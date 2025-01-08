@@ -1,0 +1,20 @@
+.top {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: .5rem;
+
+    button,
+    a {
+        all: unset;
+        font-size: .9rem;
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        cursor: pointer;
+        color: #6610f2;
+        font-weight: 500;
+    }
+}

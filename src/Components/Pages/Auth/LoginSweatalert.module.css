@@ -1,0 +1,32 @@
+.logo {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    position: absolute;
+    padding: 2rem;
+    top: 0;
+    left: 0;
+    transition: 250ms ease-out;
+}
+
+.cir {
+    height: 27vw;
+    width: 27vw;
+    object-fit: cover;
+    box-shadow: 0 0 10px 100px 30px #e640676c,
+        0 0 20px 100px 30px #5926f0;
+    border-radius: 100%;
+    position: absolute;
+    z-index: -1;
+    transition: 500ms ease-out;
+}
+
+/* .cir_top {
+    top: -140px;
+    right: -140px;
+}
+
+.cir_bottom {
+    bottom: -140px;
+    left: -140px;
+} */

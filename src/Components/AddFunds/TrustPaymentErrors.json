@@ -1,0 +1,1162 @@
+[
+    {
+        "code": "0",
+        "message": "Ok",
+        "description": "Payment Successful!"
+    },
+    {
+        "code": "1",
+        "message": "Generic error",
+        "description": "Generic Error"
+    },
+    {
+        "code": "2",
+        "message": "Trust Payments API requires the 'requests' library",
+        "description": "Trust Payments API requires the 'requests' library to function properly."
+    },
+    {
+        "code": "4",
+        "message": "Send error",
+        "description": "Error during sending process. Please retry."
+    },
+    {
+        "code": "5",
+        "message": "Receive error",
+        "description": "Error during receiving process. Please retry."
+    },
+    {
+        "code": "6",
+        "message": "Invalid credentials provided",
+        "description": "Invalid credentials. Please verify and try again."
+    },
+    {
+        "code": "7",
+        "message": "An issue occurred whilst trying to connect to Trust Payments servers",
+        "description": "An issue occurred while connecting to Trust Payments servers. Please check your connection and retry."
+    },
+    {
+        "code": "8",
+        "message": "Unexpected error connecting to Trust Payments servers. If the problem persists please contact support@trustpayments.com",
+        "description": "Unexpected error while connecting to Trust Payments servers. If this problem persists, contact support@trustpayments.com."
+    },
+    {
+        "code": "9",
+        "message": "Unknown error. If this persists please contact Trust Payments",
+        "description": "Unknown error. Please contact Trust Payments support if the issue continues."
+    },
+    {
+        "code": "10",
+        "message": "Incorrect usage of the Trust Payments API",
+        "description": "Incorrect usage of Trust Payments API. Please verify the request and try again."
+    },
+    {
+        "code": "10003",
+        "message": "Invalid card details",
+        "description": "Invalid card details. Please check and enter correct details."
+    },
+    {
+        "code": "10100",
+        "message": "Invalid date",
+        "description": "Invalid date provided."
+    },
+    {
+        "code": "10101",
+        "message": "Invalid date/time",
+        "description": "Invalid date/time format. Please provide the correct format."
+    },
+    {
+        "code": "10102",
+        "message": "Invalid details",
+        "description": "Invalid details. Please verify and enter correct information."
+    },
+    {
+        "code": "10103",
+        "message": "Card number does not match card type",
+        "description": "Card number does not match the specified card type."
+    },
+    {
+        "code": "10200",
+        "message": "Malformed XML",
+        "description": "XML formatting error. Please verify and correct the XML."
+    },
+    {
+        "code": "10201",
+        "message": "XML does not match schema",
+        "description": "XML does not match the expected schema."
+    },
+    {
+        "code": "10202",
+        "message": "Invalid file format",
+        "description": "Invalid file format. Please use a supported format."
+    },
+    {
+        "code": "10203",
+        "message": "Empty file contents",
+        "description": "Empty file content. Please provide valid content."
+    },
+    {
+        "code": "10204",
+        "message": "Invalid file contents",
+        "description": "Invalid file content. Please verify the file and try again."
+    },
+    {
+        "code": "10205",
+        "message": "Malformed JSON",
+        "description": "Malformed JSON. Please correct the JSON format."
+    },
+    {
+        "code": "10500",
+        "message": "StApi Error",
+        "description": "StApi Error"
+    },
+    {
+        "code": "10600",
+        "message": "Invalid fields specified in request",
+        "description": "Invalid fields specified in the request. Please verify and correct them."
+    },
+    {
+        "code": "20004",
+        "message": "Missing parent",
+        "description": "Missing parent information."
+    },
+    {
+        "code": "20005",
+        "message": "Refund requires settled parent or parent that's due to settle today",
+        "description": "Refund requires a settled parent transaction or one due for settlement today."
+    },
+    {
+        "code": "20006",
+        "message": "Refund requires authorisation parent",
+        "description": "Refund requires an authorization parent transaction."
+    },
+    {
+        "code": "20007",
+        "message": "Refund amount too great",
+        "description": "Refund amount exceeds allowable limit."
+    },
+    {
+        "code": "20008",
+        "message": "No acquirer specified",
+        "description": "No acquirer information provided."
+    },
+    {
+        "code": "20009",
+        "message": "Repeat amount too great",
+        "description": "Repeat amount exceeds allowable limit."
+    },
+    {
+        "code": "20010",
+        "message": "Split amount too great",
+        "description": "Split amount exceeds allowable limit."
+    },
+    {
+        "code": "20011",
+        "message": "Cannot refund a declined transaction",
+        "description": "Cannot refund a declined transaction."
+    },
+    {
+        "code": "20012",
+        "message": "Refund requires a settled parent",
+        "description": "Refund requires a settled parent transaction."
+    },
+    {
+        "code": "20013",
+        "message": "Reversal requires a cancelled auth parent",
+        "description": "Reversal requires a canceled authorization transaction."
+    },
+    {
+        "code": "20014",
+        "message": "Cannot override amount in child transaction",
+        "description": "Cannot override amount in a child transaction."
+    },
+    {
+        "code": "20015",
+        "message": "Cannot override currency in child transaction",
+        "description": "Cannot override currency in a child transaction."
+    },
+    {
+        "code": "20018",
+        "message": "Subscription requires RECUR account",
+        "description": "Subscription requires a recurring account setup."
+    },
+    {
+        "code": "20019",
+        "message": "Subscription requires successful parent",
+        "description": "Subscription requires a successful parent transaction."
+    },
+    {
+        "code": "20020",
+        "message": "Risk Decisions must have AUTH as parent",
+        "description": "Risk decisions must be tied to an authorization transaction."
+    },
+    {
+        "code": "20021",
+        "message": "Chargebacks must have AUTH/REFUND as parent",
+        "description": "Chargebacks must be linked to an authorization or refund transaction."
+    },
+    {
+        "code": "20022",
+        "message": "Refund amount less than Minimum allowed",
+        "description": "Refund amount is less than the minimum allowed."
+    },
+    {
+        "code": "20023",
+        "message": "Refund requires paypaltransactionid",
+        "description": "Refund requires a PayPal transaction ID."
+    },
+    {
+        "code": "20024",
+        "message": "Invalid split transaction",
+        "description": "Invalid split transaction."
+    },
+    {
+        "code": "20025",
+        "message": "Cannot reverse AUTH processed more than 48 hours ago",
+        "description": "Cannot reverse an authorization processed more than 48 hours ago."
+    },
+    {
+        "code": "20026",
+        "message": "Reversal requires acquirerreferencedata",
+        "description": "Reversal requires acquirer reference data."
+    },
+    {
+        "code": "20027",
+        "message": "Cannot reverse AUTH processed by a different acquirer",
+        "description": "Cannot reverse authorization processed by a different acquirer."
+    },
+    {
+        "code": "20028",
+        "message": "Payment type does not support repeats",
+        "description": "Payment type does not support repeated transactions."
+    },
+    {
+        "code": "20029",
+        "message": "Reversal missing required data",
+        "description": "Reversal missing required data."
+    },
+    {
+        "code": "20030",
+        "message": "Missing token",
+        "description": "Missing token information."
+    },
+    {
+        "code": "20031",
+        "message": "Subscription with an accountcheck parent not supported on current acquirer",
+        "description": "Subscription with an account check parent not supported by the current acquirer."
+    },
+    {
+        "code": "20032",
+        "message": "Subscription cannot be used as a parent",
+        "description": "Subscription cannot be used as a parent transaction."
+    },
+    {
+        "code": "20033",
+        "message": "Invalid parent",
+        "description": "Invalid parent transaction type."
+    },
+    {
+        "code": "20034",
+        "message": "Payment type does not support refunds",
+        "description": "Payment type does not support refunds."
+    },
+    {
+        "code": "20035",
+        "message": "Invalid incremental transaction",
+        "description": "Invalid incremental transaction."
+    },
+    {
+        "code": "20036",
+        "message": "Partial reversals not supported",
+        "description": "Partial reversals are not supported."
+    },
+    {
+        "code": "20037",
+        "message": "THREEDQUERY parent/child must have the same payment type as the child",
+        "description": "Parent and child transactions must have the same payment type for 3D secure queries."
+    },
+    {
+        "code": "20038",
+        "message": "Payment type does not support card scheme updates",
+        "description": "Payment type does not support card scheme updates."
+    },
+    {
+        "code": "20039",
+        "message": "Cannot reverse AUTH at this time, please try again",
+        "description": "Cannot reverse authorization at this time. Please try again later."
+    },
+    {
+        "code": "20040",
+        "message": "Cannot determine token",
+        "description": "Unable to determine token. Please verify and try again."
+    },
+    {
+        "code": "21000",
+        "message": "Service Temporarily Disabled",
+        "description": "Service is temporarily disabled. Please try again later."
+    },
+    {
+        "code": "21001",
+        "message": "Login first request",
+        "description": "Login required before making a request."
+    },
+    {
+        "code": "21002",
+        "message": "Invalid username/password",
+        "description": "Invalid username or password. Please try again."
+    },
+    {
+        "code": "21003",
+        "message": "Invalid session",
+        "description": "Invalid session. Please log in again."
+    },
+    {
+        "code": "21004",
+        "message": "Session has expired",
+        "description": "Session expired. Please log in again."
+    },
+    {
+        "code": "21005",
+        "message": "Password expired",
+        "description": "Password expired. Please reset your password."
+    },
+    {
+        "code": "21006",
+        "message": "Password has been previously used",
+        "description": "Password has been previously used. Please choose a new password."
+    },
+    {
+        "code": "21007",
+        "message": "MyST user account has been locked",
+        "description": "MyST user account has been locked. Please contact support."
+    },
+    {
+        "code": "21009",
+        "message": "New password does not match confirmed password",
+        "description": "New password does not match the confirmed password."
+    },
+    {
+        "code": "21010",
+        "message": "Incorrect current password",
+        "description": "Incorrect current password. Please try again."
+    },
+    {
+        "code": "21012",
+        "message": "Invalid selection",
+        "description": "Invalid selection made. Please choose a valid option."
+    },
+    {
+        "code": "21013",
+        "message": "User already exists",
+        "description": "User already exists. Please log in or reset the password if needed."
+    },
+    {
+        "code": "21014",
+        "message": "No transaction found",
+        "description": "No transaction found."
+    },
+    {
+        "code": "21015",
+        "message": "Invalid selected transactions",
+        "description": "Invalid selected transactions."
+    },
+    {
+        "code": "21016",
+        "message": "Data supplied has not been saved",
+        "description": "Data has not been saved. Please try again."
+    },
+    {
+        "code": "21017",
+        "message": "Invalid request type",
+        "description": "Invalid request type."
+    },
+    {
+        "code": "21018",
+        "message": "Missing request type, at least one request type must be selected",
+        "description": "Missing request type. At least one must be selected."
+    },
+    {
+        "code": "21019",
+        "message": "Invalid payment type",
+        "description": "Invalid payment type."
+    },
+    {
+        "code": "21020",
+        "message": "Missing payment type, at least one payment type must be selected",
+        "description": "Missing payment type. At least one must be selected."
+    },
+    {
+        "code": "21021",
+        "message": "Invalid error code",
+        "description": "Invalid error code."
+    },
+    {
+        "code": "21022",
+        "message": "Missing error code, at least one error code must be selected",
+        "description": "Missing error code. At least one must be selected."
+    },
+    {
+        "code": "21023",
+        "message": "Invalid filter description",
+        "description": "Invalid filter description."
+    },
+    {
+        "code": "21024",
+        "message": "Invalid destination description",
+        "description": "Invalid destination description."
+    },
+    {
+        "code": "21025",
+        "message": "Invalid notification type",
+        "description": "Invalid notification type."
+    },
+    {
+        "code": "21026",
+        "message": "Invalid destination",
+        "description": "Invalid destination."
+    },
+    {
+        "code": "21027",
+        "message": "Invalid field selected",
+        "description": "Invalid field selected."
+    },
+    {
+        "code": "21028",
+        "message": "Invalid email from address",
+        "description": "Invalid email address for the sender."
+    },
+    {
+        "code": "21029",
+        "message": "Invalid email subject",
+        "description": "Invalid email subject line."
+    },
+    {
+        "code": "21030",
+        "message": "Invalid email type",
+        "description": "Invalid email type."
+    },
+    {
+        "code": "21031",
+        "message": "Unable to process request",
+        "description": "Unable to process the request. Please try again later."
+    },
+    {
+        "code": "21032",
+        "message": "No file selected for upload",
+        "description": "No file selected for upload."
+    },
+    {
+        "code": "21033",
+        "message": "Invalid file size",
+        "description": "Invalid file size. Please provide a file of acceptable size."
+    },
+    {
+        "code": "21034",
+        "message": "Invalid filename",
+        "description": "Invalid filename."
+    },
+    {
+        "code": "21035",
+        "message": "Invalid extension",
+        "description": "Invalid file extension."
+    },
+    {
+        "code": "21036",
+        "message": "User requires at least one site reference",
+        "description": "User requires at least one site reference."
+    },
+    {
+        "code": "21037",
+        "message": "Only ST-level users can have '*' access",
+        "description": "Only ST-level users can have '*' access rights."
+    },
+    {
+        "code": "21038",
+        "message": "Request failed",
+        "description": "Request failed. Please try again later."
+    },
+    {
+        "code": "21039",
+        "message": "Invalid File Contents",
+        "description": "Invalid file contents."
+    },
+    {
+        "code": "21040",
+        "message": "Maximum number of files uploaded",
+        "description": "Maximum number of files uploaded. Please delete some files and retry."
+    },
+    {
+        "code": "21041",
+        "message": "Insufficient gateway access privileges",
+        "description": "Insufficient gateway access privileges."
+    },
+    {
+        "code": "21042",
+        "message": "Maximum file size limit reached",
+        "description": "Maximum file size limit reached."
+    },
+    {
+        "code": "21043",
+        "message": "Username(s) must be a valid user(s)",
+        "description": "Username(s) must be valid users."
+    },
+    {
+        "code": "21044",
+        "message": "Site reference(s) must be a valid site(s)",
+        "description": "Site reference(s) must be valid sites."
+    },
+    {
+        "code": "21045",
+        "message": "Unable to send email, please verify the details and try again",
+        "description": "Unable to send email. Please verify the details and try again."
+    },
+    {
+        "code": "21046",
+        "message": "Negative already exists",
+        "description": "A negative value already exists. Please verify and make corrections."
+    },
+    {
+        "code": "21047",
+        "message": "Cannot delete a search owned by another user",
+        "description": "Cannot delete a search owned by another user."
+    },
+    {
+        "code": "21048",
+        "message": "Invalid search",
+        "description": "Invalid search. Please try again with valid criteria."
+    },
+    {
+        "code": "21049",
+        "message": "Cannot delete the specified search, the search name cannot be found",
+        "description": "Cannot delete the specified search. The search name cannot be found."
+    },
+    {
+        "code": "21050",
+        "message": "Search parameter is too short",
+        "description": "Search parameter is too short. Please enter more specific search terms."
+    },
+    {
+        "code": "21051",
+        "message": "Duplicate custom fields defined",
+        "description": "Duplicate custom fields defined. Please resolve the duplicates."
+    },
+    {
+        "code": "21052",
+        "message": "Cannot allocate selected users, insufficient privileges",
+        "description": "Cannot allocate selected users. Insufficient privileges."
+    },
+    {
+        "code": "21053",
+        "message": "Allocated users have access to additional sites",
+        "description": "Allocated users have access to additional sites."
+    },
+    {
+        "code": "21054",
+        "message": "Allocated users have access to additional users",
+        "description": "Allocated users have access to additional users."
+    },
+    {
+        "code": "21055",
+        "message": "User with current role cannot be allocated users",
+        "description": "Users with the current role cannot allocate other users."
+    },
+    {
+        "code": "21056",
+        "message": "This site requires that your browser accept cookies to sign in. Cookies can be accepted by clicking 'I accept' below.",
+        "description": "This site requires that your browser accepts cookies to sign in. Cookies can be accepted by clicking 'I accept' below."
+    },
+    {
+        "code": "21057",
+        "message": "User requires at least one site reference or site group",
+        "description": "User requires at least one site reference or site group."
+    },
+    {
+        "code": "21058",
+        "message": "Allocated users have access to additional site groups",
+        "description": "Allocated users have access to additional site groups."
+    },
+    {
+        "code": "21059",
+        "message": "No statement found",
+        "description": "No statement found."
+    },
+    {
+        "code": "21060",
+        "message": "Data supplied has not been updated in MobilePay 3rd-party service",
+        "description": "Data supplied has not been updated in the MobilePay third-party service."
+    },
+    {
+        "code": "22000",
+        "message": "Bypass",
+        "description": "Bypass"
+    },
+    {
+        "code": "25000",
+        "message": "Insufficient access privileges",
+        "description": "Insufficient access privileges."
+    },
+    {
+        "code": "25001",
+        "message": "Coding error",
+        "description": "Coding error detected."
+    },
+    {
+        "code": "25002",
+        "message": "Insufficient privileges",
+        "description": "Insufficient privileges to complete this action."
+    },
+    {
+        "code": "25003",
+        "message": "Invalid request",
+        "description": "Invalid request. Please verify and try again."
+    },
+    {
+        "code": "30000",
+        "message": "The card details you entered seem incorrect. Please double-check and try again.",
+        "description": "Invalid field entered. Please verify and correct the entry."
+    },
+    {
+        "code": "30001",
+        "message": "Unknown site",
+        "description": "Unknown site."
+    },
+    {
+        "code": "30002",
+        "message": "Banned card",
+        "description": "Banned card."
+    },
+    {
+        "code": "30003",
+        "message": "XML element parse error",
+        "description": "XML element parsing error. Please verify the XML structure."
+    },
+    {
+        "code": "30004",
+        "message": "Maestro must use SecureCode",
+        "description": "Maestro transactions must use SecureCode for validation."
+    },
+    {
+        "code": "30005",
+        "message": "Multiple email addresses must be separated with , or ;",
+        "description": "Multiple email addresses must be separated with commas (,) or semicolons (;)."
+    },
+    {
+        "code": "30006",
+        "message": "Invalid site reference for alias",
+        "description": "Invalid site reference for alias."
+    },
+    {
+        "code": "30007",
+        "message": "Invalid version number",
+        "description": "Invalid version number. Please enter a valid version number."
+    },
+    {
+        "code": "30008",
+        "message": "Unknown user",
+        "description": "Unknown user. Please verify and try again."
+    },
+    {
+        "code": "30009",
+        "message": "Cannot determine account",
+        "description": "Cannot determine account."
+    },
+    {
+        "code": "30010",
+        "message": "JSON element parse error",
+        "description": "JSON element parsing error. Please verify the JSON structure."
+    },
+    {
+        "code": "30011",
+        "message": "Wallet type configuration error",
+        "description": "Wallet type configuration error."
+    },
+    {
+        "code": "30012",
+        "message": "Wallet type not supported on this request",
+        "description": "Wallet type not supported for this request."
+    },
+    {
+        "code": "31000",
+        "message": "The card number you have provided is incorrect, please verify your details and try again",
+        "description": "The card number provided is incorrect. Please verify your details and try again."
+    },
+    {
+        "code": "31001",
+        "message": "The security code (CVV2) you have provided is incorrect, please verify your details and try again",
+        "description": "The security code (CVV2) you provided is incorrect. Please verify and try again."
+    },
+    {
+        "code": "31002",
+        "message": "The expiry date you have provided is incorrect, please verify your details and try again",
+        "description": "The expiry date provided is incorrect. Please verify your details and try again."
+    },
+    {
+        "code": "31003",
+        "message": "The expiry month you have provided is incorrect, please verify your details and try again",
+        "description": "The expiry month provided is incorrect. Please verify and try again."
+    },
+    {
+        "code": "31004",
+        "message": "The expiry year you have provided is incorrect, please verify your details and try again",
+        "description": "The expiry year provided is incorrect. Please verify and try again."
+    },
+    {
+        "code": "31005",
+        "message": "Unable to process your payment due to connection errors - request id mismatch, please try again",
+        "description": "Unable to process your payment due to connection errors. Request ID mismatch. Please try again."
+    },
+    {
+        "code": "31006",
+        "message": "The issue number you have provided is incorrect, please verify your details and try again",
+        "description": "The issue number provided is incorrect. Please verify and try again."
+    },
+    {
+        "code": "31007",
+        "message": "The payment type you have provided is incorrect, please verify your details and try again",
+        "description": "The payment type provided is incorrect. Please verify and try again."
+    },
+    {
+        "code": "31009",
+        "message": "Unable to process your payment, please contact the website",
+        "description": "Unable to process your payment. Please contact the website for support."
+    },
+    {
+        "code": "31010",
+        "message": "There are errors with these fields: {0}",
+        "description": "There are errors with these fields: {0}"
+    },
+    {
+        "code": "40000",
+        "message": "No account found",
+        "description": "No account found."
+    },
+    {
+        "code": "40001",
+        "message": "Refund cannot be processed",
+        "description": "Refund cannot be processed."
+    },
+    {
+        "code": "40002",
+        "message": "Transaction de-activated",
+        "description": "Transaction deactivated."
+    },
+    {
+        "code": "50000",
+        "message": "Socket receive error",
+        "description": "Socket receive error."
+    },
+    {
+        "code": "50001",
+        "message": "Socket connection error",
+        "description": "Socket connection error."
+    },
+    {
+        "code": "50002",
+        "message": "Socket closed",
+        "description": "Socket closed."
+    },
+    {
+        "code": "50003",
+        "message": "Invalid data received",
+        "description": "Invalid data received."
+    },
+    {
+        "code": "50004",
+        "message": "Invalid SQL",
+        "description": "Invalid SQL query."
+    },
+    {
+        "code": "50005",
+        "message": "Timeout",
+        "description": "Timeout occurred."
+    },
+    {
+        "code": "50006",
+        "message": "Invalid acquirer",
+        "description": "Invalid acquirer details."
+    },
+    {
+        "code": "50007",
+        "message": "Unable to connect to acquirer",
+        "description": "Unable to connect to the acquirer."
+    },
+    {
+        "code": "50008",
+        "message": "Invalid response from acquirer",
+        "description": "Invalid response from the acquirer."
+    },
+    {
+        "code": "50009",
+        "message": "No available transport",
+        "description": "No available transport found."
+    },
+    {
+        "code": "50010",
+        "message": "File size too large",
+        "description": "File size too large."
+    },
+    {
+        "code": "50011",
+        "message": "Socket send error",
+        "description": "Socket send error."
+    },
+    {
+        "code": "50012",
+        "message": "Communication error",
+        "description": "Communication error."
+    },
+    {
+        "code": "50014",
+        "message": "Proxy error",
+        "description": "Proxy error."
+    },
+    {
+        "code": "51000",
+        "message": "Unable to process your payment due to connection errors, please verify your details and try again ({0})",
+        "description": "Unable to process your payment due to connection errors. Please verify your details and try again ({0})."
+    },
+    {
+        "code": "51001",
+        "message": "Unable to process your payment due to connection errors (HTTP response status {0}), please verify your details and try again ({1})",
+        "description": "Unable to process your payment due to connection errors (HTTP response status {0}). Please verify your details and try again ({1})."
+    },
+    {
+        "code": "60003",
+        "message": "Wrong number of emails",
+        "description": "Incorrect number of email addresses provided."
+    },
+    {
+        "code": "60010",
+        "message": "Bank System Error",
+        "description": "Bank system error."
+    },
+    {
+        "code": "60011",
+        "message": "Wrong number of transactions",
+        "description": "Incorrect number of transactions provided."
+    },
+    {
+        "code": "60012",
+        "message": "Invalid transport configuration",
+        "description": "Invalid transport configuration."
+    },
+    {
+        "code": "60013",
+        "message": "No valid updates specified",
+        "description": "No valid updates specified."
+    },
+    {
+        "code": "60014",
+        "message": "Transaction reference not found",
+        "description": "Transaction reference not found."
+    },
+    {
+        "code": "60016",
+        "message": "Settlebaseamount too large",
+        "description": "Settle base amount is too large."
+    },
+    {
+        "code": "60017",
+        "message": "Transaction not updatable",
+        "description": "Transaction not updatable."
+    },
+    {
+        "code": "60018",
+        "message": "Invalid request type",
+        "description": "Invalid request type."
+    },
+    {
+        "code": "60019",
+        "message": "No searchable filter specified",
+        "description": "No searchable filter specified."
+    },
+    {
+        "code": "60020",
+        "message": "Timeout Error",
+        "description": "Timeout error. Please try again."
+    },
+    {
+        "code": "60021",
+        "message": "3-D Secure Transport Error",
+        "description": "3-D Secure transport error."
+    },
+    {
+        "code": "60022",
+        "message": "Unauthenticated",
+        "description": "Unauthenticated request."
+    },
+    {
+        "code": "60023",
+        "message": "Site Suspended",
+        "description": "Site suspended."
+    },
+    {
+        "code": "60024",
+        "message": "No updates performed",
+        "description": "No updates performed."
+    },
+    {
+        "code": "60025",
+        "message": "Invalid Request",
+        "description": "Invalid request."
+    },
+    {
+        "code": "60026",
+        "message": "Invalid Response",
+        "description": "Invalid response."
+    },
+    {
+        "code": "60027",
+        "message": "Invalid Acquirer",
+        "description": "Invalid acquirer information."
+    },
+    {
+        "code": "60028",
+        "message": "Invalid account data",
+        "description": "Invalid account data."
+    },
+    {
+        "code": "60029",
+        "message": "Missing",
+        "description": "Missing information."
+    },
+    {
+        "code": "60030",
+        "message": "Payment Error",
+        "description": "Payment error."
+    },
+    {
+        "code": "60031",
+        "message": "Invalid acquirer for 3-D Secure",
+        "description": "Invalid acquirer for 3-D Secure."
+    },
+    {
+        "code": "60032",
+        "message": "Invalid payment type for 3-D Secure",
+        "description": "Invalid payment type for 3-D Secure."
+    },
+    {
+        "code": "60033",
+        "message": "Invalid updates specified",
+        "description": "Invalid updates specified."
+    },
+    {
+        "code": "60034",
+        "message": "Manual investigation required",
+        "description": "Manual investigation required."
+    },
+    {
+        "code": "60035",
+        "message": "Invalid headers",
+        "description": "Invalid headers."
+    },
+    {
+        "code": "60036",
+        "message": "Max fraudscore exceeded",
+        "description": "Maximum fraud score exceeded."
+    },
+    {
+        "code": "60037",
+        "message": "Invalid filters",
+        "description": "Invalid filters provided."
+    },
+    {
+        "code": "60038",
+        "message": "Merchant System Error",
+        "description": "Merchant system error."
+    },
+    {
+        "code": "60039",
+        "message": "Your payment is being processed. Please wait...",
+        "description": "Your payment is being processed. Please wait..."
+    },
+    {
+        "code": "60040",
+        "message": "Cannot specify both requesttypedescription and requesttypedescriptions on a single request",
+        "description": "Cannot specify both 'request type description' and 'request type descriptions' in a single request."
+    },
+    {
+        "code": "60041",
+        "message": "Acquirer missing original transaction data",
+        "description": "Acquirer missing original transaction data."
+    },
+    {
+        "code": "60042",
+        "message": "Insufficient funds",
+        "description": "Insufficient funds."
+    },
+    {
+        "code": "60043",
+        "message": "Unable to process due to scheme restrictions",
+        "description": "Unable to process due to scheme restrictions."
+    },
+    {
+        "code": "60044",
+        "message": "Failed Screening",
+        "description": "Failed screening."
+    },
+    {
+        "code": "60045",
+        "message": "Unable to process due to restrictions",
+        "description": "Unable to process due to restrictions."
+    },
+    {
+        "code": "60100",
+        "message": "Invalid process",
+        "description": "Invalid process."
+    },
+    {
+        "code": "60101",
+        "message": "Invalid process",
+        "description": "Risk referral required."
+    },
+    {
+        "code": "60102",
+        "message": "Invalid process",
+        "description": "Name is required for selection."
+    },
+    {
+        "code": "60103",
+        "message": "Invalid process",
+        "description": "Address is required for selection."
+    },
+    {
+        "code": "60104",
+        "message": "Invalid process",
+        "description": "IP address not in range."
+    },
+    {
+        "code": "60105",
+        "message": "Invalid process",
+        "description": "Invalid button configuration."
+    },
+    {
+        "code": "60106",
+        "message": "Invalid process",
+        "description": "Unrecognized response from acquirer."
+    },
+    {
+        "code": "60107",
+        "message": "Invalid process",
+        "description": "Decline."
+    },
+    {
+        "code": "60108",
+        "message": "Invalid process",
+        "description": "Uncertain result."
+    },
+    {
+        "code": "60109",
+        "message": "Invalid process",
+        "description": "Soft decline."
+    },
+    {
+        "code": "60110",
+        "message": "Invalid process",
+        "description": "Refer to the issuer for more information."
+    },
+    {
+        "code": "60111",
+        "message": "Invalid process",
+        "description": "Request is queued. Please check the transaction status later."
+    },
+    {
+        "code": "60112",
+        "message": "Invalid process",
+        "description": "Generic retry."
+    },
+    {
+        "code": "60113",
+        "message": "Invalid process",
+        "description": "Soft decline retry."
+    },
+    {
+        "code": "60114",
+        "message": "Invalid process",
+        "description": "There has been a problem with your payment. Please verify your details and try again."
+    },
+    {
+        "code": "60115",
+        "message": "Invalid process",
+        "description": "Unknown error."
+    },
+    {
+        "code": "60116",
+        "message": "Invalid process"
+    },
+    {
+        "code": "60117",
+        "message": "Invalid process"
+    },
+    {
+        "code": "60118",
+        "message": "Invalid process"
+    },
+    {
+        "code": "60119",
+        "message": "Invalid process"
+    },
+    {
+        "code": "60120",
+        "message": "Invalid process"
+    },
+    {
+        "code": "60500",
+        "message": "Risk Referral"
+    },
+    {
+        "code": "61000",
+        "message": "Name Pick required"
+    },
+    {
+        "code": "61001",
+        "message": "Address Pick required"
+    },
+    {
+        "code": "61002",
+        "message": "IP not in range"
+    },
+    {
+        "code": "61003",
+        "message": "Invalid button configuration"
+    },
+    {
+        "code": "62000",
+        "message": "Unrecognised response from acquirer"
+    },
+    {
+        "code": "70000",
+        "message": "Decline"
+    },
+    {
+        "code": "70001",
+        "message": "Uncertain result"
+    },
+    {
+        "code": "71000",
+        "message": "Soft Decline"
+    },
+    {
+        "code": "72000",
+        "message": "Refer to Issuer"
+    },
+    {
+        "code": "79000",
+        "message": "Request is queued please check the transaction later for the status"
+    },
+    {
+        "code": "88000",
+        "message": "Generic Retry"
+    },
+    {
+        "code": "88888",
+        "message": "Soft Decline retry"
+    },
+    {
+        "code": "99998",
+        "message": "There has been a problem with your payment, please verify your details and try again"
+    },
+    {
+        "code": "99999",
+        "message": "Unknown error"
+    }
+]

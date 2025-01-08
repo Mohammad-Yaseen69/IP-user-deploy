@@ -1,0 +1,17 @@
+<root>
+  <person>
+    <ID>User 1</ID>
+    <Amount>340</Amount>
+    <Currency>GBP</Currency>
+  </person>
+  <person>
+    <ID>User 2</ID>
+    <Amount>350</Amount>
+    <Currency>EUR</Currency>
+  </person>
+  <person>
+    <ID>User 3</ID>
+    <Amount>360</Amount>
+    <Currency>USD</Currency>
+  </person>
+</root>

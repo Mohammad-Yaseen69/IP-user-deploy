@@ -1,0 +1,92 @@
+.wizard-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.completed-steps {
+    display: flex;
+    gap: 30px;
+}
+
+.incompleted-steps {
+    display: flex;
+    gap: 30px;
+}
+
+.step {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 5px;
+    position: relative;
+}
+
+.step::before {
+    content: "";
+    height: 2px;
+    width: 20px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: -20px;
+    background-color: red;
+}
+
+
+.step::after {
+    content: "";
+    height: 2px;
+    width: 20px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: -20px;
+    background-color: red;
+}
+
+.completed {
+    background-color: #5926f0;
+
+}
+
+.incompleted {
+    background-color: #d9d9d9;
+}
+
+.completed::before,
+.completed::after {
+    background-color: #5926f0;
+}
+
+.incompleted::before,
+.incompleted::after {
+    background-color: #d9d9d9;
+}
+
+.completed:nth-child(1)::before {
+    display: none;
+}
+
+.completed[data-last="last"]::after {
+    display: none;
+}
+
+.completed[data-complete=true] {
+    background-color: #13AD1A;
+}
+
+.completed[data-complete=true]::before,
+.completed[data-complete=true]::after {
+    background-color: #13AD1A;
+}
+
+.completed[data-complete=true]:last-child:after {
+    display: none;
+}
+
+.incompleted:last-child::after {
+    display: none;
+}

@@ -1,0 +1,43 @@
+.dropdown {
+    display: block;
+    width: 100%;
+    padding: .7rem 0.75rem;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    appearance: none;
+    border-radius: 0.375rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    position: relative;
+    font-size: .9rem;
+    min-width: 250px;
+    font-weight: 600;
+}
+
+.dd_menu {
+    position: absolute;
+    top: 100%;
+    border: 1px solid #ced4da;
+    left: 0;
+    right: 0;
+    background-color: white;
+    z-index: 100;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.dd_item {
+    padding: .75rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: 250ms;
+}
+
+.dd_item:hover {
+    background-color: #e0dddd;
+}

@@ -1,0 +1,219 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    /* align-items: flex-end; */
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    /* margin-top: -130px; */
+}
+
+.left {
+    max-width: 350px;
+}
+
+.left h4 {
+    color: #000;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.left p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+    color: #7E7E7E;
+    text-overflow: ellipsis;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 170%;
+}
+
+.right {
+    border-radius: 22.892px;
+    background: #FAFAFA;
+    width: 310.096px;
+    height: 335.746px;
+    flex-shrink: 0;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+}
+
+.currency {
+    display: flex;
+    padding: 7px 10px;
+    /* width: 83px; */
+    width: fit-content;
+    gap: 5px;
+    align-items: center;
+    border-radius: 6.775px;
+    background: rgba(89, 38, 240, 0.06);
+    margin-bottom: 10px;
+}
+
+.currency div {
+    background: linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%);
+    color: white;
+    font-weight: 800;
+    font-size: 1rem;
+    height: 25px;
+    min-width: 25px;
+    width: fit-content;
+    padding: .2rem;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.currency p {
+    margin-bottom: 0;
+}
+
+.amount label {
+    color: #7D7D7D;
+    font-size: 10.055px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    text-transform: capitalize;
+}
+
+.amount input,
+.amount span {
+    color: #000;
+    font-size: 40.5px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -1.417px;
+    border: none;
+    padding: 0;
+    background-color: transparent;
+}
+
+.amount div {
+    display: flex;
+}
+
+.amount input::before {
+    content: "$";
+}
+
+.buttons {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.button {
+    display: flex;
+    gap: 1rem;
+    padding: 9px 11px;
+    align-items: center;
+}
+
+.button div {
+    border-radius: 6.517px;
+    background: radial-gradient(124.63% 259.09% at 48.48% 152.15%, rgba(230, 64, 103, 0.10) 0%, rgba(89, 38, 240, 0.10) 55.65%, rgba(72, 40, 160, 0.10) 100%), #FFF;
+    height: 30px;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button:nth-child(1) {
+    border-radius: 10.391px;
+    background: rgba(255, 255, 255, 0.55);
+    box-shadow: 0px 3.978px 32.819px 0px rgba(0, 0, 0, 0.09);
+    color: #000;
+    font-size: 11.275px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.225px;
+}
+
+.button:nth-child(2) {
+    border-radius: 10.391px;
+    background: #5926F0;
+    box-shadow: 0px 3.978px 32.819px 0px rgba(0, 0, 0, 0.09);
+    color: #FFF;
+    font-size: 11.275px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.225px;
+}
+
+.button img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+@media screen and (max-width: 1000px) {
+    .container {
+        margin-top: 2rem;
+        margin-bottom: 0;
+        flex-direction: column-reverse;
+    }
+
+    .right {
+        width: 100%;
+        align-items: center;
+        gap: 1rem;
+        height: fit-content;
+    }
+
+    .amount {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        gap: .3rem;
+        margin-top: 1rem;
+    }
+
+    .amount label {
+        font-size: .8rem;
+        margin: 0 auto;
+    }
+
+    .amount input {
+        width: 100%;
+        max-width: 10ch;
+        margin-left: .3rem;
+    }
+
+    .buttons {
+        width: 100%;
+    }
+
+    .button {
+        padding: .7rem .8rem;
+    }
+
+    .button div:not(.gperror) {
+        height: 35px !important;
+        width: 35px !important;
+    }
+
+    .button img {
+        width: 22px;
+        height: 22px;
+    }
+
+    .button span {
+        font-size: .9rem;
+    }
+}
+
+.gperror {
+    width: 100% !important;
+}

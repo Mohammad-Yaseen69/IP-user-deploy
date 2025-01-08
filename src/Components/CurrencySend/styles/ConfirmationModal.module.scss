@@ -1,0 +1,77 @@
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    width: 400px;
+    z-index: 9999;
+
+    .modal_header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+
+        .modal_header_text {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .modal_header_icon {
+            cursor: pointer;
+        }
+    }
+
+    .modal_checkmark {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(to right bottom, #e64067, #5926f0, #4828a0);
+        border-radius: 50%;
+        height: 100px;
+        width: 100px;
+        margin: 0 auto 24px;
+    }
+
+    .modal_receipt {
+        .modal_receipt_item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+
+            .modal_receipt_label {
+                font-weight: 600;
+                margin-right: 8px;
+            }
+
+            .modal_receipt_value {
+                font-weight: 400;
+            }
+        }
+    }
+
+    .modal_market_rate {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba($color: grey, $alpha: .5);
+        text-align: center;
+
+        span {
+            font-weight: 600;
+        }
+    }
+}
+
+.modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 9998;
+}

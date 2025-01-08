@@ -1,0 +1,320 @@
+.container {
+    display: flex;
+    gap: 40px;
+    container-type: inline-size;
+    aspect-ratio: 1080/650;
+}
+
+.left {
+    /* min-height: 670px; */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+    min-width: 40%;
+}
+
+.top {
+    display: flex;
+    flex-direction: column;
+    gap: 3cqi;
+    max-width: 320px;
+}
+
+.top h1 {
+    color: #5926F0;
+    font-family: Manrope;
+    /* font-size: 16px; */
+    font-size: min(1.6cqi, 16px);
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    letter-spacing: 5.76px;
+    text-transform: uppercase;
+}
+
+.top h2 {
+    color: #000;
+    font-family: Manrope;
+    /* font-size: 32px; */
+    font-size: min(3.1cqi, 32px);
+    font-style: normal;
+    font-weight: 800;
+    line-height: 130%;
+}
+
+.top p {
+    color: #8D8D8D;
+    font-family: Manrope;
+    /* font-size: 18px; */
+    font-size: min(1.7cqi, 18px);
+    font-style: normal;
+    font-weight: 600;
+    line-height: 157%;
+    letter-spacing: -0.18px;
+}
+
+.top ol {
+    display: flex;
+    flex-direction: column;
+    gap: 3cqi;
+}
+
+.top ol li {
+    color: #8D8D8D;
+    font-family: Manrope;
+    /* font-size: 18px; */
+    font-size: min(1.7cqi, 18px);
+    font-style: normal;
+    font-weight: 600;
+    line-height: 157%;
+    letter-spacing: -0.18px;
+    list-style-type: none;
+}
+
+.bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 3cqi;
+    flex-wrap: wrap;
+}
+
+.bottom .button {
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
+    background-blend-mode: overlay, normal;
+    box-shadow: 0px 4.5px 5.3px -5.409px rgba(89, 38, 240, 0.04);
+    color: #FFF;
+    font-family: Manrope;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    display: flex;
+    align-items: center;
+    gap: 3cqi;
+    font-size: 1.65cqi;
+    padding: .75cqi 2cqi;
+}
+
+.right {
+    min-width: 0%;
+    width: 100%;
+}
+
+.right_item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+@media screen and (max-width: 1000px) {
+    .container {
+        aspect-ratio: unset;
+        flex-direction: column-reverse;
+        padding: 0px !important;
+        gap: 0px;
+        background: #FAFAFA;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .left {
+        padding: 1.5rem;
+        width: 100%;
+        gap: 2rem;
+    }
+
+    .top {
+        max-width: none;
+        gap: 1rem;
+    }
+
+    .top h1 {
+        font-size: .9rem;
+    }
+
+    .top h2 {
+        font-size: 1.5rem;
+    }
+
+    .top p {
+        font-size: 1rem;
+    }
+
+    .top ol {
+        gap: 1rem;
+    }
+
+    .top ol li {
+        font-size: 1rem;
+    }
+
+    .bottom {
+        flex-direction: column-reverse;
+        gap: 2rem;
+        margin-top: 1rem;
+    }
+
+    .bottom .button {
+        gap: 2rem;
+        font-size: 1.25rem;
+        padding: .65rem 1.5rem;
+        border-radius: 1rem;
+    }
+
+    /* .right_item img{
+        object-fit: cover;
+    } */
+}
+
+
+/* last step */
+.last {
+    display: flex;
+    flex-direction: column;
+    gap: 2.1rem;
+}
+
+.last h1 {
+    color: #5926F0;
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    letter-spacing: 5.76px;
+    text-transform: uppercase;
+    margin-bottom: -10px;
+}
+
+.last>h2 {
+    border-radius: 6px;
+    background: #FAFAFA;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #FF1F1F;
+    font-family: Manrope;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 130%;
+    letter-spacing: -0.48px;
+    width: fit-content;
+}
+
+.avoid {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border-radius: 16px;
+    background: #EFEAFE;
+}
+
+.avoid h2 {
+    color: #5926F0;
+    font-family: Manrope;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 180%;
+    letter-spacing: -0.36px;
+}
+
+.avoid ul {
+    padding-left: 1.25rem;
+}
+
+.avoid ul li {
+    color: #000;
+    font-family: Manrope;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 180%;
+    list-style-type: disc;
+    letter-spacing: -0.18px;
+}
+
+.note {
+    background: #FFF493;
+    padding: 10px;
+}
+
+.note p {
+    color: #000;
+    font-family: Manrope;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 157%;
+    letter-spacing: -0.36px;
+    margin-bottom: 0;
+}
+
+.last>p {
+    color: #8D8D8D;
+    font-family: Manrope;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 157%;
+    letter-spacing: -0.18px;
+    margin-bottom: 0;
+}
+
+.last>p a {
+    color: #5926F0;
+    font-family: Manrope;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 157%;
+    letter-spacing: -0.18px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+    margin-top: 11px;
+}
+
+.t_button {
+    border: none;
+    background-color: transparent;
+    background: none;
+    outline: none;
+    padding: 0;
+    color: #8D8D8D;
+    font-family: Manrope;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 157%;
+    letter-spacing: -0.18px;
+}
+
+.f_button {
+    border-radius: 6px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
+    background-blend-mode: overlay, normal;
+    box-shadow: 0px 4.5px 5.3px -5.409px rgba(89, 38, 240, 0.04);
+    display: flex;
+    border: none;
+    outline: none;
+    align-items: center;
+    gap: 24px;
+    color: #FFF;
+    font-family: Manrope;
+    font-size: 17.31px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}

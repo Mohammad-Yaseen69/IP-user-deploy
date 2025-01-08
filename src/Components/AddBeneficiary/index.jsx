@@ -1,0 +1,163 @@
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"
+import IndividualAccount from "./IndividualAccount";
+import BusinessAccount from "./BusinessAccount";
+import { Card, CardHeader, Form } from "reactstrap";
+import { H4 } from "../../AbstractElements";
+import SuccessModal from "./SuccessModal";
+import { useTranslation } from "react-i18next";
+import axios from "axios";
+import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
+import { UserContext } from "../../Context/UserContext";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
+const AddBeneficiary = () => {
+    const { t } = useTranslation()
+    const [mobileView, setMobileView] = useState(window?.innerWidth < 600)
+    const [isIndividual, setIsIndividual] = useState(true)
+    const [showSuccess, setShowSuccess] = useState(false)
+    const navigate = useNavigate()
+    const { authHeader, allowedCountries } = useContext(UserContext)
+
+    const toggleSuccess = () => showSuccess ? navigate("/beneficiaries") : setShowSuccess(true)
+
+    const setWidth = () => {
+        setMobileView(window.innerWidth < 600)
+    }
+
+    useEffect(() => {
+        window.addEventListener("resize", setWidth)
+
+        return () => window.removeEventListener("resize", setWidth)
+    }, [])
+
+
+    const handleChangeAlpha = (event) => {
+        const charCode = event.charCode;
+        if (!/[a-zA-Z]/.test(String.fromCharCode(charCode))) {
+            event.preventDefault();
+        }
+    }
+
+    const handleChangeNumber = (event) => {
+        const charCode = event.charCode;
+        if (!/\d/.test(String.fromCharCode(charCode))) {
+            event.preventDefault();
+        }
+    }
+
+    const [filteringCountries, setFilteringCountries] = useState([])
+
+    // useEffect(() => {
+    //     const getReceivingCountries = async () => {
+    //         try {
+    //             const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/country/get-all-receiving-country`, {
+    //                 headers: authHeader
+    //             })
+
+    //             const decrypted = decryptData(res.data.data)
+    //             setFilteringCountries(decrypted?.Countries)
+    //         } catch (error) {
+    //             // console.log(decryptData(error.response.data.data))
+    //         }
+    //     }
+
+    //     getReceivingCountries()
+    // }, [])
+
+    useEffect(() => {
+        setFilteringCountries(allowedCountries)
+    }, [allowedCountries])
+
+    return (
+        <div style={{ margin: "1rem 0 1rem 1rem" }}>
+            <Form className="card" style={{
+                // border: "2px solid rgba(128,128,128,.5)"
+                minHeight: `calc(${100}vh - ${2}rem)`,
+                marginBottom: "0"
+            }}>
+                <div style={{}}>
+                    <button onClick={() => navigate(-1)} style={{
+                        all: "unset",
+                        color: "var(--theme-default)",
+                        fontSize: "1rem",
+                        marginTop: "1rem",
+                        marginLeft: "1rem",
+                        paddingLeft: ".5rem",
+                        cursor: "pointer"
+                    }}>&larr; &nbsp;</button>
+                    <CardHeader className="pb-0 pt-0" style={{
+                        display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem"
+                    }}>
+                        {/* <H4 attrH4={{ className: 'card-title mb-0' }}>{t("Add")} {isIndividual ? t("Individual") : t("Business")} {t("Account")}</H4> */}
+                        <H4 attrH4={{ className: 'card-title mb-0' }}>{isIndividual ? t("Add Individual Account") : t("Add Business Account")} </H4>
+                        <div style={{ display: "flex" }}>
+                            <button style={{
+                                all: "unset",
+                                padding: "1rem",
+                                boxShadow: "0 0 3px rgba(128,128,128,0.4)",
+                                flex: 1,
+                                textAlign: "center",
+                                cursor: "pointer",
+                                type: "button",
+                                borderRadius: "10px",
+                                background: isIndividual ? "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)" : "transparent",
+                                color: isIndividual ? "white" : "inherit",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "1rem",
+                                justifyContent: "center",
+                                transition: "250ms"
+                            }}
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    setIsIndividual(true)
+                                }}>{t("Individual")}</button>
+                            <button style={{
+                                all: "unset",
+                                padding: "1rem",
+                                boxShadow: "0 0 3px rgba(128,128,128,0.4)",
+                                flex: 1,
+                                textAlign: "center",
+                                cursor: "pointer",
+                                type: "button",
+                                borderRadius: "10px",
+                                background: !isIndividual ? "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)" : "transparent",
+                                color: !isIndividual ? "white" : "inherit",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "1rem",
+                                justifyContent: "center",
+                                transition: "250ms"
+                            }}
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    setIsIndividual(false)
+                                }}>{t("Business")}</button>
+                        </div>
+                    </CardHeader>
+                </div>
+                {
+                    isIndividual
+                        ?
+                        // <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <IndividualAccount mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} />
+                        // </LocalizationProvider>
+                        :
+                        <Card style={{
+                            margin: "6rem auto 0",
+                            maxWidth: "80ch", textAlign: "center",
+                            fontSize: ".9rem", fontWeight: 600,
+                            padding: "30px"
+                        }}>{t("Business beneficiaries are next in our pipeline. Soon, you'll be able to conduct business transactions globally, expanding your reach worldwide.")}
+                        </Card>
+                    // <BusinessAccount mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} />
+                }
+            </Form >
+            <SuccessModal isOpen={showSuccess} toggle={toggleSuccess} message={t("Beneficiary has been successfully added.")} subMessage={t("Beneficiary Updated.")} />
+        </div>
+    )
+}
+
+export default AddBeneficiary;

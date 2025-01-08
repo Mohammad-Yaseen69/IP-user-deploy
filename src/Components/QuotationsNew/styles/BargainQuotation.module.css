@@ -1,0 +1,343 @@
+.body {
+    padding: 0;
+    display: flex;
+    min-height: 630px;
+}
+
+.left {
+    width: 317px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 2rem;
+    background: #FAFAFA;
+}
+
+.left img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+}
+
+.left h4 {
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 2rem;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 130%;
+}
+
+.right {
+    background: #FFF;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 1.3rem;
+}
+
+.amount {
+    border-radius: 8px;
+    padding: 1.25rem;
+}
+
+.amount .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+}
+
+.amount .top span {
+    color: #848484;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: .9rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.32px;
+}
+
+.badge {
+    border-radius: 233.348px;
+    background: rgba(89, 38, 240, 0.55);
+    padding: .3rem .55rem;
+    color: #FFF;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: .45rem;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+}
+
+.amount h5 {
+    margin-bottom: 0;
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 2rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+    letter-spacing: -2.4px;
+}
+
+.inp_amount {
+    border-radius: 8px;
+    background: rgba(89, 38, 240, 0.06);
+    padding: 1.25rem;
+}
+
+.inp_amount .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+}
+
+.inp_amount .top span {
+    color: #848484;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: .9rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.32px;
+}
+
+.badge {
+    border-radius: 233.348px;
+    background: rgba(89, 38, 240, 0.55);
+    padding: .3rem .55rem;
+    color: #FFF;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: .45rem;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+}
+
+.inp_amount h5 {
+    margin-bottom: 0;
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 2.5rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+    letter-spacing: -2.4px;
+}
+
+.inp_amount input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-weight: 700;
+    background-color: transparent;
+}
+
+.counters {
+    display: flex;
+    gap: .8rem;
+}
+
+.counter {
+    border-radius: 6px;
+    background: #F4F4F4;
+    padding: .7rem;
+    cursor: pointer;
+    color: #909090;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: .9rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.32px;
+    display: flex;
+    /* justify-content: space-between; */
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.counter.c_a {
+    border-radius: 6px;
+    background: rgba(89, 38, 240, 0.55);
+    box-shadow: 0px 2.5px 9.2px 0px rgba(89, 38, 240, 0.34);
+    color: white;
+}
+
+.counter.wide {
+    flex: 3;
+}
+
+
+.bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: auto;
+}
+
+.bottom p {
+    color: red;
+    margin-bottom: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.btns {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.trs {
+    all: unset;
+    color: #808080;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    cursor: pointer;
+}
+
+.cou {
+    border-radius: 6px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
+    background-blend-mode: overlay, normal;
+    box-shadow: 0px 11.901px 8.655px -5.409px rgba(89, 38, 240, 0.17);
+    border: none;
+    outline: none;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: .6rem 1rem;
+    color: #FFF;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 1.1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.body button:disabled {
+    opacity: .7;
+}
+
+.top_2 {
+    border-radius: 8px;
+    background: linear-gradient(266deg, #5926F0 2.07%, #33168A 103.16%);
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.top_2 img {
+    width: 105.759px;
+    height: 29.691px;
+    object-fit: contain;
+}
+
+@media screen and (max-width: 1000px) {
+    .payment_flow_mobile {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 99;
+        height: calc(100vh - 85px);
+        width: 100vw;
+        overflow-y: auto;
+        background-color: white;
+        padding: 1.5rem;
+    }
+
+    .counters {
+        flex-wrap: wrap;
+    }
+
+    .counter {
+        white-space: nowrap;
+        font-size: .75rem;
+    }
+
+    .step_one_m {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .top_2 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .success {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin: 1rem 0;
+        align-items: center;
+    }
+
+    .success h2 {
+        color: #5926f0;
+        text-align: center;
+        leading-trim: both;
+        text-edge: cap;
+        font-family: Manrope;
+        font-size: 1.3rem;
+        font-style: normal;
+        font-weight: 800;
+        line-height: 120.6%;
+        letter-spacing: -0.48px;
+    }
+
+    .success img {
+        height: 250px;
+        width: 250px;
+        object-fit: cover;
+    }
+
+    .amount .top span,
+    .inp_amount .top span {
+        font-size: .7rem;
+    }
+
+    .badge {
+        font-size: .4rem;
+    }
+
+    .amount h5 {
+        font-size: 1.5rem;
+    }
+
+    .inp_amount h5 {
+        font-size: 1.8rem;
+        gap: .3rem;
+    }
+}

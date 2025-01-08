@@ -1,0 +1,93 @@
+import React, { useContext, useEffect, useState } from 'react'
+import styles from "./styles/index.module.scss"
+import { useTranslation } from 'react-i18next'
+import { UserContext } from '../../Context/UserContext'
+import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
+import axios from 'axios'
+import { service_name_formatter } from '../TransactionsNewApi/TransactionItem'
+
+const Socials = () => {
+    const { t } = useTranslation()
+    const { userDetails, authHeader } = useContext(UserContext)
+    const [socials_data, setSocialData] = useState([
+        {
+            name: "Instagram",
+            followers: "0" + t("Followers"),
+        },
+        {
+            name: "Facebook",
+            followers: "0" + t("Followers"),
+        },
+        {
+            name: "Whatsapp",
+            followers: null,
+        },
+    ])
+
+    useEffect(() => {
+        const getFollowers = async () => {
+            try {
+                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-social-media-details/${userDetails?._id}`, {
+                    headers: authHeader
+                })
+                const dec = decryptData(res.data.data)
+                console.log(dec)
+                const data = Object.keys(dec?.data)?.map(item => {
+                    return {
+                        name: `${service_name_formatter(item)}: `,
+                        followers: typeof dec?.data?.[item] === "number" ? dec?.data?.[item] + " " + t("Followers") : dec?.data?.[item]
+                    }
+                })
+                setSocialData(data)
+            } catch (error) {
+                const dec = decryptData(error.response.data.data)
+                console.log(dec)
+            }
+        }
+        if (userDetails) {
+            getFollowers()
+        }
+    }, [userDetails])
+
+
+    const [showMore, setShowMore] = useState(false)
+    return (
+        <div className={styles.social_info} style={{ flexWrap: "wrap" }}>
+            {
+                socials_data.slice(0, showMore ? socials_data.length - 1 : 3).map(item => (
+                    <div className={styles.item} key={item.name}>
+                        <div className={styles.left}>
+                            <span>{item.name}</span>
+                            {
+                                item?.name?.toLowerCase()?.includes("instagram") && userDetails?.insta_username
+                                    ?
+                                    <a target='_blank' href={`https://www.instagram.com/${userDetails?.insta_username}`} style={{ cursor: "pointer", color: "#5926f0", fontSize: ".65rem" }}>@{userDetails?.insta_username}</a>
+                                    : ""
+
+                            }
+                        </div>
+                        <div className={styles.right}>
+                            {
+                                item.followers !== null
+                                &&
+                                <span>{item.followers}</span>
+                            }
+                            <div>{">"}</div>
+                        </div>
+                    </div>
+                ))
+            }
+            <div className={styles.item} style={{ cursor: "pointer" }} onClick={() => setShowMore(!showMore)}>
+                <div className={styles.left}>
+                    <span>{
+                        showMore ? "Less" : "More"}</span>
+                </div>
+                <div className={styles.right}>
+                    <div>{">"}</div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default Socials

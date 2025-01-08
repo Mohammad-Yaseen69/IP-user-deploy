@@ -1,0 +1,90 @@
+.container {
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 1.3rem;
+    padding: 1rem;
+    max-height: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.item {
+    border-radius: 6px;
+    background: #FFF;
+    display: flex;
+    padding: .9rem 1.4rem;
+    align-items: center;
+    gap: 1.3rem;
+    cursor: pointer;
+}
+
+.item.disabled {
+    opacity: .3;
+    pointer-events: none;
+}
+
+.icon {
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    object-fit: contain;
+    margin-bottom: -5px;
+}
+
+.item span {
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+}
+
+.item div {
+    margin-left: auto;
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+}
+
+@media screen and (max-width: 1600px) {
+    .container {
+        padding: .7rem;
+        gap: .7rem;
+    }
+
+    .item {
+        padding: .7rem 1.1rem;
+    }
+
+    .icon {
+        height: 40px;
+        width: 40px;
+    }
+
+    .item span {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .container {
+        background: transparent;
+        padding: .5rem;
+        margin-top: 1rem;
+    }
+
+    .item {
+        box-shadow: 0px 2.41px 4.824px 0px rgba(0, 0, 0, 0.09), 0px 30.889px 33.463px 0px rgba(109, 41, 220, 0.04);
+        border-radius: 8px;
+    }
+}

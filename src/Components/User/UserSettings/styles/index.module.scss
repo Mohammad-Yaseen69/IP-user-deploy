@@ -1,0 +1,21 @@
+.container {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    padding: 0 .75rem;
+
+    .sub_container {
+        flex: 4;
+    }
+}
+
+@media screen and (max-width: 965px) {
+    .container {
+        flex-direction: column;
+
+        .sub_container {
+            width: 100%;
+        }
+    }
+
+}

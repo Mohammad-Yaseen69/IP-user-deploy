@@ -1,0 +1,284 @@
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.top>span {
+    color: #7D7D7D;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.top button {
+    border-radius: 19.474px;
+    background: #FFF;
+    box-shadow: 0px 3.35px 11.724px -3.35px rgba(89, 38, 240, 0.25);
+    padding: 0px .6rem 3px;
+    border: none;
+    outline: none;
+}
+
+.top button span {
+    background: linear-gradient(341deg, #E64067 -4.84%, #5926F0 90.69%, #4828A0 166.81%), #D9D9D9;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.search {
+    padding: .6rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.13);
+}
+
+.search img {
+    width: 17.42px;
+    height: 18.668px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.search input {
+    border: none;
+    padding: 0;
+    outline: none;
+    background: transparent;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.32px;
+    flex: 1;
+}
+
+.beneficiaries {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-height: 450px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.ben_card {
+    border-radius: 13.851px;
+    background: #FFF;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: .8rem 1rem;
+    transition: 250ms;
+    cursor: pointer;
+}
+
+.ben_card.active {
+    background: linear-gradient(341deg, #E64067 -4.84%, #5926F0 90.69%, #4828A0 166.81%), #D9D9D9;
+}
+
+.dp {
+    width: 58.094px;
+    height: 58.094px;
+    border-radius: 9.234px;
+    box-shadow: 0px 3.003px 24.024px 0px rgba(109, 41, 220, 0.17);
+    background: linear-gradient(341deg, #E64067 -4.84%, #5926F0 90.69%, #4828A0 166.81%), #D9D9D9;
+    font-size: 1rem;
+    font-weight: 800;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    color: white;
+    transition: 250ms;
+}
+
+.ben_details {
+    display: flex;
+    flex-direction: column;
+    /* gap: .7rem; */
+}
+
+.bd_top {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.bd_top h5 {
+    margin-bottom: 0;
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 21.021px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.42px;
+    max-width: 70%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: 250ms;
+}
+
+.badge {
+    border-radius: 1138.646px;
+    background: #FFF;
+    box-shadow: 0px 3.003px 9.009px 0px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: 3px .5rem;
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 8px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 170%;
+    /* 8.83px */
+}
+
+.badge img {
+    width: 5px;
+    height: 5px;
+}
+
+.ben_details>span {
+    color: #848484;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 13.851px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 170%;
+    transition: 250ms;
+}
+
+.ben_card.active .dp {
+    background: white;
+    color: #5926F0;
+}
+
+.ben_card.active .bd_top h5 {
+    color: white;
+}
+
+.ben_card.active .ben_details>span {
+    color: #fafafa;
+}
+
+@media screen and (max-width: 1600px) {
+    .container {
+        gap: .7rem;
+    }
+
+    .top {
+        padding: .7rem 0;
+        gap: .7rem;
+    }
+
+    .top>span {
+        font-size: .7rem;
+    }
+
+    .top button span {
+        font-size: .5rem;
+    }
+
+    .search {
+        padding: .5rem .7rem;
+    }
+
+    .search img {
+        width: 14px;
+    }
+
+    .search input {
+        font-size: .75rem;
+    }
+
+    .beneficiaries {
+        min-height: 350px;
+        gap: .75rem;
+    }
+
+    .ben_card {
+        height: fit-content;
+        gap: .7rem;
+        padding: .6rem .8rem;
+    }
+
+    .dp {
+        width: 45px;
+        height: 45px;
+    }
+
+    .bd_top {
+        gap: .7rem;
+    }
+
+    .bd_top h5 {
+        font-size: 1rem;
+    }
+
+    .badge {
+        font-size: .45rem;
+        padding: .15rem .4rem;
+        gap: .4rem;
+    }
+
+    .ben_details>span {
+        font-size: .5rem;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .ben_card {
+        box-shadow: 0px 2.41px 4.824px 0px rgba(0, 0, 0, 0.09), 0px 30.889px 33.463px 0px rgba(109, 41, 220, 0.04);
+        margin: 0 .5rem;
+    }
+
+    .bd_top h5 {
+        max-width: 100%;
+        font-size: 1rem;
+    }
+
+    .ben_details>span {
+        font-size: .7rem;
+    }
+
+    .beneficiaries {
+        margin-left: -.7rem;
+        margin-right: -.7rem;
+        padding: .7rem 0;
+    }
+}

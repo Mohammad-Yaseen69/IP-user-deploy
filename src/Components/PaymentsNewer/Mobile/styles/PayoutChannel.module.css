@@ -1,0 +1,114 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.container h5 {
+    font-size: 1.5rem;
+    color: #000;
+    font-style: normal;
+    font-weight: 600;
+    margin-left: 1.5rem;
+    line-height: 130%;
+    width: 16ch;
+}
+
+.search {
+    margin-top: 1rem;
+    margin-bottom: .5rem;
+}
+
+.cards {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    max-height: 60vh;
+    min-height: 300px;
+    overflow-y: auto;
+    padding: .5rem;
+    flex: 1;
+    margin-top: 2rem;
+    margin-bottom: .75rem;
+    border-radius: 10px;
+}
+
+.card {
+    display: flex;
+    gap: 1rem;
+    border-radius: 12px;
+    background: #FFF;
+    box-shadow: 0px 26.265px 28.454px 0px rgba(109, 41, 220, 0.04), 0px 6.3px 247.288px 0px rgba(0, 0, 0, 0.09);
+    overflow: hidden;
+}
+
+.left {
+    width: 100%;
+    padding-left: 1rem;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    cursor: pointer;
+}
+
+.left .icon {
+    background: linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%);
+    min-width: 30px;
+    max-width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: .5rem;
+}
+
+.left input {
+    height: 100%;
+    width: 100%;
+    border: none;
+    outline: none;
+}
+
+.left img {
+    width: 100%;
+    object-fit: contain;
+}
+
+.left span {
+    font-size: .9rem;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 1rem 1rem 0;
+}
+
+.right div {
+    height: 23px;
+    width: 23px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(141, 195, 3);
+    color: white;
+    border-radius: 23px;
+    font-size: .5rem;
+}
+
+.button {
+    border-radius: 10px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
+    background-blend-mode: overlay, normal;
+    box-shadow: 0px 30.589px 22.247px -13.904px rgba(89, 38, 240, 0.17);
+    color: white;
+    text-align: center;
+    border: none;
+    outline: none;
+    height: 60px;
+    font-size: 1.2rem;
+}

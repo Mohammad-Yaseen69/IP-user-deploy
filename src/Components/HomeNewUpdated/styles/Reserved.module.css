@@ -1,0 +1,139 @@
+.flex {
+    display: flex;
+    align-items: center;
+}
+
+.flex h5 {
+    margin-bottom: 0;
+}
+
+.r_total {
+    gap: .9rem;
+    border-radius: 3.544px;
+    background: rgba(255, 255, 255, 0.08);
+    padding: .5rem;
+    margin-bottom: .4rem;
+}
+
+.r_total span {
+    color: rgba(255, 255, 255, 0.80);
+    font-family: "Red Hat Display";
+    font-size: 8.86px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.r_total h5 {
+    color: #FFF;
+    font-family: "Clash Display";
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.177px;
+}
+
+.r_blocked {
+    border-radius: 3.544px;
+    background: rgba(255, 255, 255, 0.10);
+    justify-content: space-between;
+    padding: .5rem;
+    margin-bottom: .3rem;
+}
+
+.r_blocked span {
+    color: rgba(255, 255, 255, 0.80);
+    font-family: "Red Hat Display";
+    font-size: 7.336px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.r_blocked h5 {
+    color: #FFF;
+    font-family: "Clash Display";
+    font-size: 8.86px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.r_wallet {
+    gap: .5rem;
+    margin-top: .4rem;
+    margin-bottom: .4rem;
+}
+
+.r_wallet span {
+    color: rgba(255, 255, 255, 0.80);
+    font-family: "Red Hat Display";
+    font-size: 8.86px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.r_wallet h5 {
+    padding: .4rem;
+    border-radius: 6.699px;
+    background: rgba(217, 217, 217, 0.08);
+    box-shadow: 0px 2.679px 8.708px 0px rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur(1.3397164344787598px);
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    color: #FFF;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: "Clash Display";
+    font-size: 12.404px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.248px;
+}
+
+.r_bal {
+    gap: .6rem;
+    margin-bottom: auto;
+}
+
+.r_bal span {
+    color: rgba(255, 255, 255, 0.80);
+    font-family: "Red Hat Display";
+    font-size: 7.088px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.r_bal h5 {
+    color: #FFF;
+    font-family: "Clash Display";
+    font-size: 10.189px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 0.204px;
+}
+
+.bb {
+    position: relative;
+    margin-top: .5rem;
+}
+
+.bb span {
+    color: #FFF;
+    text-align: right;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: "Clash Display";
+    font-size: 7.336px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    position: absolute;
+    bottom: 0px;
+}

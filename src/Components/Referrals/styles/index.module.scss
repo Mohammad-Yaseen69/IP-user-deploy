@@ -1,0 +1,57 @@
+.header {
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 1rem;
+    margin-bottom: 120px;
+    text-align: center;
+
+    .bottom {
+        position: absolute;
+        bottom: -60px;
+        width: 100%;
+        text-align: center;
+
+        .referrals__info {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 5px;
+            width: 90%;
+            margin: auto;
+            padding: 1rem;
+
+            .sub_item {
+                flex: 1;
+                padding: .5rem;
+                text-align: center;
+
+                &.right {
+                    div {
+                        display: flex;
+                        max-width: 300px;
+                        margin: auto;
+
+                        input {
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 745px) {
+    .header {
+        margin-bottom: 200px;
+        height: 350px;
+
+        .bottom {
+            bottom: -50%;
+        }
+    }
+}

@@ -1,0 +1,104 @@
+.show {
+    display: none;
+}
+
+.table_wrapper {
+    overflow-x: auto;
+    padding: .5rem;
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+
+        th {
+            font-weight: bold;
+            text-align: left;
+            padding: 1rem;
+            white-space: nowrap;
+            border-bottom: 1px solid #ddd;
+        }
+
+        td {
+            padding: 1rem;
+            text-align: left;
+            white-space: nowrap;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tbody>tr {
+            border-bottom: none;
+        }
+
+        .lastItem {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+
+            .edit_quote {
+                all: unset;
+                height: 30px;
+                aspect-ratio: 1;
+                display: grid;
+                place-items: center;
+                cursor: pointer;
+                transition: 250ms;
+                border-radius: 10px;
+                color: orange;
+
+                &:hover {
+                    background-color: orange;
+                    color: white;
+                }
+            }
+
+            .btn {
+                all: unset;
+                height: 30px;
+                aspect-ratio: 1;
+                display: grid;
+                place-items: center;
+                border-radius: 10px;
+                cursor: pointer;
+                transition: 250ms;
+
+                &.btn_danger {
+                    color: red;
+
+                    &:hover {
+                        background-color: red;
+                        color: white;
+                    }
+                }
+
+                &.btn_success {
+                    color: #61ae41;
+
+                    &:hover {
+                        background-color: #61ae41;
+                        color: white;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .hidden {
+        display: none;
+    }
+
+    .show {
+        display: block;
+    }
+
+    .table_wrapper {
+        table {
+
+            th,
+            td {
+                padding: 1rem 7px;
+            }
+        }
+    }
+}

@@ -1,0 +1,63 @@
+import { EarningCardSvg, MessageCardSvg, NewUserSvg, ProductCardSvg } from "../../../SvgIcons";
+
+export let AccountsData = [
+    {
+        headingClassName: "header-text-primary",
+        Heading: "Earnings",
+        amount: 6659,
+        svgIcon: <EarningCardSvg />,
+        progressClass: "progress-gradient-primary",
+        progressValue: 50,
+    },
+    {
+        headingClassName: "header-text-primary",
+        Heading: "Earnings",
+        amount: 6659,
+        svgIcon: <EarningCardSvg />,
+        progressClass: "progress-gradient-primary",
+        progressValue: 50,
+    },
+    {
+        headingClassName: "header-text-primary",
+        Heading: "Earnings",
+        amount: 6659,
+        svgIcon: <EarningCardSvg />,
+        progressClass: "progress-gradient-primary",
+        progressValue: 50,
+    },
+    {
+        headingClassName: "header-text-primary",
+        Heading: "Earnings",
+        amount: 6659,
+        svgIcon: <EarningCardSvg />,
+        progressClass: "progress-gradient-primary",
+        progressValue: 50,
+    },
+    // {
+    //     cardClassName: "product-widget",
+    //     headingClassName: "header-text-success",
+    //     Heading: "Sales",
+    //     amount: 9856,
+    //     svgIcon: <EarningCardSvg />,
+    //     progressClass: "progress-gradient-success",
+    //     progressValue: 60,
+    // },
+    // {
+    //     cardClassName: "message-widget",
+    //     headingClassName: "header-text-secondary",
+    //     Heading: "Messages",
+    //     amount: 893,
+    //     svgIcon: <EarningCardSvg />,
+    //     progressClass: "progress-gradient-secondary",
+    //     progressValue: 48,
+    // },
+    // {
+    //     cardClassName: "user-widget",
+    //     headingClassName: "header-text-info",
+    //     Heading: "NewUser",
+    //     amount: 45631,
+    //     svgIcon: <EarningCardSvg />,
+    //     progressClass: "progress-gradient-info",
+    //     progressValue: 48,
+    // },
+];

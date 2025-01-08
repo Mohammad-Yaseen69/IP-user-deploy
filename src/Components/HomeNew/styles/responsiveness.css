@@ -1,0 +1,95 @@
+.p_g_link.card-body {
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.b_card.card-body {
+    padding: 1rem;
+}
+
+.c_h_pb.card-header {
+    padding: 1rem 1rem 1rem;
+}
+
+.d_r_mt3 {
+    margin-top: 3rem;
+}
+
+.d_r_head {
+    margin-bottom: 1.5rem;
+}
+
+.d_r_act_dot {
+    margin: 1.5rem 0;
+}
+
+.d_r_c_opt {
+    height: 50px;
+    width: 50px;
+}
+
+.d_r_c_opt>img {
+    height: 30px;
+    width: 30px;
+}
+
+.d_r_c_opt_con {
+    margin-top: 1.5rem;
+}
+
+.d_r_m_con.card-body {
+    padding: 30px;
+}
+
+.c_c_p_b {
+    margin-top: 1rem;
+}
+
+@media screen and (max-width: 1500px) {
+    .p_g_link.card-body {
+        padding: .5rem;
+        gap: .5rem;
+    }
+
+    .b_card.card-body {
+        padding: .7rem;
+    }
+
+    .c_h_pb.card-header {
+        padding: 1rem 1rem 0rem;
+    }
+
+    .d_r_mt3 {
+        margin-top: 1.5rem;
+    }
+
+    .d_r_head {
+        margin-bottom: .5rem;
+    }
+
+    .d_r_act_dot {
+        margin: 1rem 0;
+    }
+
+    .d_r_c_opt {
+        height: 35px;
+        width: 35px;
+    }
+
+    .d_r_c_opt>img {
+        height: 20px;
+        width: 20px;
+    }
+
+    .d_r_c_opt_con {
+        margin-top: .5rem;
+    }
+
+    .d_r_m_con.card-body {
+        padding: 12px 24px;
+    }
+
+    .c_c_p_b {
+        margin-top: .2rem;
+    }
+}

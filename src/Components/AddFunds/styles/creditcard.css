@@ -1,0 +1,39 @@
+.credit_card_field {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
+    position: relative !important;
+    width: 100% !important;
+    padding: 0 !important;
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.credit_card_field>img {
+    position: absolute !important;
+    top: 15px !important;
+    left: 1rem !important;
+    height: 20px !important;
+    object-fit: contain !important;
+    z-index: 10;
+}
+
+.credit_card_field label {
+    height: 50px !important;
+    margin: 0 !important;
+}
+
+.credit_card_field label[data-max="9999 9999 9999 9999 9999"] {
+    grid-column: span 2 !important;
+}
+
+.credit_card_field label[data-max="9999 9999 9999 9999 9999"] input {
+    padding-left: 60px;
+}
+
+.credit_card_field label input {
+    width: 100% !important;
+    border: 1px solid #eeeeee !important;
+    padding: 1rem;
+    border-radius: 5px;
+}

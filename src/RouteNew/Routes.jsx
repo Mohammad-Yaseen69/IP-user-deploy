@@ -1,0 +1,126 @@
+import React, { lazy } from 'react';
+import QrCode from '../Components/QrCode';
+import QRScan from '../Components/QrScan';
+import TempCountriesBankFields from '../Components/TempCountriesBankFields';
+import ChatbotQrCode from '../Components/ChatbotQrCode';
+import PanTransaction from '../Components/Chatbot/PanTransaction';
+import PanTransactionStatus from '../Components/Chatbot/PanTransactionStatus';
+import PaymentStatus from '../Components/PaymentStatus';
+import DataDecrypt from '../Components/DataDecrypt';
+import NotFound from '../Components/NotFound';
+import PaypalTransactions from '../Components/Chatbot/PaypalTransactions';
+import GetLocation from '../Components/Chatbot/GetLocation';
+import ShowLocation from '../Components/Chatbot/ShowLocation';
+
+const AddBeneficiary = lazy(() => import('../Components/AddBeneficiary'));
+const AddFunds = lazy(() => import('../Components/AddFunds'));
+const Analytics = lazy(() => import('../Components/Analytics'));
+const AuthNew = lazy(() => import('../Components/AuthNew'));
+const Beneficiaries = lazy(() => import('../Components/Beneficiaries'));
+const BroadcastSignup = lazy(() => import('../Components/BroadcastSignup'));
+const BroadcastVerify = lazy(() => import('../Components/BroadcastVerify'));
+const ChipsInNew = lazy(() => import('../Components/ChipsInNew'));
+const CreditSuccess = lazy(() => import('../Components/CreditSuccess'));
+const EditBeneficiary = lazy(() => import('../Components/EditBeneficiary'));
+const HomeNewUpdated = lazy(() => import('../Components/HomeNewUpdated'));
+const OtherTransactions = lazy(() => import('../Components/OtherTransactions'));
+const PartnerVerificationPage = lazy(() => import('../Components/PartnerVerification'));
+const PaymentAddress = lazy(() => import('../Components/PaymentAddress'));
+const PaymentAddressPublic = lazy(() => import('../Components/PaymentAddressPublic'));
+const PaymentsNewer = lazy(() => import('../Components/PaymentsNewer'));
+const PendingNew = lazy(() => import('../Components/PendingNew'));
+const Portfolio = lazy(() => import('../Components/Portfolio'));
+const ProfileTest = lazy(() => import('../Components/Profile'));
+const Quotations = lazy(() => import('../Components/QuotationsNew'));
+const ReferralsNew = lazy(() => import('../Components/ReferralsNew'));
+// const Settings = lazy(() => import('../Components/Settings'));
+const TransactionsNewApi = lazy(() => import('../Components/TransactionsNewApi'));
+const UserSettings = lazy(() => import('../Components/User/UserSettings'));
+const UserProfile = lazy(() => import('../Components/UserProfile'));
+const UserProfilePublic = lazy(() => import('../Components/UserProfilePublic'));
+const UserSettingsNew = lazy(() => import('../Components/UserSettings'));
+const UserSettingsUpdated = lazy(() => import('../Components/UserSettingsNew'));
+const DownloadQrPage = lazy(() => import("../Components/DownloadQrPage"))
+const Settings = lazy(() => import("../Components/Settings"))
+const WalletsNew = lazy(() => import("../Components/WalletsNew"))
+const CardPayment = lazy(() => import("../Components/CardPayment"))
+const Auth = lazy(() => import("../Components/Auth"))
+const ScheduleCalendar = lazy(() => import("../Components/Chatbot/schedule-calendar"))
+const SubscriptionCalendar = lazy(() => import("../Components/Chatbot/subscription-calendar"))
+const RequestCalendar = lazy(() => import("../Components/Chatbot/schedule-payment-request"))
+const SubscriptionRequest = lazy(() => import("../Components/Chatbot/subscription-payment-request"))
+const SubscriptionCalendarEndDate = lazy(() => import("../Components/Chatbot/subscription-end-date"))
+const SubscriptionRequestEndDate = lazy(() => import("../Components/Chatbot/subscription-request-end-date"))
+
+
+export const routes = [
+    { path: "/", component: <HomeNewUpdated /> },
+    { path: "/dashboard", component: <HomeNewUpdated /> },
+    { path: "/dashboard/default", component: <HomeNewUpdated /> },
+    { path: "/wallets", component: <WalletsNew /> },
+    { path: "/transactions", component: <TransactionsNewApi /> },
+    { path: "/other-transactions", component: <OtherTransactions /> },
+    { path: "/payments", component: <PaymentsNewer /> },
+    // card payment success or failure
+    { path: "/payments/:status/:token", component: <CardPayment /> },
+    { path: "/beneficiaries", component: <Beneficiaries /> },
+    { path: "/beneficiaries/add", component: <AddBeneficiary /> },
+    { path: "/beneficiaries/edit", component: <EditBeneficiary /> },
+    { path: "/referrals", component: <ReferralsNew /> },
+    { path: "/quotations", component: <Quotations /> },
+    { path: "/payment-requests", component: <PendingNew /> },
+    { path: "/chips-in", component: <ChipsInNew /> },
+    { path: "/portfolio", component: <Portfolio /> },
+    { path: "/payment-address", component: <PaymentAddress /> },
+    { path: "/analytics", component: <Analytics /> },
+    { path: "/settings", component: <Settings /> },
+    { path: "/profile/me", component: <UserProfile /> },
+    { path: "/my-profile", component: <ProfileTest /> },
+    { path: "/users/settings", component: <UserSettingsNew /> },
+    { path: "/users/settings-new", component: <UserSettingsUpdated /> },
+    { path: "/users/settings/extra", component: <UserSettings /> },
+    { path: "/profile/:user_name", component: <UserProfilePublic /> },
+    { path: "/add-funds", component: <AddFunds /> },
+    { path: "/add-funds/card/:type", component: <AddFunds /> },
+    { path: "/add-funds/card/:type/:code", component: <AddFunds /> },
+    { path: "/add-funds/success/:enc", component: <AddFunds /> },
+    { path: "/add-funds/error/:enc", component: <AddFunds /> },
+    { path: "/add-funds/aborted/:enc", component: <AddFunds /> },
+    { path: "/onboarding/add-users", component: <BroadcastSignup /> },
+    { path: "/payment-status/:type/:status/:code", component: <PaymentStatus /> },
+    { path: "*", component: <NotFound type='Page' /> }
+]
+
+export const publicRoutes = [
+    { path: "/qr-test", component: <QrCode /> },
+    { path: "/q/:wallet_id", component: <QRScan /> },
+    { path: "/tcbf", component: <TempCountriesBankFields /> },
+    { path: "/pay/:user_name", component: <PaymentAddressPublic /> },
+    { path: "/pay/:user_name/:status", component: <PaymentAddressPublic /> },
+    // { path: "/profile/:user_name", component: <UserProfilePublic /> },
+    { path: "/partners/verification/:token", component: <PartnerVerificationPage /> },
+    { path: "/onboarding/user-verification/:token", component: <BroadcastVerify /> },
+    { path: "/download-qr-poster/:wallet_id", component: <DownloadQrPage /> },
+    { path: "/chatbot/pan-transaction", component: <PanTransaction /> },
+    { path: "/chatbot/pan-transaction/:status/:code", component: <PanTransactionStatus /> },
+    { path: "/chatbot/scheduled/:token", component: <ScheduleCalendar /> },
+    { path: "/chatbot/subscription/:token", component: <SubscriptionCalendar /> },
+    { path: "/chatbot/request-scheduled/:token", component: <RequestCalendar /> },
+    { path: "/chatbot/request-subscription/:token", component: <SubscriptionRequest /> },
+    { path: "/chatbot/subscription-end-date/:token/:date", component: <SubscriptionCalendarEndDate /> },
+    { path: "/chatbot/subscription-request-end-date/:token/:date", component: <SubscriptionRequestEndDate /> },
+    { path: "/qr-activate", component: <ChatbotQrCode /> },
+    { path: "/data-decrypt-karo", component: <DataDecrypt /> },
+    { path: "/chatbot/paypal-transaction/:status/:id", component: <PaypalTransactions /> },
+    { path: "/chatbot/get-location", component: <GetLocation /> },
+    { path: "/chatbot/payment-request", component: <ShowLocation /> },
+    { path: "*", component: <NotFound type='Page' /> }
+]
+
+export const authRoutes = [
+    { path: `/auth/login`, component: <Auth /> },
+    { path: `/auth/forgot-password`, component: <AuthNew /> },
+    { path: `/auth/signup`, component: <Auth /> },
+    { path: `/auth/signup/:code`, component: <Auth /> },
+    { path: "*", component: <NotFound type='Page' /> }
+]

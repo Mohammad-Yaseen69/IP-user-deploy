@@ -1,0 +1,124 @@
+.container {
+    margin-top: 1rem;
+}
+
+.container h4 {
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 1.1rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.36px;
+    margin-bottom: 1rem;
+}
+
+.form {
+    position: relative;
+}
+
+.input_con {
+    display: flex;
+}
+
+.input_con select,
+.input_con input {
+    all: unset;
+    border-radius: .8rem;
+    border: 1px solid #DADADA;
+    padding: .7rem;
+    background: #FFF;
+}
+
+.input_con select {
+    font-size: 1.5rem;
+    font-weight: 700;
+    width: 36px;
+    height: 36px;
+    text-align: center;
+}
+
+.input_con select option {
+    padding: 0rem;
+    font-size: 1rem;
+}
+
+.input_con input {
+    flex: 1;
+    width: 100%;
+    font-size: 1.1rem;
+}
+
+.input_con div {
+    height: 100%;
+    width: 0px;
+    position: relative;
+}
+
+.input_con div::before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 100%;
+    transform: translate(-50%, -50%);
+    height: 30px;
+    width: 30px;
+    background: url(../files/conv.svg);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.form button {
+    border: none;
+    outline: none;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #E64067 0.4%, #5926F0 55.6%, #4828A0 99.6%), #FFF;
+    box-shadow: 0px 4.457px 132.583px 0px rgba(0, 0, 0, 0.11);
+    display: flex;
+    width: 100%;
+    padding: .8rem 1.6rem;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    color: #FFF;
+    text-shadow: 0px 4.457px 132.583px rgba(0, 0, 0, 0.11);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.36px;
+    margin-top: 1rem;
+}
+
+@media screen and (max-width: 1650px) {
+    .container {
+        margin-top: 1rem;
+    }
+
+    .container h5 {
+        font-size: 1rem;
+        margin-bottom: .75rem;
+    }
+
+    .input_con select,
+    .input_con input {
+        padding: .5rem;
+        font-size: 1rem;
+        border-radius: 10px;
+    }
+
+    .input_con select {
+        height: 34px;
+        width: 34px;
+        font-size: 1.2rem;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .container {
+        margin-top: 0;
+    }
+}

@@ -1,0 +1,56 @@
+.top>p,
+.top>h4 {
+    margin: 0;
+    text-align: center;
+}
+
+.top>h4 {
+    font-size: 2.2rem;
+}
+
+.top>p {
+    font-size: 1.2rem;
+}
+
+.top {
+    margin-bottom: 2rem;
+}
+
+.two_items {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.two_items>div {
+    flex: 1;
+}
+
+.currency_info {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    background-color: rgba(89, 38, 240, 0.08);
+    margin-top: .5rem;
+    padding: 1rem;
+    border-radius: 12px;
+}
+
+.currency_info span {
+    margin: 0;
+    color: #a8a8a8;
+    font-size: .7rem;
+}
+
+.currency_info p {
+    margin: 0;
+    font-weight: 700;
+    font-size: .7rem;
+}
+
+.cur_det {
+    font-size: .7rem;
+    color: #a8a8a8;
+    margin-bottom: 0;
+    margin: .5rem .5rem 0;
+}

@@ -1,0 +1,110 @@
+.container {
+    padding: 2rem;
+    background-color: white;
+}
+
+.container>h1 {
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 140%;
+    letter-spacing: -0.48px;
+}
+
+.container>p {
+    color: #8D8D8D;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 170%;
+    max-width: 95ch;
+}
+
+.info {
+    border-radius: 6px;
+    background: #FFE3C2;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 1.2rem;
+}
+
+.info div {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.info p {
+    color: #EB8C1D;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+    margin-bottom: 0;
+}
+
+.info button {
+    border-radius: 6px;
+    border: 1px solid #DFDFDF !important;
+    background: linear-gradient(341deg, #E64067 -4.84%, #5926F0 90.69%, #4828A0 166.81%), #FFF;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    outline: none;
+}
+
+.info button img {
+    width: 13.193px;
+    height: 13.193px;
+    flex-shrink: 0;
+    background-color: white;
+}
+
+.info button span {
+    color: #FFF;
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.5px;
+    white-space: nowrap;
+}
+
+@media screen and (max-width: 1000px) {
+    .info {
+        flex-direction: column;
+    }
+
+    .info div {
+        align-items: flex-start;
+        font-size: .9rem !important;
+    }
+
+    .info p {
+        font-size: .8rem;
+        margin-top: -.3rem;
+    }
+
+    .info button {
+        width: 100%;
+        justify-content: center;
+        padding: .8rem;
+    }
+
+    .container {
+        padding: 2rem 1rem;
+    }
+}

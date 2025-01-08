@@ -1,0 +1,227 @@
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 10vw;
+    padding: 10vh 10vw;
+    background-color: #000;
+    min-height: 100vh;
+}
+
+.left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 70px;
+    align-items: center;
+    justify-content: center;
+}
+
+.left h1 {
+    color: #DDD;
+    text-align: center;
+    font-family: 'General Sans', sans-serif;
+    font-size: min(1.8vw, 27.923px);
+    font-style: normal;
+    font-weight: 500;
+    line-height: 110%;
+}
+
+.left h2 {
+    margin-top: 70px;
+    color: #FFF;
+    text-align: center;
+    font-family: "Red Hat Display", sans-serif;
+    font-size: min(2.5vw, 55.847px);
+    font-style: normal;
+    font-weight: 700;
+    line-height: 130%;
+    letter-spacing: -1.117px;
+}
+
+.left h3 {
+    color: #DDD;
+    text-align: center;
+    font-family: "General Sans", sans-serif;
+    font-size: min(1.8vw, 27.923px);
+    font-style: normal;
+    font-weight: 500;
+    line-height: 110%;
+    margin-bottom: 70px;
+}
+
+.left img {
+    width: 15vw;
+    height: 68.533px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.right {
+    flex: 1;
+    border-radius: 90px;
+    background: url(../files/form.svg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding: 4rem;
+}
+
+.right h2 {
+    margin-top: 60px;
+    color: #333;
+    text-align: center;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+}
+
+.right h3 {
+    color: #7D7D7D;
+    text-align: center;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+}
+
+.adv {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 18px;
+    row-gap: 24px;
+    margin-top: 3rem;
+    justify-content: center;
+}
+
+.ad_item {
+    flex: 1;
+    min-width: fit-content;
+    max-width: 70%;
+    display: flex;
+    align-items: center;
+    padding: 13px;
+    gap: 12px;
+    border-radius: 16px;
+    background: #FFF;
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.09);
+}
+
+.icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: #5926F0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+}
+
+.ad_item span {
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 219.5%;
+    white-space: nowrap;
+    letter-spacing: -0.32px;
+}
+
+.container p {
+    color: #5926F0;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 219.5%;
+    letter-spacing: -0.32px;
+    margin-top: 1rem;
+    margin-bottom: 80px;
+}
+
+.container button {
+    display: flex;
+    padding: 12px 36px;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 30px;
+    flex-shrink: 0;
+    border: none;
+    outline: none;
+    border-radius: 16px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
+    margin-bottom: 34px;
+    background-blend-mode: overlay, normal;
+    transition: .5s;
+}
+
+@media screen and (max-width: 1600px) {
+    .container {
+        padding: 5vw;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .left {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .right {
+        padding: 3rem 1rem;
+        border-radius: 45px;
+    }
+
+    .right h2 {
+        font-size: 22px;
+    }
+
+    .right h3 {
+        font-size: 16px;
+    }
+
+    .ad_item {
+        width: 100%;
+    }
+
+    .ad_item span {
+        font-size: 13px;
+        white-space: normal;
+    }
+
+    .icon {
+        height: 27px;
+        width: 27px;
+    }
+
+    .container p {
+        font-size: 13px;
+    }
+
+    .container button {
+        gap: 1rem;
+    }
+}

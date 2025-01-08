@@ -1,0 +1,111 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.inp {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.inp label {
+    margin-bottom: 0;
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+}
+
+.input {
+    position: relative;
+    width: 100%;
+}
+
+.input input {
+    width: 100%;
+    padding: .8rem 1rem;
+    border-radius: 8px;
+    background: #FFF;
+    box-shadow: 0px -0.5px 7.2px 0px rgba(0, 0, 0, 0.20), 0px 0px 4px 6px #FDFDFD inset;
+    outline: none;
+    padding-right: 2.4rem;
+}
+
+.input div {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    height: fit-content;
+    width: fit-content;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.password_guide {
+    display: flex;
+    padding: 1.1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.1rem;
+    border-radius: 7.295px;
+    background: #F0F0F0;
+}
+
+.password_guide span {
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: .66rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 170%;
+    /* 21.704px */
+}
+
+.regex_item {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+}
+
+.regex_item span {
+    color: #1F1F1F;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: .66rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 190%;
+}
+
+.cross,
+.check {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    background-color: #FE3D3D;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.check {
+    background-color: #19AE28;
+}
+
+.regex_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.1rem;
+    padding-left: 1.25rem;
+}

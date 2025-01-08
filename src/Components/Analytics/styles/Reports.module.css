@@ -1,0 +1,17 @@
+.container {
+    display: flex;
+    gap: 36px;
+    flex-direction: column;
+}
+
+.top,
+.bottom {
+    display: flex;
+    gap: 36px;
+}
+
+@media screen and (max-width: 1000px) {
+    .top {
+        flex-direction: column-reverse;
+    }
+}

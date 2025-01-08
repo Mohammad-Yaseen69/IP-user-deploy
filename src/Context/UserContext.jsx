@@ -1,0 +1,498 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { createContext } from "react";
+import { decryptData } from "../Helper/EssentilaMethods/Decryption";
+import { encryptData } from "../Helper/EssentilaMethods/Encryption";
+import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
+import { publicRoutes } from "../RouteNew/Routes";
+import questionsData from "../Components/Settings/questions.json"
+
+axios.defaults.timeout = 10000;
+axios.defaults.timeoutErrorMessage = "Server Timeout."
+
+axios.interceptors.response.use(
+    response => {
+        return response
+    },
+    error => {
+        if (error.message === "Server Timeout." && error?.config?.url?.toLowerCase()?.includes("fontawesomev23")) {
+            toast.error("Request timed out. Please try again!");
+        }
+        const message = decryptData(error.response.data.data)
+        if (error.response.status === 401 && message.message === "Unauthorize to access this route.") {
+            window.history.replaceState(null, null, `?show_logout_modal=unauthorized`)
+        }
+        return Promise.reject(error);
+    }
+);
+
+export const UserContext = createContext(null)
+
+const UserState = ({ children }) => {
+    console.log(`%c Dear User, Please be aware that copying and pasting code or commands directly into your console(in this section) can pose significant security risks. Malicious code can compromise your account, steal sensitive information, or damage your system. \nFor your safety, never paste commands from untrusted or unknown sources.\nThank you for your attention to this matter.\nSincerely,\nInstaPay`, 'color: white; font-size: 20px; font-weight: 500; background: linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%); padding: .5rem; border-radius: 5px;');
+
+    const checkBusinessBeneficiary = async (email) => {
+        const data = { email }
+        if (email) {
+            const encrypted = encryptData(data)
+            try {
+                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/account-check/business`, {
+                    data: encrypted
+                })
+                return decryptData(res.data.data).status
+            } catch (error) {
+                return decryptData(error.response.data.data).status
+            }
+        }
+    }
+
+    const checkIndividualBeneficiary = async (email, phone) => {
+        const data = { email, phone }
+        if (email && phone) {
+            const encrypted = encryptData(data)
+            try {
+                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/account-check/individual`, {
+                    data: encrypted
+                })
+                return decryptData(res.data.data).status
+            } catch (error) {
+                return decryptData(error.response.data.data).status
+            }
+        }
+    }
+
+
+    const token = localStorage.getItem("token")
+    const [userDetails, setUserDetails] = useState(null)
+    const [userWallets, setUserWallets] = useState([])
+    const [refresh, setRefresh] = useState(0)
+    const [walletRefresh, setWalletRefresh] = useState(0)
+    const [userRefresh, setUserRefresh] = useState(0)
+    const [beneficiaries, setBeneficiaries] = useState([])
+    const [registeredBeneficiaries, setRegisteredBeneficiaries] = useState([])
+    const [userTransactions, setUserTransactions] = useState([])
+    const [userSecurityQues, setUserSecurityQues] = useState([])
+    const [page, setPage] = useState(1)
+    const [searchQuery, setSearchQuery] = useState("")
+    const [apiDates, setApiDates] = useState(null)
+    const [referralLink, setReferralLink] = useState("")
+    const [userSessions, setUserSessions] = useState([])
+    const [allowedFeatures, setAllowedFeatures] = useState(null)
+    const [userWithdrawals, setUserWithdrawals] = useState([])
+    const [allowedWithdrawals, setAllowedWithdrawals] = useState(null)
+    const [allowedCountries, setAllowedCountries] = useState([])
+    const [userPortfolio, setUserPortfolio] = useState([])
+    const [portfolioRef, setPortfolioRef] = useState(0)
+    const [profileCompleted, setProfileCompleted] = useState(null)
+    const [profileCompletedPercentage, setProfileCompletedPercentage] = useState(0)
+    const [profileIncompleteReason, setProfileIncompleteReason] = useState("")
+    const navigate = useNavigate()
+
+    const authHeader = {
+        "Authorization": `Bearer ${token}`,
+        "source": "user"
+    }
+
+    const [profileLockTIme, setProfileLockTime] = useState(0)
+    useEffect(() => {
+        if (profileLockTIme > 0) {
+            const timeout = setTimeout(() => {
+                setProfileLockTime(prev => prev - 1);
+            }, 1000);
+
+            return () => clearTimeout(timeout);
+        }
+    }, [profileLockTIme]);
+
+    const clearData = () => {
+        setUserDetails(null)
+        setUserWallets([])
+        setRefresh(0)
+        setWalletRefresh(0)
+        setUserRefresh(0)
+        setBeneficiaries([])
+        setRegisteredBeneficiaries([])
+        setUserTransactions([])
+        setUserSecurityQues([])
+        setPage(1)
+        setSearchQuery("")
+        setApiDates(null)
+        setReferralLink("")
+        setUserSessions([])
+        setAllowedFeatures(null)
+        setUserWithdrawals([])
+        setAllowedWithdrawals(null)
+        setUserPortfolio([])
+        setPortfolioRef(0)
+        setProfileCompleted(null)
+        setProfileCompletedPercentage(0)
+        setProfileIncompleteReason("")
+    }
+
+    const verifyToken = () => {
+        if (!window.location.pathname.includes("auth")) {
+            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/auth/${token}`)
+                .then(res => {
+                    const decrypted = decryptData(res.data.data)
+                    // console.log(decrypted)
+                    setUserDetails(decrypted)
+                    if (!decrypted?.country?.status) {
+                        sessionStorage.setItem("country_status_error", "Service not available in your country!")
+                        const coun = localStorage.getItem("ip_country")
+                        localStorage.clear()
+                        localStorage.setItem("ip_country", coun)
+                        clearData()
+                        navigate("/auth/login")
+                    }
+                    if (decrypted?.status !== "active") {
+                        toast.error("Account Suspended!")
+                        const coun = localStorage.getItem("ip_country")
+                        localStorage.clear()
+                        localStorage.setItem("ip_country", coun)
+                        clearData()
+                        navigate("/auth/login")
+                    }
+                    // console.log(decryptData(res.data.data))
+                })
+                .catch(err => {
+                    if (err?.response?.data?.data) {
+                        decryptData(err.response.data.data)
+                        const coun = localStorage.getItem("ip_country")
+                        localStorage.clear()
+                        localStorage.setItem("ip_country", coun)
+                        clearData()
+                        if (!publicRoutes.some(item => window.location.pathname.toLowerCase().includes(item.path.toLowerCase().split(":")[0])) && !window.location.pathname.toLowerCase().includes("profile/")) {
+                            sessionStorage.setItem("path", window.location.href?.split("pay.ch")?.[1])
+                            navigate("/auth/login")
+                        }
+                    }
+                })
+        }
+    }
+
+    // check auth
+    const checkAuth = () => {
+        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/auth/${token}`)
+            .then(res => {
+                const decrypted = decryptData(res.data.data)
+                setUserDetails(decrypted)
+                if (!decrypted?.country?.status) {
+                    sessionStorage.setItem("country_status_error", "Service not available in your country!")
+                    const coun = localStorage.getItem("ip_country")
+                    localStorage.clear()
+                    localStorage.setItem("ip_country", coun)
+                    clearData()
+                    navigate("/auth/login")
+                }
+                if (decrypted?.status !== "active") {
+                    toast.error("Account Suspended!")
+                    const coun = localStorage.getItem("ip_country")
+                    localStorage.clear()
+                    localStorage.setItem("ip_country", coun)
+                    clearData()
+                    navigate("/auth/login")
+                }
+            })
+            .catch(err => {
+                const dec = decryptData(err.response.data.data)
+                const coun = localStorage.getItem("ip_country")
+                localStorage.clear()
+                localStorage.setItem("ip_country", coun)
+                clearData()
+                if (dec?.message?.toLowerCase()?.includes("account not found")) {
+                    navigate("/auth/login")
+                }
+                if (!publicRoutes.some(item => window.location.pathname.toLowerCase().includes(item.path.toLowerCase().split(":")[0])) && !window.location.pathname.toLowerCase().includes("profile/")) {
+                    sessionStorage.setItem("path", window.location.href?.split("pay.ch")?.[1])
+                    navigate("/auth/login")
+                }
+            })
+    }
+
+
+    // user wallets
+    const getUserWallets = () => {
+        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-user-wallet/${userDetails?._id}`, { headers: authHeader })
+            .then(res => {
+                const decrypted = decryptData(res.data.data)
+                const sorted = decrypted.walletList.sort((a, b) => {
+                    if (a.wallet_type === 'insta' && b.wallet_type === 'crypto') {
+                        return -1; // "insta" comes before "crypto"
+                    } else if (a.wallet_type === 'crypto' && b.wallet_type === 'insta') {
+                        return 1; // "crypto" comes after "insta"
+                    }
+                    return 0; // no change in order
+                });
+                // console.log(sorted)
+                setUserWallets(sorted)
+            })
+            .catch(err => "a") // console.log(decryptData(err.response.data.data)))
+    }
+    useEffect(() => {
+        if (userDetails /*&& userWallets.length === 0*/) {
+            getUserWallets()
+        }
+    }, [userDetails])
+
+    // user beneficiaries
+    const getUserBeneficiaries = async () => {
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/get-user-beneficiaries/${userDetails?._id}`, {
+                headers: authHeader
+            })
+            const decrypted = decryptData(res.data.data)
+            setBeneficiaries(decrypted.beneficiaryList)
+
+        } catch (error) {
+            const dec = decryptData(error.response.data.data)
+        }
+    }
+
+    // beneficiary registration check
+    const checkRegisteredBenficiaries = () => {
+        if (beneficiaries.length > 0) {
+            Promise.all(beneficiaries.map(async (benef) => {
+                if (benef.beneficiary_type === "individual") {
+                    const isNotRegistered = await checkIndividualBeneficiary(benef.email, benef.phone);
+                    // // console.log(benef.email, benef.beneficiary_type, benef.phone, "not registered", isNotRegistered);
+                    return !isNotRegistered;
+                } else {
+                    const isNotRegistered = await checkBusinessBeneficiary(benef.email);
+                    // // console.log(benef.email, "not registered", isNotRegistered);
+                    return !isNotRegistered;
+                }
+            })).then((results) => {
+                const filtered = beneficiaries.filter((_, index) => results[index]);
+                setRegisteredBeneficiaries(filtered);
+                // // console.log(filtered);
+            }).catch((error) => {
+                console.error("An error occurred while checking beneficiaries:", error);
+            });
+        };
+    }
+
+    // security questions
+    const getSecurityQuestions = () => {
+        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-security-question`, {
+            headers: authHeader
+        })
+            .then(res => {
+                const decrypted = decryptData(res.data.data)
+                const questions = decrypted.questionsList?.map(item => {
+                    const question = questionsData.find(it => it.language_code === (userDetails?.language ?? "en") && it.number === item?.question_no)
+                    return { ...question, ...item }
+                })
+                console.log(decrypted.questionsList)
+                console.log(questions)
+                setUserSecurityQues(questions)
+            })
+            .catch(err => {
+                // console.log(err.response.data)
+            })
+    }
+
+    // invitation link
+    const getInvitationLink = () => {
+        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/invitation/get-link/${userDetails?._id}`, {
+            headers: authHeader
+        })
+            .then(res => {
+                const decrypted = decryptData(res.data.data)
+                const url = decrypted?.url.split("/signup/")
+                const formattedUrl = `https://my.insta-pay.ch/auth/signup/${url[1]}`
+                setReferralLink(formattedUrl)
+            })
+            .catch(err => {
+                const decrypted = decryptData(err.response.data.data)
+                // console.log(decrypted)
+            })
+    }
+
+    // user sessions
+    const getSessions = () => {
+        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/login/get-user-login-history/${userDetails._id}`, {
+            headers: authHeader
+        })
+            .then(res => {
+                const decrypted = decryptData(res.data.data)
+                setUserSessions(decrypted?.history?.sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt))?.slice(0) ?? [])
+                // console.log(decrypted?.history?.sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt))?.slice(0) ?? [])
+            })
+            .catch(err => {
+                // console.log(err)
+            })
+    }
+    useEffect(() => {
+        if (userSessions.length === 0 && userDetails && window.location.pathname.toLowerCase().includes("settings")) {
+            getSessions()
+        }
+    }, [userSessions, userDetails, window.location])
+
+
+    // profile completion details
+    const getProfileCompletionDetails = () => {
+        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-profile-completion/${userDetails?._id}`, {
+            headers: authHeader
+        })
+            .then(res => {
+                const decrypted = decryptData(res.data.data)
+                console.log(decrypted)
+                const { completedBasicFields, totalBasicFields, securityQuestionsCount, completedProfilePercent } = decrypted?.fieldsInformation
+                setProfileIncompleteReason(completedBasicFields !== totalBasicFields ? "basic" : "")
+                setProfileCompleted(completedProfilePercent === 100)
+                setProfileCompletedPercentage(completedProfilePercent)
+            })
+            .catch(err => {
+                const decrypted = decryptData(err.response.data.data)
+                // console.log(decrypted)
+            })
+
+    }
+    useEffect(() => {
+        if (userDetails) {
+            getProfileCompletionDetails()
+        }
+    }, [userDetails])
+
+    // getActive countries
+    const getAllActiveCountries = () => {
+        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/country/get-all-active-country`, {
+            headers: authHeader
+        })
+            .then(res => {
+                const decrypted = decryptData(res.data.data)
+                // console.log(decrypted)
+                setAllowedCountries(decrypted?.Countries)
+            })
+            .catch(err => {
+                // console.log(err)
+                const decrypted = decryptData(err.response.data.data)
+                // console.log(decrypted)
+            })
+    }
+    useEffect(() => {
+        getAllActiveCountries()
+    }, [])
+
+    // user portfolio
+    const getUserDocuments = () => {
+        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-all-document/${userDetails._id}`, {
+            headers: authHeader
+        })
+            .then(res => {
+                const decrypted = decryptData(res.data.data)
+                setUserPortfolio(decrypted.result)
+            })
+            .catch(err => {
+                const decrypted = decryptData(err.response.data.data)
+                // console.log(decrypted)
+            })
+    }
+
+    const getWithdrawals = async () => {
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/get-all-withdrawal/${userDetails?._id}`, {
+                headers: authHeader
+            })
+            const decrypted = await decryptData(res.data.data)
+            // console.log(decrypted)
+            setUserWithdrawals(decrypted?.withdrawalList ?? [])
+        } catch (error) {
+            // const dec = decryptData(error.response.data.data);
+            setUserWithdrawals([])
+        }
+    }
+
+    const [totalReferralAmount, setTotalReferralAmount] = useState(0)
+    const getReferralCommission = async () => {
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/invitation/get-user-commissions/${userDetails?._id}`, {
+                headers: authHeader
+            })
+
+            const data = decryptData(res.data.data)
+            setTotalReferralAmount(data?.availableCommission ?? 0)
+            // console.log(data)
+        } catch (error) {
+            // console.log(decryptData(error.response.data.data));
+        }
+    }
+
+    const validateSendingLimits = () => {
+        if (userDetails?.level?.daily_sending_limit - userDetails?.used_limits?.daily_sending_limit < 1) {
+            return true
+        }
+        if (userDetails?.level?.monthly_sending_limit - userDetails?.used_limits?.monthly_sending_limit < 1) {
+            return true
+        }
+        if (userDetails?.level?.yearly_sending_limit - userDetails?.used_limits?.yearly_sending_limit < 1) {
+            return true
+        }
+        return false;
+    }
+
+    const validateReceivingLimits = (amount) => {
+        if (userDetails?.level?.daily_receiving_limit - userDetails?.used_limits?.daily_receiving_limit < 1) {
+            return true
+        }
+        if (userDetails?.level?.monthly_receiving_limit - userDetails?.used_limits?.monthly_receiving_limit < 1) {
+            return true
+        }
+        if (userDetails?.level?.yearly_receiving_limit - userDetails?.used_limits?.yearly_receiving_limit < 1) {
+            return true
+        }
+        return false;
+    }
+
+    const validateTransactionsCount = () => {
+        if (userDetails?.used_limits?.daily_transaction_count === 0) {
+            return true
+        }
+        if (userDetails?.used_limits?.monthly_transaction_count === 0) {
+            return true
+        }
+        if (userDetails?.used_limits?.yearly_transaction_count === 0) {
+            return true
+        }
+        return false;
+    }
+
+
+    const [showInactivityModal, setShowInactivityModal] = useState(false)
+
+
+    // 30 days/3 days securtiy questions
+    const [is30Days, setIs30Days] = useState(false)
+    const [threeDaysReminder, set3DaysReminder] = useState(false)
+
+    useEffect(() => {
+        if (userDetails) {
+            if (!userDetails?.user?.answer1 || !userDetails?.user?.answer2 || !userDetails?.user?.answer3) {
+                const getSecurityQuestionDetails = async () => {
+                    try {
+                        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/check-security-questions/${userDetails?._id}`, {
+                            headers: authHeader
+                        })
+                        setIs30Days(res?.data?.thirtyDaysCheck)
+                        if (!res?.data?.thirtyDaysCheck) {
+                            set3DaysReminder(res?.data?.currentCheck)
+                        }
+                    } catch (error) {
+                        console.log("Chin Tapak dam dam: ", error)
+                    }
+                }
+                getSecurityQuestionDetails()
+            }
+        }
+
+    }, [userDetails])
+
+    return (
+        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, setRefresh, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, setPage, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, setUserRefresh, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, setWalletRefresh, allowedCountries, userPortfolio, setPortfolioRef, profileIncompleteReason, setUserPortfolio, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, clearData }}>
+            {children}
+        </UserContext.Provider>
+    )
+}
+
+export default UserState;

@@ -1,0 +1,93 @@
+.container {
+    padding: .75rem;
+    border-radius: 6px;
+    background: #EBEBEB;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 220px;
+}
+
+.bright {
+    padding: .75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 220px;
+    border-radius: var(--8, 8px);
+    background: #FFF;
+    box-shadow: 0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11);
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    gap: .65rem;
+}
+
+.item span {
+    color: #8A8A8A;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: .85rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    /* 21px */
+    letter-spacing: -0.14px;
+}
+
+.item p {
+    margin-bottom: 0;
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 1.1rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 170%;
+    /* 30.6px */
+    letter-spacing: -0.36px;
+}
+
+.item p.sm {
+    font-size: .85rem;
+}
+
+.item p.lg {
+    font-size: 1.4rem;
+}
+
+.fees {
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+    background: #5926F0;
+    padding: .6rem 1rem;
+    gap: .5rem;
+    justify-content: center;
+}
+
+.bright .fees {
+    border-radius: 4px;
+    background: rgba(255, 218, 68, 0.24);
+}
+
+.fees span {
+    color: #FFF;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 1rem;
+    white-space: nowrap;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    letter-spacing: -0.18px;
+}
+
+.bright .fees span {
+    color: #BE9A08;
+}

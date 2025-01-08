@@ -1,0 +1,9 @@
+.notif {
+    transition: 100ms;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.notif:hover {
+    background: #f0f0f0;
+}

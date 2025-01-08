@@ -1,0 +1,18 @@
+.mobile_layout {
+    display: none;
+}
+
+@media screen and (max-width: 1000px) {
+    .pc_layout {
+        display: none;
+    }
+
+    .mobile_layout {
+        display: block;
+        padding-bottom: 85px;
+        background-color: #fff;
+        min-height: calc(100vh - 85px);
+        width: 100vw;
+        overflow: hidden;
+    }
+}

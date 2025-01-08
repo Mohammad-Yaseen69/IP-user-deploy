@@ -1,0 +1,348 @@
+import { Card, CardBody, Modal, ModalBody } from "reactstrap";
+import { Check, ChevronRight, XCircle } from "react-feather";
+import { useContext, useEffect, useRef, useState } from "react";
+import Draggable from "react-draggable";
+import { useTranslation } from "react-i18next";
+import faded_lines from "../PaymentsNewer/files/faded_lines.png"
+import SelectedPayoutChannel from "../PaymentsNewer/SelectedPayoutChannel";
+import SelectedAmountAndCurrency from "../PaymentsNewer/SelectedAmountAndCurrency";
+import SelectedWallet from "./WalletFund/SelectedWallet";
+import { UserContext } from "../../Context/UserContext";
+import { countries } from "country-list-json";
+import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
+import axios from "axios";
+import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
+import TrustpaymentPage from "./WalletFund/CreditTransaction";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
+import { createShambeToken } from "../../Helper/CreateToken";
+import NotFoundModal from "../NotFound/NotFoundModal";
+
+const isBig = window.innerWidth > 1000
+
+const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, limits, setLimits, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { } }) => {
+    const navigate = useNavigate()
+    const { t } = useTranslation()
+    const [complete, setComplete] = useState(false);
+    const pRef = useRef(null)
+    const divRef = useRef(null)
+    const svgRef = useRef(null)
+    const chevRef = useRef(null)
+    const [transDetails, setTransDetails] = useState(null)
+    const { userDetails, authHeader, userWallets } = useContext(UserContext)
+    const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
+
+    const handleDrag = (e, ui) => {
+        const { x } = ui;
+        pRef.current.style.transform = `translateX(${(x * 90) / 100}px)`
+        svgRef.current.style.transform = `translateX(${x}px)`
+        const threshold = divRef?.current?.offsetWidth - 72;
+        if (x >= threshold) {
+            setComplete(true);
+            setLoading(true)
+        } else {
+            return
+        }
+    };
+
+    const [showCardModal, setShowCardModal] = useState(false)
+    useEffect(() => {
+        const createTransaction = async () => {
+            if (payoutChannel?.value === "card") {
+                try {
+                    let data = paymentWithSavedCard ? {
+                        wallet_id: wallet?._id,
+                        amount: +amount * 100,
+                        payment_type: payoutChannel?.value,
+                        pan: currentCard?._id
+                    } :
+                        type === "add_fund" ? {
+                            se_shambey: createShambeToken({ cardNumber: card_number, expiry: card_expiry, cvc: card_cvc }),
+                            wallet_id: wallet?._id,
+                            amount: +amount * 100,
+                            payment_type: payoutChannel?.value,
+                            is_card_save: saveCard
+                        } : {
+                            se_shambey: createShambeToken({ cardNumber: card_number, expiry: card_expiry, cvc: card_cvc }),
+                            is_card_save: saveCard
+                        }
+                    // console.log(data)
+                    const enc = encryptData(data)
+
+                    // api
+                    const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/initiat${type === "add_fund" ? "" : "-kyc"}${paymentWithSavedCard ? "-pan" : ""}-transaction`, {
+                        data: enc
+                    }, {
+                        headers: authHeader
+                    })
+                    const dec = decryptData(res.data.data)
+                    console.log(dec)
+                    // if (paymentWithSavedCard) {
+                    //     navigate("/add-funds/card/success")
+                    // }
+                    // else {
+                    setTransDetails(dec)
+                    // }
+                } catch (error) {
+                    const dec = decryptData(error?.response?.data?.data)
+                    if (dec?.message === "Unauthorize to access this route") {
+                        const coun = localStorage.getItem("ip_country")
+                        localStorage.clear()
+                        localStorage.setItem("ip_country", coun)
+                        window.location.pathname = "/auth/login";
+                    }
+                    if (dec?.message === "Invalid card.") {
+                        setShowCardModal(true)
+                    } else {
+                        setShowCardModal(false)
+                        setError(dec?.message ?? "Something went wrong!")
+                    }
+                    // console.log(dec)
+                }
+                finally {
+                    setLoading(false)
+                }
+            } else if (payoutChannel?.value === "paypal") {
+                const data = {
+                    wallet_id: wallet?._id,
+                    amount: String(paypalAmount),
+                    payment_type: "paypal",
+                    token,
+                    rate
+                }
+
+                console.log(data)
+                try {
+                    const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/paypal/initiate-payment`, {
+                        data: encryptData(data)
+                    }, {
+                        headers: authHeader,
+                        timeout: 20000
+                    })
+                    const decrypted = await decryptData(res.data.data)
+                    console.log(decrypted)
+                    setExternalLink(decrypted?.url)
+                } catch (error) {
+                    const dec = decryptData(error?.response?.data?.data)
+                    if (dec?.message === "Unauthorize to access this route") {
+                        const coun = localStorage.getItem("ip_country")
+                        localStorage.clear()
+                        localStorage.setItem("ip_country", coun)
+                        window.location.pathname = "/auth/login";
+                    }
+                    console.log(dec)
+                    setError(dec?.message)
+                }
+                finally {
+                    setLoading(false)
+                }
+            } else {
+                const data = {
+                    wallet_id: wallet?._id,
+                    country_iso_code: userDetails?.country_iso_code,
+                    payment_page_id: payer?.payment_page_id,
+                    merchant_id: merchant,
+                    amount: +amount,
+                    currency: userWallets?.[0]?.currency?.code,
+                    service_name: payoutChannel?.sub_name
+                }
+
+                console.log(data)
+                try {
+                    const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/collection/create-payment-order`, {
+                        data: encryptData(data)
+                    }, {
+                        headers: authHeader
+                    })
+                    const decrypted = await decryptData(res.data.data)
+                    console.log(data)
+                    setExternalLink(decrypted?.external_link)
+                    // console.log(decrypted)
+                } catch (error) {
+                    const dec = decryptData(error?.response?.data?.data)
+                    if (dec?.message === "Unauthorize to access this route") {
+                        const coun = localStorage.getItem("ip_country")
+                        localStorage.clear()
+                        localStorage.setItem("ip_country", coun)
+                        window.location.pathname = "/auth/login";
+                    }
+                    setError(dec?.message)
+                }
+                finally {
+                    setLoading(false)
+                }
+            }
+        }
+        if (complete) {
+            setTimeout(() => {
+                createTransaction()
+            }, 500)
+        }
+    }, [complete])
+
+    return (
+        <>
+            {
+                showCardModal
+                &&
+                <NotFoundModal
+                    isOpen={showCardModal}
+                    toggle={() => {
+                        reEnterCallback()
+                        setShowCardModal(false)
+                    }}
+                    buttonText="Close"
+                    messages={[
+                        `Oops! It looks like the card you entered isn’t recognized as being issued in ${userDetails?.country_name}.`,
+                        `For security and compatibility, we currently accept only cards issued in the same country as your InstaPay account. Please use a card issued in ${userDetails?.country_name} to complete your transaction.`,
+                        `Thank you for your understanding!`
+                    ]}
+                    title="Add Funds Failed"
+                    reEnter={() => setSubStep(4)}
+                />
+            }
+            <Modal isOpen={error}>
+                <ModalBody style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                    <XCircle size={70} color="red" />
+                    <p color="red" style={{ fontSize: "1.1rem", fontWeight: "600", color: "red", marginTop: ".3rem" }}>
+                        Something went wrong!
+                    </p>
+                    <p style={{ fontSize: ".6rem", marginTop: ".5rem" }}>We're sorry about that.
+
+                        <span onClick={() => {
+                            setSubStep(1)
+                            setError("")
+                        }} style={{ textDecoration: "underline", color: "#5926f0", cursor: "pointer" }}>Try Again</span>
+                    </p>
+                </ModalBody>
+            </Modal>
+            <Card style={{
+                height: "100%",
+                marginBottom: 0,
+                boxShadow: "none",
+                gap: "1.3rem",
+            }}>
+                <CardBody style={{
+                    paddingBottom: "0",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    borderRadius: "20px",
+                    padding: isBig ? (window.innerWidth < 1500 ? "20px" : "20px 40px") : "5px",
+                    paddingBottom: 0,
+                    boxShadow: "0px 2px 20px -5.704601287841797px rgba(89, 38, 240, 0.07)"
+                }} className="conf_cont">
+                    <div>
+                        <h4 style={{ fontSize: "1.25rem", fontWeight: 700, textAlign: "center" }}>Your Details</h4>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                            {
+                                type === "add_fund" &&
+                                <SelectedWallet setSubStep={setSubStep} wallet={wallet} />
+                            }
+                            <SelectedAmountAndCurrency amount={amount} currency={wallet?.currency?.code} setSubStep={setSubStep} step={2} />
+                            {
+                                payoutChannel?.icon
+                                &&
+                                <SelectedPayoutChannel payoutChannel={payoutChannel} setSubStep={setSubStep} step={3} />
+                            }
+                        </div>
+                    </div>
+
+
+
+                    <div ref={divRef}
+                        style={{
+                            textAlign: "center",
+                            position: "relative",
+                            background: "linear-gradient(0deg, rgba(11, 13, 65, 0.16), rgba(11, 13, 65, 0.16)), radial-gradient(182.3% 794.57% at 91.57% -107.9%, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
+                            backgroundBlendMode: "color-burn,normal",
+                            boxShadow: "0px 6px 13px -5.4094px rgba(89, 38, 240, 0.17)",
+                            borderRadius: "16px",
+                            padding: "1rem",
+                            overflow: "hidden",
+                            marginTop: "1rem",
+                            pointerEvents: loading ? "none" : "all",
+                            opacity: loading ? .9 : 1
+                        }}
+                    >
+                        {
+                            loading
+                            &&
+                            <div style={{
+                                position: "absolute",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                                zIndex: 10000
+                            }}>
+                                <div class="d-flex justify-content-center">
+                                    <div class="spinner-border" color='primary' role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <img src={faded_lines} alt="faded" style={{ position: "absolute", left: "-130px", display: complete ? "none" : "inherit", width: "130px" }} ref={svgRef} />
+                        <Draggable axis="x" bounds="parent" onDrag={handleDrag}>
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    top: "10px",
+                                    left: "10px",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    border: "3px solid white",
+                                    height: "40px",
+                                    width: "40px",
+                                    borderRadius: "16px",
+                                    cursor: "pointer",
+                                    zIndex: 1
+                                }}
+                                ref={chevRef}
+                            >
+                                {
+                                    complete
+                                        ?
+                                        <Check color="white" size={30} />
+                                        :
+                                        <ChevronRight color="white" size={30} />
+                                }
+                            </div>
+                        </Draggable>
+                        <p style={{ marginBottom: "0", fontSize: "1.1rem", fontWeight: 500, color: "white", display: complete ? "none" : "inherit" }} ref={pRef}>
+                            {t("Slide To Confirm")}
+                        </p>
+                        {
+                            complete
+                            &&
+                            <p style={{ marginBottom: "0", fontSize: "1.1rem", fontWeight: 500, color: "white" }}>
+                                {t("Details Confirmed")}
+                            </p>
+                        }
+                    </div>
+                </CardBody>
+            </Card>
+            {
+                complete
+                    && transDetails !== null
+                    && payoutChannel?.value == "card"
+                    ?
+                    <TrustpaymentPage
+                        amount={amount}
+                        card_cvc={card_cvc}
+                        card_expiry={card_expiry}
+                        card_number={card_number}
+                        currency={wallet?.currency?.code}
+                        transaction={transDetails}
+                        type={type}
+                        paymentWithSavedCard={paymentWithSavedCard}
+                    />
+                    : ""
+            }
+        </>
+    );
+};
+
+export default ConfirmWalletFund;

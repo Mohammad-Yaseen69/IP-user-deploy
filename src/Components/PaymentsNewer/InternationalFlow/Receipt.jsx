@@ -1,0 +1,131 @@
+import styles from "./styles/receipt.module.css"
+import logo from "./files/ins_logo.svg"
+import confirm_vid from "../files/confirm.mp4"
+import { useTranslation } from "react-i18next"
+import { Check, Info } from "react-feather"
+import w from "../files/where.png"
+import share from "../files/share.png"
+import help from "./files/help.svg"
+import { useState } from "react"
+import SocialModal from "../../ShareBtn/SocialModal"
+import { useLocation, useNavigate } from "react-router"
+import success from "./files/success.gif"
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+
+const Receipt = ({ data, showBack = false, backHandler = () => { }, showTrxBtn = true }) => {
+    const { t } = useTranslation()
+    const [showShare, setShowShare] = useState(false)
+    const navigate = useNavigate()
+
+    const location = useLocation()
+    const queryParams = new URLSearchParams(location.search)
+    const title = queryParams.get("title")
+    return (
+        <>
+            {
+                data.error
+                    ?
+                    ""
+                    :
+                    <div className={styles.container}>
+                        {
+                            showShare
+                            &&
+                            <SocialModal
+                                isOpen={showShare}
+                                toggle={() => setShowShare(!showShare)}
+                                link={"https://my.insta-pay.ch"}
+                            />
+                        }
+                        <div className={styles.top}>
+                            <img src={logo} alt="" />
+                            {/* {
+                                showBack
+                                &&
+                                <div style={{ fontSize: ".9rem", fontWeight: 600, color: "#afafaf", cursor: "pointer" }} onClick={backHandler}>
+                                    Back
+                                </div>
+                            } */}
+                        </div>
+                        <div className={styles.confirmed}>
+                            <div className={styles.c_left}>
+                                <h3 style={{ maxWidth: "15ch" }}>{t("Your payment is in process")}</h3>
+                                <p>{t("Thanks for Using InstaPay")}</p>
+                            </div>
+                            {/* <video src={confirm_vid} muted autoPlay loop controls={false} /> */}
+                            {/* <img src={success} alt="" /> */}
+                            <DotLottieReact
+                                src="https://lottie.host/dc9844a3-b41b-4ddc-97c8-0039376f3ac8/DGe7bLZyug.json"
+                                backgroundColor="transparent"
+                                speed="1"
+                                style={{ width: "225px", height: "225px" }}
+                                playMode="normal"
+                                loop={true}
+                                autoplay={true}
+                            />
+                        </div>
+                        <div className={styles.trx_details}>
+                            <div className={styles.td_top}>
+                                <h4>{t("Status")}</h4>
+                                <div className={styles.actions}>
+                                    <button onClick={() => window.open("https://insta-pay.ch/faq", "_blank")}>
+                                        <img src={help} alt="" />
+                                        <span>{t("Need help?")}</span>
+                                    </button>
+                                    <button onClick={() => setShowShare(true)}>
+                                        <img src={share} alt="" />
+                                        <span>{t("Share")}</span>
+                                    </button>
+                                    {
+                                        showTrxBtn
+                                        &&
+                                        <button onClick={() => navigate("/transactions")}>
+                                            <img src={w} alt="" />
+                                            <span>{t("Transaction Details")}</span>
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+
+                            <div className={styles.td_bottom}>
+                                <div className={styles.status_item}>
+                                    <h5>{t("Transfer created")}</h5>
+                                    <p>{new Date().toLocaleString()}</p>
+                                </div>
+                                <div className={styles.circle}>
+                                    <Check color="white" size={10} />
+                                </div>
+                                <div className={styles.status_item}>
+                                    <h5>{t("Transfer initiated")}</h5>
+                                    <p>{new Date().toLocaleString()}</p>
+                                </div>
+                                <div className={styles.circle}>
+                                    !
+                                </div>
+                                <div className={styles.status_item}>
+                                    <h5>{t("Transfer in progress")}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={styles.note}>
+                            <Info size={20} />
+                            <span>It may take a few hours for the funds to appear in <strong>
+                                {
+                                    title
+                                        ?
+                                        title
+                                        :
+                                        <>
+                                            {data.beneficiary?.firstname ?? data.beneficiary?.first_name} {data.beneficiary?.lastname ?? data.beneficiary?.last_name}
+                                        </>
+                                }
+                                ’s
+                            </strong> account</span>
+                        </div>
+                    </div>
+            }
+        </>
+    )
+}
+
+export default Receipt

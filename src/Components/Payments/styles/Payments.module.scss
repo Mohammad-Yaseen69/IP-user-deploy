@@ -1,0 +1,22 @@
+.top {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 1rem;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: .5rem;
+    position: relative;
+
+    button,
+    a {
+        all: unset;
+        font-size: .9rem;
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        cursor: pointer;
+        color: #6610f2;
+        font-weight: 500;
+    }
+}

@@ -1,0 +1,62 @@
+.container {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    h3 {
+        margin-bottom: 1rem;
+    }
+
+    .buttons {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .picker {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        margin: 2rem 0 3rem;
+
+        div {
+            margin: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .5rem;
+
+            input {
+                all: unset;
+                width: 100%;
+                text-align: center;
+                padding-bottom: .5rem;
+                border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+                width: fit-content;
+                font-size: 1.2rem;
+            }
+
+        }
+
+        .days {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: .5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+    }
+}

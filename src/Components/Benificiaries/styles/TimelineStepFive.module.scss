@@ -1,0 +1,38 @@
+.container {
+    margin-top: 1rem;
+    background-color: white;
+    padding: 1rem;
+
+    &>* {
+        margin: 0;
+        padding: 0;
+    }
+
+    .top {
+        height: 80px;
+        width: 80px;
+        background: linear-gradient(to right bottom, #e64067, #5926f0, #4828a0);
+        border-radius: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto 1rem;
+    }
+
+    .details {
+        border-top: 1px solid rgba(128, 128, 128, 0.2);
+        padding-top: 1rem;
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+
+    .bottom {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 2rem;
+    }
+}

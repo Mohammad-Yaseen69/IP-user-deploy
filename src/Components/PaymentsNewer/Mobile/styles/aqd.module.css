@@ -1,0 +1,41 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.container h5 {
+    font-size: 1.5rem;
+    color: #000;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 130%;
+    width: 16ch;
+    margin-bottom: 1rem;
+}
+
+.upload_btn {
+    border-radius: 10.274px;
+    background: #FFF;
+    box-shadow: 0px 8.589px 13.365px -8.589px rgba(89, 38, 240, 0.13);
+}
+
+.code_input {
+    border-radius: 10px;
+    border: 1px solid #D6A30A;
+    background: #FFF8EA;
+}
+
+.button {
+    border-radius: 10px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
+    background-blend-mode: overlay, normal;
+    box-shadow: 0px 30.589px 22.247px -13.904px rgba(89, 38, 240, 0.17);
+    color: white;
+    text-align: center;
+    border: none;
+    outline: none;
+    height: 60px;
+    font-size: 1.2rem;
+    margin-top: 2rem;
+}

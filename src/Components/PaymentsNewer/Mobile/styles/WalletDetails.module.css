@@ -1,0 +1,57 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.container h5 {
+    font-size: 1.5rem;
+    color: #000;
+    font-style: normal;
+    font-weight: 600;
+    /* margin-left: 1.5rem; */
+    line-height: 130%;
+    /* width: 16ch; */
+    width: 90%;
+    margin: 0 auto;
+}
+
+.search {
+    width: 90%;
+    margin: 1.5rem auto 1rem;
+}
+
+.search input {
+    padding: 12px 16px;
+    border-radius: 10.043px;
+    border: 1.67px solid rgba(0, 0, 0, 0.13);
+    background: #FFF;
+    outline: none;
+    width: 100%;
+}
+
+.cards {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    max-height: 60vh;
+    min-height: 200px;
+    overflow-y: auto;
+    flex: 1;
+    margin-top: 2rem;
+    margin-bottom: .75rem;
+}
+
+.button {
+    border-radius: 10px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
+    background-blend-mode: overlay, normal;
+    box-shadow: 0px 30.589px 22.247px -13.904px rgba(89, 38, 240, 0.17);
+    color: white;
+    text-align: center;
+    border: none;
+    outline: none;
+    height: 60px;
+    font-size: 1.2rem;
+    width: 90%;
+    margin: 0 auto;
+}

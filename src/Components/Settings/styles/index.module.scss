@@ -1,0 +1,167 @@
+.container {
+    padding: 3rem 3rem 0;
+    // background: linear-gradient(to right, transparent, white);
+    min-height: 100vh;
+    font-family: "Manrope";
+
+    .top {
+        margin-bottom: 4rem;
+        position: relative;
+
+        h4 {
+            font-size: 3vw;
+            background: linear-gradient(3.1deg, #E64067 -102.47%, #5926F0 25.82%, #4828A0 128.05%), #FFFFFF;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 17px;
+            font-weight: 600;
+        }
+    }
+
+    .bottom {
+        display: flex;
+        // gap: 1rem;
+        // padding: 0 80px;
+        margin-top: 100px;
+        background-color: white;
+        border-radius: 30px;
+        overflow: hidden;
+    }
+
+    .right {
+        flex: 1;
+    }
+}
+
+.mobile {
+    display: none;
+}
+
+@media screen and (max-width: 1530px) {
+    .container {
+        padding: 1.5rem 2rem 1rem;
+
+        .top {
+            margin-bottom: 3rem;
+        }
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .container {
+        display: none;
+    }
+
+    .mobile {
+        display: block;
+        background-color: white;
+
+        .profile_complete {
+            display: flex;
+            margin: 0 1rem 2rem;
+            border-radius: 18px;
+            background: linear-gradient(270deg, #5926F0 0%, #B311FF 100%);
+            padding: 1rem;
+            gap: 1rem;
+            justify-content: space-between;
+
+            .left {
+                h4 {
+                    color: white;
+                    font-size: min(9vw, 2.5rem);
+                    font-weight: 800;
+                }
+
+                span {
+                    font-size: .7rem;
+                    color: white;
+                }
+            }
+
+            .right {
+                display: flex;
+                flex-direction: column;
+                gap: .5rem;
+
+                .progress {
+                    height: 20px;
+                    width: 100%;
+                    background: white;
+                    border-radius: 30px;
+                    position: relative;
+
+                    &::before {
+                        content: "";
+                        height: 100%;
+                        width: var(--progress);
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        border-radius: 72px;
+                        background: linear-gradient(284deg, #F7D116 9.83%, #FF7121 90.17%);
+                    }
+                }
+
+                .bottom {
+                    display: flex;
+                    gap: .5rem;
+                    align-items: flex-end;
+                    padding: 0;
+
+                    span {
+                        font-size: .6rem;
+                        color: white;
+                        // min-width: 15ch;
+                    }
+
+                    button {
+                        display: flex;
+                        align-items: center;
+                        white-space: nowrap;
+                        border: none;
+                        outline: none;
+                        border-radius: 10.474px;
+                        background: linear-gradient(296deg, #E64067 2.47%, #EB4634 99.3%), #FFF;
+                        color: white;
+                        gap: .3rem;
+                        padding: .3rem .5rem;
+                        font-size: .5rem;
+                    }
+                }
+            }
+        }
+
+        .top {
+            padding: 2rem;
+
+            h4 {
+                font-size: 1.4rem;
+                background: linear-gradient(3.1deg, #E64067 -102.47%, #5926F0 25.82%, #4828A0 128.05%), #FFFFFF;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                text-fill-color: transparent;
+                margin-bottom: 0;
+            }
+        }
+
+        .dp_cover {
+            padding: 0 1rem;
+            margin-bottom: -50px;
+        }
+
+        .bottom {
+            padding: 0 1rem;
+
+            &>* {
+                font-size: 80% !important;
+            }
+        }
+    }
+}

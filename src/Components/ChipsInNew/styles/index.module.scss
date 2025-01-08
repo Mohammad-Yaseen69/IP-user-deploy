@@ -1,0 +1,113 @@
+.container {
+    padding: 3rem;
+    background: linear-gradient(to right, transparent, white);
+    min-height: 100vh;
+
+    .top {
+        margin-bottom: 4rem;
+        position: relative;
+
+        h4 {
+            font-size: 3vw;
+            background: linear-gradient(3.1deg, #E64067 -102.47%, #5926F0 25.82%, #4828A0 128.05%), #FFFFFF;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 17px;
+            font-weight: 600;
+        }
+    }
+}
+
+.mobile {
+    display: none;
+}
+
+@media screen and (max-width: 1500px) {
+    .container {
+        padding: 1rem 2rem 0;
+
+        .top {
+            margin-bottom: 3rem;
+        }
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .container {
+        display: none;
+    }
+
+    .mobile {
+        display: block;
+        padding: 2rem;
+
+        .top {
+            margin-bottom: 3rem;
+
+            h4 {
+                font-size: 1.4rem;
+                background: linear-gradient(3.1deg, #E64067 -102.47%, #5926F0 25.82%, #4828A0 128.05%), #FFFFFF;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                text-fill-color: transparent;
+                margin-bottom: 1rem;
+            }
+        }
+
+        .bottom {
+            .dots {
+                display: flex;
+                padding: 1rem;
+                width: fit-content;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: .7rem;
+                border-radius: 40px;
+                background-color: white;
+                box-shadow: 0 3px 5px #b3b3b3;
+                margin: 1rem auto 0;
+
+                .dot {
+                    height: 5px;
+                    width: 5px;
+                    border-radius: 5px;
+                    background-color: #b3b3b3;
+                }
+            }
+
+            &>a {
+                display: flex;
+                width: 90%;
+                justify-content: flex-start;
+                align-items: center;
+                margin: 2rem auto 0;
+                border-radius: 8px;
+                gap: 1rem;
+                background-color: white;
+                box-shadow: 0 1px 5px #b3b3b365;
+                border: none;
+                outline: none;
+                padding: 1rem;
+
+                img {
+                    width: 25px;
+                    object-fit: cover;
+                }
+
+                span {
+                    font-size: 1rem;
+                    font-weight: 600;
+                    color: black;
+                }
+            }
+        }
+    }
+}

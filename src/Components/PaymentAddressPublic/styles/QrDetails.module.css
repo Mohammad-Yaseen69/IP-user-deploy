@@ -1,0 +1,158 @@
+.container {
+    border-radius: 1rem;
+    background: #FFF;
+    box-shadow: 0px 0px 12.2px 0px rgba(0, 0, 0, 0.12);
+    padding: 1.2rem;
+    gap: 1.3rem;
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+}
+
+.qr {
+    flex: 1;
+    min-width: 210px;
+    border-radius: 8px;
+    border: 1px solid #5926F0;
+    overflow: hidden;
+    height: fit-content;
+}
+
+.qr img {
+    width: 100%;
+    object-fit: contain;
+}
+
+.qr_id {
+    padding: 1rem;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 900;
+    background-color: #5926F0;
+    color: white;
+    font-family: Manrope;
+}
+
+.details {
+    flex: 2.2;
+    display: flex;
+    flex-direction: column;
+}
+
+.details>h5 {
+    overflow: hidden;
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    text-overflow: ellipsis;
+    font-family: Manrope;
+    font-size: .85rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 170%;
+    letter-spacing: -0.14px;
+}
+
+.list {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.list li {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+}
+
+.list li>span {
+    overflow: hidden;
+    color: #6C6C6C;
+    leading-trim: both;
+    text-edge: cap;
+    text-overflow: ellipsis;
+    font-family: Manrope;
+    font-size: .95rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 140%;
+    /* 21px */
+    letter-spacing: -0.15px;
+}
+
+.list li>span strong {
+    color: #000;
+    font-weight: 700;
+}
+
+.btns {
+    display: flex;
+    gap: .6rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: .65rem;
+    border-radius: 6px;
+    background: #5926F0;
+    box-shadow: 0px 3.978px 32.819px 0px rgba(0, 0, 0, 0.09);
+    display: flex;
+    align-items: center;
+    border: none;
+    outline: none;
+    gap: .65rem;
+}
+
+.btn.btn_d {
+    cursor: not-allowed;
+    opacity: .4;
+}
+
+.icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+}
+
+.icon img {
+    height: 70%;
+    width: 70%;
+    object-fit: contain;
+}
+
+.btn span {
+    color: #FFF;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: .7rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.225px;
+}
+
+@media screen and (max-width: 1000px) {
+    .qr {
+        width: 100%;
+    }
+
+    .details>h5 {
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .list {
+        margin-top: 1rem;
+    }
+
+    .btns {
+        flex-direction: column;
+    }
+
+}

@@ -1,0 +1,33 @@
+import { useTranslation } from "react-i18next"
+import styles from "./styles/steptwo.module.css"
+import PhoneInput from "../../PhoneInput"
+
+const Stepthree = ({ data, dataHandler }) => {
+    const { t } = useTranslation()
+    return (
+        <div className={styles.container}>
+            <div className={styles.inp}>
+                <label>{t("Phone Number")}</label>
+                <PhoneInput
+                    country={data.country}
+                    setPhone={(e) => dataHandler("phone", e)}
+                    phone={data.phone}
+                    setCountry={e => dataHandler("country", e?.alpha3 ?? "")}
+                />
+            </div>
+            {
+                data?.phone_error
+                &&
+                <div style={{ color: "red", fontWeight: 500 }}>
+                    {t("Incorrect phone number, please enter a valid number.")}
+                </div>
+            }
+            <div className={styles.inp}>
+                <label>{t("Email (Optional)")}</label>
+                <input type="email" value={data.email} onChange={e => dataHandler("email", e.target.value)} placeholder={t("Enter Your Email")} />
+            </div>
+        </div>
+    )
+}
+
+export default Stepthree

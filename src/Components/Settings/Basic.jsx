@@ -1,0 +1,772 @@
+import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { UserContext } from '../../Context/UserContext';
+import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
+import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
+import axios from 'axios';
+import { useTranslation } from 'react-i18next';
+import { Button, Card, CardBody, CardFooter, CardHeader, FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import CitiesDropDown from '../CitiesDropDown';
+import { toast } from 'react-toastify';
+import PhoneInput from 'react-phone-input-2';
+import { countries } from 'country-list-json';
+import SuccessModal from '../AddBeneficiary/SuccessModal';
+import OTPConfirmation from '../UserSettingsNew/OTPConfirmation';
+import { useLocation, useNavigate } from 'react-router';
+import QrGenerate from './QrGenerate';
+
+// dates
+export const currentDate = new Date();
+export const minDate = new Date(currentDate.getFullYear() - 15, currentDate.getMonth(), currentDate.getDate());
+let timeout;
+
+const Basic = () => {
+    const navigate = useNavigate()
+    const { t } = useTranslation()
+    const { userDetails, authHeader, verifyToken, profileCompletedPercentage, userWallets } = useContext(UserContext);
+    const [company, setCompany] = useState('');
+    const [username, setUsername] = useState(userDetails?.username ?? "");
+    const [phone, setPhone] = useState(userDetails?.phone ?? "");
+    const [email, setEmail] = useState(userDetails?.email);
+    const [firstName, setFirstName] = useState(userDetails?.user?.first_name);
+    const [lastName, setLastName] = useState(userDetails?.user?.last_name);
+    const [gender, setGender] = useState(userDetails?.gender ?? "");
+    const [dateOfBirth, setDateOfBirth] = useState(userDetails?.date_of_birth ?? "");
+    const [address, setAddress] = useState(userDetails?.address);
+    const [city, setCity] = useState(userDetails?.city);
+    const [postalCode, setPostalCode] = useState(userDetails?.postal_code);
+    const [country, setCountry] = useState(userDetails?.country_name);
+    const [aboutMe, setAboutMe] = useState(userDetails?.about_me);
+    const [timezone, setTimezone] = useState(userDetails?.timezone)
+    console.log(userDetails)
+    const [usernameValid, setUsernameValid] = useState(true)
+    const [isEditMode, setIsEditMode] = useState(false)
+    const [isSaving, setIsSaving] = useState(false)
+    const [showSuccess, setShowSuccess] = useState(false)
+    const [showOtp, setShowOtp] = useState(false)
+    const [usernameError, setUserNameError] = useState("")
+    const [codeType, setCodeType] = useState("")
+
+    useEffect(() => {
+        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+    }, [userDetails])
+
+    const isVerified = useMemo(() => userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "verified", [userDetails])
+
+    const handleDateChange = (e) => {
+        const selected = new Date(e.target.value);
+
+        if (selected <= minDate) {
+            setDateOfBirth(e.target.value);
+        } else {
+            toast.error('Please select a date at least 15 years ago or earlier.');
+        }
+    };
+
+    const checkUsername = (value) => {
+        setUserNameError("")
+        if (value === userDetails?.username) {
+            setUsernameValid(true)
+            return;
+        };
+        setUsernameValid(false)
+        const data = {
+            username: value
+        }
+
+        const encrypted = encryptData(data)
+
+        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/username-check`, {
+            data: encrypted
+        }, {
+            headers: authHeader
+        })
+            .then(res => {
+                const decrypted = decryptData(res.data.data)
+                setUsernameValid(decrypted.status)
+            })
+            .catch(err => {
+                const decrypted = decryptData(err.response.data.data)
+                if (decrypted.message.toLowerCase().includes("already")) {
+                    setUsernameValid(decrypted.status)
+                    setUserNameError("Username not available.")
+                }
+            })
+    }
+
+    useEffect(() => {
+        setEmail(userDetails?.email)
+        setPhone(userDetails?.phone)
+        setCompany(userDetails?.company?.company_name)
+        setFirstName(userDetails?.user?.first_name)
+        setLastName(userDetails?.user?.last_name)
+        setUsername(userDetails?.username)
+        setAddress(userDetails?.address)
+        setCity(userDetails?.city ?? "")
+        setPostalCode(userDetails?.postal_code)
+        setCountry(userDetails?.country_name ?? "")
+        setAboutMe(userDetails?.about_me)
+        setGender(userDetails?.gender)
+        setTimezone(userDetails?.timezone)
+        setDateOfBirth()
+        const day = userDetails?.dob?.split("-")?.[0]
+        const month = userDetails?.dob?.split("-")?.[1]
+        const year = userDetails?.dob?.split("-")?.[2]
+        setDateOfBirth(`${year}-${month}-${day}`)
+    }, [userDetails, isEditMode])
+
+    const updateUsername = () => {
+        if (username) {
+            const data = {
+                username
+            }
+
+            const encrypted = encryptData(data)
+
+            axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-username/${userDetails?._id}`, {
+                data: encrypted
+            }, {
+                headers: authHeader
+            })
+                .then(res => {
+                    const decrypted = decryptData(res.data.data)
+                    // console.log(decrypted)
+                })
+                .catch(err => {
+                    // console.log(decryptData(err.response.data.data))
+                })
+        }
+    }
+
+
+    const [otpToken, setOtpToken] = useState("")
+    const sendOtp = async (type = "") => {
+        setIsSaving(true)
+        try {
+            const body = {
+                [type]: type === "email" ? email : phone,
+                account_id: userDetails?._id,
+                authenticator: codeType === "authenticator"
+            }
+            // console.log(body)
+            const encrypted = encryptData(body)
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/set-${type}-otp`, {
+                data: encrypted
+            }, {
+                headers: authHeader
+            })
+
+            const data = decryptData(res.data.data)
+            // console.log(data)
+            setOtpToken(data?.token)
+            setShowOtp(true)
+        } catch (err) {
+            toast.error("Something went wrong while sending otp to your " + type)
+            // console.log(decryptData(err.response.data.data))
+        }
+        finally {
+            setIsSaving(false)
+        }
+    }
+
+    const editProfileHandler = () => {
+        setIsSaving(true)
+        if (!usernameError && usernameValid && !isVerified) {
+            updateUsername()
+        }
+
+        if (userDetails?.account_type === "individual") {
+            const data = isVerified ? { about_me: aboutMe } : {
+                first_name: firstName,
+                last_name: lastName,
+                // address,
+                city,
+                // postal_code: postalCode,
+                about_me: aboutMe,
+                // gender,
+                // dob: dateOfBirth !== userDetails?.dob ? dateOfBirth?.split("-")?.reverse()?.join("-") : dateOfBirth,
+                timezone: timezone
+            }
+            // console.log(data)
+            const encrypted = encryptData(data)
+
+            axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-individual/${userDetails?._id}`, {
+                data: encrypted
+            }, {
+                headers: authHeader
+            })
+                .then(res => {
+                    const decrypted = decryptData(res.data.data)
+                    // console.log(decrypted)
+                    if (profileCompletedPercentage != 100) {
+                        navigate("/settings?tab=tfa&ft=true")
+                    }
+                    setIsEditMode(false)
+                    setIsSaving(false)
+                    verifyToken()
+                })
+                .catch(err => {
+                    // console.log(decryptData(err.response.data.data))
+                    setIsSaving(false)
+                })
+        }
+        if (userDetails?.account_type === "business") {
+            const data = isVerified ? { about_me: aboutMe } : {
+                company_name: company,
+                // address,
+                city,
+                // postal_code: postalCode,
+                about_me: aboutMe,
+                // gender,
+                // dob: dateOfBirth !== userDetails?.dob ? dateOfBirth?.split("-")?.reverse()?.join("-") : dateOfBirth,
+                timezone: timezone
+            }
+            // console.log(data)
+
+            const encrypted = encryptData(data)
+
+            axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-business/${userDetails?._id}`, {
+                data: encrypted
+            }, {
+                headers: authHeader
+            })
+                .then(res => {
+                    const decrypted = decryptData(res.data.data)
+                    // console.log(decrypted)
+                    if (profileCompletedPercentage != 100) {
+                        navigate("/settings?tab=tfa&ft=true")
+                    }
+                    setIsEditMode(false)
+                    setIsSaving(false)
+                    verifyToken()
+                })
+                .catch(err => {
+                    // console.log(decryptData(err.response.data.data))
+                    setIsSaving(false)
+                })
+        }
+    }
+
+    const [availableTimezones, setAvailableTimezones] = useState([])
+
+    useEffect(() => {
+        if (userDetails?.country_iso_code) {
+            const getCountryTimezones = async () => {
+                try {
+                    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-timezones/${userDetails?.country_iso_code}`, {
+                        headers: authHeader
+                    })
+                    const data = decryptData(res.data.data)
+                    setAvailableTimezones(data?.timezones)
+                    // console.log("timezones", data)
+                } catch (err) {
+                    // console.log(decryptData(err.response.data.data))
+                }
+            }
+
+            getCountryTimezones()
+        }
+    }, [userDetails])
+
+    const verifyOTP = async (setter, type = "", otp) => {
+        setIsSaving(true)
+        try {
+            const data = {
+                token: otpToken,
+                otp,
+                [type]: type === "email" ? email : phone,
+                account_id: userDetails?._id
+            }
+            // console.log(data)
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/verify-${type}-otp`, {
+                data: encryptData(data)
+            }, {
+                headers: authHeader
+            })
+
+            const dec = decryptData(res.data.data)
+            editProfileHandler()
+            setter(true)
+            // console.log(dec)
+        } catch (err) {
+            toast.error("Something went wrong while verifying otp!")
+            // console.log(decryptData(err.response.data.data))
+        }
+    }
+
+    const location = useLocation()
+    const queryParams = new URLSearchParams(location.search)
+    const editmode = queryParams.get("editmode")
+    const tab = queryParams.get("tab")
+
+    useEffect(() => {
+        setIsEditMode(editmode)
+    }, [editmode])
+
+
+    const handleUsernameChange = (e) => {
+        const value = e.target.value;
+        if (value.length >= 30) return;
+        if (/^[a-zA-Z0-9_]*$/.test(value)) {
+            setUsername(value?.trim()?.toLowerCase());
+            if (timeout) {
+                clearTimeout(timeout)
+            }
+            if (value.length > 6) {
+                timeout = setTimeout(() => {
+                    checkUsername(value?.trim()?.toLowerCase())
+                }, 1000)
+            } else {
+                setUsernameValid(false)
+                setUserNameError("User name must be atleast 6 characters.")
+            }
+        }
+    }
+
+    const [showUsernameGuide, setShowUsernameGuide] = useState(false)
+    return (
+        <Card>
+            {
+                userDetails?.username
+                    ?
+                    <QrGenerate
+                        wallets={userWallets?.filter(item => !item?.qrCode?.url)}
+                    />
+                    :
+                    ""
+            }
+            <SuccessModal
+                isOpen={showSuccess}
+                message={"Profile Updated"}
+                subMessage={"Profile has been updated successfully!"}
+                toggle={() => {
+                    setShowSuccess(false)
+                    if (profileCompletedPercentage != 100) {
+                        navigate("/settings?tab=tfa&ft=true")
+                    }
+                }}
+            />
+            <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
+                <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
+                <ModalBody>
+                    <OTPConfirmation type={userDetails?.account_type === "individual" ? "email" : "phone"} callback={verifyOTP} setter={setShowSuccess} setterValue={true} hideOtp={() => setShowOtp(false)} processing={isSaving} resendHandler={sendOtp} authType={codeType} setAuthType={setCodeType} hideTfaSwitch={true} />
+                </ModalBody>
+            </Modal>
+            <CardHeader style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "2rem" }}>
+                <h4 style={{ width: "50%" }}>{t("Basic Info")}</h4>
+                {/* <div style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
+                   
+                </div> */}
+            </CardHeader>
+            <CardBody>
+                {
+                    userDetails?.account_type === "individual"
+                        ?
+                        <>
+                            <FormGroup style={{ position: "relative" }}>
+                                {
+                                    !firstName
+                                    &&
+                                    <div style={{
+                                        height: "9px",
+                                        width: "9px",
+                                        borderRadius: "9px",
+                                        background: "red",
+                                        position: "absolute",
+                                        bottom: "20px",
+                                        right: "-17px"
+                                    }}></div>
+                                }
+                                <Label>
+                                    {t("First Name")}
+                                    {!firstName && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                                </Label>
+                                <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={firstName} onChange={e => setFirstName(e.target.value)} />
+                            </FormGroup>
+                            <FormGroup style={{ position: "relative" }}>
+                                {
+                                    !lastName
+                                    &&
+                                    <div style={{
+                                        height: "9px",
+                                        width: "9px",
+                                        borderRadius: "9px",
+                                        background: "red",
+                                        position: "absolute",
+                                        bottom: "20px",
+                                        right: "-17px"
+                                    }}></div>
+                                }
+                                <Label>
+                                    {t("Last Name")}
+                                    {!lastName && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                                </Label>
+                                <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={lastName} onChange={e => setLastName(e.target.value)} />
+                            </FormGroup>
+                        </>
+                        :
+                        <FormGroup style={{ position: "relative" }}>
+                            {
+                                !company
+                                &&
+                                <div style={{
+                                    height: "9px",
+                                    width: "9px",
+                                    borderRadius: "9px",
+                                    background: "red",
+                                    position: "absolute",
+                                    bottom: "20px",
+                                    right: "-17px"
+                                }}></div>
+                            }
+                            <Label>
+                                {t("Company Name")}
+                                {!company && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                            </Label>
+                            <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={company} onChange={e => setCompany(e.target.value)} />
+                        </FormGroup>
+                }
+                <FormGroup style={{ position: "relative" }}>
+                    {
+                        !username
+                        &&
+                        <div style={{
+                            height: "9px",
+                            width: "9px",
+                            borderRadius: "9px",
+                            background: "red",
+                            position: "absolute",
+                            top: "30px",
+                            right: "-17px"
+                        }}></div>
+                    }
+                    {
+                        isEditMode
+                        &&
+                        <div style={{
+                            position: "absolute",
+                            top: "0px",
+                            right: "5px",
+                            fontSize: ".8rem",
+                            fontWeight: 600
+                        }}>
+                            {username?.length ?? 0}/30 Chars
+                        </div>
+                    }
+                    <Label>
+                        {t("Username")}
+                        {!username && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                    </Label>
+                    <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} style={{
+                        borderColor: !isEditMode ? "#eeeeee" : usernameValid ? "green" : "red",
+                    }} value={username} onChange={handleUsernameChange} onFocus={() => setShowUsernameGuide(true)} onBlur={() => setShowUsernameGuide(false)} />
+                    {
+                        (username && usernameError) &&
+                        <div style={{ fontSize: ".8rem", fontWeight: 600, color: "red", marginTop: "5px" }}>{usernameError}</div>
+                    }
+                    {
+                        showUsernameGuide
+                        &&
+                        <div style={{
+                            padding: "1rem",
+                            borderRadius: "10px",
+                            background: "#5926f0f3",
+                            color: "white",
+                            marginTop: "1rem"
+                        }}>
+                            Username may includes only alphabets, numbers and _ (underscores).
+                        </div>
+                    }
+                </FormGroup>
+                <FormGroup style={{ position: "relative" }}>
+                    {/* {
+                        !aboutMe
+                        &&
+                        <div style={{
+                            height: "9px",
+                            width: "9px",
+                            borderRadius: "9px",
+                            background: "red",
+                            position: "absolute",
+                            bottom: "20px",
+                            right: "-17px"
+                        }}></div>
+                    } */}
+                    <Label>{t("About Me")}</Label>
+                    <Input disabled={!isEditMode} readOnly={!isEditMode} type='textarea' value={aboutMe} onChange={e => setAboutMe(e.target.value)} />
+                </FormGroup>
+                {
+                    userDetails?.gender
+                    &&
+                    <FormGroup style={{ position: "relative" }}>
+                        {
+                            !gender
+                            &&
+                            <div style={{
+                                height: "9px",
+                                width: "9px",
+                                borderRadius: "9px",
+                                background: "red",
+                                position: "absolute",
+                                bottom: "20px",
+                                right: "-17px"
+                            }}></div>
+                        }
+                        <Label>
+                            {t("Gender")}
+                            {!gender && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                        </Label>
+                        <Input disabled={true} readOnly={true} value={gender} onChange={e => setGender(e.target.value)} />
+                        {/* <Input type='select' disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={gender} onChange={e => setGender(e.target.value)}>
+                            <option value="">{t("--Select-Gender--")}</option>
+                            <option value="male">{t("Male")}</option>
+                            <option value="female">{t("Female")}</option>
+                            <option value="other">{t("Other")}</option>
+                        </Input> */}
+                    </FormGroup>
+                }
+                {
+                    (typeof userDetails?.dob === "string" && !userDetails?.dob?.toLowerCase()?.includes("undefined"))
+                    &&
+                    <FormGroup style={{ position: "relative" }}>
+                        {
+                            !dateOfBirth
+                            &&
+                            <div style={{
+                                height: "9px",
+                                width: "9px",
+                                borderRadius: "9px",
+                                background: "red",
+                                position: "absolute",
+                                bottom: "20px",
+                                right: "-17px"
+                            }}></div>
+                        }
+                        <Label>
+                            {t("Date Of Birth")}
+                            {!dateOfBirth && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                        </Label>
+                        {
+                            !isEditMode
+                                ?
+                                <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={dateOfBirth} />
+                                :
+                                <Input type='date' disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={dateOfBirth} onChange={handleDateChange} max={minDate.toISOString().split("T")[0]} />
+                        }
+                    </FormGroup>
+                }
+                <FormGroup style={{ position: "relative" }}>
+                    {
+                        (!email && userDetails?.account_type !== "individual")
+                        &&
+                        <div style={{
+                            height: "9px",
+                            width: "9px",
+                            borderRadius: "9px",
+                            background: "red",
+                            position: "absolute",
+                            bottom: "20px",
+                            right: "-17px"
+                        }}></div>
+                    }
+                    <Label>{t("Email Address")}  {
+                        (!email && userDetails?.account_type !== "individual")
+                        && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
+                    <Input disabled={userDetails?.email || isVerified} readOnly={userDetails?.email || isVerified} value={email} onChange={e => setEmail(e.target.value)} />
+                </FormGroup>
+                <FormGroup style={{ position: "relative" }}>
+                    {
+                        (!phone && userDetails?.account_type !== "business")
+                        &&
+                        <div style={{
+                            height: "9px",
+                            width: "9px",
+                            borderRadius: "9px",
+                            background: "red",
+                            position: "absolute",
+                            bottom: "20px",
+                            right: "-17px"
+                        }}></div>
+                    }
+                    <Label>{t("Phone Number")} {
+                        (!phone && userDetails?.account_type !== "business")
+                        && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
+                    <PhoneInput
+                        // country={countries.filter(item => userDetails?.country_name?.toLowerCase().includes(item.name?.toLowerCase())?.[0]?.code ?? "pk")}
+                        value={phone}
+                        onChange={e => setPhone(e)}
+                        disableDropdown={true}
+                        disabled={userDetails?.phone || isVerified}
+                        inputStyle={{
+                            width: "100%",
+                            background: userDetails?.phone ? "#e9ecef" : "white",
+                            height: "47px"
+                        }}
+                    />
+                    {/* <Input disabled={1 + 1 === 2} readOnly={1 + 1 === 2} value={phone} onChange={e => setPhone(e.target.value)} /> */}
+                </FormGroup>
+                {
+                    userDetails?.address
+                    &&
+                    <FormGroup style={{ position: "relative" }}>
+                        {
+                            !address
+                            &&
+                            <div style={{
+                                height: "9px",
+                                width: "9px",
+                                borderRadius: "9px",
+                                background: "red",
+                                position: "absolute",
+                                bottom: "20px",
+                                right: "-17px"
+                            }}></div>
+                        }
+                        <Label>{t("Address")}  {
+                            !address
+                            && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
+                        <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={address} onChange={e => setAddress(e.target.value)} />
+                    </FormGroup>
+                }
+                <FormGroup style={{ position: "relative" }}>
+                    {
+                        !city
+                        &&
+                        <div style={{
+                            height: "9px",
+                            width: "9px",
+                            borderRadius: "9px",
+                            background: "red",
+                            position: "absolute",
+                            bottom: "20px",
+                            right: "-17px"
+                        }}></div>
+                    }
+                    <Label>{t("City")}   {
+                        !city
+                        && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
+                    <CitiesDropDown country={country === "Cabo Verde" ? "Cape Verde" : country} setUserCity={setCity} userCity={city} disabled={!isEditMode || isVerified} iso_3={userDetails?.country_iso_code} />
+                </FormGroup>
+                <FormGroup style={{ position: "relative" }}>
+                    {
+                        !country
+                        &&
+                        <div style={{
+                            height: "9px",
+                            width: "9px",
+                            borderRadius: "9px",
+                            background: "red",
+                            position: "absolute",
+                            bottom: "20px",
+                            right: "-17px"
+                        }}></div>
+                    }
+                    <Label>{t("Country")}   {
+                        !country
+                        && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
+                    <Input disabled={1 + 1 === 2 || isVerified} readOnly={1 + 1 === 2 || isVerified} value={country} onChange={e => setCountry(e.target.value)} />
+                </FormGroup>
+                <FormGroup style={{ position: "relative" }}>
+                    {
+                        !timezone
+                        &&
+                        <div style={{
+                            height: "9px",
+                            width: "9px",
+                            borderRadius: "9px",
+                            background: "red",
+                            position: "absolute",
+                            bottom: "20px",
+                            right: "-17px"
+                        }}></div>
+                    }
+                    <Label>{t("Timezone")}  {
+                        !timezone
+                        && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
+                    {/* {
+                        isEditMode
+                            ? */}
+                    <Input disabled={!isEditMode || isVerified} value={timezone} onChange={e => setTimezone(e.target.value)} type='select'>
+                        <option value="">--Select-Your-Timezone--</option>
+                        {
+                            availableTimezones.map(i => (
+                                <option value={i?.split(" GMT")?.[0]}>{i}</option>
+                            ))
+                        }
+                    </Input>
+                    {/* :
+                            <Input disabled={1 + 1 === 2} readOnly={1 + 1 === 2} value={timezone} />
+                    } */}
+                </FormGroup>
+                {
+                    userDetails?.postalCode
+                    &&
+                    <FormGroup style={{ position: "relative" }}>
+                        {
+                            !postalCode
+                            &&
+                            <div style={{
+                                height: "9px",
+                                width: "9px",
+                                borderRadius: "9px",
+                                background: "red",
+                                position: "absolute",
+                                bottom: "20px",
+                                right: "-17px"
+                            }}></div>
+                        }
+                        <Label>{t("Postal Code")}  {
+                            !postalCode
+                            && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
+                        <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={postalCode} onChange={e => setPostalCode(e.target.value)} />
+                    </FormGroup>
+                }
+            </CardBody>
+            <CardFooter style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+                {
+                    isEditMode
+                        ?
+                        <>
+                            <Button style={{
+                                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                border: "none",
+                                outline: "none",
+                                borderRadius: "10px"
+                            }} onClick={() => setIsEditMode(false)} disabled={isSaving}>Cancel</Button>
+                            <Button style={{
+                                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                border: "none",
+                                outline: "none",
+                                borderRadius: "10px"
+                            }} onClick={() => {
+                                if (userDetails?.account_type === "individual") {
+                                    return userDetails?.email === email ? editProfileHandler() : sendOtp("email")
+                                }
+                                if (userDetails?.account_type === "business") {
+                                    return userDetails?.phone === phone ? editProfileHandler() : sendOtp("phone")
+                                }
+                            }}
+                                // (userDetails?.account_type === "individual" ? !firstName || !lastName : !company) || !address || !city || !country || !email || !phone || !postalCode || !timezone || !username || !usernameValid || phone.length < 8
+                                disabled={isSaving || usernameError || !usernameValid || !city || !username}>
+                                {
+                                    isSaving
+                                        ?
+                                        t("Saving")
+                                        :
+                                        t("Save")
+                                }
+                            </Button>
+                        </>
+                        :
+                        <Button style={{
+                            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                            border: "none",
+                            outline: "none",
+                            borderRadius: "10px"
+                        }} onClick={() => setIsEditMode(true)}>{t("Edit Profile")}</Button>
+                }
+            </CardFooter>
+        </Card>
+    )
+}
+
+export default Basic

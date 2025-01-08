@@ -1,0 +1,26 @@
+.table_container {
+    overflow-x: auto;
+
+    .table {
+        border-collapse: collapse;
+        width: 100%;
+
+        th {
+            font-weight: bold;
+            text-align: left;
+            padding: 1rem;
+            white-space: nowrap;
+            border-bottom: 1px solid #ddd;
+        }
+
+        td {
+            padding: 1rem;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        tbody>tr {
+            border-bottom: 1px solid #ddd;
+        }
+    }
+}

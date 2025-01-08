@@ -1,0 +1,139 @@
+.body {
+    display: flex;
+    gap: 1.2rem;
+    border-radius: 16px;
+    background: #FAFAFA;
+    padding: 0;
+    min-height: 650px;
+}
+
+.left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: fit-content;
+    padding: 2rem 0 2rem 2rem;
+    max-width: 290px;
+}
+
+.left h1 {
+    color: #5926F0;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    letter-spacing: 5.04px;
+    text-transform: uppercase;
+    margin-bottom: 0;
+}
+
+.left h2 {
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 130%;
+    /* 41.6px */
+    max-width: 250px;
+    margin-bottom: auto;
+}
+
+.right {
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+    background-color: white;
+    min-width: 450px;
+    flex-direction: column;
+}
+
+.bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.bottom a {
+    color: #A6A6A6;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    /* 18px */
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.buttons button {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-radius: 6px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
+    background-blend-mode: overlay, normal;
+    box-shadow: 0px 11.901px 8.655px -5.409px rgba(89, 38, 240, 0.17);
+    display: flex;
+    padding: .4rem 1rem;
+    align-items: center;
+    color: #FFF;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.16px;
+    gap: 16px;
+    outline: none;
+    border: none;
+}
+
+.buttons .transparent {
+    all: unset;
+    cursor: pointer;
+    color: #808080;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    /* 21px */
+}
+
+.bottom button:disabled {
+    opacity: .7;
+}
+
+@media screen and (max-width: 1000px) {
+    .payment_flow_mobile {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 99;
+        height: calc(100vh - 85px);
+        width: 100vw;
+        overflow-y: auto;
+        background-color: white;
+        padding: 1.5rem;
+    }
+}

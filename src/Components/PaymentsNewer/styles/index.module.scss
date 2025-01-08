@@ -1,0 +1,143 @@
+.container {
+    padding: 3rem;
+    background: linear-gradient(to right, transparent, white);
+    min-height: 100vh;
+    height: 100%;
+
+    .top {
+        margin-bottom: 4rem;
+        position: relative;
+
+        h4 {
+            font-size: 3vw;
+            background: linear-gradient(3.1deg, #E64067 -102.47%, #5926F0 25.82%, #4828A0 128.05%), #FFFFFF;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 17px;
+            font-weight: 600;
+        }
+    }
+}
+
+.mobile {
+    display: none;
+}
+
+@media screen and (max-width: 1500px) {
+    .container {
+        padding: 1rem 2rem 0;
+
+        .top {
+            margin-bottom: 2rem;
+        }
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .container {
+        display: none;
+    }
+
+    .mobile {
+        display: block;
+        padding: 1.5rem 1rem;
+    }
+
+    .top {
+        display: flex;
+        align-items: flex-start;
+        gap: 0px;
+    }
+
+    .back_btn {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.25rem;
+        padding-top: .1rem;
+    }
+
+    .title {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .title h4 {
+        font-size: 1.4rem;
+        background: linear-gradient(3.1deg, #E64067 -102.47%, #5926F0 25.82%, #4828A0 128.05%), #FFFFFF;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+        margin-bottom: 0px;
+    }
+
+    .title p {
+        font-size: 10px;
+        font-weight: 600;
+        color: #afafaf;
+    }
+
+    .bottom {
+        margin-top: 2rem;
+    }
+
+    .cards {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .cards button {
+        max-height: 296px;
+        aspect-ratio: 777/280;
+        background: transparent;
+        border: none;
+        position: relative;
+        outline: none;
+        border-radius: 20px !important;
+        overflow: hidden;
+        background-size: cover !important;
+        background-position: center !important;
+        background-repeat: no-repeat !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 1rem;
+    }
+
+    .disabled::before {
+        position: absolute;
+        z-index: 10;
+        height: 100%;
+        width: 100%;
+        background: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        top: 0;
+        left: 0;
+        border-radius: 20px;
+        transition: 250ms;
+        color: white;
+        font-size: 3rem;
+    }
+
+    .cards button img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}

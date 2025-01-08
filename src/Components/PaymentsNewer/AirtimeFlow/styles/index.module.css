@@ -1,0 +1,226 @@
+.main_container {
+    display: flex;
+    width: 100%;
+    min-height: 650px;
+    margin-bottom: 2rem;
+}
+
+.content {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    min-height: 650px;
+    align-items: stretch;
+}
+
+.left {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    min-width: 220px;
+}
+
+.left h1 {
+    color: #5926F0;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    letter-spacing: 5.04px;
+    margin-bottom: 0;
+    text-transform: uppercase;
+}
+
+.left h2 {
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 130%;
+    margin-bottom: 0;
+}
+
+.right {
+    height: 100%;
+    flex: 1;
+    min-width: 45vw;
+    /* display: flex; */
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1.5rem;
+}
+
+.buttons button {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: .4rem 1.25rem;
+    border-radius: 6px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
+    background-blend-mode: overlay, normal;
+    box-shadow: 0px 11.901px 8.655px -5.409px rgba(89, 38, 240, 0.17);
+    border: none;
+    outline: none;
+    color: #FFF;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 17.31px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.buttons button:disabled {
+    opacity: .7;
+}
+
+.buttons button.trs {
+    all: unset;
+    cursor: pointer;
+    color: #808080;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    /* 21px */
+}
+
+@media screen and (max-width: 1680px) {
+    .left h1 {
+        font-size: .6rem;
+    }
+
+    .left h2 {
+        font-size: 1.5rem;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .mobile {
+        margin-top: 3rem;
+    }
+
+    .bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .bottom a {
+        color: #A6A6A6;
+        leading-trim: both;
+        text-edge: cap;
+        font-family: Manrope;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 150%;
+        /* 18px */
+    }
+
+    .buttons {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+    }
+
+    .buttons button {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        border-radius: 6px;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
+        background-blend-mode: overlay, normal;
+        box-shadow: 0px 11.901px 8.655px -5.409px rgba(89, 38, 240, 0.17);
+        display: flex;
+        padding: .4rem 1rem;
+        align-items: center;
+        color: #FFF;
+        leading-trim: both;
+        text-edge: cap;
+        font-family: Manrope;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        letter-spacing: -0.16px;
+        gap: 16px;
+        outline: none;
+        border: none;
+    }
+
+    .buttons .transparent {
+        all: unset;
+        cursor: pointer;
+        color: #808080;
+        leading-trim: both;
+        text-edge: cap;
+        font-family: Manrope;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 150%;
+        /* 21px */
+    }
+
+    .bottom button:disabled {
+        opacity: .7;
+    }
+
+    .mobile .bottom {
+        flex-direction: column-reverse;
+        margin-top: 2rem;
+        gap: 2rem;
+        width: 100%;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 1rem;
+        width: 100%;
+    }
+
+    .buttons button {
+        border-radius: 11px;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
+        background-blend-mode: overlay, normal;
+        box-shadow: 0px 30.589px 22.247px -13.904px rgba(89, 38, 240, 0.17);
+        padding: 1rem;
+        color: #FFF;
+        leading-trim: both;
+        text-edge: cap;
+        font-family: Manrope;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        letter-spacing: -0.73px;
+        display: flex;
+        justify-content: center;
+        border: none;
+        outline: none;
+        align-items: center;
+    }
+
+    .buttons button.full {
+        width: 100%;
+        flex: 1;
+    }
+}

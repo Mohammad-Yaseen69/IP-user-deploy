@@ -1,0 +1,101 @@
+.card {
+    padding: 1rem;
+    background: radial-gradient(124.63% 259.09% at 48.48% 152.15%, #E64067 0%, #5926F0 55.65%, #4828A0 100%), #FFFFFF;
+    border-radius: 10px;
+    width: 100%;
+    aspect-ratio: 16/8;
+    cursor: grab;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0px 13.2063px 39.6189px rgba(89, 38, 240, 0.13);
+    // overflow: hidden;
+
+    .circle {
+        height: 120%;
+        aspect-ratio: 1;
+        // background: linear-gradient(to left, transparent, rgba(255, 255, 255, 0.3));
+        position: absolute;
+        border-radius: 100%;
+        top: -20px;
+        // z-index: -1;
+        right: -18%;
+    }
+
+
+    .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0;
+
+
+        .left {
+            span {
+                padding: 0;
+                margin: 0;
+                color: rgb(221, 221, 221);
+                font-weight: 400;
+                font-size: .7vw;
+            }
+
+            h3 {
+                font-size: 1.1vw;
+                font-weight: 600;
+                color: white;
+                margin-bottom: 0;
+            }
+        }
+
+        .right {
+            width: fit-content;
+
+            img {
+                width: 40px;
+                height: 40px;
+                object-fit: contain;
+            }
+
+            // h3 {
+            //     font-size: 1rem;
+            //     font-weight: 500;
+            //     color: white;
+            // }
+        }
+    }
+
+    .bottom {
+        // margin-top: .5rem;
+
+        p {
+            margin: 0;
+            padding: 0;
+            font-size: .7vw;
+            color: rgb(221, 221, 221);
+        }
+
+        h3 {
+            font-size: 1.1vw;
+            font-weight: 600;
+            color: white;
+        }
+
+        .bb {
+            position: relative;
+
+            span {
+                margin: 0;
+                padding: 0;
+                color: rgb(255, 255, 255);
+                font-size: .56rem;
+                text-align: right;
+                position: absolute;
+                bottom: 0px;
+            }
+        }
+
+    }
+
+}

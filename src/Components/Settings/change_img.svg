@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="82" height="106" viewBox="0 0 82 106" fill="none">
+  <g filter="url(#filter0_bd_482_3410)">
+    <rect x="17.1682" y="0.802734" width="47.0352" height="47.0352" rx="9.32688" fill="#5926F0" fill-opacity="0.23" shape-rendering="crispEdges"/>
+  </g>
+  <path d="M53.4943 9.84863H28.1089C26.0627 9.84863 24.3987 11.5122 24.3987 13.5611V36.8941C24.3987 38.9406 26.0627 40.6024 28.1089 40.6024H53.4942C55.5405 40.6024 57.2027 38.9406 57.2027 36.8941V13.5611C57.2028 11.5122 55.5406 9.84863 53.4943 9.84863ZM45.6115 15.3697C47.5903 15.3697 49.1951 16.9748 49.1951 18.9537C49.1951 20.9326 47.5902 22.5377 45.6115 22.5377C43.6321 22.5377 42.0279 20.9326 42.0279 18.9537C42.0279 16.9748 43.6321 15.3697 45.6115 15.3697ZM52.3308 37.1724H40.8004H29.7837C28.794 37.1724 28.3532 36.4563 28.7994 35.5727L34.9495 23.3901C35.3951 22.5067 36.2444 22.4278 36.8459 23.2138L43.03 31.2963C43.6315 32.0825 44.6827 32.1493 45.3785 31.445L46.8913 29.9129C47.5866 29.2086 48.6109 29.2958 49.1783 30.1064L53.0958 35.7029C53.6621 36.5147 53.3205 37.1724 52.3308 37.1724Z" fill="white"/>
+  <defs>
+    <filter id="filter0_bd_482_3410" x="-22.8318" y="-39.1973" width="127.035" height="144.551" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feGaussianBlur in="BackgroundImageFix" stdDeviation="20"/>
+      <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_482_3410"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feMorphology radius="21.7627" operator="erode" in="SourceAlpha" result="effect2_dropShadow_482_3410"/>
+      <feOffset dy="40.4165"/>
+      <feGaussianBlur stdDeviation="19.431"/>
+      <feComposite in2="hardAlpha" operator="out"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.427451 0 0 0 0 0.160784 0 0 0 0 0.862745 0 0 0 0.23 0"/>
+      <feBlend mode="normal" in2="effect1_backgroundBlur_482_3410" result="effect2_dropShadow_482_3410"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_482_3410" result="shape"/>
+    </filter>
+  </defs>
+</svg>

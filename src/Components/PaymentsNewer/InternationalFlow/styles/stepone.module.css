@@ -1,0 +1,442 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.amount_and_currency {
+    border-radius: 8px;
+    background: #F6F6F6;
+    padding: 1.4rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+}
+
+.amount {
+    display: flex;
+    flex-direction: column;
+    gap: .9rem;
+    flex: 1;
+}
+
+.amount label {
+    color: #808080;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.32px;
+}
+
+.amount input,
+.total input {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    color: var(#000);
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 2rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -2px;
+}
+
+.currency {
+    border-radius: 6px;
+    background: #FFF;
+    display: flex;
+    padding: .5rem;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+}
+
+.currency span {
+    color: var(--colour-of-country-names, #000);
+    font-family: Manrope;
+    font-size: 13.068px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.chev {
+    width: 10px;
+    height: 4px;
+    object-fit: contain;
+}
+
+.exchange_rate {
+    display: flex;
+    gap: .7rem;
+    flex-wrap: wrap;
+}
+
+.er_item {
+    padding: .6rem;
+    border-radius: 6px;
+    background: rgba(89, 38, 240, 0.13);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5926F0;
+    gap: .6rem;
+    flex: 1;
+}
+
+.er_item span {
+    white-space: nowrap;
+}
+
+.service_and_others {
+    padding: 1.5rem 1.5rem;
+    border-radius: 6px;
+    background: #F6F6F6;
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+}
+
+.country_and_total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.country {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: space-between;
+    min-width: 250px;
+    border-radius: 6px;
+    background: #FFF;
+    padding: .6rem 1rem;
+    cursor: pointer;
+}
+
+.total {
+    display: flex;
+    flex-direction: column;
+    gap: 1.3rem;
+}
+
+.total span {
+    color: #808080;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.32px;
+}
+
+.main {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+}
+
+.main img {
+    width: 20px;
+    object-fit: contain;
+}
+
+.main span {
+    color: var(--colour-of-country-names, #000);
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.total h5 {
+    margin-bottom: 0;
+    color: var(--colour-of-country-names, #000);
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -2px;
+}
+
+.receiving_method {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+}
+
+.receiving_method span {
+    color: #808080;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.32px;
+}
+
+.channel_con {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: space-between;
+    min-width: 250px;
+    border-radius: 6px;
+    background: #FFF;
+    padding: .6rem 1rem;
+    cursor: pointer;
+}
+
+.channel {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+}
+
+.grad_icon {
+    border-radius: 4px;
+    background: linear-gradient(341deg, #E64067 -4.84%, #5926F0 90.69%, #4828A0 166.81%), #D9D9D9;
+    box-shadow: 0px 4px 7px 0px rgba(172, 53, 159, 0.31);
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grad_icon img {
+    height: 65%;
+    width: 65%;
+    object-fit: contain;
+}
+
+.channel span {
+    color: var(--colour-of-country-names, #000);
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.pt_note {
+    border-radius: 6.689px;
+    background: #6D29DC;
+    display: flex;
+    padding: 13.377px 15.607px;
+    align-items: center;
+    gap: 11.148px;
+}
+
+.pt_note img {
+    width: 17.837px;
+    height: 17.837px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.pt_note span {
+    overflow: hidden;
+    color: rgba(255, 255, 255, 0.70);
+    leading-trim: both;
+    text-edge: cap;
+    text-overflow: ellipsis;
+    font-family: Manrope;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.pt_note span strong {
+    overflow: hidden;
+    color: #FFF;
+    leading-trim: both;
+    text-edge: cap;
+    text-overflow: ellipsis;
+    font-family: Manrope;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+@media screen and (max-width: 1600px) and (min-width: 1001px) {
+    .container {
+        gap: 1rem;
+    }
+
+    .amount_and_currency {
+        padding: .9rem;
+        gap: .75rem;
+    }
+
+    .amount {
+        gap: .65rem;
+    }
+
+    .amount label {
+        font-size: .7rem;
+    }
+
+    .amount input {
+        font-size: 1.4rem;
+    }
+
+    .currency {
+        gap: .75rem;
+    }
+
+    .currency span {
+        font-size: .5rem;
+    }
+
+    .currency img {
+        width: 10px !important;
+        height: 10px !important;
+    }
+
+    .chev {
+        width: 8px;
+    }
+
+    .exchange_rate {
+        gap: .5rem;
+    }
+
+    .er_item {
+        padding: .5rem;
+        gap: .5rem;
+    }
+
+    .er_item span {
+        font-size: .65rem;
+    }
+
+    .er_item img {
+        width: 14px;
+    }
+
+    .service_and_others {
+        padding: 1rem;
+        gap: .6rem;
+    }
+
+    .country_and_total {
+        gap: .7rem;
+        margin-bottom: .7rem;
+    }
+
+    .country {
+        gap: .7rem;
+        min-width: 180px;
+        padding: .5rem .8rem;
+    }
+
+    .total {
+        gap: .8rem;
+    }
+
+    .total span {
+        font-size: .7rem;
+    }
+
+    .total h5 {
+        font-size: 1.5rem;
+    }
+
+    .main span {
+        font-size: .7rem;
+    }
+
+    .receiving_method {
+        gap: .7rem;
+    }
+
+    .receiving_method span {
+        font-size: .7rem;
+    }
+
+    .channel_con {
+        gap: .7rem;
+        padding: .5rem .8rem;
+        min-width: 180px;
+    }
+
+    .grad_icon {
+        height: 20px;
+        width: 20px;
+    }
+
+    .channel span {
+        font-size: .7rem;
+    }
+
+    .pt_note span {
+        font-size: .55rem
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .container {
+        gap: 1rem;
+    }
+
+    .service_and_others {
+        background: transparent;
+        padding: 0;
+    }
+
+    .country_and_total {
+        flex-direction: column-reverse;
+        padding: 1rem 1rem;
+        border-radius: 6px;
+        background: #F6F6F6;
+    }
+
+    .country {
+        width: 100%;
+        gap: 1rem;
+    }
+
+    .receiving_method {
+        flex-direction: column;
+        padding: 1rem 1rem;
+        border-radius: 6px;
+        background: #F6F6F6;
+    }
+
+    .channel_con {
+        gap: 1rem;
+        width: 100%;
+    }
+
+    .total {
+        margin-top: 1.25rem;
+        width: 100%;
+        text-align: center;
+        gap: .5rem;
+    }
+}

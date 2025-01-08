@@ -1,0 +1,101 @@
+.center {
+    flex: 1.25;
+    max-width: 300px;
+    border-radius: 24px;
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    background: #FFF;
+    box-shadow: 0px 4.45658px 132.58315px 0px rgba(0, 0, 0, 0.11);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 220px;
+
+    .top {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: center;
+
+        div {
+            display: flex;
+            gap: .5rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+
+            button {
+                display: flex;
+                gap: 9px;
+                align-items: center;
+                padding: 7px 7px 7px 7px;
+                min-width: fit-content;
+                width: fit-content;
+                border-radius: 12px;
+                cursor: pointer;
+                position: relative;
+                transition: 250ms;
+                border: none;
+                outline: none;
+            }
+        }
+    }
+
+    .chart_container {
+        flex: 1;
+        min-height: 100px;
+
+        .balance_info {
+            position: absolute;
+            left: 50%;
+            top: 45%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+
+            h4 {
+                margin-bottom: 0;
+                font-size: 18px
+            }
+
+            span {
+                font-size: .6rem;
+                color: #8e8e8e;
+            }
+        }
+    }
+
+    .series_container {
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+        min-height: 100px;
+    }
+}
+
+@media screen and (max-width: 1500px) {
+    .center {
+        padding: 1rem;
+
+        .top {
+            h5 {
+                font-size: 11px;
+            }
+
+            div {
+                button {
+                    font-size: 11px;
+                    padding: 4px 7px 4px 7px;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .center {
+        width: 100%;
+        border-radius: 18px;
+        background: #FFF;
+        box-shadow: 0px 9.657px 287.3px 0px rgba(0, 0, 0, 0.11);
+        max-width: none;
+    }
+}

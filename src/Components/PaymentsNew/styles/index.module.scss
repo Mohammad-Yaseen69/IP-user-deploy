@@ -1,0 +1,25 @@
+.container {
+    padding: 3rem;
+    background: linear-gradient(to right, transparent, white);
+    min-height: 100vh;
+
+    .top {
+        margin-bottom: 4rem;
+        position: relative;
+
+        h4 {
+            font-size: 60px;
+            background: linear-gradient(3.1deg, #E64067 -102.47%, #5926F0 25.82%, #4828A0 128.05%), #FFFFFF;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 17px;
+            font-weight: 600;
+        }
+    }
+}

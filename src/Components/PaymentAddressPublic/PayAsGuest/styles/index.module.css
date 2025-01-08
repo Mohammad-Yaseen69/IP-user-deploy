@@ -1,0 +1,483 @@
+.body {
+    display: flex;
+    padding: 0;
+    border-radius: 16px;
+    height: 700px;
+}
+
+.left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: #FAFAFA;
+    padding: 2rem;
+}
+
+.l_top {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.l_top h1 {
+    margin-bottom: 0;
+    color: #5926F0;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    letter-spacing: 5.04px;
+    text-transform: uppercase;
+}
+
+.l_top h2 {
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 130%;
+    /* 41.6px */
+    max-width: 270px;
+    margin-bottom: 0;
+}
+
+.l_bottom {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: .7rem;
+}
+
+.right {
+    flex: 1.6;
+    background-color: white;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 1rem;
+}
+
+.bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.bottom a {
+    color: #A6A6A6;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    /* 18px */
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.buttons button {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-radius: 6px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
+    background-blend-mode: overlay, normal;
+    box-shadow: 0px 11.901px 8.655px -5.409px rgba(89, 38, 240, 0.17);
+    display: flex;
+    padding: .4rem 1rem;
+    align-items: center;
+    color: #FFF;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.16px;
+    gap: 16px;
+    outline: none;
+    border: none;
+}
+
+.buttons .transparent {
+    all: unset;
+    cursor: pointer;
+    color: #808080;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    /* 21px */
+}
+
+.bottom button:disabled {
+    opacity: .7;
+}
+
+
+.bot_top {
+    display: flex;
+    flex-direction: column;
+    gap: .7rem;
+    margin-bottom: 1.5rem;
+}
+
+.bot_top h5 {
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 170%;
+    /* 27.2px */
+    letter-spacing: -0.16px;
+    margin-bottom: 0;
+}
+
+.bot_top span {
+    color: #848484;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: .75rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 170%;
+    /* 22.95px */
+    letter-spacing: -0.135px;
+}
+
+.personal {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.inpt_co {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.inpt_co label {
+    margin-bottom: 0;
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: .8rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    display: flex;
+    align-items: flex-start;
+}
+
+.inpt_co input {
+    border-radius: var(--8, 8px);
+    background: #F6F6F6;
+    border: none;
+    outline: none;
+    padding: 1rem;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    /* 19.5px */
+}
+
+.recipient_amount_details {
+    border-radius: var(--8, 8px);
+    background: rgba(109, 41, 220, 0.04);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+    position: relative;
+    overflow: hidden;
+    z-index: 10;
+    margin-bottom: 1rem;
+    margin-top: .5rem;
+}
+
+.recipient_amount_details span {
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: .8rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    /* 21px */
+    letter-spacing: -0.14px;
+}
+
+.recipient_amount_details h5 {
+    margin-bottom: 0;
+    color: #5926F0;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 2rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+    /* 54px */
+    letter-spacing: -1.8px;
+}
+
+.recipient_amount_details h5 span {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #5926F0;
+}
+
+.recipient_amount_details div {
+    position: absolute;
+    top: -20px;
+    right: 20px;
+    z-index: 1;
+}
+
+.other_details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    border-radius: var(--8, 8px);
+    background: rgba(109, 41, 220, 0.04);
+    padding: 1rem;
+}
+
+.aao_item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.aao_item span {
+    color: #8A8A8A;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 170%;
+    /* 23.8px */
+    letter-spacing: -0.28px;
+}
+
+.total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.total span {
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 170%;
+    /* 23.8px */
+    letter-spacing: -0.28px;
+}
+
+.card_dets {
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+    padding: .6rem;
+    border-radius: 6px;
+    background: rgba(109, 41, 220, 0.04);
+    width: 100%;
+}
+
+.cd_top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cd_top span {
+    color: #8A8A8A;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    letter-spacing: -0.12px;
+}
+
+.cd_top button {
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    background: linear-gradient(0deg, var(--black-40, rgba(0, 0, 0, 0.40)) 0%, var(--black-40, rgba(0, 0, 0, 0.40)) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
+    background-blend-mode: overlay, normal;
+    padding: .3rem;
+    color: #FFF;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: .5rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.16px;
+    cursor: pointer;
+}
+
+.cd_bot {
+    display: flex;
+    flex-direction: column;
+}
+
+.cd_bot h5 {
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: .65rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 170%;
+    /* 20.4px */
+    margin-bottom: .2rem;
+}
+
+.cd_bot span {
+    color: #6C6C6C;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: .55rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 170%;
+    /* 17px */
+}
+
+/* @media screen and (max-width: 1000px) {
+    .mobile {
+        padding: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .m_top {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .m_top h1 {
+        color: #848484;
+        leading-trim: both;
+        text-edge: cap;
+        font-family: Manrope;
+        font-size: .65rem;
+        font-style: normal;
+        font-weight: 800;
+        line-height: normal;
+        letter-spacing: 8.64px;
+        text-transform: uppercase;
+        margin-bottom: 0;
+    }
+
+    .m_top h2 {
+        color: #000;
+        leading-trim: both;
+        text-edge: cap;
+        font-family: Manrope;
+        font-size: 1.5rem;
+        font-style: normal;
+        font-weight: 800;
+        line-height: 130%;
+        margin-bottom: 0;
+    }
+
+    .mobile .bottom {
+        flex-direction: column-reverse;
+        margin-top: 2rem;
+        gap: 1.25rem;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 1rem;
+        width: 100%;
+    }
+
+    .buttons button {
+        border-radius: 11px;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
+        background-blend-mode: overlay, normal;
+        box-shadow: 0px 30.589px 22.247px -13.904px rgba(89, 38, 240, 0.17);
+        padding: 1rem;
+        color: #FFF;
+        leading-trim: both;
+        text-edge: cap;
+        font-family: Manrope;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        letter-spacing: -0.73px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .buttons button.full {
+        width: 100%;
+        flex: 1;
+    }
+} */
+@media screen and (max-width: 1000px) {
+    .payment_flow_mobile {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 99;
+        height: 100vh;
+        width: 100vw;
+        overflow-y: auto;
+        background-color: white;
+        padding: 1.5rem;
+    }
+}

@@ -1,0 +1,64 @@
+.form {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    flex-wrap: wrap;
+
+    input,
+    select {
+        // all: unset;
+        background: transparent;
+        outline: none;
+        border: 2px solid rgba(128, 128, 128, 0.4);
+        padding: .5rem 1rem;
+        border-radius: 5px;
+        // appearance: initial;
+    }
+
+    button {
+        all: unset;
+        height: 20px;
+        width: 20px;
+        padding: .5rem;
+        border-radius: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: 250ms;
+
+        &:hover {
+            background: linear-gradient(to right bottom, #e64067, #5926f0, #4828a0);
+            color: white;
+        }
+    }
+}
+
+.amountDet {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: white;
+
+    p {
+        padding: 0;
+    }
+
+    span {
+        cursor: pointer;
+        padding: 0;
+        margin: 0;
+    }
+}
+
+.hoverSpan {
+    white-space: nowrap;
+    font-weight: 500;
+    padding: .5rem;
+
+    &:hover {
+        color: var(--theme-default)
+    }
+}

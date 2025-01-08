@@ -1,0 +1,89 @@
+.search_con {
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.13);
+    background: #FFF;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: .7rem 1rem;
+}
+
+.icon {
+    fill: #C0C0C0;
+    color: #C0C0C0;
+}
+
+.search_con input {
+    border: none;
+    outline: none;
+    flex: 1;
+    width: 100%;
+    background-color: transparent;
+    color: #000;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.4px;
+}
+
+.search_con input::placeholder {
+    color: #C0C0C0;
+}
+
+.container {
+    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.03);
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 1rem;
+}
+
+.list {
+    padding: .7rem;
+    border-radius: 6px;
+    background: #FFF;
+    display: flex;
+    flex-direction: column;
+    max-height: 450px;
+    overflow-y: auto;
+}
+
+.item {
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: .8rem;
+    cursor: pointer;
+}
+
+.item img {
+    width: 40.679px;
+    height: 30.067px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.item span {
+    color: var(--colour-of-country-names, #000);
+    font-family: Manrope;
+    font-size: 1.1rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.item.active {
+    background-color: #5926f0;
+}
+
+.item.active span {
+    color: white;
+}

@@ -1,0 +1,42 @@
+.mob {
+    display: none;
+}
+
+.pc h5 {
+    color: #848484;
+    /* text-align: center; */
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-bottom: 1rem;
+    /* transform: translateX(10px) rotate(-90deg); */
+    /* margin-right: -16px; */
+}
+
+.pc .row {
+    gap: 1rem;
+    display: flex;
+    flex: 1;
+    overflow-x: auto;
+    padding-left: .5rem;
+    scrollbar-width: none;
+    align-items: center;
+}
+
+@media screen and (max-width: 1000px) {
+    .pc {
+        display: none;
+    }
+
+    .mob {
+        display: flex;
+        flex-direction: column;
+    }
+}

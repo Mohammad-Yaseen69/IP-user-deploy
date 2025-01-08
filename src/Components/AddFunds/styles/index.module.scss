@@ -1,0 +1,65 @@
+.container {
+    padding: 3rem;
+    background: linear-gradient(to right, transparent, white);
+    min-height: 100vh;
+
+    .top {
+        margin-bottom: 4rem;
+        position: relative;
+
+        h4 {
+            font-size: 3vw;
+            background: linear-gradient(3.1deg, #E64067 -102.47%, #5926F0 25.82%, #4828A0 128.05%), #FFFFFF;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+    }
+}
+
+.mobile {
+    display: none;
+}
+
+@media screen and (max-width: 1500px) {
+    .container {
+        padding: 1rem 2rem 0;
+
+        .top {
+            margin-bottom: 2rem;
+        }
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .container {
+        display: none;
+    }
+
+    .mobile {
+        display: block;
+        padding: 1.5rem;
+        overflow-y: auto;
+        min-height: 100vh;
+
+        .top {
+            margin-bottom: 4rem;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            h4 {
+                font-size: 1.5rem;
+                background: linear-gradient(3.1deg, #E64067 -102.47%, #5926F0 25.82%, #4828A0 128.05%), #FFFFFF;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                text-fill-color: transparent;
+                margin-bottom: 1rem;
+            }
+        }
+    }
+}

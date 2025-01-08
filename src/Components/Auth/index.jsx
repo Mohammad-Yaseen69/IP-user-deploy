@@ -1,0 +1,154 @@
+
+import styles from "./styles/index.module.css"
+import man from "./files/man.png"
+import woman from "./files/woman.png"
+import overlay from "./files/overlay.svg"
+import { useContext, useEffect, useState } from "react"
+import RegistrationCompleted from "../AuthNew/RegistrationCompleted"
+import LanguagePicker from "../LanguagePicker"
+import { UserContext } from "../../Context/UserContext"
+import axios from "axios"
+import { countries } from "country-list-json"
+import { useTranslation } from "react-i18next"
+import logo from "../../assets/images/logo/logo2.png"
+import Login from "./Login"
+import coun from "../PaymentsNewer/CountriesData.json"
+import SidePopup from "../SidePopup"
+import Signup from "./Signup"
+
+const swissFlag = coun.find(item => item.alpha3 === "CHE")?.file_url
+
+const Auth = () => {
+    const { t } = useTranslation()
+    const [isLoginForm, setIsLoginForm] = useState(window?.location?.href?.includes("login") ? true : false);
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            const path = sessionStorage.getItem("path")
+            window.location.href = path ?? "/dashboard/default"
+        }
+    }, []);
+
+    useEffect(() => {
+        if (typeof window != "undefined") {
+            const url = window.location.href;
+
+            if (url.includes("login")) {
+                setIsLoginForm(true)
+            } else {
+                setIsLoginForm(false)
+            }
+        }
+    }, [])
+
+
+    // signup state
+    const [step, setStep] = useState(1)
+
+    useEffect(() => {
+        setStep(1)
+    }, [isLoginForm])
+
+    const [registrationCompleted, setRegistrationCompleted] = useState(false)
+    const [isForgot, setIsForgot] = useState(false)
+
+
+    const { allowedCountries } = useContext(UserContext)
+
+    const [country, setCountry] = useState({})
+
+    useEffect(() => {
+        const getCountryDetails = async () => {
+            const ipBasedStoredCountry = localStorage.getItem("ip_country")
+            if (ipBasedStoredCountry?.length === 3) {
+                setCountry(ipBasedStoredCountry)
+            } else {
+                try {
+                    const res = await axios.get(`https://ipinfo.io?token=${process.env.REACT_APP_IP_INFO_TOKEN}`)
+                    const location = res.data;
+
+                    if (location) {
+                        const findCOuntry = countries.find(item => item?.code === location?.country)
+
+                        if (findCOuntry) {
+                            const foundCount = allowedCountries?.find(item => item?.country_name?.toLowerCase() === findCOuntry?.name?.toLowerCase() || item?.country_name?.toLowerCase()?.includes(findCOuntry?.name?.toLowerCase()))
+                            if (foundCount?.country_iso_code) {
+                                localStorage.setItem("ip_country", foundCount?.country_iso_code)
+                            }
+                            setCountry(foundCount?.country_iso_code ?? localStorage.getItem("ip_country"))
+                        }
+                    }
+                } catch (error) {
+                    const res = await fetch("https://geolocation-db.com/json/")
+                    const data = await res.json()
+                    const filteredCountry = allowedCountries.filter(item => item.country_name.toLowerCase().includes(data?.country_name?.toLowerCase()))?.[0]?.country_iso_code
+                    if (filteredCountry) {
+                        localStorage.setItem("ip_country", filteredCountry)
+                    }
+                    setCountry(filteredCountry ?? localStorage.getItem("ip_country"))
+                }
+            }
+        }
+        if (allowedCountries?.length > 0) {
+            getCountryDetails()
+        }
+    }, [allowedCountries])
+
+    return (
+        <>
+            {
+                registrationCompleted && window.location.pathname.toLowerCase().includes("signup")
+                    ?
+                    <RegistrationCompleted
+                        setStep={setStep}
+                        setIsLoginForm={setIsLoginForm}
+                    />
+                    :
+                    <section className={styles.container}>
+                        <img src={overlay} alt="overlay" className={styles.overlay} />
+                        {
+                            step < 2 ?
+                                <img src={man} alt="man" className={styles.man} />
+                                :
+                                <img src={woman} alt="woman" className={styles.man} />
+                        }
+                        <div className={styles.form}>
+                            <div className={styles.f_top}>
+                                <img src={logo} alt="Instapay" />
+                                {
+                                    window.innerWidth > 1000
+                                    &&
+                                    <LanguagePicker />
+                                }
+                            </div>
+                            {
+                                isLoginForm
+                                    ?
+                                    <Login
+                                        country={country}
+                                        setIsForgot={setIsForgot}
+                                        setIsLoginForm={setIsLoginForm}
+                                    />
+                                    :
+                                    <Signup
+                                        country={country}
+                                        setIsLoginForm={setIsLoginForm}
+                                    />
+                            }
+                            <div className={styles.f_footer}>
+                                {/* <span>{t("© 2024 InstaPay | Kemit KIngdom SA • All rights reserved")}</span> */}
+                                <span>{t("Powered By")} {t("Kemit Kingdom SA")}</span>
+                                <span style={{ display: "flex", gap: ".4rem", alignItems: "center" }}>
+                                    <img src={swissFlag} alt="" style={{ height: "13px", width: "18px", objectFit: "cover", borderRadius: "2px" }} />
+                                    {t("A Swiss Company")}
+                                </span>
+                            </div>
+                        </div>
+                    </section>
+            }
+        </>
+    )
+}
+
+export default Auth;

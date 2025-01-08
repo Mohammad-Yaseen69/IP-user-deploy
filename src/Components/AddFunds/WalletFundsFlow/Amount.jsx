@@ -1,0 +1,128 @@
+import { useTranslation } from "react-i18next"
+import styles from "./Amount.module.css"
+import { Info } from "react-feather"
+import { useContext, useEffect, useState } from "react"
+import { UserContext } from "../../../Context/UserContext"
+import { formatCurrency } from "../../../Helper/AmountFormat"
+import { useLocation } from "react-router"
+import { getLimits } from "../../WalletsNew"
+import InstaPayLoader from "../../Loader"
+
+export function formatCurrencyLocal(value) {
+    return value ? parseFloat(value?.replace(/,/g, ''))?.toFixed(2) : value;
+}
+
+const Amount = ({ data, dataHandler }) => {
+    const { t } = useTranslation()
+    const { userDetails, authHeader } = useContext(UserContext)
+
+    const [formattedAmount, setFormattedAmount] = useState(data?.amount)
+    const handleKeyUp = (e) => {
+        formatCurrency(e.target.value, false, setFormattedAmount);
+    };
+
+    const handleBlur = (e) => {
+        formatCurrency(e.target.value, true, setFormattedAmount);
+    };
+
+    useEffect(() => {
+        dataHandler("amount", Math.ceil(String(formattedAmount ?? "")?.replaceAll(",", "")))
+    }, [formattedAmount])
+
+    const location = useLocation()
+    const queryParams = new URLSearchParams(location.search)
+    const wallet_address = queryParams.get("wallet_address")
+    const [walletData, setWalletData] = useState({})
+    const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        if (wallet_address && data.wallet?._id) {
+            setLoading(true)
+            getLimits(data.wallet, setWalletData, authHeader, () => { }, () => { })
+        }
+    }, [wallet_address, data.wallet])
+
+
+    useEffect(() => {
+        if (walletData?.min_topup_amount && wallet_address) {
+            dataHandler("limits", {
+                min: walletData?.min_topup_amount ?? data?.limits?.min,
+                max: walletData?.max_topup_amount ?? data?.limits?.max
+            })
+            // dataHandler("amount", walletData?.min_topup_amount ?? data?.limits?.min)
+            formatCurrency(formatCurrencyLocal(walletData?.min_topup_amount) ?? formatCurrencyLocal(data?.limits?.min), true, setFormattedAmount)
+            setLoading(false)
+        }
+    }, [wallet_address, walletData])
+
+    return (
+        loading
+            ?
+            <div style={{ height: "200px", width: "200px", margin: "1rem auto" }}>
+                <InstaPayLoader />
+            </div>
+            :
+            <div className={styles.container}>
+                <div className={styles.amount}>
+                    <label>{t("Enter Amount")}</label>
+                    <div style={{ display: "flex", gap: ".5rem" }}>
+                        <span style={{ width: "fit-content" }}>{data?.wallet?.currency?.code} </span>
+                        <input
+                            type="text"
+                            value={formattedAmount}
+                            maxLength={12}
+                            onChange={(e) => setFormattedAmount(e.target.value)}
+                            onKeyUp={handleKeyUp}
+                            onBlur={handleBlur}
+                            placeholder="0.00"
+                            data-type="currency"
+                        />
+                    </div>
+                </div>
+                <div className={styles.warning}>
+                    <Info size={19} color="#EB8C1D" />
+                    <span>
+                        {
+                            t(`⚠️ The transactional value should be between[Currency ISO code & Amount] - [Currency ISO code & Amount] `)
+                                .replace("[Currency ISO code & Amount] - [Currency ISO code & Amount] ", ` ${data?.limits?.min ?? 0} - ${data?.limits?.max ?? 0}`)
+                                .replace("⚠️ ", "")
+                        }
+                    </span>
+                </div>
+                {
+                    !data.amount || +String(data.amount ?? "")?.replaceAll(",", "") <= +formatCurrencyLocal(data.limits.min) || +String(data.amount ?? "")?.replaceAll(",", "") >= +formatCurrencyLocal(data.limits.max)
+                        ?
+                        <div style={{
+                            height: "100px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            textAlign: "center",
+                            fontSize: "1rem",
+                            fontWeight: 600,
+                            color: "red"
+                        }}>{
+                                userDetails?.user?.kyc_status !== "approved" && +String(data.amount ?? "")?.replaceAll(",", "") >= +formatCurrencyLocal(data.limits.max)
+                                    ?
+                                    t("⚠️ Invalid Amount: Your current  identity verification level limits the  maximum amount you can add. Please upgrade your identity verification to benefit from higher limits")
+                                        .replace("⚠️ ", "")
+                                    :
+                                    +String(data.amount ?? "")?.replaceAll(",", "") <= +formatCurrencyLocal(data.limits.min)
+                                        ?
+                                        "Minimum transactional amount is " + data?.limits?.min
+                                        :
+                                        +String(data.amount ?? "")?.replaceAll(",", "") >= +formatCurrencyLocal(data.limits.max)
+                                            ?
+                                            "Maximum transactional amount is " + data?.limits?.max
+                                            :
+                                            t("Invalid Amount")
+                            }</div>
+                        :
+                        ""
+                }
+
+            </div>
+    )
+}
+
+export default Amount
