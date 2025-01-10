@@ -7,6 +7,7 @@ import { X } from 'react-feather'
 const SessionExpireModal = ({ isOpen, toggle }) => {
     const [timer, setTimer] = useState(5)
     const { clearData } = useContext(UserContext)
+    const [isOpenState, setIsOpenState] = useState(isOpen)
     const navigate = useNavigate()
 
     const logoutHandler = () => {
@@ -15,6 +16,7 @@ const SessionExpireModal = ({ isOpen, toggle }) => {
         localStorage.setItem("ip_country", coun)
         clearData()
         toggle()
+        setIsOpenState(false)
         navigate("/auth/login")
     }
 
@@ -33,7 +35,7 @@ const SessionExpireModal = ({ isOpen, toggle }) => {
     }, [timer])
 
     return (
-        <Modal isOpen={isOpen}>
+        <Modal isOpen={isOpenState}>
             <ModalBody
                 style={{
                     display: "flex",
