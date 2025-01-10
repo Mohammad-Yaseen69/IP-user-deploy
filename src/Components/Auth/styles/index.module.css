@@ -81,6 +81,10 @@
     border-radius: 8px;
 }
 
+.otp{
+    min-height: 390px !important;
+}
+
 .form_details .left,
 .otp .left {
     padding: 24px;
@@ -396,6 +400,7 @@
     margin-top: 24px;
     display: flex;
     gap: 1rem;
+    flex-direction: column;
     align-items: center;
 }
 

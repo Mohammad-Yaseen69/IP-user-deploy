@@ -33,10 +33,12 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const { allowedCountries, profileLockTIme, setProfileLockTime, setUserDetails } = useContext(UserContext)
     const [loginMethod, setLoginMethod] = useState("phone")
     const [userAuthSetup, setUserAuthSetup] = useState(false)
+    const [isInstagram, setIsInstagram] = useState(false)
     const [currentActiveInput, setCurrentActiveInput] = useState(1)
     const [isOtpCorrect, setIsOtpCorrect] = useState(false)
     const [otpVerified, setOtpVerified] = useState(false)
     const [startTyping, setStartTyping] = useState(false)
+    const [currentOtpMethod, setCurrentOtpMethod] = useState("auth")
 
     useLayoutEffect(() => {
         const loginWith = localStorage.getItem("loginWith")
@@ -50,13 +52,27 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         setIsPressed(false)
     }
 
-    const loginHandler = (e, argSMs = null) => {
+    const loginHandler = (e, method = null) => {
         e.preventDefault()
         setIsPressed(true)
         setIsLoginError("")
+        console.log(currentOtpMethod, method)
+        const isAuth = method ? (method === "auth") : (currentOtpMethod === "auth");
+        const isInsta = method ? (method === "insta") : (currentOtpMethod === "insta" || currentOtpMethod !== "sms");
+
         const credentials = isEmail.test(email)
-            ? { email, password, authenticator: argSMs ?? !isSms }
-            : { phone: email, password, authenticator: argSMs ?? !isSms }
+            ? {
+                email,
+                password,
+                authenticator: isAuth,
+                platform: isInsta ? "instagram" : ""
+            }
+            : {
+                phone: email,
+                password,
+                authenticator: isAuth,
+                platform: isInsta ? "instagram" : ""
+            };
         const encrypted = encryptData(credentials)
         console.log(credentials)
 
@@ -66,20 +82,24 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             .then(async (res) => {
                 const decrypted = decryptData(res.data.data)
                 setUserAuthSetup(decrypted?.tfa)
+                setIsInstagram(decrypted?.instagram)
+                setCurrentOtpMethod((decrypted?.tfa) && (decrypted?.authenticator) ? "auth" : decrypted?.instagram ? "insta" : "sms")
                 setResendTimer(120)
-                if (typeof argSMs !== "boolean") {
-                    setIsSms(!decrypted?.authenticator)
-                    if (decrypted?.authenticator == true) {
-                        setResendTimer(0)
-                    }
+                console.log(decrypted)
+        
+
+
+                if (decrypted?.authenticator == true) {
+                    setResendTimer(0)
                 }
+
                 setLoginToken(decrypted?.token)
                 setStep(2)
                 setIsPressed(false)
             })
             .catch(error => {
                 setIsPressed(false)
-                const decrypted = decryptData(error.response.data.data)
+                const decrypted = decryptData(error.response.data?.data)
                 if (decrypted.message === "Account not found!" || decrypted.message === "Incorrect Password!" || decrypted.message?.toLowerCase()?.includes("incorrect") || decrypted.message === "User not found!") {
                     setIsLoginError(`Uh-Oh! The password/${isEmail.test(email) ? "email" : "phone number"} you entered is wrong.`)
                 }
@@ -139,13 +159,15 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
     }, [loginMethod])
 
-    const [isSms, setIsSms] = useState(false)
 
-    useEffect(() => {
-        if (step === 1) {
-            setIsSms(false)
-        }
-    }, [step])
+    // useEffect(() => {
+    //     if (step === 1) {
+    //         console.log("as")
+    //         setCurrentOtpMethod(userAuthSetup ? "auth" : isInstagram ? "insta" : "sms")
+    //     }
+    // }, [step])
+
+
     const getUserInfo = async () => {
         try {
             const res = await axios.get(`https://ipinfo.io?token=${process.env.REACT_APP_IP_INFO_TOKEN}`)
@@ -247,7 +269,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
         const encrypted = encryptData(credentials)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/verify-login-${isSms ? "otp" : "auth"}`, {
+        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/verify-login-${currentOtpMethod === "auth" ? "auth" : "otp"}`, {
             data: encrypted
         })
             .then(async (res) => {
@@ -327,6 +349,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             })
     }
 
+    console.log(currentOtpMethod)
     const handlePaste = (event) => {
         event.preventDefault();
         console.log(event)
@@ -345,6 +368,18 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             verifyOTpHandler({ preventDefault: () => { } }, newOTPValues.join(""))
         }
     };
+
+    const handleOtpMethod = (method) => {
+        setOTPValues(Array(numberOfFields).fill(''))
+        inputRefs?.current?.[0]?.focus()
+        if (resendTimer == 0) {
+            loginHandler({ preventDefault: () => { } }, method)
+            if (currentOtpMethod !== "sms" || currentOtpMethod !== "insta") {
+                setResendTimer(120)
+            }
+        }
+        setCurrentOtpMethod(method)
+    }
 
     useEffect(() => {
         if (profileLockTIme > 0) {
@@ -524,7 +559,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     :
                     <form onSubmit={verifyOTpHandler} className={styles.otp}>
                         <div className={styles.left}>
-                            <h1>{!isSms ? t("Google Authenticator") : t("SMS Verification")}</h1>
+                            <h1>{currentOtpMethod === "auth" ? t("Google Authenticator") : currentOtpMethod == "insta" ? "Instagram" : t("SMS Verification")}</h1>
                             <p>{t("Start Your InstaPay Journey Today!")}</p>
                             {
                                 window.innerWidth < 1000
@@ -537,22 +572,26 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 <div className={styles.otp_inp}>
                                     <label>
                                         {
-                                            !isSms
+                                            currentOtpMethod === "auth"
                                                 ?
                                                 t("Two Factor Authentication Code")
                                                 :
-                                                t(`Enter the SMS code sent to +41********4053`)
-                                                    .replace(
-                                                        "+41********4053",
-                                                        isEmail.test(email)
-                                                            ?
-                                                            `${email.slice(0, 4).split("").map(_ => "*").join("")}${email.slice(4)}`
-                                                            :
-                                                            `${email.slice(0, email.length - 4).split("").map(_ => "*").join("")}${email.slice(email.length - 4)}`
-                                                    )
+                                                currentOtpMethod === "insta"
+                                                    ?
+                                                    "Enter the code sent to your Instagram Account"
+                                                    :
+                                                    t(`Enter the SMS code sent to +41********4053`)
+                                                        .replace(
+                                                            "+41********4053",
+                                                            isEmail.test(email)
+                                                                ?
+                                                                `${email.slice(0, 4).split("").map(_ => "*").join("")}${email.slice(4)}`
+                                                                :
+                                                                `${email.slice(0, email.length - 4).split("").map(_ => "*").join("")}${email.slice(email.length - 4)}`
+                                                        )
                                         }
                                     </label>
-                                    <FaceAnimation currentInput={currentActiveInput} verification={otpVerified} isCorrect={isOtpCorrect} startTyping/>
+                                    <FaceAnimation currentInput={currentActiveInput} verification={otpVerified} isCorrect={isOtpCorrect} startTyping />
                                     <div style={{ animation: otpVerified && !isOtpCorrect ? "horizontal-shaking 0.5s ease-in-out" : "" }} className={styles.otp_inputs + " " + (otpVerified && (!isOtpCorrect ? "wrong" : "correct"))}>
                                         {otpValues.map((value, index) => (
                                             <motion.input
@@ -574,35 +613,38 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 </div>
                                 <div style={{ paddingTop: "10px" }} className={styles.toggle_sms}>
                                     {
-                                        !isSms
+                                        currentOtpMethod === "auth"
                                         &&
                                         <span>{t("Problem with the token?")}</span>
                                     }
+                                    <div style={{ display: "flex", gap: "9px" }}>
+                                        {
+                                            (userAuthSetup || isInstagram)
+                                            &&
+                                            <>
+                                                {(currentOtpMethod !== "auth" && userAuthSetup) && (
+                                                    <button type="button" disabled={isPressed} onClick={() => handleOtpMethod("auth")}>
+                                                        Verify Using Authenticator
+                                                    </button>
+                                                )}
+
+                                                {currentOtpMethod !== "sms" && (
+                                                    <button type="button" disabled={isPressed} onClick={() => handleOtpMethod("sms")}>
+                                                        Verify Using Sms/Email
+                                                    </button>
+                                                )}
+
+                                                {(currentOtpMethod !== "insta" && isInstagram) && (
+                                                    <button type="button" disabled={isPressed} onClick={() => handleOtpMethod("insta")}>
+                                                        Verify Instagram
+                                                    </button>
+                                                )}
+                                            </>
+
+                                        }
+                                    </div>
                                     {
-                                        userAuthSetup
-                                        &&
-                                        <button type="button" disabled={isPressed} onClick={() => {
-                                            setOTPValues(Array(numberOfFields).fill(''))
-                                            inputRefs?.current?.[0]?.focus()
-                                            if (resendTimer == 0) {
-                                                isSms ? loginHandler({ preventDefault: () => { } }, true) : loginHandler({ preventDefault: () => { } }, false)
-                                                if (!isSms) {
-                                                    setResendTimer(120)
-                                                }
-                                            }
-                                            setIsSms(!isSms)
-                                        }}>
-                                            {
-                                                isSms
-                                                    ?
-                                                    t("Verify Using Authenticator")
-                                                    :
-                                                    t("Verify Using Sms/Email")
-                                            }
-                                        </button>
-                                    }
-                                    {
-                                        isSms
+                                        currentOtpMethod !== "auth"
                                         &&
                                         <span>
                                             {
@@ -618,6 +660,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             }
                                         </span>
                                     }
+
                                 </div>
                                 {
                                     isLoginError
