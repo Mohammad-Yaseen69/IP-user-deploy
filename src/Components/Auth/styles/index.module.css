@@ -82,7 +82,7 @@
 }
 
 .otp{
-    min-height: 390px !important;
+    min-height: 450px !important;
 }
 
 .form_details .left,
@@ -393,7 +393,7 @@
 }
 
 .otp {
-    margin-top: -200px;
+    margin-top: -300px;
 }
 
 .toggle_sms {
@@ -449,6 +449,27 @@
 
 .shake{
     display: none !important;
+}
+
+.otp_methods{
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px !important;
+    flex-direction: column;
+}
+
+.otpMethodButton{
+    display: flex !important;
+    align-items: center !important;
+    text-decoration-line: none !important;
+    gap: 8px !important;
+    border: 1px solid rgba(0, 0, 0, 0.216);
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px, rgba(0, 0, 0, 0.07) 0px 8px 8px, rgba(0, 0, 0, 0.07) 0px 16px 16px !important;
+}
+
+
+.otp_inputs button img{
+    width: 20px !important;
 }
 
 @keyframes horizontal-shaking {
@@ -689,5 +710,11 @@
 
     .otp .center_bottom {
         margin-top: 3.5rem;
+    }
+}
+
+@media screen and (max-width: 600px){
+    .otp_methods{
+        flex-direction: column;
     }
 }

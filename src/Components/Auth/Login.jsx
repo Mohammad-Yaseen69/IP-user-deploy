@@ -15,6 +15,9 @@ import { countries } from "country-list-json";
 import LanguagePicker from "../LanguagePicker";
 import FaceAnimation from "./FaceAnimation"
 import { motion } from "framer-motion"
+import InstaSvg from "../../assets/icons/insta.svg"
+import SmsSvg from "../../assets/icons/sms.svg"
+import AuthSvg from "../../assets/icons/auth.svg"
 import "./styles/index.module.css";
 
 const Login = ({ country, setIsLoginForm, setIsForgot }) => {
@@ -83,7 +86,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 const decrypted = decryptData(res.data.data)
                 setUserAuthSetup(decrypted?.tfa)
                 setIsInstagram(decrypted?.instagram)
-                setCurrentOtpMethod((decrypted?.tfa) && (decrypted?.authenticator) ? "auth" : decrypted?.instagram ? "insta" : "sms")
+                setCurrentOtpMethod((decrypted?.tfa) && (decrypted?.authenticator) ? "auth" : (decrypted?.instagram) && (isInsta) ? "insta" : "sms")
                 setResendTimer(120)
                 console.log(decrypted)
         
@@ -349,7 +352,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             })
     }
 
-    console.log(currentOtpMethod)
     const handlePaste = (event) => {
         event.preventDefault();
         console.log(event)
@@ -617,26 +619,26 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         &&
                                         <span>{t("Problem with the token?")}</span>
                                     }
-                                    <div style={{ display: "flex", gap: "9px" }}>
+                                    <div className={styles.otp_methods}>
                                         {
                                             (userAuthSetup || isInstagram)
                                             &&
                                             <>
                                                 {(currentOtpMethod !== "auth" && userAuthSetup) && (
-                                                    <button type="button" disabled={isPressed} onClick={() => handleOtpMethod("auth")}>
-                                                        Verify Using Authenticator
+                                                    <button className={styles.otpMethodButton} type="button" disabled={isPressed} onClick={() => handleOtpMethod("auth")}>
+                                                        <img style={{width: "30px"}} src={AuthSvg} alt="" /> <p style={{marginBottom: "0"}}>Verify Using Authenticator</p>  
                                                     </button>
                                                 )}
 
                                                 {currentOtpMethod !== "sms" && (
-                                                    <button type="button" disabled={isPressed} onClick={() => handleOtpMethod("sms")}>
-                                                        Verify Using Sms/Email
+                                                    <button className={styles.otpMethodButton} type="button" disabled={isPressed} onClick={() => handleOtpMethod("sms")}>
+                                                       <img style={{width: "30px"}}  src={SmsSvg} alt="" /> <p style={{marginBottom: "0"}}>Verify Using Sms/Email</p>
                                                     </button>
                                                 )}
 
                                                 {(currentOtpMethod !== "insta" && isInstagram) && (
-                                                    <button type="button" disabled={isPressed} onClick={() => handleOtpMethod("insta")}>
-                                                        Verify Instagram
+                                                    <button className={styles.otpMethodButton} type="button" disabled={isPressed} onClick={() => handleOtpMethod("insta")}>
+                                                       <img style={{width: "30px"}} src={InstaSvg} alt="" /> <p style={{marginBottom: "0"}}>Verify Using Instagram</p>
                                                     </button>
                                                 )}
                                             </>
