@@ -89,7 +89,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 setCurrentOtpMethod((decrypted?.tfa) && (decrypted?.authenticator) ? "auth" : (decrypted?.instagram) && (isInsta) ? "insta" : "sms")
                 setResendTimer(120)
                 console.log(decrypted)
-        
+
 
 
                 if (decrypted?.authenticator == true) {
@@ -626,19 +626,19 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             <>
                                                 {(currentOtpMethod !== "auth" && userAuthSetup) && (
                                                     <button className={styles.otpMethodButton} type="button" disabled={isPressed} onClick={() => handleOtpMethod("auth")}>
-                                                        <img style={{width: "30px"}} src={AuthSvg} alt="" /> <p style={{marginBottom: "0"}}>Verify Using Authenticator</p>  
-                                                    </button>
-                                                )}
-
-                                                {currentOtpMethod !== "sms" && (
-                                                    <button className={styles.otpMethodButton} type="button" disabled={isPressed} onClick={() => handleOtpMethod("sms")}>
-                                                       <img style={{width: "30px"}}  src={SmsSvg} alt="" /> <p style={{marginBottom: "0"}}>Verify Using Sms/Email</p>
+                                                        <img style={{ width: "30px" }} src={AuthSvg} alt="" /> <p style={{ marginBottom: "0" }}>Verify Using Authenticator</p>
                                                     </button>
                                                 )}
 
                                                 {(currentOtpMethod !== "insta" && isInstagram) && (
                                                     <button className={styles.otpMethodButton} type="button" disabled={isPressed} onClick={() => handleOtpMethod("insta")}>
-                                                       <img style={{width: "30px"}} src={InstaSvg} alt="" /> <p style={{marginBottom: "0"}}>Verify Using Instagram</p>
+                                                        <img style={{ width: "30px" }} src={InstaSvg} alt="" /> <p style={{ marginBottom: "0" }}>Verify Using Instagram</p>
+                                                    </button>
+                                                )}
+
+                                                {currentOtpMethod !== "sms" && (
+                                                    <button className={styles.otpMethodButton} type="button" disabled={isPressed} onClick={() => handleOtpMethod("sms")}>
+                                                        <img style={{ width: "33px" }} src={SmsSvg} alt="" /> <p style={{ marginBottom: "0" }}>Verify Using Sms/Email</p>
                                                     </button>
                                                 )}
                                             </>
