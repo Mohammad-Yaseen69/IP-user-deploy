@@ -12,6 +12,7 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
 import { useLocation, useNavigate } from 'react-router'
 import LinkToInstagramModal from '../LinkToInstagramModal'
+import LinktoTelegramModal from "../LinkToTelegramModal"
 
 const AccountItem = ({ data }) => {
     const navigate = useNavigate()
@@ -32,8 +33,9 @@ const AccountItem = ({ data }) => {
         setCodeType(userDetails?.tfa ? "authenticator" : "sms")
     }, [userDetails])
 
+    console.log(data)
     const onChange = () => {
-        if (data.name.toLowerCase().includes("insta") && !checked) {
+        if ((data.name.toLowerCase().includes("insta") || data.name.toLowerCase().includes("telegram")) && !checked) {
             if (userDetails?.username) {
                 setShowModal(true)
             }
@@ -73,18 +75,19 @@ const AccountItem = ({ data }) => {
 
     const otpCallback = (setter, type, otp, setError) => {
         setSaving(true)
-        const data = {
+        const socialType = data.name.toLowerCase().includes("insta") ? "insta" : "telegram"
+        const requestData = {
             token,
             otp,
             type: codeType
         }
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/insta-unlink/${userDetails?._id}`, { data: encryptData(data) }, {
+        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/${socialType}-unlink/${userDetails?._id}`, { data: encryptData(requestData) }, {
             headers: authHeader
         })
             .then(res => {
                 verifyToken()
                 setter(true)
-                toast.success("Instagram account unlinked successfully!")
+                toast.success("Telegram account unlinked successfully!")
             })
             .catch(error => {
                 const dec = decryptData(error.response.data.data)
@@ -118,7 +121,12 @@ const AccountItem = ({ data }) => {
         if (data.name.toLowerCase().includes("insta")) {
             setChecked(userDetails?.insta_username ? true : false)
         }
+        else if (data.name.toLowerCase().includes("telegram")) {
+            setChecked(userDetails?.telegram_bot)
+        }
     }, [userDetails])
+
+    console.log(userDetails)
 
     const conRef = useRef()
     const location = useLocation()
@@ -212,6 +220,18 @@ const AccountItem = ({ data }) => {
                         }}
                     />
                     : ""
+            }
+            {
+                (data.name.toLowerCase().includes("telegram") && showModal) ? 
+                <LinktoTelegramModal
+                    isOpen={showModal}
+                    toggle={() => {
+                        setShowModal(!showModal)
+                        if (tab?.toLowerCase() === "social" && ft) {
+                            navigate("/settings?tab=verification&ft=true")
+                        }
+                    }} 
+                /> : ""
             }
             {/* <Modal isOpen={showModal} toggle={() => setShowModal(!showModal)}>
                 <ModalHeader toggle={() => setShowModal(!showModal)}>{t("Activate Account")}</ModalHeader>

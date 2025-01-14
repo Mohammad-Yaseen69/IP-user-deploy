@@ -210,7 +210,9 @@ export const routes = [
   { path: `${process.env.PUBLIC_URL}/profile/me`, Component: <UserProfile /> },
   // { path: `${process.env.PUBLIC_URL}/users/userEdit`, Component: <UsersEditContain /> },
   { path: `${process.env.PUBLIC_URL}/users/userEdit`, Component: <UserSettings /> },
-  { path: `${process.env.PUBLIC_URL}/users/settings`, Component: <UserSettingsNew /> },
+  { path: `${process.env.PUBLIC_URL}/users/settings`, Component: <UserSett
+  
+  ingsNew /> },
   { path: `${process.env.PUBLIC_URL}/users/userCards`, Component: <UsersCardssContain /> },
 
   { path: `${process.env.PUBLIC_URL}/bookmark`, Component: <BookmarksContain /> },

@@ -13,6 +13,12 @@ export const AccountsData = [
         available: true
     },
     {
+        img: tl,
+        name: "Telegram",
+        enabled: false,
+        available: true
+    },
+    {
         img: wa,
         name: "Whatsapp",
         enabled: false,
@@ -27,12 +33,6 @@ export const AccountsData = [
     {
         img: tk,
         name: "Tiktok",
-        enabled: false,
-        available: false
-    },
-    {
-        img: tl,
-        name: "Telegram",
         enabled: false,
         available: false
     },
