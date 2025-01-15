@@ -122,7 +122,7 @@ const AccountItem = ({ data }) => {
             setChecked(userDetails?.insta_username ? true : false)
         }
         else if (data.name.toLowerCase().includes("telegram")) {
-            setChecked(userDetails?.telegram_bot)
+            setChecked(userDetails?.telegram_bot ? true : false)
         }
     }, [userDetails])
 
