@@ -104,10 +104,10 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
 
     useEffect(() => {
         let interval;
-        if (userDetails?.insta_username) {
+        if (userDetails?.telegram_bot) {
             setShowSuccess(true)
         }
-        else if (linkCode && !userDetails?.insta_username) {
+        else if (linkCode && !userDetails?.telegram_bot) {
             interval = setInterval(() => {
                 verifyToken()
             }, 3000)
