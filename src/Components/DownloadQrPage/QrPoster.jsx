@@ -46,19 +46,21 @@ const QrPoster = ({ wallet }) => {
     }, []);
 
     useEffect(() => {
-        const url = `https://my.insta-pay.ch/q/${wallet?.wallet_id}`
-        qrCode.update({ data: url });
-
-        qrCode.getRawData("png").then((dataUrl) => {
-            const file = new File([dataUrl], "abc.png", { type: "image/png" });
-            const reader = new FileReader()
-            reader.onload = () => {
-                setQrLink(reader.result);
-            };
-
-            reader.readAsDataURL(file);
-        })
-            .catch(err => console.log(err))
+        if(qrCode && wallet){
+            const url = `https://my.insta-pay.ch/q/${wallet?.wallet_id}`
+            qrCode.update({ data: url });
+    
+            qrCode.getRawData("png").then((dataUrl) => {
+                const file = new File([dataUrl], "abc.png", { type: "image/png" });
+                const reader = new FileReader()
+                reader.onload = () => {
+                    setQrLink(reader.result);
+                };
+    
+                reader.readAsDataURL(file);
+            })
+                .catch(err => console.log(err))
+        }
     }, [wallet])
 
     return (
@@ -69,7 +71,7 @@ const QrPoster = ({ wallet }) => {
 
                 <div className={styles.qr_con}>
                     <div className={styles.qr_container}>
-                        <img src={qrLink} alt="" />
+                        {qrLink && <img src={qrLink} alt="" />}
                         <div className={styles.wi}>{wallet?.wallet_id}</div>
                         <div className={styles.un}>{userDetails?.username}</div>
                     </div>

@@ -126,7 +126,7 @@
 }
 
 .switch.disabled {
-    cursor: not-allowed;
+    /* cursor: not-allowed; */
 }
 
 .thumb {
