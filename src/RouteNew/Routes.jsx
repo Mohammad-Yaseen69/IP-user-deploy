@@ -51,6 +51,7 @@ const RequestCalendar = lazy(() => import("../Components/Chatbot/schedule-paymen
 const SubscriptionRequest = lazy(() => import("../Components/Chatbot/subscription-payment-request"))
 const SubscriptionCalendarEndDate = lazy(() => import("../Components/Chatbot/subscription-end-date"))
 const SubscriptionRequestEndDate = lazy(() => import("../Components/Chatbot/subscription-request-end-date"))
+const CreatePassword = lazy(() => import("../Components/CreatePassword/CreatePassword"))
 
 
 export const routes = [
@@ -88,6 +89,7 @@ export const routes = [
     { path: "/add-funds/aborted/:enc", component: <AddFunds /> },
     { path: "/onboarding/add-users", component: <BroadcastSignup /> },
     { path: "/payment-status/:type/:status/:code", component: <PaymentStatus /> },
+    { path: "/create-password/:token", component: <CreatePassword /> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 
@@ -114,6 +116,7 @@ export const publicRoutes = [
     { path: "/chatbot/paypal-transaction/:status/:id", component: <PaypalTransactions /> },
     { path: "/chatbot/get-location", component: <GetLocation /> },
     { path: "/chatbot/payment-request", component: <ShowLocation /> },
+    { path: "/create-password/:token", component: <CreatePassword /> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 
