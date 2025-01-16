@@ -9,6 +9,7 @@ import { useNavigate, useParams } from "react-router"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import Cross from "./Cross.svg"
+import { toast } from "react-toastify"
 
 const CreatePassword = () => {
     const { t } = useTranslation()
@@ -55,6 +56,7 @@ const CreatePassword = () => {
     }
 
     const passwordVerify = () => {
+        setIsPressed(true)
         if (data && passwords.password.value === passwords.confirm_password.value && passwords.password) {
             const bodyData = {
                 platform: data.platform,
@@ -68,14 +70,19 @@ const CreatePassword = () => {
             axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/set-password`, {
                 data: encryptedData
             }).
-            then((res) => {
-                const dec = decryptData(res.data.data)
-                console.log(dec)
-            })
-            .catch((err) => {
-                const dec = decryptData(err.response.data.data)
-                console.log(dec)
-            })
+                then((res) => {
+                    const dec = decryptData(res.data.data)
+                    toast.success("Password set successfully")
+                    console.log(dec)
+                })
+                .catch((err) => {
+                    const dec = decryptData(err.response.data.data)
+                    toast.error(dec?.message || "Something went wrong")
+                    console.log(dec)
+                })
+                .finally(() => {
+                    setIsPressed(false)
+                })
         }
     }
 

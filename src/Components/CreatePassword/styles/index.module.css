@@ -835,6 +835,13 @@
     }
 }
 
+
+@media screen and (max-width: 600px){
+    .wrapper{
+        width: 95%;
+    }
+}
+
 @media screen and (max-width: 360px) {
     .otp_fields {
         gap: 10px;
