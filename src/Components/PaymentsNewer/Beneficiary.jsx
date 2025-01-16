@@ -1,4 +1,4 @@
-import { Check, ChevronRight, HelpCircle, Search, X, XCircle } from "react-feather"
+import { Check, ChevronLeft, ChevronRight, HelpCircle, Search, X, XCircle } from "react-feather"
 import { Badge, Button, Card, CardBody, Input } from "reactstrap"
 import { useSelector } from "react-redux"
 import { useTranslation } from "react-i18next"
@@ -15,6 +15,7 @@ import countries from "./CountriesData.json"
 import { BsThreeDots } from "react-icons/bs"
 import InstaPayLoader from "../Loader"
 import { Link } from "react-router-dom"
+import stylesForButtons from "./InternationalFlow/styles/index.module.css"
 
 const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "Sending", payoutChannel = "", international = null, country = null, countryCode = null, backHandler = () => { } }) => {
     const { t } = useTranslation()
@@ -416,7 +417,7 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                 </div>
             </CardBody>
             <div style={{
-                display: "flex",
+                display: window.innerWidth > 600 ? "flex" : "none",
                 justifyContent: "space-between",
                 alignItems: "flex-end",
                 gap: ".5rem",
@@ -456,9 +457,47 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                         onClick={createQuotations}
                         disabled={isChecking || beneficiary.length < 1}
                     >
-                        {isChecking ? t("Confirming") : t("Confirm")} <ChevronRight size={20} />
+                        {isChecking ? t("Confirming") : "asdfasdfasdfasdfasdf"} <ChevronRight size={20} />
                     </Button>
                 </div>
+            </div>
+            <div style={{
+                display: window.innerWidth < 600 ? "flex" : "none",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection:"column",
+                gap: ".5rem",
+                flexWrap: "wrap",
+                paddingLeft: "1rem",
+                marginTop: "1rem"
+            }}>
+                {/* <p style={{ fontSize: window.innerWidth > 1000 ? ".7vw" : ".7rem", display: "flex", alignItems: "center", gap: ".3rem", marginBottom: "0" }}> */}
+                <div className={stylesForButtons?.buttons}>
+                    <button onClick={backHandler}><ChevronLeft /></button>
+                    <button 
+                        className={stylesForButtons?.full}
+                        onClick={createQuotations}
+                        disabled={isChecking || beneficiary.length < 1}
+                    >
+                        {isChecking ? t("Confirming") : "Confirm"} <ChevronRight size={20} />
+                    </button>
+                </div>
+
+                <p style={{ fontSize: window.innerWidth > 1000 ? ".7vw" : ".7rem", display: "flex", alignItems: "center", gap: ".3rem", marginBottom: "0", cursor: "pointer" }} onClick={() => window.open("https://insta-pay.ch/faqs", "_blank")}>
+                    {
+                        quotationError
+                            ?
+                            <>
+                                <XCircle size={12} color="red" />
+                                <span style={{ color: "red" }}>Something went wrong.</span>
+                            </>
+                            :
+                            <>
+                                <HelpCircle size={12} />
+                                <span>{t(`Trouble ${type} Money?`)}</span>
+                            </>
+                    }
+                </p>
             </div>
         </Card >
     )
