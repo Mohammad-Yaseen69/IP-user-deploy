@@ -304,7 +304,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                             className="i_t_button"
                             disabled={isAnyFieldEmpty || isSaving || processing}
                         >
-                            Verifyy <ChevronRight size={24} />
+                            Verify <ChevronRight size={24} />
                         </Button>
                     </>
                 </div>

@@ -87,7 +87,7 @@ const AccountItem = ({ data }) => {
             .then(res => {
                 verifyToken()
                 setter(true)
-                toast.success("Telegram account unlinked successfully!")
+                toast.success(`$${data.name.toLowerCase().includes("insta") ? "Instagram" : "Telegram"} account unlinked successfully!`)
             })
             .catch(error => {
                 const dec = decryptData(error.response.data.data)

@@ -4,7 +4,7 @@ import guide_video from "./files/right.mp4"
 import { useTranslation } from 'react-i18next'
 import hash from "./files/hash.svg"
 import time from "./files/time.svg"
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { UserContext } from '../../Context/UserContext'
 import { toast } from 'react-toastify'
@@ -66,6 +66,7 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
     const [linkCode, setLinkCode] = useState("")
     const [timer, setTimer] = useState(120)
     const [showSuccess, setShowSuccess] = useState(false)
+    const modalRef  = useRef(null)
 
     const getLinkCode = async () => {
         setLoading(true)
@@ -103,6 +104,12 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
     const ft = queryParams.get("ft")
 
     useEffect(() => {
+        if (isOpen && modalRef.current) {
+            modalRef.current.scrollTop = 0;
+        }
+    }, [isOpen]);
+
+    useEffect(() => {
         let interval;
         if (userDetails?.telegram_bot) {
             setShowSuccess(true)
@@ -121,8 +128,20 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
             {
                 !showSuccess
                     ?
-                    <Modal isOpen={isOpen} toggle={toggle} style={{ maxWidth: "920px", width: "100vw" }} contentClassName={styles.content}>
-                        <ModalBody className={styles.container}>
+                    <Modal 
+                    isOpen={isOpen} 
+                    toggle={toggle} 
+                    style={{ maxWidth: "920px", width: "100vw" }} 
+                    contentClassName={styles.content} 
+                    onOpened={() => {
+                        const modalContent = document.querySelector(`.${styles.container}`);
+                        if (modalContent) {
+                          modalContent.scrollTop = 0; // Scroll to the top
+                        }
+                    }}
+                    scrollable={true}
+                    >
+                        <ModalBody className={styles.container} ref={modalRef}>
                             <div className={styles.left}>
                                 {
                                     window.innerWidth > 900
@@ -171,7 +190,7 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <button style={{ outline: "none", border: "none", display: "flex", alignItems: "center", color: "black", fontSize: "1rem", fontWeight: 500, background: "transparent", gap: "1rem", padding: ".6rem 1rem", justifyContent: "center" }} onClick={() => window.open("https://www.instagram.com/instapay_swiss/", "_blank")}>
+                                            <button style={{ outline: "none", border: "none", display: "flex", alignItems: "center", color: "black", fontSize: "1rem", fontWeight: 500, background: "transparent", gap: "1rem", padding: ".6rem 1rem", justifyContent: "center" }} onClick={() => window.open("https://t.me/instapay_swiss_bot/", "_blank")}>
                                                 <div style={{ borderRadius: "10px", height: "35px", width: "35px", display: "flex", justifyContent: "center", alignItems: "center", background: "#5926f0" }}>
                                                     <Instagram color='white' size={20} />
                                                 </div>
@@ -184,7 +203,7 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
                                                 <img src={hash} alt="#" />
                                                 <span>{t("Get Connection Code")}</span>
                                             </button>
-                                            <button className={styles.button} style={{ color: "white" }} onClick={() => window.open("https://www.instagram.com/instapay_swiss/", "_blank")}>{t("Go to InstaPay Instagram account")}</button>
+                                            <button className={styles.button} style={{ color: "white" }} onClick={() => window.open("https://t.me/instapay_swiss_bot/", "_blank")}>{t("Go to InstaPay Instagram account").replace("Instagram", "Telegram")}</button>
                                         </div>
                                 }
                             </div>
@@ -211,7 +230,7 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
                     :
                     <SuccessModal
                         isOpen={showSuccess}
-                        message={`Your InstaPay account has been connected to ${userDetails?.insta_username}.`}
+                        message={`Your InstaPay account has been connected to Your Telegram Account`}
                         subMessage={"Telegram Linked Successfully!"}
                         toggle={() => {
                             toggle()

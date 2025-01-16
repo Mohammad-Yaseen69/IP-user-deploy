@@ -291,7 +291,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                             const data = await getUserInfo()
                                 .catch(() => {
                                     const path = sessionStorage.getItem("path")
-                                    navigate("/")
+                                    if(path){
+                                        navigate(path)
+                                    }else{
+                                        navigate("/")
+                                    }
                                     sessionStorage.clear()
                                 })
                             const encrypted = encryptData(
@@ -306,7 +310,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 .then(res => {
                                     const decrypted = decryptData(res.data.data)
                                     const path = sessionStorage.getItem("path")
-                                    navigate("/")
+                                    if(path){
+                                        navigate(path)
+                                    }else{
+                                        navigate("/")
+                                    }
                                     sessionStorage.clear()
                                     setIsPressed(false)
                                 })
@@ -315,7 +323,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     setIsLoginError("Something went wrong while creating login details")
                                     const decrypted = decryptData(err.response.data.data)
                                     const path = sessionStorage.getItem("path")
-                                    navigate("/")
+                                    if(path){
+                                        navigate(path)
+                                    }else{
+                                        navigate("/")
+                                    }
                                     sessionStorage.clear()
                                 })
                         } else {
