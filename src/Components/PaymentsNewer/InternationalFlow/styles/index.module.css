@@ -133,6 +133,21 @@
     opacity: .7;
 }
 
+@media screen and (max-width: 600px) {
+    .buttonsDesktop {
+        display: none !important;
+    }
+    .mobileButtons{
+        display: flex !important;
+        position: fixed;
+        bottom: 110px;
+        width: 100%;
+        left: 0;
+        padding: 0px 20px 0 0;
+        background-color: white !important;
+    }
+}
+
 @media screen and (max-width: 1680px) {
     .left {
         padding: 1rem;

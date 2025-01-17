@@ -62,7 +62,6 @@ const CreatePassword = () => {
                 platform: data.platform,
                 recipientId: data.recipient_id,
                 password: passwords.password.value,
-                account_id: data.account_id
             }
 
             const encryptedData = encryptData(bodyData)

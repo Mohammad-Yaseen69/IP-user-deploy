@@ -194,7 +194,9 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
             marginBottom: 0,
             boxShadow: "none",
             // gap: "1.3rem",
-            // maxHeight: "540px"
+            // maxHeight: "540px",
+            display: "flex",
+            position: "relative"
         }}>
             <CardBody style={{
                 paddingBottom: "0",
@@ -416,8 +418,8 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                     }
                 </div>
             </CardBody>
-            <div style={{
-                display: window.innerWidth > 600 ? "flex" : "none",
+            <div className={stylesForButtons.buttonsDesktop} style={{
+                display: "flex",
                 justifyContent: "space-between",
                 alignItems: "flex-end",
                 gap: ".5rem",
@@ -457,15 +459,15 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                         onClick={createQuotations}
                         disabled={isChecking || beneficiary.length < 1}
                     >
-                        {isChecking ? t("Confirming") : "asdfasdfasdfasdfasdf"} <ChevronRight size={20} />
+                        {isChecking ? t("Confirming") : "Confirm"} <ChevronRight size={20} />
                     </Button>
                 </div>
             </div>
-            <div style={{
-                display: window.innerWidth < 600 ? "flex" : "none",
+            <div className={stylesForButtons.mobileButtons} style={{
+                display: "none",
                 justifyContent: "center",
                 alignItems: "center",
-                flexDirection:"column",
+                flexDirection: "column",
                 gap: ".5rem",
                 flexWrap: "wrap",
                 paddingLeft: "1rem",
@@ -474,7 +476,7 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                 {/* <p style={{ fontSize: window.innerWidth > 1000 ? ".7vw" : ".7rem", display: "flex", alignItems: "center", gap: ".3rem", marginBottom: "0" }}> */}
                 <div className={stylesForButtons?.buttons}>
                     <button onClick={backHandler}><ChevronLeft /></button>
-                    <button 
+                    <button
                         className={stylesForButtons?.full}
                         onClick={createQuotations}
                         disabled={isChecking || beneficiary.length < 1}
