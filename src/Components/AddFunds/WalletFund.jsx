@@ -15,7 +15,7 @@ import { useLocation } from "react-router";
 import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
-import { ChevronLeft } from "react-feather";
+import { ChevronLeft, Info } from "react-feather";
 import TopIcon from "../PaymentsNewer/Mobile/files/Top";
 import { useTranslation } from "react-i18next";
 import styles from "../PaymentsNewer/Mobile/styles/International.module.css"
@@ -26,7 +26,7 @@ import FeesComponent from "../PaymentsNewer/InternationalFlow/FeesComponent";
 import InstaPayLoader from "../Loader";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import MobileWalletLink from "./WalletFund/MobileWalletLink";
-
+import PaypalCurrencies from "./PaypalCurrencies.json"
 const WalletFund = ({ setAction }) => {
     const { t } = useTranslation()
     const [subStep, setSubStep] = useState(1);
@@ -45,6 +45,7 @@ const WalletFund = ({ setAction }) => {
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const wallet_address = queryParams.get("wallet_address")
+    const [paypalFx, setPaypalFx] = useState({})
 
     useEffect(() => {
         if (wallet_address) {
@@ -54,6 +55,8 @@ const WalletFund = ({ setAction }) => {
             setSubStep(2);
         }
     }, [wallet_address])
+
+
 
     const { userDetails, authHeader, userWallets } = useContext(UserContext)
 
@@ -99,6 +102,39 @@ const WalletFund = ({ setAction }) => {
             }
         }
     }, [wallet])
+
+    useEffect(() => {
+        async function paypalExchange() {
+            setLoading(true)
+            if (channel?.value === "paypal") {
+                try {
+                    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/paypal/fee/${wallet?._id}/${parseFloat(amount)}`, {
+                        headers: authHeader,
+                    })
+                    const dec = decryptData(res.data.data)
+
+                    console.log(dec)
+
+                    setPaypalFx(
+                        {
+                            amount: dec?.data?.converted_amount,
+                            exchange_rate: dec?.data?.rate
+                        }
+                    )
+
+                } catch (error) {
+                    const dec = decryptData(error?.response?.data?.data);
+                    console.log(dec)
+                    toast.error(dec?.message || "Something Went Wrong")
+                }
+                finally{
+                    setLoading(false)
+                }
+            }
+        }
+
+        paypalExchange()
+    }, [channel])
 
     const [thunesServices, setThunesServices] = useState([])
     const [pLoading, setPLoading] = useState(false)
@@ -387,14 +423,18 @@ const WalletFund = ({ setAction }) => {
                                                             <InstaPayLoader />
                                                         </div>
                                                         :
-                                                        <FeesComponent
-                                                            receiverLabel={"You will get"}
-                                                            error={error}
-                                                            feesLabel="Fees"
-                                                            sendingLabel="Sending"
-                                                            totalLabel="Amount to pay"
-                                                            data={{ exchange_rate }}
-                                                        />
+                                                        <>
+                                                            <FeesComponent
+                                                                receiverLabel={"You will get"}
+                                                                error={error}
+                                                                feesLabel="Fees"
+                                                                sendingLabel="Sending"
+                                                                totalLabel="Amount to pay"
+                                                                data={{ exchange_rate }}
+                                                            />
+
+
+                                                        </>
                                                     :
                                                     ""
                                             }
@@ -579,14 +619,116 @@ const WalletFund = ({ setAction }) => {
                                         <InstaPayLoader />
                                     </div>
                                     :
-                                    <FeesComponent
-                                        receiverLabel={"You will get"}
-                                        error={error}
-                                        feesLabel="Fees"
-                                        sendingLabel="Sending"
-                                        totalLabel="Amount to pay"
-                                        data={{ exchange_rate }}
-                                    />
+                                    <>
+                                        <FeesComponent
+                                            receiverLabel={"You will get"}
+                                            error={error}
+                                            feesLabel="Fees"
+                                            sendingLabel="Sending"
+                                            totalLabel="Amount to pay"
+                                            data={{ exchange_rate }}
+                                        />
+
+                                        {
+                                            channel?.value === "paypal" && !PaypalCurrencies.some(item => item === wallet?.currency?.code)
+                                                ?
+                                                <>
+                                                    <div
+                                                        style={{
+                                                            display: "flex",
+                                                            alignItems: "flex-start",
+                                                            gap: ".7rem",
+                                                            padding: "12px",
+                                                            borderRadius: "6px",
+                                                            background: "rgba(89, 38, 240, 0.13)",
+                                                            marginTop: "18px"
+                                                        }}
+                                                    >
+                                                        <Info
+                                                            color="#5926f0"
+                                                            size={20}
+                                                        />
+                                                        <span style={{
+                                                            color: '#5926F0',
+                                                            fontFamily: 'Manrope',
+                                                            fontSize: ".7rem",
+                                                            fontStyle: 'normal',
+                                                            fontWeight: 700,
+                                                            lineHeight: 1.3,
+                                                            letterSpacing: '-0.28px'
+                                                        }}>
+                                                            <strong>{wallet?.currency?.code} </strong> is not supported by Paypal, <strong>USD</strong> will be used as the default currency.
+                                                        </span>
+                                                    </div>
+                                                    <div style={{
+                                                        display: "flex",
+                                                        flexDirection: "column",
+                                                        gap: ".9rem",
+                                                        padding: ".8rem",
+                                                        background: "#EBEBEB",
+                                                        borderRadius: "6px",
+                                                        marginTop: "18px"
+                                                    }}>
+                                                        <div style={{
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            gap: "1rem",
+                                                            justifyContent: "space-between"
+                                                        }}>
+                                                            <span style={{
+                                                                color: '#8A8A8A',
+                                                                fontFamily: 'Manrope',
+                                                                fontSize: ".7rem",
+                                                                fontStyle: 'normal',
+                                                                fontWeight: 600,
+                                                                lineHeight: 1.5,
+                                                                letterSpacing: '-0.14px'
+                                                            }}>{t("Exchange Rate")}</span>
+                                                            <strong
+                                                                style={{
+                                                                    color: '#000',
+                                                                    fontFamily: 'Manrope',
+                                                                    fontSize: ".7rem",
+                                                                    fontStyle: 'normal',
+                                                                    lineHeight: 1.5,
+                                                                    letterSpacing: '-0.14px'
+                                                                }}>
+                                                                1.00 {wallet?.currency?.code}  = {Number(paypalFx?.exchange_rate)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 })} USD
+                                                            </strong>
+                                                        </div>
+                                                        <div style={{
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            gap: "1rem",
+                                                            justifyContent: "space-between"
+                                                        }}>
+                                                            <span style={{
+                                                                color: '#8A8A8A',
+                                                                fontFamily: 'Manrope',
+                                                                fontSize: ".7rem",
+                                                                fontStyle: 'normal',
+                                                                fontWeight: 600,
+                                                                lineHeight: 1.5,
+                                                                letterSpacing: '-0.14px'
+                                                            }}>{t("Amount in USD")}</span>
+                                                            <strong style={{
+                                                                color: '#000',
+                                                                fontFamily: 'Manrope',
+                                                                fontSize: "1.2rem",
+                                                                fontStyle: 'normal',
+                                                                fontWeight: 700,
+                                                                lineHeight: 1.7,
+                                                                letterSpacing: '-0.8px'
+                                                            }}>
+                                                                {Number(paypalFx?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
+                                                            </strong>
+                                                        </div>
+                                                    </div>
+                                                </>
+                                                :
+                                                ""
+                                        }
+                                    </>
                                 :
                                 ""
                         }

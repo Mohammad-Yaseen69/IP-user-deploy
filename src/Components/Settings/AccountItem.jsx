@@ -87,7 +87,7 @@ const AccountItem = ({ data }) => {
             .then(res => {
                 verifyToken()
                 setter(true)
-                toast.success(`$${data.name.toLowerCase().includes("insta") ? "Instagram" : "Telegram"} account unlinked successfully!`)
+                toast.success(`${data.name.toLowerCase().includes("insta") ? "Instagram" : "Telegram"} account unlinked successfully!`)
             })
             .catch(error => {
                 const dec = decryptData(error.response.data.data)
@@ -116,6 +116,8 @@ const AccountItem = ({ data }) => {
                 })
         }
     }
+
+    console.log(userDetails)
 
     useEffect(() => {
         if (data.name.toLowerCase().includes("insta")) {

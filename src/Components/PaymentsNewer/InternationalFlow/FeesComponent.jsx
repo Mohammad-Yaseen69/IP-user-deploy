@@ -4,6 +4,7 @@ import { Info } from "react-feather"
 
 const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Exchange Rate", feesLabel = "Transfer Fees", totalLabel = "Total Amount", error = "", receiverLabel = "They Receive", bright = false, extraContent }) => {
     const { t } = useTranslation()
+
     return (
         error
             ?

@@ -169,7 +169,7 @@ const WalletAmount = ({ setSubStep, amount, setAmount, wallet, limits, setLimits
                         maxLength={12}
                         onChange={(e) => setFormattedAmount(e.target.value)}
                         onKeyUp={handleKeyUp}
-                        onBlur={handleBlur} maxLength={12}
+                        onBlur={handleBlur}
                         placeholder="0.00"
                         data-type="currency"
                         style={{
