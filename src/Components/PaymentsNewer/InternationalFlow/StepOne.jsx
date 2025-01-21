@@ -396,7 +396,8 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                                 value={data.amount}
                                 onChange={(e) => dataHandler("amount", e.target.value)}
                                 onKeyUp={handleKeyUp}
-                                onBlur={handleBlur} maxLength={12}
+                                onBlur={handleBlur}
+                                maxLength={14}
                                 placeholder="Enter the amount"
                                 data-type="currency"
                             />
