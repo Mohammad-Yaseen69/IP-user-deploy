@@ -1340,7 +1340,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                             <option value="">--Select-Occupation--</option>
                                                             {
                                                                 Object.keys(occupations).map(item => (
-                                                                    <option value={item}>{item}</option>
+                                                                    <option value={item}>{t(item)}</option>
                                                                 ))
                                                             }
                                                         </Input>

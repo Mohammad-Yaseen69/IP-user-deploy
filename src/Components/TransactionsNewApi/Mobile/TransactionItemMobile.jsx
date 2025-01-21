@@ -99,6 +99,7 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
         return statuses?.[item?.external_status?.split("_")?.[1]]?.[i18n.language]?.message ?? ""
     }, [item, i18n])
 
+    console.log(item)
     return (
         <div className={styles.item}>
             <div className={styles.top} onClick={() => setActiveItem(activeItem === index + 1 ? 0 : index + 1)}>
@@ -106,42 +107,22 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
                     <div className={styles.dp}>
                         {
                             item?.service_type === "airtime"
-                                ?
-                                item?.airtime_number?.[1]
-                                :
-                                item?.payment_type === "conversion" /*|| item?.service_type === "withdrawal"*/
-                                    ?
-                                    item?.wallet_id?.[0]
-                                    :
-                                    item?.transaction_type?.toLowerCase() === "debit"
-                                        ?
-                                        <>
-                                            {
-                                                item?.service_type === "withdraw_by_admin"
-                                                    ?
-                                                    "Admin"?.[0]
-                                                    :
-                                                    item?.service_type === "kyc_verification"
-                                                        ?
-                                                        "InstaPay"?.[0]
-                                                        :
-                                                        item?.service_type === "withdrawal"
-                                                            ?
-                                                            `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)?.[0]
-                                                            :
-                                                            item?.receiver
-                                                                ?
-                                                                `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)?.[0]
-                                                                :
-                                                                `${internationalReceiver?.first_name} ${internationalReceiver?.last_name}`.slice(0, 20)?.[0]
-                                            }
-                                        </>
-                                        :
-                                        item?.service_type === "topup"
-                                            ?
-                                            `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)?.[0]
-                                            :
-                                            `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)?.[0]
+                                ? item?.airtime_number?.[1]
+                                : item?.payment_type === "conversion"
+                                    ? item?.wallet_id?.[0]
+                                    : item?.transaction_type?.toLowerCase() === "debit"
+                                        ? item?.service_type === "withdraw_by_admin"
+                                            ? "Admin"?.[0]
+                                            : item?.service_type === "kyc_verification"
+                                                ? "InstaPay"?.[0]
+                                                : item?.service_type === "withdrawal"
+                                                    ? `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)?.[0]
+                                                    : item?.receiver
+                                                        ? `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)?.[0]
+                                                        : `${internationalReceiver?.first_name} ${internationalReceiver?.last_name}`.slice(0, 20)?.[0]
+                                        : item?.service_type === "topup"
+                                            ? `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)?.[0]
+                                            : `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)?.[0]
                         }
                     </div>
                     <div className={styles.t_details}>
@@ -152,8 +133,7 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
                         >
                             {
                                 item?.service_type === "airtime"
-                                    ?
-                                    item?.airtime_number
+                                    ? item?.airtime_number
                                     :
                                     item?.payment_type === "conversion" /*|| item?.service_type === "withdrawal"*/
                                         ?
@@ -241,159 +221,6 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
                     setNote={setNote}
                     fromReferral={fromReferral}
                 />
-                // <div className={styles.tm_details}>
-                //     <div className={styles.tmd_row}>
-                //         <div className={styles.tmdr_item}>
-                //             <span>{t("Amount")}</span>
-                //             <h4>{item?.currency?.code} {item?.amount ? item?.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"}</h4>
-                //         </div>
-                //         <div className={styles.tmdr_item}>
-                //             <span>{t("Total")}:</span>
-                //             <h4>{item?.currency?.code}  {item?.total ? item?.total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"}</h4>
-                //         </div>
-                //     </div>
-                //     <div className={styles.tmd_row}>
-                //         <div className={styles.tmdr_item}>
-                //             <span>{t("Fees")}:</span>
-                //             <h4>{item?.currency?.code}  {item?.fee ? item?.fee.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"}</h4>
-                //         </div>
-                //         <div className={styles.tmdr_item}>
-                //             <span>{t("Transaction ID")}:</span>
-                //             <h4>{item?.reference_id ?? "None"}</h4>
-                //         </div>
-                //     </div>
-                //     <div className={styles.tmd_row}>
-                //         <div className={styles.tmdr_item}>
-                //             <span>{t("Payment Type")}:</span>
-                //             <h4>
-                //                 {
-                //                     item?.service_type === "withdraw_by_admin" || item?.service_type === "deposite_by_admin"
-                //                         ?
-                //                         "Admin Funds"
-                //                         :
-                //                         item?.payment_type?.includes("bank")
-                //                             ?
-                //                             "Bank Transfer"
-                //                             :
-                //                             item?.payment_type?.includes("mobile")
-                //                                 ?
-                //                                 "Mobile Money"
-                //                                 :
-                //                                 service_name_formatter(item?.payment_type)
-                //                 }
-                //             </h4>
-                //         </div>
-                //         <div className={styles.tmdr_item}>
-                //             <span>{t("Type")}:</span>
-                //             <h4>{service_name_formatter(item?.service_type)}</h4>
-                //         </div>
-                //     </div>
-
-                //     {
-                //         item?.description
-                //         &&
-                //         <div className={styles.t_item}>
-                //             <span>{t("Note")}:</span>
-                //             <div>
-                //                 <h5>{item?.description}</h5>
-                //             </div>
-                //         </div>
-                //     }
-                //     {
-                //         item?.attachments?.length > 0
-                //         &&
-                //         <div className={styles.t_item}>
-                //             <span>{t("Attachments")}:</span>
-                //             <div style={{
-                //                 display: "flex",
-                //                 gap: ".75rem",
-                //                 maxWidth: "100%",
-                //                 overflowX: "auto"
-                //             }}>
-                //                 {
-                //                     item?.attachments?.map(it => (
-                //                         <img key={it?.key} src={it?.url} alt="" style={{
-                //                             height: "100px",
-                //                             width: "100px",
-                //                             objectFit: "cover"
-                //                         }}
-                //                             onClick={() => setCurrentImage({
-                //                                 src: it?.url,
-                //                                 index: it?.key
-                //                             })}
-                //                         />
-                //                     ))
-                //                 }
-                //             </div>
-                //         </div>
-                //     }
-                //     {
-                //         currentImage
-                //         &&
-                //         <ImagePreviewModal
-                //             currentImage={currentImage}
-                //             isOpen={currentImage}
-                //             toggle={() => setCurrentImage("")}
-                //         />
-                //     }
-
-                //     {/* categories */}
-                //     <div className={`${styles.t_item} ${styles.t_item_cat}`}>
-                //         <span style={{ marginBottom: ".5rem" }}>{t("Category")}:</span>
-                //         <CatDown selectedCategories={selectedCategory} setSelectedCategories={setSelectedCategory} isEditMode={isEditMode} item={item} />
-                //     </div>
-                //     {
-                //         selectedCategory.length > 0
-                //         &&
-                //         <>
-                //             <div className={styles.t_item}>
-                //                 <span style={{ marginBottom: ".5rem" }}>{t("Note")}:</span>
-                //                 <div>
-                //                     <Input placeholder="Add a note" style={{ borderRadius: "14px" }} value={note} onChange={e => setNote(e.target.value)} disabled={!isEditMode} />
-                //                 </div>
-                //             </div>
-                //             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                //                 {
-                //                     message
-                //                         ?
-                //                         <span style={{ fontWeight: 700 }}>{message}</span>
-                //                         :
-                //                         <div></div>
-                //                 }
-                //                 {
-                //                     isEditMode
-                //                         ?
-                //                         <Button style={{
-                //                             background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                //                             border: "none",
-                //                             outline: "none",
-                //                             borderRadius: "10px"
-                //                         }}
-                //                             onClick={addCategoriesToTransaction}
-                //                             disabled={isSaving || selectedCategory.length < 1}
-                //                         >
-                //                             {isSaving ? "Saving" : "Save"}
-                //                         </Button>
-                //                         :
-                //                         <Button style={{
-                //                             background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                //                             border: "none",
-                //                             outline: "none",
-                //                             borderRadius: "10px"
-                //                         }}
-                //                             onClick={() => {
-                //                                 setIsEditMode(true)
-                //                                 setMessage("")
-                //                             }}
-                //                         >
-                //                             Edit
-                //                         </Button>
-                //                 }
-                //             </div>
-                //         </>
-                //     }
-
-                // </div>
             }
         </div>
     )
