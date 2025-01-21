@@ -99,13 +99,15 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
         return statuses?.[item?.external_status?.split("_")?.[1]]?.[i18n.language]?.message ?? ""
     }, [item, i18n])
 
-    console.log(item)
+
     return (
-        <div className={styles.item}>
+        <div className={styles.item} onClick={(() => console.log(item, (item?.service_type == "payment_address" && item?.guest_details)))}>
             <div className={styles.top} onClick={() => setActiveItem(activeItem === index + 1 ? 0 : index + 1)}>
                 <div className={styles.left}>
                     <div className={styles.dp}>
                         {
+                             !(item?.service_type == "payment_address" && item?.guest_details)
+                             ?
                             item?.service_type === "airtime"
                                 ? item?.airtime_number?.[1]
                                 : item?.payment_type === "conversion"
@@ -123,6 +125,8 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
                                         : item?.service_type === "topup"
                                             ? `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)?.[0]
                                             : `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)?.[0]
+                                :
+                                item?.guest_details?.name?.[0]
                         }
                     </div>
                     <div className={styles.t_details}>
@@ -131,11 +135,13 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
                                 width: activeItem === index + 1 ? "fit-content" : "30vw"
                             }}
                         >
-                            {
+                           {
+                                !(item?.service_type == "payment_address" && item?.guest_details)
+                                ?
                                 item?.service_type === "airtime"
                                     ? item?.airtime_number
                                     :
-                                    item?.payment_type === "conversion" /*|| item?.service_type === "withdrawal"*/
+                                    item?.payment_type === "conversion"
                                         ?
                                         item?.wallet_id
                                         :
@@ -149,7 +155,7 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
                                                         :
                                                         item?.service_type === "kyc_verification"
                                                             ?
-                                                            "InstaPay"
+                                                             "InstaPay"
                                                             :
                                                             item?.service_type === "withdrawal"
                                                                 ?
@@ -168,7 +174,10 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
                                                 `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)
                                                 :
                                                 `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)
+                                        : 
+                                        item?.guest_details?.name
                             }
+                            
                         </h5>
                         <span>{new Date(item?.createdAt)?.toLocaleString()}</span>
                     </div>
