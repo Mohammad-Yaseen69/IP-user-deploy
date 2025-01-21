@@ -205,23 +205,11 @@ const PaymentAddressComponent = ({ userDetails }) => {
                                         username={user_name}
                                     />
                                 }
-                                {
-                                    window.innerWidth < 1000
-                                    &&
-                                    <div className={styles.go_back} style={{ margin: "18px 10px", }} onClick={() => window.history.back()}>
-                                        <ChevronLeft size={16} color='black' />
-                                        <span>
-                                            {t("Go back (Cancel Payment)")}
-                                        </span>
-                                    </div>
-                                }
-
                                 <div className={styles.cover_container}>
                                     <img src={cover ?? coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: "300px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important" }} />
                                 </div>
                                 <Card style={{ marginBottom: "0", boxShadow: "unset" }} className={styles.sub_container}>
                                     <CardBody className={styles.sc_body}>
-
 
 
                                         {/* basic info */}
@@ -322,7 +310,16 @@ const PaymentAddressComponent = ({ userDetails }) => {
                                                 currency={currency}
                                                 currentWallet={currentWallet}
                                             />
-
+                                            {
+                                                window.innerWidth < 1000
+                                                &&
+                                                <div className={styles.go_back} onClick={() => window.history.back()}>
+                                                    <ChevronLeft size={16} color='black' />
+                                                    <span>
+                                                        {t("Go back (Cancel Payment)")}
+                                                    </span>
+                                                </div>
+                                            }
                                             <div className={vpa_styles.right}>
                                                 <div className={vpa_styles.currency}>
                                                     <div>{currentWallet?.currency?.code} </div>
