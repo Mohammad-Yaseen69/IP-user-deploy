@@ -208,7 +208,7 @@ const PaymentAddressComponent = ({ userDetails }) => {
                                 {
                                     window.innerWidth < 1000
                                     &&
-                                    <div className={styles.go_back} style={{ marginTop: "18px" }} onClick={() => window.history.back()}>
+                                    <div className={styles.go_back} style={{ margin: "18px 10px", }} onClick={() => window.history.back()}>
                                         <ChevronLeft size={16} color='black' />
                                         <span>
                                             {t("Go back (Cancel Payment)")}
