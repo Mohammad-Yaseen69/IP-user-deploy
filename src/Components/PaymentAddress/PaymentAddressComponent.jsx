@@ -175,11 +175,10 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     }
 
     // pa link
-    const pa_link = `https://my.insta-pay.ch/pay/${userDetails?.username}`;
+    const pa_link = `https://my.insta-pay.ch/pay/${userDetails?.username}`;  
     const [urlCopied, setUrlCopied] = useState(false)
-
     const copyHandler = () => {
-        navigator.clipboard.writeText(pa_link)
+        navigator?.clipboard?.writeText(pa_link)
         setUrlCopied(true)
         setTimeout(() => {
             setUrlCopied(false)

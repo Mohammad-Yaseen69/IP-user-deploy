@@ -211,6 +211,16 @@ const PaymentAddressComponent = ({ userDetails }) => {
                                 <Card style={{ marginBottom: "0", boxShadow: "unset" }} className={styles.sub_container}>
                                     <CardBody className={styles.sc_body}>
 
+                                        {
+                                            window.innerWidth < 1000
+                                            &&
+                                            <div className={styles.go_back} style={{marginTop: "18px"}} onClick={() => window.history.back()}>
+                                                <ChevronLeft size={16} color='black' />
+                                                <span>
+                                                    {t("Go back (Cancel Payment)")}
+                                                </span>
+                                            </div>
+                                        }
 
                                         {/* basic info */}
                                         <div className={styles.top}>
@@ -310,16 +320,7 @@ const PaymentAddressComponent = ({ userDetails }) => {
                                                 currency={currency}
                                                 currentWallet={currentWallet}
                                             />
-                                            {
-                                                window.innerWidth < 1000
-                                                &&
-                                                <div className={styles.go_back} onClick={() => window.history.back()}>
-                                                    <ChevronLeft size={16} color='black' />
-                                                    <span>
-                                                        {t("Go back (Cancel Payment)")}
-                                                    </span>
-                                                </div>
-                                            }
+
                                             <div className={vpa_styles.right}>
                                                 <div className={vpa_styles.currency}>
                                                     <div>{currentWallet?.currency?.code} </div>

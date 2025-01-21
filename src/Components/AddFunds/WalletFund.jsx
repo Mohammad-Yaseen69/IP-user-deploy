@@ -50,11 +50,12 @@ const WalletFund = ({ setAction }) => {
     useEffect(() => {
         if (wallet_address) {
             const currentWallet = userWallets?.find(i => i?.wallet_id === wallet_address)
-            console.log(currentWallet)
+            // console.log(currentWallet)
             setWallet(currentWallet)
             setSubStep(2);
         }
     }, [wallet_address])
+
 
 
 
@@ -113,12 +114,14 @@ const WalletFund = ({ setAction }) => {
                     })
                     const dec = decryptData(res.data.data)
 
-                    console.log(dec)
+                    // console.log(dec)
 
                     setPaypalFx(
                         {
                             amount: dec?.data?.converted_amount,
-                            exchange_rate: dec?.data?.rate
+                            exchange_rate: dec?.data?.rate,
+                            paypal_token: dec?.data?.token,
+                            rate: dec?.data?.rate
                         }
                     )
 
@@ -127,7 +130,7 @@ const WalletFund = ({ setAction }) => {
                     console.log(dec)
                     toast.error(dec?.message || "Something Went Wrong")
                 }
-                finally{
+                finally {
                     setLoading(false)
                 }
             }
@@ -148,7 +151,7 @@ const WalletFund = ({ setAction }) => {
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
-            console.log(dec)
+            // console.log(dec)
             setThunesServices(dec?.data?.services ?? [])
             setMerchant(dec?.data?.merchant_id ?? "")
         } catch (e) {
@@ -170,7 +173,7 @@ const WalletFund = ({ setAction }) => {
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
-            console.log(dec)
+            // console.log(dec)
             setThunesProviders(dec?.data?.payers ?? [])
         } catch (e) {
             const dec = decryptData(e.response.data.data)
@@ -215,7 +218,7 @@ const WalletFund = ({ setAction }) => {
                         headers: authHeader,
                     })
                     const dec = decryptData(res.data.data)
-                    console.log(dec)
+                    // console.log(dec)
                     setExchangeRate({
                         fee: { amount: dec?.feeDetails },
                         sending: { currency: wallet?.currency?.code, amount: amount },
@@ -249,6 +252,8 @@ const WalletFund = ({ setAction }) => {
         }
     }, [channel])
 
+    console.log(exchange_rate)
+
     useEffect(() => {
         const getProviderFees = async () => {
             setLoading(true)
@@ -275,7 +280,7 @@ const WalletFund = ({ setAction }) => {
                         }
                     )
                     const decrypted = decryptData(res.data.data)
-                    console.log(decrypted)
+                    // console.log(decrypted)
                     const exchange_rate_details = {
                         exchange_rate: decrypted?.data?.exchanged_rate?.value,
                         exchange_rate_currency: decrypted?.data?.exchanged_rate?.currency,
@@ -285,7 +290,7 @@ const WalletFund = ({ setAction }) => {
                         total: decrypted?.data?.total?.value,
                         total_currency: decrypted?.data?.total?.currency,
                     }
-                    console.log(exchange_rate_details)
+                    // console.log(exchange_rate_details)
                     setExchangeRate(exchange_rate_details)
                 } catch (error) {
                     const dec = decryptData(error?.response?.data?.data);
@@ -550,7 +555,10 @@ const WalletFund = ({ setAction }) => {
                                                                 card_number={cardNumber}
                                                                 saveCard={saveCard}
                                                                 limits={limits}
+                                                                paypalAmount={amount}
                                                                 setLimits={setLimits}
+                                                                rate={paypalFx?.rate}
+                                                                token={paypalFx?.paypal_token}
                                                             />
                                                     )
                                                 }
@@ -576,6 +584,9 @@ const WalletFund = ({ setAction }) => {
                                                                 saveCard={saveCard}
                                                                 limits={limits}
                                                                 setLimits={setLimits}
+                                                                paypalAmount={amount}
+                                                                rate={paypalFx?.rate}
+                                                                token={paypalFx?.paypal_token}
                                                             />
                                                             : ""
                                                     )
@@ -829,11 +840,14 @@ const WalletFund = ({ setAction }) => {
                                                         amount={amount}
                                                         wallet={wallet}
                                                         card_cvc={cvc}
+                                                        paypalAmount={amount}
                                                         card_expiry={expiry}
                                                         card_number={cardNumber}
                                                         saveCard={saveCard}
                                                         limits={limits}
                                                         setLimits={setLimits}
+                                                        rate={paypalFx?.rate}
+                                                        token={paypalFx?.paypal_token}
                                                     />
                                             )
                                         }
@@ -857,6 +871,9 @@ const WalletFund = ({ setAction }) => {
                                                         saveCard={saveCard}
                                                         limits={limits}
                                                         setLimits={setLimits}
+                                                        paypalAmount={amount}
+                                                        rate={paypalFx?.rate}
+                                                        token={paypalFx?.paypal_token}
                                                     />
                                                     : ""
                                             )

@@ -111,7 +111,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                     token,
                     rate
                 }
-
+             
                 console.log(data)
                 try {
                     const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/paypal/initiate-payment`, {
