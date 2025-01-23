@@ -13,7 +13,7 @@ import { ar } from "./translations/ar"
 import { pl } from "./translations/pl"
 import { nl } from "./translations/nl"
 import { yo } from "./translations/yo"
-// import { id } from "./translations/id"
+import { id } from "./translations/id"
 import { tr } from "./translations/tr"
 import { sw } from "./translations/sw"
 import { ha } from "./translations/ha"
@@ -63,9 +63,9 @@ i18n
       yo: {
         translations: yo
       },
-      // id: {
-      //   translations: id
-      // },
+      id: {
+        translations: id
+      },
       tr: {
         translations: tr
       },
