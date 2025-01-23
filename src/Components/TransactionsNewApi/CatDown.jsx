@@ -8,10 +8,12 @@ import { UserContext } from '../../Context/UserContext'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import EditModal from './EditModal'
 import DeleteModal from './DeleteModal'
+import { useTranslation } from "react-i18next";
 
 const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }) => {
     // dropdown
     const dropdownRef = useRef(null)
+    const {t} = useTranslation()
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen)
@@ -215,7 +217,7 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
                                         </div>
                                         :
                                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: ".75rem 1rem", width: window.innerWidth > 700 ? "100%" : "100%", background: isEditMode ? "white" : "#fafafa", borderRadius: "14px", pointerEvents: isEditMode ? "auto" : "none" }}>
-                                            <span style={{ color: "#a8a8a8", whiteSpace: "nowrap" }}>-Select from the list-</span>
+                                            <span style={{ color: "#a8a8a8", whiteSpace: "nowrap" }}>-{t("Select From The List")}-</span>
                                             {/* <span style={{ transform: "translateY(8px)", minWidth: "none", maxWidth: "20px", background: "red" }}> */}
                                             <svg style={{ transform: "translateY(8px)" }} xmlns="http://www.w3.org/2000/svg" width="23" height="17" viewBox="0 0 23 17" fill="none">
                                                 <g filter="url(#filter0_d_3611_6068)">

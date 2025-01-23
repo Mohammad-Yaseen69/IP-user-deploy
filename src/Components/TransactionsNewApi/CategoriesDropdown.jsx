@@ -9,6 +9,7 @@ import EditModal from './EditModal'
 import DeleteModal from './DeleteModal'
 import AddModal from './AddModal';
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
+import { useTranslation } from "react-i18next";
 
 const CategoryDropdown = ({ category = "", disabled = false, padding = ".7rem .5rem", disabledColor = "#e9ecef", selectedCategory, setSelectedCategory }) => {
     // modals ///////////////////////////////////////////
@@ -29,7 +30,7 @@ const CategoryDropdown = ({ category = "", disabled = false, padding = ".7rem .5
     const [searchTerm, setSearchTerm] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const { authHeader, userDetails } = useContext(UserContext)
-
+    const { t } = useTranslation()
     useEffect(() => {
         setSearchedCategories(filteredCategories)
     }, [filteredCategories])
@@ -152,7 +153,7 @@ const CategoryDropdown = ({ category = "", disabled = false, padding = ".7rem .5
                                     </div>
                                 ) : (
                                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 1rem", width: "100%" }}>
-                                        <span style={{ color: "#a8a8a8" }}>-Select from the list-</span>
+                                        <span style={{ color: "#a8a8a8" }}>-{t("Select From The List")}--</span>
                                         <span style={{ transform: "translateY(8px)", width: "fit-content", minWidth: "none" }}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="23" height="17" viewBox="0 0 23 17" fill="none">
                                                 <g filter="url(#filter0_d_3611_6068)">

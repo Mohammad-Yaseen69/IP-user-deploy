@@ -117,6 +117,7 @@ const AddCurrencyModal = ({ isOpen, toggle, setSavedWalelt }) => {
                                 currencies?.map(item => (
                                     <div
                                         key={item?.code}
+                                        data-content={t("Already Exist")}
                                         className={`${styles.currency} ${item?.code === currency ? styles.active : isAlreadyAdded(item) ? styles.disabled : ""}`}
                                         onClick={() => {
                                             if (isAlreadyAdded(item)) {

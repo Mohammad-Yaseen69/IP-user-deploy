@@ -413,7 +413,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                                                 )
                                             })
                                             :
-                                            <span style={{ textAlign: "center", marginTop: "2rem" }}>No Transactions</span>
+                                            <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No transactions")}</span>
                                     }
                                 </>
                         }
@@ -500,7 +500,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                                                 )
                                             })
                                             :
-                                            <span style={{ textAlign: "center", marginTop: "2rem" }}>No Transactions</span>
+                                            <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No transactions")}</span>
                                     }
                                 </>
                         }

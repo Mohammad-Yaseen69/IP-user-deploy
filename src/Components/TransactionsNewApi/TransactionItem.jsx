@@ -111,6 +111,13 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
     const externalStatusDescription = useMemo(() => {
         return statuses?.[item?.external_status?.split("_")?.[1]]?.[i18n.language]?.message ?? ""
     }, [item, i18n])
+
+    function capitalizeStatus(str) {
+        return str
+            .split(" ")
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(" ");
+    }
     return (
         <div>
             <div className={styles.body_item} onClick={() => {
@@ -196,7 +203,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                         padding: "5px",
                         borderRadius: "30px",
                         textAlign: "center"
-                    }} >{t(item?.status?.toUpperCase())}</div>
+                    }} >{t(capitalizeStatus(item?.status))}</div>
                 </div>
                 <div style={{ maxWidth: "15px" }}>{
                     activeItem === index + 1

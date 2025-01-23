@@ -373,7 +373,7 @@ const Stats = ({ currentWallet }) => {
                                     &&
                                     months.sixthMonth.length < 1
                                     &&
-                                    <div style={{ margin: "3rem auto", textAlign: "center" }}>No transactions</div>
+                                    <div style={{ margin: "3rem auto", textAlign: "center" }}>{t("No transactions")}</div>
                                 }
                             </>
                     }
@@ -411,7 +411,7 @@ const Stats = ({ currentWallet }) => {
                                         &&
                                         months.sixthMonth.length < 1
                                         &&
-                                        <div style={{ margin: "3rem auto", textAlign: "center" }}>No transactions</div>
+                                        <div style={{ margin: "3rem auto", textAlign: "center" }}>{t("No transactions")}</div>
                                     }
                                 </>
                         }
