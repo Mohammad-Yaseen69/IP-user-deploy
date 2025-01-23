@@ -2604,5 +2604,7 @@ export const en = {
     "Tip: If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Tip: If the website does not appear in the browser settings, clear your browser’s cache or history and try again.",
     "To send a payment request, please share your location—this helps us boost security and build trust for a smoother experience!": "To send a payment request, please share your location—this helps us boost security and build trust for a smoother experience!",
     "Decline": "Decline",
-    "Share Location": "Share Location"
+    "Share Location": "Share Location",
+    "Already Exist": "Already Exist",
+    "Withdraw": "Withdraw"
 }

@@ -2605,5 +2605,7 @@ export const tr = {
     "Tip: If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "İpucu: Web sitesi tarayıcı ayarlarında görünmüyorsa, tarayıcınızın önbelleğini veya geçmişini temizleyin ve tekrar deneyin.",
     "To send a payment request, please share your location—this helps us boost security and build trust for a smoother experience!": "Bir ödeme talebi göndermek için lütfen konumunuzu paylaşın—bu, güvenliği artırmamıza ve daha sorunsuz bir deneyim için güven oluşturmamıza yardımcı olur!",
     "Decline": "Reddet",
-    "Share Location": "Konum paylaş"
+    "Share Location": "Konum paylaş",
+     "Already Exist": "Zaten Var",
+  "Withdraw": "Çekmek"
 }

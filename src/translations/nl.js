@@ -2592,5 +2592,7 @@ export const nl = {
     "Tip: If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Tip: Als de website niet in de browserinstellingen verschijnt, wis de cache of geschiedenis van je browser en probeer het opnieuw.",
     "To send a payment request, please share your location—this helps us boost security and build trust for a smoother experience!": "Om een betalingsverzoek te verzenden, deel je locatie—dit helpt ons de beveiliging te verbeteren en vertrouwen op te bouwen voor een soepelere ervaring!",
     "Decline": "Afwijzen",
-    "Share Location": "Deel locatie"
+    "Share Location": "Deel locatie",
+    "Already Exist": "Bestaat Al",
+  "Withdraw": "Opnemen"
 }

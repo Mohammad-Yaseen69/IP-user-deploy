@@ -2615,5 +2615,7 @@ export const it = {
     "Tip: If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Suggerimento: Se il sito web non appare nelle impostazioni del browser, cancella la cache o la cronologia del browser e riprova.",
     "To send a payment request, please share your location—this helps us boost security and build trust for a smoother experience!": "Per inviare una richiesta di pagamento, condividi la tua posizione: questo ci aiuta a migliorare la sicurezza e a costruire fiducia per un’esperienza più fluida!",
     "Decline": "Rifiutare",
-    "Share Location": "Condividere posizione"
+    "Share Location": "Condividere posizione",
+     "Already Exist": "Già Esistente",
+  "Withdraw": "Prelevare"
 }

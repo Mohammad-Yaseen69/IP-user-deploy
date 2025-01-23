@@ -2605,5 +2605,7 @@ export const cn = {
     "Tip: If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "提示：如果该网站未出现在浏览器设置中，请清除浏览器的缓存或历史记录，然后重试。",
     "To send a payment request, please share your location—this helps us boost security and build trust for a smoother experience!": "要发送付款请求，请分享您的位置—这有助于我们提高安全性并建立信任，从而带来更顺畅的体验！",
     "Decline": "拒绝",
-    "Share Location": "分享位置"
+    "Share Location": "分享位置",
+    "Already Exist": "已经存在",
+    "Withdraw": "提取"
 }

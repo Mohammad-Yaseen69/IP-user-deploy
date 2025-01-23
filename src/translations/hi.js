@@ -2606,5 +2606,7 @@ export const hi = {
     "Tip: If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "सुझाव: यदि वेबसाइट ब्राउज़र सेटिंग्स में दिखाई नहीं देती है, तो अपने ब्राउज़र का कैश या इतिहास साफ़ करें और फिर से प्रयास करें।",
     "To send a payment request, please share your location—this helps us boost security and build trust for a smoother experience!": "भुगतान अनुरोध भेजने के लिए, कृपया अपना स्थान साझा करें—यह हमें सुरक्षा बढ़ाने और एक सहज अनुभव के लिए विश्वास बनाने में मदद करता है!",
     "Decline": "अस्वीकार करें",
-    "Share Location": "स्थान साझा करें"
+    "Share Location": "स्थान साझा करें",
+    "Already Exist": "पहले से मौजूद है",
+    "Withdraw": "निकालना"
 }

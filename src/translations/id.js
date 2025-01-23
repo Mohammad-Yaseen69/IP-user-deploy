@@ -2442,5 +2442,7 @@ export const id = {
     "Tip: If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Tip: Jika situs web tidak muncul dalam pengaturan peramban, bersihkan cache atau riwayat peramban Anda dan coba lagi.",
     "To send a payment request, please share your location—this helps us boost security and build trust for a smoother experience!": "Untuk mengirim permintaan pembayaran, silakan bagikan lokasi Anda—ini membantu kami meningkatkan keamanan dan membangun kepercayaan untuk pengalaman yang lebih lancar!",
     "Decline": "Tolak",
-    "Share Location": "Bagikan lokasi"
+    "Share Location": "Bagikan lokasi",
+      "Already Exist": "Sudah Ada",
+  "Withdraw": "Tarik"
 }

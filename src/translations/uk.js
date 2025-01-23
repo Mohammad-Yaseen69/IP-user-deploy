@@ -2606,5 +2606,7 @@ export const uk = {
     "Tip: If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Порада: Якщо вебсайт не відображається в налаштуваннях браузера, очистіть кеш або історію браузера і спробуйте ще раз.",
     "To send a payment request, please share your location—this helps us boost security and build trust for a smoother experience!": "Щоб надіслати запит на оплату, поділіться вашим місцем розташування—це допоможе підвищити безпеку та створити довіру для більш зручного використання!",
     "Decline": "Відхилити",
-    "Share Location": "Поділитися місцем розташування"
+    "Share Location": "Поділитися місцем розташування",
+     "Already Exist": "Вже Існує",
+  "Withdraw": "Вивести"
 }

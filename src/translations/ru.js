@@ -2501,5 +2501,7 @@ export const ru = {
     "Tip: If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Совет: Если веб-сайт не появляется в настройках браузера, очистите кэш или историю браузера и попробуйте снова.",
     "To send a payment request, please share your location—this helps us boost security and build trust for a smoother experience!": "Чтобы отправить запрос на оплату, пожалуйста, поделитесь своим местоположением — это помогает повысить безопасность и укрепить доверие для более плавного опыта!",
     "Decline": "Отклонить",
-    "Share Location": "Поделиться местоположением"
+    "Share Location": "Поделиться местоположением",
+      "Already Exist": "Уже Существует",
+  "Withdraw": "Снять"
 }

@@ -2605,5 +2605,7 @@ export const ur = {
     "Tip: If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "مشورہ: اگر ویب سائٹ براؤزر کی سیٹنگز میں ظاہر نہیں ہوتی، تو اپنے براؤزر کا کیش یا تاریخ صاف کریں اور دوبارہ کوشش کریں۔",
     "To send a payment request, please share your location—this helps us boost security and build trust for a smoother experience!": "ادائیگی کی درخواست بھیجنے کے لیے، براہ کرم اپنا مقام شیئر کریں—یہ ہمیں سیکیورٹی کو بڑھانے اور ہموار تجربے کے لیے اعتماد پیدا کرنے میں مدد دیتا ہے!",
     "Decline": "مسترد کریں",
-    "Share Location": "مقام شیئر کریں"
+    "Share Location": "مقام شیئر کریں",
+      "Already Exist": "پہلے سے موجود ہے",
+  "Withdraw": "نکالنا"
 }

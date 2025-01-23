@@ -2605,5 +2605,7 @@ export const sw = {
     "Tip: If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Kidokezo: Ikiwa tovuti haionekani katika mipangilio ya kivinjari, futa hifadhi ya akiba au historia ya kivinjari chako na ujaribu tena.",
     "To send a payment request, please share your location—this helps us boost security and build trust for a smoother experience!": "Ili kutuma ombi la malipo, tafadhali shiriki eneo lako—hii inatusaidia kuongeza usalama na kujenga uaminifu kwa uzoefu laini zaidi!",
     "Decline": "Kataa",
-    "Share Location": "Shiriki eneo"
+    "Share Location": "Shiriki eneo",
+    "Already Exist": "Tayari Ipo",
+  "Withdraw": "Withdraw"
 }

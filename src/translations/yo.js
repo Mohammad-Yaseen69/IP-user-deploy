@@ -2597,5 +2597,7 @@ export const yo = {
     "Tip: If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Imọran: Ti oju opo wẹẹbu ko ba han ninu awọn eto aṣawakiri, nu kaṣi ti aṣawakiri tabi itan rẹ ki o gbiyanju lẹẹkansi.",
     "To send a payment request, please share your location—this helps us boost security and build trust for a smoother experience!": "Lati firanṣẹ ibeere isanwo kan, jọwọ pin ipo rẹ—eyi ṣe iranlọwọ fun wa lati mu aabo pọ si ati kọ igbẹkẹle fun iriri ti o rọrun diẹ sii!",
     "Decline": "Kataa",
-    "Share Location": "Pín ipo"
+    "Share Location": "Pín ipo",
+    "Already Exist": "Ti Wa Nibẹ",
+    "Withdraw": "Yọ"
 }

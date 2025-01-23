@@ -2637,5 +2637,7 @@ export const ha = {
     "Tip: If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Tukwici: Idan gidan yanar gizon bai bayyana a cikin saitunan mai bincike ba, share bayanan ƙwaƙwalwar ajiya ko tarihin bincike sannan ka sake gwadawa.",
     "To send a payment request, please share your location—this helps us boost security and build trust for a smoother experience!": "Don aika buƙatar biyan kuɗi, don Allah a raba wurinku—wannan yana taimaka mana wajen ƙara tsaro da gina amana don ƙwarewa mai sauƙi!",
     "Decline": "ƙi",
-    "Share Location": "Raba wurin"
+    "Share Location": "Raba wurin",
+    "Already Exist": "Tuni Akwai",
+    "Withdraw": "Cire"
 }

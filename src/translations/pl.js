@@ -2606,5 +2606,8 @@ export const pl = {
     "Tip: If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Porada: Jeśli strona internetowa nie pojawia się w ustawieniach przeglądarki, wyczyść pamięć podręczną lub historię przeglądarki i spróbuj ponownie.",
     "To send a payment request, please share your location—this helps us boost security and build trust for a smoother experience!": "Aby wysłać żądanie płatności, udostępnij swoją lokalizację—pomoże nam to zwiększyć bezpieczeństwo i zbudować zaufanie dla płynniejszego doświadczenia!",
     "Decline": "Odrzuć",
-    "Share Location": "Udostępnij lokalizację"
+    "Share Location": "Udostępnij lokalizację",
+    "Already Exist": "Już Istnieje",
+  "Withdraw": "Wypłacić"
+
 }
