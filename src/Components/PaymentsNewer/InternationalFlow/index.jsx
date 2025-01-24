@@ -32,6 +32,8 @@ import MobileWalletServices from "./MobileWalletServices"
 import { createJwtToken, createShambeToken } from "../../../Helper/CreateToken"
 import NotFoundModal from "../../NotFound/NotFoundModal"
 import errors from "../../AddFunds/TrustPaymentErrors.json"
+import AddBeneficiaryRequiredFields from "../../AddBeneficiaryRequiredFields"
+import { update } from "lodash"
 
 const leftSideContent = [
     "Enter The Amount",
@@ -86,8 +88,54 @@ const initialState = {
     mobile_wallet_channel: {},
     mobile_wallet_service: {},
     ex_extra_error: "",
-    conversion_in: ""
+    conversion_in: "",
+    payerRequiredFields: {}
 }
+
+const beneficiaryRequiredFields = [
+    "lastname2",
+    "middlename",
+    "nativename",
+    "nationality_country_iso_code",
+    "date_of_birth",
+    "country_of_birth_iso_code",
+    "gender",
+    "address",
+    "postal_code",
+    "country_iso_code",
+    "msisdn",
+    "email",
+    "id_type",
+    "id_country_iso_code",
+    "id_number",
+    "id_delivery_date",
+    "id_expiration_date",
+    "occupation",
+    "bank_account_holder_name",
+    "province_state"
+];
+
+const vendorsRequiredFields = [
+    "msisdn",
+    "bank_account_number",
+    "iban",
+    "clabe",
+    "cbu",
+    "cbu_alias",
+    "swift_bic_code",
+    "bik_code",
+    "ifs_code",
+    "sort_code",
+    "aba_routing_number",
+    "bsb_number",
+    "branch_number",
+    "routing_code",
+    "entity_tt_id",
+    "account_type",
+    "account_number",
+    "email",
+    "card_number"
+];
 
 function reducer(state, action) {
     switch (action.type) {
@@ -106,8 +154,30 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
     const { t } = useTranslation()
     const navigate = useNavigate()
     const { userDetails, authHeader, setProfileLockTime, userWallets } = useContext(UserContext)
-    const [subStep, setSubStep] = useState(1)
+    const [subStep, setSubStep] = useState(0)
     const [internationalData, dispatch] = useReducer(reducer, initialState);
+    const [showDetailsModal, setShowDetailsModal] = useState(false)
+    const [requiredMissingFields, setRequiredMissingFields] = useState({
+        beneficiary: {
+            basic: [],
+            extras: []
+        },
+        vendors: {
+            vendorType: "",
+            fields: []
+        }
+    })
+
+    const [showRequiredFieldsModal, setShowRequiredFieldsModal] = useState(false)
+    const [requiredFields, setRequiredFields] = useState({
+        basic: [],
+        extras: []
+    })
+
+    const handleRequiredFields = (fields) => {
+        setRequiredFields(fields)
+        setShowRequiredFieldsModal(true)
+    }
 
     const updateInternationalData = (field, value) => {
         dispatch({ type: "UPDATE_FIELD", field, value });
@@ -159,6 +229,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             })
             const dec = await decryptData(res.data.data)
             updateInternationalData("recipient_currency", dec?.data?.destination_currency)
+            updateInternationalData("payerRequiredFields", dec?.data?.payer_required_fields)
             return dec?.data?.destination_currency
         } catch (error) {
             const dec = decryptData(error.response.data.data)
@@ -401,7 +472,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
-            console.log(dec)
             updateInternationalData("mobile_wallet_channels", dec?.data?.services ?? [])
             updateInternationalData("mobile_wallet_merchant", dec?.data?.merchant_id ?? "")
         } catch {
@@ -699,7 +769,55 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 userDetails.user?.kyc_status === "approved" ? setSubStep(prev => prev + 1) : navigate("/settings?tab=verification")
                 break;
             case 2:
-                setSubStep(prev => prev + 1)
+                console.log(internationalData.payerRequiredFields, internationalData?.payoutChannel.value, internationalData?.beneficiary)
+                setRequiredMissingFields({
+                    beneficiary: {basic: [], extras: []},
+                    vendors: {fields: [], vendorType: internationalData?.payoutChannel.value}
+                })
+                internationalData.payerRequiredFields?.[0]?.forEach((field) => {
+                    field = field === "firstname" ? "first_name" : field === "lastname" ? "last_name" : field
+
+                    if(field === "country_iso_code") return
+
+                    if (beneficiaryRequiredFields.includes(field)) {
+                        if (field === "postal_code" && internationalData.beneficiary?.zip_code === "") {
+                            setRequiredMissingFields(prev => ({
+                                ...prev,
+                                beneficiary: {
+                                    ...prev.beneficiary,
+                                    basic: [...prev.beneficiary.basic, "postal_code"]
+                                }
+                            }))
+                        }
+                        if ((internationalData.beneficiary?.[field] === "" || !internationalData.beneficiary?.[field]) && !internationalData.beneficiary?.extras?.[field]) {
+                            if (field === "postal_code") return
+                            setRequiredMissingFields(prev => ({
+                                ...prev,
+                                beneficiary: {
+                                    ...prev.beneficiary,
+                                    basic: [...prev.beneficiary.basic, field]
+                                }
+                            }))
+                        } else if ((internationalData.beneficiary?.extras?.[field] === "" || !internationalData.beneficiary?.extras?.[field]) && !internationalData.beneficiary?.[field]) {
+                            setRequiredMissingFields(prev => ({
+                                ...prev,
+                                beneficiary: {
+                                    ...prev.beneficiary,
+                                    extras: [...prev.beneficiary.extras, field]
+                                }
+                            }))
+                        }
+                    } 
+                    else if (vendorsRequiredFields.includes(field)) {
+                        setRequiredMissingFields(prev => ({
+                            ...prev,
+                            vendors: {
+                                ...prev.vendors,
+                                fields: [...prev.vendors.fields, field]
+                            }
+                        }))
+                    }
+                })
                 break;
             case 3:
                 setSubStep(prev => prev + 1)
@@ -744,6 +862,16 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 break;
         }
     }
+
+    useEffect(() => {
+        if (requiredMissingFields.beneficiary.basic?.length >= 1 || requiredMissingFields.beneficiary.extras?.length >= 1){
+            setShowDetailsModal(true)
+        }else{
+            setSubStep(prev => prev + 1)
+        }
+    },[requiredMissingFields.beneficiary])
+
+       
 
     const verifyOtp = async (otp) => {
         setLoading(true)
@@ -858,6 +986,17 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                     reEnter={() => {
                         updateInternationalData("showCard", true)
                     }}
+                />
+            }
+            {
+                showDetailsModal
+                &&
+                <AddBeneficiaryRequiredFields
+                    isOpen={showDetailsModal}
+                    beneficiary={internationalData?.beneficiary}
+                    close={() => setShowDetailsModal(false)}
+                    requiredFields={requiredMissingFields}
+                    dataHandler={updateInternationalData}
                 />
             }
             {
@@ -1483,6 +1622,16 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                         </div>
                     </div>
             }
+            
+            <AddBeneficiaryRequiredFields
+                isOpen={showRequiredFieldsModal}
+                toggle={() => setShowRequiredFieldsModal(!showRequiredFieldsModal)}
+                beneficiary={internationalData.beneficiary}
+                close={() => setShowRequiredFieldsModal(false)}
+                requiredFields={requiredFields}
+                dataHandler={updateInternationalData}
+            />
+            
         </>
     )
 }

@@ -655,6 +655,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                         }}
                         isOpen={modals.payout}
                         onSelectHandler={(item) => {
+                            console.log(item)
                             dataHandler("payoutChannel", item)
                             dataHandler("payer", {})
                         }}
