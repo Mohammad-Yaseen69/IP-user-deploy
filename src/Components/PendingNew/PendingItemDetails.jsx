@@ -14,6 +14,13 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
     const { t } = useTranslation()
     const [showReviewModal, setShowReviewModal] = useState(false)
     const [showImgPreview, setShowImgPreview] = useState(false)
+
+    function capitalizeStatus(str) {
+        return str.toLowerCase() === "bargain-accepted" ? "Bargain-Accepted" : str
+            .split(" ")
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(" ");
+    }
     return (
         <div className={styles.container}>
             <div className={styles.left}>
@@ -23,7 +30,7 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
                             {t("Total Amount")}
                         </span>
                         <div className={styles.badge} style={{ background: badgeColor }}>
-                            {t(item?.status?.toUpperCase())}
+                            {t(capitalizeStatus(item?.status))}
                         </div>
                     </div>
                     <h5>
@@ -37,7 +44,7 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
                     </div>
                     <div className={styles.oac_right}>
                         <Rating initialRating={allRating.toFixed(1)} emptySymbol="fa fa-star-o fa-2x" fullSymbol="fa fa-star fa-2x" readonly className={styles.rating} />
-                        <span className={styles.rating_count}>{allReviews.length} ratings</span>
+                        <span className={styles.rating_count}>{allReviews.length} {t("ratings")}</span>
                     </div>
                 </div>
 
@@ -176,7 +183,7 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
                                         ?
                                         "Seller left a reply"
                                         :
-                                        "How was your experience?"
+                                        t("How Was Your Experience?")
                             }: </span>
                             <Button onClick={() => setShowReviewModal(!showReviewModal)}>
                                 {
@@ -184,7 +191,7 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
                                         ?
                                         "Check Now"
                                         :
-                                        "Leave a review"
+                                        t("Leave A Review")
                                 }
                             </Button>
                             <ReviewModal isOpen={showReviewModal} toggle={() => setShowReviewModal(!showReviewModal)} item={item} type="Received" />

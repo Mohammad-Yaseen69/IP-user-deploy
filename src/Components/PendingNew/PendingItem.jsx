@@ -121,6 +121,13 @@ const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "re
         }
     }, [id])
 
+    function capitalizeStatus(str) {
+        return str.toLowerCase() === "bargain-accepted" ? "Bargain-Accepted" : str
+            .split(" ")
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(" ");
+    }
+
     return (
         <div ref={itemRef}>
             <div className={styles.body_item} onClick={() => {
@@ -159,7 +166,7 @@ const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "re
                         margin: "0 auto",
                         padding: "5px",
                         borderRadius: "30px"
-                    }}>{status}</div>
+                    }}>{t(capitalizeStatus(status))}</div>
                 </div>
                 {
                     type === "received" && status.toLowerCase() === "pending"

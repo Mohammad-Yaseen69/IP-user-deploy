@@ -257,7 +257,7 @@ const PendingNew = () => {
                         <div className={styles.left}>
                             <div className={styles.search}>
                                 <Search size={16} color="#848484" />
-                                <Input placeholder={t("Search Requests")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                                <Input placeholder={t("Search Request")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
                             </div>
                             <img src={calendar} alt="c" onClick={handleDatePickerClick} />
                             {showDatePicker && (
@@ -359,7 +359,7 @@ const PendingNew = () => {
                         <div className={styles.left}>
                             <div className={styles.search}>
                                 <Search size={16} color="#848484" />
-                                <Input placeholder={t("Search Requests")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                                <Input placeholder={t("Search Request")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
                             </div>
                             <img src={calendar} alt="c" onClick={handleDatePickerClick} />
                             {showDatePicker && (
