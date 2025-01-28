@@ -228,7 +228,7 @@ const StepTwo = ({ data, dataHandler }) => {
                         <div style={{ marginTop: "1rem" }}>
                             <span style={{ marginTop: "1rem" }}>{t("Other Beneficiaries")}: </span>
                             {
-                                [...bankBens, ...bankBens].map(item => (
+                                bankBens.map(item => (
                                     <div key={item?._id} style={{marginTop: "8px"}} className={`${styles.ben_card} ${data?.beneficiary?._id === item?._id ? styles.active : ""}`} onClick={() => dataHandler("beneficiary", item)}>
                                         <div className={styles.dp}>
                                             {item?.first_name?.[0]}
