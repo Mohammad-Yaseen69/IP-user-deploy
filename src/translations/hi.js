@@ -2607,5 +2607,11 @@ export const hi = {
     "Decline": "अस्वीकार करें",
     "Share Location": "स्थान साझा करें",
     "Already Exist": "पहले से मौजूद है",
-    "Withdraw": "निकालना"
+    "Withdraw": "निकालना",
+    "Seller Left A reply": "विक्रेता ने उत्तर छोड़ा",
+    "Check Now": "अभी जाँच करें",
+    "You Left A Review": "आपने समीक्षा छोड़ी",
+    "View Larger Map": "बड़ा नक्शा देखें",
+    "English (UK)": "अंग्रेज़ी (यूके)",
+    "QR Code Title": "क्यूआर कोड शीर्षक"
 }

@@ -2443,5 +2443,11 @@ export const id = {
     "Decline": "Tolak",
     "Share Location": "Bagikan lokasi",
       "Already Exist": "Sudah Ada",
-  "Withdraw": "Tarik"
+  "Withdraw": "Tarik",
+    "Seller Left A reply": "Penjual meninggalkan balasan",
+  "Check Now": "Periksa sekarang",
+  "You Left A Review": "Anda meninggalkan ulasan",
+  "View Larger Map": "Lihat Peta Lebih Besar",
+  "English (UK)": "Bahasa Inggris (Inggris)",
+  "QR Code Title": "Judul Kode QR"
 }

@@ -2607,5 +2607,11 @@ export const uk = {
     "Decline": "Відхилити",
     "Share Location": "Поділитися місцем розташування",
      "Already Exist": "Вже Існує",
-  "Withdraw": "Вивести"
+  "Withdraw": "Вивести",
+    "Seller Left A reply": "Продавець залишив відповідь",
+  "Check Now": "Перевірте зараз",
+  "You Left A Review": "Ви залишили відгук",
+  "View Larger Map": "Переглянути більшу карту",
+  "English (UK)": "Англійська (Велика Британія)",
+  "QR Code Title": "Назва QR-коду"
 }

@@ -2605,5 +2605,11 @@ export const ar = {
   "Decline": "رفض",
   "Share Location": "مشاركة الموقع",
   "Already Exist": "موجود بالفعل",
-  "Withdraw": "سحب"
+  "Withdraw": "سحب",
+  "Seller Left A reply": "ترك البائع ردًا",
+  "Check Now": "تحقق الآن",
+  "You Left A Review": "لقد تركت مراجعة",
+  "View Larger Map": "عرض خريطة أكبر",
+  "English (UK)": "الإنجليزية (المملكة المتحدة)",
+  "QR Code Title": "عنوان رمز الاستجابة السريعة"
 }

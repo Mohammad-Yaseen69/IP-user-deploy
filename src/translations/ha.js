@@ -2639,5 +2639,11 @@ export const ha = {
     "Decline": "ƙi",
     "Share Location": "Raba wurin",
     "Already Exist": "Tuni Akwai",
-    "Withdraw": "Cire"
+    "Withdraw": "Cire",
+    "Seller Left A reply": "Mai sayarwa ya bar amsa",
+    "Check Now": "Duba yanzu",
+    "You Left A Review": "Ka bar bita",
+    "View Larger Map": "Duba Babban Taswira",
+    "English (UK)": "Turanci (UK)",
+    "QR Code Title": "Sunan Lambar QR"
 }

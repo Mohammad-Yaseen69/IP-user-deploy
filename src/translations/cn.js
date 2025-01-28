@@ -2606,5 +2606,11 @@ export const cn = {
     "Decline": "拒绝",
     "Share Location": "分享位置",
     "Already Exist": "已经存在",
-    "Withdraw": "提取"
+    "Withdraw": "提取",
+    "Seller Left A reply": "卖家留下了回复",
+    "Check Now": "立即查看",
+    "You Left A Review": "您留下了一条评论",
+    "View Larger Map": "查看大地图",
+    "English (UK)": "英语（英国）",
+    "QR Code Title": "二维码标题"
 }

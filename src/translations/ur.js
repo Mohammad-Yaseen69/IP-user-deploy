@@ -2606,5 +2606,11 @@ export const ur = {
     "Decline": "مسترد کریں",
     "Share Location": "مقام شیئر کریں",
       "Already Exist": "پہلے سے موجود ہے",
-  "Withdraw": "نکالنا"
+  "Withdraw": "نکالنا",
+  "Seller Left A reply": "بیچنے والے نے جواب چھوڑا",
+  "Check Now": "ابھی چیک کریں",
+  "You Left A Review": "آپ نے جائزہ چھوڑا",
+  "View Larger Map": "بڑا نقشہ دیکھیں",
+  "English (UK)": "انگریزی (برطانیہ)",
+  "QR Code Title": "کیو آر کوڈ کا عنوان"
 }

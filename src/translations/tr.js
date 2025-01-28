@@ -2606,5 +2606,11 @@ export const tr = {
     "Decline": "Reddet",
     "Share Location": "Konum paylaş",
      "Already Exist": "Zaten Var",
-  "Withdraw": "Çekmek"
+  "Withdraw": "Çekmek",
+  "Seller Left A reply": "Satıcı bir yanıt bıraktı",
+  "Check Now": "Şimdi Kontrol Et",
+  "You Left A Review": "Bir İnceleme Bıraktınız",
+  "View Larger Map": "Daha Büyük Haritayı Görüntüle",
+  "English (UK)": "İngilizce (Birleşik Krallık)",
+  "QR Code Title": "QR Kod Başlığı"
 }

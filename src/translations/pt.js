@@ -2607,5 +2607,11 @@ export const pt = {
     "Decline": "Recusar",
     "Share Location": "Compartilhar localização",
     "Already Exist": "Já Existe",
-  "Withdraw": "Retirar"
+  "Withdraw": "Retirar",
+  "Seller Left A reply": "O vendedor deixou uma resposta",
+  "Check Now": "Verifique agora",
+  "You Left A Review": "Você deixou uma avaliação",
+  "View Larger Map": "Ver mapa maior",
+  "English (UK)": "Inglês (Reino Unido)",
+  "QR Code Title": "Título do código QR"
 }

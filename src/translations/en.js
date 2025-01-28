@@ -2606,5 +2606,11 @@ export const en = {
     "Decline": "Decline",
     "Share Location": "Share Location",
     "Already Exist": "Already Exist",
-    "Withdraw": "Withdraw"
+    "Withdraw": "Withdraw",
+    "Seller Left A reply": "Seller Left A reply",
+    "Check Now": "Check Now",
+    "You Left A Review": "You Left A Review",
+    "View Larger Map": "View Larger Map",
+    "English (UK)": "Englisch (UK)",
+    "QR Code Title": "QR Code Title"
 }

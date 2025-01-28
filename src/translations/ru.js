@@ -2502,5 +2502,11 @@ export const ru = {
     "Decline": "Отклонить",
     "Share Location": "Поделиться местоположением",
       "Already Exist": "Уже Существует",
-  "Withdraw": "Снять"
+  "Withdraw": "Снять",
+  "Seller Left A reply": "Продавец оставил ответ",
+  "Check Now": "Проверьте сейчас",
+  "You Left A Review": "Вы оставили отзыв",
+  "View Larger Map": "Посмотреть увеличенную карту",
+  "English (UK)": "Английский (Великобритания)",
+  "QR Code Title": "Название QR-кода"
 }

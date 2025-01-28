@@ -259,18 +259,18 @@ const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "re
                                     {
                                         item?.seller_comment
                                             ?
-                                            "You left a review"
+                                            t("You Left A Review")
                                             :
-                                            "How was your experience?"
+                                            t("How Was Your Experience?")
                                     }
                                 </span>
                                 <Button onClick={() => setShowReviewModal(!showReviewModal)}>
                                     {
                                         item?.seller_comment || item?.seller_reply
                                             ?
-                                            "Check Now"
+                                            t("Check Now")
                                             :
-                                            "Leave a review"
+                                            t("Leave A Review")
                                     }
                                 </Button>
                             </div>

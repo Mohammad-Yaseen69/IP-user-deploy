@@ -2616,5 +2616,11 @@ export const it = {
     "Decline": "Rifiutare",
     "Share Location": "Condividere posizione",
      "Already Exist": "Già Esistente",
-  "Withdraw": "Prelevare"
+  "Withdraw": "Prelevare",
+  "Seller Left A reply": "Il venditore ha lasciato una risposta",
+  "Check Now": "Controlla ora",
+  "You Left A Review": "Hai lasciato una recensione",
+  "View Larger Map": "Visualizza mappa ingrandita",
+  "English (UK)": "Inglese (Regno Unito)",
+  "QR Code Title": "Titolo del codice QR"
 }

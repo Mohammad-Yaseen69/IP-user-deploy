@@ -2593,5 +2593,11 @@ export const nl = {
     "Decline": "Afwijzen",
     "Share Location": "Deel locatie",
     "Already Exist": "Bestaat Al",
-  "Withdraw": "Opnemen"
+  "Withdraw": "Opnemen",
+  "Seller Left A reply": "Verkoper heeft een reactie achtergelaten",
+  "Check Now": "Controleer nu",
+  "You Left A Review": "Je hebt een beoordeling achtergelaten",
+  "View Larger Map": "Grotere kaart bekijken",
+  "English (UK)": "Engels (Verenigd Koninkrijk)",
+  "QR Code Title": "QR-codetitel"
 }

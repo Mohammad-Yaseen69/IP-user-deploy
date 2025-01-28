@@ -177,11 +177,11 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
                             <span>{
                                 item?.buyer_comment
                                     ?
-                                    "You left a review"
+                                    t("You Left A Review")
                                     :
                                     item?.seller_reply
                                         ?
-                                        "Seller left a reply"
+                                        t("Seller Left A reply")
                                         :
                                         t("How Was Your Experience?")
                             }: </span>
@@ -189,7 +189,7 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
                                 {
                                     item?.buyer_comment || item?.seller_reply
                                         ?
-                                        "Check Now"
+                                        t("Check Now")
                                         :
                                         t("Leave A Review")
                                 }

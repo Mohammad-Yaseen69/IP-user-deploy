@@ -2619,5 +2619,11 @@ export const de = {
     "Decline": "Ablehnen",
     "Share Location": "Standort teilen",
     "Already Exist": "Bereits Vorhanden",
-    "Withdraw": "Abheben"
+    "Withdraw": "Abheben",
+    "Seller Left A reply": "Verkäufer hat eine Antwort hinterlassen",
+    "Check Now": "Jetzt überprüfen",
+    "You Left A Review": "Sie haben eine Bewertung hinterlassen",
+    "View Larger Map": "Größere Karte anzeigen",
+    "English (UK)": "Englisch (UK)",
+    "QR Code Title": "QR-Code-Titel"
 }

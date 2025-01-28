@@ -2598,5 +2598,11 @@ export const yo = {
     "Decline": "Kataa",
     "Share Location": "Pín ipo",
     "Already Exist": "Ti Wa Nibẹ",
-    "Withdraw": "Yọ"
+    "Withdraw": "Yọ",
+    "Seller Left A reply": "Ẹlẹdàá fi esi silẹ",
+    "Check Now": "Ṣayẹwo Bayi",
+    "You Left A Review": "O fi Atunwo silẹ",
+    "View Larger Map": "Wo Maapu Tobi",
+    "English (UK)": "Gẹẹsi (UK)",
+    "QR Code Title": "Akole Koodu QR"
 }

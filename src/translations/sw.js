@@ -2606,5 +2606,11 @@ export const sw = {
     "Decline": "Kataa",
     "Share Location": "Shiriki eneo",
     "Already Exist": "Tayari Ipo",
-  "Withdraw": "Withdraw"
+  "Withdraw": "Withdraw",
+  "Seller Left A reply": "Muuzaji aliacha jibu",
+  "Check Now": "Angalia sasa",
+  "You Left A Review": "Uliacha Maoni",
+  "View Larger Map": "Tazama Ramani Kubwa",
+  "English (UK)": "Kiingereza (Uingereza)",
+  "QR Code Title": "Kichwa cha Msimbo wa QR"
 }
