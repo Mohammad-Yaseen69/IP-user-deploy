@@ -182,7 +182,7 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
                                                             borderRadius: "10px",
                                                             pointerEvents: isEditMode ? "auto" : "none"
                                                         }}>
-                                                            <span style={{ color: "white", whiteSpace: "nowrap" }}>{item?.name}</span>
+                                                            <span style={{ color: "white", whiteSpace: "nowrap" }}>{t(item?.name)}</span>
                                                             <div style={{
                                                                 height: "15px",
                                                                 width: "15px",
