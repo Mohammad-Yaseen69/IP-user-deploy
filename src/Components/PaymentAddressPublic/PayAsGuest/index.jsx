@@ -459,7 +459,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                                         error={data.exchange_rate_error}
                                                         feesLabel="Fees"
                                                         sendingLabel="Sending"
-                                                        totalLabel="Amount to pay"
+                                                        totalLabel="Amount To Pay"
                                                         bright={true}
                                                         extraContent={
                                                             data.payment_type?.value === "card" && data.step > 3
@@ -774,7 +774,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                                     error={data.exchange_rate_error}
                                                     feesLabel="Fees"
                                                     sendingLabel="Sending"
-                                                    totalLabel="Amount to pay"
+                                                    totalLabel="Amount To Pay"
                                                     bright={true}
                                                     extraContent={
                                                         data.payment_type?.value === "card" && data.step > 3

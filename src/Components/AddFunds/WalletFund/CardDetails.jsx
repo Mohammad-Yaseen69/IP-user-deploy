@@ -133,7 +133,7 @@ const CardDetails = ({ setSubStep, cardNumber, setCardNumber, expiry, setExpiry,
           savedCards.length > 0
             ?
             <>
-              <h5>{t("Select payment card")}</h5>
+              <h5>{t("Select Payment Card")}</h5>
               <div className={styles.cards}>
                 {
                   savedCards.map(item => (

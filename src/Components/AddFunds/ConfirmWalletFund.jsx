@@ -234,7 +234,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                     boxShadow: "0px 2px 20px -5.704601287841797px rgba(89, 38, 240, 0.07)"
                 }} className="conf_cont">
                     <div>
-                        <h4 style={{ fontSize: "1.25rem", fontWeight: 700, textAlign: "center" }}>Your Details</h4>
+                        <h4 style={{ fontSize: "1.25rem", fontWeight: 700, textAlign: "center" }}>{t("Your Details")}</h4>
                         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                             {
                                 type === "add_fund" &&
@@ -318,7 +318,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                             complete
                             &&
                             <p style={{ marginBottom: "0", fontSize: "1.1rem", fontWeight: 500, color: "white" }}>
-                                {t("Details Confirmed")}
+                                {t("Detailed Confirmed")}
                             </p>
                         }
                     </div>

@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from "./styles/card_number.module.css";
 import { creditCardImages } from './CreditCardImages';
+import { useTranslation } from 'react-i18next';
 
 
 
 const CardNumberInput = ({ content, setContent, cardType, cardError }) => {
     const divRef = useRef(null);
     const caretPositionRef = useRef(0);
+    const {t} = useTranslation()
 
     const sanitizeInput = (input) => {
         return input.replace(/\D/g, '');
@@ -104,7 +106,7 @@ const CardNumberInput = ({ content, setContent, cardType, cardError }) => {
             {
                 content.length < 1
                 &&
-                <span className={styles.placeholder}>Card Number</span>
+                <span className={styles.placeholder}>{t("Card Number")}</span>
             }
             {
                 cardError && content.length > 3

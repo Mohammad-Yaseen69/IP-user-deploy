@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { X, Check, Edit } from "react-feather";
 import styles from "./QuotationsTable.module.scss"
+import { useTranslation } from "react-i18next";
 
 const QTBActions = ({ status }) => {
     const [itemStatus, setItemStatus] = useState(status)
+    const {t} = useTranslation()
     return (
         <td className={styles.lastItem}>
             {
@@ -16,7 +18,7 @@ const QTBActions = ({ status }) => {
                     </>
                     :
                     <>
-                        {itemStatus !== false ? "Accepted" : "Rejected"}
+                        {itemStatus !== false ? t("Accepted") : t("Rejected")}
                     </>
             }
         </td>

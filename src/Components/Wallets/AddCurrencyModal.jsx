@@ -50,7 +50,8 @@ const AddCurrencyModal = ({ isOpen, toggle, setSavedWalelt }) => {
         } catch (error) {
             const decrypted = decryptData(error?.response?.data?.data)
             setError(decrypted?.message ?? "Something went wrong!")
-            toast.error(decrypted?.message ?? "Something went wrong!")
+            const message = decrypted?.message == "You can only have 8 wallets!" ? "You Can Have Only 8 Wallets" : decrypted?.message
+            toast.error(t(message ?? "Something went wrong!"))
         } finally {
             setIsSaving(false)
         }

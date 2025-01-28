@@ -21,6 +21,7 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import AddPortfolioItem from "../Portfolio/AddPortfolioItem"
 import PortfolioItem from "./PortfolioItem"
 import InstaPayLoader from "../Loader"
+import { useTranslation } from "react-i18next"
 
 export const reviews = [
     {
@@ -52,6 +53,7 @@ const ProfileComponent = () => {
     const [totalReviewsAsBuyer, setTotalReviewsAsBuyer] = useState(0)
     const toggleAddPortfolio = () => setShowAddPortfolio(!showAddPortfolio)
     const [isLoading, setIsLoading] = useState(true)
+    const {t} = useTranslation() 
 
     useEffect(() => {
         const fetchData = async () => {
@@ -229,7 +231,7 @@ const ProfileComponent = () => {
                         </Card>
                         <div className={styles.rating_actions}>
                             <div className={styles.rating}>
-                                <p>Overall Rating</p>
+                                <p>{t("Overall Ratings")}</p>
                                 <h4>{currentRevTab === "Seller" ? averageRatingAsSeller : averageRatingAsBuyer}/5</h4>
                                 <div>
                                     <Rating initialRating={currentRevTab === "Seller" ? averageRatingAsSeller : averageRatingAsBuyer} emptySymbol="fa fa-star-o fa-2x" fullSymbol="fa fa-star fa-2x" readonly></Rating>

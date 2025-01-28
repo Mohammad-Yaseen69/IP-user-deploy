@@ -354,7 +354,7 @@ const WalletFund = ({ setAction }) => {
                                             {subStep === 1 && t("Choose The Wallet")}
                                             {subStep === 2 && t("Enter the Amount")}
                                             {subStep === 3 && t("Choose The Top-Up Channel")}
-                                            {subStep === 4 && channel?.value?.toLowerCase() === "card" ? t("Select or Add Payment Card") : ""}
+                                            {subStep === 4 && channel?.value?.toLowerCase() === "card" ? t("Select Or Add Payment Card") : ""}
                                         </h2>
                                         {
                                             subStep === 4
@@ -430,11 +430,11 @@ const WalletFund = ({ setAction }) => {
                                                         :
                                                         <>
                                                             <FeesComponent
-                                                                receiverLabel={"You will get"}
+                                                                receiverLabel={"You Will Get"}
                                                                 error={error}
                                                                 feesLabel="Fees"
                                                                 sendingLabel="Sending"
-                                                                totalLabel="Amount to pay"
+                                                                totalLabel="Amount To Pay"
                                                                 data={{ exchange_rate }}
                                                             />
 
@@ -460,7 +460,7 @@ const WalletFund = ({ setAction }) => {
                                             <MobileWalletLink
                                                 data={channel?.value === "paypal" ? { name: "Paypal" } : thunesProvider}
                                                 setSubStep={setSubStep}
-                                                type={channel?.value === "paypal" ? "Payment type" : "Mobile Wallet"}
+                                                type={channel?.value === "paypal" ? "Payment Type" : "Mobile Wallet"}
                                                 externalLink={externalLink}
                                             />
                                             :
@@ -632,11 +632,11 @@ const WalletFund = ({ setAction }) => {
                                     :
                                     <>
                                         <FeesComponent
-                                            receiverLabel={"You will get"}
+                                            receiverLabel={"You Will Get"}
                                             error={error}
                                             feesLabel="Fees"
                                             sendingLabel="Sending"
-                                            totalLabel="Amount to pay"
+                                            totalLabel="Amount To Pay"
                                             data={{ exchange_rate }}
                                         />
 
@@ -668,7 +668,7 @@ const WalletFund = ({ setAction }) => {
                                                             lineHeight: 1.3,
                                                             letterSpacing: '-0.28px'
                                                         }}>
-                                                            <strong>{wallet?.currency?.code} </strong> is not supported by Paypal, <strong>USD</strong> will be used as the default currency.
+                                                            {t(`${wallet?.currency?.code} is not supported by Paypal, USD will be used as the default currency.`)}
                                                         </span>
                                                     </div>
                                                     <div style={{

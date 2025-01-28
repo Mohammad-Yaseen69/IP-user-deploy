@@ -18,7 +18,7 @@ import { formatCurrency } from "../../Helper/AmountFormat";
 import { t as T } from "i18next"
 
 export const reasons = {
-    COMPUTER_SERVICES: T("Computer service"),
+    COMPUTER_SERVICES: T("Computer Service"),
     FAMILY_SUPPORT: T("Family support"),
     EDUCATION: T("Education"),
     GIFT_AND_DONATION: T("Gift and other donations"),

@@ -595,7 +595,7 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                                                     (
                                                         data.show_cards
                                                             ?
-                                                            t("Select or Add Payment Card")
+                                                            t("Select Or Add Payment Card")
                                                             :
                                                             data.show_receipt
                                                                 ?
@@ -858,7 +858,7 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                                             (
                                                 data.show_cards
                                                     ?
-                                                    t("Select or Add Payment Card")
+                                                    t("Select Or Add Payment Card")
                                                     :
                                                     data.show_receipt
                                                         ?

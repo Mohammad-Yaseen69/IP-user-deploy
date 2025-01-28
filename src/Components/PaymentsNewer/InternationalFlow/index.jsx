@@ -1102,7 +1102,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                         <div className={styles.left}>
                                             <div className={styles.l_top}>
                                                 <h1>{t("Send Money")}</h1>
-                                                <h2>{subStep === 5 && internationalData.showCard ? t("Select or Add Payment Card") : t(leftSideContent?.[subStep - 1])}</h2>
+                                                <h2>{subStep === 5 && internationalData.showCard ? t("Select Or Add Payment Card") : t(leftSideContent?.[subStep - 1])}</h2>
                                             </div>
                                             {
                                                 subStep !== 4
@@ -1439,7 +1439,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                         }
                         <div className={styles.m_top}>
                             <h1>{t("SEND MONEY")}</h1>
-                            <h2>{internationalData.payment_type?.value === "card" ? t("Select or Add Payment Card") : t(leftSideContent?.[subStep - 1])}</h2>
+                            <h2>{internationalData.payment_type?.value === "card" ? t("Select Or Add Payment Card") : t(leftSideContent?.[subStep - 1])}</h2>
                         </div>
                         <div className={styles.flow}>
                             {

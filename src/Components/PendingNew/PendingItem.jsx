@@ -200,7 +200,7 @@ const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "re
                             </div>
                         </div>
                         :
-                        <div>No Actions</div>
+                        <div>{t("No Actions")}</div>
                 }
                 <div style={{ maxWidth: "15px" }}>{
                     activeItem === index + 1

@@ -16,6 +16,8 @@ const AccountLimits = ({ currentWallet, data, loading, error }) => {
     const { t } = useTranslation()
     const [current, setCurrent] = useState(0)
 
+
+    console.log(data)
     return (
         loading
             ?
@@ -148,6 +150,7 @@ const RightItem = ({ item, setCurrent }) => {
 }
 
 const LimitItem = ({ item, title, parent }) => {
+
     const { t } = useTranslation()
     return (
         <div className={styles.ri_limits}>

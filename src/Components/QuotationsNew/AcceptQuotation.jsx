@@ -620,7 +620,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                                                     (
                                                         data.show_cards
                                                             ?
-                                                            t("Select or Add Payment Card")
+                                                            t("Select Or Add Payment Card")
                                                             :
                                                             data.show_receipt
                                                                 ?

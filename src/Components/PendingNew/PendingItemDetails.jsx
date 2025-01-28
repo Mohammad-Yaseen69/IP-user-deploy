@@ -32,7 +32,7 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
                 </div>
                 <div className={styles.over_all}>
                     <div className={styles.oac_left}>
-                        <span>Overall Ratings</span>
+                        <span>{t("Overall Ratings")}</span>
                         <h4>{allRating}/5</h4>
                     </div>
                     <div className={styles.oac_right}>

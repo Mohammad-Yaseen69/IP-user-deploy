@@ -876,7 +876,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                         <div className={styles.left}>
                                             <div className={styles.l_top}>
                                                 <h1>{t("Send Money")}</h1>
-                                                <h2>{data.step === 5 && data.showCard ? t("Select or Add Payment Card") : t(leftSideContent?.[data.step - 1])}</h2>
+                                                <h2>{data.step === 5 && data.showCard ? t("Select Or Add Payment Card") : t(leftSideContent?.[data.step - 1])}</h2>
                                             </div>
                                             {
                                                 data.step === 4
@@ -1203,7 +1203,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                     <div className={styles.mobile}>
                         <div className={styles.m_top}>
                             <h1>{t("SEND MONEY")}</h1>
-                            <h2>{data.payment_type?.value === "card" ? t("Select or Add Payment Card") : t(leftSideContent?.[data.step - 1])}</h2>
+                            <h2>{data.payment_type?.value === "card" ? t("Select Or Add Payment Card") : t(leftSideContent?.[data.step - 1])}</h2>
                         </div>
                         <div className={styles.flow}>
                             {

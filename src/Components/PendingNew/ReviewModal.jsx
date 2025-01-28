@@ -189,7 +189,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
     return (
         <Modal isOpen={isOpen} toggle={toggle} style={{ minWidth: window.innerWidth > 1150 ? "1150px" : "90vw", transform: window.innerWidth > 1000 ? `scale(${scaleFactor})` : "scale(1)" }}>
             <ModalHeader toggle={toggle}>
-                {title}
+                {t(title)}
             </ModalHeader>
             <ModalBody style={{
                 display: "flex",
@@ -213,7 +213,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                             <Card className={styles.rating_container} style={{ marginBottom: 0 }}>
                                 <CardBody className={styles.rating_body}>
                                     <div className={styles.left}>
-                                        <p>Overall Rating</p>
+                                        <p></p>
                                         <h4>{sellerOverallRating}/5</h4>
                                         <div>
                                             <Rating initialRating={4.5} emptySymbol="fa fa-star-o fa-2x" fullSymbol="fa fa-star fa-2x" readonly></Rating>
