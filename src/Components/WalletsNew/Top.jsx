@@ -153,7 +153,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
             }
             <div className={styles.left} style={{alignItems: "flex-start"}}>
                 <div className={styles.top} >
-                    <h2 style={{whiteSpace: "nowrap"}}>{currentWallet?.currency?.code}  {t("Wallet")}</h2>
+                    <h2 >{currentWallet?.currency?.code}  {t("Wallet")}</h2>
                     <div className={styles.default}>
                         <span style={{textAlign: "right"}}>
                             {t("set as default Wallet").split(" ").map(item => service_name_formatter(item)).join(" ")}
@@ -238,7 +238,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     <span>{t("Add Currency")}</span>
                 </div>
             </div>
-            <div className={styles.right} style={{minWidth: "500px"}}>
+            <div className={styles.right} style={{minWidth: window.innerWidth > 100 ? "500px" :"auto"}}>
                 <div className={styles.top}>
                     <h2>
                         {t("Wallet Management")}
