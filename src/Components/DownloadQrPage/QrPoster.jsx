@@ -14,12 +14,12 @@ const qrCode = new QRCodeStyling({
         mode: "Byte",
         errorCorrectionLevel: "Q",
     },
-    image: logo2,
-    imageOptions: {
-        hideBackgroundDots: true,
-        imageSize: 0.2,
-        margin: 10,
-    },
+    // image: logo2,
+    // imageOptions: {
+    //     hideBackgroundDots: true,
+    //     imageSize: 0.2,
+    //     margin: 10,
+    // },
     dotsOptions: {
         type: "extra-rounded",
         color: "#6a1a4c",
@@ -46,17 +46,17 @@ const QrPoster = ({ wallet }) => {
     }, []);
 
     useEffect(() => {
-        if(qrCode && wallet){
+        if (qrCode && wallet) {
             const url = `https://my.insta-pay.ch/q/${wallet?.wallet_id}`
             qrCode.update({ data: url });
-    
+
             qrCode.getRawData("png").then((dataUrl) => {
                 const file = new File([dataUrl], "abc.png", { type: "image/png" });
                 const reader = new FileReader()
                 reader.onload = () => {
                     setQrLink(reader.result);
                 };
-    
+
                 reader.readAsDataURL(file);
             })
                 .catch(err => console.log(err))
@@ -71,7 +71,10 @@ const QrPoster = ({ wallet }) => {
 
                 <div className={styles.qr_con}>
                     <div className={styles.qr_container}>
-                        {qrLink && <img src={qrLink} alt="" />}
+                        <div style={{position: "relative"}}>
+                            {qrLink && <img src={qrLink} alt="" />}
+                            <img src={logo2} style={{ position: "absolute", left: "50%", top: "40%", translate: "-50% -50%", width: window.innerWidth > 1000 ? "3rem" : "3.5rem", padding: ".6rem", background: "white", borderRadius: "10px" }} />
+                        </div>
                         <div className={styles.wi}>{wallet?.wallet_id}</div>
                         <div className={styles.un}>{userDetails?.username}</div>
                     </div>
