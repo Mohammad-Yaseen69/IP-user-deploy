@@ -151,11 +151,11 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     :
                     ""
             }
-            <div className={styles.left}>
-                <div className={styles.top}>
-                    <h2>{currentWallet?.currency?.code}  {t("Wallet")}</h2>
+            <div className={styles.left} style={{alignItems: "flex-start"}}>
+                <div className={styles.top} >
+                    <h2 style={{whiteSpace: "nowrap"}}>{currentWallet?.currency?.code}  {t("Wallet")}</h2>
                     <div className={styles.default}>
-                        <span>
+                        <span style={{textAlign: "right"}}>
                             {t("set as default Wallet").split(" ").map(item => service_name_formatter(item)).join(" ")}
                         </span>
                         <div
@@ -238,7 +238,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     <span>{t("Add Currency")}</span>
                 </div>
             </div>
-            <div className={styles.right}>
+            <div className={styles.right} style={{minWidth: "500px"}}>
                 <div className={styles.top}>
                     <h2>
                         {t("Wallet Management")}
@@ -339,6 +339,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                             cursor: blockedWallet ? "not-allowed" : "pointer",
                             backgroundColor: blockedWallet ? "grey" : "white",
                             color: blockedWallet ? "white" : "inherit",
+                            whiteSpace: "nowrap"
                         }}
                         className={styles.action}
                         onClick={() => setShowDownloadStatementModal(!showDownloadStatementModal)}
@@ -399,6 +400,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                             cursor: currentDefault ? "not-allowed" : "pointer",
                             backgroundColor: currentDefault ? "grey" : "white",
                             color: currentDefault ? "white" : "inherit",
+                            whiteSpace: "nowrap"
                         }}
                         id={"status_of_wallet"}
                     >

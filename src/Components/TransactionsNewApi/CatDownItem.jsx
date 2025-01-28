@@ -39,7 +39,7 @@ const CatDownItem = ({ category, index, handleItemSelect, showDeleteModal, setSh
                     cursor: "pointer",
                     borderRadius: "9px",
                     background: "#F8F8F8",
-                    margin: ".1rem .6rem",
+                    // margin: ".1rem .6rem",
                     position: "relative",
                     width: "100%",
                     zIndex: 999 - index,

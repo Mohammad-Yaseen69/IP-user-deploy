@@ -111,6 +111,7 @@ const Qr = ({ currentRevTab, averageRatingAsBuyer, averageRatingAsSeller, totalR
                     </Link>
                     <button className={styles.action} style={{
                         background: "rgba(230, 64, 103, 0.16)",
+                        justifyContent: "space-between"
                     }}>
                         <span style={{ textAlign: "left" }}>{t("Profile")} {t("Reports")}: </span>
                         <span>{profieInfo?.reportCounts ?? 0}</span>
