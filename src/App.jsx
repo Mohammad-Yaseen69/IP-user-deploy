@@ -32,7 +32,7 @@ import BroadcastPage from './BroadcastPage'
 import { ToastContainer } from "react-toastify";
 import SessionExpireModal from './Components/SessionExpireModal'
 
-import {decryptData} from "./Helper/EssentilaMethods/Decryption"
+import { decryptData } from "./Helper/EssentilaMethods/Decryption"
 import axios from 'axios'
 
 const App = () => {
@@ -102,7 +102,7 @@ const App = () => {
           ?
           <BroadcastPage />
           :
-          // <ErrorBoundary>
+          <ErrorBoundary>
             <Suspense fallback={<InstaPayLoader opacity={1} />}>
               <TimezonesProvider>
                 <UserState>
@@ -153,7 +153,7 @@ const App = () => {
                 </UserState>
               </TimezonesProvider>
             </Suspense>
-          // </ErrorBoundary>
+          </ErrorBoundary>
       }
       <ToastContainer />
     </div>
