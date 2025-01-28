@@ -218,7 +218,7 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
                                         </div>
                                         :
                                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: ".75rem 1rem", width: window.innerWidth > 700 ? "100%" : "100%", background: isEditMode ? "white" : "#fafafa", borderRadius: "14px", pointerEvents: isEditMode ? "auto" : "none" }}>
-                                            <span style={{ color: "#a8a8a8", whiteSpace: "nowrap" }}>-{t("Select From The List")}-</span>
+                                            <span style={{ color: "#fd0d1b", whiteSpace: "nowrap" }}>-{t("No Categories Added, Click here to add")}-</span>
                                             {/* <span style={{ transform: "translateY(8px)", minWidth: "none", maxWidth: "20px", background: "red" }}> */}
                                             {/* <svg style={{ transform: "translateY(8px)" }} xmlns="http://www.w3.org/2000/svg" width="23" height="17" viewBox="0 0 23 17" fill="none">
                                                 <g filter="url(#filter0_d_3611_6068)">
