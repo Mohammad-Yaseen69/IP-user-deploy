@@ -111,7 +111,7 @@ export const id = {
      "Other Transactions": "Transaksi Lainnya",
      "Payments": "Pembayaran",
      "Beneficiaries": "Penerima Manfaat",
-     "Referrals": "Referral",
+     "Referrals": "Rujukan",
      "Quotations": "Kutipan",
      "Pending": "Menunggu",
      "My QR Code Sticker": "Stiker Kode QR Saya",
