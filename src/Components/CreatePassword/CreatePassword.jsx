@@ -20,7 +20,7 @@ const CreatePassword = () => {
     const [isPressed, setIsPressed] = useState(false)
     const { token } = useParams()
     const [data, setData] = useState({})
-    const [success, setSuccess] = useState(true)
+    const [success, setSuccess] = useState(false)
     const [passwords, setPasswords] = useState({
         password: {
             value: "",
