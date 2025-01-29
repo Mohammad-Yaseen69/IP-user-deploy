@@ -2613,5 +2613,9 @@ export const uk = {
   "You Left A Review": "Ви залишили відгук",
   "View Larger Map": "Переглянути більшу карту",
   "English (UK)": "Англійська (Велика Британія)",
-  "QR Code Title": "Назва QR-коду"
+  "QR Code Title": "Назва QR-коду",
+   "Notice!": "Увага!",
+  "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.": "Продовжуючи цю транзакцію, я підтверджую, що дію незалежно і за власним бажанням. Я підтверджую, що на мене не впливав, не навчав, не примушував і не переконував жоден третій учасник для здійснення цієї транзакції з метою інвестування або будь-якою іншою причиною.",
+  "I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.": "Я розумію, що це підтвердження необхідне для забезпечення відповідності та захисту мого облікового запису і транзакцій.",
+  "Confirm and Proceed": "Підтвердити і продовжити"
 }

@@ -2599,5 +2599,9 @@ export const nl = {
   "You Left A Review": "Je hebt een beoordeling achtergelaten",
   "View Larger Map": "Grotere kaart bekijken",
   "English (UK)": "Engels (Verenigd Koninkrijk)",
-  "QR Code Title": "QR-codetitel"
+  "QR Code Title": "QR-codetitel",
+    "Notice!": "Let op!",
+  "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.": "Door deze transactie voort te zetten, bevestig ik hierbij dat ik onafhankelijk en uit eigen vrije wil handel. Ik bevestig dat ik niet ben beïnvloed, begeleid, gedwongen of overgehaald door een derde partij om deze transactie uit te voeren voor investeringsdoeleinden of om welke andere reden dan ook.",
+  "I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.": "Ik begrijp dat deze bevestiging vereist is om naleving te garanderen en om mijn account en transacties te beschermen.",
+  "Confirm and Proceed": "Bevestigen en doorgaan"
 }

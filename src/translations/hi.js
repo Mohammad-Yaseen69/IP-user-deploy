@@ -2613,5 +2613,9 @@ export const hi = {
     "You Left A Review": "आपने समीक्षा छोड़ी",
     "View Larger Map": "बड़ा नक्शा देखें",
     "English (UK)": "अंग्रेज़ी (यूके)",
-    "QR Code Title": "क्यूआर कोड शीर्षक"
+    "QR Code Title": "क्यूआर कोड शीर्षक",
+    "Notice!": "सावधान!",
+    "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.": "इस लेन-देन को जारी रखते हुए, मैं पुष्टि करता हूँ कि मैं स्वतंत्र रूप से और अपनी इच्छा से कार्य कर रहा हूँ। मैं यह पुष्टि करता हूँ कि मुझे किसी तीसरे पक्ष द्वारा निवेश उद्देश्य या किसी अन्य कारण से इस लेन-देन को करने के लिए प्रभावित, प्रशिक्षित, मजबूर या समझाया नहीं गया है।",
+    "I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.": "मैं समझता हूँ कि इस पुष्टि की आवश्यकता अनुपालन सुनिश्चित करने और मेरे खाते व लेन-देन की सुरक्षा के लिए है।",
+    "Confirm and Proceed": "पुष्टि करें और आगे बढ़ें"
 }

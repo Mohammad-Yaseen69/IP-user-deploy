@@ -1226,7 +1226,7 @@ export const en = {
     "Full Name: Muhammad Imtiaz": "Full Name: Muhammad Imtiaz",
     "InstaPay/Intagram Username: instauser": "InstaPay/Instagram Username",
     "Phone Number: 44795396600 (With Country Code)": "Phone Number: 44795396600 (With Country Code)",
-    "SEND TOP-UP AND E-SIM": "SEND TOP-UP AND E-SIM",
+    "SEND TOP-UP AND E-SIM": "Send Top-Up A E-Sim",
     "Keep yourself and your loved ones connected and covered, no matter where you are! InstaPay's Send Top-up service allows you to instantly recharge mobile phones, get eSIMs, purchase branded vouchers & gift cards, and pay for utilities & bills in over 150 countries. Ideal for gifts or ensuring you always have what you need, our service is designed for ease, speed, and security.": "Stay connected globally! InstaPay's Top-Up service allows you to recharge phones instantly, buy eSIMs, branded vouchers, gift cards, and pay utility bills in over 150 countries. Ideal for gifts or keeping yourself ready, our service prioritizes ease, speed, and security.",
     "MOBILE AIRTIME AND E-SIM": "MOBILE AIRTIME AND E-SIM",
     "Select the country where you want to top-up a mobile phone!": "Select the country for mobile top-up!",
@@ -2612,5 +2612,9 @@ export const en = {
     "You Left A Review": "You Left A Review",
     "View Larger Map": "View Larger Map",
     "English (UK)": "Englisch (UK)",
-    "QR Code Title": "QR Code Title"
+    "QR Code Title": "QR Code Title",
+    "Notice!": "Notice!",
+    "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.": "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.",
+    "I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.": "Ich verstehe, dass diese Bestätigung erforderlich ist, um die Einhaltung der Vorschriften sicherzustellen und mein Konto sowie meine Transaktionen zu schützen.",
+    "Confirm and Proceed": "Confirm and Proceed"
 }

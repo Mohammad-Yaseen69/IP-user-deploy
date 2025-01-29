@@ -2449,5 +2449,9 @@ export const id = {
   "You Left A Review": "Anda meninggalkan ulasan",
   "View Larger Map": "Lihat Peta Lebih Besar",
   "English (UK)": "Bahasa Inggris (Inggris)",
-  "QR Code Title": "Judul Kode QR"
+  "QR Code Title": "Judul Kode QR",
+  "Notice!": "Perhatian!",
+  "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.": "Dengan melanjutkan transaksi ini, saya dengan ini mengonfirmasi bahwa saya bertindak secara mandiri dan atas kehendak saya sendiri. Saya menegaskan bahwa saya tidak dipengaruhi, dibimbing, dipaksa, atau dibujuk oleh pihak ketiga untuk melakukan transaksi ini untuk tujuan investasi atau alasan lainnya.",
+  "I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.": "Saya memahami bahwa konfirmasi ini diperlukan untuk memastikan kepatuhan dan melindungi akun serta transaksi saya.",
+  "Confirm and Proceed": "Konfirmasi dan Lanjutkan"
 }

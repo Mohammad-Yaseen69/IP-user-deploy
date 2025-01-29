@@ -2622,5 +2622,9 @@ export const it = {
   "You Left A Review": "Hai lasciato una recensione",
   "View Larger Map": "Visualizza mappa ingrandita",
   "English (UK)": "Inglese (Regno Unito)",
-  "QR Code Title": "Titolo del codice QR"
+  "QR Code Title": "Titolo del codice QR",
+  "Notice!": "Avviso!",
+  "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.": "Procedendo con questa transazione, confermo di agire in modo indipendente e di mia spontanea volontà. Dichiaro di non essere stato influenzato, istruito, costretto o persuaso da terzi a effettuare questa transazione per scopi di investimento o per qualsiasi altro motivo.",
+  "I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.": "Comprendo che questa conferma è necessaria per garantire la conformità e proteggere il mio account e le mie transazioni.",
+  "Confirm and Proceed": "Conferma e procedi"
 }

@@ -2604,5 +2604,9 @@ export const yo = {
     "You Left A Review": "O fi Atunwo silẹ",
     "View Larger Map": "Wo Maapu Tobi",
     "English (UK)": "Gẹẹsi (UK)",
-    "QR Code Title": "Akole Koodu QR"
+    "QR Code Title": "Akole Koodu QR",
+    "Notice!": "Ikilo!",
+  "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.": "Nipa tẹsiwaju pẹlu iṣowo yii, Mo fi idi rẹ mulẹ pe mo nṣe ni ominira ati pẹlu ifẹ ọfẹ mi. Mo sọ pe emi ko ti ni ipa, kọ́, fi ipa mu, tabi fi agbara mu nipasẹ ẹni kẹta lati ṣe iṣowo yii fun idi idoko-owo tabi idi miiran kankan.",
+  "I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.": "Mo ye pe a nilo ifọwọsi yii lati rii daju ibamu ati lati daabo bo iroyin mi ati awọn iṣowo mi.",
+  "Confirm and Proceed": "Jẹrisi ati Tẹsiwaju"
 }

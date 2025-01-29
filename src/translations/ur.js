@@ -2612,5 +2612,9 @@ export const ur = {
   "You Left A Review": "آپ نے جائزہ چھوڑا",
   "View Larger Map": "بڑا نقشہ دیکھیں",
   "English (UK)": "انگریزی (برطانیہ)",
-  "QR Code Title": "کیو آر کوڈ کا عنوان"
+  "QR Code Title": "کیو آر کوڈ کا عنوان",
+  "Notice!": "نوٹس!",
+  "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.": "اس لین دین کو جاری رکھتے ہوئے، میں اس بات کی تصدیق کرتا ہوں کہ میں آزادانہ طور پر اور اپنی مرضی سے کام کر رہا ہوں۔ میں تصدیق کرتا ہوں کہ مجھے کسی تیسرے فریق نے سرمایہ کاری کے مقصد یا کسی اور وجہ سے اس لین دین کو انجام دینے کے لیے متاثر، سکھایا، مجبور یا قائل نہیں کیا ہے۔",
+  "I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.": "میں سمجھتا ہوں کہ اس تصدیق کی ضرورت تعمیل کو یقینی بنانے اور میرے اکاؤنٹ اور لین دین کی حفاظت کے لیے ہے۔",
+  "Confirm and Proceed": "تصدیق کریں اور جاری رکھیں"
 }

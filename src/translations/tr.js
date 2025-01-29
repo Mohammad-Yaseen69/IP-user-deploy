@@ -2612,5 +2612,9 @@ export const tr = {
   "You Left A Review": "Bir İnceleme Bıraktınız",
   "View Larger Map": "Daha Büyük Haritayı Görüntüle",
   "English (UK)": "İngilizce (Birleşik Krallık)",
-  "QR Code Title": "QR Kod Başlığı"
+  "QR Code Title": "QR Kod Başlığı",
+   "Notice!": "Dikkat!",
+  "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.": "Bu işlemi gerçekleştirerek, bağımsız ve kendi özgür irademle hareket ettiğimi onaylıyorum. Bu işlemi yatırım amaçlı veya başka herhangi bir sebeple yapmam için üçüncü bir taraf tarafından etkilenmediğimi, yönlendirilmediğimi, zorlanmadığımı veya ikna edilmediğimi beyan ederim.",
+  "I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.": "Bu onayın, uyumluluğu sağlamak ve hesabımı ile işlemlerimi korumak için gerekli olduğunu anlıyorum.",
+  "Confirm and Proceed": "Onayla ve Devam Et"
 }

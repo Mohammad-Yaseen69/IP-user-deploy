@@ -2612,5 +2612,9 @@ export const cn = {
     "You Left A Review": "您留下了一条评论",
     "View Larger Map": "查看大地图",
     "English (UK)": "英语（英国）",
-    "QR Code Title": "二维码标题"
+    "QR Code Title": "二维码标题",
+    "Notice!": "通知！",
+    "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.": "继续此交易即表示我确认自己是独立行动，并且完全出于自愿。我确认，我没有受到任何第三方的影响、指导、胁迫或劝说，以投资或其他任何目的执行此交易。",
+    "I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.": "我理解，此确认是为了确保合规性，并保护我的账户和交易安全。",
+    "Confirm and Proceed": "确认并继续"
 }
