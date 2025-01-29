@@ -291,7 +291,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                             const data = await getUserInfo()
                                 .catch(() => {
                                     const path = sessionStorage.getItem("path")
-                                    if(path){
+                                    if(path && path !== "undefined"){
                                         navigate(path)
                                     }else{
                                         navigate("/")
@@ -310,7 +310,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 .then(res => {
                                     const decrypted = decryptData(res.data.data)
                                     const path = sessionStorage.getItem("path")
-                                    if(path){
+                                    if(path && path !== "undefined"){
                                         navigate(path)
                                     }else{
                                         navigate("/")
@@ -323,7 +323,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     setIsLoginError("Something went wrong while creating login details")
                                     const decrypted = decryptData(err.response.data.data)
                                     const path = sessionStorage.getItem("path")
-                                    if(path){
+                                    console.log(path)
+                                    if(path && path !== "undefined"){
                                         navigate(path)
                                     }else{
                                         navigate("/")
