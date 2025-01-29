@@ -2311,7 +2311,7 @@ export const en = {
     "Search Users": "Search Users",
     "Select Payment Request Type": "Select Payment Request Type",
     "Wallet To Wallet Transfer": "Wallet To Wallet Transfer",
-    "Holiday List": "Holiday List",
+    "Holiday List": "Holidays List",
     "No Data To Show": "No Data To Show",
     "They Recieve": "They Recieve",
     "You Will Be Logged Out In 60 Seconds": "You Will Be Logged Out In 60 Seconds",

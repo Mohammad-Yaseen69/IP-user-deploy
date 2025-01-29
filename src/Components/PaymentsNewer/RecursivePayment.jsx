@@ -95,7 +95,7 @@ const Recursive = ({
                                     objectFit: "contain"
                                 }} />
                             </div>
-                            <h5>Subscription Payment</h5>
+                            <h5>{t("Subscription Payment")}</h5>
                         </div>
                     </CardBody>
                 </Card>
@@ -117,7 +117,7 @@ const Recursive = ({
                             borderRadius: "12px",
                             position: "relative"
                         }}>
-                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>Timezone</p>
+                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{t("Timezone")}</p>
                             <select
                                 style={{
                                     background: "#fff",
@@ -137,7 +137,7 @@ const Recursive = ({
                                 value={timezone}
                                 onChange={e => setTimezone(e.target.value)}
                             >
-                                <option value="">Select Timezone</option>
+                                <option value="">{t("Select A Timezone")}</option>
                                 {
                                     timezones?.map((country) => (
                                         <option
@@ -160,7 +160,7 @@ const Recursive = ({
                             borderRadius: "12px",
                             position: "relative"
                         }}>
-                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>Starting From</p>
+                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{t("Starting From")}</p>
                             <input readOnly style={{
                                 background: "#fff",
                                 background: "linear-gradient(to right,#E64067, #5926F0, #4828A0)",
@@ -201,7 +201,7 @@ const Recursive = ({
                             borderRadius: "12px",
                             marginTop: "1rem"
                         }}>
-                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>Recurring Cycle</p>
+                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{t("Recurring Cycle")}</p>
                             <div style={{
                                 background: "#fff",
                                 boxShadow: "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
@@ -295,7 +295,7 @@ const Recursive = ({
                                     </div>
                                 )}
                             </label>
-                            <label htmlFor="checkbox" style={{ marginBottom: 0, fontWeight: 500 }}>Until I stop</label>
+                            <label htmlFor="checkbox" style={{ marginBottom: 0, fontWeight: 500 }}>{t("Until I stop")}</label>
                         </div>
                     </CardBody>
                 </Card>

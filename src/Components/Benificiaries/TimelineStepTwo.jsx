@@ -6,6 +6,7 @@ import { Btn, H4, P } from '../../AbstractElements'
 const TimelineStepTwo = ({ setStepNumber }) => {
     const [message, setMessage] = useState("")
     const [completed, setCompleted] = useState(false)
+    const {t} = useTranslation()
 
     return (
         <VerticalTimelineElement
@@ -81,7 +82,7 @@ const TimelineStepTwo = ({ setStepNumber }) => {
                                     }
                                 }}
                             >
-                                Instant Payment
+                                {t("instant payment")}
                             </Btn>
 
                             <Btn

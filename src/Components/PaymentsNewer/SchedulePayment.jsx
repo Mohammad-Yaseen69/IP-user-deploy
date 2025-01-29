@@ -91,7 +91,7 @@ const SchedulePayment = ({ setSubStep, scheduleDate, setScheduleDate, scheduleTi
                                     objectFit: "contain"
                                 }} />
                             </div>
-                            <h5>Schedule Payment</h5>
+                            <h5>{t("schedule payment")}</h5>
                         </div>
                     </CardBody>
                 </Card>
@@ -113,7 +113,7 @@ const SchedulePayment = ({ setSubStep, scheduleDate, setScheduleDate, scheduleTi
                             borderRadius: "12px",
                             position: "relative"
                         }}>
-                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>Timezone</p>
+                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{t("Timezone")}</p>
                             <select
                                 style={{
                                     background: "#fff",
@@ -133,7 +133,7 @@ const SchedulePayment = ({ setSubStep, scheduleDate, setScheduleDate, scheduleTi
                                 value={timezone}
                                 onChange={e => setTimezone(e.target.value)}
                             >
-                                <option value="">Select Timezone</option>
+                                <option value="">{t("Select A Timezone")}</option>
                                 {
                                     timezones?.map((country) => (
                                         <option
@@ -156,7 +156,7 @@ const SchedulePayment = ({ setSubStep, scheduleDate, setScheduleDate, scheduleTi
                             borderRadius: "12px",
                             position: "relative"
                         }}>
-                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>Schedule To</p>
+                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{t("Schedule To")}</p>
                             <input readOnly style={{
                                 background: "#fff",
                                 background: "linear-gradient(to right,#E64067, #5926F0, #4828A0)",
@@ -197,7 +197,7 @@ const SchedulePayment = ({ setSubStep, scheduleDate, setScheduleDate, scheduleTi
                             marginTop: "1rem",
                             position: "relative"
                         }}>
-                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>Schedule At</p>
+                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{t("Schedule at")}</p>
                             <input type="time" style={{
                                 background: "#fff",
                                 background: "linear-gradient(to right,#E64067, #5926F0, #4828A0)",

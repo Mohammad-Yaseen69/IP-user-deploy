@@ -50,7 +50,7 @@ const TimelineSchedule = ({ action, mobileView, setStepNumber, scheduleDate, sch
                     </div>
                     :
                     <>
-                        <H4 attrH4={{ className: "vertical-timeline-element-subtitle" }}>Schedule Payment</H4>
+                        <H4 attrH4={{ className: "vertical-timeline-element-subtitle" }}>{t("schedule payment")}</H4>
                         <form style={{ marginTop: "1.5rem", display: "flex", flexDirection: "column", alignItems: "center" }} onSubmit={(e) => {
                             e.preventDefault()
                             if (action === "request") setStepNumber(9);

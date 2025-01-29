@@ -78,7 +78,7 @@ const SchedulePayment = (props) => {
                                     objectFit: "contain"
                                 }} />
                             </div>
-                            <h5>Schedule Payment</h5>
+                            <h5>{t("schedule payment")}</h5>
                         </div>
                     </CardBody>
                 </Card>
@@ -99,7 +99,7 @@ const SchedulePayment = (props) => {
                             alignItems: 'center',
                             borderRadius: "12px",
                         }}>
-                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>Schedule To</p>
+                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{t("Schedule To")}</p>
                             <input type="date" style={{
                                 background: "#fff",
                                 background: "linear-gradient(to right,#E64067, #5926F0, #4828A0)",
@@ -129,7 +129,7 @@ const SchedulePayment = (props) => {
                             marginTop: "1rem",
                             position: "relative"
                         }}>
-                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>Schedule At</p>
+                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{t("Schedule at")}</p>
                             <input type="time" style={{
                                 background: "#fff",
                                 background: "linear-gradient(to right,#E64067, #5926F0, #4828A0)",

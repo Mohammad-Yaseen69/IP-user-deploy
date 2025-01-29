@@ -189,7 +189,7 @@ const TimelineRecursive = ({ action, mobileView, setStepNumber, recursiveCycles,
                                         <label style={{
                                             margin: 0,
                                             padding: 0
-                                        }} className="form-label" htmlFor="cycle_unlimited">Until I stop.</label>
+                                        }} className="form-label" htmlFor="cycle_unlimited">{t("Until I stop")}</label>
                                     </div>
                                 </div>
                                 <div style={{ flex: 1, width: "100%" }}>

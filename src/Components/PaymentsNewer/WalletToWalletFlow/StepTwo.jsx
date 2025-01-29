@@ -41,7 +41,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
         setAmountLoading(e)
     }
 
-    useEffect(() => {
+    useEffect(() => {                                             
         dataHandler("exchange_rate", {})
         dataHandler("exchange_rate_error", "")
 
@@ -128,7 +128,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                                 onKeyUp={handleKeyUp}
                                 onBlur={handleBlur} 
                                 maxLength={14}
-                                placeholder="Enter the amount"
+                                placeholder={t("Enter the Amount")}
                                 data-type="currency"
                             />
                         </div>
@@ -273,7 +273,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                                 </div>
                                 :
                                 <>
-                                    <span>{"They receive"}</span>
+                                    <span>{t("They Receive")}</span>
                                     <h5 style={{ display: "flex", gap: ".5rem" }}>
                                         {data?.beneficiary_wallet?.currency?.code}
                                         <input
@@ -282,7 +282,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                                             onChange={(e) => dataHandler("recipient_amount", e.target.value)}
                                             onKeyUp={handleKeyUpR}
                                             onBlur={handleBlurR} maxLength={12}
-                                            placeholder="Enter the amount"
+                                            placeholder={t("Enter the Amount")}
                                             data-type="currency"
                                         />
                                     </h5>

@@ -639,7 +639,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             <>
                                                 {(currentOtpMethod !== "auth" && userAuthSetup) && (
                                                     <button className={styles.otpMethodButton} type="button" disabled={isPressed} onClick={() => handleOtpMethod("auth")}>
-                                                        <img style={{ width: "30px" }} src={AuthSvg} alt="" /> <p style={{ marginBottom: "0" }}>Verify Using Authenticator</p>
+                                                        <img style={{ width: "30px" }} src={AuthSvg} alt="" /> <p style={{ marginBottom: "0" }}>{t("Verify Using Authenticator")}</p>
                                                     </button>
                                                 )}
 
@@ -651,7 +651,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
                                                 {currentOtpMethod !== "sms" && (
                                                     <button className={styles.otpMethodButton} type="button" disabled={isPressed} onClick={() => handleOtpMethod("sms")}>
-                                                        <img style={{ width: "33px" }} src={SmsSvg} alt="" /> <p style={{ marginBottom: "0" }}>Verify Using Sms/Email</p>
+                                                        <img style={{ width: "33px" }} src={SmsSvg} alt="" /> <p style={{ marginBottom: "0" }}>{t("Verify Using Sms/Email")}</p>
                                                     </button>
                                                 )}
                                             </>

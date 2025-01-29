@@ -299,7 +299,7 @@ const ServiceDetails = ({ data }) => {
                                         {
                                             service_details_data.holidays?.[data.payoutChannel?.value]?.[isEuropean ? "eu" : "others"]
                                                 ?.map(item => (
-                                                    <a href={item} target="_blank">{t("Holidays list")}</a>
+                                                    <a href={item} target="_blank">{t("Holiday List")}</a>
                                                 ))
                                         }
                                     </div>

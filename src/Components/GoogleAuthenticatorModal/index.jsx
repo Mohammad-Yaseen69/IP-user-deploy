@@ -149,7 +149,7 @@ const GoogleAuthenticatorModal = ({
                         step === 1
                         &&
                         <div className={styles.s1}>
-                            <h1 className={styles.s1_t}>{t("This security feature requires password confirmation!")}</h1>
+                            <h1 className={styles.s1_t}>{t("This Security Feature Requires Password Confirmation!")}</h1>
                             <div className={styles.s1_inp_con}>
                                 <Label>{t("Enter your password")}</Label>
                                 <div className={styles.s1_i_c_input}>
@@ -176,7 +176,7 @@ const GoogleAuthenticatorModal = ({
                         step === 2
                         &&
                         <div className={styles.s2}>
-                            <p className={styles.s2_t}>{t("Use the application to scan the QR code or use your secret code to activate Google two-factor authentication.")}</p>
+                            <p className={styles.s2_t}>{t("Use The Application To Scan The QR Code Or Use Your Secret Code To Activate Google Two-Factor Authentication")}</p>
                             <div className={styles.auth_details}>
                                 <div className={styles.qr}>
                                     <img src={authenticatorDetails?.qrCodeUrl} alt="" />
@@ -188,8 +188,8 @@ const GoogleAuthenticatorModal = ({
                                     <div></div>
                                 </div>
                                 <div className={styles.auth_secret}>
-                                    <Label>{t("Paste this key in the Google Authenticator App.")}</Label>
-                                    <button onClick={() => setShowSecret(!showSecret)}>{showSecret ? t("Hide secret key") : t("Show secret key")}</button>
+                                    <Label>{t("Paste This Key In The Googe Authenticator App")}</Label>
+                                    <button onClick={() => setShowSecret(!showSecret)}>{showSecret ? t("Hide secret key") : t("Show Secret Key")}</button>
                                     <div className={styles.secret_key}>
                                         <span>
                                             {
@@ -220,10 +220,10 @@ const GoogleAuthenticatorModal = ({
                                 </div>
                             </div>
                             <div className={styles.auth_code_details}>
-                                <h2>{t("Enter this six-digit code from the application")}</h2>
-                                <p>{t("After scanning the barcode image, the app will display a six-digit code that you can enter below.")}</p>
+                                <h2>{t("Enter The Six-Digit Code From The Application")}</h2>
+                                <p>{t("After Scanning The Barcode Image, The App Will Display A Six-Digit Code That You Can Enter Below")}</p>
                                 <div className={styles.code_field}>
-                                    <Label>{t("6 Digit code")}</Label>
+                                    <Label>{t("6 Digit Code")}</Label>
                                     <div className={styles.otp_inputs}>
                                         {otpValues.map((value, index) => (
                                             <input

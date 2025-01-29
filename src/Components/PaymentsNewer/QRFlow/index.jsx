@@ -40,7 +40,7 @@ import NotFoundModal from "../../NotFound/NotFoundModal";
 
 const leftSideContent = [
     "Choose the beneficiary!",
-    "Enter the amount",
+    "Enter The Amount",
     "Add Remarks And Comments",
     "Select Payment Type",
     "Review transfer"
