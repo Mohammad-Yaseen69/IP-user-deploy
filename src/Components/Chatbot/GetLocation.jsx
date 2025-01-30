@@ -117,7 +117,7 @@ const RequestLocation = ({ coords, setCoords, isOpen, toggle, cancelPayment, dis
     return (
         <div
             style={{
-                minHeight: "100vh",
+                minHeight: window.innerWidth > 500 ? "100vh" : "70vh",
                 width: "100vw",
                 display: "flex",
                 flexDirection: "column",
