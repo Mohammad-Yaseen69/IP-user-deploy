@@ -2615,5 +2615,9 @@ export const ar = {
   "Notice!": "تنبيه!",
   "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.": "بالمتابعة في هذه المعاملة، أؤكد بموجبه أنني أتصرف بشكل مستقل وبإرادتي الحرة. أؤكد أنني لم أتأثر أو أُوجَّه أو أُجبرت أو أُقنِع من قبل أي طرف ثالث لتنفيذ هذه المعاملة لأغراض الاستثمار أو لأي سبب آخر.",
   "I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.": "أنا أفهم أن هذا التأكيد مطلوب لضمان الامتثال وحماية حسابي ومعاملاتي.",
-  "Confirm and Proceed": "تأكيد والمتابعة"
+  "Confirm and Proceed": "تأكيد والمتابعة",
+  "Blocked Wallet": "المحفظة المحظورة",
+  "Nominee's Full Name": "الاسم الكامل للمرشح",
+  "Insufficient Balance": "رصيد غير كافٍ",
+  "Upload Photo": "تحميل الصورة"
 }

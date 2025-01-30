@@ -2649,5 +2649,9 @@ export const ha = {
       "Notice!": "Gargaɗi!",
   "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.": "Ta hanyar ci gaba da wannan mu'amala, na tabbatar da cewa ina yin hakan ne bisa 'yancina kuma da yardar kaina. Na tabbatar cewa ba wani bangare na uku da ya shafi shawara, koyarwa, tilasta ko lallashin ni don yin wannan mu'amala don saka jari ko wata dalili.",
   "I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.": "Na fahimci cewa wannan tabbatarwa tana da mahimmanci don tabbatar da bin ka'ida da kuma kare asusuna da ma'amalolina.",
-  "Confirm and Proceed": "Tabbatar da ci gaba"
+  "Confirm and Proceed": "Tabbatar da ci gaba",
+  "Blocked Wallet": "Aljihun da Aka Rufe",
+  "Nominee's Full Name": "Cikakken Sunan Mai Nomin",
+  "Insufficient Balance": "Rashin Ƙari",
+  "Upload Photo": "Loda Hoto"
 }

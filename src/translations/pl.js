@@ -2617,6 +2617,10 @@ export const pl = {
     "Notice!": "Uwaga!",
   "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.": "Kontynuując tę transakcję, niniejszym potwierdzam, że działam niezależnie i z własnej woli. Oświadczam, że nie byłem pod wpływem, szkolony, zmuszany ani nakłaniany przez żadną osobę trzecią do przeprowadzenia tej transakcji w celach inwestycyjnych lub z jakiegokolwiek innego powodu.",
   "I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.": "Rozumiem, że to potwierdzenie jest wymagane w celu zapewnienia zgodności i ochrony mojego konta oraz transakcji.",
-  "Confirm and Proceed": "Potwierdź i kontynuuj"
+  "Confirm and Proceed": "Potwierdź i kontynuuj",
+   "Blocked Wallet": "Zablokowany Portfel",
+  "Nominee's Full Name": "Pełne imię i nazwisko nominata",
+  "Insufficient Balance": "Niewystarczające saldo",
+  "Upload Photo": "Prześlij zdjęcie"
 
 }

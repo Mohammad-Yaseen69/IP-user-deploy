@@ -86,7 +86,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                 <div className={styles.top_right}>
                     <div className={styles.inp_con}>
                         <Label>{t("Name")}</Label>
-                        <Input placeholder={`Nominee's full name`} value={fullName} onChange={e => setFullName(e.target.value)} />
+                        <Input placeholder={t(`Nominee's Full Name`)} value={fullName} onChange={e => setFullName(e.target.value)} />
                     </div>
                     <div className={styles.mul_inp}>
                         <div className={styles.inp_con}>

@@ -2512,5 +2512,9 @@ export const ru = {
   "Notice!": "Внимание!",
   "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.": "Продолжая эту транзакцию, я подтверждаю, что действую самостоятельно и по собственной воле. Я заявляю, что не подвергался влиянию, обучению, принуждению или убеждению со стороны третьих лиц для осуществления этой транзакции в инвестиционных целях или по любой другой причине.",
   "I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.": "Я понимаю, что это подтверждение необходимо для обеспечения соответствия и защиты моего аккаунта и транзакций.",
-  "Confirm and Proceed": "Подтвердить и продолжить"
+  "Confirm and Proceed": "Подтвердить и продолжить",
+  "Blocked Wallet": "Заблокированный Кошелек",
+  "Nominee's Full Name": "Полное имя номинанта",
+  "Insufficient Balance": "Недостаточно средств",
+  "Upload Photo": "Загрузить фото"
 }

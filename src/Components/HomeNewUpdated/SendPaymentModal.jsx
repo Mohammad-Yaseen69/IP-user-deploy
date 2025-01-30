@@ -586,7 +586,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                                             exchangeError.includes("insufficient balance")
                                                             &&
                                                             <>
-                                                                <h2 style={{ marginBottom: 0, textAlign: "center", fontSize: "1.4rem", fontWeight: 800 }}>Insufficient Balance</h2>
+                                                                <h2 style={{ marginBottom: 0, textAlign: "center", fontSize: "1.4rem", fontWeight: 800 }}>{t("Insufficient Balance")}</h2>
                                                             </>
                                                         }
                                                         {

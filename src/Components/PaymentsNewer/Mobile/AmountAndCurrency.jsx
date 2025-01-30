@@ -408,7 +408,7 @@ const AmountAndCurrency = ({ setStep, amount, setAmount, currency, setCurrency, 
                         maxLength={12}
                         onChange={(e) => setFormattedAmount(e.target.value)}
                         onKeyUp={handleKeyUp}
-                        onBlur={handleBlur} maxLength={12}
+                        onBlur={handleBlur}
                         placeholder="Enter Amount"
                         data-type="currency"
                     />

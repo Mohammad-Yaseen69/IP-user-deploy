@@ -2616,5 +2616,9 @@ export const sw = {
     "Notice!": "Tahadhari!",
   "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.": "Kwa kuendelea na muamala huu, ninathibitisha kuwa ninatenda kwa uhuru wangu na kwa mapenzi yangu mwenyewe. Ninathibitisha kuwa sijashawishiwa, kufundishwa, kulazimishwa, au kushawishiwa na mtu wa tatu kufanya muamala huu kwa madhumuni ya uwekezaji au sababu nyingine yoyote.",
   "I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.": "Ninaelewa kuwa uthibitisho huu unahitajika ili kuhakikisha uzingatiaji na kulinda akaunti yangu na miamala yangu.",
-  "Confirm and Proceed": "Thibitisha na Endelea"
+  "Confirm and Proceed": "Thibitisha na Endelea",
+  "Blocked Wallet": "Pochi Imezuiliwa",
+  "Nominee's Full Name": "Jina Kamili la Mgombea",
+  "Insufficient Balance": "Salio Lisilo La Kutosha",
+  "Upload Photo": "Pakia Picha"
 }
