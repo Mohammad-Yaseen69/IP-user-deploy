@@ -209,7 +209,7 @@ const RequestLocation = ({ coords, setCoords, isOpen, toggle, cancelPayment, dis
                                 src={`//maps.google.com/maps?q=${coords?.latitude},${coords?.longitude}&z=15&output=embed`}
                                 style={{
                                     width: "100%",
-                                    height: "100vh"
+                                    height: window.innerWidth > 500 ? "100vh" : "60vh",
                                 }}
                             ></iframe>
                             {/* <h5 style={{ marginBottom: "1rem", marginTop: "1rem", fontSize: "1.5rem", fontWeight: "700" }}>Is this your Location?</h5> */}
