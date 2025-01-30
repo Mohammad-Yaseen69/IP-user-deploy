@@ -150,6 +150,17 @@ const RequestLocation = ({ coords, setCoords, isOpen, toggle, cancelPayment, dis
                             Follow the below Instructions to Enable Location Services in Your Browser After Denying Permission Previously.
                         </p>
                         <div style={{ marginBottom: '1.5rem', background: "#4444441e", width: "100%", padding: "1rem", borderRadius: ".5rem" }}>
+                            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Instructions to Open the Link in an External Browser.</h3>
+                            <ul style={{ padding: 0, listStyleType: "initial", marginLeft: "1.2rem" }}>
+                                <li style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>Locate and click the three dots icon in the top-right corner of the interface. </li>
+                                <li style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>From the dropdown menu, select "Open with".</li>
+                                <li style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>Choose your preferred external browser from the available options.</li>
+                                <li style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>Locate the website in the list or search for it.</li>
+                                <li style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>The link will open in the selected browser.</li>
+                            </ul>
+                        </div>
+
+                        <div style={{ marginBottom: '1.5rem', background: "#4444441e", width: "100%", padding: "1rem", borderRadius: ".5rem" }}>
                             <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>1: Chrome Browser</h3>
                             <ul style={{ padding: 0, listStyleType: "initial", marginLeft: "1.2rem" }}>
                                 <li style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>Open the Chrome app.</li>
@@ -197,8 +208,8 @@ const RequestLocation = ({ coords, setCoords, isOpen, toggle, cancelPayment, dis
                             <iframe
                                 src={`//maps.google.com/maps?q=${coords?.latitude},${coords?.longitude}&z=15&output=embed`}
                                 style={{
-                                    height: "90%",
                                     width: "100%",
+                                    height: "100vh"
                                 }}
                             ></iframe>
                             {/* <h5 style={{ marginBottom: "1rem", marginTop: "1rem", fontSize: "1.5rem", fontWeight: "700" }}>Is this your Location?</h5> */}
