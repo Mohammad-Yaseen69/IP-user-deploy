@@ -110,7 +110,7 @@ const CurConversion = () => {
                     borderRadius: "0 0 10px 10px",
                     overflow: "hidden"
                 }}>
-                    <input type="text" placeholder={t("Exchanged Amount")} style={{ flex: "1", border: "none", outline: "none", padding: ".5rem", background: "transparent", width: "100%" }} value={resultCurrency} disabled />
+                    <input type="text" placeholder={t("Exchanged Amount")} style={{ flex: "1", border: "none", outline: "none", padding: ".5rem", background: "transparent", width: "100%" }} value={t(resultCurrency)} disabled />
                     <select style={{ border: "none", outline: "none", padding: ".5rem", background: "transparent", fontWeight: 600 }} value={exchangedCurrency} onChange={e => setExchangedCurrency(e.target.value)}>
                         <option value="USD">USD</option>
                         <option value="EUR">EUR</option>

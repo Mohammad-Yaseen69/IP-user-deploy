@@ -213,7 +213,7 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
                                 //     convertCurrency()
                                 // }, 500)
                             }}></div>
-                            <input type="text" placeholder={t("Exchanged Amount")} value={error.length > 0 ? error : fxDet?.receiver?.amount?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 6 }) ?? ""} disabled />
+                            <input type="text" placeholder={t("Exchanged Amount")} value={error.length > 0 ? t(error) : fxDet?.receiver?.amount?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 6 }) ?? ""} disabled />
                         </div>
                         <button
                             style={{
