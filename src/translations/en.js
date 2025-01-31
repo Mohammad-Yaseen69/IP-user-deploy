@@ -2615,7 +2615,7 @@ export const en = {
     "QR Code Title": "QR Code Title",
     "Notice!": "Notice!",
     "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.": "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.",
-    "I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.": "Ich verstehe, dass diese Bestätigung erforderlich ist, um die Einhaltung der Vorschriften sicherzustellen und mein Konto sowie meine Transaktionen zu schützen.",
+    "I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.": "I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.",
     "Confirm and Proceed": "Confirm and Proceed",
     "Upload Photo": "Upload Photo",
     "Nominee's Full Name": "Nominee's Full Name",
