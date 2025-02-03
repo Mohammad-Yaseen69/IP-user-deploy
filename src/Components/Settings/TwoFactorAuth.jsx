@@ -20,6 +20,7 @@ const TwoFactorAuth = () => {
     const [emailActive, setEmailActive] = useState(false)
     const [smsActive, setSmsActive] = useState(false)
     const [authenticatorActive, setAuthenticatorActive] = useState(false)
+    const [fingerBioActive, setFingerBioActive] = useState(false)
 
     const [editMode, setEditMode] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
@@ -27,6 +28,7 @@ const TwoFactorAuth = () => {
     const [saved, setSaved] = useState(false)
     const [showAuth, setShowAuth] = useState(false)
     const [current, setCurrent] = useState("")
+    const [showFinger, setShowFinger] = useState(false)
     // const [firstTime, setFirstTime] = useState(true)
 
 
@@ -36,6 +38,7 @@ const TwoFactorAuth = () => {
             setSmsActive(userDetails?.sms_verification ?? false)
             setEmailActive(userDetails?.email_verification ?? false)
             setAuthenticatorActive(userDetails?.tfa ?? false)
+            console.log(userDetails)
             // if (typeof userDetails?.sms_verification == "undefined" || typeof userDetails?.email_verification == "undefined") {
             //     setFirstTime(true)
             // } else {
@@ -187,6 +190,15 @@ const TwoFactorAuth = () => {
                             </td>
                         </tr>
                         <tr>
+                            <td style={{ width: "100%" }} data-label="Finger Biometric">{t("Finger Biometric")}</td>
+                            <td data-label={t("Finger Biometric")}>
+                                <Switch checked={fingerBioActive} callback={() => {
+                                    setShowAuth(true)
+                                    setShowFinger(true)
+                                }} disabled={isSaving} />
+                            </td>
+                        </tr>
+                        <tr>
                             <td style={{ width: "100%" }} data-label="Phone Number">{t("Google Authenticator")}</td>
                             <td data-label={t("Google Authenticator")}>
                                 {
@@ -254,6 +266,7 @@ const TwoFactorAuth = () => {
                         }}
                         successTitle={current !== "Google" ? 'Two Factor Authentication Updated Succsessfully!' : "Google Two Factor Authentication is now linked to your InstaPay Account."}
                         sideText={`${current} Authenticator`}
+                        showFinger={showFinger}
                     />
                 }
 

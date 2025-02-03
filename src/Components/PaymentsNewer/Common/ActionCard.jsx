@@ -14,7 +14,7 @@ const ActionCard = (props) => {
                 <div className={styles.item_dets}>
                     <div>
                         <img src={icon} alt={title} />
-                        <h5 style={{ height: "48px" }}>{title}</h5>
+                        <h5 style={{ height: "48px", fontSize: title.length > 25 && "20px" }}>{title}       </h5>
                     </div>
                     <p>{desc}</p>
                 </div>
