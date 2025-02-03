@@ -5,14 +5,14 @@ import { UserContext } from "../../Context/UserContext"
 import LanguagePicker from "../LanguagePicker"
 import Notifications from "../Notifications"
 
-const TopRight = () => {
+const TopRight = ({position = "absolute"}) => {
     const { userDetails } = useContext(UserContext)
 
     return (
         <div className="d-flex justify-content-between mb-4" style={{
             // maxWidth: "350px",
             // width: "100%",
-            position: "absolute",
+            position: position,
             top: ".4rem",
             right: "0",
             gap: "2rem"

@@ -52,6 +52,7 @@ const SubscriptionRequest = lazy(() => import("../Components/Chatbot/subscriptio
 const SubscriptionCalendarEndDate = lazy(() => import("../Components/Chatbot/subscription-end-date"))
 const SubscriptionRequestEndDate = lazy(() => import("../Components/Chatbot/subscription-request-end-date"))
 const CreatePassword = lazy(() => import("../Components/CreatePassword/CreatePassword"))
+const GeoFencing = lazy(() => import("../Components/GeoFencing"))
 
 
 export const routes = [
@@ -90,6 +91,7 @@ export const routes = [
     { path: "/onboarding/add-users", component: <BroadcastSignup /> },
     { path: "/payment-status/:type/:status/:code", component: <PaymentStatus /> },
     { path: "/create-password/:token", component: <CreatePassword /> },
+    { path: "/geo-fencing", component: <GeoFencing /> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 
