@@ -349,7 +349,6 @@ const TwoFactorAuth = () => {
                                         :
                                         <Switch checked={authenticatorActive} callback={() => {
                                             setCurrent("Google")
-                                            setShowFinger(true)
                                             enableAuthenticator()
                                         }} disabled={isSaving} />
                                 }
