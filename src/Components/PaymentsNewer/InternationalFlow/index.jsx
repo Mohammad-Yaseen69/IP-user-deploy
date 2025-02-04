@@ -239,110 +239,112 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
     }
 
     const getConversionRate = async (amount = internationalData.amount, setLimitType, wallet_id = "", currency_code = "", avoid_balance = true, setLoading, fromOrTo = "from") => {
-        setLoading(true)
-        const destinationCurrency = await getCurrency()
-        try {
-            const service_name = internationalData?.payoutChannel?.value === "bank" ? "international_bank_transfer" : internationalData?.payoutChannel?.value === "mobile" ? "international_mobile_wallet" : internationalData?.payoutChannel?.value === "card" ? "international_card_payment" : internationalData?.payoutChannel?.value === "cash" ? "international_cash_pickup" : ""
-
-            const url = `${process.env.REACT_APP_IP_DEV_API}/api/thunes/get-markup-conversion-rates?from=${internationalData.currency_wallet?.currency?.code}&to=${destinationCurrency}&amount=${+String(amount)?.replaceAll(",", "")}&fromOrTo=${fromOrTo}&service_name=${service_name}&account_id=${userDetails?._id}&payer_id=${internationalData.payer?.id}&service_id=${internationalData.payoutChannel?.id}`
-
-            const res = await axios.get(url, { headers: authHeader })
-
-            const decrypted = decryptData(res.data.data)
-            const exchange_rate_details = {
-                exchange_rate: decrypted?.data?.exchangeRate,
-                receiver: { currency: destinationCurrency, amount: decrypted?.data?.recipientAmount },
-                fee: { amount: decrypted?.data?.result?.fee?.value },
-                total: decrypted?.data?.result?.total?.value,
-                limits_used: {
-                    daily_receiving_limit_used: decrypted?.data?.limits?.daily_receiving_limit - decrypted?.data?.limits_used?.daily_receiving_limit_used,
-                    daily_sending_limit_used: decrypted?.data?.limits?.daily_sending_limit - decrypted?.data?.limits_used?.daily_sending_limit_used,
-                    monthly_receiving_limit_used: decrypted?.data?.limits?.monthly_receiving_limit - decrypted?.data?.limits_used?.monthly_receiving_limit_used,
-                    monthly_sending_limit_used: decrypted?.data?.limits?.monthly_sending_limit - decrypted?.data?.limits_used?.monthly_sending_limit_used,
-                    yearly_receiving_limit_used: decrypted?.data?.limits?.yearly_receiving_limit - decrypted?.data?.limits_used?.yearly_receiving_limit_used,
-                    yearly_sending_limit_used: decrypted?.data?.limits?.yearly_sending_limit - decrypted?.data?.limits_used?.yearly_sending_limit_used,
-                },
-                limits: {
-                    daily_receiving_limit: { limits_used: decrypted?.data?.limits_used?.daily_receiving_limit_used, total_limits: decrypted?.data?.limits?.daily_receiving_limit },
-                    daily_sending_limit: { limits_used: decrypted?.data?.limits_used?.daily_sending_limit_used, total_limits: decrypted?.data?.limits?.daily_sending_limit },
-                    monthly_receiving_limit: { limits_used: decrypted?.data?.limits_used?.monthly_receiving_limit_used, total_limits: decrypted?.data?.limits?.monthly_receiving_limit },
-                    monthly_sending_limit: { limits_used: decrypted?.data?.limits_used?.monthly_sending_limit_used, total_limits: decrypted?.data?.limits?.monthly_sending_limit },
-                    yearly_receiving_limit: { limits_used: decrypted?.data?.limits_used?.yearly_receiving_limit_used, total_limits: decrypted?.data?.limits?.yearly_receiving_limit },
-                    yearly_sending_limit: { limits_used: decrypted?.data?.limits_used?.yearly_sending_limit_used, total_limits: decrypted?.data?.limits?.yearly_sending_limit },
-                },
-                min_amount: decrypted?.data?.minimumValue,
-                max_amount: decrypted?.data?.maximumValue,
-                token: decrypted?.data?.token
-            }
-            updateInternationalData("exchange_rate", exchange_rate_details)
-            updateInternationalData("quotation_details", decrypted?.data)
-            if (fromOrTo === "from") {
-                updateInternationalData("receiving_amount", exchange_rate_details?.receiver?.amount)
-                updateInternationalData("conversion_in", destinationCurrency)
-            } else {
-                updateInternationalData("amount", exchange_rate_details?.receiver?.amount)
-                updateInternationalData("conversion_in", internationalData.currency_wallet?.currency?.code)
-            }
-
-            // if (+amount > exchange_rate_details?.limits_used?.daily_sending_limit_used) {
-            //     updateInternationalData("exchange_rate_error", "exceed send")
-            //     setLimitType("daily")
-            // }
-            // else if (+amount > exchange_rate_details?.limits_used?.monthly_sending_limit_used) {
-            //     updateInternationalData("exchange_rate_error", "exceed send")
-            //     setLimitType("monthly")
-            // }
-            // else if (+amount > exchange_rate_details?.limits_used?.yearly_sending_limit_used) {
-            //     updateInternationalData("exchange_rate_error", "exceed send")
-            //     setLimitType("yearly")
-            // }
-            // else {
-            //     if (amount <= exchange_rate_details?.fee?.amount) {
-            //         updateInternationalData("exchange_rate_error", "Invalid Amount Fee")
-            //     } else {
-            //         updateInternationalData("exchange_rate_error", "")
-            //     }
-            // }
-        }
-        catch (err) {
-            const dec = decryptData(err?.response.data.data)
-            if (fromOrTo === "from") {
-                updateInternationalData("receiving_amount", 0)
-                updateInternationalData("conversion_in", destinationCurrency)
-            } else {
-                updateInternationalData("amount", 0)
-                updateInternationalData("conversion_in", internationalData.currency_wallet?.currency?.code)
-            }
-
-            if (typeof dec?.message == "object") {
-                if (dec?.message?.[0]?.code === "1003007") {
-                    updateInternationalData("exchange_rate_error", "payer_unavailable")
+        if(internationalData.payer?.id && internationalData.payoutChannel?.id && amount){
+            setLoading(true)
+            const destinationCurrency = await getCurrency()
+            try {
+                const service_name = internationalData?.payoutChannel?.value === "bank" ? "international_bank_transfer" : internationalData?.payoutChannel?.value === "mobile" ? "international_mobile_wallet" : internationalData?.payoutChannel?.value === "card" ? "international_card_payment" : internationalData?.payoutChannel?.value === "cash" ? "international_cash_pickup" : ""
+    
+                const url = `${process.env.REACT_APP_IP_DEV_API}/api/thunes/get-markup-conversion-rates?from=${internationalData.currency_wallet?.currency?.code}&to=${destinationCurrency}&amount=${+String(amount)?.replaceAll(",", "")}&fromOrTo=${fromOrTo}&service_name=${service_name}&account_id=${userDetails?._id}&payer_id=${internationalData.payer?.id}&service_id=${internationalData.payoutChannel?.id}`
+    
+                const res = await axios.get(url, { headers: authHeader })
+    
+                const decrypted = decryptData(res.data.data)
+                const exchange_rate_details = {
+                    exchange_rate: decrypted?.data?.exchangeRate,
+                    receiver: { currency: destinationCurrency, amount: decrypted?.data?.recipientAmount },
+                    fee: { amount: decrypted?.data?.result?.fee?.value },
+                    total: decrypted?.data?.result?.total?.value,
+                    limits_used: {
+                        daily_receiving_limit_used: decrypted?.data?.limits?.daily_receiving_limit - decrypted?.data?.limits_used?.daily_receiving_limit_used,
+                        daily_sending_limit_used: decrypted?.data?.limits?.daily_sending_limit - decrypted?.data?.limits_used?.daily_sending_limit_used,
+                        monthly_receiving_limit_used: decrypted?.data?.limits?.monthly_receiving_limit - decrypted?.data?.limits_used?.monthly_receiving_limit_used,
+                        monthly_sending_limit_used: decrypted?.data?.limits?.monthly_sending_limit - decrypted?.data?.limits_used?.monthly_sending_limit_used,
+                        yearly_receiving_limit_used: decrypted?.data?.limits?.yearly_receiving_limit - decrypted?.data?.limits_used?.yearly_receiving_limit_used,
+                        yearly_sending_limit_used: decrypted?.data?.limits?.yearly_sending_limit - decrypted?.data?.limits_used?.yearly_sending_limit_used,
+                    },
+                    limits: {
+                        daily_receiving_limit: { limits_used: decrypted?.data?.limits_used?.daily_receiving_limit_used, total_limits: decrypted?.data?.limits?.daily_receiving_limit },
+                        daily_sending_limit: { limits_used: decrypted?.data?.limits_used?.daily_sending_limit_used, total_limits: decrypted?.data?.limits?.daily_sending_limit },
+                        monthly_receiving_limit: { limits_used: decrypted?.data?.limits_used?.monthly_receiving_limit_used, total_limits: decrypted?.data?.limits?.monthly_receiving_limit },
+                        monthly_sending_limit: { limits_used: decrypted?.data?.limits_used?.monthly_sending_limit_used, total_limits: decrypted?.data?.limits?.monthly_sending_limit },
+                        yearly_receiving_limit: { limits_used: decrypted?.data?.limits_used?.yearly_receiving_limit_used, total_limits: decrypted?.data?.limits?.yearly_receiving_limit },
+                        yearly_sending_limit: { limits_used: decrypted?.data?.limits_used?.yearly_sending_limit_used, total_limits: decrypted?.data?.limits?.yearly_sending_limit },
+                    },
+                    min_amount: decrypted?.data?.minimumValue,
+                    max_amount: decrypted?.data?.maximumValue,
+                    token: decrypted?.data?.token
+                }
+                updateInternationalData("exchange_rate", exchange_rate_details)
+                updateInternationalData("quotation_details", decrypted?.data)
+                if (fromOrTo === "from") {
+                    updateInternationalData("receiving_amount", exchange_rate_details?.receiver?.amount)
+                    updateInternationalData("conversion_in", destinationCurrency)
                 } else {
-                    updateInternationalData("exchange_rate_error", "sww")
+                    updateInternationalData("amount", exchange_rate_details?.receiver?.amount)
+                    updateInternationalData("conversion_in", internationalData.currency_wallet?.currency?.code)
                 }
-            } else {
-                const error = LimitsErrorMessage(dec?.code ?? dec?.message)
-                if (error) {
-                    updateInternationalData("exchange_rate_error", error)
+    
+                // if (+amount > exchange_rate_details?.limits_used?.daily_sending_limit_used) {
+                //     updateInternationalData("exchange_rate_error", "exceed send")
+                //     setLimitType("daily")
+                // }
+                // else if (+amount > exchange_rate_details?.limits_used?.monthly_sending_limit_used) {
+                //     updateInternationalData("exchange_rate_error", "exceed send")
+                //     setLimitType("monthly")
+                // }
+                // else if (+amount > exchange_rate_details?.limits_used?.yearly_sending_limit_used) {
+                //     updateInternationalData("exchange_rate_error", "exceed send")
+                //     setLimitType("yearly")
+                // }
+                // else {
+                //     if (amount <= exchange_rate_details?.fee?.amount) {
+                //         updateInternationalData("exchange_rate_error", "Invalid Amount Fee")
+                //     } else {
+                //         updateInternationalData("exchange_rate_error", "")
+                //     }
+                // }
+            }
+            catch (err) {
+                const dec = decryptData(err?.response.data.data)
+                if (fromOrTo === "from") {
+                    updateInternationalData("receiving_amount", 0)
+                    updateInternationalData("conversion_in", destinationCurrency)
+                } else {
+                    updateInternationalData("amount", 0)
+                    updateInternationalData("conversion_in", internationalData.currency_wallet?.currency?.code)
                 }
-                else if (dec?.message?.toLowerCase()?.includes("insufficient")) {
-                    updateInternationalData("exchange_rate_error", "insufficient balance payer")
-                }
-                else if (dec?.message?.toLowerCase()?.includes("above the max")) {
-                    updateInternationalData("exchange_rate_error", "max payer")
-                    updateInternationalData("exchange_rate_error_value", Number(dec?.value ?? 0)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
-                }
-                else if (dec?.message?.toLowerCase()?.includes("below the min")) {
-                    updateInternationalData("exchange_rate_error", "min payer")
-                    updateInternationalData("exchange_rate_error_value", Number(dec?.value ?? 0)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
-                }
-                else {
-                    updateInternationalData("exchange_rate_error", "sww")
+    
+                if (typeof dec?.message == "object") {
+                    if (dec?.message?.[0]?.code === "1003007") {
+                        updateInternationalData("exchange_rate_error", "payer_unavailable")
+                    } else {
+                        updateInternationalData("exchange_rate_error", "sww")
+                    }
+                } else {
+                    const error = LimitsErrorMessage(dec?.code ?? dec?.message)
+                    if (error) {
+                        updateInternationalData("exchange_rate_error", error)
+                    }
+                    else if (dec?.message?.toLowerCase()?.includes("insufficient")) {
+                        updateInternationalData("exchange_rate_error", "insufficient balance payer")
+                    }
+                    else if (dec?.message?.toLowerCase()?.includes("above the max")) {
+                        updateInternationalData("exchange_rate_error", "max payer")
+                        updateInternationalData("exchange_rate_error_value", Number(dec?.value ?? 0)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
+                    }
+                    else if (dec?.message?.toLowerCase()?.includes("below the min")) {
+                        updateInternationalData("exchange_rate_error", "min payer")
+                        updateInternationalData("exchange_rate_error_value", Number(dec?.value ?? 0)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
+                    }
+                    else {
+                        updateInternationalData("exchange_rate_error", "sww")
+                    }
                 }
             }
-        }
-        finally {
-            setLoading(false)
+            finally {
+                setLoading(false)
+            }
         }
     }
 

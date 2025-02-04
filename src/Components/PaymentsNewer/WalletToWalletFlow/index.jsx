@@ -577,69 +577,71 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
     }
 
     const getExchangeRateConversion = async (amount, setLimitType, payment_method = "instant", from, setLoading, fromOrTo = "from") => {
-        setLoading(true)
+        if (amount) {
+            setLoading(true)
 
-        try {
-            const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/w2w-rates?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=wallet_to_wallet&level_id=${userDetails?.level?._id}&payment_type=wallet&&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}&fromOrTo=${fromOrTo}`
+            try {
+                const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/w2w-rates?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=wallet_to_wallet&level_id=${userDetails?.level?._id}&payment_type=wallet&&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}&fromOrTo=${fromOrTo}`
 
 
-            const res = await axios.get(url, { headers: authHeader })
-            const decrypted = decryptData(res.data.data)
-            console.log(url)
-            console.log(decrypted)
-            const exchange_rate_details = {
-                exchange_rate: decrypted?.data?.exchanged_rate?.value,
-                receiver: { currency: decrypted?.data?.recipient?.currency, amount: decrypted?.data?.recipient?.value },
-                fee: { amount: decrypted?.data?.fee?.value ?? 0.00, currency: decrypted?.data?.fee?.currency },
-                sending: { amount: decrypted?.data?.sending?.value, currency: decrypted?.data?.sending?.currency },
-                total: decrypted?.data?.total?.value,
-            }
+                const res = await axios.get(url, { headers: authHeader })
+                const decrypted = decryptData(res.data.data)
+                console.log(url)
+                console.log(decrypted)
+                const exchange_rate_details = {
+                    exchange_rate: decrypted?.data?.exchanged_rate?.value,
+                    receiver: { currency: decrypted?.data?.recipient?.currency, amount: decrypted?.data?.recipient?.value },
+                    fee: { amount: decrypted?.data?.fee?.value ?? 0.00, currency: decrypted?.data?.fee?.currency },
+                    sending: { amount: decrypted?.data?.sending?.value, currency: decrypted?.data?.sending?.currency },
+                    total: decrypted?.data?.total?.value,
+                }
 
-            dataHandler("exchange_rate", exchange_rate_details)
+                dataHandler("exchange_rate", exchange_rate_details)
 
-            if (fromOrTo === "from") {
-                dataHandler("recipient_amount", exchange_rate_details?.receiver?.amount)
-            } else {
-                dataHandler("amount", exchange_rate_details?.sending?.amount)
-            }
-            return exchange_rate_details
-        }
-        catch (err) {
-            const dec = decryptData(err?.response.data.data)
-
-            if (fromOrTo === "from") {
-                dataHandler("recipient_amount", 0)
-            } else {
-                dataHandler("amount", 0)
-            }
-
-            if (typeof dec?.message == "object") {
-                if (dec?.message?.[0]?.code === "1003007") {
-                    dataHandler("exchange_rate_error", "payer_unavailable")
+                if (fromOrTo === "from") {
+                    dataHandler("recipient_amount", exchange_rate_details?.receiver?.amount)
                 } else {
-                    dataHandler("exchange_rate_error", "sww")
+                    dataHandler("amount", exchange_rate_details?.sending?.amount)
                 }
-            } else {
-                const error = LimitsErrorMessage(dec?.code ?? dec?.message)
-                if (error) {
-                    dataHandler("exchange_rate_error", error)
+                return exchange_rate_details
+            }
+            catch (err) {
+                const dec = decryptData(err?.response.data.data)
+
+                if (fromOrTo === "from") {
+                    dataHandler("recipient_amount", 0)
+                } else {
+                    dataHandler("amount", 0)
                 }
-                else if (dec?.message?.toLowerCase()?.includes("insufficient")) {
-                    dataHandler("exchange_rate_error", "insufficient balance payer")
-                }
-                else if (dec?.message?.toLowerCase()?.includes("exceeds max")) {
-                    dataHandler("exchange_rate_error", "max payer")
-                }
-                else if (dec?.message?.toLowerCase()?.includes("below the min") || dec?.message?.toLowerCase()?.includes("below the max")) {
-                    dataHandler("exchange_rate_error", "min payer")
-                }
-                else {
-                    dataHandler("exchange_rate_error", "sww")
+
+                if (typeof dec?.message == "object") {
+                    if (dec?.message?.[0]?.code === "1003007") {
+                        dataHandler("exchange_rate_error", "payer_unavailable")
+                    } else {
+                        dataHandler("exchange_rate_error", "sww")
+                    }
+                } else {
+                    const error = LimitsErrorMessage(dec?.code ?? dec?.message)
+                    if (error) {
+                        dataHandler("exchange_rate_error", error)
+                    }
+                    else if (dec?.message?.toLowerCase()?.includes("insufficient")) {
+                        dataHandler("exchange_rate_error", "insufficient balance payer")
+                    }
+                    else if (dec?.message?.toLowerCase()?.includes("exceeds max")) {
+                        dataHandler("exchange_rate_error", "max payer")
+                    }
+                    else if (dec?.message?.toLowerCase()?.includes("below the min") || dec?.message?.toLowerCase()?.includes("below the max")) {
+                        dataHandler("exchange_rate_error", "min payer")
+                    }
+                    else {
+                        dataHandler("exchange_rate_error", "sww")
+                    }
                 }
             }
-        }
-        finally {
-            setLoading(false)
+            finally {
+                setLoading(false)
+            }
         }
     }
 
