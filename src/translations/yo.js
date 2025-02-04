@@ -2612,5 +2612,8 @@ export const yo = {
     "Blocked Wallet": "Apamowo Ti A Ti Dena",
   "Nominee's Full Name": "Orukọ pipe oludabobo",
   "Insufficient Balance": "Ko to iye owo ninu akọọlẹ",
-  "Upload Photo": "Po aworan"
+  "Upload Photo": "Po aworan",
+    "Security Alert": "Ikilọ Aabo",
+  "Please remember to add your security questions for smooth experience. You will not be able to access the features of InstaPay unless You add the security questions.": "Jọwọ ranti lati fi awọn ibeere aabo rẹ kun fun iriri ti o rọrun. Iwọ ko le wọle si awọn ẹya InstaPay ayafi ti o fi awọn ibeere aabo kun.",
+  "Setup Security Questions": "Ṣeto Awọn Ibeere Aabo"
 }

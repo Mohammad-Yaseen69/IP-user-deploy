@@ -2620,5 +2620,8 @@ export const tr = {
   "Blocked Wallet": "Bloke Cüzdan",
   "Nominee's Full Name": "Adayın Tam Adı",
   "Insufficient Balance": "Yetersiz Bakiye",
-  "Upload Photo": "Fotoğraf Yükle"
+  "Upload Photo": "Fotoğraf Yükle",
+   "Security Alert": "Güvenlik Uyarısı",
+  "Please remember to add your security questions for smooth experience. You will not be able to access the features of InstaPay unless You add the security questions.": "Sorunsuz bir deneyim için güvenlik sorularınızı eklemeyi unutmayın. Güvenlik sorularınızı eklemezseniz InstaPay özelliklerine erişemezsiniz.",
+  "Setup Security Questions": "Güvenlik Sorularını Ayarla"
 }

@@ -2621,5 +2621,8 @@ export const uk = {
     "Blocked Wallet": "Заблокований Гаманець",
   "Nominee's Full Name": "Повне ім'я номінанта",
   "Insufficient Balance": "Недостатньо коштів",
-  "Upload Photo": "Завантажити фото"
+  "Upload Photo": "Завантажити фото",
+    "Security Alert": "Сповіщення про безпеку",
+  "Please remember to add your security questions for smooth experience. You will not be able to access the features of InstaPay unless You add the security questions.": "Будь ласка, не забудьте додати свої контрольні запитання для безперебійного користування. Ви не зможете отримати доступ до функцій InstaPay, якщо не додасте контрольні запитання.",
+  "Setup Security Questions": "Налаштувати контрольні запитання"
 }

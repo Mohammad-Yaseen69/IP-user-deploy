@@ -2620,5 +2620,8 @@ export const cn = {
      "Blocked Wallet": "被封钱包",
   "Nominee's Full Name": "提名人全名",
   "Insufficient Balance": "余额不足",
-  "Upload Photo": "上传照片"
+  "Upload Photo": "上传照片",
+    "Security Alert": "安全警报",
+  "Please remember to add your security questions for smooth experience. You will not be able to access the features of InstaPay unless You add the security questions.": "请记得添加您的安全问题，以确保流畅的使用体验。除非您添加安全问题，否则您将无法访问 InstaPay 的功能。",
+  "Setup Security Questions": "设置安全问题"
 }

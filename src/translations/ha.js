@@ -2653,5 +2653,9 @@ export const ha = {
   "Blocked Wallet": "Aljihun da Aka Rufe",
   "Nominee's Full Name": "Cikakken Sunan Mai Nomin",
   "Insufficient Balance": "Rashin Ƙari",
-  "Upload Photo": "Loda Hoto"
+  "Upload Photo": "Loda Hoto",
+   "Security Alert": "Gargadi na Tsaro",
+  "Please remember to add your security questions for smooth experience. You will not be able to access the features of InstaPay unless You add the security questions.": "Da fatan za a tuna da ƙara tambayoyinku na tsaro don ƙwarewar da ta fi dacewa. Ba za ku iya samun damar fasalulluka na InstaPay ba sai kun ƙara tambayoyin tsaro.",
+  "Setup Security Questions": "Saita Tambayoyin Tsaro",
+  
 }

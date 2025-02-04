@@ -2516,5 +2516,8 @@ export const ru = {
   "Blocked Wallet": "Заблокированный Кошелек",
   "Nominee's Full Name": "Полное имя номинанта",
   "Insufficient Balance": "Недостаточно средств",
-  "Upload Photo": "Загрузить фото"
+  "Upload Photo": "Загрузить фото",
+    "Security Alert": "Оповещение о безопасности",
+  "Please remember to add your security questions for smooth experience. You will not be able to access the features of InstaPay unless You add the security questions.": "Пожалуйста, не забудьте добавить свои секретные вопросы для удобного использования. Вы не сможете получить доступ к функциям InstaPay, если не добавите секретные вопросы.",
+  "Setup Security Questions": "Настроить секретные вопросы"
 }

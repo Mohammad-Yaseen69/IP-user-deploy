@@ -2630,5 +2630,8 @@ export const it = {
     "Blocked Wallet": "Portafoglio Bloccato",
   "Nominee's Full Name": "Nome completo del nominato",
   "Insufficient Balance": "Saldo insufficiente",
-  "Upload Photo": "Carica foto"
+  "Upload Photo": "Carica foto",
+   "Security Alert": "Avviso di sicurezza",
+  "Please remember to add your security questions for smooth experience. You will not be able to access the features of InstaPay unless You add the security questions.": "Ricorda di aggiungere le tue domande di sicurezza per un’esperienza senza problemi. Non potrai accedere alle funzionalità di InstaPay a meno che non aggiungi le domande di sicurezza.",
+  "Setup Security Questions": "Imposta domande di sicurezza"
 }

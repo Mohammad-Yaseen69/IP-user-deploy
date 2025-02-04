@@ -2620,5 +2620,8 @@ export const ur = {
   "Blocked Wallet": "مسدود شدہ بٹوا",
   "Nominee's Full Name": "نامزد شخص کا مکمل نام",
   "Insufficient Balance": "کافی بیلنس نہیں",
-  "Upload Photo": "تصویر اپ لوڈ کریں"
+  "Upload Photo": "تصویر اپ لوڈ کریں",
+  "Security Alert": "سیکیورٹی الرٹ",
+  "Please remember to add your security questions for smooth experience. You will not be able to access the features of InstaPay unless You add the security questions.": "براہ کرم ہموار تجربے کے لیے اپنے سیکیورٹی سوالات شامل کرنا یاد رکھیں۔ جب تک آپ سیکیورٹی سوالات شامل نہیں کریں گے، آپ InstaPay کی خصوصیات تک رسائی حاصل نہیں کر سکیں گے۔",
+  "Setup Security Questions": "سیکیورٹی سوالات سیٹ کریں"
 }

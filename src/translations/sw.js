@@ -2620,5 +2620,8 @@ export const sw = {
   "Blocked Wallet": "Pochi Imezuiliwa",
   "Nominee's Full Name": "Jina Kamili la Mgombea",
   "Insufficient Balance": "Salio Lisilo La Kutosha",
-  "Upload Photo": "Pakia Picha"
+  "Upload Photo": "Pakia Picha",
+   "Security Alert": "Tahadhari ya Usalama",
+  "Please remember to add your security questions for smooth experience. You will not be able to access the features of InstaPay unless You add the security questions.": "Tafadhali kumbuka kuongeza maswali yako ya usalama kwa matumizi laini. Hutaweza kufikia vipengele vya InstaPay isipokuwa uongeze maswali ya usalama.",
+  "Setup Security Questions": "Sanidi Maswali ya Usalama"
 }

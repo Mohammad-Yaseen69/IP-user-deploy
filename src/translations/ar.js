@@ -2619,5 +2619,8 @@ export const ar = {
   "Blocked Wallet": "المحفظة المحظورة",
   "Nominee's Full Name": "الاسم الكامل للمرشح",
   "Insufficient Balance": "رصيد غير كافٍ",
-  "Upload Photo": "تحميل الصورة"
+  "Upload Photo": "تحميل الصورة",
+   "Security Alert": "تنبيه أمني",
+  "Please remember to add your security questions for smooth experience. You will not be able to access the features of InstaPay unless You add the security questions.": "يرجى تذكر إضافة أسئلة الأمان الخاصة بك لتجربة سلسة. لن تتمكن من الوصول إلى ميزات InstaPay ما لم تضف أسئلة الأمان.",
+  "Setup Security Questions": "إعداد أسئلة الأمان"
 }

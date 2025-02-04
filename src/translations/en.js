@@ -2620,5 +2620,8 @@ export const en = {
     "Upload Photo": "Upload Photo",
     "Nominee's Full Name": "Nominee's Full Name",
     "Insufficient Balance": "Insufficient Balance",
-    "Blocked Wallet": "Blocked Wallet"
+    "Blocked Wallet": "Blocked Wallet",
+      "Security Alert": "Security Alert",
+  "Please remember to add your security questions for smooth experience. You will not be able to access the features of InstaPay unless You add the security questions.": "Please remember to add your security questions for smooth experience. You will not be able to access the features of InstaPay unless You add the security questions.",
+  "Setup Security Questions": "Setup Security Questions"
 }

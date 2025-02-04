@@ -2457,5 +2457,8 @@ export const id = {
   "Blocked Wallet": "Dompet Diblokir",
   "Nominee's Full Name": "Nama Lengkap Nominee",
   "Insufficient Balance": "Saldo Tidak Cukup",
-  "Upload Photo": "Unggah Foto"
+  "Upload Photo": "Unggah Foto",
+   "Security Alert": "Peringatan Keamanan",
+  "Please remember to add your security questions for smooth experience. You will not be able to access the features of InstaPay unless You add the security questions.": "Harap ingat untuk menambahkan pertanyaan keamanan Anda untuk pengalaman yang lancar. Anda tidak akan dapat mengakses fitur InstaPay kecuali Anda menambahkan pertanyaan keamanan.",
+  "Setup Security Questions": "Atur Pertanyaan Keamanan"
 }

@@ -2607,5 +2607,8 @@ export const nl = {
   "Blocked Wallet": "Geblokkeerde Portemonnee",
   "Nominee's Full Name": "Volledige naam van genomineerde",
   "Insufficient Balance": "Onvoldoende saldo",
-  "Upload Photo": "Foto uploaden"
+  "Upload Photo": "Foto uploaden",
+  "Security Alert": "Beveiligingswaarschuwing",
+  "Please remember to add your security questions for smooth experience. You will not be able to access the features of InstaPay unless You add the security questions.": "Vergeet niet uw beveiligingsvragen toe te voegen voor een soepele ervaring. U krijgt geen toegang tot de functies van InstaPay tenzij u de beveiligingsvragen toevoegt.",
+  "Setup Security Questions": "Beveiligingsvragen instellen"
 }
