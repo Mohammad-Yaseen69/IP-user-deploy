@@ -238,7 +238,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     <span>{t("Add Currency")}</span>
                 </div>
             </div>
-            <div className={styles.right} style={{minWidth: window.innerWidth > 100 ? "500px" :"auto"}}>
+            <div className={styles.right} style={{minWidth: window.innerWidth > 600 ? "500px" :"auto"}}>
                 <div className={styles.top}>
                     <h2>
                         {t("Wallet Management")}
