@@ -20,6 +20,7 @@ import SmsSvg from "../../assets/icons/sms.svg"
 import AuthSvg from "../../assets/icons/auth.svg"
 import BiometricSvg from "../../assets/icons/fingerprint.png" // Add this import
 import { startAuthentication } from "@simplewebauthn/browser"
+import * as rdd from "react-device-detect";
 import "./styles/index.module.css";
 
 const Login = ({ country, setIsLoginForm, setIsForgot }) => {
@@ -44,7 +45,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [otpVerified, setOtpVerified] = useState(false)
     const [startTyping, setStartTyping] = useState(false)
     const [currentOtpMethod, setCurrentOtpMethod] = useState("auth")
-    const [isMobile, setIsMobile] = useState(navigator?.userAgentData?.mobile ?? false)
+    const [isMobile, setIsMobile] = useState((rdd.isMobile || rdd.isMobileSafari) ?? false)
     const [isBioMetric, setIsBioMetric] = useState(false)
 
     useLayoutEffect(() => {
@@ -60,6 +61,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     }
 
 
+    console.log((rdd.isMobile || rdd.isMobileSafari))
+    
 
 
     const loginHandler = (e, method = undefined) => {
