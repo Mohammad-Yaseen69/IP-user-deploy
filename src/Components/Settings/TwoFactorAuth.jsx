@@ -13,10 +13,14 @@ import { toast } from "react-toastify"
 import GoogleAuthenticatorModal from '../GoogleAuthenticatorModal';
 import { useLocation, useNavigate } from 'react-router';
 import { AuthenticatorDetails } from '../Auth/Login';
+import { startRegistration } from "@simplewebauthn/browser"
+import OtpConfirmation from '../PaymentsNewer/InternationalFlow/OtpConfirmation';
+import OTPConfirmation from '../UserSettingsNew/OTPConfirmation';
+import SuccessModal from '../AddBeneficiary/SuccessModal';
 
 const TwoFactorAuth = () => {
     const { t } = useTranslation()
-    const { userDetails, authHeader, verifyToken } = useContext(UserContext)
+    const { userDetails, authHeader, verifyToken, setProfileLockTime } = useContext(UserContext)
     const [emailActive, setEmailActive] = useState(false)
     const [smsActive, setSmsActive] = useState(false)
     const [authenticatorActive, setAuthenticatorActive] = useState(false)
@@ -29,6 +33,9 @@ const TwoFactorAuth = () => {
     const [showAuth, setShowAuth] = useState(false)
     const [current, setCurrent] = useState("")
     const [showFinger, setShowFinger] = useState(false)
+    const [showSuccess, setShowSuccess] = useState(false)
+    const [codeType, setCodeType] = useState("sms")
+    const [token, setToken] = useState(null)
     // const [firstTime, setFirstTime] = useState(true)
 
 
@@ -38,6 +45,7 @@ const TwoFactorAuth = () => {
             setSmsActive(userDetails?.sms_verification ?? false)
             setEmailActive(userDetails?.email_verification ?? false)
             setAuthenticatorActive(userDetails?.tfa ?? false)
+            setFingerBioActive(userDetails?.passkey ?? false)
             console.log(userDetails)
             // if (typeof userDetails?.sms_verification == "undefined" || typeof userDetails?.email_verification == "undefined") {
             //     setFirstTime(true)
@@ -107,6 +115,7 @@ const TwoFactorAuth = () => {
                 })
                 const dec = decryptData(response.data.data)
                 setAuthenticatorDetails(dec?.data)
+                setShowFinger(false)
                 setShowAuth(true)
                 setGuideModal(false)
             } catch (error) {
@@ -115,6 +124,64 @@ const TwoFactorAuth = () => {
             }
             finally {
                 setEnablingAuth(false)
+            }
+        }
+    }
+
+    const createPasskey = async (setter, type, otp, setError) => {
+        try {
+            const data = {
+                token: token,
+                type: codeType,
+                otp
+            }
+
+            console.log(data)
+            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/register-challenge`, { data: encryptData(data) }, {
+                headers: authHeader
+            })
+
+            const dec = decryptData(response.data.data)
+
+
+            const registrationResult = await startRegistration({
+                ...dec?.options,
+                authenticatorSelection: {
+                    userVerification: "preferred",
+                    ...dec?.options?.authenticatorSelection
+                }
+            })
+
+
+
+            const data2 = {
+                account_id: userDetails?._id,
+                credentials: registrationResult
+            }
+
+            console.log(data2)
+            const response2 = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/register-verify`, {
+                data: encryptData(data2)
+            }, { headers: authHeader })
+
+
+            setFingerBioActive(true)
+            setShowFinger(false)
+            setShowSuccess(true)
+            setToken(null)
+            console.log(decryptData(response2.data.data))
+
+        } catch (err) {
+            const decrypted = decryptData(err.response.data.data);
+            setError(decrypted?.message ?? "Invalid Verification Code")
+            if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+                const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
+                const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
+                setProfileLockTime(timeInSec)
+                const coun = localStorage.getItem("ip_country")
+                localStorage.clear()
+                localStorage.setItem("ip_country", coun)
+                navigate("/auth/login")
             }
         }
     }
@@ -130,6 +197,68 @@ const TwoFactorAuth = () => {
             setGuideModal(true)
         }
     }, [ft])
+
+    const sendOtp = async (e) => {
+        e && e.preventDefault()
+        setIsSaving(true)
+        try {
+            const data = {
+                data: {
+                    account_id: userDetails?._id
+                },
+                type: codeType
+            }
+            const encrypted = encryptData(data)
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+                data: encrypted
+            }, {
+                headers: authHeader
+            })
+
+            const dec = decryptData(res.data.data)
+            setToken(dec?.token)
+            setShowFinger(true)
+        } catch (error) {
+            toast.error("Something went wrong while changing the password!")
+        }
+        finally {
+            setIsSaving(false)
+        }
+    }
+
+    const deletePasskey = async (setter, type, otp, setError) => {
+        const data = {
+            token: token,
+            type: codeType,
+            otp
+        }
+        try {
+            const response = await axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/delete-challenge`, { data: encryptData(data) }, {
+                headers: authHeader
+            })
+
+            const dec = decryptData(response.data?.data)
+
+
+            setShowFinger(false)
+            setShowSuccess(true)
+            setToken(null)
+            setFingerBioActive(false)
+            console.log(dec)
+        } catch (err) {
+            const decrypted = decryptData(err.response.data.data);
+            setError(decrypted?.message ?? "Invalid Verification Code")
+            if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+                const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
+                const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
+                setProfileLockTime(timeInSec)
+                const coun = localStorage.getItem("ip_country")
+                localStorage.clear()
+                localStorage.setItem("ip_country", coun)
+                navigate("/auth/login")
+            }
+        }
+    }
 
     const navigate = useNavigate()
     return (
@@ -192,10 +321,18 @@ const TwoFactorAuth = () => {
                         <tr>
                             <td style={{ width: "100%" }} data-label="Finger Biometric">{t("Finger Biometric")}</td>
                             <td data-label={t("Finger Biometric")}>
-                                <Switch checked={fingerBioActive} callback={() => {
-                                    setShowAuth(true)
-                                    setShowFinger(true)
-                                }} disabled={isSaving} />
+
+                                {isSaving ?
+                                    (<div class="d-flex justify-content-center">
+                                        <div class="spinner-border" color='primary' role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>)
+                                    :
+                                    (<Switch checked={fingerBioActive} callback={() => {
+                                        sendOtp()
+                                    }} disabled={isSaving} />)
+                                }
                             </td>
                         </tr>
                         <tr>
@@ -212,6 +349,7 @@ const TwoFactorAuth = () => {
                                         :
                                         <Switch checked={authenticatorActive} callback={() => {
                                             setCurrent("Google")
+                                            setShowFinger(true)
                                             enableAuthenticator()
                                         }} disabled={isSaving} />
                                 }
@@ -266,9 +404,32 @@ const TwoFactorAuth = () => {
                         }}
                         successTitle={current !== "Google" ? 'Two Factor Authentication Updated Succsessfully!' : "Google Two Factor Authentication is now linked to your InstaPay Account."}
                         sideText={`${current} Authenticator`}
-                        showFinger={showFinger}
                     />
                 }
+
+
+                <Modal isOpen={showFinger}>
+                    <ModalHeader toggle={() => setShowFinger(!showFinger)}>Confirm</ModalHeader>
+                    <ModalBody>
+                        <OTPConfirmation
+                            callback={fingerBioActive ? deletePasskey : createPasskey}
+                            setter={setShowSuccess}
+                            setterValue={true}
+                            hideOtp={() => setShowFinger(false)}
+                            processing={isSaving}
+                            resendHandler={sendOtp}
+                            authType={codeType}
+                            setAuthType={setCodeType}
+                            showAuthToggle={false}
+                        />
+                    </ModalBody>
+                </Modal>
+                <SuccessModal
+                    isOpen={showSuccess}
+                    message={`Your finger biometric has been ${fingerBioActive ? "enabled" : "disabled"} successfully!`}
+                    subMessage={"Finger Biometric Updated"}
+                    toggle={() => setShowSuccess(false)}
+                />
 
                 {/* <Modal isOpen={authenticatorDetails}>
                     <ModalHeader toggle={() => setAuthenticatorDetails(null)}>

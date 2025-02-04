@@ -10,7 +10,6 @@ import axios from "axios"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import copy from "../ChipsInNew/copy.png"
-import { startRegistration } from "@simplewebauthn/browser"
 
 const GoogleAuthenticatorModal = ({
     isOpen,
@@ -20,10 +19,9 @@ const GoogleAuthenticatorModal = ({
     setEditMode,
     smsActive,
     emailActive,
-    showFinger,
     passwordNext = () => { },
     successTitle = "Google Two Factor Authentication is now linked to your InstaPay Account.",
-    sideText = "Google Authenticator"
+    sideText = "Google Authenticator",
 }) => {
     const { t } = useTranslation()
     const { userDetails, authHeader } = useContext(UserContext)
@@ -68,45 +66,7 @@ const GoogleAuthenticatorModal = ({
         }
     };
 
-    const createPasskey = async () => {
-        try {
-            const data = {
-                account_id: userDetails?._id,
-            }
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/register-challenge`, { data: encryptData(data) }, {
-                headers: authHeader
-            })
 
-            const dec = decryptData(response.data.data)
-
-
-            const registrationResult = await startRegistration({
-                ...dec?.options,
-                authenticatorSelection: {
-                    userVerification: "preferred",
-                    ...dec?.options?.authenticatorSelection
-                }
-            })
-
-           
-
-            const data2 = {
-                account_id: userDetails?._id,
-                credentials: registrationResult
-            }
-
-            console.log(data2)
-            const response2 = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/register-verify`, {
-                data: encryptData(data2) 
-            },{headers: authHeader})
-
-
-            console.log(decryptData(response2.data.data))
-        } catch (error) {
-            const dec = decryptData(error.response.data.data)
-            console.log(dec)
-        }
-    }
 
 
 
@@ -121,10 +81,7 @@ const GoogleAuthenticatorModal = ({
                 headers: authHeader
             })
             const dec = decryptData(response.data.data)
-            if (showFinger) {
-                createPasskey()
-            }
-            else if (sideText == "Google Authenticator") {
+            if (sideText == "Google Authenticator") {
                 console.log("he")
                 setStep(2)
             } else {
@@ -141,7 +98,6 @@ const GoogleAuthenticatorModal = ({
     }
     // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6IlUyRnNkR1ZrWDE4UzhqR3VnU3VSUlJ5NTJWVWRWMERzbldLQ25mU29aRkU9IiwiYWNjb3VudF90eXBlIjoiaW5kaXZpZHVhbCIsIl9pZCI6IjY2YTM5YTVmZmU1Yjc1YzUyNTU5NGQ1MSIsImlhdCI6MTcyMTk5OTA4MiwiZXhwIjoxNzIyMDAwODgyfQ.dwzuNF6fOxV7M1yIdGTyGeWHYF683txOlVienF0L4S8
     const verifyAuthenticator = async () => {
-        if (showFinger) return
         setEnablingAuth(true)
         try {
             const data = {
@@ -221,82 +177,82 @@ const GoogleAuthenticatorModal = ({
                         </div>
                     }
 
-                    {!showFinger &&
-                        <>
 
-                            {
-                                step === 2
-                                &&
-                                <div className={styles.s2}>
-                                    <p className={styles.s2_t}>{t("Use The Application To Scan The QR Code Or Use Your Secret Code To Activate Google Two-Factor Authentication")}</p>
-                                    <div className={styles.auth_details}>
-                                        <div className={styles.qr}>
-                                            <img src={authenticatorDetails?.qrCodeUrl} alt="" />
-                                            {/* <img src={userDetails?.profileImage?.url} alt="" /> */}
-                                        </div>
-                                        <div className={styles.or}>
-                                            <div></div>
-                                            <p>{t("OR")}</p>
-                                            <div></div>
-                                        </div>
-                                        <div className={styles.auth_secret}>
-                                            <Label>{t("Paste This Key In The Googe Authenticator App")}</Label>
-                                            <button onClick={() => setShowSecret(!showSecret)}>{showSecret ? t("Hide secret key") : t("Show Secret Key")}</button>
-                                            <div className={styles.secret_key}>
-                                                <span>
-                                                    {
-                                                        showSecret
-                                                            ?
-                                                            authenticatorDetails?.secret
-                                                            :
-                                                            authenticatorDetails?.secret?.split("")?.map(_ => "*")
-                                                    }
-                                                </span>
-                                                <button style={{
-                                                    border: "none",
-                                                    outline: "none",
-                                                    background: "transparent",
-                                                    display: "flex",
-                                                    justifyContent: "center",
-                                                    alignItems: "center"
-                                                }}
-                                                    onClick={() => {
-                                                        navigator?.clipboard?.writeText(authenticatorDetails?.secret)
-                                                        toast.success(`"${authenticatorDetails?.secret}" copied to clipboard.`)
-                                                    }}
-                                                >
-                                                    {/* <Copy color='white' /> */}
-                                                    <img src={copy} alt="" style={{ height: "20px", width: "20px" }} />
-                                                </button>
-                                            </div>
-                                        </div>
+                    <>
+
+                        {
+                            step === 2
+                            &&
+                            <div className={styles.s2}>
+                                <p className={styles.s2_t}>{t("Use The Application To Scan The QR Code Or Use Your Secret Code To Activate Google Two-Factor Authentication")}</p>
+                                <div className={styles.auth_details}>
+                                    <div className={styles.qr}>
+                                        <img src={authenticatorDetails?.qrCodeUrl} alt="" />
+                                        {/* <img src={userDetails?.profileImage?.url} alt="" /> */}
                                     </div>
-                                    <div className={styles.auth_code_details}>
-                                        <h2>{t("Enter The Six-Digit Code From The Application")}</h2>
-                                        <p>{t("After Scanning The Barcode Image, The App Will Display A Six-Digit Code That You Can Enter Below")}</p>
-                                        <div className={styles.code_field}>
-                                            <Label>{t("6 Digit Code")}</Label>
-                                            <div className={styles.otp_inputs}>
-                                                {otpValues.map((value, index) => (
-                                                    <input
-                                                        key={index}
-                                                        type="number"
-                                                        maxLength={1}
-                                                        value={value}
-                                                        onChange={(e) => {
-                                                            handleInputChange(index, e.target.value)
-                                                        }}
-                                                        onKeyDown={(e) => handleInputKeyDown(index, e)}
-                                                        ref={(input) => (inputRefs.current[index] = input)}
-                                                    />
-                                                ))}
-                                            </div>
+                                    <div className={styles.or}>
+                                        <div></div>
+                                        <p>{t("OR")}</p>
+                                        <div></div>
+                                    </div>
+                                    <div className={styles.auth_secret}>
+                                        <Label>{t("Paste This Key In The Googe Authenticator App")}</Label>
+                                        <button onClick={() => setShowSecret(!showSecret)}>{showSecret ? t("Hide secret key") : t("Show Secret Key")}</button>
+                                        <div className={styles.secret_key}>
+                                            <span>
+                                                {
+                                                    showSecret
+                                                        ?
+                                                        authenticatorDetails?.secret
+                                                        :
+                                                        authenticatorDetails?.secret?.split("")?.map(_ => "*")
+                                                }
+                                            </span>
+                                            <button style={{
+                                                border: "none",
+                                                outline: "none",
+                                                background: "transparent",
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                alignItems: "center"
+                                            }}
+                                                onClick={() => {
+                                                    navigator?.clipboard?.writeText(authenticatorDetails?.secret)
+                                                    toast.success(`"${authenticatorDetails?.secret}" copied to clipboard.`)
+                                                }}
+                                            >
+                                                {/* <Copy color='white' /> */}
+                                                <img src={copy} alt="" style={{ height: "20px", width: "20px" }} />
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
-                            }
-                        </>
-                    }
+                                <div className={styles.auth_code_details}>
+                                    <h2>{t("Enter The Six-Digit Code From The Application")}</h2>
+                                    <p>{t("After Scanning The Barcode Image, The App Will Display A Six-Digit Code That You Can Enter Below")}</p>
+                                    <div className={styles.code_field}>
+                                        <Label>{t("6 Digit Code")}</Label>
+                                        <div className={styles.otp_inputs}>
+                                            {otpValues.map((value, index) => (
+                                                <input
+                                                    key={index}
+                                                    type="number"
+                                                    maxLength={1}
+                                                    value={value}
+                                                    onChange={(e) => {
+                                                        handleInputChange(index, e.target.value)
+                                                    }}
+                                                    onKeyDown={(e) => handleInputKeyDown(index, e)}
+                                                    ref={(input) => (inputRefs.current[index] = input)}
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </>
+
                     {
                         step === 3
                         &&
