@@ -12,7 +12,7 @@ const OtherBalance = () => {
     const { userWallets, authHeader } = useContext(UserContext)
 
     const getExchangedAmounts = async (from, to, amount) => {
-        if(!amount) return
+        if(amount == undefined) return
         try {
             const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
                 headers: authHeader

@@ -366,7 +366,7 @@ const WalletFundsFlow = ({ setAction }) => {
     }
 
     const getExchangedAmounts = async (from, to, amount) => {
-        if(!amount) return
+        if(amount == undefined) return
         dataHandler("loading", true)
         try {
             const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
