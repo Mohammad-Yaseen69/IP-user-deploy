@@ -65,12 +65,12 @@
         overflow: hidden;
         border: 0.5px solid var(--COLORS-Neutral-200, #E8E8E8);
         background: rgba(255, 255, 255, 0.00);
-        
+
         span {
             font-size: 14px;
             font-weight: 600;
             color: #A4A4A4;
-            
+
         }
 
         div:nth-child(1) {
@@ -78,18 +78,18 @@
             align-items: flex-end;
             gap: 30px;
             padding: 0px 0 0 18px;
-    
-           p{
-            font-weight: 600;
-           }
+
+            p {
+                font-weight: 600;
+            }
 
         }
 
         div:nth-child(2) {
             div:nth-child(1) {
                 background-color: #eef0f3;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
+                display: flex;
+                justify-content: center;
                 padding: 16px 30px;
             }
 
@@ -105,8 +105,8 @@
         div:nth-child(3) {
             div:nth-child(1) {
                 background-color: #f2f4f6;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
+                display: flex;
+                justify-content: center;
                 padding: 16px 30px;
             }
 
@@ -119,11 +119,21 @@
         }
     }
 
+    .saveBtn {
+        display: flex;
+        padding: var(--SPACING-spacing-1, 12px) var(--SPACING-spacing-2, 18px);
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        background: var(--COLORS-Primary-300, #5926F0);
+        border-radius: 6px;
+        color: white;
+    }
+
     .regions {
         margin-top: 1rem;
 
         .regionWrapper {
-            border: 1px solid #E8E8E8;
             margin-bottom: 0.5rem;
             border-radius: 6px;
             overflow: hidden;
@@ -131,12 +141,26 @@
 
         .regionHeader {
             padding: 1rem;
-            background: #F6F6F6;
+            overflow: hidden;
+            border-radius: var(--RADIUS-radius-1, 4px);
+            border: 1px solid var(--COLORS-Neutral-200, #E8E8E8);
+            background: var(--COLORS-Neutral-100, #FFF);
             display: flex;
+            margin-bottom: 7px;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            
+
+            .regionRow {
+                display: grid;
+                width: 100%;
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+
+            .regionRow .checkboxGroup {
+                margin-left: 15px;
+            }
+
             &:hover {
                 background: #EFEFEF;
             }
@@ -149,9 +173,10 @@
 
         .chevron {
             transition: transform 0.3s ease;
-            
+            transform: rotate(90deg);
+
             &.expanded {
-                transform: rotate(90deg);
+                transform: rotate(270deg);
             }
         }
 
@@ -162,8 +187,9 @@
         .countryRow {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            padding: 1rem !important;
-            border-bottom: 1px solid #E8E8E8;
+            padding: 19px 1rem !important;
+            border-bottom: 0.5px solid var(--COLORS-Neutral-200, #E8E8E8);
+            background: rgba(255, 255, 255, 0.00);
             align-items: start !important;
             gap: 1rem;
 
@@ -193,7 +219,8 @@
             gap: 2rem;
         }
 
-        .paymentChecks, .quotationChecks {
+        .paymentChecks,
+        .quotationChecks {
             display: flex;
             gap: 2rem;
             justify-content: center;
@@ -205,7 +232,7 @@
         display: inline-block;
         width: 36px;
         height: 20px;
-        margin: auto;
+        margin-left: 20px;
 
         input {
             opacity: 0;
@@ -237,12 +264,60 @@
             }
         }
 
-        input:checked + .slider {
-            background-color: #5926F0;
+        input:checked+.slider {
+            background-color: #00875A;
         }
 
-        input:checked + .slider:before {
+        input:checked+.slider:before {
             transform: translateX(16px);
+        }
+    }
+
+    .checkbox {
+        position: relative;
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        cursor: pointer;
+
+        input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            margin-left: 20px;
+            border: 2px solid #00875A;
+            border-radius: 4px;
+
+            &:after {
+                content: "";
+                position: absolute;
+                display: none;
+                left: 6px;
+                top: 2px;
+                width: 5px;
+                height: 10px;
+                border: solid white;
+                border-width: 0 2px 2px 0;
+                transform: rotate(45deg);
+            }
+        }
+
+        input:checked~.checkmark {
+            background-color: #00875A;
+        }
+
+        input:checked~.checkmark:after {
+            display: block;
         }
     }
 }

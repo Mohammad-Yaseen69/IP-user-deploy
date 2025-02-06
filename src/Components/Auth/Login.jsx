@@ -852,7 +852,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         )}
                                     </div>
                                     {
-                                       ( currentOtpMethod !== "auth" || currentOtpMethod !== "biometric" )
+                                       ( currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" )
                                         &&
                                         <span>
                                             {

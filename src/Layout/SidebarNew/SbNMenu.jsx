@@ -43,6 +43,7 @@ import pa_a from "./files/pa_a.svg"
 import analytics from "./files/analytics.svg"
 import analytics_a from "./files/analytics_a.svg"
 import location from "./files/location.svg"
+import location_a from "./files/location_a.svg"
 
 export const MENU = [
     {
@@ -157,7 +158,7 @@ export const MENU = [
             {
                 title: "Geo Fencing",
                 icon: <img src={location} style={{ marginRight: "12px" }} />,
-                activeIcon: <img src={acc_a} style={{ marginRight: "12px" }} />,
+                activeIcon: <img src={location_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${process.env.PUBLIC_URL}/geo-fencing`,
             },
