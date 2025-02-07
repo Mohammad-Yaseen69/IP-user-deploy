@@ -59,9 +59,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         setEmailVerified(true)
         setIsPressed(false)
     }
-
-
-    console.log((rdd.isMobile || rdd.isMobileSafari))
     
 
 

@@ -1,6 +1,8 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { MapPin, X } from 'react-feather'
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap'
+
 
 const RequestLocation = ({ coords, setCoords, isOpen, toggle, cancelPayment, disabled = false }) => {
     const [locationAllowed, setLocationAllowed] = useState(false);
@@ -9,6 +11,7 @@ const RequestLocation = ({ coords, setCoords, isOpen, toggle, cancelPayment, dis
     const requestLocation = () => {
         navigator.geolocation.getCurrentPosition(
             (position) => {
+                console.log(position)
                 setCoords({
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude,
@@ -25,10 +28,12 @@ const RequestLocation = ({ coords, setCoords, isOpen, toggle, cancelPayment, dis
             },
             {
                 timeout: 10000,
-            }
+            } 
         );
     };
 
+    
+    
     useEffect(() => {
         requestLocation();
     }, []);
@@ -89,7 +94,7 @@ const RequestLocation = ({ coords, setCoords, isOpen, toggle, cancelPayment, dis
                                     <li style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>The link will open in the selected browser.</li>
                                 </ul>
                             </div>
-                            
+
                             <div style={{ marginBottom: '1.5rem', background: "#4444441e", width: "100%", padding: "1rem", borderRadius: ".5rem" }}>
                                 <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>1: Chrome Browser</h3>
                                 <ul style={{ padding: 0, listStyleType: "initial", marginLeft: "1.2rem" }}>
@@ -145,8 +150,11 @@ const RequestLocation = ({ coords, setCoords, isOpen, toggle, cancelPayment, dis
                                 ></iframe>
                                 <h5 style={{ marginBottom: "1rem", marginTop: "1rem", fontSize: "1.5rem", fontWeight: "700" }}>Is this your Location?</h5>
                                 <div style={{ marginTop: "1.5rem", display: "flex", gap: "1rem" }}>
-                                    {/* <Button style={{ borderRadius: "9px" }} color='primary' onClick={handleAllowLocation}>No, Get Location Again</Button> */}
-                                    <Button disabled={disabled} style={{ borderRadius: "9px" }} color='primary' onClick={toggle}>Yes</Button>
+                                    <Button
+                                        disabled={disabled}
+                                        style={{ borderRadius: "9px" }}
+                                        color='primary'
+                                        onClick={toggle}>Yes</Button>
                                 </div>
                             </>
                             :

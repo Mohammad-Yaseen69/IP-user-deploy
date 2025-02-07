@@ -17,9 +17,10 @@ import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { toast } from "react-toastify";
 import RequestLocation from "../RequestLocation";
+import CitiesData from '../CitiesDropDown/CitiesData.json';
 // import { newTransaction } from "../../store/slices/Transactions";
 
-const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, paymentType, setConfirmed, setSubStep, setPaymentType, scheduleDate, scheduleTime, recStartDate, recCycle, setNotInstant, setToken, requestObject, totalBalance, coords, setCoords }) => {
+const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, paymentType, setConfirmed, setSubStep, setPaymentType, scheduleDate, scheduleTime, recStartDate, recCycle, setNotInstant, setToken, requestObject, totalBalance, coords, setCoords, prefrencesFunc, preferences, isPreferencesCheck }) => {
     const { t } = useTranslation()
     const [complete, setComplete] = useState(false);
     // const dispatch = useDispatch();
@@ -31,6 +32,7 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
     const [showCompletionModal, setShowCompletionModal] = useState(false)
     const [showVerificationModal, setShowVerificationModal] = useState(false)
     const navigate = useNavigate()
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         if (!profileCompleted) {
@@ -152,10 +154,37 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
 
     useEffect(() => {
         if (complete) {
-            // sendOtp()
             setShowLocation(true)
         }
     }, [complete])
+
+    useEffect(() => {
+        console.log(isPreferencesCheck, preferences)
+        if (isPreferencesCheck && !preferences.live && !preferences.origin) {
+            console.log("adfasdfaf")
+            setConfirmed(true)
+            sendOtp()
+        }
+    }, [isPreferencesCheck, preferences])
+
+    async function getCountryByCoods(latitude, longitude) {
+        try {
+            const url = `https://geocode.maps.co/reverse?lat=${latitude}&lon=${longitude}&api_key=6723a535c69dc210230851dly54f0c1`;
+
+            const response = await axios.get(url);
+
+
+            if (response.status === 200) {
+                const country = CitiesData.find((cont) => cont.iso2.toLowerCase() == response.data?.address?.country_code?.toLowerCase())
+                prefrencesFunc(country)
+            } else {
+                return { status: false };
+            }
+        } catch (error) {
+            console.error('Error fetching geocode data:', error.message);
+            return { status: false };
+        }
+    }
 
     return (
         <Card style={{
@@ -173,7 +202,11 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
                     setCoords={setCoords}
                     toggle={() => {
                         setShowLocation(false)
-                        sendOtp()
+                        setLoading(true)
+                        if (coords) {
+                            getCountryByCoods(coords?.latitude, coords?.longitude)
+                        }
+                        setLoading(false)
                     }}
                     cancelPayment={() => window.location.reload()}
                 />
