@@ -32,7 +32,7 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
     const [showCompletionModal, setShowCompletionModal] = useState(false)
     const [showVerificationModal, setShowVerificationModal] = useState(false)
     const navigate = useNavigate()
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         if (!profileCompleted) {
@@ -163,11 +163,13 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
         if (isPreferencesCheck && !preferences.live && !preferences.origin) {
             console.log("adfasdfaf")
             setConfirmed(true)
+            setLoading(false)
             sendOtp()
         }
     }, [isPreferencesCheck, preferences])
 
     async function getCountryByCoods(latitude, longitude) {
+        setLoading(true)
         try {
             const url = `https://geocode.maps.co/reverse?lat=${latitude}&lon=${longitude}&api_key=6723a535c69dc210230851dly54f0c1`;
 
@@ -184,6 +186,7 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
             console.error('Error fetching geocode data:', error.message);
             return { status: false };
         }
+        setShowLocation(false)
     }
 
     return (
@@ -201,12 +204,12 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
                     isOpen={showLocation}
                     setCoords={setCoords}
                     toggle={() => {
-                        setShowLocation(false)
-                        setLoading(true)
+                        
+                       
                         if (coords) {
                             getCountryByCoods(coords?.latitude, coords?.longitude)
                         }
-                        setLoading(false)
+                       
                     }}
                     cancelPayment={() => window.location.reload()}
                 />
@@ -303,7 +306,7 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
                         complete
                         &&
                         <p style={{ marginBottom: "0", fontSize: window.innerWidth > 1700 ? "1.1rem" : ".95rem", fontWeight: 500, color: "white" }}>
-                            {t("Payment Confirmed")}
+                            {!loading ?  t("Payment Confirmed") : t("Processing")}
                         </p>
                     }
                 </div>

@@ -192,7 +192,7 @@ const RequestMoney = ({ setAction, setStep }) => {
             isOpen={isPreferencesCheck && (preferences.live || preferences.origin)} 
             backdrop="static" 
             keyboard={false}
-            className="modal-dialog-centered"  // Add this for center alignment
+            className="modal-dialog-centered" 
             style={{
                 maxWidth: '600px',  // Increased from default
                 width: '95%',
@@ -210,6 +210,7 @@ const RequestMoney = ({ setAction, setStep }) => {
                 borderRadius: "8px",  // Added border radius
                 boxShadow: "0 5px 15px rgba(0,0,0,0.2)"  // Added shadow
             }}>
+                <img src={Icon} style={{width: "70px", marginBottom: "7px"}} alt="" />
                 <h4 style={{ 
                     color: "#D92D20", 
                     fontSize: "22px",  // Increased font size
@@ -244,7 +245,7 @@ const RequestMoney = ({ setAction, setStep }) => {
                         }
                     }}
                 >
-                    {t("OK")}
+                    {t("Back")}
                 </button>
             </ModalBody>
         </Modal>
