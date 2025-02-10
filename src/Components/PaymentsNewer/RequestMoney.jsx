@@ -141,7 +141,8 @@ const RequestMoney = ({ setAction, setStep }) => {
 
     const getPrefrences = async (liveCountry) => {
         console.log(beneficiary, userDetails.country.country_iso_code, liveCountry)
-        const userId = beneficiary[0]?.user ? beneficiary[0]?.user?._id : beneficiary[0]?._id
+        const userId = beneficiary[0]?.user ? beneficiary[0]?._id : beneficiary[0]?._id
+        console.log(beneficiary)
         try {
 
             if (userDetails.country.country_iso_code == liveCountry?.iso3) {
@@ -179,7 +180,8 @@ const RequestMoney = ({ setAction, setStep }) => {
                 }))
             }
         } catch (error) {
-
+            
+            console.log(error.response.data)
         } finally {
             SetIsPreferencesCheck(true)
         }
