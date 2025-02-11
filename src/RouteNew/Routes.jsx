@@ -53,9 +53,11 @@ const SubscriptionCalendarEndDate = lazy(() => import("../Components/Chatbot/sub
 const SubscriptionRequestEndDate = lazy(() => import("../Components/Chatbot/subscription-request-end-date"))
 const CreatePassword = lazy(() => import("../Components/CreatePassword/CreatePassword"))
 const GeoFencing = lazy(() => import("../Components/GeoFencing"))
-const MyMasterCard = lazy(() => import("../Components/MyMasterCard"))
+// const MyMasterCard = lazy(() => import("../Components/MyMasterCard"))
 const CreatePin = lazy(() => import("../Components/CreatePin"))
 const UpdatePin = lazy(() => import("../Components/UpdatePin"))
+const CreatePinChatBot = lazy(() => import("../Components/Chatbot/Pin/CreatePin"))
+const VerifyPinChatBot = lazy(() => import("../Components/Chatbot/Pin/VerifyPin"))
 
 
 export const routes = [
@@ -95,7 +97,7 @@ export const routes = [
     { path: "/payment-status/:type/:status/:code", component: <PaymentStatus /> },
     { path: "/create-password/:token", component: <CreatePassword /> },
     { path: "/geo-fencing", component: <GeoFencing /> },
-    { path: "/my-mastercard", component: <MyMasterCard /> },
+    // { path: "/my-mastercard", component: <MyMasterCard /> },
     { path: "/create-pin", component: <CreatePin /> },
     { path: "/update-pin", component: <UpdatePin /> },
     { path: "*", component: <NotFound type='Page' /> }
@@ -125,6 +127,8 @@ export const publicRoutes = [
     { path: "/chatbot/get-location", component: <GetLocation /> },
     { path: "/chatbot/payment-request", component: <ShowLocation /> },
     { path: "/create-password/:token", component: <CreatePassword /> },
+    { path: "/set-account-pin/:accountId/:platformType", component: <CreatePinChatBot /> },
+    { path: "/verify-bot-pin/:accountId/:platformType", component: <VerifyPinChatBot />},
     { path: "*", component: <NotFound type='Page' /> }
 ]
 

@@ -3,7 +3,7 @@ import React, { forwardRef } from 'react'
 const PinFields = ({ label, changeHandler, data, setter, handlePaste, inputRefs, handleInputKeyDown }) => {
     return (
         <div>
-            <p>{label}</p>
+            {label && <p>{label}</p>}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "10px", maxWidth: "100%" }}>
                 {data?.data?.map((value, index) => (
                     <input

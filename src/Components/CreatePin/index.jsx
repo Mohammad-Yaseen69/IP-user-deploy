@@ -149,7 +149,7 @@ const CreatePin = () => {
                     </div>
 
                     <h4>
-                        Update Your PIN
+                        Set Your PIN
                     </h4>
                 </div>
 
@@ -170,11 +170,11 @@ const CreatePin = () => {
 
 
             <div className={styles.right}>
-                <h4>Need to change your PIN? Enter a new 4-digit PIN below.</h4>
+                <h4>For added security, please create a 4-digit PIN to protect your session.</h4>
 
                 <div className={styles.fields}>
                     <PinFields
-                        label="New 4-digit PIN"
+                        label="4-digit PIN"
                         data={pinFields}
                         setter={setPinFields}
                         handlePaste={handlePaste}
@@ -184,7 +184,7 @@ const CreatePin = () => {
                     />
 
                     <PinFields
-                        label="Confirm New PIN"
+                        label="Confirm PIN"
                         data={confirmPinFields}
                         setter={setConfirmFields}
                         handlePaste={handlePaste}
