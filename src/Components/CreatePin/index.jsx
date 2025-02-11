@@ -7,6 +7,8 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import { UserContext } from '../../Context/UserContext'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { useNavigate } from "react-router-dom"
+import { Modal, ModalBody, ModalHeader } from "reactstrap"
+import OTPConfirmation from "../UserSettingsNew/OTPConfirmation"
 
 
 
@@ -22,13 +24,14 @@ const CreatePin = () => {
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
     const [disabled, setDisabled] = useState(true)
+    const [success, setShowSuccess] = useState(false)
 
     const pinRefs = useRef(Array(4).fill(null));
     const confirmRefs = useRef(Array(4).fill(null));
 
     useEffect(() => {
-        setDisabled(loading  || confirmPinFields.data.join("").length < 4 || pinFields.data.join("").length < 4)
-    } ,[loading, confirmPinFields.data, pinFields.data])
+        setDisabled(loading || confirmPinFields.data.join("").length < 4 || pinFields.data.join("").length < 4)
+    }, [loading, confirmPinFields.data, pinFields.data])
 
     const handlePaste = (event, setter, data) => {
         event.preventDefault();
@@ -109,29 +112,26 @@ const CreatePin = () => {
         }
 
         setLoading(true)
-        try{
+        try {
             const data = {
                 pin: pin,
                 account_id: userDetails?._id
             }
-    
+
             const enc = encryptData(data)
-    
+
             const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/set-account-pin`, { data: enc }, {
                 headers: authHeader
             })
-    
+
             const dec = decryptData(response.data.data)
 
-            if(dec.status){
-                toast.success("Your Pin Set Successfully!")
-                setTimeout(() => {
-                    navigate("/settings")
-                },1500)
+            if (dec.status) {
+                setShowSuccess(true)
             }
-           
+
         }
-        catch(error){
+        catch (error) {
             const dec = decryptData(error.response.data?.data)
             console.log(dec)
         }
@@ -196,16 +196,44 @@ const CreatePin = () => {
                     {isPinMatch && <span>PINs do  not match. Please try again.</span>}
                 </div>
 
-                <button disabled={disabled} style={{opacity: disabled ? 0.5 : 1}} onClick={setPin}>
+                <button disabled={disabled} style={{ opacity: disabled ? 0.5 : 1 }} onClick={setPin}>
                     {loading ? (
                         <div class="d-flex justify-content-center">
-                        <div class="spinner-border" color='primary' role="status">
-                            <span class="sr-only">Loading...</span>
+                            <div class="spinner-border" color='primary' role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
                         </div>
-                    </div>
-                    ): "Set Pin"}
+                    ) : "Set Pin"}
                 </button>
             </div>
+
+            <Modal
+                toggle={() => setShowSuccess(false)}
+                isOpen={success}>
+                <ModalBody>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "80px", flexDirection: "column" }}>
+                        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+                            <img style={{ width: "180px" }} src="https://s3-alpha-sig.figma.com/img/ef2e/1717/4db8e1b4fc049990a1ee8c948f4df881?Expires=1740355200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=cb2R4BZobzhArm9WvLe3VZma2wbVEPtDFdiwfV~CdsdXGyzulp4C7T2l56jSca2EFC8cPWHrQoB8IjHsD5SULBk6oufPqNhBOLbN1udUZyA6Oq6IpJJv0L9-9Lk0uUh69Oek-coREA9VBui~GheklMMs0WPOYhWQnke15LMXwIz5UKTO8kfQxRGHvejjJAggs2BA5VG6ZbMmmomGnu0LPMRtGnZo9kVpIl3JAH7CWJUBQ~aImTpg2m4R9V1XgajLk8JKwE810Y6L2tal-24CMABeYwKMd6L3KFYPiD4t3q5VkxkB5UBpa-cqIWOCbNkaKQqafhQxhdb0tQnbyPRBZQ__" alt="" />
+                            <p style={{ width: "60%", textAlign: "center", fontSize: "20px", fontWeight: 700, color: "black", lineHeight: "26px" }}>Your PIN has been successfully updated!</p>
+                        </div>
+
+                        <button onClick={() => navigate("/settings")} style={{
+                            display: "flex",
+                            width: "100%",
+                            borderRadius: "8px",
+                            background: "#5926F0",
+                            height: "55px",
+                            justifyContent: "center",
+                            color: "#FFF",
+                            fontSize: "18px",
+                            fontStyle: "normal",
+                            fontWeight: "600",
+                            alignItems: "center",
+                            flexShrink: "0",
+                        }}>Close</button>
+                    </div>
+                </ModalBody>
+            </Modal>
         </div>
     )
 }

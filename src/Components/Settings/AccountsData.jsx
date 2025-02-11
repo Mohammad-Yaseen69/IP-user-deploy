@@ -30,12 +30,12 @@ export const AccountsData = [
         enabled: false,
         available: false
     },
-    {
-        img: tk,
-        name: "Tiktok",
-        enabled: false,
-        available: false
-    },
+    // {
+    //     img: tk,
+    //     name: "Tiktok",
+    //     enabled: false,
+    //     available: false
+    // },
     {
         img: x,
         name: "X",

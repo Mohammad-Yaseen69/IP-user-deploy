@@ -175,3 +175,12 @@
         }
     }
 }
+
+@media screen and (max-width: 1000px){
+    .left{
+        display: none !important;
+    }
+    .container{
+        justify-content: center !important;
+    }
+}
