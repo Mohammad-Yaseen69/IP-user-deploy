@@ -1,9 +1,9 @@
-import ins from "./a_items/ins.png"
-import fb from "./a_items/fb.png"
+import ins from "./a_items/instagram.svg"
+import fb from "./a_items/facebook.svg"
 import tk from "./a_items/tk.png"
-import tl from "./a_items/tl.png"
-import x from "./a_items/x.png"
-import wa from "./a_items/wa.jpg"
+import tl from "./a_items/telegram.svg"
+import x from "./a_items/x.svg"
+import wa from "./a_items/whatsapp.svg"
 
 export const AccountsData = [
     {
