@@ -10,8 +10,8 @@ import Card_a from "./files/Card_a.svg"
 import Filter_a from "./files/Filter_a.svg"
 import Analytics_a from "./files/Analytics_a.svg"
 import logo from "../../assets/images/logo/logo.png"
-import { Link } from "react-router-dom"
-import { useContext, useState } from "react"
+import { Link, useLocation } from "react-router-dom"
+import { useContext, useEffect, useState } from "react"
 import { MobileSbContext } from "../Layout"
 import { UserContext } from "../../Context/UserContext"
 import signup from "../SidebarNew/files/signup.svg"
@@ -22,6 +22,20 @@ import { useTranslation } from "react-i18next"
 const BottomNav = ({ setShowModal }) => {
     const { toggleSidebar } = useContext(MobileSbContext)
     const { userDetails, profileCompletedPercentage, verifyToken } = useContext(UserContext)
+    const [dontShow, setDontShow] = useState(false)
+    const location = useLocation()
+
+
+    useEffect(() => {
+        if (location.pathname.includes("pin")) {
+            console.log("Dont show")
+            setDontShow(true) 
+        } else {
+            setDontShow(false)
+        }
+    }, [location.pathname])
+    
+    
     const navData = userDetails ? [
         {
             icon: Home,
@@ -86,7 +100,7 @@ const BottomNav = ({ setShowModal }) => {
 
     const { t } = useTranslation()
     const [showFixed, setShowFixed] = useState(false)
-    return (
+    return !dontShow ? (
         <>
             <nav className={styles.bottom_nav} onClick={() => {
                 if (profileCompletedPercentage < 100) {
@@ -142,7 +156,7 @@ const BottomNav = ({ setShowModal }) => {
                     ""
             }
         </>
-    )
+    ) : null
 }
 
 export default BottomNav;

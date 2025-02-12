@@ -14,19 +14,31 @@ import { toast } from "react-toastify"
 const CreatePin = () => {
     const [pinFields, setPinFields] = useState({
         data: ["", "", "", ""],
+        asteriskFields: ["", "", "", ""],
         currentField: 0
     })
     const [loading, setLoading] = useState(false)
-    const navigate = useNavigate()
     const [disabled, setDisabled] = useState(true)
     const [success, setShowSuccess] = useState(false)
     const { accountId, platformType } = useParams()
-
     const pinRefs = useRef(Array(4).fill(null));
+    const [shake, setShake] = useState(false)
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         setDisabled(loading || pinFields.data.join("").length < 4)
     }, [loading, pinFields.data])
+
+
+    useEffect(() => {
+        if(error){
+            setShake(true)
+            setTimeout(() => {
+                setShake(false)
+            }, 1000)
+        }
+    },[error])
+
 
     const handlePaste = (event, setter, data) => {
         event.preventDefault();
@@ -46,23 +58,28 @@ const CreatePin = () => {
         }));
     };
 
-    const [error, setError] = useState(null);
+    
 
+   
     const handleInputChange = (index, value, setter, data, refs) => {
-        setError(null)
+        setError(null);
         const numericValue = value.replace(/[^0-9]/g, '');
-
+    
         if (numericValue.length <= 1) {
             const newValues = [...data.data];
+            const newAsteriskValues = [...data.asteriskFields];
+    
             newValues[index] = numericValue;
-
+            // Immediately set asterisk
+            newAsteriskValues[index] = numericValue ? '*' : '';
+    
             setter(prev => ({
                 ...prev,
                 data: newValues,
-                currentField: index
+                currentField: index,
+                asteriskFields: newAsteriskValues
             }));
-
-            // Move to next input if value entered
+    
             if (numericValue && index < 3) {
                 refs.current[index + 1]?.focus();
             }
@@ -72,21 +89,24 @@ const CreatePin = () => {
     const handleInputKeyDown = (index, event, setter, data, refs) => {
         if (event.key === 'Backspace') {
             if (index > 0 && !data.data[index]) {
-                // If current field is empty, move to previous field
                 refs.current[index - 1]?.focus();
                 setter(prev => ({
                     ...prev,
                     currentField: index - 1
                 }));
             } else if (data.data[index]) {
-                // Clear current field
-                const newValues = [...data.data];
-                newValues[index] = '';
-                setter(prev => ({
-                    ...prev,
-                    data: newValues,
-                    currentField: index
-                }));
+                setter(prev => {
+                    const newValues = [...prev.data];
+                    const newAsteriskValues = [...prev.asteriskFields];
+                    newValues[index] = '';
+                    newAsteriskValues[index] = '';
+                    return {
+                        ...prev,
+                        data: newValues,
+                        currentField: index,
+                        asteriskFields: newAsteriskValues
+                    };
+                });
             }
         } else if (event.key === 'ArrowLeft' && index > 0) {
             refs.current[index - 1]?.focus();
@@ -119,6 +139,13 @@ const CreatePin = () => {
         }
         catch (error) {
             const dec = decryptData(error.response.data?.data)
+            setPinFields(prev => ({
+                ...prev,
+                data: ["", "", "", ""],
+                asteriskFields: ["", "", "", ""],
+                currentField: 0
+            }))
+            pinRefs.current[0].focus()
             setError(dec.message)
             console.log(dec)
         } finally {
@@ -127,7 +154,7 @@ const CreatePin = () => {
     }
 
     return (
-        <div style={{ margin: "auto", justifyContent: "center", padding: window.innerWidth < 480 ? "0px" : "41px 45px" }} className={styles.container}>
+        <div style={{ margin: "auto", justifyContent: "center", padding: window.innerWidth < 480 ? "0px" : "41px 45px", height: "60vh" }} className={styles.container}>
 
             <div style={{ display: "grid", justifyContent: "center", alignItems: "center" }} className={styles.right}>
                 <svg style={{ margin: 'auto' }} xmlns="http://www.w3.org/2000/svg" width="123" height="36" viewBox="0 0 123 36" fill="none">
@@ -148,7 +175,7 @@ const CreatePin = () => {
                         </radialGradient>
                     </defs>
                 </svg>
-                <div style={{ display: "flex", flexDirection: "column", gap: "15px", alignItems: "center" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "15px", alignItems: "center", justifyContent: "center", justifySelf: "center", width: "65%", textAlign:"center" }}>
                     <div style={{
                         display: "flex",
                         padding: "10px",
@@ -167,7 +194,7 @@ const CreatePin = () => {
                         }
                     </div>
 
-                    <h4 style={{ fontSize: "24px" }}>
+                    <h4 style={{ fontSize: "24px", marginBottom: "0px" }}>
                         {!success ? 'Enter Your PIN' : 'Your PIN is verified!'}
                     </h4>
                     <p style={{ fontSize: "14px", fontWeight: 600, color: "#777", textAlign: "center" }}>{!success ? "To continue, please enter your 4-digit security PIN." : "You can now close this window and go back to chatbot"}</p>
@@ -180,6 +207,9 @@ const CreatePin = () => {
                                 inputRefs={pinRefs}
                                 changeHandler={handleInputChange}
                                 handleInputKeyDown={handleInputKeyDown}
+                                asteriskFields={pinFields.asteriskFields}
+                                styles={styles}
+                                shake={shake}
                             />
 
 
@@ -191,7 +221,7 @@ const CreatePin = () => {
 
               {!success ?
                 <div  style={{ alignSelf: "flex-end" }}>
-                    <button disabled={disabled} style={{ opacity: disabled ? 0.5 : 1 }} onClick={setPin}>
+                    <button disabled={disabled} style={{ opacity: disabled ? 0.5 : 1, border: 'none', outline: "none" }} onClick={setPin}>
 
                         {loading ? (
                             <div class="d-flex justify-content-center">
