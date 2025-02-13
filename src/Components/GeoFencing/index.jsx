@@ -4,7 +4,7 @@ import TopRight from "../topRight";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
 import { UserContext } from "../../Context/UserContext";
-import { ChevronLeft, Search, ChevronRight } from "react-feather";
+import { ChevronLeft, Search, ChevronRight, ChevronDown } from "react-feather";
 import citiesData from "../CitiesDropDown/CitiesData.json"
 import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
@@ -67,7 +67,7 @@ const GeoFencing = () => {
                 const dec = decryptData(response.data.data);
                 const checksData = dec.data?.checks || [];
 
-                if(checksData.length == 0) return
+                if (checksData.length == 0) return
 
                 const updatedCountries = JSON.parse(JSON.stringify(countriesWithRegion));
 
@@ -243,7 +243,7 @@ const GeoFencing = () => {
 
             // Merge existing disabled toggles with new changes
             const finalChecks = [...Object.values(allDisabledToggles)];
-            
+
             // Add or update with new changes
             changedToggles.forEach(change => {
                 const existingIndex = finalChecks.findIndex(check => check.isoCode === change.isoCode);
@@ -261,7 +261,7 @@ const GeoFencing = () => {
 
             console.log("Submitting data:", data);
             setChanges([]);
-            
+
             const response = await axios.put(
                 `${process.env.REACT_APP_IP_DEV_API}/api/user-preferences/update-preferences/${userDetails?._id}`,
                 { data: encryptData(data) },
@@ -269,7 +269,7 @@ const GeoFencing = () => {
             );
 
             const dec = decryptData(response.data.data);
-            if(dec.status){
+            if (dec.status) {
                 toast.success("Your Preferences Updated Successfully")
             }
 
@@ -277,7 +277,7 @@ const GeoFencing = () => {
             console.error("Error submitting changes:", error);
             const dec = decryptData(error.response?.data?.data);
             console.error("Error details:", dec);
-        }finally{
+        } finally {
             setIsSaving(false)
         }
     };
@@ -290,7 +290,7 @@ const GeoFencing = () => {
                     <p>Control countries from where you can receive Payment Requests and Quotations. Toggle on/off access for specific countries.</p>
                 </div>
                 <div>
-                    <TopRight />
+                    {window.innerWidth > 1000 && <TopRight />}
                 </div>
             </div>
 
@@ -307,7 +307,11 @@ const GeoFencing = () => {
                     />
                 </div>
 
-                <span>Filter</span>
+                <span className={styles.filter}> Filter
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6" fill="none">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.72583 0.416683C9.34592 0.0158128 8.71299 -0.00117671 8.31212 0.378733L5 3.51764L1.6879 0.378733C1.287 -0.00117671 0.654099 0.0158128 0.274199 0.416683C-0.1057 0.817543 -0.0887012 1.45048 0.312099 1.83034L4.3121 5.62124C4.6979 5.98684 5.3021 5.98684 5.6879 5.62124L9.68787 1.83034C10.0887 1.45048 10.1057 0.817543 9.72583 0.416683Z" fill="#252525" />
+                    </svg>
+                </span>
             </div>
 
             <div className={styles.content}>
@@ -351,7 +355,7 @@ const GeoFencing = () => {
                                 className={styles.regionHeader}
                                 onClick={() => handleRegionClick(region)}
                                 style={{
-                                    boxShadow: expandedRegion === region ? "0px 5px 20px 0px rgba(0, 146, 255, 0.12)" :"",
+                                    boxShadow: expandedRegion === region ? "0px 5px 20px 0px rgba(0, 146, 255, 0.12)" : "",
                                 }}
                             >
                                 <div className={styles.regionRow}>
@@ -435,8 +439,8 @@ const GeoFencing = () => {
                     onClick={submitChanges}
                     disabled={changes.length < 1}
                     className={styles.saveBtn}
-                    >
-                    {!isSaving ? "Save Changes" :"Saving"}
+                >
+                    {!isSaving ? "Save Changes" : "Saving"}
                 </button>
             </div>
         </div>
