@@ -12,7 +12,7 @@ const OtherBalance = () => {
     const { userWallets, authHeader } = useContext(UserContext)
 
     const getExchangedAmounts = async (from, to, amount) => {
-        if(amount == undefined) return
+
         try {
             const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
                 headers: authHeader
@@ -23,18 +23,19 @@ const OtherBalance = () => {
             return 0;
         } finally {
         }
+
     };
 
     useEffect(() => {
-        if (userWallets?.length > 0) {
+        if (userWallets?.length > 0 && userWallets) {
             const calculateTotal = async () => {
-                const promises = userWallets.filter(item => item?.wallet_type === "insta").map(item => getExchangedAmounts(item?.currency?.code, "USD", item?.balance?.available));
+                const promises = await userWallets.filter(item => item?.wallet_type === "insta").map(item => getExchangedAmounts(item?.currency?.code, "USD", item?.balance?.available));
                 const balances = await Promise.all(promises);
                 const total = balances.reduce((acc, balance) => acc + balance, 0);
                 setAvailable(total ?? 0);
             };
             const calculateBlocked = async () => {
-                const promises = userWallets.filter(item => item?.wallet_type === "insta").map(item => getExchangedAmounts(item?.currency?.code, "USD", item?.balance?.reserved));
+                const promises = await userWallets.filter(item => item?.wallet_type === "insta").map(item => getExchangedAmounts(item?.currency?.code, "USD", item?.balance?.reserved));
                 const balances = await Promise.all(promises);
                 const total = balances.reduce((acc, balance) => acc + balance, 0);
                 setBlocked(total ?? 0);
