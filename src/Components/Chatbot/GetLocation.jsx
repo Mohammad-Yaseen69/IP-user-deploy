@@ -117,14 +117,14 @@ const RequestLocation = ({ coords, setCoords, isOpen, toggle, cancelPayment, dis
     return (
         <div
             style={{
-                minHeight: window.innerWidth > 500 ? "100vh" : "70vh",
+                minHeight: window.innerWidth > 500 ? "100vh" : "100vh",
                 width: "100vw",
                 display: "flex",
                 flexDirection: "column",
                 gap: "1rem",
                 alignItems: "center",
-                justifyContent: "center",
-                padding: "2rem"
+                justifyContent: locationAllowed ? "flex-start" : "center",
+                padding: locationAllowed ? "0" : "2rem"
             }}
         >
             {
@@ -209,7 +209,7 @@ const RequestLocation = ({ coords, setCoords, isOpen, toggle, cancelPayment, dis
                                 src={`//maps.google.com/maps?q=${coords?.latitude},${coords?.longitude}&z=15&output=embed`}
                                 style={{
                                     width: "100%",
-                                    height: window.innerWidth > 500 ? "100vh" : "60vh",
+                                    height: window.innerWidth > 500 ? "100vh" : "80vh",
                                 }}
                             ></iframe>
                             {/* <h5 style={{ marginBottom: "1rem", marginTop: "1rem", fontSize: "1.5rem", fontWeight: "700" }}>Is this your Location?</h5> */}
