@@ -46,7 +46,7 @@ const StepFive = ({ data, dataHandler }) => {
                         </div>
                         <div className={styles.er_details}>
                             <img src={er_icon} alt="" />
-                            <span>1.00 {data?.currency} = {Number(exchangedAmount / data.amount)?.toLocaleString("en-US", { minimumFractionDigits: 3, maximumFractionDigits: 4 })} {data.payment_type?.value !== "wallet" ? data.currency_wallet?.currency?.code : data.wallet?.currency?.code} </span>
+                            <span>1.00 {data?.currency} = {Number(exchangedAmount / Number(data.amount.replace(/,/g, '')))?.toLocaleString("en-US", { minimumFractionDigits: 3, maximumFractionDigits: 4 })} {data.payment_type?.value !== "wallet" ? data.currency_wallet?.currency?.code : data.wallet?.currency?.code} </span>
                         </div>
                         <div className={styles.right}>
                             <div className={styles.wc_pt}>
