@@ -1151,6 +1151,12 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                                 dataHandler("payment_duration", {})
                                                                 dataHandler("show_payment_type", false)
                                                             }
+                                                            else if (data.step === 2 && Object.keys(data.beneficiary).length > 0 && Object.keys(data.beneficiary_wallet)) {
+                                                                dataHandler("beneficiary", {})
+                                                                dataHandler("beneficiary_wallet", {})
+                                                                dataHandler("amount", 1)
+                                                                dataHandler("step", data.step - 1)
+                                                            }
                                                             else if (data.step === 4 && data.payment_type?.value === "card") {
                                                                 dataHandler("payment_type", {})
                                                                 dataHandler("showCard", false)
