@@ -41,7 +41,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
         setAmountLoading(e)
     }
 
-    useEffect(() => {                                             
+    useEffect(() => {
         dataHandler("exchange_rate", {})
         dataHandler("exchange_rate_error", "")
 
@@ -124,9 +124,14 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                             <input
                                 type="text"
                                 value={data.amount}
-                                onChange={(e) => dataHandler("amount", e.target.value)}
+                                onChange={(e) => {
+                                    if (e.target.value == "") {
+                                        dataHandler("recipient_amount", "")
+                                    }
+                                    dataHandler("amount", e.target.value)
+                                }}
                                 onKeyUp={handleKeyUp}
-                                onBlur={handleBlur} 
+                                onBlur={handleBlur}
                                 maxLength={14}
                                 placeholder={t("Enter the Amount")}
                                 data-type="currency"
@@ -279,7 +284,12 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                                         <input
                                             type="text"
                                             value={data.recipient_amount ?? 0}
-                                            onChange={(e) => dataHandler("recipient_amount", e.target.value)}
+                                            onChange={(e) => {
+                                                if (e.target.value == "") {
+                                                    dataHandler("amount", '')
+                                                }
+                                                dataHandler("recipient_amount", e.target.value)
+                                            }}
                                             onKeyUp={handleKeyUpR}
                                             onBlur={handleBlurR} maxLength={12}
                                             placeholder={t("Enter the Amount")}
