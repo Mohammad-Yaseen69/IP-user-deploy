@@ -88,6 +88,8 @@ const StepFour = ({ data, dataHandler, callback = () => { }, loading = false, er
         }
     }, [types])
 
+    console.log( data.payment_type?.value === "paypal" && !data?.exchange_rate?.paypal?.paypal_currency_supported, data.payment_type?.value === "paypal" , !data?.exchange_rate?.paypal?.paypal_currency_supported)
+
     return (
         <>
             {

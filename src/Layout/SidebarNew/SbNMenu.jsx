@@ -116,6 +116,13 @@ export const MENU = [
                 type: "link",
                 url: `${process.env.PUBLIC_URL}/payment-requests`,
             },
+            // {
+            //     title: "Mastercard",
+            //     icon: <img src={pen} style={{ marginRight: "12px" }} />,
+            //     activeIcon: <img src={pen_a} style={{ marginRight: "12px" }} />,
+            //     type: "link",
+            //     url: `${process.env.PUBLIC_URL}/my-mastercard`,
+            // },
             {
                 title: "My QR Code Sticker",
                 icon: <img src={qr_s} style={{ marginRight: "12px" }} />,
