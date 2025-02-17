@@ -101,11 +101,11 @@ const Qr = ({ currentRevTab, averageRatingAsBuyer, averageRatingAsSeller, totalR
                     <span>{currentRevTab === "Seller" ? totalReviewsAsSeller?.toFixed(1) : totalReviewsAsBuyer?.toFixed(1)} {t("ratings")}</span>
                 </div>
                 <div className={styles.actions}>
-                    <Link to={"/quotations"} className={styles.action}>
+                    <Link style={{justifyContent: "space-between"}} to={"/quotations"} className={styles.action}>
                         <span>{t("Pending")} {t("Quotations")}: </span>
                         <span>{profieInfo?.quotationCounts ?? 0}</span>
                     </Link>
-                    <Link to={"/payment-requests"} className={styles.action}>
+                    <Link style={{justifyContent: "space-between"}} to={"/payment-requests"} className={styles.action}>
                         <span>{t("Pending")} {t("Payments")}: </span>
                         <span>{profieInfo?.paymentCounts ?? 0}</span>
                     </Link>
