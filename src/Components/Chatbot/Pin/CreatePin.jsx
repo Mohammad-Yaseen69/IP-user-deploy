@@ -207,7 +207,7 @@ const CreatePin = () => {
                         </button>
                     </div>
                 </div>) :
-                (<div style={{ margin: "auto" }} className={styles.container}>
+                (<div style={{ margin: "auto", height: "100vh" }} className={styles.container}>
                     <div style={{ padding: "27px" }} className={styles.right}>
                         <div>
                             <div style={{ marginBottom: "15px" }} className={styles.top}>

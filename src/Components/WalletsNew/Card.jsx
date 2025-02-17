@@ -64,6 +64,8 @@ const Card = ({ wallet, current, index, data }) => {
     //     }
     // }, [wallet, userDetails])
 
+    console.log(wallet)
+
     const translateX = (index - current) * 20;
     return (
         <div className={styles.card} style={{ width: "90%", boxShadow: "none" }}>

@@ -783,6 +783,8 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
         }
     }, [transaction_status])
 
+    console.log(data.step)
+
     return (
         <>
             {
@@ -875,7 +877,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                         style={{
                                             width: sendPaymentType === "international" ? "100%" : "0px",
                                             transition: "500ms",
-                                            "--min-width": data.step === 4 && data.payment_type?.value === "wallet" ? "65vw" : "55vw"
+                                            "--min-width": data.step === 4 && data.payment_type?.value === "wallet" && !data.show_payment_type ? "65vw" : "55vw"
                                         }}
                                     >
                                         <div className={styles.left}>
