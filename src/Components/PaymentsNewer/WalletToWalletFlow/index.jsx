@@ -1143,7 +1143,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                     <HelpCircle size={16} />
                                                     {t("Trouble Sending Money")}
                                                 </Link>
-                                                <div className={styles?.buttons}>
+                                                <div style={{gap: data.step === 5 && "0.5rem"}} className={styles?.buttons}>
                                                     {
                                                         data.step > 1
                                                         &&

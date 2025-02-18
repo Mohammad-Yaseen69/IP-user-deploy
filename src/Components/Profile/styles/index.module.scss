@@ -1031,6 +1031,12 @@
     }
 }
 
+@media screen and (max-width: 600px){
+    .actions span{
+        font-size: 10px !important;
+    }
+}
+
 @media screen and (max-width: 1350px) {
     .sub_container {
         .sc_body {

@@ -54,10 +54,46 @@ const Socials = () => {
     return (
         <div className={styles.social_info} style={{ flexWrap: "wrap" }}>
             {
-                socials_data.slice(0, showMore ? socials_data.length - 1 : 3).map(item => (
-                    <div className={styles.item} key={item.name}>
-                        <div className={styles.left}>
-                            <span>{item.name}</span>
+                window.innerWidth > 600 ?
+                    socials_data.slice(0, showMore ? socials_data.length - 1 : 3).map(item => (
+                        <div className={styles.item} key={item.name}>
+                            <div className={styles.left}>
+                                <span>{item.name}</span>
+                                {
+                                    item?.name?.toLowerCase()?.includes("instagram") && userDetails?.insta_username
+                                        ?
+                                        <a target='_blank' href={`https://www.instagram.com/${userDetails?.insta_username}`} style={{ cursor: "pointer", color: "#5926f0", fontSize: ".65rem" }}>@{userDetails?.insta_username}</a>
+                                        : ""
+
+                                }
+                            </div>
+                            <div className={styles.right}>
+                                {
+                                    item.followers !== null
+                                    &&
+                                    <span>{item.followers}</span>
+                                }
+                                <div>{">"}</div>
+                            </div>
+                        </div>
+                    ))
+                    :
+                    socials_data.slice(0, showMore ? socials_data.length - 1 : 3).map(item => (
+                        <div className={styles.item} style={{ flexDirection: "column", alignItems: "center", justifyContent: "center" }} key={item.name}>
+                            <div style={{display: "flex", alignItems: "center", justifyContent: "space-between", width: '100%'}}>
+                                <div className={styles.left}>
+                                    <span>{item.name}</span>
+                                </div>
+                                <div className={styles.right}>
+                                    {
+                                        item.followers !== null
+                                        &&
+                                        <span>{item.followers}</span>
+                                    }
+                                    <div>{">"}</div>
+                                </div>
+                            </div>
+
                             {
                                 item?.name?.toLowerCase()?.includes("instagram") && userDetails?.insta_username
                                     ?
@@ -66,16 +102,7 @@ const Socials = () => {
 
                             }
                         </div>
-                        <div className={styles.right}>
-                            {
-                                item.followers !== null
-                                &&
-                                <span>{item.followers}</span>
-                            }
-                            <div>{">"}</div>
-                        </div>
-                    </div>
-                ))
+                    ))
             }
             <div className={styles.item} style={{ cursor: "pointer" }} onClick={() => setShowMore(!showMore)}>
                 <div className={styles.left}>
