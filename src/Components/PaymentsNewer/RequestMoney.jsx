@@ -152,6 +152,7 @@ const RequestMoney = ({ setAction, setStep }) => {
 
                 const dec = decryptData(res.data?.data)
 
+                console.log(dec)
                 setPreferences({
                     live: dec.data[0].reason.includes("payment_request_live"),
                     origin: dec.data[0].reason.includes("payment_request_origin"),
@@ -162,6 +163,7 @@ const RequestMoney = ({ setAction, setStep }) => {
                 });
 
                 const dec = decryptData(res.data?.data)
+                console.log(dec)
 
                 setPreferences(prev => ({
                     ...prev,

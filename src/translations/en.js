@@ -2611,7 +2611,7 @@ export const en = {
     "Check Now": "Check Now",
     "You Left A Review": "You Left A Review",
     "View Larger Map": "View Larger Map",
-    "English (UK)": "Englisch (UK)",
+    "English (UK)": "English (UK)",
     "QR Code Title": "QR Code Title",
     "Notice!": "Notice!",
     "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.": "By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.",

@@ -284,7 +284,7 @@ const CreatePin = () => {
                     </div >)
                     : (
                         // New mobile layout
-                        <div style={{ margin: "auto", minHeight: "100vh" }} className={styles.container}>
+                        <div style={{ margin: "auto" }} className={styles.container}>
                             <div style={{ padding: "27px" }} className={styles.right}>
                                 <div>
                                     <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "35px" }}>
