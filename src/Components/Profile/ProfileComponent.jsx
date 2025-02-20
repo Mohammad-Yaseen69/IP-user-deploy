@@ -6,7 +6,7 @@ import Header from "./Header"
 import Socials from "./Socials"
 import Qr from "./Qr"
 import Portfolio from "./Portfolio"
-import Reviews from "./Reviews"
+import Reviews from "./Reviews" 
 
 const ProfileComponent = () => {
     const [currentRevTab, setCurrentRevTab] = useState("Seller");

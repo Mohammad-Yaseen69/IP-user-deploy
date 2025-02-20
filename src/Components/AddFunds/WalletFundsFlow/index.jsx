@@ -72,8 +72,8 @@ function reducer(state, action) {
 
 const headings = [
     "Choose the Wallet",
-    "Enter the amount",
-    "Choose the Top-Up channel"
+    "Enter the Amount",
+    "Choose The Top-Up Channel"
 ]
 
 const WalletFundsFlow = ({ setAction }) => {
@@ -366,6 +366,7 @@ const WalletFundsFlow = ({ setAction }) => {
     }
 
     const getExchangedAmounts = async (from, to, amount) => {
+        if(amount == undefined) return
         dataHandler("loading", true)
         try {
             const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
@@ -460,7 +461,7 @@ const WalletFundsFlow = ({ setAction }) => {
                     }}>
                         <SendActionCard
                             bg={money}
-                            title={t("Load/Deposit Money to the wallet")}
+                            title={t("Load/Deposit Money To The Wallet")}
                             icon={wallet_ic}
                             desc={t("")}
                             setter={() => { }}
@@ -479,7 +480,7 @@ const WalletFundsFlow = ({ setAction }) => {
                         >
                             <div className={styles.left}>
                                 <div className={styles.l_top}>
-                                    <h1>{t("TOP-UP WALLET")}</h1>
+                                    <h1>{t("Top-Up Wallet")}</h1>
                                     <h2>
                                         {
                                             data.step === 4
@@ -491,7 +492,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                                         :
                                                         data.channel?.value === "card"
                                                             ?
-                                                            "Select or Add Payment Card"
+                                                            t("Select Or Add Payment Card")
                                                             :
                                                             ""
                                                 )
@@ -504,7 +505,8 @@ const WalletFundsFlow = ({ setAction }) => {
                                                         ?
                                                         "Confirm Your Payment"
                                                         :
-                                                        headings[data.step - 1]}
+                                                        t(headings[data.step - 1])
+                                        }
                                     </h2>
                                 </div>
                                 <div style={{ display: "flex", flexDirection: "column", gap: ".7rem" }}>
@@ -521,11 +523,11 @@ const WalletFundsFlow = ({ setAction }) => {
                                                     <>
                                                         <FeesComponent
                                                             data={data}
-                                                            receiverLabel={"You will get"}
+                                                            receiverLabel={"You Will Get"}
                                                             error={data.error}
                                                             feesLabel="Fees"
                                                             sendingLabel="Sending"
-                                                            totalLabel="Amount to pay"
+                                                            totalLabel="Amount To Pay"
                                                         />
                                                         {
                                                             data.channel?.value === "paypal" && !PaypalCurrencies.some(item => item === data.wallet?.currency?.code)
@@ -554,7 +556,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                                                             lineHeight: 1.3,
                                                                             letterSpacing: '-0.28px'
                                                                         }}>
-                                                                            <strong>{data.wallet?.currency?.code} </strong> is not supported by Paypal, <strong>USD</strong> will be used as the default currency.
+                                                                            {t(`${data.wallet?.currency?.code} is not supported by Paypal, USD will be used as the default currency.`)}
                                                                         </span>
                                                                     </div>
                                                                     <div style={{
@@ -634,7 +636,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                         <MobileWalletLink
                                             data={data.channel?.value === "paypal" ? { name: "Paypal" } : data.mobile_wallet_service}
                                             setSubStep={e => dataHandler("step", e)}
-                                            type={data.channel?.value === "paypal" ? "Payment type" : "Mobile Wallet"}
+                                            type={data.channel?.value === "paypal" ? "Payment Type" : "Mobile Wallet"}
                                             externalLink={data.externalLink}
                                         />
                                         :
@@ -758,7 +760,7 @@ const WalletFundsFlow = ({ setAction }) => {
                     :
                     <div className={styles.mobile}>
                         <div className={styles.m_top}>
-                            <h1>{t("TOP-UP WALLET")}</h1>
+                            <h1>{t("Top-Up Wallet")}</h1>
                             <h2>
                                 {
                                     data.step === 4
@@ -770,7 +772,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                                 :
                                                 data.channel?.value === "card"
                                                     ?
-                                                    "Select or Add Payment Card"
+                                                    t("Select Or Add Payment Card")
                                                     :
                                                     ""
                                         )
@@ -783,7 +785,8 @@ const WalletFundsFlow = ({ setAction }) => {
                                                 ?
                                                 "Confirm Your Payment"
                                                 :
-                                                headings[data.step - 1]}
+                                               t(headings[data.step - 1])
+                                }
                             </h2>
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", gap: ".7rem" }}>
@@ -800,11 +803,11 @@ const WalletFundsFlow = ({ setAction }) => {
                                             <>
                                                 <FeesComponent
                                                     data={data}
-                                                    receiverLabel={"You will get"}
+                                                    receiverLabel={"You Will Get"}
                                                     error={data.error}
                                                     feesLabel="Fees"
                                                     sendingLabel="Sending"
-                                                    totalLabel="Amount to pay"
+                                                    totalLabel="Amount To Pay"
                                                 />
                                                 {
                                                     data.channel?.value === "paypal" && !PaypalCurrencies.some(item => item === data.wallet?.currency?.code)
@@ -833,7 +836,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                                                     lineHeight: 1.3,
                                                                     letterSpacing: '-0.28px'
                                                                 }}>
-                                                                    <strong>{data.wallet?.currency?.code} </strong> is not supported by Paypal, <strong>USD</strong> will be used as the default currency.
+                                                                    {t(`${data.wallet?.currency?.code} is not supported by Paypal, USD will be used as the default currency.`)}
                                                                 </span>
                                                             </div>
                                                             <div style={{
@@ -913,7 +916,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                         <MobileWalletLink
                                             data={data.channel?.value === "paypal" ? { name: "Paypal" } : data.mobile_wallet_service}
                                             setSubStep={e => dataHandler("step", e)}
-                                            type={data.channel?.value === "paypal" ? "Payment type" : "Mobile Wallet"}
+                                            type={data.channel?.value === "paypal" ? "Payment Type" : "Mobile Wallet"}
                                             externalLink={data.externalLink}
                                         />
                                         :

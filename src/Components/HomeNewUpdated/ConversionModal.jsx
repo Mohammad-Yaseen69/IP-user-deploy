@@ -203,7 +203,7 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
                     setSaving(false)
                 })
         } else {
-            toast.error("Insufficient Balance")
+            toast.error(t("Insufficient Balance"))
         }
     }
 

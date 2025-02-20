@@ -124,10 +124,16 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                             <input
                                 type="text"
                                 value={data.amount}
-                                onChange={(e) => dataHandler("amount", e.target.value)}
+                                onChange={(e) => {
+                                    if (e.target.value == "") {
+                                        dataHandler("recipient_amount", "")
+                                    }
+                                    dataHandler("amount", e.target.value)
+                                }}
                                 onKeyUp={handleKeyUp}
-                                onBlur={handleBlur} maxLength={12}
-                                placeholder="Enter the amount"
+                                onBlur={handleBlur}
+                                maxLength={14}
+                                placeholder={t("Enter the Amount")}
                                 data-type="currency"
                             />
                         </div>
@@ -272,16 +278,21 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                                 </div>
                                 :
                                 <>
-                                    <span>{"They receive"}</span>
+                                    <span>{t("They Receive")}</span>
                                     <h5 style={{ display: "flex", gap: ".5rem" }}>
                                         {data?.beneficiary_wallet?.currency?.code}
                                         <input
                                             type="text"
                                             value={data.recipient_amount ?? 0}
-                                            onChange={(e) => dataHandler("recipient_amount", e.target.value)}
+                                            onChange={(e) => {
+                                                if (e.target.value == "") {
+                                                    dataHandler("amount", '')
+                                                }
+                                                dataHandler("recipient_amount", e.target.value)
+                                            }}
                                             onKeyUp={handleKeyUpR}
                                             onBlur={handleBlurR} maxLength={12}
-                                            placeholder="Enter the amount"
+                                            placeholder={t("Enter the Amount")}
                                             data-type="currency"
                                         />
                                     </h5>

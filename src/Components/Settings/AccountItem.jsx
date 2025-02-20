@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Badges, H4, P } from '../../AbstractElements'
 import styles from "./styles/Accounts.module.scss"
 import { Trash } from 'react-feather'
-import { Modal, ModalBody, ModalHeader } from 'reactstrap'
+import { Badge, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import axios from 'axios'
 import { UserContext } from '../../Context/UserContext'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
@@ -12,6 +12,7 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
 import { useLocation, useNavigate } from 'react-router'
 import LinkToInstagramModal from '../LinkToInstagramModal'
+import LinktoTelegramModal from "../LinkToTelegramModal"
 
 const AccountItem = ({ data }) => {
     const navigate = useNavigate()
@@ -32,8 +33,9 @@ const AccountItem = ({ data }) => {
         setCodeType(userDetails?.tfa ? "authenticator" : "sms")
     }, [userDetails])
 
+    console.log(data)
     const onChange = () => {
-        if (data.name.toLowerCase().includes("insta") && !checked) {
+        if ((data.name.toLowerCase().includes("insta") || data.name.toLowerCase().includes("telegram")) && !checked) {
             if (userDetails?.username) {
                 setShowModal(true)
             }
@@ -73,18 +75,19 @@ const AccountItem = ({ data }) => {
 
     const otpCallback = (setter, type, otp, setError) => {
         setSaving(true)
-        const data = {
+        const socialType = data.name.toLowerCase().includes("insta") ? "insta" : "telegram"
+        const requestData = {
             token,
             otp,
             type: codeType
         }
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/insta-unlink/${userDetails?._id}`, { data: encryptData(data) }, {
+        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/${socialType}-unlink/${userDetails?._id}`, { data: encryptData(requestData) }, {
             headers: authHeader
         })
             .then(res => {
                 verifyToken()
                 setter(true)
-                toast.success("Instagram account unlinked successfully!")
+                toast.success(`${data.name.toLowerCase().includes("insta") ? "Instagram" : "Telegram"} account unlinked successfully!`)
             })
             .catch(error => {
                 const dec = decryptData(error.response.data.data)
@@ -114,11 +117,18 @@ const AccountItem = ({ data }) => {
         }
     }
 
+    console.log(userDetails)
+
     useEffect(() => {
         if (data.name.toLowerCase().includes("insta")) {
             setChecked(userDetails?.insta_username ? true : false)
         }
+        else if (data.name.toLowerCase().includes("telegram")) {
+            setChecked(userDetails?.telegram_bot ? true : false)
+        }
     }, [userDetails])
+
+    console.log(userDetails)
 
     const conRef = useRef()
     const location = useLocation()
@@ -144,15 +154,10 @@ const AccountItem = ({ data }) => {
             <div className={styles.top}>
                 <div className={styles.left}>
                     <img src={data.img} alt={data.name} />
-                    <div>
-                        <H4>{data.name}</H4>
-                        <P>{
-                            userDetails?.insta_username && data.name.toLowerCase().includes("insta")
-                                ?
-                                userDetails?.insta_username
-                                :
-                                t("Social Network Account")}</P>
-                    </div>
+
+                    <H4>{data.name}</H4>
+
+
                 </div>
                 <div className={styles.right}>
                     {
@@ -199,6 +204,32 @@ const AccountItem = ({ data }) => {
                     </Modal>
                 </div>
             </div>
+            <div className={styles.middle}>
+                <P>{
+                    userDetails?.insta_username && data.name.toLowerCase().includes("insta")
+                        ?
+                        userDetails?.insta_username
+                        :
+                        t("Add Your Account")}
+                </P>
+
+                <span 
+                style={{
+                     backgroundColor: (data.name.toLowerCase().includes("insta") || (data.name.toLowerCase().includes("telegram"))) 
+                        ? checked ? "#84EBB4" : "#ffebed" 
+                        : "#FFDB43",
+                    color: (data.name.toLowerCase().includes("insta") || (data.name.toLowerCase().includes("telegram"))) 
+                        ? checked ? "#00875A" : "#D00416" 
+                        : "#DFB400",
+                    }}>
+                    {(data.name.toLowerCase().includes("insta") || (data.name.toLowerCase().includes("telegram")))
+                        ? 
+                        checked ? "Connected" : "Not Connected"
+                        :
+                        "Coming Soon"
+                    }
+                </span>
+            </div>
             {
                 (data.name.toLowerCase().includes("insta") && showModal)
                     ?
@@ -212,6 +243,18 @@ const AccountItem = ({ data }) => {
                         }}
                     />
                     : ""
+            }
+            {
+                (data.name.toLowerCase().includes("telegram") && showModal) ?
+                    <LinktoTelegramModal
+                        isOpen={showModal}
+                        toggle={() => {
+                            setShowModal(!showModal)
+                            if (tab?.toLowerCase() === "social" && ft) {
+                                navigate("/settings?tab=verification&ft=true")
+                            }
+                        }}
+                    /> : ""
             }
             {/* <Modal isOpen={showModal} toggle={() => setShowModal(!showModal)}>
                 <ModalHeader toggle={() => setShowModal(!showModal)}>{t("Activate Account")}</ModalHeader>

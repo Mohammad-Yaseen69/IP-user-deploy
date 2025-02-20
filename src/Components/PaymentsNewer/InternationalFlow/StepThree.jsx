@@ -34,7 +34,7 @@ const StepThree = ({ data, dataHandler }) => {
     return (
         <div className={styles.container}>
             <select value={data.reason} onChange={e => dataHandler("reason", e.target.value)}>
-                <option value="" disabled>{t("Select Remark / Reason")}</option>
+                <option value="" disabled>{t("Select Remark Reason")}</option>
                 {
                     Object.keys(reasons).map(item => (
                         <option value={item} key={item}>{reasons[item]}</option>
@@ -44,7 +44,7 @@ const StepThree = ({ data, dataHandler }) => {
             <div className={styles.comment_files}>
                 <input type="text" placeholder={t("Comments")} value={data.comment} onChange={e => dataHandler("comment", e.target.value)} />
                 <label htmlFor="files" className={styles.files}>
-                    <span style={{ whiteSpace: "nowrap" }}>{t("Attach files")}</span>
+                    <span style={{ whiteSpace: "nowrap" }}>{t("Attach Files")}</span>
                     <img src={file} alt="" />
                     <input type="file" id="files" hidden multiple accept="image/*,video/*" onChange={handleFileChange} />
                 </label>

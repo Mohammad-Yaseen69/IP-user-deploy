@@ -84,7 +84,7 @@ const Amount = ({ data, dataHandler }) => {
                     <span>
                         {
                             t(`⚠️ The transactional value should be between[Currency ISO code & Amount] - [Currency ISO code & Amount] `)
-                                .replace("[Currency ISO code & Amount] - [Currency ISO code & Amount] ", ` ${data?.limits?.min ?? 0} - ${data?.limits?.max ?? 0}`)
+                                .replace("[Currency ISO code & Amount] - [Currency ISO code & Amount]", ` ${data?.limits?.min ?? 0} - ${data?.limits?.max ?? 0} `)
                                 .replace("⚠️ ", "")
                         }
                     </span>

@@ -109,7 +109,7 @@ const CurConversion = () => {
                         <option value="EUR" style={{ fontSize: "1rem", fontWeight: 900 }}>€</option>
                         <option value="GBP" style={{ fontSize: "1rem", fontWeight: 900 }}>£</option>
                     </select>
-                    <input type="text" placeholder={t("Exchanged Amount")} style={{ flex: "1", border: "1px solid rgba(0,0,0,.1)", borderRadius: "13px", outline: "none", padding: ".5rem", background: "white", width: "100%", }} value={resultCurrency} disabled />
+                    <input type="text" placeholder={t("Exchanged Amount")} style={{ flex: "1", border: "1px solid rgba(0,0,0,.1)", borderRadius: "13px", outline: "none", padding: ".5rem", background: "white", width: "100%", }} value={t(resultCurrency)} disabled />
                 </div>
                 <button
                     disabled={!enteredCurrency || !resultCurrency || !userCurrency || !exchangedCurrency || invalid}

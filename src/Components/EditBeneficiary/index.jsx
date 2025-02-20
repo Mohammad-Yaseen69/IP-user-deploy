@@ -977,19 +977,19 @@ const EditBeneficiary = () => {
                                         }}>
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <Label className="col-form-label" htmlFor="first-name">{t("First Name")} <span className="req_star">*</span></Label>
-                                                <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} id="first-name" type="text" placeholder='First name' required pattern="[A-Za-z]+" title="(A to Z | a to z)" value={firstName} onChange={e => setFirstName(e.target.value)} />
+                                                <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} id="first-name" type="text" placeholder={t("First Name")} required pattern="[A-Za-z]+" title="(A to Z | a to z)" value={firstName} onChange={e => setFirstName(e.target.value)} />
                                             </FormGroup>
                                             {
                                                 fieldInfoValidate("required_receiving_entity_fields", "middlename")
                                                 &&
                                                 <FormGroup style={{ flex: 1, margin: 0 }}>
                                                     <Label className="col-form-label" htmlFor="middlename">{t("Middle Name")} <span className="req_star">*</span></Label>
-                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="middlename" id="middlename" type="text" placeholder='Middle Name' value={basicExtras.middlename} onChange={handleBasicExtraChange} readOnly={!isEditMode} disabled={!isEditMode} />
+                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="middlename" id="middlename" type="text" placeholder={t('Middle Name')} value={basicExtras.middlename} onChange={handleBasicExtraChange} readOnly={!isEditMode} disabled={!isEditMode} />
                                                 </FormGroup>
                                             }
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <Label className="col-form-label" htmlFor="last-name">{t("Last Name")} <span className="req_star">*</span></Label>
-                                                <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} id="last-name" type="text" placeholder='Last name' required pattern="[A-Za-z]+" title="(A to Z | a to z)" value={lastName} onChange={e => setLastName(e.target.value)} />
+                                                <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} id="last-name" type="text" placeholder={t('Last Name')} required pattern="[A-Za-z]+" title="(A to Z | a to z)" value={lastName} onChange={e => setLastName(e.target.value)} />
                                             </FormGroup>
                                         </div>
                                     </FormGroup>
@@ -1009,7 +1009,7 @@ const EditBeneficiary = () => {
                                                                 <option value="">{t("Select Document")}</option>
                                                                 {
                                                                     Object.keys(idTypeData).map(item => (
-                                                                        <option key={item} value={item}>{idTypeData?.[item]}</option>
+                                                                        <option key={item} value={item}>{t(idTypeData?.[item])}</option>
                                                                     ))
                                                                 }
                                                             </Input>
@@ -1059,13 +1059,13 @@ const EditBeneficiary = () => {
                                             </FormGroup>
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <Label className="col-form-label" htmlFor="postal_code">{t("Postal Code")}</Label>
-                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="postal_code" id="postal_code" type="text" placeholder='Postal Code' value={formData.postal_code} onChange={inputChangeHandler} disabled={!isEditMode} />
+                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="postal_code" id="postal_code" type="text" placeholder={t('Postal Code')} value={formData.postal_code} onChange={inputChangeHandler} disabled={!isEditMode} />
                                             </FormGroup>
                                         </div>
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                         <Label className="col-form-label" htmlFor="address">{t("Address Line")} {isAddressRequired && <span className="req_star">*</span>}</Label>
-                                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="address" id="address" type="textarea" placeholder='Address line' value={formData.address} onChange={inputChangeHandler} disabled={!isEditMode} />
+                                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="address" id="address" type="textarea" placeholder={t('Address line')} value={formData.address} onChange={inputChangeHandler} disabled={!isEditMode} />
                                     </FormGroup>
                                     <FormGroup className="mb-3">
                                         <div style={{
@@ -1075,7 +1075,7 @@ const EditBeneficiary = () => {
                                         }}>
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <Label className="col-form-label" htmlFor="email">{t("Email Address")}</Label>
-                                                <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} id="email" name="email" type="email" placeholder='Email Address' title="abc@xyz.com" value={formData?.email} onChange={inputChangeHandler} />
+                                                <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} id="email" name="email" type="email" placeholder={t('Email Address')} title="abc@xyz.com" value={formData?.email} onChange={inputChangeHandler} />
                                             </FormGroup>
                                             <FormGroup style={{ flex: 1, margin: 0, transform: "translateY(-4px)" }}>
                                                 <Label className="col-form-label" htmlFor="mobile_number">{t("Mobile Number")} <span className="req_star">*</span></Label>
@@ -1123,10 +1123,10 @@ const EditBeneficiary = () => {
                                                         <FormGroup FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                             <Label className="col-form-label">{t(service_name_formatter(item))}</Label>
                                                             <Input disabled={!isEditMode} type="select" className="form-control" style={{ flex: 1, minWidth: "250px" }} value={additionFields[item]} name={item} onChange={handleAddtionalFieldChange}>
-                                                                <option value="">--Select-Gender--</option>
+                                                                <option value="">--{t("Select Gender")}--</option>
                                                                 {
                                                                     Object.keys(gendersData).map(item => (
-                                                                        <option value={item}>{item}</option>
+                                                                        <option value={item}>{t(item)}</option>
                                                                     ))
                                                                 }
                                                             </Input>
@@ -1164,7 +1164,7 @@ const EditBeneficiary = () => {
                                                                         <option value="">--Select-Occupation--</option>
                                                                         {
                                                                             Object.keys(occupations).map(item => (
-                                                                                <option value={item}>{item}</option>
+                                                                                <option value={item}>{t(item)}</option>
                                                                             ))
                                                                         }
                                                                     </Input>
@@ -1182,7 +1182,7 @@ const EditBeneficiary = () => {
                                                             <option value="">{t("Select Document")}</option>
                                                             {
                                                                 Object.keys(idTypeData).map(item => (
-                                                                    <option key={item} value={item}>{idTypeData?.[item]}</option>
+                                                                    <option key={item} value={item}>{t(idTypeData?.[item])}</option>
                                                                 ))
                                                             }
                                                         </Input>
@@ -1535,7 +1535,7 @@ const EditBeneficiary = () => {
                                                 gap: "1rem"
                                             }}>
                                                 <FormGroup style={{ flex: 1, margin: 0 }}>
-                                                    <Label className="col-form-label">Mobile Money Provider <span className="req_star">*</span></Label>
+                                                    <Label className="col-form-label">{t("Mobile Money Provider")} <span className="req_star">*</span></Label>
                                                     <Input readOnly={!isEditMode} disabled={!isEditMode} type="select" className="form-control" style={{ flex: 1, minWidth: "250px" }} value={formData?.mobile_wallet_provider} onChange={inputChangeHandler} name="mobile_wallet_provider">
                                                         <option value="" disabled>Select Provider</option>
                                                         {
@@ -1546,11 +1546,11 @@ const EditBeneficiary = () => {
                                                     </Input>
                                                 </FormGroup>
                                                 <FormGroup style={{ flex: 1, margin: 0 }}>
-                                                    <Label className="col-form-label" >Wallet Name <span className="req_star">*</span></Label>
+                                                    <Label className="col-form-label" >{t("Wallet Name")} <span className="req_star">*</span></Label>
                                                     <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" placeholder='Wallet Name' required id="account_holder_name" name="mobile_wallet_name" value={formData?.mobile_wallet_name} onChange={inputChangeHandler} />
                                                 </FormGroup>
                                                 <FormGroup style={{ flex: 1, margin: 0 }}>
-                                                    <Label className="col-form-label" htmlFor="mobile_wallet_account_number">Wallet Number <span className="req_star">*</span></Label>
+                                                    <Label className="col-form-label" htmlFor="mobile_wallet_account_number">{t("Wallet Number")} <span className="req_star">*</span></Label>
                                                     {/* <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} placeholder='Account Number' required onKeyPress={handleChangeNumber} name="mobile_wallet_account_number" value={formData?.mobile_wallet_account_number} onChange={inputChangeHandler} /> */}
                                                     <PhoneInput
                                                         customStyles={{
@@ -1722,15 +1722,15 @@ const EditBeneficiary = () => {
                                                 gap: "1rem"
                                             }}>
                                                 <FormGroup style={{ flex: 1, margin: 0 }}>
-                                                    <Label className="col-form-label" htmlFor="card-holder-name">Crypto Currency <span className="req_star">*</span></Label>
+                                                    <Label className="col-form-label" htmlFor="card-holder-name">{t("Crypto Currency")} <span className="req_star">*</span></Label>
                                                     <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="select" value={formData?.crypto_currency} onChange={inputChangeHandler} name="crypto_currency">
-                                                        <option value="Bitcoin">Bitcoin</option>
-                                                        <option value="Ethereum">Ethereum</option>
-                                                        <option value="Other">Other</option>
+                                                        <option value="Bitcoin">{t("Bitcoin")}</option>
+                                                        <option value="Ethereum">{t("Ethereum")}</option>
+                                                        <option value="Other">{t("Other")}</option>
                                                     </Input>
                                                 </FormGroup>
                                                 <FormGroup style={{ flex: 1, margin: 0 }}>
-                                                    <Label className="col-form-label" htmlFor="card-number">Wallet Address <span className="req_star">*</span></Label>
+                                                    <Label className="col-form-label" htmlFor="card-number">{t("Wallet Address")} <span className="req_star">*</span></Label>
                                                     <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" value={formData?.crypto_wallet_address} onChange={inputChangeHandler} name="crypto_wallet_address" style={{ flex: 1, minWidth: "250px" }} placeholder="ABCD12345WAD2" />
                                                 </FormGroup>
                                             </div>
@@ -1790,7 +1790,7 @@ const EditBeneficiary = () => {
                                                         onClick={_ => instapayWallets.every(item => typeof item === "string" ? item.length === 8 : item) && !walletError ? setInstapayWallets(prev => [...prev, ""]) : setInstapayWallets(instapayWallets)}
                                                     >
                                                         <Plus size={20} />
-                                                        <p style={{ marginBottom: 0 }}>Add another wallet</p>
+                                                        <p style={{ marginBottom: 0 }}>{t("Add another wallet")}</p>
                                                     </div>
                                                 }
                                             </>
@@ -1805,21 +1805,21 @@ const EditBeneficiary = () => {
                                                     gap: "1rem"
                                                 }}>
                                                     <FormGroup style={{ flex: 1, margin: 0 }}>
-                                                        <Label className="col-form-label" htmlFor="card-holder-name">Select Document Type <span className="req_star">*</span></Label>
+                                                        <Label className="col-form-label" htmlFor="card-holder-name">{t("Select Document Type")} <span className="req_star">*</span></Label>
                                                         <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} type="select" value={cashPickupType} onChange={e => setCashPickupType(e.target.value)} name="crypto_currency" disabled={!mobileNumber || mobileNumber.length < 9 || !isEditMode} readOnly={!mobileNumber || mobileNumber.length < 9}>
-                                                            <option value="PASSPORT">Passport</option>
-                                                            <option value="NATIONAL_ID">National Identity Card</option>
-                                                            <option value="DRIVING_LICENSE">Driving License</option>
-                                                            <option value="SOCIAL_SECURITY">Social Security Card/Number</option>
-                                                            <option value="SENIOR_CITIZEN_ID">Senior Citizen Identification Card</option>
-                                                            <option value="RESIDENT_CARD">Permanent Residency Identification Card</option>
-                                                            <option value="PAN_CARD">PAN Card</option>
-                                                            <option value="HEALTH_CARD">Health Insurance Card/Number</option>
-                                                            <option value="EMPLOYER_ID">Employer Identification Card</option>
+                                                            <option value="PASSPORT">{t("Passport")}</option>
+                                                            <option value="NATIONAL_ID">{t("National Identity Card")}</option>
+                                                            <option value="DRIVING_LICENSE">{t("Driving License")}</option>
+                                                            <option value="SOCIAL_SECURITY">{t("Social Security Card/Number")}</option>
+                                                            <option value="SENIOR_CITIZEN_ID">{t("Senior Citizen Identification Card")}</option>
+                                                            <option value="RESIDENT_CARD">{t("Permanent Residency Identification Card")}</option>
+                                                            <option value="PAN_CARD">{t("PAN Card")}</option>
+                                                            <option value="HEALTH_CARD">{t("Health Insurance Card/Number")}</option>
+                                                            <option value="EMPLOYER_ID">{t("Employer Identification Card")}</option>
                                                         </Input>
                                                     </FormGroup>
                                                     <FormGroup style={{ flex: 1, margin: 0 }}>
-                                                        <Label className="col-form-label" htmlFor="card-number">Enter Document Number <span className="req_star">*</span></Label>
+                                                        <Label className="col-form-label" htmlFor="card-number">{t("Enter Document Number")} <span className="req_star">*</span></Label>
                                                         <Input className="form-control" value={cashPickupNumber} onChange={e => setCashPickupNumber(e.target.value)} name="crypto_wallet_address" style={{ flex: 1, minWidth: "250px" }} placeholder="ABCD12345WAD2" disabled={!mobileNumber || mobileNumber.length < 9} readOnly={!mobileNumber || mobileNumber.length < 9 || !isEditMode} />
                                                     </FormGroup>
                                                     {
@@ -1870,7 +1870,7 @@ const EditBeneficiary = () => {
                                                     disabled={
                                                         walletError || !firstName || !lastName || !country || !city || mobileNumber.length < 9 || (!completedBank && !completedCard && !completedCrypto && !completedWallet && !cashPickupCompleted && instapayWallets.some(item => item.length < 8 || item.length > 8)) || !formData.relation || (isAddressRequired ? !formData.address : false)
                                                     }
-                                                >Save</button>
+                                                >{t("Save")}</button>
                                             </div>
                                             :
                                             <></>

@@ -12,7 +12,7 @@ const CategoryItem = ({ category, index, handleBugSelect, showDeleteModal, setSh
                 cursor: "pointer",
                 borderRadius: "9px",
                 background: "#F8F8F8",
-                margin: ".1rem .6rem",
+                // margin: ".1rem .6rem",
                 position: "relative",
                 zIndex: 999 - index
             }}>

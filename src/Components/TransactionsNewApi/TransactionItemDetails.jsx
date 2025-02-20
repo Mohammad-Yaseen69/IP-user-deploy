@@ -19,6 +19,13 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
         return countries.find(item => internationalReceiver?.country_iso_code ? item.alpha3 === internationalReceiver?.country_iso_code : item?.receiver?.country_iso_code === item.alpha3)
     }, [item, internationalReceiver])
 
+
+    function capitalizeStatus(str) {
+        return str
+            .split(" ")
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
+    }
     const [showImgPreview, setShowImgPreview] = useState(false)
     return (
         <div className={styles.container}>
@@ -29,7 +36,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                             {t("total amount")}
                         </span>
                         <div className={styles.badge} style={{ background: badgeColor }}>
-                            {t(item?.status?.toUpperCase())}
+                            {t(capitalizeStatus(item?.status))}
                         </div>
                     </div>
                     <h5>

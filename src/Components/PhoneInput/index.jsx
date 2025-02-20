@@ -8,7 +8,7 @@ function extractNumber(value) {
     return digits;
 }
 
-const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabledDropdown = false, disabled = false, phone = "", customStyles = {} }) => {
+const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabledDropdown = false, disabled = false, phone = "", customStyles = {}, error, setError }) => {
     const [selectedCountry, setSelectedCountry] = useState({})
     const [number, setNumber] = useState("")
 
@@ -25,30 +25,35 @@ const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabledDropdow
     }, [selectedCountry, number])
 
     return (
-        <div
-            className={styles.container}
-            style={{
-                opacity: disabled ? .8 : 1,
-                pointerEvents: disabled ? "none" : "all",
-                ...customStyles
-            }}
-        >
-            <CountryCode
-                number={number}
-                country={country}
-                setCountry={setCountry}
-                selectedCountry={selectedCountry}
-                setSelectedCountry={setSelectedCountry}
-                disabledDropdown={disabledDropdown}
-                setNumber={setNumber}
-                phone={phone}
-            />
-            <PhoneNumber
-                number={number}
-                setNumber={setNumber}
-                selectedCountry={selectedCountry}
-            />
-        </div>
+        <>
+            <div
+                className={styles.container}
+                style={{
+                    opacity: disabled ? .8 : 1,
+                    pointerEvents: disabled ? "none" : "all",
+                    ...customStyles
+                }}
+            >
+                <CountryCode
+                    number={number}
+                    country={country}
+                    setCountry={setCountry}
+                    selectedCountry={selectedCountry}
+                    setSelectedCountry={setSelectedCountry}
+                    disabledDropdown={disabledDropdown}
+                    setNumber={setNumber}
+                    phone={phone}
+                />
+                <PhoneNumber
+                    number={number}
+                    setNumber={setNumber}
+                    setError={setError}
+                    selectedCountry={selectedCountry}
+                />
+            </div>
+
+            {error && <p style={{marginTop: "4px", fontWeight: 600, color: "red", fontSize: "12px", marginBottom: "0"}}>{error}</p>}
+        </>
     )
 }
 

@@ -189,7 +189,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
     return (
         <Modal isOpen={isOpen} toggle={toggle} style={{ minWidth: window.innerWidth > 1150 ? "1150px" : "90vw", transform: window.innerWidth > 1000 ? `scale(${scaleFactor})` : "scale(1)" }}>
             <ModalHeader toggle={toggle}>
-                {title}
+                {t(title)}
             </ModalHeader>
             <ModalBody style={{
                 display: "flex",
@@ -198,7 +198,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                 overflow: "hidden"
             }}>
                 <div className={styles.left_rm}>
-                    <img src={review} alt="Leave A Review" />
+                    <img src={review} alt={t("Leave A Review")} />
                 </div>
                 {
                     loading
@@ -213,17 +213,17 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                             <Card className={styles.rating_container} style={{ marginBottom: 0 }}>
                                 <CardBody className={styles.rating_body}>
                                     <div className={styles.left}>
-                                        <p>Overall Rating</p>
+                                        <p></p>
                                         <h4>{sellerOverallRating}/5</h4>
                                         <div>
                                             <Rating initialRating={4.5} emptySymbol="fa fa-star-o fa-2x" fullSymbol="fa fa-star fa-2x" readonly></Rating>
                                         </div>
-                                        <span>{sellerOverallRatingCount} ratings</span>
+                                        <span>{sellerOverallRatingCount} {t("ratings")}</span>
                                     </div>
                                     <Card style={{ marginBottom: 0 }} className={styles.right}>
                                         <CardBody className={styles.right_body}>
                                             <div className={styles.rb_top}>
-                                                <span>{step > 1 ? "You Rated: " : "Leave a review:"} </span>
+                                                <span>{step > 1 ? t("You Rated") + ":" : t("Leave A Review") + ":"} </span>
                                                 {
                                                     reviewMessage
                                                     &&
@@ -235,13 +235,13 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                                                 {
                                                     step < 2
                                                     &&
-                                                    <button disabled={rating == 0 || !message || isSaving || step > 1} onClick={createInitialReview}>{isSaving ? "Posting Review" : "Save And Post"}</button>
+                                                    <button disabled={rating == 0 || !message || isSaving || step > 1} onClick={createInitialReview}>{isSaving ? "Posting Review" : t("Save And Post")}</button>
                                                 }
                                             </div>
                                             <div className={styles.rb_rating}>
                                                 <Rating initialRating={rating} onChange={e => setRating(e)} emptySymbol="fa fa-star-o fa-2x" fullSymbol="fa fa-star fa-2x" readonly={step > 1}></Rating>
                                             </div>
-                                            <Input type="textarea" className="form-control" placeholder="write review message" value={message} onChange={e => setMessage(e.target.value)} readOnly={step > 1} />
+                                            <Input type="textarea" className="form-control" placeholder={t("Write Review Message")} value={message} onChange={e => setMessage(e.target.value)} readOnly={step > 1} />
                                         </CardBody>
                                     </Card>
                                 </CardBody>
@@ -317,7 +317,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                                 <Card style={{ marginBottom: 0 }} className={styles.right}>
                                     <CardBody className={styles.right_body}>
                                         <div className={styles.rb_top}>
-                                            <span>{sellerStep > 1 ? "You Rated: " : "Leave a review:"} </span>
+                                            <span>{sellerStep > 1 ? t("You Rated") + ":" : t("Leave A Review") + ":"} </span>
                                             {
                                                 reviewMessage
                                                 &&
@@ -329,7 +329,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                                             {
                                                 sellerStep < 2
                                                 &&
-                                                <button disabled={sellerRating == 0 || !sellerMessage || isSaving || sellerStep > 1} onClick={createSellerReview}>{isSaving ? "Posting Review" : "Save And Post"}</button>
+                                                <button disabled={sellerRating == 0 || !sellerMessage || isSaving || sellerStep > 1} onClick={createSellerReview}>{isSaving ? "Posting Review" : t("Save And Post")}</button>
                                             }
                                         </div>
                                         <div className={styles.rb_rating}>

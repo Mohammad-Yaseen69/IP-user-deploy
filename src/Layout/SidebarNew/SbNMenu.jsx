@@ -42,6 +42,8 @@ import pa from "./files/pa.svg"
 import pa_a from "./files/pa_a.svg"
 import analytics from "./files/analytics.svg"
 import analytics_a from "./files/analytics_a.svg"
+import location from "./files/location.svg"
+import location_a from "./files/location_a.svg"
 
 export const MENU = [
     {
@@ -114,6 +116,13 @@ export const MENU = [
                 type: "link",
                 url: `${process.env.PUBLIC_URL}/payment-requests`,
             },
+            // {
+            //     title: "Mastercard",
+            //     icon: <img src={pen} style={{ marginRight: "12px" }} />,
+            //     activeIcon: <img src={pen_a} style={{ marginRight: "12px" }} />,
+            //     type: "link",
+            //     url: `${process.env.PUBLIC_URL}/my-mastercard`,
+            // },
             {
                 title: "My QR Code Sticker",
                 icon: <img src={qr_s} style={{ marginRight: "12px" }} />,
@@ -152,6 +161,13 @@ export const MENU = [
                 activeIcon: <img src={acc_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${process.env.PUBLIC_URL}/my-profile`,
+            },
+            {
+                title: "Geo Fencing",
+                icon: <img src={location} style={{ marginRight: "12px" }} />,
+                activeIcon: <img src={location_a} style={{ marginRight: "12px" }} />,
+                type: "link",
+                url: `${process.env.PUBLIC_URL}/geo-fencing`,
             },
             {
                 title: "Settings",

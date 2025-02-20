@@ -396,8 +396,9 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                                 value={data.amount}
                                 onChange={(e) => dataHandler("amount", e.target.value)}
                                 onKeyUp={handleKeyUp}
-                                onBlur={handleBlur} maxLength={12}
-                                placeholder="Enter the amount"
+                                onBlur={handleBlur}
+                                maxLength={14}
+                                placeholder={t("Enter the amount")}
                                 data-type="currency"
                             />
                     }
@@ -537,7 +538,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                                             onChange={(e) => dataHandler("receiving_amount", e.target.value)}
                                             onKeyUp={handleKeyUpR}
                                             onBlur={handleBlurR} maxLength={12}
-                                            placeholder="Enter the amount"
+                                            placeholder={t("Enter the Amount")}
                                             data-type="currency"
                                         />
                                     </h5>
@@ -654,6 +655,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                         }}
                         isOpen={modals.payout}
                         onSelectHandler={(item) => {
+                            console.log(item)
                             dataHandler("payoutChannel", item)
                             dataHandler("payer", {})
                         }}

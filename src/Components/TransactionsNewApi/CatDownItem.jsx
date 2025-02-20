@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import More from './More';
+import { useTranslation } from 'react-i18next';
 
 const CatDownItem = ({ category, index, handleItemSelect, showDeleteModal, setShowDeleteModal, showEditModal, setShowEditModal, setTempItem, selected, removeSelected }) => {
-    const [checked, setChecked] = useState(selected);
-
+    const [checked, setChecked] = useState(selected)
+    const {t} = useTranslation()
     // console.log(selected, category?.name)
     const handleCheckboxChange = () => {
         setChecked(!checked);
@@ -39,7 +40,7 @@ const CatDownItem = ({ category, index, handleItemSelect, showDeleteModal, setSh
                     cursor: "pointer",
                     borderRadius: "9px",
                     background: "#F8F8F8",
-                    margin: ".1rem .6rem",
+                    // margin: ".1rem .6rem",
                     position: "relative",
                     width: "100%",
                     zIndex: 999 - index,
@@ -58,7 +59,7 @@ const CatDownItem = ({ category, index, handleItemSelect, showDeleteModal, setSh
                         checked={checked}
                         onChange={handleCheckboxChange}
                     />
-                    <span style={{ fontWeight: 700 }}>{category?.name}</span>
+                    <span style={{ fontWeight: 700 }}>{t(category?.name)}</span>
                 </div>
                 {
                     category?.type?.toLowerCase() !== "admin"

@@ -161,7 +161,7 @@ const HomeNewUpdated = () => {
                             <div className={styles.card}>
                                 <div className={styles.top}>
                                     <div className={styles.greet}>
-                                        <h5>{t("Good Evening!")}</h5>
+                                        <h5>{t("Good Evening")}</h5>
                                         <div style={{
                                             display: "flex", alignItems: "center", gap: window.innerWidth > 1650 ? "1rem" : ".6rem"
                                         }}>

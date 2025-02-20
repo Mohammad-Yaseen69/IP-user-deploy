@@ -71,7 +71,7 @@
 }
 
 .card.disabled_card::after {
-    content: "Insufficient Balance";
+    content: attr(data-content);
     position: absolute;
     border-radius: .25rem;
     background-color: rgb(255, 255, 255);
@@ -98,7 +98,7 @@
 }
 
 .card.blocked_card::after {
-    content: "Blocked Wallet";
+    content: attr(data-block-content);
     position: absolute;
     border-radius: .25rem;
     background-color: rgb(255, 255, 255);

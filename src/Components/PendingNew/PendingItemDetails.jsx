@@ -14,6 +14,13 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
     const { t } = useTranslation()
     const [showReviewModal, setShowReviewModal] = useState(false)
     const [showImgPreview, setShowImgPreview] = useState(false)
+
+    function capitalizeStatus(str) {
+        return str.toLowerCase() === "bargain-accepted" ? "Bargain-Accepted" : str
+            .split(" ")
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(" ");
+    }
     return (
         <div className={styles.container}>
             <div className={styles.left}>
@@ -23,7 +30,7 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
                             {t("Total Amount")}
                         </span>
                         <div className={styles.badge} style={{ background: badgeColor }}>
-                            {t(item?.status?.toUpperCase())}
+                            {t(capitalizeStatus(item?.status))}
                         </div>
                     </div>
                     <h5>
@@ -32,12 +39,12 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
                 </div>
                 <div className={styles.over_all}>
                     <div className={styles.oac_left}>
-                        <span>Overall Ratings</span>
+                        <span>{t("Overall Ratings")}</span>
                         <h4>{allRating}/5</h4>
                     </div>
                     <div className={styles.oac_right}>
                         <Rating initialRating={allRating.toFixed(1)} emptySymbol="fa fa-star-o fa-2x" fullSymbol="fa fa-star fa-2x" readonly className={styles.rating} />
-                        <span className={styles.rating_count}>{allReviews.length} ratings</span>
+                        <span className={styles.rating_count}>{allReviews.length} {t("ratings")}</span>
                     </div>
                 </div>
 
@@ -170,21 +177,21 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
                             <span>{
                                 item?.buyer_comment
                                     ?
-                                    "You left a review"
+                                    t("You Left A Review")
                                     :
                                     item?.seller_reply
                                         ?
-                                        "Seller left a reply"
+                                        t("Seller Left A reply")
                                         :
-                                        "How was your experience?"
+                                        t("How Was Your Experience?")
                             }: </span>
                             <Button onClick={() => setShowReviewModal(!showReviewModal)}>
                                 {
                                     item?.buyer_comment || item?.seller_reply
                                         ?
-                                        "Check Now"
+                                        t("Check Now")
                                         :
-                                        "Leave a review"
+                                        t("Leave A Review")
                                 }
                             </Button>
                             <ReviewModal isOpen={showReviewModal} toggle={() => setShowReviewModal(!showReviewModal)} item={item} type="Received" />

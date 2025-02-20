@@ -7,25 +7,27 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { publicRoutes } from "../RouteNew/Routes";
 import questionsData from "../Components/Settings/questions.json"
+import Modal from "../Components/SessionExpireModal" 
 
 axios.defaults.timeout = 10000;
 axios.defaults.timeoutErrorMessage = "Server Timeout."
 
-axios.interceptors.response.use(
-    response => {
-        return response
-    },
-    error => {
-        if (error.message === "Server Timeout." && error?.config?.url?.toLowerCase()?.includes("fontawesomev23")) {
-            toast.error("Request timed out. Please try again!");
-        }
-        const message = decryptData(error.response.data.data)
-        if (error.response.status === 401 && message.message === "Unauthorize to access this route.") {
-            window.history.replaceState(null, null, `?show_logout_modal=unauthorized`)
-        }
-        return Promise.reject(error);
-    }
-);
+// axios.interceptors.response.use(
+//     response => {
+//         return response
+//     },
+//     error => {
+//         if (error.message === "Server Timeout." && error?.config?.url?.toLowerCase()?.includes("fontawesomev23")) {
+//             toast.error("Request timed out. Please try again!");
+//         }
+//         const message = decryptData(error.response.data.data)
+//         if (error.response.status === 401 && message.message === "Unauthorize to access this route.") {
+//             window.history.replaceState(null, null, `?show_logout_modal=unauthorized`)
+//             showLogoutModal = true
+//         }
+//         return Promise.reject(error);
+//     }
+// );
 
 export const UserContext = createContext(null)
 
@@ -87,12 +89,33 @@ const UserState = ({ children }) => {
     const [profileCompleted, setProfileCompleted] = useState(null)
     const [profileCompletedPercentage, setProfileCompletedPercentage] = useState(0)
     const [profileIncompleteReason, setProfileIncompleteReason] = useState("")
+    const [showModalState, setShowModalState] = useState(false)
     const navigate = useNavigate()
 
     const authHeader = {
         "Authorization": `Bearer ${token}`,
         "source": "user"
     }
+
+    useEffect(() => {
+        const interceptor = axios.interceptors.response.use(
+            (response) => response,
+            (error) => {
+                if (
+                    error.response?.status === 401 &&
+                    decryptData(error.response.data.data).message === "Unauthorize to access this route."
+                ) {
+                    window.history.replaceState(null, null, `?show_logout_modal=unauthorized`);
+                    setShowModalState(true);
+                }
+                return Promise.reject(error);
+            }
+        );
+
+        return () => {
+            axios.interceptors.response.eject(interceptor);
+        };
+    }, []);
 
     const [profileLockTIme, setProfileLockTime] = useState(0)
     useEffect(() => {
@@ -490,7 +513,8 @@ const UserState = ({ children }) => {
 
     return (
         <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, setRefresh, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, setPage, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, setUserRefresh, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, setWalletRefresh, allowedCountries, userPortfolio, setPortfolioRef, profileIncompleteReason, setUserPortfolio, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, clearData }}>
-            {children}
+              {showModalState && <Modal isOpen={showModalState}  toggle={() => window.history.replaceState(null, null, "")} />}
+              {children}
         </UserContext.Provider>
     )
 }

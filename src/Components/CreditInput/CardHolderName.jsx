@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import styles from "./styles/card_cvc.module.css"
 
 const CardHolderName = ({ content, setContent }) => {
@@ -7,6 +8,7 @@ const CardHolderName = ({ content, setContent }) => {
         setContent(filteredValue);
     };
 
+    const {t} = useTranslation()
     return (
         <div className={styles.main}>
             <input
@@ -16,7 +18,7 @@ const CardHolderName = ({ content, setContent }) => {
             />
             {
                 content.length < 1 &&
-                <span className={styles.placeholder}>Card Holder Name</span>
+                <span className={styles.placeholder}>{t("Card Holder Name")}</span>
             }
         </div>
     );

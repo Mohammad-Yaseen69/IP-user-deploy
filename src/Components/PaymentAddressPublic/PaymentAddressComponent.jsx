@@ -326,7 +326,7 @@ const PaymentAddressComponent = ({ userDetails }) => {
                                                     {/* <p>{currency}</p> */}
                                                 </div>
                                                 <div className={vpa_styles.amount}>
-                                                    <label >Enter The Amount</label>
+                                                    <label >{t("Enter The Amount")}</label>
                                                     <div>
                                                         <span>{currentWallet?.currency?.code} </span>
                                                         {/* <Input value={amount} onChange={e => e.target.value < 0 ? console.log("") : setAmount(e.target.value)} placeholder='10.00' type='number' /> */}

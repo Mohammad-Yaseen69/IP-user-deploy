@@ -248,7 +248,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
             const dec = decryptData(res.data.data)
             console.log(dec)
             dataHandler("exchange_rate", {
-                fee: { amount: dec?.data?.fee },
+                fee: { amount: dec?.data?.fee, paymentAddressFee: dec?.data?.paymentAddressFee },
                 sending: { currency: wallet?.currency?.code, amount: amount },
                 receiver: { currency: wallet?.currency?.code, amount: dec?.data?.recipient_amount },
                 total: dec?.data?.total_amount,
@@ -276,7 +276,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
             const dec = decryptData(res.data.data)
             console.log(dec)
             dataHandler("exchange_rate", {
-                fee: { amount: dec?.feeDetails },
+                fee: { amount: dec?.feeDetails, paymentAddressFee: dec?.paymentAddressFee },
                 sending: { currency: wallet?.currency?.code, amount: amount },
                 receiver: { currency: wallet?.currency?.code, amount: dec?.recipient_amount },
                 total: dec?.total,
@@ -322,6 +322,8 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
             getPayouts()
         }
     }, [user])
+
+    console.log(data.exchange_rate?.fee?.paymentAddressFee)
 
 
     return (
@@ -453,11 +455,11 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                                 <>
                                                     <FeesComponent
                                                         data={data}
-                                                        receiverLabel={"They will get"}
+                                                        receiverLabel={`They will get  ${data?.exchange_rate?.fee?.paymentAddressFee ? `(after a ${Number(data?.exchange_rate?.fee?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 }) ?? "0.00"} ${data.exchange_rate?.sending?.currency} receiver fee deduction)` :""}`}
                                                         error={data.exchange_rate_error}
                                                         feesLabel="Fees"
                                                         sendingLabel="Sending"
-                                                        totalLabel="Amount to pay"
+                                                        totalLabel="Amount To Pay"
                                                         bright={true}
                                                         extraContent={
                                                             data.payment_type?.value === "card" && data.step > 3
@@ -772,7 +774,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                                     error={data.exchange_rate_error}
                                                     feesLabel="Fees"
                                                     sendingLabel="Sending"
-                                                    totalLabel="Amount to pay"
+                                                    totalLabel="Amount To Pay"
                                                     bright={true}
                                                     extraContent={
                                                         data.payment_type?.value === "card" && data.step > 3

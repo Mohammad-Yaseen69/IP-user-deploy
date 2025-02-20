@@ -376,7 +376,7 @@ const PaymentsFlow = ({ item }) => {
                 <div className={styles.bottom}>
                     <Link to={"https://insta-pay.ch/faqs"}>
                         <HelpCircle size={20} />
-                        <span>{t("Trouble Sending money?")}</span>
+                        <span>{t("Trouble Sending Money?")}</span>
                     </Link>
 
                     <button>

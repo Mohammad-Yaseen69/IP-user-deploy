@@ -81,6 +81,10 @@
     border-radius: 8px;
 }
 
+.otp{
+    min-height: 450px !important;
+}
+
 .form_details .left,
 .otp .left {
     padding: 24px;
@@ -389,13 +393,14 @@
 }
 
 .otp {
-    margin-top: -200px;
+    margin-top: -300px;
 }
 
 .toggle_sms {
     margin-top: 24px;
     display: flex;
     gap: 1rem;
+    flex-direction: column;
     align-items: center;
 }
 
@@ -446,6 +451,27 @@
     display: none !important;
 }
 
+.otp_methods{
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px !important;
+    flex-direction: column;
+}
+
+.otpMethodButton{
+    display: flex !important;
+    align-items: center !important;
+    text-decoration-line: none !important;
+    gap: 8px !important;
+    border: 1px solid rgba(0, 0, 0, 0.216);
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px, rgba(0, 0, 0, 0.07) 0px 8px 8px, rgba(0, 0, 0, 0.07) 0px 16px 16px !important;
+}
+
+
+.otp_inputs button img{
+    width: 20px !important;
+}
+
 @keyframes horizontal-shaking {
     0% { transform: translateX(0); }
     25% { transform: translateX(5px); }
@@ -454,6 +480,30 @@
     100% { transform: translateX(0); }
   }
 
+.biometric_section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0;
+}
+
+.biometric_button {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.biometric_button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
 
 @media screen and (max-width: 1700px) {
     .man {
@@ -684,5 +734,11 @@
 
     .otp .center_bottom {
         margin-top: 3.5rem;
+    }
+}
+
+@media screen and (max-width: 600px){
+    .otp_methods{
+        flex-direction: column;
     }
 }

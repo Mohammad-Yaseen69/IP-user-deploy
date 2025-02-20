@@ -250,7 +250,8 @@ const Layout = ({ children, classNames, ...rest }) => {
                 <ProfileCompletionModal setShowModal={setShowModal} profileIncompleteReason={profileIncompleteReason} />
               }
               <div style={{
-                pointerEvents: userDetails && (is30Days || showModal) ? "none" : "all"
+                pointerEvents: userDetails && (is30Days || showModal) ? "none" : "all",
+                paddingBottom: location.pathname.includes("pin") && 0
               }} className={styles.mobile_layout}>
                 <Loader />
                 <MobileSidebar setShowModal={setShowModal} />

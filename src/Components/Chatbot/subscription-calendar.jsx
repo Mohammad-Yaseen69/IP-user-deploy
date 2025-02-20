@@ -141,6 +141,14 @@ export default function SubscriptionCalendar() {
     }
   }, [defaul, timezones])
 
+
+  const handleTimezoneFilter = (options, { inputValue }) => {
+    const normalizedInput = inputValue.replace(/^(\+)([1-9])$/, '$10$2') // Remove leading zeros
+    return options.filter(option =>
+      option.toLowerCase().includes(normalizedInput.toLowerCase())
+    );
+  };
+
   const isDateValid = selectedDate.isAfter(dayjs(), "day") || selectedDate.isSame(dayjs(), "day");
   return (
     <div
@@ -201,17 +209,17 @@ export default function SubscriptionCalendar() {
                   disablePortal
                   options={["System Default", ...timezones?.map(option => `${option.name} - ${option.timezone}`)]}
                   getOptionLabel={(option) => option}
-                  value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone }
+                  value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone}
                   onChange={(e, newValue) => {
                     setSelectedTimezone(newValue);
                   }}
-
+                  filterOptions={handleTimezoneFilter}
                   isOptionEqualToValue={(option, value) => option === value}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       variant="outlined"
-                      value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone }
+                      value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone}
                     />
                   )}
                 />

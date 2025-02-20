@@ -171,7 +171,7 @@ const SubscriptionCalendar = () => {
   const isFormValid = isDateValid && isTimeValid;
 
   const handleTimezoneFilter = (options, { inputValue }) => {
-    const normalizedInput = inputValue.replace(/^0+/, ''); // Remove leading zeros
+    const normalizedInput = inputValue.replace(/^(\+)([1-9])$/, '$10$2') // Remove leading zeros
     return options.filter(option =>
       option.toLowerCase().includes(normalizedInput.toLowerCase())
     );

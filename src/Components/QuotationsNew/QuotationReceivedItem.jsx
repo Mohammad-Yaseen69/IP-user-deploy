@@ -159,7 +159,7 @@ const QuotationReceivedItem = ({ item, activeItem, setActiveItem, index }) => {
                             }} />
                         </div>
                         :
-                        <div>No Actions</div>
+                        <div>{t("No Actions")}</div>
                 }
                 <div style={{ maxWidth: "15px" }}>{
                     activeItem === index + 1

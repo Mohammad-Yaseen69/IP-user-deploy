@@ -128,7 +128,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
                 <div className={styles.top_right}>
                     <div className={styles.inp_con}>
                         <Label>{t("Full Name")}</Label>
-                        <Input placeholder={`Nominee's full name`} value={fullName} disabled={!isEditMode} readOnly={!isEditMode} onChange={e => setFullName(e.target.value)} />
+                        <Input placeholder={t(`Nominee's Full Name`)} value={fullName} disabled={!isEditMode} readOnly={!isEditMode} onChange={e => setFullName(e.target.value)} />
                     </div>
                     <div className={styles.mul_inp}>
                         <div className={styles.inp_con}>
@@ -138,9 +138,9 @@ const NomineeDetails = ({ nominee, setNominee }) => {
                         <div className={styles.inp_con}>
                             <Label>{t("Gender")}</Label>
                             <Input type='select' value={gender} disabled={!isEditMode} readOnly={!isEditMode} onChange={e => setGender(e.target.value)}>
-                                <option value="" disabled>{t("--Select-Gender--")}</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
+                                <option value="" disabled>--{t("Select Gender")}--</option>
+                                <option value="male">{t("Male")}</option>
+                                <option value="female">{t("Female")}</option>
                             </Input>
                         </div>
                     </div>
@@ -150,11 +150,11 @@ const NomineeDetails = ({ nominee, setNominee }) => {
                 <div className={styles.inp_con}>
                     <Label>{t("Relation with Nominee")}</Label>
                     <Input type='select' value={relationship} disabled={!isEditMode} readOnly={!isEditMode} onChange={e => setRelationship(e.target.value)}>
-                        <option value="" disabled>{t("--Select-Relation--")}</option>
-                        <option value="brother">Brother</option>
-                        <option value="sister">Sister</option>
-                        <option value="son">Son</option>
-                        <option value="daughter">Daughter</option>
+                        <option value="" disabled>--{t("Select Relation")}--</option>
+                        <option value="brother">{t("Brother")}</option>
+                        <option value="sister">{t("Sister")}</option>
+                        <option value="son">{t("Son")}</option>
+                        <option value="daughter">{t("Daughter")}</option>
                     </Input>
                 </div>
                 <div className={styles.inp_con}>

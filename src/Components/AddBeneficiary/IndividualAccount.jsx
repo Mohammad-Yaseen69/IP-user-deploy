@@ -177,6 +177,8 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
     const [loading, setLoading] = useState(false)
     const [isAddressRequired, setIsAddressRequired] = useState(true)
 
+    const [mobileError, setMobileError] = useState("")
+
     const handleInputChange = (index, value) => {
         const newOTPValues = [...instapayWallets];
         newOTPValues[index] = value;
@@ -377,7 +379,10 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
     //     }))
     // }, [mobileNumber])
 
+
+
     const addBeneficiaryHandler = (e) => {
+        setMobileError("")
         e.preventDefault()
         const account_types = [
             services.some(item => item?.name?.toLowerCase()?.includes("bank")) && completedBank ? "bank" : null,
@@ -472,26 +477,35 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         const encrypted = encryptData(data)
         // console.log(encrypted)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/add-beneficiary`, {
-            data: encrypted
-        }, {
-            headers: authHeader
-        })
-            .then(res => {
-                const decrypted = decryptData(res.data.data)
-                // console.log(decrypted)
-                toggleSuccess()
+        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
+            data: encryptData({ number: `+${mobileNumber}` })
+        }).then(() => {
+            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/add-beneficiary`, {
+                data: encrypted
+            }, {
+                headers: authHeader
             })
-            .catch(err => {
-                const dec = decryptData(err.response.data.data)
-                if (dec?.message === "Unauthorize to access this route") {
-                    const coun = localStorage.getItem("ip_country")
-                    localStorage.clear()
-                    localStorage.setItem("ip_country", coun)
-                    window.location.pathname = "/auth/login";
-                }
-                // console.log(decryptData(err.response.data.data))
-            })
+                .then(res => {
+                    const decrypted = decryptData(res.data.data)
+                    toggleSuccess()
+                })
+                .catch(err => {
+                    const dec = decryptData(err.response.data.data)
+                    if (dec?.message === "Unauthorize to access this route") {
+                        const coun = localStorage.getItem("ip_country")
+                        localStorage.clear()
+                        localStorage.setItem("ip_country", coun)
+                        window.location.pathname = "/auth/login";
+                    }
+                    // console.log(decryptData(err.response.data.data))
+                })
+        }).catch(err => {
+            const dec = decryptData(err.response.data.data)
+            setMobileError("Incorrect phone number, please enter a valid number.")
+            console.log(dec)
+        }) 
+
+
     }
 
     const inputChangeHandler = (e) => {
@@ -802,6 +816,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
     // const coutry filtering
     const [selectedCountryDetails, setSelectedCountryDetails] = useState(null)
 
+
     useEffect(() => {
         if (countryId) {
             const getChannels = async () => {
@@ -993,19 +1008,19 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                 }}>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                         <Label className="col-form-label" htmlFor="first-name">{t("First Name")} <span className="req_star">*</span></Label>
-                                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} id="first-name" type="text" placeholder='First name' required pattern="[A-Za-z]+" title="(A to Z | a to z)" value={firstName} onChange={e => setFirstName(e.target.value)} />
+                                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} id="first-name" type="text" placeholder={t("First Name")} required pattern="[A-Za-z]+" title="(A to Z | a to z)" value={firstName} onChange={e => setFirstName(e.target.value)} />
                                     </FormGroup>
                                     {
                                         fieldInfoValidate("required_receiving_entity_fields", "middlename")
                                         &&
                                         <FormGroup style={{ flex: 1, margin: 0 }}>
                                             <Label className="col-form-label" htmlFor="middlename">{t("Middle Name")} <span className="req_star">*</span></Label>
-                                            <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="middlename" id="middlename" type="text" placeholder='Middle Name' value={basicExtras.middlename} onChange={handleBasicExtraChange} />
+                                            <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="middlename" id="middlename" type="text" placeholder={t('Middle Name')} value={basicExtras.middlename} onChange={handleBasicExtraChange} />
                                         </FormGroup>
                                     }
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                         <Label className="col-form-label" htmlFor="last-name">{t("Last Name")} <span className="req_star">*</span></Label>
-                                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} id="last-name" type="text" placeholder='Last name' required pattern="[A-Za-z]+" title="(A to Z | a to z)" value={lastName} onChange={e => setLastName(e.target.value)} />
+                                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} id="last-name" type="text" placeholder={t('Last Name')} required pattern="[A-Za-z]+" title="(A to Z | a to z)" value={lastName} onChange={e => setLastName(e.target.value)} />
                                     </FormGroup>
                                 </div>
                             </FormGroup>
@@ -1113,7 +1128,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                     border: "1px solid red"
                                                 }}
                                             >
-                                                {t("Select country first")}
+                                                {t("Select Country First")}
                                             </div>
                                         }
                                     </FormGroup>
@@ -1131,7 +1146,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                         }))}
                                     >
                                         <Label className="col-form-label" htmlFor="postal_code">{t("Postal Code")}</Label>
-                                        <Input disabled={!country} readOnly={!country} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="postal_code" id="postal_code" type="text" placeholder='Postal Code' value={formData.postal_code} onChange={e => {
+                                        <Input disabled={!country} readOnly={!country} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="postal_code" id="postal_code" type="text" placeholder={t('Postal Code')} value={formData.postal_code} onChange={e => {
                                             const value = e.target.value.replace(/[^a-zA-Z0-9]/g, '')
                                             inputChangeHandler({ target: { name: e.target.name, value } })
                                         }} />
@@ -1175,7 +1190,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                 }))}
                             >
                                 <Label className="col-form-label" htmlFor="address">{t("Address Line")} {isAddressRequired && <span className="req_star">*</span>}</Label>
-                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="address" id="address" type="textarea" placeholder='Address line' disabled={!country} readOnly={!country} value={formData.address} onChange={inputChangeHandler} onFocus={() => setAddressInFocus(true)} onBlur={() => {
+                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="address" id="address" type="textarea" placeholder={t('Address Line')} disabled={!country} readOnly={!country} value={formData.address} onChange={inputChangeHandler} onFocus={() => setAddressInFocus(true)} onBlur={() => {
                                     setTimeout(() => {
                                         setAddressInFocus(false)
                                     }, 100)
@@ -1252,7 +1267,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                 }}>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                         <Label className="col-form-label" htmlFor="email">{t("Email Address")}</Label>
-                                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} id="email" name="email" type="email" placeholder='Email Address' title="abc@xyz.com" value={formData.email} onChange={inputChangeHandler} />
+                                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} id="email" name="email" type="email" placeholder={t('Email Address')} title="abc@xyz.com" value={formData.email} onChange={inputChangeHandler} />
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0, transform: "translateY(-4px)" }}>
                                         <Label className="col-form-label" htmlFor="mobile_number">{t("Mobile Number")} <span className="req_star">*</span></Label>
@@ -1266,6 +1281,8 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                             disabled={!country}
                                             setCountry={() => { }}
                                             phone={mobileNumber}
+                                            setError={setMobileError}
+                                            error={mobileError}
                                         />
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
@@ -1298,10 +1315,10 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                             <FormGroup FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                 <Label className="col-form-label">{t(service_name_formatter(item))}</Label>
                                                 <Input type="select" className="form-control" style={{ flex: 1, minWidth: "250px" }} value={additionFields[item]} name={item} onChange={handleAddtionalFieldChange}>
-                                                    <option value="">--Select-Gender--</option>
+                                                    <option value="">--{t("Select Gender")}--</option>
                                                     {
                                                         Object.keys(gendersData).map(item => (
-                                                            <option value={item}>{item}</option>
+                                                            <option value={item}>{t(item)}</option>
                                                         ))
                                                     }
                                                 </Input>
@@ -1337,10 +1354,10 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                     <FormGroup FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                         <Label className="col-form-label">{t(service_name_formatter(item))}</Label>
                                                         <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} type="select" value={additionFields[item]} name={item} onChange={handleAddtionalFieldChange}>
-                                                            <option value="">--Select-Occupation--</option>
+                                                            <option value="">--{t("Select Occupation")}--</option>
                                                             {
                                                                 Object.keys(occupations).map(item => (
-                                                                    <option value={item}>{item}</option>
+                                                                    <option value={item}>{t(item)}</option>
                                                                 ))
                                                             }
                                                         </Input>
@@ -1357,14 +1374,14 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                     <option value="">{t("Select Document")}</option>
                                                     {
                                                         Object.keys(idTypeData).map(item => (
-                                                            <option key={item} value={item}>{idTypeData?.[item]}</option>
+                                                            <option key={item} value={item}>{t(idTypeData?.[item])}</option>
                                                         ))
                                                     }
                                                 </Input>
                                             </FormGroup>
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <Label className="col-form-label" htmlFor="id_number">{t("ID Number")}</Label>
-                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="id_number" id="id_number" type="text" placeholder='ID Number' value={basicExtras.id_number} onChange={handleBasicExtraChange} />
+                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="id_number" id="id_number" type="text" placeholder={t('ID Number')} value={basicExtras.id_number} onChange={handleBasicExtraChange} />
                                             </FormGroup>
                                         </>
                                         : ""
@@ -1917,9 +1934,9 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                         <FormGroup style={{ flex: 1, margin: 0 }}>
                                             <Label className="col-form-label" htmlFor="card-holder-name">{t("Crypto Currency")} <span className="req_star">*</span></Label>
                                             <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} type="select" value={formData.crypto_currency} onChange={inputChangeHandler} name="crypto_currency">
-                                                <option value="Bitcoin">Bitcoin</option>
-                                                <option value="Ethereum">Ethereum</option>
-                                                <option value="Other">Other</option>
+                                                <option value="Bitcoin">{t("Bitcoin")}</option>
+                                                <option value="Ethereum">{t("Ethereum")}</option>
+                                                <option value="Other">{t("Other")}</option>
                                             </Input>
                                         </FormGroup>
                                         <FormGroup style={{ flex: 1, margin: 0 }}>

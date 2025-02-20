@@ -12,7 +12,7 @@ const PaymentType = ({ setSubStep, paymentMethod, setPaymentMethod, setNotInstan
     const { t } = useTranslation()
     const data = [
         {
-            name: t("Instant Payment"),
+            name: t("instant payment"),
             icon: instant,
             value: "instant"
         },

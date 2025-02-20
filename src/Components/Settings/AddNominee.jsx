@@ -86,7 +86,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                 <div className={styles.top_right}>
                     <div className={styles.inp_con}>
                         <Label>{t("Name")}</Label>
-                        <Input placeholder={`Nominee's full name`} value={fullName} onChange={e => setFullName(e.target.value)} />
+                        <Input placeholder={t(`Nominee's Full Name`)} value={fullName} onChange={e => setFullName(e.target.value)} />
                     </div>
                     <div className={styles.mul_inp}>
                         <div className={styles.inp_con}>
@@ -96,9 +96,9 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                         <div className={styles.inp_con}>
                             <Label>{t("Gender")}</Label>
                             <Input type='select' value={gender} onChange={e => setGender(e.target.value)}>
-                                <option value="" disabled>--Select-Gender--</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
+                                <option value="" disabled>--{t("Select Gender")}--</option>
+                                <option value="male">{t("Male")}</option>
+                                <option value="female">{t("Female")}</option>
                             </Input>
                         </div>
                     </div>
@@ -108,11 +108,11 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                 <div className={styles.inp_con}>
                     <Label>{t("Relationship with Nominee")}</Label>
                     <Input type='select' value={relationship} onChange={e => setRelationship(e.target.value)}>
-                        <option value="" disabled>--Select-Relation--</option>
-                        <option value="brother">Brother</option>
-                        <option value="sister">Sister</option>
-                        <option value="son">Son</option>
-                        <option value="daughter">Daughter</option>
+                        <option value="" disabled>--{t("Select Relation")}--</option>
+                        <option value="brother">{t("Brother")}</option>
+                        <option value="sister">{t("Sister")}</option>
+                        <option value="son">{t("Son")}</option>
+                        <option value="daughter">{t("Daughter")}</option>
                     </Input>
                 </div>
                 <div className={styles.inp_con}>
@@ -139,7 +139,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
             </div>
             <div className={styles.inp_con}>
                 <Label>{t("Nominee Address")}</Label>
-                <Input type='textarea' placeholder='Nominee Permanent Address' value={address} onChange={e => setAddress(e.target.value)} />
+                <Input type='textarea' placeholder={t('Nominee Permanent Address')} value={address} onChange={e => setAddress(e.target.value)} />
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "1.5rem" }}>
                 <Button

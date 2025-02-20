@@ -1,9 +1,14 @@
 import { useRef } from "react"
 import styles from "../styles/ActionCard.module.scss"
+import { useTranslation } from "react-i18next"
 
 const ActionCard = (props) => {
     const { bg, title, icon, desc, setter, setterValue, setStep, disabled = false } = props
+    const {language} = useTranslation().i18n
     const itemRef = useRef(null)
+
+
+    console.log(language)
     return (
         <div className={styles.wrapper} style={{ pointerEvents: disabled ? "none" : "all" }}>
             <div ref={itemRef} className={styles.container} onClick={() => {
@@ -14,7 +19,7 @@ const ActionCard = (props) => {
                 <div className={styles.item_dets}>
                     <div>
                         <img src={icon} alt={title} />
-                        <h5 style={{ height: "48px" }}>{title}</h5>
+                        <h5 style={{ height: "48px", fontSize: (language === "de" || language === "fr" || language === "pt" || language === "ru") && "20px" }}>{title}       </h5>
                     </div>
                     <p>{desc}</p>
                 </div>

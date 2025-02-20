@@ -32,6 +32,9 @@ import MobileWalletServices from "./MobileWalletServices"
 import { createJwtToken, createShambeToken } from "../../../Helper/CreateToken"
 import NotFoundModal from "../../NotFound/NotFoundModal"
 import errors from "../../AddFunds/TrustPaymentErrors.json"
+import AddBeneficiaryRequiredFields from "../../AddBeneficiaryRequiredFields"
+import { Modal, ModalBody, Button } from "reactstrap"
+import { update } from "lodash"
 
 const leftSideContent = [
     "Enter The Amount",
@@ -86,8 +89,54 @@ const initialState = {
     mobile_wallet_channel: {},
     mobile_wallet_service: {},
     ex_extra_error: "",
-    conversion_in: ""
+    conversion_in: "",
+    payerRequiredFields: {}
 }
+
+const beneficiaryRequiredFields = [
+    "lastname2",
+    "middlename",
+    "nativename",
+    "nationality_country_iso_code",
+    "date_of_birth",
+    "country_of_birth_iso_code",
+    "gender",
+    "address",
+    "postal_code",
+    "country_iso_code",
+    "msisdn",
+    "email",
+    "id_type",
+    "id_country_iso_code",
+    "id_number",
+    "id_delivery_date",
+    "id_expiration_date",
+    "occupation",
+    "bank_account_holder_name",
+    "province_state"
+];
+
+const vendorsRequiredFields = [
+    "msisdn",
+    "bank_account_number",
+    "iban",
+    "clabe",
+    "cbu",
+    "cbu_alias",
+    "swift_bic_code",
+    "bik_code",
+    "ifs_code",
+    "sort_code",
+    "aba_routing_number",
+    "bsb_number",
+    "branch_number",
+    "routing_code",
+    "entity_tt_id",
+    "account_type",
+    "account_number",
+    "email",
+    "card_number"
+];
 
 function reducer(state, action) {
     switch (action.type) {
@@ -106,8 +155,30 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
     const { t } = useTranslation()
     const navigate = useNavigate()
     const { userDetails, authHeader, setProfileLockTime, userWallets } = useContext(UserContext)
-    const [subStep, setSubStep] = useState(1)
+    const [subStep, setSubStep] = useState(0)
     const [internationalData, dispatch] = useReducer(reducer, initialState);
+    const [showDetailsModal, setShowDetailsModal] = useState(false)
+    const [requiredMissingFields, setRequiredMissingFields] = useState({
+        beneficiary: {
+            basic: [],
+            extras: []
+        },
+        vendors: {
+            vendorType: "",
+            fields: []
+        }
+    })
+
+    const [showRequiredFieldsModal, setShowRequiredFieldsModal] = useState(false)
+    const [requiredFields, setRequiredFields] = useState({
+        basic: [],
+        extras: []
+    })
+
+    const handleRequiredFields = (fields) => {
+        setRequiredFields(fields)
+        setShowRequiredFieldsModal(true)
+    }
 
     const updateInternationalData = (field, value) => {
         dispatch({ type: "UPDATE_FIELD", field, value });
@@ -159,6 +230,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             })
             const dec = await decryptData(res.data.data)
             updateInternationalData("recipient_currency", dec?.data?.destination_currency)
+            updateInternationalData("payerRequiredFields", dec?.data?.payer_required_fields)
             return dec?.data?.destination_currency
         } catch (error) {
             const dec = decryptData(error.response.data.data)
@@ -167,110 +239,112 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
     }
 
     const getConversionRate = async (amount = internationalData.amount, setLimitType, wallet_id = "", currency_code = "", avoid_balance = true, setLoading, fromOrTo = "from") => {
-        setLoading(true)
-        const destinationCurrency = await getCurrency()
-        try {
-            const service_name = internationalData?.payoutChannel?.value === "bank" ? "international_bank_transfer" : internationalData?.payoutChannel?.value === "mobile" ? "international_mobile_wallet" : internationalData?.payoutChannel?.value === "card" ? "international_card_payment" : internationalData?.payoutChannel?.value === "cash" ? "international_cash_pickup" : ""
-
-            const url = `${process.env.REACT_APP_IP_DEV_API}/api/thunes/get-markup-conversion-rates?from=${internationalData.currency_wallet?.currency?.code}&to=${destinationCurrency}&amount=${+String(amount)?.replaceAll(",", "")}&fromOrTo=${fromOrTo}&service_name=${service_name}&account_id=${userDetails?._id}&payer_id=${internationalData.payer?.id}&service_id=${internationalData.payoutChannel?.id}`
-
-            const res = await axios.get(url, { headers: authHeader })
-
-            const decrypted = decryptData(res.data.data)
-            const exchange_rate_details = {
-                exchange_rate: decrypted?.data?.exchangeRate,
-                receiver: { currency: destinationCurrency, amount: decrypted?.data?.recipientAmount },
-                fee: { amount: decrypted?.data?.result?.fee?.value },
-                total: decrypted?.data?.result?.total?.value,
-                limits_used: {
-                    daily_receiving_limit_used: decrypted?.data?.limits?.daily_receiving_limit - decrypted?.data?.limits_used?.daily_receiving_limit_used,
-                    daily_sending_limit_used: decrypted?.data?.limits?.daily_sending_limit - decrypted?.data?.limits_used?.daily_sending_limit_used,
-                    monthly_receiving_limit_used: decrypted?.data?.limits?.monthly_receiving_limit - decrypted?.data?.limits_used?.monthly_receiving_limit_used,
-                    monthly_sending_limit_used: decrypted?.data?.limits?.monthly_sending_limit - decrypted?.data?.limits_used?.monthly_sending_limit_used,
-                    yearly_receiving_limit_used: decrypted?.data?.limits?.yearly_receiving_limit - decrypted?.data?.limits_used?.yearly_receiving_limit_used,
-                    yearly_sending_limit_used: decrypted?.data?.limits?.yearly_sending_limit - decrypted?.data?.limits_used?.yearly_sending_limit_used,
-                },
-                limits: {
-                    daily_receiving_limit: { limits_used: decrypted?.data?.limits_used?.daily_receiving_limit_used, total_limits: decrypted?.data?.limits?.daily_receiving_limit },
-                    daily_sending_limit: { limits_used: decrypted?.data?.limits_used?.daily_sending_limit_used, total_limits: decrypted?.data?.limits?.daily_sending_limit },
-                    monthly_receiving_limit: { limits_used: decrypted?.data?.limits_used?.monthly_receiving_limit_used, total_limits: decrypted?.data?.limits?.monthly_receiving_limit },
-                    monthly_sending_limit: { limits_used: decrypted?.data?.limits_used?.monthly_sending_limit_used, total_limits: decrypted?.data?.limits?.monthly_sending_limit },
-                    yearly_receiving_limit: { limits_used: decrypted?.data?.limits_used?.yearly_receiving_limit_used, total_limits: decrypted?.data?.limits?.yearly_receiving_limit },
-                    yearly_sending_limit: { limits_used: decrypted?.data?.limits_used?.yearly_sending_limit_used, total_limits: decrypted?.data?.limits?.yearly_sending_limit },
-                },
-                min_amount: decrypted?.data?.minimumValue,
-                max_amount: decrypted?.data?.maximumValue,
-                token: decrypted?.data?.token
-            }
-            updateInternationalData("exchange_rate", exchange_rate_details)
-            updateInternationalData("quotation_details", decrypted?.data)
-            if (fromOrTo === "from") {
-                updateInternationalData("receiving_amount", exchange_rate_details?.receiver?.amount)
-                updateInternationalData("conversion_in", destinationCurrency)
-            } else {
-                updateInternationalData("amount", exchange_rate_details?.receiver?.amount)
-                updateInternationalData("conversion_in", internationalData.currency_wallet?.currency?.code)
-            }
-
-            // if (+amount > exchange_rate_details?.limits_used?.daily_sending_limit_used) {
-            //     updateInternationalData("exchange_rate_error", "exceed send")
-            //     setLimitType("daily")
-            // }
-            // else if (+amount > exchange_rate_details?.limits_used?.monthly_sending_limit_used) {
-            //     updateInternationalData("exchange_rate_error", "exceed send")
-            //     setLimitType("monthly")
-            // }
-            // else if (+amount > exchange_rate_details?.limits_used?.yearly_sending_limit_used) {
-            //     updateInternationalData("exchange_rate_error", "exceed send")
-            //     setLimitType("yearly")
-            // }
-            // else {
-            //     if (amount <= exchange_rate_details?.fee?.amount) {
-            //         updateInternationalData("exchange_rate_error", "Invalid Amount Fee")
-            //     } else {
-            //         updateInternationalData("exchange_rate_error", "")
-            //     }
-            // }
-        }
-        catch (err) {
-            const dec = decryptData(err?.response.data.data)
-            if (fromOrTo === "from") {
-                updateInternationalData("receiving_amount", 0)
-                updateInternationalData("conversion_in", destinationCurrency)
-            } else {
-                updateInternationalData("amount", 0)
-                updateInternationalData("conversion_in", internationalData.currency_wallet?.currency?.code)
-            }
-
-            if (typeof dec?.message == "object") {
-                if (dec?.message?.[0]?.code === "1003007") {
-                    updateInternationalData("exchange_rate_error", "payer_unavailable")
+        if(internationalData.payer?.id && internationalData.payoutChannel?.id && amount){
+            setLoading(true)
+            const destinationCurrency = await getCurrency()
+            try {
+                const service_name = internationalData?.payoutChannel?.value === "bank" ? "international_bank_transfer" : internationalData?.payoutChannel?.value === "mobile" ? "international_mobile_wallet" : internationalData?.payoutChannel?.value === "card" ? "international_card_payment" : internationalData?.payoutChannel?.value === "cash" ? "international_cash_pickup" : ""
+    
+                const url = `${process.env.REACT_APP_IP_DEV_API}/api/thunes/get-markup-conversion-rates?from=${internationalData.currency_wallet?.currency?.code}&to=${destinationCurrency}&amount=${+String(amount)?.replaceAll(",", "")}&fromOrTo=${fromOrTo}&service_name=${service_name}&account_id=${userDetails?._id}&payer_id=${internationalData.payer?.id}&service_id=${internationalData.payoutChannel?.id}`
+    
+                const res = await axios.get(url, { headers: authHeader })
+    
+                const decrypted = decryptData(res.data.data)
+                const exchange_rate_details = {
+                    exchange_rate: decrypted?.data?.exchangeRate,
+                    receiver: { currency: destinationCurrency, amount: decrypted?.data?.recipientAmount },
+                    fee: { amount: decrypted?.data?.result?.fee?.value },
+                    total: decrypted?.data?.result?.total?.value,
+                    limits_used: {
+                        daily_receiving_limit_used: decrypted?.data?.limits?.daily_receiving_limit - decrypted?.data?.limits_used?.daily_receiving_limit_used,
+                        daily_sending_limit_used: decrypted?.data?.limits?.daily_sending_limit - decrypted?.data?.limits_used?.daily_sending_limit_used,
+                        monthly_receiving_limit_used: decrypted?.data?.limits?.monthly_receiving_limit - decrypted?.data?.limits_used?.monthly_receiving_limit_used,
+                        monthly_sending_limit_used: decrypted?.data?.limits?.monthly_sending_limit - decrypted?.data?.limits_used?.monthly_sending_limit_used,
+                        yearly_receiving_limit_used: decrypted?.data?.limits?.yearly_receiving_limit - decrypted?.data?.limits_used?.yearly_receiving_limit_used,
+                        yearly_sending_limit_used: decrypted?.data?.limits?.yearly_sending_limit - decrypted?.data?.limits_used?.yearly_sending_limit_used,
+                    },
+                    limits: {
+                        daily_receiving_limit: { limits_used: decrypted?.data?.limits_used?.daily_receiving_limit_used, total_limits: decrypted?.data?.limits?.daily_receiving_limit },
+                        daily_sending_limit: { limits_used: decrypted?.data?.limits_used?.daily_sending_limit_used, total_limits: decrypted?.data?.limits?.daily_sending_limit },
+                        monthly_receiving_limit: { limits_used: decrypted?.data?.limits_used?.monthly_receiving_limit_used, total_limits: decrypted?.data?.limits?.monthly_receiving_limit },
+                        monthly_sending_limit: { limits_used: decrypted?.data?.limits_used?.monthly_sending_limit_used, total_limits: decrypted?.data?.limits?.monthly_sending_limit },
+                        yearly_receiving_limit: { limits_used: decrypted?.data?.limits_used?.yearly_receiving_limit_used, total_limits: decrypted?.data?.limits?.yearly_receiving_limit },
+                        yearly_sending_limit: { limits_used: decrypted?.data?.limits_used?.yearly_sending_limit_used, total_limits: decrypted?.data?.limits?.yearly_sending_limit },
+                    },
+                    min_amount: decrypted?.data?.minimumValue,
+                    max_amount: decrypted?.data?.maximumValue,
+                    token: decrypted?.data?.token
+                }
+                updateInternationalData("exchange_rate", exchange_rate_details)
+                updateInternationalData("quotation_details", decrypted?.data)
+                if (fromOrTo === "from") {
+                    updateInternationalData("receiving_amount", exchange_rate_details?.receiver?.amount)
+                    updateInternationalData("conversion_in", destinationCurrency)
                 } else {
-                    updateInternationalData("exchange_rate_error", "sww")
+                    updateInternationalData("amount", exchange_rate_details?.receiver?.amount)
+                    updateInternationalData("conversion_in", internationalData.currency_wallet?.currency?.code)
                 }
-            } else {
-                const error = LimitsErrorMessage(dec?.code ?? dec?.message)
-                if (error) {
-                    updateInternationalData("exchange_rate_error", error)
+    
+                // if (+amount > exchange_rate_details?.limits_used?.daily_sending_limit_used) {
+                //     updateInternationalData("exchange_rate_error", "exceed send")
+                //     setLimitType("daily")
+                // }
+                // else if (+amount > exchange_rate_details?.limits_used?.monthly_sending_limit_used) {
+                //     updateInternationalData("exchange_rate_error", "exceed send")
+                //     setLimitType("monthly")
+                // }
+                // else if (+amount > exchange_rate_details?.limits_used?.yearly_sending_limit_used) {
+                //     updateInternationalData("exchange_rate_error", "exceed send")
+                //     setLimitType("yearly")
+                // }
+                // else {
+                //     if (amount <= exchange_rate_details?.fee?.amount) {
+                //         updateInternationalData("exchange_rate_error", "Invalid Amount Fee")
+                //     } else {
+                //         updateInternationalData("exchange_rate_error", "")
+                //     }
+                // }
+            }
+            catch (err) {
+                const dec = decryptData(err?.response.data.data)
+                if (fromOrTo === "from") {
+                    updateInternationalData("receiving_amount", 0)
+                    updateInternationalData("conversion_in", destinationCurrency)
+                } else {
+                    updateInternationalData("amount", 0)
+                    updateInternationalData("conversion_in", internationalData.currency_wallet?.currency?.code)
                 }
-                else if (dec?.message?.toLowerCase()?.includes("insufficient")) {
-                    updateInternationalData("exchange_rate_error", "insufficient balance payer")
-                }
-                else if (dec?.message?.toLowerCase()?.includes("above the max")) {
-                    updateInternationalData("exchange_rate_error", "max payer")
-                    updateInternationalData("exchange_rate_error_value", Number(dec?.value ?? 0)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
-                }
-                else if (dec?.message?.toLowerCase()?.includes("below the min")) {
-                    updateInternationalData("exchange_rate_error", "min payer")
-                    updateInternationalData("exchange_rate_error_value", Number(dec?.value ?? 0)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
-                }
-                else {
-                    updateInternationalData("exchange_rate_error", "sww")
+    
+                if (typeof dec?.message == "object") {
+                    if (dec?.message?.[0]?.code === "1003007") {
+                        updateInternationalData("exchange_rate_error", "payer_unavailable")
+                    } else {
+                        updateInternationalData("exchange_rate_error", "sww")
+                    }
+                } else {
+                    const error = LimitsErrorMessage(dec?.code ?? dec?.message)
+                    if (error) {
+                        updateInternationalData("exchange_rate_error", error)
+                    }
+                    else if (dec?.message?.toLowerCase()?.includes("insufficient")) {
+                        updateInternationalData("exchange_rate_error", "insufficient balance payer")
+                    }
+                    else if (dec?.message?.toLowerCase()?.includes("above the max")) {
+                        updateInternationalData("exchange_rate_error", "max payer")
+                        updateInternationalData("exchange_rate_error_value", Number(dec?.value ?? 0)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
+                    }
+                    else if (dec?.message?.toLowerCase()?.includes("below the min")) {
+                        updateInternationalData("exchange_rate_error", "min payer")
+                        updateInternationalData("exchange_rate_error_value", Number(dec?.value ?? 0)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
+                    }
+                    else {
+                        updateInternationalData("exchange_rate_error", "sww")
+                    }
                 }
             }
-        }
-        finally {
-            setLoading(false)
+            finally {
+                setLoading(false)
+            }
         }
     }
 
@@ -401,7 +475,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
-            console.log(dec)
             updateInternationalData("mobile_wallet_channels", dec?.data?.services ?? [])
             updateInternationalData("mobile_wallet_merchant", dec?.data?.merchant_id ?? "")
         } catch {
@@ -699,7 +772,55 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 userDetails.user?.kyc_status === "approved" ? setSubStep(prev => prev + 1) : navigate("/settings?tab=verification")
                 break;
             case 2:
-                setSubStep(prev => prev + 1)
+                console.log(internationalData.payerRequiredFields, internationalData?.payoutChannel.value, internationalData?.beneficiary)
+                setRequiredMissingFields({
+                    beneficiary: { basic: [], extras: [] },
+                    vendors: { fields: [], vendorType: internationalData?.payoutChannel.value }
+                })
+                internationalData.payerRequiredFields?.[0]?.forEach((field) => {
+                    field = field === "firstname" ? "first_name" : field === "lastname" ? "last_name" : field
+
+                    if (field === "country_iso_code") return
+
+                    if (beneficiaryRequiredFields.includes(field)) {
+                        if (field === "postal_code" && internationalData.beneficiary?.zip_code === "") {
+                            setRequiredMissingFields(prev => ({
+                                ...prev,
+                                beneficiary: {
+                                    ...prev.beneficiary,
+                                    basic: [...prev.beneficiary.basic, "postal_code"]
+                                }
+                            }))
+                        }
+                        if ((internationalData.beneficiary?.[field] === "" || !internationalData.beneficiary?.[field]) && !internationalData.beneficiary?.extras?.[field]) {
+                            if (field === "postal_code") return
+                            setRequiredMissingFields(prev => ({
+                                ...prev,
+                                beneficiary: {
+                                    ...prev.beneficiary,
+                                    basic: [...prev.beneficiary.basic, field]
+                                }
+                            }))
+                        } else if ((internationalData.beneficiary?.extras?.[field] === "" || !internationalData.beneficiary?.extras?.[field]) && !internationalData.beneficiary?.[field]) {
+                            setRequiredMissingFields(prev => ({
+                                ...prev,
+                                beneficiary: {
+                                    ...prev.beneficiary,
+                                    extras: [...prev.beneficiary.extras, field]
+                                }
+                            }))
+                        }
+                    }
+                    else if (vendorsRequiredFields.includes(field)) {
+                        setRequiredMissingFields(prev => ({
+                            ...prev,
+                            vendors: {
+                                ...prev.vendors,
+                                fields: [...prev.vendors.fields, field]
+                            }
+                        }))
+                    }
+                })
                 break;
             case 3:
                 setSubStep(prev => prev + 1)
@@ -733,6 +854,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 }
                 break;
             case 5:
+                console.log("ADFADFASDF")
+                setSubStep(prev => prev + 1)
+                break;
+            case 6:
                 if (internationalData.showCard) {
                     updateInternationalData("showCard", false)
                 }
@@ -743,7 +868,21 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             default:
                 break;
         }
+
+        console.log(subStep)
     }
+
+
+
+    useEffect(() => {
+        if (requiredMissingFields.beneficiary.basic?.length >= 1 || requiredMissingFields.beneficiary.extras?.length >= 1) {
+            setShowDetailsModal(true)
+        } else {
+            setSubStep(prev => prev + 1)
+        }
+    }, [requiredMissingFields.beneficiary])
+
+
 
     const verifyOtp = async (otp) => {
         setLoading(true)
@@ -861,6 +1000,17 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 />
             }
             {
+                showDetailsModal
+                &&
+                <AddBeneficiaryRequiredFields
+                    isOpen={showDetailsModal}
+                    beneficiary={internationalData?.beneficiary}
+                    close={() => setShowDetailsModal(false)}
+                    requiredFields={requiredMissingFields}
+                    dataHandler={updateInternationalData}
+                />
+            }
+            {
                 internationalData.cardTransactionDetails?.intlToken || internationalData.cardTransactionDetails?.w2w_data
                     ?
                     <TrustpaymentPage
@@ -963,7 +1113,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                         <div className={styles.left}>
                                             <div className={styles.l_top}>
                                                 <h1>{t("Send Money")}</h1>
-                                                <h2>{subStep === 5 && internationalData.showCard ? t("Select or Add Payment Card") : t(leftSideContent?.[subStep - 1])}</h2>
+                                                <h2>{subStep === 5 && internationalData.showCard ? t("Select Or Add Payment Card") : t(leftSideContent?.[subStep - 1])}</h2>
                                             </div>
                                             {
                                                 subStep !== 4
@@ -1135,7 +1285,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                                             ""
                                             }
                                         </div>
-                                        <div className={styles.right} style={{ "--color-white": subStep === 1 || (subStep === 4 && internationalData.payment_type?.value !== "card") || subStep === 5 ? "#fff" : "#fafafa" }}>
+                                        <div className={styles.right} style={{ "--color-white": subStep === 1 || (subStep === 4 && internationalData.payment_type?.value !== "card") || subStep === 5 || subStep === 6 ? "#fff" : "#fafafa" }}>
                                             {
                                                 subStep === 1
                                                 &&
@@ -1192,6 +1342,29 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                                                     dataHandler={updateInternationalData}
                                                                 />
                                                         }
+                                                    </>
+                                                )
+                                            }
+                                            {
+                                                subStep === 6
+                                                &&
+                                                (
+                                                    <div>
+                                                        <div className={styles.noticeDiv}>
+                                                            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="49" height="48" viewBox="0 0 49 48" fill="none">
+                                                                    <path d="M24.1519 18V26M24.1519 34H24.1719M21.3825 7.78342L4.93272 36.1967C4.02031 37.7726 3.5641 38.5606 3.63153 39.2074C3.69034 39.7715 3.98588 40.2841 4.4446 40.6176C4.97051 41 5.88104 41 7.70209 41H40.6016C42.4227 41 43.3332 41 43.8591 40.6176C44.3178 40.2841 44.6134 39.7715 44.6722 39.2074C44.7396 38.5606 44.2834 37.7726 43.371 36.1967L26.9212 7.78341C26.0121 6.21309 25.5575 5.42793 24.9645 5.16422C24.4471 4.93419 23.8566 4.93419 23.3393 5.16422C22.7462 5.42793 22.2916 6.21309 21.3825 7.78342Z" stroke="#6039CD" stroke-width="4" stroke-linecap="round" />
+                                                                </svg>
+                                                                <span className={styles.noticeHead}>{t("Notice!")}</span>
+                                                            </div>
+
+                                                            <div>
+                                                                <p>{t("By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.")}</p>
+                                                                <p style={{ marginTop: "8px" }}>{t("I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.")}</p>
+                                                            </div>
+                                                        </div>
+
+
                                                         {
                                                             internationalData.showOtpModal
                                                             &&
@@ -1208,7 +1381,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                                                 error={international.otpError}
                                                             />
                                                         }
-                                                    </>
+                                                    </div>
                                                 )
                                             }
 
@@ -1247,7 +1420,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                                                         ?
                                                                         t("Confirm")
                                                                         :
-                                                                        t("Next")
+                                                                        subStep === 6 ?
+                                                                            t("Confirm and Proceed")
+                                                                            :
+                                                                            t("Next")
                                                                 )
                                                                 :
                                                                 t("Identify verification required")
@@ -1300,7 +1476,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                         }
                         <div className={styles.m_top}>
                             <h1>{t("SEND MONEY")}</h1>
-                            <h2>{internationalData.payment_type?.value === "card" ? t("Select or Add Payment Card") : t(leftSideContent?.[subStep - 1])}</h2>
+                            <h2>{internationalData.payment_type?.value === "card" ? t("Select Or Add Payment Card") : t(leftSideContent?.[subStep - 1])}</h2>
                         </div>
                         <div className={styles.flow}>
                             {
@@ -1400,6 +1576,29 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                                                                 dataHandler={updateInternationalData}
                                                                             />
                                                                     }
+                                                                </>
+                                                            )
+                                                        }
+
+                                                        {
+                                                            subStep === 6
+                                                            &&
+                                                            (
+                                                                <div>
+                                                                    <div className={styles.noticeDiv}>
+                                                                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="49" height="48" viewBox="0 0 49 48" fill="none">
+                                                                                <path d="M24.1519 18V26M24.1519 34H24.1719M21.3825 7.78342L4.93272 36.1967C4.02031 37.7726 3.5641 38.5606 3.63153 39.2074C3.69034 39.7715 3.98588 40.2841 4.4446 40.6176C4.97051 41 5.88104 41 7.70209 41H40.6016C42.4227 41 43.3332 41 43.8591 40.6176C44.3178 40.2841 44.6134 39.7715 44.6722 39.2074C44.7396 38.5606 44.2834 37.7726 43.371 36.1967L26.9212 7.78341C26.0121 6.21309 25.5575 5.42793 24.9645 5.16422C24.4471 4.93419 23.8566 4.93419 23.3393 5.16422C22.7462 5.42793 22.2916 6.21309 21.3825 7.78342Z" stroke="#6039CD" stroke-width="4" stroke-linecap="round" />
+                                                                            </svg>
+                                                                            <span className={styles.noticeHead}>{t("Notice!")}</span>
+                                                                        </div>
+
+                                                                        <div>
+                                                                            <p>{t("By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.")}</p>
+                                                                            <p style={{ marginTop: "8px" }}>{t("I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.")}</p>
+                                                                        </div>
+                                                                    </div>
+
                                                                     {
                                                                         internationalData.showOtpModal
                                                                         &&
@@ -1416,7 +1615,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                                                             error={international.otpError}
                                                                         />
                                                                     }
-                                                                </>
+                                                                </div>
                                                             )
                                                         }
                                                     </>
@@ -1459,7 +1658,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                                                     ?
                                                                     t("Confirm")
                                                                     :
-                                                                    t("Continue")
+                                                                    subStep === 6 ?
+                                                                        t("Confirm and Proceed")
+                                                                        :
+                                                                        t("Continue")
                                                             )
                                                             :
                                                             t("Identify verification required")
@@ -1483,6 +1685,16 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                         </div>
                     </div>
             }
+
+            <AddBeneficiaryRequiredFields
+                isOpen={showRequiredFieldsModal}
+                toggle={() => setShowRequiredFieldsModal(!showRequiredFieldsModal)}
+                beneficiary={internationalData.beneficiary}
+                close={() => setShowRequiredFieldsModal(false)}
+                requiredFields={requiredFields}
+                dataHandler={updateInternationalData}
+            />
+
         </>
     )
 }

@@ -51,7 +51,7 @@ const AmountAndCurrency = ({ setSubStep, amount, setAmount, currency, setCurrenc
                 background: "rgba(0,0,0,.03)",
                 paddingBottom: 0
             }}>
-                <h5>Enter the amount</h5>
+                <h5>{t("Enter The Amount")}</h5>
                 <div style={{
                     background: "linear-gradient(347deg, #E64067 0%, #5926F0 55.65%, #4828A0 100%), radial-gradient(250.07% 250.07% at 50.00% -150.07%, rgba(89, 38, 240, 0.20) 0%, rgba(89, 38, 240, 0.00) 85.12%), rgba(255, 255, 255, 0.10)",
                     border: "0.5px solid rgba(0, 0, 0, 0.08)",

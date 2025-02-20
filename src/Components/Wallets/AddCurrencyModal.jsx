@@ -50,7 +50,8 @@ const AddCurrencyModal = ({ isOpen, toggle, setSavedWalelt }) => {
         } catch (error) {
             const decrypted = decryptData(error?.response?.data?.data)
             setError(decrypted?.message ?? "Something went wrong!")
-            toast.error(decrypted?.message ?? "Something went wrong!")
+            const message = decrypted?.message == "You can only have 8 wallets!" ? "You Can Have Only 8 Wallets" : decrypted?.message
+            toast.error(t(message ?? "Something went wrong!"))
         } finally {
             setIsSaving(false)
         }
@@ -117,6 +118,7 @@ const AddCurrencyModal = ({ isOpen, toggle, setSavedWalelt }) => {
                                 currencies?.map(item => (
                                     <div
                                         key={item?.code}
+                                        data-content={t("Already Exist")}
                                         className={`${styles.currency} ${item?.code === currency ? styles.active : isAlreadyAdded(item) ? styles.disabled : ""}`}
                                         onClick={() => {
                                             if (isAlreadyAdded(item)) {

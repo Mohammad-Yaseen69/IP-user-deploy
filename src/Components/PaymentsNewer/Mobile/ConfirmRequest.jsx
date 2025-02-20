@@ -14,8 +14,9 @@ import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";
 import { toast } from "react-toastify";
 import RequestLocation from "../../RequestLocation";
+import CitiesData from '../../CitiesDropDown/CitiesData.json';
 
-const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, paymentType, setConfirmed, setSubStep, setPaymentType, scheduleDate, scheduleTime, recStartDate, recCycle, setNotInstant, requestObject, setToken, totalBalance, coords, setCoords }) => {
+const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, paymentType, setConfirmed, setSubStep, setPaymentType, scheduleDate, scheduleTime, recStartDate, recCycle, setNotInstant, requestObject, setToken, totalBalance, coords, setCoords, preferences, prefrencesFunc, isPreferencesCheck }) => {
     const { t } = useTranslation()
     const [complete, setComplete] = useState(false);
     const pRef = useRef(null)
@@ -25,6 +26,7 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
     const { userDetails, profileCompleted, authHeader, userWallets } = useContext(UserContext)
     const [showCompletionModal, setShowCompletionModal] = useState(false)
     const [showVerificationModal, setShowVerificationModal] = useState(false)
+    const [loading, setLoading] = useState(true)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -148,10 +150,40 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
 
     useEffect(() => {
         if (complete) {
-            // sendOtp()
             setShowLocation(true)
         }
     }, [complete])
+
+    useEffect(() => {
+        console.log(isPreferencesCheck, preferences)
+        if (isPreferencesCheck && !preferences.live && !preferences.origin) {
+            console.log("adfasdfaf")
+            setConfirmed(true)
+            sendOtp()
+            setLoading(false)
+        }
+    }, [isPreferencesCheck, preferences])
+
+    async function getCountryByCoods(latitude, longitude) {
+        setLoading(true)
+        try {
+            const url = `https://geocode.maps.co/reverse?lat=${latitude}&lon=${longitude}&api_key=6723a535c69dc210230851dly54f0c1`;
+
+            const response = await axios.get(url);
+
+
+            if (response.status === 200) {
+                const country = CitiesData.find((cont) => cont.iso2.toLowerCase() == response.data?.address?.country_code?.toLowerCase())
+                await prefrencesFunc(country)
+            } else {
+                return { status: false };
+            }
+        } catch (error) {
+            console.error('Error fetching geocode data:', error.message);
+            return { status: false };
+        }
+        setShowLocation(false)
+    }
 
     return (
         <>
@@ -164,8 +196,9 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
                     isOpen={showLocation}
                     setCoords={setCoords}
                     toggle={() => {
-                        setShowLocation(false)
-                        sendOtp()
+                        if (coords) {
+                            getCountryByCoods(coords?.latitude, coords?.longitude)
+                        }
                     }}
                     cancelPayment={() => window.location.reload()}
                 />
@@ -252,7 +285,7 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
                         complete
                         &&
                         <p style={{ marginBottom: "0", fontSize: window.innerWidth > 1700 ? "1.1rem" : ".95rem", fontWeight: 500, color: "white" }}>
-                            {t("Payment Confirmed")}
+                            {!loading ? t("Payment Confirmed"): t("Proccessing")}
                         </p>
                     }
                 </div>

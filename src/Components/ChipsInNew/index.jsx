@@ -94,7 +94,17 @@ const ChipsInNew = () => {
                             </div>
                             <div style={{ display: "flex", flexWrap: "wrap", gap: "2rem" }}>
                                 {/* <GeneralContainer currency={currency} setCurrency={setCurrency} currentWallet={currentWallet} setWalletRefresh={setWalletRefresh} authHeader={authHeader} defaultWal={defaultWal} showTooltip={showTooltip} setShowTooltip={setShowTooltip} /> */}
-                                <LeftContainer currency={currency} setCurrency={setCurrency} currentWallet={currentWallet} setWalletRefresh={setWalletRefresh} authHeader={authHeader} defaultWal={defaultWal} showTooltip={showTooltip} setShowTooltip={setShowTooltip} setCurrentWallet={setCurrentWallet} />
+                                <LeftContainer
+                                    currency={currency}
+                                    setCurrency={setCurrency}
+                                    currentWallet={currentWallet}
+                                    setWalletRefresh={setWalletRefresh}
+                                    authHeader={authHeader}
+                                    defaultWal={defaultWal}
+                                    showTooltip={showTooltip}
+                                    setShowTooltip={setShowTooltip}
+                                    setCurrentWallet={setCurrentWallet}
+                                />
                                 <SpecificQrs />
                             </div>
                         </div>

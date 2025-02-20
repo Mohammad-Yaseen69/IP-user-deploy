@@ -54,7 +54,7 @@ const MobileWalletLink = ({ externalLink, setSubStep, data, type = "Mobile Walle
             }}
         >
             <h5 style={{ fontSize: "1rem", fontWeight: 700, color: "#7d7d7d", textAlign: "center" }}>
-                {t(`Please process the payment via your selected ${type}.`)}
+                {t(`Please Process The Payment Via Your Selected Payment Type`)}
             </h5>
 
             <div style={{
@@ -155,7 +155,7 @@ const MobileWalletLink = ({ externalLink, setSubStep, data, type = "Mobile Walle
                     lineHeight: "130%", // Equivalent to 15.6px
                 }}
             >
-                You have 15 minutes to complete the transaction. Please complete within the time limit to avoid URL expiration.
+                {t("You Have 15 Minutes To Complete The Transaction, Please Complete Within The Time Limit To Avoid URL Expiration")}
             </div>
             <Button
                 style={{

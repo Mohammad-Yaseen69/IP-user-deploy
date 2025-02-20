@@ -210,7 +210,7 @@ const Quotations = () => {
                         <div className={styles.left}>
                             <div className={styles.search}>
                                 <Search size={16} color="#848484" />
-                                <Input placeholder={t("Search Quotations")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                                <Input placeholder={t("Search Quotation")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
                             </div>
                         </div>
                     </div>
@@ -323,7 +323,7 @@ const Quotations = () => {
                         <div className={styles.left}>
                             <div className={styles.search}>
                                 <Search size={16} color="#848484" />
-                                <Input placeholder={t("Search Quotations")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                                <Input placeholder={t("Search Quotation")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
                             </div>
                             <img src={calendar} alt="c" onClick={handleDatePickerClick} />
                             {showDatePicker && (

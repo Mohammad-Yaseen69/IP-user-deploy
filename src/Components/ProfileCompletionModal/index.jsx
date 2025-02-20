@@ -20,7 +20,8 @@ const ProfileCompletionModal = ({ setShowModal, profileIncompleteReason }) => {
                     right: "20px",
                     display: "flex",
                     gap: "1rem",
-                    flexDirection: "row-reverse"
+                    flexDirection: "row-reverse",
+                    alignItems: "flex-end"
                 }}>
                     <div
                         onClick={() => {
@@ -38,9 +39,9 @@ const ProfileCompletionModal = ({ setShowModal, profileIncompleteReason }) => {
                         }}
                     >
                         <img src={logout} alt="logout" style={{
-                            height: window.innerWidth < 1000 ? "20px" : "35px",
-                            width: window.innerWidth < 1000 ? "20px" : "35px",
-                            objectFit: "contain"
+                            height: window.innerWidth < 1000 ? "20px" : "25px",
+                            width: window.innerWidth < 1000 ? "20px" : "25px",
+                            objectFit: "contain",
                         }}
                         />
                         <span style={{ color: "white", fontSize: "1rem", fontWeight: "500" }}>{t("Logout")}</span>
@@ -52,9 +53,9 @@ const ProfileCompletionModal = ({ setShowModal, profileIncompleteReason }) => {
                         flexDirection: "column"
                     }}>
                         <div style={{
-                            borderRadius: "10px", background: "white", width: "40px"
+                            borderRadius: "10px", background: "white", width: "33px", height: "33px", display: "flex", alignItems: "center", justifyContent: "center"
                         }}>
-                            <LanguagePicker />
+                            <LanguagePicker size={"16"}/>
                         </div>
                         <span style={{ color: "white", fontSize: "1rem", fontWeight: "500" }}>{("Language")}</span>
                     </div>

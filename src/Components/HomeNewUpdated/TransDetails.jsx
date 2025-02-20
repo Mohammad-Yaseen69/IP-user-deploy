@@ -80,6 +80,7 @@ const TransDetails = ({ selectedWallet }) => {
                         value: `${defaultWalletCurrency?.symbol ?? ""}${totalReferralAmount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? 0.00}`
                     }
                 ])
+                console.log(data)
             } catch (error) {
                 // console.log(decryptData(error?.response?.data?.data))
             } finally {
@@ -90,7 +91,7 @@ const TransDetails = ({ selectedWallet }) => {
         if (userDetails) {
             getDetails()
         }
-    }, [userDetails, userWallets])
+    }, [userDetails, userWallets, selectedWallet])
 
     return (
         <>

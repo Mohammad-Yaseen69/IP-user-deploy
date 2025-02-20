@@ -577,69 +577,71 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
     }
 
     const getExchangeRateConversion = async (amount, setLimitType, payment_method = "instant", from, setLoading, fromOrTo = "from") => {
-        setLoading(true)
+        if (amount) {
+            setLoading(true)
 
-        try {
-            const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/w2w-rates?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=wallet_to_wallet&level_id=${userDetails?.level?._id}&payment_type=wallet&&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}&fromOrTo=${fromOrTo}`
+            try {
+                const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/w2w-rates?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=wallet_to_wallet&level_id=${userDetails?.level?._id}&payment_type=wallet&&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}&fromOrTo=${fromOrTo}`
 
 
-            const res = await axios.get(url, { headers: authHeader })
-            const decrypted = decryptData(res.data.data)
-            console.log(url)
-            console.log(decrypted)
-            const exchange_rate_details = {
-                exchange_rate: decrypted?.data?.exchanged_rate?.value,
-                receiver: { currency: decrypted?.data?.recipient?.currency, amount: decrypted?.data?.recipient?.value },
-                fee: { amount: decrypted?.data?.fee?.value ?? 0.00, currency: decrypted?.data?.fee?.currency },
-                sending: { amount: decrypted?.data?.sending?.value, currency: decrypted?.data?.sending?.currency },
-                total: decrypted?.data?.total?.value,
-            }
+                const res = await axios.get(url, { headers: authHeader })
+                const decrypted = decryptData(res.data.data)
+                console.log(url)
+                console.log(decrypted)
+                const exchange_rate_details = {
+                    exchange_rate: decrypted?.data?.exchanged_rate?.value,
+                    receiver: { currency: decrypted?.data?.recipient?.currency, amount: decrypted?.data?.recipient?.value },
+                    fee: { amount: decrypted?.data?.fee?.value ?? 0.00, currency: decrypted?.data?.fee?.currency },
+                    sending: { amount: decrypted?.data?.sending?.value, currency: decrypted?.data?.sending?.currency },
+                    total: decrypted?.data?.total?.value,
+                }
 
-            dataHandler("exchange_rate", exchange_rate_details)
+                dataHandler("exchange_rate", exchange_rate_details)
 
-            if (fromOrTo === "from") {
-                dataHandler("recipient_amount", exchange_rate_details?.receiver?.amount)
-            } else {
-                dataHandler("amount", exchange_rate_details?.sending?.amount)
-            }
-            return exchange_rate_details
-        }
-        catch (err) {
-            const dec = decryptData(err?.response.data.data)
-
-            if (fromOrTo === "from") {
-                dataHandler("recipient_amount", 0)
-            } else {
-                dataHandler("amount", 0)
-            }
-
-            if (typeof dec?.message == "object") {
-                if (dec?.message?.[0]?.code === "1003007") {
-                    dataHandler("exchange_rate_error", "payer_unavailable")
+                if (fromOrTo === "from") {
+                    dataHandler("recipient_amount", exchange_rate_details?.receiver?.amount)
                 } else {
-                    dataHandler("exchange_rate_error", "sww")
+                    dataHandler("amount", exchange_rate_details?.sending?.amount)
                 }
-            } else {
-                const error = LimitsErrorMessage(dec?.code ?? dec?.message)
-                if (error) {
-                    dataHandler("exchange_rate_error", error)
+                return exchange_rate_details
+            }
+            catch (err) {
+                const dec = decryptData(err?.response.data.data)
+
+                if (fromOrTo === "from") {
+                    dataHandler("recipient_amount", 0)
+                } else {
+                    dataHandler("amount", 0)
                 }
-                else if (dec?.message?.toLowerCase()?.includes("insufficient")) {
-                    dataHandler("exchange_rate_error", "insufficient balance payer")
-                }
-                else if (dec?.message?.toLowerCase()?.includes("exceeds max")) {
-                    dataHandler("exchange_rate_error", "max payer")
-                }
-                else if (dec?.message?.toLowerCase()?.includes("below the min") || dec?.message?.toLowerCase()?.includes("below the max")) {
-                    dataHandler("exchange_rate_error", "min payer")
-                }
-                else {
-                    dataHandler("exchange_rate_error", "sww")
+
+                if (typeof dec?.message == "object") {
+                    if (dec?.message?.[0]?.code === "1003007") {
+                        dataHandler("exchange_rate_error", "payer_unavailable")
+                    } else {
+                        dataHandler("exchange_rate_error", "sww")
+                    }
+                } else {
+                    const error = LimitsErrorMessage(dec?.code ?? dec?.message)
+                    if (error) {
+                        dataHandler("exchange_rate_error", error)
+                    }
+                    else if (dec?.message?.toLowerCase()?.includes("insufficient")) {
+                        dataHandler("exchange_rate_error", "insufficient balance payer")
+                    }
+                    else if (dec?.message?.toLowerCase()?.includes("exceeds max")) {
+                        dataHandler("exchange_rate_error", "max payer")
+                    }
+                    else if (dec?.message?.toLowerCase()?.includes("below the min") || dec?.message?.toLowerCase()?.includes("below the max")) {
+                        dataHandler("exchange_rate_error", "min payer")
+                    }
+                    else {
+                        dataHandler("exchange_rate_error", "sww")
+                    }
                 }
             }
-        }
-        finally {
-            setLoading(false)
+            finally {
+                setLoading(false)
+            }
         }
     }
 
@@ -700,6 +702,9 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                 break;
 
             case 5:
+                dataHandler("step", 6)
+                break;
+            case 6:
                 // if (data.payment_type?.value === "mobile") {
                 //     handleMobileWalletPayment()
                 // }
@@ -777,6 +782,8 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
             dataHandler("error", error_message() ?? "It appears that the add funds request was canceled. Please try again later when you're ready.")
         }
     }, [transaction_status])
+
+    console.log(data.step)
 
     return (
         <>
@@ -870,13 +877,13 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                         style={{
                                             width: sendPaymentType === "international" ? "100%" : "0px",
                                             transition: "500ms",
-                                            "--min-width": data.step === 4 && data.payment_type?.value === "wallet" ? "65vw" : "55vw"
+                                            "--min-width": data.step === 4 && data.payment_type?.value === "wallet" && !data.show_payment_type ? "65vw" : "55vw"
                                         }}
                                     >
                                         <div className={styles.left}>
                                             <div className={styles.l_top}>
                                                 <h1>{t("Send Money")}</h1>
-                                                <h2>{data.step === 5 && data.showCard ? t("Select or Add Payment Card") : t(leftSideContent?.[data.step - 1])}</h2>
+                                                <h2>{data.step === 5 && data.showCard ? t("Select Or Add Payment Card") : t(leftSideContent?.[data.step - 1])}</h2>
                                             </div>
                                             {
                                                 data.step === 4
@@ -1088,6 +1095,29 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                                     dataHandler={dataHandler}
                                                                 />
                                                         }
+
+                                                    </>
+                                                )
+                                            }
+                                            {data.step == 6
+                                                &&
+                                                (
+                                                    <div>
+                                                        <div className={styles.noticeDiv}>
+                                                            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="49" height="48" viewBox="0 0 49 48" fill="none">
+                                                                    <path d="M24.1519 18V26M24.1519 34H24.1719M21.3825 7.78342L4.93272 36.1967C4.02031 37.7726 3.5641 38.5606 3.63153 39.2074C3.69034 39.7715 3.98588 40.2841 4.4446 40.6176C4.97051 41 5.88104 41 7.70209 41H40.6016C42.4227 41 43.3332 41 43.8591 40.6176C44.3178 40.2841 44.6134 39.7715 44.6722 39.2074C44.7396 38.5606 44.2834 37.7726 43.371 36.1967L26.9212 7.78341C26.0121 6.21309 25.5575 5.42793 24.9645 5.16422C24.4471 4.93419 23.8566 4.93419 23.3393 5.16422C22.7462 5.42793 22.2916 6.21309 21.3825 7.78342Z" stroke="#6039CD" stroke-width="4" stroke-linecap="round" />
+                                                                </svg>
+                                                                <span className={styles.noticeHead}>{t("Notice!")}</span>
+                                                            </div>
+
+                                                            <div>
+                                                                <p>{t("By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.")}</p>
+                                                                <p style={{ marginTop: "8px" }}>{t("I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.")}</p>
+                                                            </div>
+                                                        </div>
+
+
                                                         {
                                                             data.showOtpModal
                                                             &&
@@ -1104,7 +1134,8 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                                 error={data.otpError}
                                                             />
                                                         }
-                                                    </>
+
+                                                    </div>
                                                 )
                                             }
                                             <div className={styles.bottom}>
@@ -1112,7 +1143,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                     <HelpCircle size={16} />
                                                     {t("Trouble Sending Money")}
                                                 </Link>
-                                                <div className={styles?.buttons}>
+                                                <div style={{gap: data.step === 5 && "0.5rem"}} className={styles?.buttons}>
                                                     {
                                                         data.step > 1
                                                         &&
@@ -1121,6 +1152,12 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                                 dataHandler("payment_type", {})
                                                                 dataHandler("payment_duration", {})
                                                                 dataHandler("show_payment_type", false)
+                                                            }
+                                                            else if (data.step === 2 && Object.keys(data.beneficiary).length > 0 && Object.keys(data.beneficiary_wallet)) {
+                                                                dataHandler("beneficiary", {})
+                                                                dataHandler("beneficiary_wallet", {})
+                                                                // dataHandler("amount", 1)
+                                                                dataHandler("step", data.step - 1)
                                                             }
                                                             else if (data.step === 4 && data.payment_type?.value === "card") {
                                                                 dataHandler("payment_type", {})
@@ -1167,7 +1204,11 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                                 ?
                                                                 t("Confirm")
                                                                 :
-                                                                t("Next")
+                                                                data.step == 6
+                                                                    ?
+                                                                    t("Confirm and Proceed")
+                                                                    :
+                                                                    t("Next")
                                                         }
                                                         <ChevronRight size={18} />
                                                     </button>
@@ -1203,7 +1244,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                     <div className={styles.mobile}>
                         <div className={styles.m_top}>
                             <h1>{t("SEND MONEY")}</h1>
-                            <h2>{data.payment_type?.value === "card" ? t("Select or Add Payment Card") : t(leftSideContent?.[data.step - 1])}</h2>
+                            <h2>{data.payment_type?.value === "card" ? t("Select Or Add Payment Card") : t(leftSideContent?.[data.step - 1])}</h2>
                         </div>
                         <div className={styles.flow}>
                             {
@@ -1334,6 +1375,29 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                                                 dataHandler={dataHandler}
                                                                             />
                                                                     }
+                                                                </>
+                                                            )
+                                                        }
+
+                                                        {data.step == 6
+                                                            &&
+                                                            (
+                                                                <div>
+                                                                    <div className={styles.noticeDiv}>
+                                                                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="49" height="48" viewBox="0 0 49 48" fill="none">
+                                                                                <path d="M24.1519 18V26M24.1519 34H24.1719M21.3825 7.78342L4.93272 36.1967C4.02031 37.7726 3.5641 38.5606 3.63153 39.2074C3.69034 39.7715 3.98588 40.2841 4.4446 40.6176C4.97051 41 5.88104 41 7.70209 41H40.6016C42.4227 41 43.3332 41 43.8591 40.6176C44.3178 40.2841 44.6134 39.7715 44.6722 39.2074C44.7396 38.5606 44.2834 37.7726 43.371 36.1967L26.9212 7.78341C26.0121 6.21309 25.5575 5.42793 24.9645 5.16422C24.4471 4.93419 23.8566 4.93419 23.3393 5.16422C22.7462 5.42793 22.2916 6.21309 21.3825 7.78342Z" stroke="#6039CD" stroke-width="4" stroke-linecap="round" />
+                                                                            </svg>
+                                                                            <span className={styles.noticeHead}>{t("Notice!")}</span>
+                                                                        </div>
+
+                                                                        <div>
+                                                                            <p>{t("By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.")}</p>
+                                                                            <p style={{ marginTop: "8px" }}>{t("I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.")}</p>
+                                                                        </div>
+                                                                    </div>
+
+
                                                                     {
                                                                         data.showOtpModal
                                                                         &&
@@ -1350,7 +1414,8 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                                             error={data.otpError}
                                                                         />
                                                                     }
-                                                                </>
+
+                                                                </div>
                                                             )
                                                         }
                                                     </>
@@ -1417,7 +1482,11 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                             ?
                                                             t("Confirm")
                                                             :
-                                                            t("Next")
+                                                            data.step == 6
+                                                                ?
+                                                                t("Confirm and Proceed")
+                                                                :
+                                                                t("Next")
                                                     }
                                                 </button>
                                             </div>

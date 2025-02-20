@@ -95,7 +95,7 @@
     font-weight: 500;
 }
 
-.s1_i_c_input button {
+.s1_i_c_input span {
     all: unset;
     color: grey;
     cursor: pointer;

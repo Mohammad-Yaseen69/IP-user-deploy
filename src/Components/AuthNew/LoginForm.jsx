@@ -186,7 +186,7 @@ const LoginForm = ({ setIsLoginForm, setIsForgot, country }) => {
                                                 setEmail("")
                                             }}
                                         >
-                                            {t("Login with")} {loginMethod === "email" ? t("Phone Number") : t("Email")}
+                                            {t("Login with ")} {loginMethod === "email" ? t("Phone Number") : t("email")}
                                         </div>
                                     </div>
                                     :

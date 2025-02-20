@@ -397,7 +397,7 @@ const ProfileComponent = () => {
                                         </Card>
                                         <div className={styles.rating_actions}>
                                             <div className={styles.rating}>
-                                                <p>Overall Rating</p>
+                                                <p>{t("Overall Ratings")}</p>
                                                 <h4>{currentRevTab === "Seller" ? averageRatingAsSeller?.toFixed(1) : averageRatingAsBuyer?.toFixed(1)}/5.0</h4>
                                                 <div>
                                                     <Rating initialRating={currentRevTab === "Seller" ? averageRatingAsSeller : averageRatingAsBuyer} emptySymbol="fa fa-star-o fa-2x" fullSymbol="fa fa-star fa-2x" readonly></Rating>

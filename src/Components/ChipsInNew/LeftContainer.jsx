@@ -36,13 +36,13 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
 
     const updateQr = (setter) => {
         setSaving(true)
+    
         const data = {
             title,
             description,
             status: `${!generalQRactive}`,
             wallet_id: currentWallet?.wallet_id
         }
-        console.log(data)
         const encrypted = encryptData(data)
 
         axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/update-qr-details`, {
@@ -52,10 +52,11 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
-                verifyToken()
                 setTitleEdit(false)
                 setDescEdit(false)
-                setter(decrypted?.updated?.qrCode?.status == "false" ? false : true)
+                setCurrentWallet(currentWallet)
+                setter(decrypted?.walletDetails?.qrCode?.status == "false" ? false : true)
+                console.log(generalQRactive)
             })
             .catch(err => {
                 const decrypted = decryptData(err.response.data.data)
@@ -110,7 +111,7 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
                                 <span>{t("QR Code Status")}</span>
                                 <div
                                     className={`${styles.switch} ${generalQRactive ? styles.disabled : ""}`}
-                                    onClick={() => {
+                                    onClick={(e) => {
                                         updateQr(setGeneralQRactive)
                                     }}>
                                     <div className={`${styles.thumb} ${generalQRactive ? styles.active : ""}`}></div>
@@ -123,6 +124,7 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
                     </div>
                 </div>
             </div>
+
             <div className={styles.bottom}>
                 <div className={styles.b_left}>
                     <h5>{t("Share your QR Code or pay link to instantly get paid in your insta wallet.")}</h5>

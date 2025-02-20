@@ -32,6 +32,9 @@ import BroadcastPage from './BroadcastPage'
 import { ToastContainer } from "react-toastify";
 import SessionExpireModal from './Components/SessionExpireModal'
 
+import { decryptData } from "./Helper/EssentilaMethods/Decryption"
+import axios from 'axios'
+
 const App = () => {
   const [showOtherTabError, setShowOtherTabError] = useState(false)
 
@@ -87,9 +90,10 @@ const App = () => {
   //   };
   // }, []);
 
+
+
   const location = useLocation()
   const query = new URLSearchParams(location.search)
-  const show_logout_modal = query.get("show_logout_modal")
 
   return (
     <div className='App' id='main_app'>
@@ -146,14 +150,6 @@ const App = () => {
                       </WishListProvider>
                     </CustomizerProvider>
                   </InactivityWrapper>
-                  {
-                    show_logout_modal
-                    &&
-                    <SessionExpireModal
-                      isOpen={show_logout_modal}
-                      toggle={() => window.history.replaceState(null, null, "")}
-                    />
-                  }
                 </UserState>
               </TimezonesProvider>
             </Suspense>

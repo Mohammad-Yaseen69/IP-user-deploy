@@ -18,9 +18,13 @@ import PWizard from "../PWizard"
 import { UserContext } from "../../../Context/UserContext"
 import axios from "axios"
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
+import { Modal, ModalBody } from "reactstrap"
+import Icon from "../../../assets/icons/cancel-user.png"
+import { useNavigate as RouterNavigate } from "react-router-dom"
 
 const RequestMoneyMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
     const navigate = useNavigate()
+    const navigate2 = RouterNavigate()
     const { t } = useTranslation();
     const [beneficiary, setBeneficiary] = useState([]);
     const [currency, setCurrency] = useState("")
@@ -68,6 +72,11 @@ const RequestMoneyMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
     const [codeType, setCodeType] = useState("sms")
     const [totalBalance, setTotalBalance] = useState(0)
     const [timezone, setTimezone] = useState("")
+    const [preferences, setPreferences] = useState({
+        origin: false,
+        live: false
+    })
+    const [isPreferencesCheck, SetIsPreferencesCheck] = useState(false)
 
     useEffect(() => {
         if (userWallets?.length > 0 && currency && userDetails?.user?.kyc_status !== "approved") {
@@ -101,10 +110,127 @@ const RequestMoneyMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
         setTimezone(userDetails?.timezone)
     }, [userDetails])
 
+    const getPrefrences = async (liveCountry) => {
+        console.log(beneficiary, userDetails.country.country_iso_code, liveCountry)
+        const userId = beneficiary[0]?.user ? beneficiary[0]?.user?._id : beneficiary[0]?._id
+        try {
+
+            if (userDetails.country.country_iso_code == liveCountry?.iso3) {
+                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user-preferences/get-preferences/${userId}/${userDetails.country.country_iso_code}`, {
+                    headers: authHeader
+                });
+
+                const dec = decryptData(res.data?.data)
+
+                setPreferences({
+                    live: dec.data[0].reason.includes("payment_request_live"),
+                    origin: dec.data[0].reason.includes("payment_request_origin"),
+                })
+            } else {
+                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user-preferences/get-preferences/${userId}/${userDetails.country.country_iso_code}`, {
+                    headers: authHeader
+                });
+
+                const dec = decryptData(res.data?.data)
+
+                setPreferences(prev => ({
+                    ...prev,
+                    origin: dec.data[0].reason.includes("payment_request_origin"),
+                }))
+
+                const res2 = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user-preferences/get-preferences/${userId}/${liveCountry?.iso3}`, {
+                    headers: authHeader
+                });
+
+                const dec2 = decryptData(res2.data?.data)
+
+                setPreferences(prev => ({
+                    ...prev,
+                    live: dec2.data[0].reason.includes("payment_request_live"),
+                }))
+            }
+        } catch (error) {
+
+        } finally {
+            SetIsPreferencesCheck(true)
+        }
+
+
+    }
+
+    const NoAccessWarning = () => (
+        <Modal
+            isOpen={isPreferencesCheck && (preferences.live || preferences.origin)} 
+            backdrop="static" 
+            keyboard={false}
+            className="modal-dialog-centered" 
+            style={{
+                maxWidth: '600px',  // Increased from default
+                width: '95%',
+                margin: '1.75rem auto'
+            }}
+        >
+            <ModalBody style={{
+                padding: "3rem",  // Increased padding
+                display: "flex",
+                flexDirection: "column",
+                gap: "1.5rem",  // Increased gap
+                alignItems: "center",
+                textAlign: "center",
+                background: "white",  // Explicit background
+                borderRadius: "8px",  // Added border radius
+                boxShadow: "0 5px 15px rgba(0,0,0,0.2)"  // Added shadow
+            }}>
+                <img src={Icon} style={{width: "70px", marginBottom: "7px"}} alt="" />
+                <h4 style={{ 
+                    color: "#D92D20", 
+                    fontSize: "22px",  // Increased font size
+                    fontWeight: "600",
+                    marginBottom: "0"
+                }}>
+                    {t("Unsupported Recipient")}
+                </h4>
+                <p style={{ 
+                    color: "#667085",
+                    fontSize: "16px",  // Increased font size
+                    lineHeight: "1.5",  // Added line height
+                    maxWidth: "500px"  // Control text width
+                }}>
+                    {t(`It looks like ${beneficiary?.[0]?.username || beneficiary?.[0]?.user?.name || "this recipient"} has chosen to receive payments only from certain countries and locations, and your account's country or location isn't on the list. You may want to check with them to proceed with the payment request.`)}
+                </p>
+                <button 
+                    onClick={() => {
+                        navigate("/payments?payment_action=req_money")
+                        SetIsPreferencesCheck(false)
+                    }}
+                    style={{
+                        background: "#D92D20",
+                        color: "white",
+                        border: "none",
+                        padding: "12px 24px",  // Increased padding
+                        borderRadius: "6px",
+                        cursor: "pointer",
+                        fontSize: "16px",  // Increased font size
+                        fontWeight: "500",
+                        minWidth: "120px",  // Added minimum width
+                        transition: "background 0.3s",
+                        "&:hover": {
+                            background: "#C01E1E"
+                        }
+                    }}
+                >
+                    {t("Back")}
+                </button>
+            </ModalBody>
+        </Modal>
+    );
+
+
     const [coords, setCoords] = useState(null);
 
     return (
         <div className={styles.container}>
+                        <NoAccessWarning />
             <div className={styles.top}>
                 <button className={styles.back_btn} disabled={step === 8 && completed} onClick={() => {
                     if (step === 6) {
@@ -273,6 +399,9 @@ const RequestMoneyMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
                         scheduleTime={scheduleTime}
                         setPaymentType={setPaymentType}
                         totalBalance={totalBalance}
+                        prefrencesFunc={getPrefrences}
+                        preferences={preferences}
+                        isPreferencesCheck={isPreferencesCheck}
                     />
                 }
                 {

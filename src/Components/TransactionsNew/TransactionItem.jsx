@@ -87,7 +87,7 @@ const TransactionItem = ({ color, item, activeItem, setActiveItem, index }) => {
                                 <h5>$ 1.99</h5>
                             </div>
                             <div>
-                                <span>{t("Comission")}:</span>
+                                <span>{t("comission")}:</span>
                                 <h5>$ 2.50</h5>
                             </div>
                         </div>

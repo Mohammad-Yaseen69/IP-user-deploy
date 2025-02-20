@@ -103,7 +103,7 @@
 }
 
 .currency.disabled::before {
-    content: "Already Exist";
+    content: attr(data-content);
     position: absolute;
     top: 0;
     left: 0;

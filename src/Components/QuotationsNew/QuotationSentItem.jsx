@@ -68,6 +68,13 @@ const QuotationSentItem = ({ item, activeItem, setActiveItem, index }) => {
         }
     }, [item])
 
+    function capitalizeStatus(str) {
+        return str.toLowerCase() === "bargain-accepted" ? "Bargain-Accepted" : str
+            .split(" ")
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(" ");
+    }
+
 
     return (
         <div>
@@ -131,7 +138,7 @@ const QuotationSentItem = ({ item, activeItem, setActiveItem, index }) => {
                         padding: "5px",
                         borderRadius: "30px",
                         textAlign: "center"
-                    }} >{t(item?.status?.toUpperCase())}</div>
+                    }} >{t(capitalizeStatus(item?.status))}</div>
                 </div>
                 {
                     status?.toLowerCase() !== "accepted" && status?.toLowerCase() !== "declined"
@@ -157,7 +164,7 @@ const QuotationSentItem = ({ item, activeItem, setActiveItem, index }) => {
                             }} />
                         </div>
                         :
-                        <div>No Actions</div>
+                        <div>{t("No Actions")}</div>
                 }
                 <div style={{ maxWidth: "15px" }}>{
                     activeItem === index + 1

@@ -158,6 +158,8 @@ const WalletCard = ({ wallet, data, dataHandler, loading, blocked = false }) => 
 
     return (
         <div
+            data-content={t("Insufficient Balance")}
+            data-block-content={t("Blocked Wallet")}
             className={`${styles.card} ${isSufficient ? "" : styles.disabled_card} ${blocked ? styles.blocked_card : ""} ${data.wallet?._id === wallet?._id ? styles.active : ""}`}
             onClick={() => isSufficient && !loading && !blocked ? dataHandler("wallet", wallet) : console.log("")}
         >

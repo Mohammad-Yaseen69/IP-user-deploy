@@ -209,7 +209,16 @@ const PaymentAddressPublic = () => {
                                             (
                                                 userDetails
                                                     ?
-                                                    <PaymentAddressComponent userDetails={userDetails} />
+                                                    <>
+                                                        <div className={styles.go_back} style={{marginBottom: "12px"}} onClick={() => window.history.back()}>
+                                                            <ChevronLeft size={18} color='white' />
+                                                            <span>
+                                                                {t("Go back (Cancel Payment)")}
+                                                            </span>
+                                                        </div>
+
+                                                        <PaymentAddressComponent userDetails={userDetails} />
+                                                    </>
                                                     :
                                                     <NotFound type='Page' />
                                                 // <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>

@@ -8,10 +8,12 @@ import { UserContext } from '../../Context/UserContext'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import EditModal from './EditModal'
 import DeleteModal from './DeleteModal'
+import { useTranslation } from "react-i18next";
 
 const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }) => {
     // dropdown
     const dropdownRef = useRef(null)
+    const {t} = useTranslation()
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen)
@@ -60,7 +62,7 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
                 })
                 .catch(err => {
                     const decrypted = decryptData(err.response.data.data)
-                    // console.log(decrypted)
+                    console.log(decrypted)
                 })
         }
 
@@ -82,7 +84,7 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
                 })
                 .catch(err => {
                     const decrypted = decryptData(err.response.data.data)
-                    // console.log(decrypted)
+                    console.log(decrypted)
                 })
         }
 
@@ -150,6 +152,7 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
         };
     }, [isDropdownOpen]);
 
+    console.log(selectedCategories)
     return (
         <>
             <div ref={dropdownRef} style={{ flex: 1, position: "relative", width: "100%" }}>
@@ -161,7 +164,7 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
                     {
                         isDropdownOpen
                             ?
-                            <Input style={{ border: "none", outline: "none", padding: ".75rem 1rem", borderRadius: "14px" }} placeholder='Search Here' value={searchTerm} onChange={e => setSearchTerm(e.target.value)} onClick={e => e.stopPropagation()} />
+                            <Input style={{ border: "none", outline: "none", padding: ".75rem 1rem", borderRadius: "14px", }} placeholder='Search Here' value={searchTerm} onChange={e => setSearchTerm(e.target.value)} onClick={e => e.stopPropagation()} />
                             :
                             <>
                                 {
@@ -179,7 +182,7 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
                                                             borderRadius: "10px",
                                                             pointerEvents: isEditMode ? "auto" : "none"
                                                         }}>
-                                                            <span style={{ color: "white", whiteSpace: "nowrap" }}>{item?.name}</span>
+                                                            <span style={{ color: "white", whiteSpace: "nowrap" }}>{t(item?.name)}</span>
                                                             <div style={{
                                                                 height: "15px",
                                                                 width: "15px",
@@ -215,9 +218,9 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
                                         </div>
                                         :
                                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: ".75rem 1rem", width: window.innerWidth > 700 ? "100%" : "100%", background: isEditMode ? "white" : "#fafafa", borderRadius: "14px", pointerEvents: isEditMode ? "auto" : "none" }}>
-                                            <span style={{ color: "#a8a8a8", whiteSpace: "nowrap" }}>-Select from the list-</span>
+                                            <span style={{ color: "#fd0d1b" }}>-{t("No Categories Added, Click here to add")}-</span>
                                             {/* <span style={{ transform: "translateY(8px)", minWidth: "none", maxWidth: "20px", background: "red" }}> */}
-                                            <svg style={{ transform: "translateY(8px)" }} xmlns="http://www.w3.org/2000/svg" width="23" height="17" viewBox="0 0 23 17" fill="none">
+                                            {/* <svg style={{ transform: "translateY(8px)" }} xmlns="http://www.w3.org/2000/svg" width="23" height="17" viewBox="0 0 23 17" fill="none">
                                                 <g filter="url(#filter0_d_3611_6068)">
                                                     <path d="M12.1766 8.51889C11.622 9.16037 10.5498 9.16037 9.99523 8.5189L4.383 2.0275C3.67119 1.20418 4.31898 -2.49871e-07 5.4737 -1.48923e-07L16.6982 8.32352e-07C17.8529 9.333e-07 18.5007 1.20418 17.7889 2.0275L12.1766 8.51889Z" fill="#5926F0" />
                                                 </g>
@@ -230,8 +233,7 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
                                                         <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_3611_6068" result="shape" />
                                                     </filter>
                                                 </defs>
-                                            </svg>
-                                            {/* </span> */}
+                                            </svg> */}
                                         </div>
                                 }
                             </>

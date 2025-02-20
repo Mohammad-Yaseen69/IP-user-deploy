@@ -16,7 +16,7 @@
 .left .top {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     gap: 1.5rem;
 }
 
@@ -130,6 +130,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
+    
 }
 
 .right .top h2 {

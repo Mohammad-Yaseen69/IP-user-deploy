@@ -50,7 +50,7 @@ const AddBeneficiaryAddressModal = ({ isOpen, toggle, beneficiaries = [], close 
             }
         }
         catch (error) {
-            toast.error(`Something went wrong while adding address for "${beneficiary?.first_name} ${beneficiary?.lastname}"`)
+            toast.error(`Something went wrong while adding address for "${beneficiary?.first_name} ${beneficiary?.last_name}"`)
         }
         finally {
             setIsLoading(false)
