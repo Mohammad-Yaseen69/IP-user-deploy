@@ -29,25 +29,25 @@ app.get('*', (req, res) => {
 const port = process.env.PORT || '3000';
 app.set('port', port);
 
-const privateKey = fs.readFileSync('/etc/letsencrypt/live/my.insta-pay.ch/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/my.insta-pay.ch/cert.pem', 'utf8');
-const ca = fs.readFileSync('/etc/letsencrypt/live/my.insta-pay.ch/fullchain.pem', 'utf8');
-const credentials = {
-  key: privateKey,
-  cert: certificate,
-  ca: ca
-};
+// const privateKey = fs.readFileSync('/etc/letsencrypt/live/my.insta-pay.ch/privkey.pem', 'utf8');
+// const certificate = fs.readFileSync('/etc/letsencrypt/live/my.insta-pay.ch/cert.pem', 'utf8');
+// const ca = fs.readFileSync('/etc/letsencrypt/live/my.insta-pay.ch/fullchain.pem', 'utf8');
+// const credentials = {
+//   key: privateKey,
+//   cert: certificate,
+//   ca: ca
+// };
 
-https.createServer(credentials, app).listen(443, () => {
-  // console.log('HTTPS Server running on port 443');
-});
+// https.createServer(credentials, app).listen(443, () => {
+//   // console.log('HTTPS Server running on port 443');
+// });
 
-http.createServer((req, res) => {
-  res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
-  res.end();
-}).listen(80);
+// http.createServer((req, res) => {
+//   res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+//   res.end();
+// }).listen(80);
 
 
-// const server = http.createServer(app)
-// // Start the app by listening on the default Heroku port
-// server.listen(port, () => "a") // console.log('Running...'));
+const server = http.createServer(app)
+// Start the app by listening on the default Heroku port
+server.listen(port, () => console.log('Running...'));
