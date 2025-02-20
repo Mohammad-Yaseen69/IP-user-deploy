@@ -382,7 +382,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
 
 
     const addBeneficiaryHandler = (e) => {
-
+        setMobileError("")
         e.preventDefault()
         const account_types = [
             services.some(item => item?.name?.toLowerCase()?.includes("bank")) && completedBank ? "bank" : null,
