@@ -177,6 +177,8 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
     const [loading, setLoading] = useState(false)
     const [isAddressRequired, setIsAddressRequired] = useState(true)
 
+    const [mobileError, setMobileError] = useState("")
+
     const handleInputChange = (index, value) => {
         const newOTPValues = [...instapayWallets];
         newOTPValues[index] = value;
@@ -377,7 +379,10 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
     //     }))
     // }, [mobileNumber])
 
+
+
     const addBeneficiaryHandler = (e) => {
+
         e.preventDefault()
         const account_types = [
             services.some(item => item?.name?.toLowerCase()?.includes("bank")) && completedBank ? "bank" : null,
@@ -472,26 +477,35 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         const encrypted = encryptData(data)
         // console.log(encrypted)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/add-beneficiary`, {
-            data: encrypted
-        }, {
-            headers: authHeader
-        })
-            .then(res => {
-                const decrypted = decryptData(res.data.data)
-                // console.log(decrypted)
-                toggleSuccess()
+        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
+            data: encryptData({ number: `+${mobileNumber}` })
+        }).then(() => {
+            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/add-beneficiary`, {
+                data: encrypted
+            }, {
+                headers: authHeader
             })
-            .catch(err => {
-                const dec = decryptData(err.response.data.data)
-                if (dec?.message === "Unauthorize to access this route") {
-                    const coun = localStorage.getItem("ip_country")
-                    localStorage.clear()
-                    localStorage.setItem("ip_country", coun)
-                    window.location.pathname = "/auth/login";
-                }
-                // console.log(decryptData(err.response.data.data))
-            })
+                .then(res => {
+                    const decrypted = decryptData(res.data.data)
+                    toggleSuccess()
+                })
+                .catch(err => {
+                    const dec = decryptData(err.response.data.data)
+                    if (dec?.message === "Unauthorize to access this route") {
+                        const coun = localStorage.getItem("ip_country")
+                        localStorage.clear()
+                        localStorage.setItem("ip_country", coun)
+                        window.location.pathname = "/auth/login";
+                    }
+                    // console.log(decryptData(err.response.data.data))
+                })
+        }).catch(err => {
+            const dec = decryptData(err.response.data.data)
+            setMobileError("Incorrect phone number, please enter a valid number.")
+            console.log(dec)
+        }) 
+
+
     }
 
     const inputChangeHandler = (e) => {
@@ -801,6 +815,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
 
     // const coutry filtering
     const [selectedCountryDetails, setSelectedCountryDetails] = useState(null)
+
 
     useEffect(() => {
         if (countryId) {
@@ -1266,6 +1281,8 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                             disabled={!country}
                                             setCountry={() => { }}
                                             phone={mobileNumber}
+                                            setError={setMobileError}
+                                            error={mobileError}
                                         />
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>

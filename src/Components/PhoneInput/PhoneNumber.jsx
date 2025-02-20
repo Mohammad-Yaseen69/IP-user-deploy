@@ -1,7 +1,8 @@
 import React from 'react';
 
-const PhoneNumber = ({ number, setNumber, selectedCountry }) => {
+const PhoneNumber = ({ number, setNumber, selectedCountry, setError }) => {
     const handleChange = (e) => {
+        setError("")
         const input = e.target.value;
         if (input.length > selectedCountry?.maxLength) {
             e.preventDefault()
