@@ -972,7 +972,7 @@
         "dial_code": "+682"
     },
     "CIV": {
-        "maxLength": 11,
+        "maxLength": 10,
         "dial_code": "+225"
     },
     "OS": {
