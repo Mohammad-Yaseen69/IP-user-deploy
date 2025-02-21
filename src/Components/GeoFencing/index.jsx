@@ -35,8 +35,8 @@ const GeoFencing = () => {
 
     useEffect(() => {
         const groupedData = citiesData?.reduce((acc, country) => {
-            const { name, region, iso3 } = country
-            if (region) {
+            const { name, region, iso3, prohibited } = country
+            if (region && !prohibited) {
                 if (!acc[region]) acc[region] = []
                 acc[region].push({
                     name: name,
