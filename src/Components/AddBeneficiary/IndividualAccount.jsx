@@ -178,6 +178,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
     const [isAddressRequired, setIsAddressRequired] = useState(true)
 
     const [mobileError, setMobileError] = useState("")
+    const [walletMobileError, setWalletMobileError] = useState("")
 
     const handleInputChange = (index, value) => {
         const newOTPValues = [...instapayWallets];
@@ -381,9 +382,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
 
 
 
-    const addBeneficiaryHandler = (e) => {
-        setMobileError("")
-        e.preventDefault()
+    const addBenFunc = () => {
         const account_types = [
             services.some(item => item?.name?.toLowerCase()?.includes("bank")) && completedBank ? "bank" : null,
             services.some(item => item?.name?.toLowerCase()?.includes("card")) && completedCard ? "card" : null,
@@ -475,8 +474,6 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
             }
         }
         const encrypted = encryptData(data)
-        // console.log(encrypted)
-
         axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
             data: encryptData({ number: `+${mobileNumber}` })
         }).then(() => {
@@ -503,10 +500,26 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
             const dec = decryptData(err.response.data.data)
             setMobileError("Incorrect phone number, please enter a valid number.")
             console.log(dec)
-        }) 
-
-
+        })
     }
+    const addBeneficiaryHandler = async (e) => {
+        setMobileError("")
+        setWalletMobileError("")
+        e.preventDefault()
+
+        if (formData.mobile_wallet_account_number) {
+            try {
+                await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
+                    data: encryptData({ number: `+${formData.mobile_wallet_account_number}` })
+                });
+                addBenFunc();
+            } catch {
+                setWalletMobileError("Incorrect phone number, please enter a valid number.");
+            }
+        } else {
+            addBenFunc();
+        }
+    };
 
     const inputChangeHandler = (e) => {
         const { name, value } = e.target
@@ -1761,6 +1774,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                 disabledDropdown={true}
                                                 setCountry={() => { }}
                                                 phone={formData.mobile_wallet_account_number}
+                                                error={walletMobileError}
                                             />
                                         </FormGroup>
 

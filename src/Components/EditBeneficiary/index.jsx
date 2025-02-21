@@ -694,7 +694,11 @@ const EditBeneficiary = () => {
 
     const toggleSuccess = () => showSuccess ? navigate("/beneficiaries") : setShowSuccess(true)
 
-    const editBeneficiaryHandler = () => {
+
+    const [mobileNumberError, setMobileNumberError] = useState("")
+    const [walletNumberError, setWalletNumberError] = useState("")
+
+    const editBenFun = () => {
         const account_types = [
             services.some(item => item?.name?.toLowerCase()?.includes("bank")) && completedBank ? "bank" : null,
             services.some(item => item?.name?.toLowerCase()?.includes("card")) && completedCard ? "card" : null,
@@ -801,6 +805,34 @@ const EditBeneficiary = () => {
             .catch(err => {
                 // console.log(decryptData(err.response.data.data))
             })
+    }
+
+    const editBeneficiaryHandler = async () => {
+        setMobileNumberError("")
+        setWalletNumberError("") 
+        try {
+            const mobileCheck = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
+                data: encryptData({ number: `+${mobileNumber}` })
+            })
+            if (formData.mobile_wallet_account_number) {
+                await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
+                    data: encryptData({ number: `+${formData.mobile_wallet_account_number}` })
+                })
+            }
+
+
+            await editBenFun()
+        } catch (error) {
+            const decrypt = decryptData(error.response.data.data)
+
+            if(decrypt.includes("`mobile_number`")){
+                setWalletNumberError("Incorrect phone number, please enter a valid number")
+            }
+            else if(decrypt.includes("mobile number")){
+                setMobileNumberError("Incorrect phone number, please enter a valid number")
+            }
+            console.log(decrypt)
+        }
     }
 
 
@@ -1089,6 +1121,7 @@ const EditBeneficiary = () => {
                                                     setPhone={(e) => setMobileNumber(e)}
                                                     disabled={!isEditMode}
                                                     required
+                                                    error={mobileNumberError}
                                                 />
                                             </FormGroup>
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
@@ -1562,6 +1595,7 @@ const EditBeneficiary = () => {
                                                         setPhone={(e) => inputChangeHandler({ target: { value: e, name: "mobile_wallet_account_number" } })}
                                                         disabled={!country || !isEditMode}
                                                         disabledDropdown={true}
+                                                        error={walletNumberError}
                                                     />
                                                 </FormGroup>
                                             </div>
