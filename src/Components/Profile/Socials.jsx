@@ -79,7 +79,7 @@ const Socials = () => {
                     ))
                     :
                     socials_data.slice(0, showMore ? socials_data.length - 1 : 3).map(item => (
-                        <div className={styles.item} style={{ flexDirection: "column", alignItems: "center", justifyContent: "center" }} key={item.name}>
+                        <div className={styles.item} style={{ flexDirection: "column", alignItems: "flex-start", justifyContent: "center", gap: "0" }} key={item.name}>
                             <div style={{display: "flex", alignItems: "center", justifyContent: "space-between", width: '100%'}}>
                                 <div className={styles.left}>
                                     <span>{item.name}</span>
