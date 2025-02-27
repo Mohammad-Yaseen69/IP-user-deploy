@@ -21,7 +21,7 @@ import cardStyles from "../PaymentsNewer/InternationalFlow/styles/creditcard.mod
 import { Check } from 'react-feather'
 import logo_w from "../../assets/images/logo/logo_white.png"
 import { createShambeToken } from '../../Helper/CreateToken'
-import { useReactToPrint } from 'react-to-print'
+import TrustpaymentPage from '../AddFunds/WalletFund/CreditTransaction'
 
 
 const options = [
@@ -102,6 +102,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
   const [saveCard, setSaveCard] = useState(false)
   const [cards, setCards] = useState([])
   const [selectedSaveCard, setSelectedSaveCard] = useState({})
+  const [cardTransactionDetails, setCardTransactionDetails] = useState({})
   const navigate = useNavigate()
   const [cardDetail, setCardDetails] = useState({
     cardNumber: "",
@@ -109,7 +110,6 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
     cardCVC: "",
     cardHolderName: "",
   })
-  console.log(userDetails)
   const [defaultWallet, setDefaultWallet] = useState({})
   const [feeDetails, setFeeDetails] = useState({})
   const [cardNumberError, setCardNumberError] = useState(null)
@@ -160,12 +160,14 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
       const twoYearsAhead = new Date();
       twoYearsAhead.setFullYear(twoYearsAhead.getFullYear() + 2);
 
+
+      console.log(feeDetails)
       const cardData = {
         data: {
-            currency: "USD",
-            expdate: `${twoYearsAhead.getFullYear()}-${String(twoYearsAhead.getMonth() + 1).padStart(2, '0')}-${String(twoYearsAhead.getDate()).padStart(2, '0')}`,
-            token: feeDetails?.token,
-            cardType: "international_card_payment",
+          currency: "USD",
+          expdate: `${twoYearsAhead.getFullYear()}-${String(twoYearsAhead.getMonth() + 1).padStart(2, '0')}-${String(twoYearsAhead.getDate()).padStart(2, '0')}`,
+          token: feeDetails?.token,
+          cardType: vvcCardType == "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual",
         },
         type: codeType
       }
@@ -176,9 +178,6 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
         cardData.data.is_card_save = saveCard
         cardData.data.se_shambey = createShambeToken(cardDetail)
       }
-
-
-   
 
 
       const data = {
@@ -193,10 +192,8 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
         type: codeType
       }
 
-      const dataToEnc = paymentType === "wallet" ? data : paymentType === "card" && cardData
-
-      console.log(authHeader)
-      const encrypted = encryptData(dataToEnc)
+      console.log(cardData)
+      const encrypted = encryptData(paymentType === "wallet" ? data : paymentType === "card" && cardData)
       const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
         data: encrypted
       }, {
@@ -217,7 +214,6 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
   }
 
   const createWallet = async (setter, type, otp, setError) => {
-    console.log("Creating with wallet")
     setLoading(true)
     const data = {
       token: token,
@@ -281,7 +277,6 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
         })
 
         const dec = decryptData(res.data.data)
-        console.log(dec)
         setFeeDetails(dec.data)
       } catch (error) {
         const dec = decryptData(error.response.data.data)
@@ -315,7 +310,6 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
   }, [walletState, paymentType, cardDetail, cardNumberError, selectedSaveCard]);
 
   const initiateCardVVC = async (setter, type, otp, setError) => {
-    console.log("Creating with card")
     const twoYearsAhead = new Date();
     twoYearsAhead.setFullYear(twoYearsAhead.getFullYear() + 2);
     setLoading(true)
@@ -327,7 +321,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
         currency: "USD",
         expdate: `${twoYearsAhead.getFullYear()}-${String(twoYearsAhead.getMonth() + 1).padStart(2, '0')}-${String(twoYearsAhead.getDate()).padStart(2, '0')}`,
         token: feeDetails?.token,
-        cardType: "international_card_payment",
+        cardType: vvcCardType == "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual",
       }
     }
 
@@ -335,11 +329,9 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
     if (selectedSaveCard?._id) {
       data.panData.pan = selectedSaveCard._id
     } else {
-      data.panData.is_card_save = saveCard
-      data.panData.se_shambey = createShambeToken(cardDetail)
+      data.panDatais_card_save = saveCard
+      data.panDatase_shambey = createShambeToken(cardDetail)
     }
-
-    console.log(data)
 
     try {
       const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/virtual-card/initiate-vcc${selectedSaveCard._id ? "-pan" : ""}-card`, { data: encryptData(data) }, {
@@ -347,11 +339,10 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
       })
 
       console.log(decryptData(res.data.data))
-      setShowSuccess(true)
       setToken(null)
-      setStep(4)
       setshowOtpModal(false)
-
+      const dec = decryptData(res.data.data)
+      setCardTransactionDetails(dec)
     } catch (err) {
       const decrypted = decryptData(err.response.data.data);
       console.log(decrypted)
@@ -692,6 +683,26 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
           />
         </ModalBody>
       </Modal>
+
+      {cardTransactionDetails?.transaction_id
+        ?
+        <TrustpaymentPage
+          paymentWithSavedCard={selectedSaveCard?._id ? true : false}
+          card_cvc={cardDetail.cardCVC}
+          card_expiry={cardDetail.cardExpiry}
+          card_number={cardDetail.cardNumber}
+          currency={"USD"}
+          transaction={cardTransactionDetails}
+          amount={feeDetails?.totalFee}
+          url={`${process.env.REACT_APP_IP_DEV_API}api/virtual-card/confirm-vcc${selectedSaveCard._id ? "-pan" : ""}-card/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
+          tokenUrl={() => `${process.env.REACT_APP_IP_DEV_API}api/virtual-card/confirm-vcc${selectedSaveCard._id ? "-pan" : ""}-card/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
+        />
+        :
+        <></>
+      }
+
+
+
 
     </div>
   )
