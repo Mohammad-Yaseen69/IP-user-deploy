@@ -14,8 +14,11 @@ const PaypalTransactions = () => {
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const flow = queryParams.get("flow")
+    const platform = queryParams.get("platform")
+
 
     useEffect(() => {
+
         const hitNotification = async () => {
             try {
                 const data = {
@@ -37,8 +40,36 @@ const PaypalTransactions = () => {
                 toast.error(err?.message)
             }
         }
+
+        const hitNotificationTelegram = async () => {
+            try {
+                const data = {
+                    "referenceId": id,
+                    "flow": flow,
+                    "method": "paypal"
+                }
+
+                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/paypal/send-bot-notification-telegram`, {
+                    data: encryptData(data)
+                })
+
+                const dec = decryptData(res.data.data)
+                console.log(dec)
+                setCompleted(true)
+            } catch (error) {
+                const err = decryptData(error?.response?.data?.data)
+                console.log(err)
+                toast.error(err?.message)
+            }
+        }
+
+
         if (status && id) {
-            hitNotification()
+            if(platform && platform === "telegram"){
+                hitNotificationTelegram()
+            }else{
+                hitNotification()
+            }
         }
     }, [status, id])
 
