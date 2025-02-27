@@ -44,6 +44,8 @@ import analytics from "./files/analytics.svg"
 import analytics_a from "./files/analytics_a.svg"
 import location from "./files/location.svg"
 import location_a from "./files/location_a.svg"
+import mastercard_a from "./files/master_card_a.svg"
+import mastercard from "./files/master_card.svg"
 
 export const MENU = [
     {
@@ -66,6 +68,13 @@ export const MENU = [
                 activeIcon: <img src={wallets_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${process.env.PUBLIC_URL}/wallets`,
+            },
+            {
+                title: "My MasterCard",
+                icon: <img src={mastercard} style={{ marginRight: "12px" }} />,
+                activeIcon: <img src={mastercard_a} style={{ marginRight: "12px" }} />,
+                type: "link",
+                url: `${process.env.PUBLIC_URL}/my-mastercard`,
             },
             {
                 title: "Transactions",

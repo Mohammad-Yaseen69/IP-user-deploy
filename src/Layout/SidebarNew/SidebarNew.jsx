@@ -95,7 +95,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
         if (location.pathname === "/" || location.pathname === "/dashboard/default" || location.pathname === "/my-mastercard") {
             setTogglSidebar(true)
         }
-    }, [location])
+    }, [location.pathname])
 
     const [inheritSize, setInheritSize] = useState(false)
 
