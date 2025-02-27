@@ -304,12 +304,12 @@ const TwoFactorAuth = () => {
                     </ModalFooter>
                 </Modal>
             }
-            <CardBody style={{ overflowX: "auto", padding: window.innerWidth > 1000? "10px" : '0' }}>
+            <CardBody style={{ overflowX: "auto", padding: window.innerWidth > 1000 ? "10px" : '0', backgroundColor: window.innerWidth < 1000 && "#fbfbfb" }}>
                 <table className={styles.table}>
                     <tbody>
                         <tr>
                             <td style={{ width: "100%", fontWeight: 600 }} data-label="Email Address">
-                                <img src={EmailIcon} style={{ width: window.innerWidth  > 1000? "22px": "14px", height: "22px", aspectRadio: "1/1", marginRight: "7px" }} alt="" />
+                                <img src={EmailIcon} style={{ width: window.innerWidth > 1000 ? "22px" : "14px", height: "22px", aspectRadio: "1/1", marginRight: "7px" }} alt="" />
                                 {t("Email Address")}
                             </td>
                             <td data-label={t("Email Address")}>
@@ -321,7 +321,7 @@ const TwoFactorAuth = () => {
                         </tr>
                         <tr>
                             <td style={{ width: "100%", fontWeight: 600 }} data-label="Phone Number">
-                                <img src={PhoneIcon} style={{ width: window.innerWidth  > 1000? "22px": "14px", height: "22px", aspectRadio: "1/1", marginRight: "7px" }} alt="" />
+                                <img src={PhoneIcon} style={{ width: window.innerWidth > 1000 ? "22px" : "14px", height: "22px", aspectRadio: "1/1", marginRight: "7px" }} alt="" />
                                 {t("Phone Number")}
                             </td>
                             <td data-label={t("Phone Number")}>
@@ -333,7 +333,7 @@ const TwoFactorAuth = () => {
                         </tr>
                         <tr>
                             <td style={{ width: "100%", fontWeight: 600 }} data-label="Phone Number">
-                                <img src={AuthIcon} style={{ width: window.innerWidth  > 1000? "22px": "14px", height: "22px", aspectRadio: "1/1", marginRight: "7px" }} alt="" />
+                                <img src={AuthIcon} style={{ width: window.innerWidth > 1000 ? "22px" : "14px", height: "22px", aspectRadio: "1/1", marginRight: "7px" }} alt="" />
                                 {t("Google Authenticator")}
                             </td>
                             <td data-label={t("Google Authenticator")}>
@@ -355,10 +355,10 @@ const TwoFactorAuth = () => {
                         </tr>
                         <tr>
                             <td style={{ width: "100%", fontWeight: 600 }} data-label="Finger Biometric">
-                                <img src={BioIcon} style={{ width: window.innerWidth  > 1000? "22px": "14px", height: "22px", aspectRadio: "1/1", marginRight: "7px" }} alt="" />
+                                <img src={BioIcon} style={{ width: window.innerWidth > 1000 ? "22px" : "14px", height: "22px", aspectRadio: "1/1", marginRight: "7px" }} alt="" />
                                 {t("Finger Biometric")}
                             </td>
-                            <td style={{ minWidth: window.innerWidth > 1000  && "400px" }} data-label={t("Finger Biometric")}>
+                            <td style={{ minWidth: window.innerWidth > 1000 && "400px" }} data-label={t("Finger Biometric")}>
 
                                 {window.innerWidth > 1000 &&
                                     <div style={{ cursor: "pointer" }} onClick={() => setShowDevices(true)} className={styles.deviceDiv}>
@@ -394,7 +394,7 @@ const TwoFactorAuth = () => {
                     </div>
                 }
 
-                {showDevices &&
+                {(showDevices && window.innerWidth > 1000) &&
                     <div style={{ display: "flex", flexDirection: "column", gap: "18px", alignItems: "flex-end" }}>
                         <div className={styles.devices}>
                             <h4>Manage Your Biometric Devices</h4>
@@ -458,6 +458,63 @@ const TwoFactorAuth = () => {
                         </div>
                     </div>
                 }
+                {(showDevices && window.innerWidth < 1000) &&
+                    <div style={{ display: "flex", flexDirection: "column", gap: "18px", alignItems: "flex-end",   }}>
+                        <div className={styles.devices} style={{backgroundColor: "white", padding: "12px"}}>
+                            <h4 style={{fontSize: "12px"}}>Manage Your Biometric Devices</h4>
+                            <div className={styles.device}>
+                                <div>
+                                    <div>
+                                        <p style={{ fontSize: "12px", color: "#333333" }}>iPhone 14 pro max</p>
+                                    </div>
+
+                                </div>
+
+                                <div style={{ display: "flex", alignItems: "center" }}>
+                                    <Switch />
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
+                                        <path d="M6 2.604H10M2 4.604H14M12.6667 4.604L12.1991 11.6169C12.129 12.669 12.0939 13.1951 11.8667 13.594C11.6666 13.9452 11.3648 14.2275 11.0011 14.4038C10.588 14.604 10.0607 14.604 9.00623 14.604H6.99377C5.93927 14.604 5.41202 14.604 4.99889 14.4038C4.63517 14.2275 4.33339 13.9452 4.13332 13.594C3.90607 13.1951 3.871 12.669 3.80086 11.6169L3.33333 4.604" stroke="#D00416" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div className={styles.device}>
+                                <div>
+                                    <div >
+                                        <p style={{ fontSize: "12px", color: "#333333" }}>iPhone 14 pro max</p>
+                                    </div>
+
+                                   
+                                </div>
+
+                                <div style={{ display: "flex", alignItems: "center" }}>
+                                    <Switch />
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
+                                        <path d="M6 2.604H10M2 4.604H14M12.6667 4.604L12.1991 11.6169C12.129 12.669 12.0939 13.1951 11.8667 13.594C11.6666 13.9452 11.3648 14.2275 11.0011 14.4038C10.588 14.604 10.0607 14.604 9.00623 14.604H6.99377C5.93927 14.604 5.41202 14.604 4.99889 14.4038C4.63517 14.2275 4.33339 13.9452 4.13332 13.594C3.90607 13.1951 3.871 12.669 3.80086 11.6169L3.33333 4.604" stroke="#D00416" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div className={styles.buttons} style={{ display: 'grid', gridTemplateColumns: "1fr 1fr", gap: "8px", margin: "0" }}>
+                            <button onClick={() => setShowDevices(false)} className={styles.close}>
+                                <img src={Cancel} alt="" />     
+                                <p style={{ marginBottom: "0" }}>Close</p>
+                            </button>
+
+                            <button className={styles.plus}>
+                                <img src={Plus} alt="" />
+                                <p style={{ marginBottom: "0" }}>Register Biometric</p>
+                            </button>
+                        </div>
+                    </div>
+                }
+
+
                 <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "2.5rem" }}>
                     {/* {
                         editMode
@@ -574,7 +631,7 @@ const TwoFactorAuth = () => {
 
 
                                 <div className={styles.modalBtns} style={{ display: "flex", alignItems: "center", gap: "8px", width: "100%" }}>
-                                    <button style={{ width: window.innerWidth > 1000 && "100%" }} onClick={() => setShowBioModal(false)} className={styles.back}>Back</button>
+                                    <button style={{ width: window.innerWidth < 1000 && "100%" }} onClick={() => setShowBioModal(false)} className={styles.back}>Back</button>
                                     <button className={styles.next}>Next</button>
                                 </div>
                             </div>

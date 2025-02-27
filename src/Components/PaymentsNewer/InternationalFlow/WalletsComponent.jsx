@@ -81,7 +81,7 @@ const WalletsComponent = ({ data, dataHandler, loading = false }) => {
                         }
                     </div>
                     {
-                        data.wallet?.currency?.code
+                        data?.wallet?.currency?.code
                         &&
                         <p style={{
                             fontSize: ".8rem",
@@ -107,7 +107,7 @@ const WalletsComponent = ({ data, dataHandler, loading = false }) => {
 
 export default WalletsComponent
 
-const WalletCard = ({ wallet, data, dataHandler, loading, blocked = false }) => {
+export const WalletCard = ({ wallet, data, dataHandler, loading, blocked = false, cardType, isInVCard = false }) => {
     const { t } = useTranslation()
     const { authHeader } = useContext(UserContext)
     const [walletData, setWalletData] = useState({})
@@ -131,37 +131,57 @@ const WalletCard = ({ wallet, data, dataHandler, loading, blocked = false }) => 
         }
     };
 
+    const getFee = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/virtual-card/get-vvc-fee/${wallet?.wallet_id}/${cardType}/wallet`, {
+                headers: authHeader
+            })
+
+            const dec = decryptData(response?.data?.data)
+            setIsSufficient(wallet?.balance?.available > dec.data?.fee)
+            console.log(dec)
+        } catch (error) {
+            const dec = decryptData(error.response?.data?.data)
+            console.log(dec)
+        }
+    }
+
     const [isSufficient, setIsSufficient] = useState(false)
     useEffect(() => {
-        if (!blocked && wallet) {
-            let amount;
+        if (!isInVCard) {
+            if (!blocked && wallet) {
+                let amount;
 
-            if (data?.amount) {
-                amount = +String(data?.amount)?.replaceAll(",", "")
-            }
-            if (data.package_details?.response) {
-                amount = data.package_details?.response?.total
-            }
-            if (data.package_details?.filteredData?.[0]) {
-                amount = data.package_details?.filteredData?.[0]?.total
-            }
+                if (data?.amount) {
+                    amount = +String(data?.amount)?.replaceAll(",", "")
+                }
+                if (data?.package_details?.response) {
+                    amount = data.package_details?.response?.total
+                }
+                if (data?.package_details?.filteredData?.[0]) {
+                    amount = data.package_details?.filteredData?.[0]?.total
+                }
 
-            const apidata = [data.currency_wallet?.currency?.code ?? data.airtime_currency?.currency?.code, wallet?.currency?.code, Number(amount)]
+                const apidata = [data?.currency_wallet?.currency?.code ?? data?.airtime_currency?.currency?.code, wallet?.currency?.code, Number(amount)]
 
-            getExchangedAmounts(...apidata)
-                .then(res => {
-                    setIsSufficient(wallet?.balance?.available > res)
-                })
+                getExchangedAmounts(...apidata)
+                    .then(res => {
+                        setIsSufficient(wallet?.balance?.available > res)
+                    })
+            }
+        } else {
+            getFee()
         }
     }, [wallet, blocked])
 
+    console.log(data)
 
     return (
         <div
             data-content={t("Insufficient Balance")}
             data-block-content={t("Blocked Wallet")}
-            className={`${styles.card} ${isSufficient ? "" : styles.disabled_card} ${blocked ? styles.blocked_card : ""} ${data.wallet?._id === wallet?._id ? styles.active : ""}`}
-            onClick={() => isSufficient && !loading && !blocked ? dataHandler("wallet", wallet) : console.log("")}
+            className={`${styles.card} ${isSufficient ? "" : styles.disabled_card} ${blocked ? styles.blocked_card : ""} ${data?.wallet?._id === wallet?._id ? styles.active : ""}`}
+            onClick={() => isSufficient && !loading && !blocked ? dataHandler("wallet", wallet) : console.log("sdfgsfg")}
         >
             <div className={styles.top}>
                 <div className={styles.left}>
@@ -169,7 +189,7 @@ const WalletCard = ({ wallet, data, dataHandler, loading, blocked = false }) => 
                     <h4>{wallet?.currency?.code}  {wallet?.balance?.available?.toFixed(2)}</h4>
                 </div>
                 {
-                    data.wallet?._id === wallet?._id
+                    data?.wallet?._id === wallet?._id
                         ?
                         <div className={styles.top_badge}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">

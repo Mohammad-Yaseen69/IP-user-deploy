@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 
 
-const CardNumberInput = ({ content, setContent, cardType, cardError }) => {
+const CardNumberInput = ({ content, setContent, cardType, cardError, isinVVC = false ,widthFull }) => {
     const divRef = useRef(null);
     const caretPositionRef = useRef(0);
     const {t} = useTranslation()
@@ -92,21 +92,22 @@ const CardNumberInput = ({ content, setContent, cardType, cardError }) => {
 
     return (
         <div className={styles.main}>
-            <img src={creditCardImages?.[cardType?.type]} alt="" className={styles.card_img} />
+            <img style={{top: isinVVC && "10px"}} src={creditCardImages?.[cardType?.type]} alt="" className={styles.card_img} />
             <div
                 ref={divRef}
                 className={styles.input_container}
                 contentEditable="true"
+                style={{padding:  isinVVC && "8px 14px 8px 60px", borderRadius: isinVVC && "6px", width: widthFull && "100%"}}
                 role="textbox"
                 aria-label="Secure Input Field"
-                suppressContentEditableWarning={true}
+                suppressContentEditableWarning={true} 
             >
                 {content}
             </div>
             {
-                content.length < 1
+                content.length < 1 
                 &&
-                <span className={styles.placeholder}>{t("Card Number")}</span>
+                <span style={{display: isinVVC && "none"}} className={styles.placeholder}>{t("Card Number")}</span>
             }
             {
                 cardError && content.length > 3

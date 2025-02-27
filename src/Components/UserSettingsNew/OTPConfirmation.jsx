@@ -20,6 +20,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
             inputRefs?.current?.[0]?.focus()
         }
     }, [])
+    
     const [verified, setVerified] = useState(false);
     const [resendTimer, setResendTimer] = useState(90);
     const [isAnyFieldEmpty, setIsAnyFieldEmpty] = useState(true);

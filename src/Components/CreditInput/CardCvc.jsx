@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import styles from "./styles/card_cvc.module.css"
 
-const CardCVC = ({ content, setContent, maxLength = 3 }) => {
+const CardCVC = ({ content, setContent, maxLength = 3, isinVVC = false }) => {
     const divRef = useRef(null);
     const caretPositionRef = useRef(0);
 
@@ -63,14 +63,6 @@ const CardCVC = ({ content, setContent, maxLength = 3 }) => {
     };
 
     // Handle input event
-    // const handleInput = (event) => {
-    //     saveCaretPosition()
-    //     const sanitizedContent = sanitizeInput(event.target.innerText);
-    //     setContent(sanitizedContent);
-    //     event.target.innerText = sanitizedContent;
-
-    //     requestAnimationFrame(restoreCaretPosition)
-    // };
     const handleInput = (event) => {
         saveCaretPosition();
         let sanitizedContent = sanitizeInput(event.target.innerText);
@@ -103,6 +95,7 @@ const CardCVC = ({ content, setContent, maxLength = 3 }) => {
                 ref={divRef}
                 className={styles.input_container}
                 contentEditable="true"
+                style={{ padding: isinVVC && "8px 14px", borderRadius: isinVVC && "6px" }}
                 role="textbox"
                 aria-label="Secure Input Field"
                 suppressContentEditableWarning={true}
@@ -110,9 +103,8 @@ const CardCVC = ({ content, setContent, maxLength = 3 }) => {
                 {content}
             </div>
             {
-                content.length < 1
-                &&
-                <span className={styles.placeholder}>CVC</span>
+                content.length < 1 &&
+                <span style={{display: isinVVC && "none"}} className={styles.placeholder}>CVC</span>
             }
         </div>
     );

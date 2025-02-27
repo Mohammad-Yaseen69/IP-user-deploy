@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/card_cvc.module.css"
 
-const CardHolderName = ({ content, setContent }) => {
+const CardHolderName = ({ content, setContent, isinVVC = false }) => {
     const handleChange = (e) => {
         // Remove non-alphabetic characters and spaces from the input value
         const filteredValue = e.target.value.replace(/[^A-Za-z\s]/g, '');
@@ -13,12 +13,13 @@ const CardHolderName = ({ content, setContent }) => {
         <div className={styles.main}>
             <input
                 className={styles.input_container}
+                style={{ padding: isinVVC && "8px 14px", borderRadius: isinVVC && "6px" }}
                 value={content}
                 onChange={handleChange}
             />
             {
                 content.length < 1 &&
-                <span className={styles.placeholder}>{t("Card Holder Name")}</span>
+                <span style={{display: isinVVC && "none"}} className={styles.placeholder}>{t("Card Holder Name")}</span>
             }
         </div>
     );

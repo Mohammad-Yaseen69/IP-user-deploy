@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import styles from "./styles/card_cvc.module.css";
 
-const CardExpiry = ({ content, setContent }) => {
+const CardExpiry = ({ content, setContent, isinVVC = false, widthFull }) => {
     const divRef = useRef(null);
     const caretPositionRef = useRef(0);
 
@@ -134,6 +134,7 @@ const CardExpiry = ({ content, setContent }) => {
                 ref={divRef}
                 className={styles.input_container}
                 contentEditable="true"
+                style={{ padding: isinVVC && "8px 14px", borderRadius: isinVVC && "6px" }}
                 role="textbox"
                 aria-label="Secure Input Field"
                 suppressContentEditableWarning={true}
@@ -142,7 +143,7 @@ const CardExpiry = ({ content, setContent }) => {
             </div>
             {
                 content.length < 1 &&
-                <span className={styles.placeholder}>MM / YY</span>
+                <span style={{display: isinVVC && "none"}} className={styles.placeholder}>MM / YY</span>
             }
             {
                 error && content.length > 3

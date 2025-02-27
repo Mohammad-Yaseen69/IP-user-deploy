@@ -1,0 +1,10 @@
+.vvc-modal .modal-body, .modal-header {
+    padding: 0 !important;
+    overflow: hidden !important;
+    border-radius: 16px !important;
+}
+
+.vvc-modal .modal-header, .modal-footer, .modal-content {
+    border-color: #eeeeee;
+    overflow: hidden !important;
+}
