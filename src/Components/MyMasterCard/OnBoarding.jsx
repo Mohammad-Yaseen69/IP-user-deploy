@@ -5,10 +5,11 @@ import Steptwo from "./Steptwo.jsx"
 import { UserContext } from "../../Context/UserContext.jsx"
 import Stepthree from "./Stepthree.jsx"
 import PaymentModal from "./PaymentModal.jsx"
+import Stepfour from "./Stepfour.jsx"
 
 
 
-const OnBoarding = ({alreadyHaveCard, setCardPurchased, setReRender}) => {
+const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
     const [cardType, setCardType] = useState("premium")
     const [step, setStep] = useState(1)
     const { userDetails } = useContext(UserContext)
@@ -47,9 +48,11 @@ const OnBoarding = ({alreadyHaveCard, setCardPurchased, setReRender}) => {
                     vvcCardType={cardType}
                     isOpen={showPaymentModal}
                     setIsOpen={setShowPaymentModal}
-                    setReRender={setReRender}
-                    alreadyHaveCard={alreadyHaveCard}
+                    setStepParent={setStep}
                 />
+            }
+            {step === 4 &&
+                <Stepfour />
             }
 
             <div className={styles.bottom}>
@@ -66,14 +69,19 @@ const OnBoarding = ({alreadyHaveCard, setCardPurchased, setReRender}) => {
                 </div>
 
                 <div className={styles.btns}>
-                    <button onClick={() => setStep(prev => prev !== 1 ? --prev : alreadyHaveCard ? setCardPurchased(true) : 1)}>Back</button>
+                    {step !== 4 && <button onClick={() => setStep(prev => prev !== 1 ? --prev : alreadyHaveCard ? setCardPurchased(true) : 1)}>Back</button>}
                     <button
                         onClick={() => {
+                            if(step == 4){
+                                setReRender(true)
+                                setCardPurchased(true)
+                                return 
+                            }
                             if (step !== 3) {
                                 setStep(prev => prev += 1)
                             }
-                            else{
-                                if(userDetails.user.kyc_status === "approved"){
+                            else {
+                                if (userDetails.user.kyc_status === "approved") {
                                     setShowPaymentModal(true)
                                 }
                             }
@@ -81,7 +89,7 @@ const OnBoarding = ({alreadyHaveCard, setCardPurchased, setReRender}) => {
                         }}
                         style={{ color: "white", backgroundColor: "#5926F0" }}
                     >
-                        Verify & Continue
+                        {step !== 4 ?  "Verify & Continue": "View My Card & Details - Go to InstaPay Dashboard"}
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
                             <path d="M5.25 11L8.75 7.5L5.25 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>

@@ -10,6 +10,7 @@ import { UserContext } from '../../Context/UserContext';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import { useStateManager } from 'react-select';
 import InstaPayLoader from '../Loader';
+import { toast } from 'react-toastify'; // Add this import at the top
 
 
 const Toggle = ({ checked, onChange, isCheckbox = false }) => (
@@ -43,6 +44,21 @@ const CardPurchased = ({ cards, setCardPurchased }) => {
             ...prev,
             [cardId]: !prev[cardId]
         }));
+    };
+
+    const formatCardNumber = (number) => {
+        if (!number) return '';
+        return number.replace(/(.{4})/g, '$1-').slice(0, -1);
+    };
+
+    const handleCopy = (text) => {
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                toast.success('Copied to clipboard!');
+            })
+            .catch(() => {
+                toast.error('Failed to copy!');
+            });
     };
 
     useEffect(() => {
@@ -178,8 +194,18 @@ const CardPurchased = ({ cards, setCardPurchased }) => {
 
                                         <div className={styles.cardDets}>
                                             <div className={styles.num}>
-                                                <h3 className={styles.vals}>{currentCardDetails?.card_number}</h3>
-                                               <img src={Copy} alt="" />
+                                                <h3 className={styles.vals}>
+                                                    {formatCardNumber(currentCardDetails?.card_number)}
+                                                </h3>
+                                                <img
+                                                    src={Copy}
+                                                    alt="copy"
+                                                    style={{ cursor: 'pointer' }}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleCopy(currentCardDetails?.card_number);
+                                                    }}
+                                                />
                                             </div>
 
                                             <div className={styles.row}>
@@ -215,19 +241,19 @@ const CardPurchased = ({ cards, setCardPurchased }) => {
                     </svg>
                     <div className={styles.top}>
                         <p>Card Balance</p>
-                        <span>•• 9847</span>
+                        <span>•• {currentCardDetails?.card_number?.slice(-4)}</span>
                     </div>
 
                     <div className={styles.bottom}>
                         {!cardLoading && <h2>${currentCardDetails?.balance}</h2>}
                         {cardLoading && <InstaPayLoader />}
-                        <div>
+                        {/* <div>
                             <span>
                                 +3,8%
                             </span>
 
                             <p>From Lasth month</p>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
@@ -345,22 +371,22 @@ const CardPurchased = ({ cards, setCardPurchased }) => {
                         <h4>Wallet Options:</h4>
 
                         <div >
-                            <div onClick={() => window.location = "https://support.apple.com/en-us/108398"} className={styles.option}>
+                            <div onClick={() => window.open("https://support.apple.com/en-us/108398", "_blank", "noopener,noreferrer")} className={styles.option}>
                                 <img src={Apay} alt="" />
                                 <h3>Add to Apple Pay</h3>
                             </div>
-                            <div onClick={() => window.location = "https://support.google.com/wallet/answer/12058983?hl=en"} className={styles.option}>
+                            <div onClick={() => window.open("https://support.google.com/wallet/answer/12058983?hl=en", "_blank", "noopener,noreferrer")} className={styles.option}>
                                 <img src={Gpay} alt="" />
                                 <h3>Add to Google Pay</h3>
                             </div>
-                            <div onClick={() => window.location = "https://www.samsung.com/us/support/answer/ANS10002609"} className={styles.option}>
+                            <div onClick={() => window.open("https://www.samsung.com/us/support/answer/ANS10002609", "_blank", "noopener,noreferrer")} className={styles.option}>
                                 <img src={Samsung} alt="" />
                                 <h3>Add to Samsung Wallet</h3>
                             </div>
                         </div>
                     </div>
 
-                    <div className={styles.linkDevices}>
+                    {/* <div className={styles.linkDevices}>
                         <h4>Linked Devices:</h4>
 
                         <div style={{ display: "flex", alignItems: "center", gap: "20px", overflowX: "auto" }}>
@@ -432,7 +458,7 @@ const CardPurchased = ({ cards, setCardPurchased }) => {
                                 </svg>
                             </span>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 

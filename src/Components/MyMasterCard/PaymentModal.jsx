@@ -89,7 +89,7 @@ const PLACEHOLDER_CARD_TYPE = {
 
 
 
-const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setReRender, alreadyHaveCard }) => {
+const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
   const [step, setStep] = useState(1)
   const { t } = useTranslation()
   const { userWallets, getUserWallets, userDetails, authHeader, setProfileLockTime } = useContext(UserContext)
@@ -119,6 +119,27 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setReRender, alreadyHave
   const [cardType, setCardType] = useState(PLACEHOLDER_CARD_TYPE)
   const [sideText, setSideText] = useState("Select the payment Type")
 
+  const handleClose = () => {
+    setIsOpen(false);
+    setStep(1);
+    setPaymentType("");
+    setWalletState({});
+    setShowOtp(false);
+    setLoading(false);
+    setToken(null);
+    setshowOtpModal(false);
+    setCodeType("authenticator");
+    setShowSuccess(false);
+    setSaveCard(false);
+    setSelectedSaveCard({});
+    setCardTransactionDetails({});
+    setCardDetails({
+      cardNumber: "",
+      cardExpiry: "",
+      cardCVC: "",
+      cardHolderName: "",
+    });
+  };
 
   useEffect(() => {
     switch (step) {
@@ -390,10 +411,18 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setReRender, alreadyHave
   return (
     <div className='vvc-modal'>
       <Modal isOpen={isOpen && !showOtpModal} style={{ borderRadius: "16px", overflow: "hidden", minWidth: step === 4 ? "1000px" : '800px' }}>
+        <div style={{ position: 'absolute', right: '10px', top: '10px', zIndex: 10, cursor: 'pointer' }} onClick={handleClose}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6L18 18" stroke="#1F2937" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
         <ModalBody style={{ padding: "0" }}>
           <div className={styles.modal} style={{ display: 'flex', alignItems: 'center' }}>
             <div style={{ flex: step === 4 && 0.8 || step === 2 && 1.2 }} className={styles.left}>
-              <h1>{sideText}</h1>
+              <div>
+                <h1>{sideText}</h1>
+                {step === 4 && <p>Thanks for using InstaPay!</p>}
+              </div>
 
               {step !== 1 &&
                 <div className={styles.contact}>
@@ -655,7 +684,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setReRender, alreadyHave
                     <div className={styles.paymentInfo}>
                       <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
                         <p>You Have to Pay</p>
-                        <h1>$5.00</h1>
+                        <h1>{feeDetails.currency}{feeDetails.fee}</h1>
                       </div>
 
 
@@ -682,7 +711,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setReRender, alreadyHave
 
                       <div>
                         <h3>Card activation fee</h3>
-                        <h3>$5.00</h3>
+                        <h3>{feeDetails.currency}{feeDetails.fee}</h3>
                       </div>
 
                     </div>
@@ -701,7 +730,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setReRender, alreadyHave
                     <button
                       style={{ color: "white", backgroundColor: "#5926F0" }}
                       onClick={() => {
-                        setReRender(prev => !prev)
+                        setStepParent(4)
                         setIsOpen(false)
                       }}
                     >
