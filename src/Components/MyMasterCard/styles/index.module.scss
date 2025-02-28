@@ -32,6 +32,30 @@
         padding: 24px;
         border-radius: 16px;
 
+        .tap {
+            display: flex;
+            padding: 10px;
+            justify-content: center;
+            align-items: center;
+            gap: 15.283px;
+            border-radius: 6.113px;
+            background: var(--COLORS-Neutral-200, #E8E8E8);
+            margin: 10px auto;
+            color: var(--COLORS-Neutral-900, #4A4A4A);
+            text-align: center;
+            leading-trim: both;
+            text-edge: cap;
+
+            /* Big Screen/BodyLarge */
+            font-family: Manrope;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 24px;
+            /* 150% */
+            letter-spacing: -0.32px;
+        }
+
         .left {
             display: flex;
             height: 779px;
@@ -172,6 +196,7 @@
                                 letter-spacing: 1.286px;
                                 text-transform: uppercase;
                             }
+
                             .num {
                                 display: flex;
                                 padding: 6.431px 5.145px;

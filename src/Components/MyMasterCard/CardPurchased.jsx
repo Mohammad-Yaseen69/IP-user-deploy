@@ -65,7 +65,7 @@ const CardPurchased = ({ cards, setCardPurchased }) => {
         setCardLoading(true)
         const getCardDetail = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/virtual-card/get-card-details/${cards[0]._id}`, {
+                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/virtual-card/get-card-details/${cards[current]._id}`, {
                     headers: authHeader
                 })
 
@@ -225,6 +225,8 @@ const CardPurchased = ({ cards, setCardPurchased }) => {
                         ))}
                     </Swiper>
                 </div>
+
+                <span className={styles.tap}>Tap to see Details</span>
 
                 <div className={styles.balance}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="222" height="160" viewBox="0 0 222 160" fill="none">
