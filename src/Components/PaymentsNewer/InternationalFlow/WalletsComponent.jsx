@@ -107,7 +107,7 @@ const WalletsComponent = ({ data, dataHandler, loading = false }) => {
 
 export default WalletsComponent
 
-export const WalletCard = ({ wallet, data, dataHandler, loading, blocked = false, cardType, isInVCard = false }) => {
+export const WalletCard = ({ wallet, data, dataHandler, loading, blocked = false, cardType, isInVCard = false, selectedWallet, setFeeDetail }) => {
     const { t } = useTranslation()
     const { authHeader } = useContext(UserContext)
     const [walletData, setWalletData] = useState({})

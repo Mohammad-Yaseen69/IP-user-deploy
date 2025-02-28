@@ -227,26 +227,7 @@
         width: 100%;
         align-items: center;
 
-        .contact {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            align-self: stretch;
-
-
-            .circle {
-                display: flex;
-                width: 28.939px;
-                height: 29.628px;
-                padding: 6.275px 5.931px 6.275px 5.929px;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                border-radius: 1219.588px;
-                border: 0.689px solid var(--COLORS-Primary-100, #C8B7FA);
-            }
-        }
-
+       
         .btns {
             display: flex;
             justify-content: flex-end;
@@ -379,6 +360,27 @@
 
 }
 
+.contact {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
+
+
+    .circle {
+        display: flex;
+        width: 28.939px;
+        height: 29.628px;
+        padding: 6.275px 5.931px 6.275px 5.929px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 1219.588px;
+        border: 0.689px solid var(--COLORS-Primary-100, #C8B7FA);
+    }
+}
+
+
 .modal {
 
     .left {
@@ -390,6 +392,7 @@
         align-self: stretch;
         background-color: #FAFAFA;
         flex: 1.6;
+        justify-content: space-between;
 
         h1 {
             color: #000;

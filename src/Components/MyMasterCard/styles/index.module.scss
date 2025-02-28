@@ -40,8 +40,250 @@
             flex-direction: column;
             border-radius: var(--RADIUS-radius-4, 16px);
             box-shadow: 0px 16px 32px -12px rgba(88, 92, 95, 0.10);
-            align-items: center;
-            gap: var(--SPACING-spacing-4, 32px);
+            align-items: flex-start;
+            gap: var(--SPACING-spacing-4, 20px);
+
+
+            .card {
+                width: 270px;
+                height: 350px;
+                border-radius: 15px;
+                overflow: hidden;
+                // box-shadow: 0px 34.5px 67.2px -30px rgba(89, 38, 240, 0.74);
+                background-size: cover;
+                background-position: center;
+                transform-style: preserve-3d;
+                transition: transform 0.6s;
+                cursor: pointer;
+                position: relative;
+                perspective: 1000px; // Add this
+                transform-style: preserve-3d;
+                position: relative;
+
+                &.flipped {
+                    .front {
+                        transform: rotateY(180deg);
+                    }
+
+                    .back {
+                        transform: rotateY(0);
+                    }
+                }
+
+                .front,
+                .back {
+                    backface-visibility: hidden;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    transition: transform 0.6s;
+                }
+
+                .front {
+                    transform: rotateY(0);
+                    z-index: 2;
+                }
+
+                .back {
+                    transform: rotateY(180deg);
+
+                    .cardDets {
+                        transform: rotateY(0deg) scale(-1, 1); // This keeps card details readable
+                        opacity: 0;
+                        transition: opacity 0.3s;
+                    }
+                }
+
+                &.flipped {
+                    transform: rotateY(180deg);
+
+                    .cardDets {
+                        opacity: 1;
+                    }
+
+                    .front {
+                        transform: rotateY(180deg);
+                    }
+
+                    .back {
+                        transform: rotateY(0);
+                        z-index: 2;
+
+                        .cardDets {
+                            opacity: 1;
+                        }
+
+                        img,
+                        svg,
+                        .topicon {
+                            transform: scale(-1, 1); // Only flip these elements
+                        }
+                    }
+                }
+
+                >div {
+                    display: flex;
+                    height: 100%;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    padding: 24px;
+                    backface-visibility: hidden;
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+
+                    &.back {
+                        transform: rotateY(180deg) scale(-1, 1);
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: flex-start;
+                        padding: 24px;
+                        justify-content: space-between;
+
+                        img,
+                        svg {
+                            transform: scale(-1, 1);
+                        }
+
+                        .cardDets {
+                            margin-top: auto; // This pushes it to the bottom
+                            display: flex;
+                            padding: 10.289px;
+                            flex-direction: column;
+                            align-items: flex-start;
+                            border-radius: 7.717px;
+                            background: linear-gradient(180deg, #33168A 0%, #401DA8 100%);
+                            backdrop-filter: blur(9.646px);
+                            gap: 12.862px;
+                            opacity: 0;
+
+                            .vals {
+                                color: #FFF;
+                                leading-trim: both;
+                                text-edge: cap;
+                                font-family: "Clash Display";
+                                font-size: 14.148px;
+                                font-style: normal;
+                                font-weight: 500;
+                                line-height: 129%;
+                                /* 18.251px */
+                                letter-spacing: 1.286px;
+                                text-transform: uppercase;
+                            }
+                            .num {
+                                display: flex;
+                                padding: 6.431px 5.145px;
+                                justify-content: space-between;
+                                line-height: 129%;
+                                /* 18.251px */
+                                letter-spacing: 1.286px;
+                                text-transform: uppercase;
+                            }
+
+                            .lab {
+                                color: #FFF;
+                                font-family: Manrope;
+                                font-size: 5.058px;
+                                font-style: normal;
+                                font-weight: 700;
+                                line-height: 170%;
+                                /* 8.598px */
+                                letter-spacing: 2.653px;
+                                text-transform: uppercase;
+                            }
+
+                            .num {
+                                display: flex;
+                                padding: 6.431px 5.145px;
+                                justify-content: space-between;
+                                align-items: center;
+                                align-self: stretch;
+                                border-radius: 2.572px;
+                                background: rgba(255, 255, 255, 0.12);
+                            }
+
+                            .dets {
+                                display: flex;
+                                align-items: center;
+                                gap: 7.587px;
+                                width: auto !important;
+                            }
+
+                            .row {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: flex-start;
+                                align-self: stretch;
+                            }
+                        }
+                    }
+
+                    div {
+                        display: flex;
+                        align-items: center;
+                        width: 100%;
+                        justify-content: space-between;
+                    }
+
+                    .topicon {
+                        display: inline-flex;
+                        padding: 3.643px;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 9.108px;
+                        border-radius: 35.522px;
+                        background: rgba(255, 255, 255, 0.18);
+                    }
+
+
+                    h2 {
+                        color: #FFF;
+                        font-family: "SF Pro Text";
+                        font-style: normal;
+                        font-weight: 700;
+                        font-size: 14px;
+                        line-height: 129%;
+                        letter-spacing: 1.822px;
+                        text-transform: uppercase;
+                        margin-bottom: 0;
+                    }
+
+                    h3 {
+                        color: #FFF;
+                        text-align: center;
+                        font-family: Manrope;
+                        font-size: 8px;
+                        font-style: normal;
+                        font-weight: 800;
+                        line-height: 148%;
+                        letter-spacing: 1.419px;
+                        text-transform: uppercase;
+                        margin-bottom: 0;
+                    }
+                }
+            }
+
+            .card.standard {
+                background: url(https://s3-alpha-sig.figma.com/img/005e/469b/526be6dd373da716feb3701968e16123?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=VvuTcHf2BKbXjh7SR7LE0djN1N1586FH08R3Jg2MBL-2igQ-1Mur5ep0lg-mxGje~VEqjN2IwIuaJsmD5tRtwBR9ElJay9u~S9pwTSxTDvMlfjS3Us6qxZF8RF4v3~eICygk7LXjzFyeECLBIgiGqWoKGe9kaqxPw87jXTGJAaHJZqr2uHy7mJiNUdcarZ586PYdC2fPeIWruKboTjKs2gRMaEsO7L7t0Y9ANQdD7eHteoSzfRTRK95tp~gIAIKOczyBIOTNaZM5gdwy91Z1oagItEbHG4BK7FziKNeLjhgN9NkCaMY8p7UDCvZa4fc9Hg6hWwGcPxIMD7fl~UBzjw__);
+                background-size: cover !important;
+                background-position: center;
+
+                .cardDets {
+                    background: linear-gradient(180deg, #33168A 0%, #401DA8 100%) !important;
+                }
+            }
+
+            .card.premium {
+                background-size: cover !important;
+                background-position: center;
+                background: url(https://s3-alpha-sig.figma.com/img/1a75/fe05/05b35bdd50433618ba11dd6cbe9340d2?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=owlJy5yVvink3nDq-w9utcRGdDVpJIY~ufmCV0k-MLZBFpHjThDFS1uBWWA0MVECOPMyHRwV73k9njMph7-NNorg0xP6BkfwCRpJvS715~sG7PBvoC6MqIFRlUNtwQrJvsgjAR8qIKrBdOoLVGgzhrtt8bsCkFpXxNYs4WjjcsO0tbgZQwzoGCNqaOByhL9hMy19Kg~BBbrHPYOvHlJ4WqXRWJ8ioWcmHQN1dBk79PBGYMkVEXVWlxI3FZpdSmDNOpSz5VHiF8J8sr51Dt6EvYXmXW0AilusruLg9ltuzk4SDdBBmYIw~jAN1ImCUwbdN2uBtDkq~2SULvYWH~fL6g__);
+
+                .cardDets {
+                    background: #57360c !important;
+                }
+            }
 
             .topInfo {
                 display: flex;
@@ -94,6 +336,109 @@
                     letter-spacing: -0.14px;
                 }
             }
+
+            h2 {
+                color: #000;
+                font-size: 20px;
+                font-weight: 700;
+                margin-bottom: 0;
+            }
+
+
+            .balance {
+                display: flex;
+                padding: 19px 24px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--SPACING-spacing-3, 18px);
+                align-self: stretch;
+                border-radius: var(--RADIUS-radius-4, 16px);
+                background: #FFF;
+                box-shadow: 0px 16px 32px -12px rgba(88, 92, 95, 0.10);
+                position: relative;
+
+                svg {
+                    fill: rgba(89, 38, 240, 0.26);
+                    filter: blur(63.150001525878906px);
+                    position: absolute;
+                    right: -20px;
+                    top: -20px;
+                    position: absolute;
+                }
+
+                .top {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    align-self: stretch;
+                    align-items: center;
+                    margin-bottom: 0;
+
+                    p {
+                        color: var(--Gray-Cool-Gray-500, #6B7280);
+                        font-family: "Inter", serif;
+                        font-size: 16px;
+                        margin-bottom: 0;
+
+                    }
+
+                    span {
+                        display: flex;
+                        padding: 3px 5px;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 5px;
+                        color: var(--COLORS-Primary-300, #5926F0);
+                        font-family: "Inter", serif;
+                        font-size: 13px;
+                        border-radius: var(--RADIUS-radius-1, 4px);
+                        background: var(--COLORS-Primary-Alpha-10, rgba(89, 38, 240, 0.10));
+                        font-weight: 500;
+                    }
+                }
+
+                .bottom {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: var(--SPACING-spacing-2, 12px);
+                    align-self: stretch;
+
+
+                    h2 {
+                        margin-bottom: 0;
+                        color: #000;
+                        font-size: 40px;
+                        font-weight: 700;
+                    }
+
+                    div {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+
+                        span {
+                            display: flex;
+                            padding: 4px;
+                            justify-content: center;
+                            align-items: center;
+                            gap: 8px;
+                            border-radius: 4px;
+                            background: rgba(59, 207, 181, 0.10);
+                            color: #3BCFB5;
+                            font-size: 14px;
+                            font-weight: 600;
+                        }
+
+                        p {
+                            color: var(--Gray-Cool-Gray-400, #9CA3AF);
+                            margin-bottom: 0;
+                            font-size: 14px;
+                            font-weight: 600;
+                        }
+                    }
+                }
+            }
         }
 
         .right {
@@ -135,6 +480,27 @@
                     padding: 12px var(--RADIUS-radius-4, 16px);
                     align-items: center;
                     gap: var(--SPACING-spacing-2, 12px);
+
+                    .cardLabel {
+                        display: flex;
+                        border-radius: var(--RADIUS-radius-1, 4px);
+                        background: #FAFAFA;
+                        padding: 8px 5.5px 8px 12px;
+                        align-items: center;
+                        gap: 8px;
+                        align-self: stretch;
+
+
+                        h3 {
+                            flex: 1 0 0;
+                            margin-bottom: 0;
+                            color: var(--Secondary, #6F6F6F);
+                            font-size: 14px;
+                            font-weight: 500;
+                        }
+
+
+                    }
 
                     span {
                         color: #000;
@@ -221,6 +587,7 @@
                             align-items: center;
                             gap: var(--SPACING-spacing-1, 12px);
                             flex: 1 0 0;
+                            cursor: pointer;
 
                             img {
                                 width: 20px;
@@ -253,14 +620,14 @@
                         margin-bottom: 0;
                     }
 
-                  
 
-                    >div >div::-webkit-scrollbar{
+
+                    >div>div::-webkit-scrollbar {
                         display: none;
                     }
 
 
-                    >div > div {
+                    >div>div {
                         max-width: 400px;
                         display: flex;
                         align-items: center;
@@ -270,7 +637,7 @@
                         overflow: auto;
                         justify-content: flex-start;
 
-                        
+
 
                         .device {
                             display: flex;
@@ -323,6 +690,7 @@
                         }
 
                     }
+
                     .arrow {
                         display: flex;
                         width: 30px;

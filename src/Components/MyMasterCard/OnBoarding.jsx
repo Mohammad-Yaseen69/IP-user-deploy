@@ -8,7 +8,7 @@ import PaymentModal from "./PaymentModal.jsx"
 
 
 
-const OnBoarding = () => {
+const OnBoarding = ({alreadyHaveCard, setCardPurchased, setReRender}) => {
     const [cardType, setCardType] = useState("premium")
     const [step, setStep] = useState(1)
     const { userDetails } = useContext(UserContext)
@@ -22,6 +22,7 @@ const OnBoarding = () => {
                         cardType={cardType}
                         setCardType={setCardType}
                         setStep={setStep}
+                        userDetails={userDetails}
                     />
                 )
             }
@@ -31,6 +32,7 @@ const OnBoarding = () => {
                     <Steptwo
                         cardType={cardType}
                         setStep={setStep}
+                        userDetails={userDetails}
                     />
                 )
             }
@@ -45,6 +47,8 @@ const OnBoarding = () => {
                     vvcCardType={cardType}
                     isOpen={showPaymentModal}
                     setIsOpen={setShowPaymentModal}
+                    setReRender={setReRender}
+                    alreadyHaveCard={alreadyHaveCard}
                 />
             }
 
@@ -62,7 +66,7 @@ const OnBoarding = () => {
                 </div>
 
                 <div className={styles.btns}>
-                    <button onClick={() => setStep(prev => prev !== 1 ? --prev : 1)}>Back</button>
+                    <button onClick={() => setStep(prev => prev !== 1 ? --prev : alreadyHaveCard ? setCardPurchased(true) : 1)}>Back</button>
                     <button
                         onClick={() => {
                             if (step !== 3) {

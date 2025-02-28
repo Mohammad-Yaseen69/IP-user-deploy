@@ -30,6 +30,8 @@ import Samsung from "./samsumg.svg"
 import Speaker from "./speaker.svg"
 import plus from "./plus.svg"
 import Wallet2 from "./wallet-01.svg"
+
+import Copy from "./Copy.svg"
 // export them
 export  {
     Payment,
@@ -59,5 +61,6 @@ export  {
     Samsung,
     Speaker,
     plus,
-    Wallet2
+    Wallet2,
+    Copy
 }

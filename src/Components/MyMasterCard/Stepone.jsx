@@ -16,9 +16,9 @@ const cardTypes = [
 ]
 
 
-const Stepone = ({ cardType, setCardType, setStep }) => {
+const Stepone = ({ cardType, setCardType, setStep, userDetails }) => {
     return (
-        <div style={{display: "flex", gap: "8px", marginBottom: "7px", flexDirection: "column", maxWidth: "100%"}}>
+        <div style={{ display: "flex", gap: "8px", marginBottom: "7px", flexDirection: "column", maxWidth: "100%" }}>
             <div className={styles.top}>
                 <h2>Let’s Get Your InstaPay MasterCard!</h2>
                 <p>Choose the type of card that best suits your needs. Whether you want an instant Virtual Card for online payments or a Physical Card for everyday transactions, we’ve got you covered!  </p>
@@ -144,7 +144,7 @@ const Stepone = ({ cardType, setCardType, setStep }) => {
                         </div>
 
                         <div>
-                            <h2>Alexendra Morgan</h2>
+                            <h2>{userDetails.first_name} {userDetails.last_name}</h2>
 
                             <h3>Virtual <br /> Card</h3>
                         </div>

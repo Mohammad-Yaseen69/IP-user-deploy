@@ -87,7 +87,9 @@ const PLACEHOLDER_CARD_TYPE = {
 }
 
 
-const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
+
+
+const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setReRender, alreadyHaveCard }) => {
   const [step, setStep] = useState(1)
   const { t } = useTranslation()
   const { userWallets, getUserWallets, userDetails, authHeader, setProfileLockTime } = useContext(UserContext)
@@ -115,6 +117,24 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
   const [cardNumberError, setCardNumberError] = useState(null)
   const [disabledBtnS, setDisabledBtn] = useState(false)
   const [cardType, setCardType] = useState(PLACEHOLDER_CARD_TYPE)
+  const [sideText, setSideText] = useState("Select the payment Type")
+
+
+  useEffect(() => {
+    switch (step) {
+      case 1:
+        setSideText("Select the payment Type")
+        break;
+      case 2:
+        paymentType === "card" ? setSideText("Enter card Details") : paymentType === "wallet" && setSideText("Choose the Wallet")
+        break;
+      case 3:
+        setSideText("Review the Payment")
+        break;
+      case 4:
+        setSideText("Your Payment is now Completed")
+    }
+  }, [step])
 
   useEffect(() => {
     getUserWallets()
@@ -144,6 +164,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
   }, [userWallets])
 
   useEffect(() => {
+
     if (filteredWallets?.length) {
       setDefaultWallet(filteredWallets[0])
     }
@@ -272,7 +293,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
   useEffect(() => {
     const getFee = async (method) => {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/virtual-card/get-vvc-fee/${defaultWallet?.wallet_id}/${vvcCardType == "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual"}/${method}`, {
+        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/virtual-card/get-vvc-fee/${walletState?.wallet_id ? walletState?.wallet_id : defaultWallet?.wallet_id}/${vvcCardType == "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual"}/${method}`, {
           headers: authHeader
         })
 
@@ -286,7 +307,11 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
     }
     if (paymentType === "card") {
       getFee("card")
-    } else if (paymentType === "paypal") {
+    }
+    else if (paymentType === "wallet") {
+      getFee("wallet")
+    }
+    else if (paymentType === "paypal") {
       getFee("paypal")
     }
   }, [paymentType])
@@ -361,13 +386,28 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
 
 
 
+  console.log(feeDetails)
   return (
     <div className='vvc-modal'>
       <Modal isOpen={isOpen && !showOtpModal} style={{ borderRadius: "16px", overflow: "hidden", minWidth: step === 4 ? "1000px" : '800px' }}>
         <ModalBody style={{ padding: "0" }}>
           <div className={styles.modal} style={{ display: 'flex', alignItems: 'center' }}>
-            <div style={{ flex: step === 4 && 1 || step === 2 && 1.2 }} className={styles.left}>
-              <h1>Select Payment Type</h1>
+            <div style={{ flex: step === 4 && 0.8 || step === 2 && 1.2 }} className={styles.left}>
+              <h1>{sideText}</h1>
+
+              {step !== 1 &&
+                <div className={styles.contact}>
+                  <div className={styles.circle}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
+                      <path d="M7.39898 7.36508C7.56628 6.88948 7.89651 6.48843 8.33118 6.23297C8.76585 5.97751 9.2769 5.88413 9.77381 5.96937C10.2707 6.0546 10.7214 6.31295 11.0461 6.69866C11.3708 7.08437 11.5485 7.57254 11.5478 8.07671C11.5478 9.49997 9.41289 10.2116 9.41289 10.2116M9.46982 13.0581H9.47694M16.5861 9.49997C16.5861 13.4302 13.4 16.6163 9.46982 16.6163C5.53959 16.6163 2.35352 13.4302 2.35352 9.49997C2.35352 5.56975 5.53959 2.38367 9.46982 2.38367C13.4 2.38367 16.5861 5.56975 16.5861 9.49997Z" stroke="#5926F0" stroke-width="1.42326" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <span style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}>Having Troubles?</span>
+                    <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>Contact Us</span>
+                  </div>
+                </div>
+              }
             </div>
 
             <div className={styles.right}>
@@ -531,6 +571,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
                       onClick={() => {
                         setStep(1)
                         setWalletState({})
+                        setSelectedSaveCard({})
                       }}
                     >Back</button>
                     <button
@@ -563,7 +604,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
                     <div className={styles.paymentInfo}>
                       <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
                         <p>You Have to Pay</p>
-                        <h1>$5.00</h1>
+                        <h1>{feeDetails.currency}{feeDetails.fee}</h1>
                       </div>
 
 
@@ -586,7 +627,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
 
                       <div>
                         <h3>Card activation fee</h3>
-                        <h3>$5.00</h3>
+                        <h3>{feeDetails.currency}{feeDetails.fee}</h3>
                       </div>
 
                     </div>
@@ -626,10 +667,14 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
                       <div>
                         <div>
                           <p>You are using</p>
-                          <div>
-                            <span>USD Wallet</span>
-                            <p>3MKTGFY7</p>
-                          </div>
+
+                          {paymentType === "wallet"
+                            &&
+                            <div>
+                              <span>{walletState?.name} Wallet</span>
+                              <p>{walletState?.wallet_id}</p>
+                            </div>
+                          }
 
                           <button>Change</button>
                         </div>
@@ -655,7 +700,10 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen }) => {
                   <div className={styles.btns}>
                     <button
                       style={{ color: "white", backgroundColor: "#5926F0" }}
-                      onClick={() => setIsOpen(false)}
+                      onClick={() => {
+                        setReRender(prev => !prev)
+                        setIsOpen(false)
+                      }}
                     >
                       Close
                     </button>

@@ -6,7 +6,7 @@ import DollarIcon from "./files/dollar-icon.svg"
 import StandardLabel from "./files/standard-label.png"
 
 
-const Steptwo = ({ cardType, setStep }) => {
+const Steptwo = ({ cardType, setStep, userDetails }) => {
     return (
         <div style={{ width: "100%" }}>
             <div className={styles.top}>
@@ -26,7 +26,7 @@ const Steptwo = ({ cardType, setStep }) => {
                             Virtual Card : {cardType[0].toUpperCase() + cardType.slice(1)} Card (USD)
 
                         </span>
-                        <div style={{ background: `url(${cardType === "premium" ?PremiumLabel : StandardLabel})`, backgroundSize: "cover", backgroundPosition: "center" }} className={styles.cardLabel}>
+                        <div style={{ background: `url(${cardType === "premium" ? PremiumLabel : StandardLabel})`, backgroundSize: "cover", backgroundPosition: "center" }} className={styles.cardLabel}>
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="22" viewBox="0 0 36 22" fill="none">
                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M13.3536 19.5202H22.6226V2.90527H13.3536V19.5202Z" fill="#FF5F00" />
@@ -36,7 +36,7 @@ const Steptwo = ({ cardType, setStep }) => {
                             </span>
 
                             <div>
-                                <h5 style={{color: cardType === "standard" && "white"}}>{cardType[0].toUpperCase() + cardType.slice(1)}</h5>
+                                <h5 style={{ color: cardType === "standard" && "white" }}>{cardType[0].toUpperCase() + cardType.slice(1)}</h5>
                                 <p>Virtual <br /> Card</p>
                             </div>
                         </div>
@@ -66,12 +66,14 @@ const Steptwo = ({ cardType, setStep }) => {
                                 <p style={{ fontSize: "10px", color: "#A4A4A4" }}> Total Cost </p>
 
                                 <h3 style={{ fontSize: "16px", color: "black" }}>$5 (Card Fee)</h3>
-                                <div style={{ width: "fit-content" }}>
-                                    <h3 style={{ fontSize: "16px", color: "black" }}>$4.99 (Identity Verification)</h3>
-                                    <div style={{ width: "100%", height: "1px", background: "black", margin: "5px 0" }}></div>
-                                </div>
-                                <h3 style={{ fontSize: "16px", color: "black" }}>$9.99</h3>
-
+                                {!userDetails.user.kyc_status &&
+                                    <div style={{ width: "fit-content" }}>
+                                        <h3 style={{ fontSize: "16px", color: "black" }}>$4.99 (Identity Verification)</h3>
+                                        <div style={{ width: "100%", height: "1px", background: "black", margin: "5px 0" }}></div>
+                                    </div>
+                                }
+                                {!userDetails.user.kyc_status && <h3 style={{ fontSize: "16px", color: "black" }}>$9.99</h3>
+                                }
                             </div>
 
                         </div>
