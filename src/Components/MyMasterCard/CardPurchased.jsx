@@ -133,16 +133,20 @@ const CardPurchased = ({ cards, setCardPurchased }) => {
                             depth: 100,
                             modifier: 2.5,
                             slideShadows: false,
+
                         }}
                         centeredSlides={true}
-                        slidesPerView={'auto'}
+                        slidesPerView={window.innerWidth > 1650 ? 3 : 1}
                         initialSlide={1}
-                        spaceBetween={-50}
+                        spaceBetween={-200}
                         slideToClickedSlide={true}
                         className="mySwiper"
                         grabCursor={true}
                         modules={[EffectCoverflow]}
-                        onSlideChange={e => setCurrent(e.activeIndex)}
+                        onSlideChange={e => {
+                            setCurrent(e.activeIndex)
+                            setFlippedCards({})
+                        }}
                         ref={swiperRef}
                         style={{
                             width: '100%',
@@ -150,9 +154,10 @@ const CardPurchased = ({ cards, setCardPurchased }) => {
                         }}
                     >
 
-                        {cards?.map((card) => (
+                        {cards?.map((card, idx) => (
                             <SwiperSlide key={card._id}>
                                 <div
+
                                     className={`${styles.card} ${card.type == "standard" ? styles.standard : styles.premium} ${flippedCards[card._id] ? styles.flipped : ''}`}
                                     onClick={() => handleCardFlip(card._id)}
                                 >
@@ -226,7 +231,7 @@ const CardPurchased = ({ cards, setCardPurchased }) => {
                     </Swiper>
                 </div>
 
-                <span className={styles.tap}>Tap to see Details</span>
+                <span style={{cursor: 'pointer'}} onClick={() => handleCardFlip(cards[current]._id)}  className={styles.tap}>Tap to see Details</span>
 
                 <div className={styles.balance}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="222" height="160" viewBox="0 0 222 160" fill="none">
