@@ -8,7 +8,7 @@ import auth_icon from "../PaymentsNewer/files/auth.png"
 import { useNavigate } from 'react-router';
 import { UserContext } from '../../Context/UserContext';
 
-const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", processing = false, resendHandler = () => { }, authType, setAuthType, hideTfaSwitch = false, showAuthToggle = true }) => {
+const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", processing = false, resendHandler = () => { }, authType, setAuthType, hideTfaSwitch = false, showAuthToggle = true, otpTypeOnProfile }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
     const navigate = useNavigate()
@@ -207,7 +207,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                     (
                                         authType === "sms"
                                             ?
-                                            t(`A one-time verification code has been sent to your ${userDetails?.email && "email address and"} phone number.`)
+                                            t(`A one-time verification code has been sent to your ${userDetails?.email  && "email address and"} ${otpTypeOnProfile && "email address"} ${otpTypeOnProfile !== "email" &&  "phone number"}.`)
                                             :
                                             t("Enter a code shown in the app to make sure everything works fine.")
                                     )

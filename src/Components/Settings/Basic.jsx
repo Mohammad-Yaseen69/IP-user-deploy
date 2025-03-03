@@ -45,9 +45,10 @@ const Basic = () => {
     const [showOtp, setShowOtp] = useState(false)
     const [usernameError, setUserNameError] = useState("")
     const [codeType, setCodeType] = useState("")
+    const [otpType, setOtpType] = useState("")
 
     useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        setCodeType("sms")
     }, [userDetails])
 
     const isVerified = useMemo(() => userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "verified", [userDetails])
@@ -141,6 +142,14 @@ const Basic = () => {
     const [otpToken, setOtpToken] = useState("")
     const sendOtp = async (type = "") => {
         setIsSaving(true)
+        setOtpType(type === "email" ? "email" : "phone")
+
+        if (type === "email") {
+            if (!email) return false
+        } else {
+            if (!phone) return false
+        }
+
         try {
             const body = {
                 [type]: type === "email" ? email : phone,
@@ -322,6 +331,16 @@ const Basic = () => {
     }
 
     const [showUsernameGuide, setShowUsernameGuide] = useState(false)
+
+    const handleSaveClick = () => {
+        if (userDetails?.account_type === "individual") {
+            if(!email) return editProfileHandler()
+            return userDetails?.email === email ? editProfileHandler() : sendOtp("email")
+        }
+        if (userDetails?.account_type === "business") {
+            return userDetails?.phone === phone ? editProfileHandler() : sendOtp("phone")
+        }
+    }
     return (
         <Card>
             {
@@ -347,7 +366,7 @@ const Basic = () => {
             <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
                 <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
                 <ModalBody>
-                    <OTPConfirmation type={userDetails?.account_type === "individual" ? "email" : "phone"} callback={verifyOTP} setter={setShowSuccess} setterValue={true} hideOtp={() => setShowOtp(false)} processing={isSaving} resendHandler={sendOtp} authType={codeType} setAuthType={setCodeType} hideTfaSwitch={true} />
+                    <OTPConfirmation type={userDetails?.account_type === "individual" ? "email" : "phone"} callback={verifyOTP} setter={setShowSuccess} setterValue={true} hideOtp={() => setShowOtp(false)} processing={isSaving} resendHandler={sendOtp} authType={codeType} setAuthType={setCodeType} showAuthToggle={false} hideTfaSwitch={true} otpTypeOnProfile={otpType} />
                 </ModalBody>
             </Modal>
             <CardHeader style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "2rem" }}>
@@ -736,14 +755,7 @@ const Basic = () => {
                                 border: "none",
                                 outline: "none",
                                 borderRadius: "10px"
-                            }} onClick={() => {
-                                if (userDetails?.account_type === "individual") {
-                                    return userDetails?.email === email ? editProfileHandler() : sendOtp("email")
-                                }
-                                if (userDetails?.account_type === "business") {
-                                    return userDetails?.phone === phone ? editProfileHandler() : sendOtp("phone")
-                                }
-                            }}
+                            }} onClick={handleSaveClick}
                                 // (userDetails?.account_type === "individual" ? !firstName || !lastName : !company) || !address || !city || !country || !email || !phone || !postalCode || !timezone || !username || !usernameValid || phone.length < 8
                                 disabled={isSaving || usernameError || !usernameValid || !city || !username}>
                                 {
