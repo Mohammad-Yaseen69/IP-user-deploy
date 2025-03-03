@@ -136,9 +136,9 @@ const CardPurchased = ({ cards, setCardPurchased }) => {
 
                         }}
                         centeredSlides={true}
-                        slidesPerView={window.innerWidth > 1650 ? 3 : 1}
+                        slidesPerView={ 3}
                         initialSlide={1}
-                        spaceBetween={-200}
+                        spaceBetween={-220}
                         slideToClickedSlide={true}
                         className="mySwiper"
                         grabCursor={true}
@@ -150,7 +150,11 @@ const CardPurchased = ({ cards, setCardPurchased }) => {
                         ref={swiperRef}
                         style={{
                             width: '100%',
-                            padding: '20px 0'
+                            padding: '20px 0',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            margin: '0 auto'
                         }}
                     >
 
@@ -161,7 +165,6 @@ const CardPurchased = ({ cards, setCardPurchased }) => {
                                     className={`${styles.card} ${card.type == "standard" ? styles.standard : styles.premium} ${flippedCards[card._id] ? styles.flipped : ''}`}
                                     onClick={() => handleCardFlip(card._id)}
                                 >
-                                    {/* Front of card */}
                                     <div className={styles.front}>
                                         <div>
                                             <img src={IpLogo} alt="" />

@@ -163,9 +163,7 @@ const Basic = () => {
             toast.error("Something went wrong while sending otp to your " + type)
             // console.log(decryptData(err.response.data.data))
         }
-        finally {
-            setIsSaving(false)
-        }
+        setIsSaving(false)
     }
 
     const editProfileHandler = () => {
@@ -291,6 +289,7 @@ const Basic = () => {
             toast.error("Something went wrong while verifying otp!")
             // console.log(decryptData(err.response.data.data))
         }
+        setIsSaving(false)
     }
 
     const location = useLocation()
@@ -571,7 +570,7 @@ const Basic = () => {
                     <Label>{t("Email Address")}  {
                         (!email && userDetails?.account_type !== "individual")
                         && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
-                    <Input disabled={userDetails?.email || isVerified} readOnly={userDetails?.email || isVerified} value={email} onChange={e => setEmail(e.target.value)} />
+                    <Input disabled={userDetails?.email || isVerified || !isEditMode} readOnly={userDetails?.email || isVerified || !isEditMode} value={email} onChange={e => setEmail(e.target.value)} />
                 </FormGroup>
                 <FormGroup style={{ position: "relative" }}>
                     {
