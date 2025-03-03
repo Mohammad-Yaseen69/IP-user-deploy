@@ -59,6 +59,19 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         setEmailVerified(true)
         setIsPressed(false)
     }
+
+    useEffect(() => {
+        function isInstagramBrowser() {
+            return /Instagram/i.test(navigator.userAgent);
+        }
+        
+        if (isInstagramBrowser()) {
+            console.log("User is using the Instagram in-app browser");
+        } else {
+            console.log("User is using a normal browser");
+        }
+    },[])
+    
     
 
 
