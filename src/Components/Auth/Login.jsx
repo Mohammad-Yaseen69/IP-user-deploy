@@ -588,6 +588,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                             <>
                                 <div className={styles.inp_con}>
                                     <label>{loginMethod === "phone" ? t("Enter your phone number") : t("Enter your email")}</label>
+                                    <h4>{browserCheck}</h4>
                                     {
                                         loginMethod === "phone"
                                             ?
@@ -934,13 +935,12 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
 export default Login
 
-export const AuthenticatorDetails = ({browserCheck}) => {
+export const AuthenticatorDetails = () => {
     const { t } = useTranslation()
     return (
         <div className={styles.auth_details}>
             <div className={styles.left}>
                 <h5>{t("Two-factor authentication (2FA) is the best way to protect yourself online.")}</h5>
-                <h5>{browserCheck}</h5>
                 <p>{t("We recommend you download and install the Google Authenticator app to ensure you receive your verification codes instantly, avoiding any SMS delays or issues.")}</p>
                 <div className={styles.download_info}>
                     <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&pli=1" target="_blank">
