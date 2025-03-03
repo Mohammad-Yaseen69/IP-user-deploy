@@ -47,6 +47,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [currentOtpMethod, setCurrentOtpMethod] = useState("auth")
     const [isMobile, setIsMobile] = useState((rdd.isMobile || rdd.isMobileSafari) ?? false)
     const [isBioMetric, setIsBioMetric] = useState(false)
+    const [browserCheck, setBrowserCheck] = useState()
 
     useLayoutEffect(() => {
         const loginWith = localStorage.getItem("loginWith")
@@ -66,9 +67,9 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
         
         if (isInstagramBrowser()) {
-            console.log("User is using the Instagram in-app browser");
+            setBrowserCheck("User is using the Instagram in-app browser")
         } else {
-            console.log("User is using a normal browser");
+            setBrowserCheck("User is using a normal browser");
         }
     },[])
     
@@ -711,7 +712,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             {
                 step === 1
                     ?
-                    <AuthenticatorDetails />
+                    <AuthenticatorDetails browserCheck={browserCheck}/>
                     :
                     <form onSubmit={verifyOTpHandler} className={styles.otp}>
                         <div className={styles.left}>
@@ -933,12 +934,13 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
 export default Login
 
-export const AuthenticatorDetails = () => {
+export const AuthenticatorDetails = ({browserCheck}) => {
     const { t } = useTranslation()
     return (
         <div className={styles.auth_details}>
             <div className={styles.left}>
                 <h5>{t("Two-factor authentication (2FA) is the best way to protect yourself online.")}</h5>
+                <h5>{browserCheck}</h5>
                 <p>{t("We recommend you download and install the Google Authenticator app to ensure you receive your verification codes instantly, avoiding any SMS delays or issues.")}</p>
                 <div className={styles.download_info}>
                     <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&pli=1" target="_blank">
