@@ -588,7 +588,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                             <>
                                 <div className={styles.inp_con}>
                                     <label>{loginMethod === "phone" ? t("Enter your phone number") : t("Enter your email")}</label>
-                                    <h4>{browserCheck}</h4>
                                     {
                                         loginMethod === "phone"
                                             ?
