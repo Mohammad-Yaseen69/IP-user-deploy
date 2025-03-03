@@ -110,13 +110,15 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 setIsInstagram(decrypted?.instagram)
                 setIsBioMetric(decrypted?.biometric)
 
+                console.log(decrypted)
+
                 // Update initial OTP method based on device and available methods
                 setCurrentOtpMethod(() => {
                     if (method === undefined) {
                         console.log(typeof method)
                         if (isMobile && decrypted?.biometric) return "biometric";
                         if (decrypted?.tfa && decrypted?.authenticator) return "auth";
-                        if (isInstagram) return "insta";
+                        if (decrypted?.instagram) return "insta";
                         return "sms";
                     } else {
                         return method
