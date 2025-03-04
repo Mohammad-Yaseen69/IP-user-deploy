@@ -33,7 +33,7 @@ import { createJwtToken, createShambeToken } from "../../../Helper/CreateToken"
 import NotFoundModal from "../../NotFound/NotFoundModal"
 import errors from "../../AddFunds/TrustPaymentErrors.json"
 import AddBeneficiaryRequiredFields from "../../AddBeneficiaryRequiredFields"
-import { Modal, ModalBody, Button } from "reactstrap"
+import { Modal, ModalBody, Button, ModalHeader } from "reactstrap"
 import { update } from "lodash"
 
 const leftSideContent = [
@@ -90,7 +90,8 @@ const initialState = {
     mobile_wallet_service: {},
     ex_extra_error: "",
     conversion_in: "",
-    payerRequiredFields: {}
+    payerRequiredFields: {},
+    thunesBalance: 0
 }
 
 const beneficiaryRequiredFields = [
@@ -168,8 +169,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             fields: []
         }
     })
-
     const [showRequiredFieldsModal, setShowRequiredFieldsModal] = useState(false)
+    const [showBalanceModal, setShowBalanceModal] = useState(false)
     const [requiredFields, setRequiredFields] = useState({
         basic: [],
         extras: []
@@ -189,6 +190,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             updateInternationalData("codeType", "authenticator")
         }
     }, [userDetails])
+
 
     const disabledButton = useMemo(() => {
         switch (subStep) {
@@ -239,16 +241,16 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
     }
 
     const getConversionRate = async (amount = internationalData.amount, setLimitType, wallet_id = "", currency_code = "", avoid_balance = true, setLoading, fromOrTo = "from") => {
-        if(internationalData.payer?.id && internationalData.payoutChannel?.id && amount){
+        if (internationalData.payer?.id && internationalData.payoutChannel?.id && amount) {
             setLoading(true)
             const destinationCurrency = await getCurrency()
             try {
                 const service_name = internationalData?.payoutChannel?.value === "bank" ? "international_bank_transfer" : internationalData?.payoutChannel?.value === "mobile" ? "international_mobile_wallet" : internationalData?.payoutChannel?.value === "card" ? "international_card_payment" : internationalData?.payoutChannel?.value === "cash" ? "international_cash_pickup" : ""
-    
+
                 const url = `${process.env.REACT_APP_IP_DEV_API}/api/thunes/get-markup-conversion-rates?from=${internationalData.currency_wallet?.currency?.code}&to=${destinationCurrency}&amount=${+String(amount)?.replaceAll(",", "")}&fromOrTo=${fromOrTo}&service_name=${service_name}&account_id=${userDetails?._id}&payer_id=${internationalData.payer?.id}&service_id=${internationalData.payoutChannel?.id}`
-    
+
                 const res = await axios.get(url, { headers: authHeader })
-    
+
                 const decrypted = decryptData(res.data.data)
                 const exchange_rate_details = {
                     exchange_rate: decrypted?.data?.exchangeRate,
@@ -284,7 +286,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                     updateInternationalData("amount", exchange_rate_details?.receiver?.amount)
                     updateInternationalData("conversion_in", internationalData.currency_wallet?.currency?.code)
                 }
-    
+
                 // if (+amount > exchange_rate_details?.limits_used?.daily_sending_limit_used) {
                 //     updateInternationalData("exchange_rate_error", "exceed send")
                 //     setLimitType("daily")
@@ -314,7 +316,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                     updateInternationalData("amount", 0)
                     updateInternationalData("conversion_in", internationalData.currency_wallet?.currency?.code)
                 }
-    
+
                 if (typeof dec?.message == "object") {
                     if (dec?.message?.[0]?.code === "1003007") {
                         updateInternationalData("exchange_rate_error", "payer_unavailable")
@@ -539,6 +541,39 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
         }
         return () => clearTimeout(timeout)
     }, [internationalData.payment_type?.value, internationalData.wallet?._id])
+
+
+    useEffect(() => {
+        const data = { currency: internationalData?.currency }
+        const enc = encryptData(data)
+        const getThunesBalance = async () => {
+            try {
+                const res = await axios.post(
+                    `${process.env.REACT_APP_THUNES_API}/get-balance`,
+                    { data: enc },
+                    {
+                        headers: authHeader,
+                        data: enc
+                    }
+                );
+
+                const dec = decryptData(res.data.data)
+                updateInternationalData("thunesBalance", dec.data.balance)
+
+
+
+                console.log(dec.data.balance)
+
+            } catch (error) {
+                const dec = decryptData(error.response.data.data)
+                console.log(dec, error)
+            }
+
+
+        }
+        getThunesBalance()
+    }, [internationalData.currency])
+
 
     const createQuotation = async () => {
         setLoading(true)
@@ -766,10 +801,11 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
         }
     }
 
+
     const handleClick = () => {
         switch (subStep) {
             case 1:
-                userDetails.user?.kyc_status === "approved" ? setSubStep(prev => prev + 1) : navigate("/settings?tab=verification")
+                userDetails.user?.kyc_status === "approved" ? +String(internationalData.amount)?.replaceAll(",", "") <= internationalData.thunesBalance ? setSubStep(prev => prev + 1) : setShowBalanceModal(true) : navigate("/settings?tab=verification")
                 break;
             case 2:
                 console.log(internationalData.payerRequiredFields, internationalData?.payoutChannel.value, internationalData?.beneficiary)
@@ -998,6 +1034,22 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                         updateInternationalData("showCard", true)
                     }}
                 />
+            }
+            {
+                <Modal isOpen={showBalanceModal} toggle={() => setShowBalanceModal(false)}>
+                    <ModalHeader style={{ paddingBottom: "6px" }} toggle={() => setShowBalanceModal(false)}>
+                        <h2 style={{ fontSize: "24px" }}>Notice</h2>
+                    </ModalHeader>
+                    <ModalBody>
+                        <h3 style={{ fontSize: "18px", fontWeight: 600 }}>
+                            We understand that your current sending limit is up to {internationalData.exchange_rate?.limits_used?.daily_sending_limit_used.toFixed(2)}. However, at this time, we can only process a maximum of {internationalData.thunesBalance}.
+
+                            You may proceed with {internationalData.thunesBalance} or try again later to be able to send {internationalData.amount} .
+
+                            Thank you for your understanding.
+                        </h3>
+                    </ModalBody>
+                </Modal> 
             }
             {
                 showDetailsModal

@@ -114,7 +114,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
                 console.log(decrypted)
 
-                // Update initial OTP method based on device and available methods
                 setCurrentOtpMethod(() => {
                     if (method === undefined) {
                         console.log(typeof method)
