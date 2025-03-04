@@ -47,7 +47,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [currentOtpMethod, setCurrentOtpMethod] = useState("auth")
     const [isMobile, setIsMobile] = useState((rdd.isMobile || rdd.isMobileSafari) ?? false)
     const [isBioMetric, setIsBioMetric] = useState(false)
-    const [browserCheck, setBrowserCheck] = useState()
+    const [isInstagramBrowser, setisInstagramBrowser] = useState()
 
     useLayoutEffect(() => {
         const loginWith = localStorage.getItem("loginWith")
@@ -67,9 +67,9 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
         
         if (isInstagramBrowser()) {
-            setBrowserCheck("User is using the Instagram in-app browser")
+            setisInstagramBrowser(true)
         } else {
-            setBrowserCheck("User is using a normal browser");
+            setisInstagramBrowser(false);
         }
     },[])
     
@@ -107,7 +107,9 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             .then(async (res) => {
                 const decrypted = decryptData(res.data.data)
                 setUserAuthSetup(decrypted?.tfa)
-                setIsInstagram(decrypted?.instagram)
+                if(!isInstagramBrowser){
+                    setIsInstagram(decrypted?.instagram)
+                }
                 setIsBioMetric(decrypted?.biometric)
 
                 console.log(decrypted)
@@ -118,7 +120,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         console.log(typeof method)
                         if (isMobile && decrypted?.biometric) return "biometric";
                         if (decrypted?.tfa && decrypted?.authenticator) return "auth";
-                        if (decrypted?.instagram) return "insta";
+                        if (decrypted?.instagram && !isInstagramBrowser) return "insta";
                         return "sms";
                     } else {
                         return method
@@ -714,7 +716,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             {
                 step === 1
                     ?
-                    <AuthenticatorDetails browserCheck={browserCheck}/>
+                    <AuthenticatorDetails />
                     :
                     <form onSubmit={verifyOTpHandler} className={styles.otp}>
                         <div className={styles.left}>
