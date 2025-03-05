@@ -10,6 +10,7 @@ const ChatbotQrCode = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const token = queryParams.get("token");
+    const platform = queryParams.get("platform")
     const [message, setMessage] = useState("Getting details!");
     const [wallet_id, setWalletId] = useState("")
     // const [timer, setTimer] = useState(3)
@@ -79,6 +80,7 @@ const ChatbotQrCode = () => {
                     wallets={[
                         { wallet_id, wallet_type: "insta" }
                     ]}
+                    platform={platform}
                 />
             }
         </div>

@@ -33,7 +33,7 @@ const qrCode = new QRCodeStyling({
     backgroundOptions: { color: "#ffffff" },
 });
 
-const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false }) => {
+const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, platform }) => {
     const ref = useRef(null);
     const [generated, setGenerated] = useState(0)
 
@@ -57,6 +57,9 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false }) =
         formData.append('qrCode', file);
         formData.append("wallet_id", item?.wallet_id)
         formData.append("chatbot", chatbot)
+        if(platform === "telegram"){
+            formData.appent("platform", platform)
+        }
         try {
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/upload-qrcode`, formData)
             const dec = decryptData(res.data.data)
