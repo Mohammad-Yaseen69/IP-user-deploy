@@ -208,7 +208,7 @@ const GoogleAuthenticatorModal = ({
                                                         authenticatorDetails?.secret?.split("")?.map(_ => "*")
                                                 }
                                             </span>
-                                            <button style={{
+                                            <span style={{
                                                 border: "none",
                                                 outline: "none",
                                                 background: "transparent",
@@ -223,7 +223,7 @@ const GoogleAuthenticatorModal = ({
                                             >
                                                 {/* <Copy color='white' /> */}
                                                 <img src={copy} alt="" style={{ height: "20px", width: "20px" }} />
-                                            </button>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

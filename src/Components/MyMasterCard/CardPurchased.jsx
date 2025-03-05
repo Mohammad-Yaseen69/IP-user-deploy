@@ -24,7 +24,7 @@ const Toggle = ({ checked, onChange, isCheckbox = false }) => (
     </label>
 );
 
-const CardPurchased = ({ cards, setCardPurchased }) => {
+const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent }) => {
     const [checks, setChecks] = useState({
         cardStatus: true,
         onlinePurchases: true,
@@ -32,7 +32,6 @@ const CardPurchased = ({ cards, setCardPurchased }) => {
         contactlessPay: true
     });
     const ref = useRef();
-    const [current, setCurrent] = useState({})
     const swiperRef = useRef()
     const { authHeader, userDetails } = useContext(UserContext)
     const [currentCardDetails, setCurrentCardDetails] = useState({})
@@ -84,6 +83,8 @@ const CardPurchased = ({ cards, setCardPurchased }) => {
 
         getCardDetail()
     }, [current])
+
+
 
 
 

@@ -13,6 +13,7 @@ import CatDown from "./CatDown"
 import ImagePreviewModal from "../ImagePreviewModal.jsx"
 import statuses from "./files/thunesTransactionStatus.json"
 import TransactionItemDetails from "./TransactionItemDetails.jsx"
+import CitiesData from "../CitiesDropDown/CitiesData.json"
 
 export const service_name_formatter = (itemName) => {
     if (itemName) {
@@ -22,7 +23,7 @@ export const service_name_formatter = (itemName) => {
     }
 }
 
-const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral = false }) => {
+const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral = false, vvc = false }) => {
     const { t, i18n } = useTranslation()
     const [selectedCategory, setSelectedCategory] = useState([]);
     const { userDetails, authHeader, beneficiaries } = useContext(UserContext)
@@ -30,17 +31,28 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
     const [isSaving, setIsSaving] = useState(false)
     const [isEditMode, setIsEditMode] = useState(false)
     const [message, setMessage] = useState("")
+    const [symbol, setSymbol] = useState("")
 
     useEffect(() => {
         setNote(item?.note)
         setIsEditMode(item?.note ? false : true)
     }, [item])
 
+    useEffect(() => {
+        if(vvc){
+            const data = CitiesData.find((d) => d.currency === item.currency)
+            setSymbol(data.currency_symbol)
+        }
+    },[item])
+    
+
     const badgeColor = useMemo(() => {
         switch (item?.status?.toLowerCase()) {
             case "initiated":
                 return "#ADD8E6"
             case "completed":
+                return "#28A745"
+            case "success":
                 return "#28A745"
             case "rejected":
                 return "#DC3545"
@@ -121,78 +133,98 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
     return (
         <div>
             <div className={styles.body_item} onClick={() => {
-                if (!activeItem || activeItem !== index + 1) {
-                    setActiveItem(index + 1)
-                } else {
-                    setActiveItem(0)
+                if (!vvc) {
+                    if (!activeItem || activeItem !== index + 1) {
+                        setActiveItem(index + 1)
+                    } else {
+                        setActiveItem(0)
+                    }
                 }
             }}>
                 <div style={{ minWidth: "155px" }}>{new Date(item?.createdAt)?.toLocaleString()}</div>
-                <div>{service_name_formatter(item?.service_type)}</div>
-                <div>{item?.reference_id}</div>
-                <div>
-                    {
-                        item?.service_type === "withdraw_by_admin" || item?.service_type === "deposite_by_admin"
-                            ?
-                            "Admin Funds"
-                            :
-                            item?.payment_type?.includes("bank")
-                                ?
-                                "Bank Transfer"
-                                :
-                                item?.payment_type?.includes("mobile")
+                {vvc && <div>{item?.transactionId}</div>}
+                {vvc && <div>••{item?.cardNo?.slice(-4)}</div>}
+                {vvc && <div>{item?.merchantName}</div>}
+                {vvc && <div>{item?.reason ?? "--"}</div>}
+
+
+                {!vvc &&
+                    <>
+                        <div>{service_name_formatter(item?.service_type)}</div>
+                        <div>{item?.reference_id}</div>
+                        <div>
+                            {
+                                item?.service_type === "withdraw_by_admin" || item?.service_type === "deposite_by_admin"
                                     ?
-                                    "Mobile Money"
+                                    "Admin Funds"
                                     :
-                                    service_name_formatter(item?.payment_type)
-                    }
-                </div>
-                <div>
-                    {
-                        item?.service_type === "payment_address" && item?.guest_details
-                            ?
-                            item?.guest_details?.name
-                            :
-                            item?.service_type === "airtime"
-                                ?
-                                item?.airtime_number
-                                :
-                                item?.payment_type === "conversion" /*|| item?.service_type === "withdrawal"*/
-                                    ?
-                                    item?.wallet_id
-                                    :
-                                    item?.transaction_type?.toLowerCase() === "debit"
+                                    item?.payment_type?.includes("bank")
                                         ?
-                                        <>
-                                            {
-                                                item?.service_type === "withdraw_by_admin"
-                                                    ?
-                                                    "Admin"
-                                                    :
-                                                    item?.service_type === "kyc_verification"
-                                                        ?
-                                                        "InstaPay"
-                                                        :
-                                                        item?.service_type === "withdrawal"
-                                                            ?
-                                                            `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)
-                                                            :
-                                                            item?.receiver
-                                                                ?
-                                                                `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)
-                                                                :
-                                                                `${internationalReceiver?.first_name} ${internationalReceiver?.last_name}`.slice(0, 20)
-                                            }
-                                        </>
+                                        "Bank Transfer"
                                         :
-                                        item?.service_type === "topup"
+                                        item?.payment_type?.includes("mobile")
                                             ?
-                                            `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)
+                                            "Mobile Money"
                                             :
-                                            `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)
-                    }
+                                            service_name_formatter(item?.payment_type)
+                            }
+                        </div>
+                        <div>
+                            {
+                                item?.service_type === "payment_address" && item?.guest_details
+                                    ?
+                                    item?.guest_details?.name
+                                    :
+                                    item?.service_type === "airtime"
+                                        ?
+                                        item?.airtime_number
+                                        :
+                                        item?.payment_type === "conversion" /*|| item?.service_type === "withdrawal"*/
+                                            ?
+                                            item?.wallet_id
+                                            :
+                                            item?.transaction_type?.toLowerCase() === "debit"
+                                                ?
+                                                <>
+                                                    {
+                                                        item?.service_type === "withdraw_by_admin"
+                                                            ?
+                                                            "Admin"
+                                                            :
+                                                            item?.service_type === "kyc_verification"
+                                                                ?
+                                                                "InstaPay"
+                                                                :
+                                                                item?.service_type === "withdrawal"
+                                                                    ?
+                                                                    `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)
+                                                                    :
+                                                                    item?.receiver
+                                                                        ?
+                                                                        `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)
+                                                                        :
+                                                                        `${internationalReceiver?.first_name} ${internationalReceiver?.last_name}`.slice(0, 20)
+                                                    }
+                                                </>
+                                                :
+                                                item?.service_type === "topup"
+                                                    ?
+                                                    `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)
+                                                    :
+                                                    `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)
+                            }
+                        </div>
+                        <div style={{ color: item?.transaction_type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234" }} >{item?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}{item?.payment_type?.toLowerCase() === "commission" && fromReferral ? "$" : item?.currency?.code} {item?.payment_type?.toLowerCase() === "commission" && fromReferral ? item?.replacement_currency?.value?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : item?.total?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                    </>
+                }
+
+
+                {vvc &&
+                 <div>
+                    {symbol}{item?.billAmount}
                 </div>
-                <div style={{ color: item?.transaction_type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234" }} >{item?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}{item?.payment_type?.toLowerCase() === "commission" && fromReferral ? "$" : item?.currency?.code} {item?.payment_type?.toLowerCase() === "commission" && fromReferral ? item?.replacement_currency?.value?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : item?.total?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                }
+
                 <div>
                     <div style={{
                         background: badgeColor,
@@ -205,13 +237,17 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                         textAlign: "center"
                     }} >{t(capitalizeStatus(item?.status))}</div>
                 </div>
-                <div style={{ maxWidth: "15px" }}>{
-                    activeItem === index + 1
-                        ?
-                        <ChevronDown />
-                        :
-                        <ChevronRight />
-                }</div>
+
+                {!vvc &&
+                    <div style={{ maxWidth: "15px" }}>{
+                        activeItem === index + 1
+                            ?
+                            <ChevronDown />
+                            :
+                            <ChevronRight />
+                    }
+                    </div>
+                }
             </div>
             {
                 activeItem === index + 1

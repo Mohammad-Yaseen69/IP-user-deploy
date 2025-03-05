@@ -207,7 +207,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                     (
                                         authType === "sms"
                                             ?
-                                            t(`A one-time verification code has been sent to your ${userDetails?.email  && "email address and"} ${otpTypeOnProfile && "email address"} ${otpTypeOnProfile !== "email" &&  "phone number"}.`)
+                                            t(`A one-time verification code has been sent to your ${userDetails?.email  ? "email address and":""} ${otpTypeOnProfile ? "email address": ""} ${otpTypeOnProfile !== "email" &&  "phone number"}.`)
                                             :
                                             t("Enter a code shown in the app to make sure everything works fine.")
                                     )

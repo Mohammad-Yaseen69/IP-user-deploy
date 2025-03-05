@@ -9,6 +9,7 @@ import axios from 'axios';
 import { UserContext } from '../../Context/UserContext';
 import InstaPayLoader from '../Loader';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
+import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 
 
 
@@ -20,6 +21,8 @@ const MyMasterCard = () => {
   const [cards, setCards] = useState([])
   const [reRender, setReRender] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [current, setCurrent] = useState(0)
+  const [transactions, setTransactions] = useState([])
 
   useEffect(() => {
     if (cardPurchased) {
@@ -59,6 +62,27 @@ const MyMasterCard = () => {
     getCard()
   }, [userDetails, reRender])
 
+  useEffect(() => {
+    const getTransactions = async () => {
+      try {
+        const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/virtual-card/get-card-transcations`, {data: encryptData({cardId: cards[0].card_id})}, {
+          headers: authHeader
+        })
+  
+        const dec = decryptData(res.data.data)
+        setTransactions(dec.data)
+        
+      } catch (error) {
+        const dec = decryptData(error.response.data.data)
+        console.log(dec)
+      }
+    }
+
+    getTransactions()
+  },[current])
+
+  console.log(transactions)
+
   return (
     <div style={{ minHeight: "100vh" }} className={styles.container}>
       <div className={styles.top}>
@@ -72,8 +96,8 @@ const MyMasterCard = () => {
           <>
             {cardPurchased ? 
               <>
-                <CardPurchased setLoading={setLoading} cards={cards} setCardPurchased={setCardPurchased} />
-                <TransactionsTable />
+                <CardPurchased setLoading={setLoading} current={current} setCurrent={setCurrent} cards={cards} setCardPurchased={setCardPurchased} />
+                <TransactionsTable transactions={transactions} isLoading={loading}/>
               </> 
               :  <OnBoarding  alreadyHaveCard={cards.length !== 0} setReRender={setReRender} setCardPurchased={setCardPurchased}/>
 

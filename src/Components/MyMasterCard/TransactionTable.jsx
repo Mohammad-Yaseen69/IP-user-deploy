@@ -30,11 +30,10 @@ const TransactionsTable = ({ transactions = [], isLoading = false }) => {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const datePickerRef = useRef(null);
     const [searchQuery, setSearchQuery] = useState("")
-    const [filtered, setFiltered] = useState(transactions)
+    // const [transactions, settransactions] = useState(transactions)
+    console.log(transactions)
     const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
-
-    console.log(styles)
     const handleClickOutside = useCallback((event) => {
         if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
             setShowDatePicker(false);
@@ -123,10 +122,10 @@ const TransactionsTable = ({ transactions = [], isLoading = false }) => {
             <div className={styles.tableWrapper}>
                 <div className={styles.table_header}>
                     <div>{t("Date & Time")}</div>
-                    <div>{t("Type")}</div>
                     <div>{t("Transaction ID")}</div>
-                    <div>{t("Payment Type")}</div>
-                    <div>{t("Recipient")}</div>
+                    <div>{t("Card No")}</div>
+                    <div>{t("Merchant Name")}</div>
+                    <div>{t("Reason")}</div>
                     <div>{t("Amount")}</div>
                     <div>{t("Status")}</div>
                     <div style={{ maxWidth: "15px" }}></div>
@@ -134,8 +133,8 @@ const TransactionsTable = ({ transactions = [], isLoading = false }) => {
                 <div className={styles.table_body} ref={tableWrapperRef}>
                     {isLoading ? (
                         <div style={{ textAlign: "center", marginTop: "2rem" }}>{t("Loading...")}</div>
-                    ) : filtered.length > 0 ? (
-                        filtered.map((item, index) => (
+                    ) : transactions.length > 0 ? (
+                        transactions.map((item, index) => (
                             <TransactionItem
                                 color={item?.status?.toLowerCase() === "completed" ? "#15bd43" : 
                                        item?.status?.toLowerCase() === "pending" ? "rgba(89, 38, 240, 0.55)" : 
@@ -145,6 +144,7 @@ const TransactionsTable = ({ transactions = [], isLoading = false }) => {
                                 activeItem={activeItem}
                                 setActiveItem={setActiveItem}
                                 index={index}
+                                vvc={true}
                             />
                         ))
                     ) : (
@@ -154,8 +154,8 @@ const TransactionsTable = ({ transactions = [], isLoading = false }) => {
                 <div className={styles.table_body_mobile} ref={tableWrapperRefMobile} style={{ minHeight: "300px" }}>
                     {isLoading ? (
                         <div style={{ textAlign: "center", marginTop: "2rem" }}>{t("Loading...")}</div>
-                    ) : filtered.length > 0 ? (
-                        filtered.map((item, index) => (
+                    ) : transactions.length > 0 ? (
+                        transactions.map((item, index) => (
                             <TransactionItemMobile
                                 color={item?.status?.toLowerCase() === "completed" ? "#15bd43" : 
                                        item?.status?.toLowerCase() === "pending" ? "rgba(89, 38, 240, 0.55)" : 
