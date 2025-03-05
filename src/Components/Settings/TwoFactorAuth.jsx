@@ -25,7 +25,10 @@ import SettingsIcon from './a_items/settings.svg'
 import Cancel from "./a_items/cancel.svg"
 import Plus from "./a_items/plus.svg"
 import Finger from "./a_items/finger/finger.svg"
+import FingerSuccess from "./a_items/finger/finger_success.svg"
+import FingerFailed from "./a_items/finger/finger_failed.svg"
 import "./styles/styles.css"
+import _ from 'lodash';
 
 const TwoFactorAuth = () => {
     const { t } = useTranslation()
@@ -50,6 +53,10 @@ const TwoFactorAuth = () => {
     const [showDevices, setShowDevices] = useState(false)
     const [remainingChar, setRemainingChar] = useState(24)
     const [deviceName, setDeviceName] = useState("")
+    const [showDeviceOtp, setShowDeviceOtp] = useState(false)
+    const [devices, setDevices] = useState([])
+    const [deviceAddError, setDeviceAddError] = useState(true)
+
 
 
     useEffect(() => {
@@ -140,7 +147,29 @@ const TwoFactorAuth = () => {
         }
     }
 
+    useEffect(() => {
+        const getDevices = async () => {
+            try {
+                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-biometric-devices`, { data: encryptData({ account_id: userDetails?._id }) }, {
+                    headers: authHeader
+                })
+
+                const dec = decryptData(res.data.data)
+
+                setDevices(dec.devices ?? [])
+                console.log(dec)
+            }
+            catch (error) {
+                const dec = decryptData(error.response.data.data)
+                console.log(dec)
+            }
+        }
+
+        getDevices()
+    }, [userDetails])
+
     const createPasskey = async (setter, type, otp, setError) => {
+        setDeviceAddError(false)
         try {
             const data = {
                 token: token,
@@ -155,6 +184,8 @@ const TwoFactorAuth = () => {
 
             const dec = decryptData(response.data.data)
 
+            console.log(dec)
+
 
             const registrationResult = await startRegistration({
                 ...dec?.options,
@@ -168,7 +199,8 @@ const TwoFactorAuth = () => {
 
             const data2 = {
                 account_id: userDetails?._id,
-                credentials: registrationResult
+                credentials: registrationResult,
+                device_name: deviceName ? deviceName : undefined
             }
 
             console.log(data2)
@@ -177,13 +209,16 @@ const TwoFactorAuth = () => {
             }, { headers: authHeader })
 
 
+            console.log(response2)
             setFingerBioActive(true)
             setShowFinger(false)
+            deviceName && setShowBioModal(true)
             setShowSuccess(true)
             setToken(null)
             console.log(decryptData(response2.data.data))
 
         } catch (err) {
+            setDeviceAddError(true)
             const decrypted = decryptData(err.response.data.data);
             setError(decrypted?.message ?? "Invalid Verification Code")
             if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
@@ -198,6 +233,7 @@ const TwoFactorAuth = () => {
         }
     }
 
+
     const [authCode, setAuthCode] = useState("")
 
     const location = useLocation()
@@ -210,7 +246,8 @@ const TwoFactorAuth = () => {
         }
     }, [ft])
 
-    const sendOtp = async (e) => {
+    const sendOtp = async (e, isDevice) => {
+        setShowBioModal(false)
         e && e.preventDefault()
         setIsSaving(true)
         try {
@@ -228,8 +265,12 @@ const TwoFactorAuth = () => {
             })
 
             const dec = decryptData(res.data.data)
-            setToken(dec?.token)
+            setShowDeviceOtp(true)
             setShowFinger(true)
+
+            setToken(dec?.token)
+
+
         } catch (error) {
             toast.error("Something went wrong while changing the password!")
         }
@@ -398,51 +439,29 @@ const TwoFactorAuth = () => {
                     <div style={{ display: "flex", flexDirection: "column", gap: "18px", alignItems: "flex-end" }}>
                         <div className={styles.devices}>
                             <h4>Manage Your Biometric Devices</h4>
-                            <div className={styles.device}>
-                                <div>
-                                    <div style={{ display: "flex", alignItems: "center", gap: "7px" }}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18" fill="none">
-                                            <path d="M11.6932 9.35859C11.7104 8.01801 12.4132 6.77974 13.5554 6.07759C12.8316 5.04393 11.6628 4.41206 10.4015 4.37257C9.07448 4.23329 7.78806 5.1666 7.11185 5.1666C6.42256 5.1666 5.38145 4.38641 4.26031 4.40947C2.78521 4.45713 1.44337 5.27546 0.725711 6.56505C-0.802529 9.21098 0.337391 13.0996 1.80137 15.2384C2.53381 16.2857 3.38984 17.4556 4.50996 17.4141C5.60606 17.3686 6.01542 16.7152 7.33847 16.7152C8.64926 16.7152 9.03331 17.4141 10.1762 17.3877C11.3523 17.3686 12.0933 16.3358 12.8001 15.2786C13.3264 14.5323 13.7314 13.7076 14 12.8348C12.6031 12.244 11.6948 10.8753 11.6932 9.35859Z" fill="black" />
-                                            <path d="M9.534 2.96583C10.1753 2.196 10.4912 1.20653 10.4147 0.20752C9.43499 0.310429 8.52996 0.778662 7.88003 1.51896C7.23823 2.24934 6.9131 3.20489 6.97625 4.17517C7.96913 4.18539 8.91183 3.73964 9.534 2.96583Z" fill="black" />
-                                        </svg>
-                                        <p style={{ fontSize: "12px", color: "#333333" }}>iPhone 14 pro max</p>
+                            {devices?.map((device, idx) => (
+                                <div className={styles.device}>
+                                    <div>
+                                        <div style={{ display: "flex", alignItems: "center", gap: "7px" }}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18" fill="none">
+                                                <path d="M11.6932 9.35859C11.7104 8.01801 12.4132 6.77974 13.5554 6.07759C12.8316 5.04393 11.6628 4.41206 10.4015 4.37257C9.07448 4.23329 7.78806 5.1666 7.11185 5.1666C6.42256 5.1666 5.38145 4.38641 4.26031 4.40947C2.78521 4.45713 1.44337 5.27546 0.725711 6.56505C-0.802529 9.21098 0.337391 13.0996 1.80137 15.2384C2.53381 16.2857 3.38984 17.4556 4.50996 17.4141C5.60606 17.3686 6.01542 16.7152 7.33847 16.7152C8.64926 16.7152 9.03331 17.4141 10.1762 17.3877C11.3523 17.3686 12.0933 16.3358 12.8001 15.2786C13.3264 14.5323 13.7314 13.7076 14 12.8348C12.6031 12.244 11.6948 10.8753 11.6932 9.35859Z" fill="black" />
+                                                <path d="M9.534 2.96583C10.1753 2.196 10.4912 1.20653 10.4147 0.20752C9.43499 0.310429 8.52996 0.778662 7.88003 1.51896C7.23823 2.24934 6.9131 3.20489 6.97625 4.17517C7.96913 4.18539 8.91183 3.73964 9.534 2.96583Z" fill="black" />
+                                            </svg>
+                                            <p style={{ fontSize: "12px", color: "#333333" }}>{device?.deviceName}</p>
+                                        </div>
+
+                                        <img src={BioIcon} style={{ width: "14px", height: "14px" }} alt="" />
                                     </div>
 
-                                    <img src={BioIcon} style={{ width: "14px", height: "14px" }} alt="" />
-                                </div>
+                                    <div style={{ display: "flex", alignItems: "center" }}>
+                                        <Switch checked={devices[idx].credentialId} />
 
-                                <div style={{ display: "flex", alignItems: "center" }}>
-                                    <Switch />
-
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
-                                        <path d="M6 2.604H10M2 4.604H14M12.6667 4.604L12.1991 11.6169C12.129 12.669 12.0939 13.1951 11.8667 13.594C11.6666 13.9452 11.3648 14.2275 11.0011 14.4038C10.588 14.604 10.0607 14.604 9.00623 14.604H6.99377C5.93927 14.604 5.41202 14.604 4.99889 14.4038C4.63517 14.2275 4.33339 13.9452 4.13332 13.594C3.90607 13.1951 3.871 12.669 3.80086 11.6169L3.33333 4.604" stroke="#D00416" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </div>
-                            </div>
-
-                            <div className={styles.device}>
-                                <div>
-                                    <div style={{ display: "flex", alignItems: "center", gap: "7px" }}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18" fill="none">
-                                            <path d="M11.6932 9.35859C11.7104 8.01801 12.4132 6.77974 13.5554 6.07759C12.8316 5.04393 11.6628 4.41206 10.4015 4.37257C9.07448 4.23329 7.78806 5.1666 7.11185 5.1666C6.42256 5.1666 5.38145 4.38641 4.26031 4.40947C2.78521 4.45713 1.44337 5.27546 0.725711 6.56505C-0.802529 9.21098 0.337391 13.0996 1.80137 15.2384C2.53381 16.2857 3.38984 17.4556 4.50996 17.4141C5.60606 17.3686 6.01542 16.7152 7.33847 16.7152C8.64926 16.7152 9.03331 17.4141 10.1762 17.3877C11.3523 17.3686 12.0933 16.3358 12.8001 15.2786C13.3264 14.5323 13.7314 13.7076 14 12.8348C12.6031 12.244 11.6948 10.8753 11.6932 9.35859Z" fill="black" />
-                                            <path d="M9.534 2.96583C10.1753 2.196 10.4912 1.20653 10.4147 0.20752C9.43499 0.310429 8.52996 0.778662 7.88003 1.51896C7.23823 2.24934 6.9131 3.20489 6.97625 4.17517C7.96913 4.18539 8.91183 3.73964 9.534 2.96583Z" fill="black" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
+                                            <path d="M6 2.604H10M2 4.604H14M12.6667 4.604L12.1991 11.6169C12.129 12.669 12.0939 13.1951 11.8667 13.594C11.6666 13.9452 11.3648 14.2275 11.0011 14.4038C10.588 14.604 10.0607 14.604 9.00623 14.604H6.99377C5.93927 14.604 5.41202 14.604 4.99889 14.4038C4.63517 14.2275 4.33339 13.9452 4.13332 13.594C3.90607 13.1951 3.871 12.669 3.80086 11.6169L3.33333 4.604" stroke="#D00416" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                         </svg>
-                                        <p style={{ fontSize: "12px", color: "#333333" }}>iPhone 14 pro max</p>
                                     </div>
-
-                                    <img src={BioIcon} style={{ width: "14px", height: "14px" }} alt="" />
                                 </div>
-
-                                <div style={{ display: "flex", alignItems: "center" }}>
-                                    <Switch />
-
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
-                                        <path d="M6 2.604H10M2 4.604H14M12.6667 4.604L12.1991 11.6169C12.129 12.669 12.0939 13.1951 11.8667 13.594C11.6666 13.9452 11.3648 14.2275 11.0011 14.4038C10.588 14.604 10.0607 14.604 9.00623 14.604H6.99377C5.93927 14.604 5.41202 14.604 4.99889 14.4038C4.63517 14.2275 4.33339 13.9452 4.13332 13.594C3.90607 13.1951 3.871 12.669 3.80086 11.6169L3.33333 4.604" stroke="#D00416" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </div>
-                            </div>
-
-
+                            ))}
                         </div>
 
                         <div className={styles.buttons} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -451,7 +470,7 @@ const TwoFactorAuth = () => {
                                 <p style={{ marginBottom: "0" }}>Close</p>
                             </button>
 
-                            <button className={styles.plus}>
+                            <button onClick={() => setShowBioModal(true)} className={styles.plus}>
                                 <img src={Plus} alt="" />
                                 <p style={{ marginBottom: "0" }}>Register Biometric Passkey</p>
                             </button>
@@ -459,9 +478,9 @@ const TwoFactorAuth = () => {
                     </div>
                 }
                 {(showDevices && window.innerWidth < 1000) &&
-                    <div style={{ display: "flex", flexDirection: "column", gap: "18px", alignItems: "flex-end",   }}>
-                        <div className={styles.devices} style={{backgroundColor: "white", padding: "12px"}}>
-                            <h4 style={{fontSize: "12px"}}>Manage Your Biometric Devices</h4>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "18px", alignItems: "flex-end", }}>
+                        <div className={styles.devices} style={{ backgroundColor: "white", padding: "12px" }}>
+                            <h4 style={{ fontSize: "12px" }}>Manage Your Biometric Devices</h4>
                             <div className={styles.device}>
                                 <div>
                                     <div>
@@ -485,7 +504,7 @@ const TwoFactorAuth = () => {
                                         <p style={{ fontSize: "12px", color: "#333333" }}>iPhone 14 pro max</p>
                                     </div>
 
-                                   
+
                                 </div>
 
                                 <div style={{ display: "flex", alignItems: "center" }}>
@@ -502,7 +521,7 @@ const TwoFactorAuth = () => {
 
                         <div className={styles.buttons} style={{ display: 'grid', gridTemplateColumns: "1fr 1fr", gap: "8px", margin: "0" }}>
                             <button onClick={() => setShowDevices(false)} className={styles.close}>
-                                <img src={Cancel} alt="" />     
+                                <img src={Cancel} alt="" />
                                 <p style={{ marginBottom: "0" }}>Close</p>
                             </button>
 
@@ -570,7 +589,15 @@ const TwoFactorAuth = () => {
                     <ModalHeader toggle={() => setShowFinger(!showFinger)}>Confirm</ModalHeader>
                     <ModalBody>
                         <OTPConfirmation
-                            callback={fingerBioActive ? deletePasskey : createPasskey}
+                            callback={(setter, type, otp, setError) => {
+                                if (deviceName) {
+                                    createPasskey(setter, type, otp, setError)
+                                    return false
+                                } else {
+                                    fingerBioActive ? deletePasskey(setter, type, otp, setError) : createPasskey(setter, type, otp, setError)
+                                }
+                            }
+                            }
                             setter={setShowSuccess}
                             setterValue={true}
                             hideOtp={() => setShowFinger(false)}
@@ -578,7 +605,7 @@ const TwoFactorAuth = () => {
                             resendHandler={sendOtp}
                             authType={codeType}
                             setAuthType={setCodeType}
-                            showAuthToggle={false}
+                            showAuthToggle={true}
                         />
                     </ModalBody>
                 </Modal>
@@ -602,44 +629,66 @@ const TwoFactorAuth = () => {
                                 </div>
 
 
-                                <h2 style={{ marginBottom: "0", fontSize: "24px", fontWeight: 700 }}>Add a new device.</h2>
-                                <p style={{ marginBottom: "0", fontSize: "16px", fontWeight: 600, color: "#777777" }}>Confirm with biometrics to register your new passkey.</p>
+                                <h2 style={{ marginBottom: "0", fontSize: "24px", fontWeight: 700 }}>{showSuccess ? "Fingerprint Registered Successfully" : deviceAddError ? "Fingerprint Not Recognized" : "Add a new device"}.</h2>
+                                <p style={{ marginBottom: "0", fontSize: "16px", fontWeight: 600, color: "#777777" }}>
+                                    {showSuccess ?
+                                        `You can now use your fingerprint to log in on this device. You  ${devices.length < 1 ? "can" : "can't"} add ${devices.length == 0 ? "two" : devices.length === 1 ? "one" : ""} more devices as biometric authentication` :
+                                        deviceAddError ?
+                                            "We couldn't capture a valid fingerprint. Please try again."
+                                            :
+                                            "Confirm with biometrics to register your new passkey."
+                                    }
+                                </p>
                             </div>
 
 
-                            <img src={Finger} alt="" />
+                            <img src={showSuccess ? FingerSuccess : deviceAddError ? FingerFailed : Finger} alt="" />
 
                             <div style={{ display: "flex", flexDirection: "column", gap: "14px", alignItems: "flex-start", width: "100%" }}>
-                                <div style={{ width: '100%' }}>
-                                    <span style={{ fontSize: "14px", fontWeight: 600, color: "#777", marginBottom: "15px" }}>Device Name:</span>
-                                    <div style={{ position: "relative" }}>
-                                        <input
-                                            value={deviceName}
-                                            onChange={(e) => {
-                                                if (remainingChar !== 0) {
-                                                    setRemainingChar(prev => prev - 1)
-                                                    setDeviceName(e.target.value)
-                                                }
-                                            }}
-                                            style={{ border: 'none', outline: 'none', width: '100%', background: "#FAFAFA", borderRadius: "4px", padding: window.innerWidth > 1000 ? "8px 10px" : "15px", fontSize: "12px", fontWeight: 600 }}
-                                        />
+                                {!deviceAddError &&
+                                    <div style={{ width: '100%', display: showSuccess && "flex", alignItems: showSuccess && "center", gap: showSuccess && "10px" }}>
+                                        <span style={{ fontSize: "14px", fontWeight: 600, color: "#777", marginBottom: !showSuccess && "15px", whiteSpace: showSuccess && "nowrap" }}>Device Name:</span>
+                                        <div style={{ position: "relative", width: "100%" }}>
+                                            <input
+                                                value={deviceName}
+                                                onChange={(e) => {
+                                                    if (remainingChar !== 0) {
+                                                        setRemainingChar(prev => prev - 1)
+                                                        setDeviceName(e.target.value)
+                                                    }
+                                                }}
+                                                readOnly={showSuccess}
+                                                style={{ border: 'none', outline: 'none', width: '100%', background: "#FAFAFA", borderRadius: "4px", padding: window.innerWidth > 1000 ? "8px 10px" : "15px", fontSize: "12px", fontWeight: 600 }}
+                                            />
 
 
-                                        <p style={{ marginBottom: "0", position: 'absolute', top: "25%", right: "8px", fontSize: "10px", color: "#BBBBB", fontWeight: 600 }}>{remainingChar}/24 Characters Remaining</p>
+                                            {!showSuccess &&
+                                                <p style={{ marginBottom: "0", position: 'absolute', top: "25%", right: "8px", fontSize: "10px", color: "#BBBBB", fontWeight: 600 }}>{remainingChar}/24 Characters Remaining
+                                                </p>
+                                            }
+                                        </div>
                                     </div>
-                                </div>
+                                }
 
 
                                 <div className={styles.modalBtns} style={{ display: "flex", alignItems: "center", gap: "8px", width: "100%" }}>
-                                    <button style={{ width: window.innerWidth < 1000 && "100%" }} onClick={() => setShowBioModal(false)} className={styles.back}>Back</button>
-                                    <button className={styles.next}>Next</button>
+                                    <button style={{ width: (window.innerWidth < 1000 || showSuccess) && "100%", background: showSuccess && "#5926F0", color: showSuccess && "white" }} onClick={() => { setShowBioModal(false); setDeviceName("") }} className={styles.back}>Back</button>
+                                    {!showSuccess &&
+                                        <button
+                                            onClick={() => {
+                                                sendOtp(undefined, true)
+                                            }}
+                                            style={{ opacity: !deviceName && 0.6, background: deviceAddError && "#D00416" }}
+                                            disabled={!deviceName}
+                                            className={styles.next}>{deviceAddError ? "Retry" : "Next"}
+                                        </button>}
                                 </div>
                             </div>
                         </div>
                     </ModalBody>
                 </Modal>
                 <SuccessModal
-                    isOpen={showSuccess}
+                    isOpen={showSuccess && !showBioModal}
                     message={`Your finger biometric has been ${fingerBioActive ? "enabled" : "disabled"} successfully!`}
                     subMessage={"Finger Biometric Updated"}
                     toggle={() => setShowSuccess(false)}

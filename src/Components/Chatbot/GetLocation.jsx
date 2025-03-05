@@ -27,7 +27,7 @@ const GetLocation = () => {
                 recipientId: recipient_id,
                 accept
             }
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-location-bot${platform === "telegram" && "-telegram"}`, { data: encryptData(payload) })
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-location-bot${platform === "telegram" ? "-telegram" :""}`, { data: encryptData(payload) })
             const dec = decryptData(res.data.data)
             console.log(dec)
         }
