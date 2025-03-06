@@ -70,7 +70,7 @@ const TwoFactorAuth = () => {
             setSmsActive(userDetails?.sms_verification ?? false)
             setEmailActive(userDetails?.email_verification ?? false)
             setAuthenticatorActive(userDetails?.tfa ?? false)
-            setFingerBioActive(userDetails?.passkeys.length ?? false)
+
             console.log(userDetails)
             // if (typeof userDetails?.sms_verification == "undefined" || typeof userDetails?.email_verification == "undefined") {
             //     setFirstTime(true)
@@ -163,6 +163,7 @@ const TwoFactorAuth = () => {
                 const dec = decryptData(res.data.data)
 
                 setDevices(dec.devices ?? [])
+                setFingerBioActive(dec.devices?.length > 0 && dec.devices?.every(device => device.enabled) || false)
                 console.log(dec)
             }
             catch (error) {
@@ -175,7 +176,6 @@ const TwoFactorAuth = () => {
     }, [userDetails])
 
     const createPasskey = async (setter, type, otp, setError) => {
-        const rdd = deviceDetect()
         setDeviceAddError(false)
         try {
             const data = {
@@ -207,7 +207,7 @@ const TwoFactorAuth = () => {
             const data2 = {
                 account_id: userDetails?._id,
                 credentials: registrationResult,
-                device_name: deviceName ? deviceName : `${rdd.browserName} ${rdd.osName} ${rdd.osVersion}`
+                device_name: deviceName
             }
 
             console.log(data2)
@@ -221,12 +221,14 @@ const TwoFactorAuth = () => {
             setShowFinger(false)
             deviceName && setShowBioModal(true)
             setShowSuccess(true)
-            setDevices(prev =>
-                [...prev, {
+            setDevices(prev => [
+                ...prev,
+                {
                     deviceName: deviceName,
-                    credentialId: data2.credentials.id
-                }]
-            )
+                    credentialId: data2.credentials.id,
+                    enabled: true // Add this to ensure new devices are enabled by default
+                }
+            ])
             setToken(null)
             console.log(decryptData(response2.data.data))
 
@@ -292,40 +294,6 @@ const TwoFactorAuth = () => {
         }
     }
 
-    const deletePasskey = async (setter, type, otp, setError) => {
-        const data = {
-            token: token,
-            type: codeType,
-            otp
-        }
-        try {
-            const response = await axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/delete-challenge`, { data: encryptData(data) }, {
-                headers: authHeader
-            })
-
-            const dec = decryptData(response.data?.data)
-
-
-            setShowFinger(false)
-            setShowSuccess(true)
-            setToken(null)
-            setFingerBioActive(false)
-            console.log(dec)
-        } catch (err) {
-            const decrypted = decryptData(err.response.data.data);
-            setError(decrypted?.message ?? "Invalid Verification Code")
-            if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-                const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
-                const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
-                setProfileLockTime(timeInSec)
-                const coun = localStorage.getItem("ip_country")
-                localStorage.clear()
-                localStorage.setItem("ip_country", coun)
-                navigate("/auth/login")
-            }
-        }
-    }
-
     const deviceToggle = async (device) => {
         try {
             const data = {
@@ -360,6 +328,7 @@ const TwoFactorAuth = () => {
             const dec = decryptData(res.data.data)
 
             setDevices(prev => prev.filter(d => d.credentialId != deleteState.deviceToDelete.credentialId))
+            setFingerBioActive(prev => !devices.length ? false : prev)
             setDelete({ deviceToDelete: {}, showModal: false })
 
         } catch (error) {
@@ -367,8 +336,38 @@ const TwoFactorAuth = () => {
         }
 
     }
+    useEffect(() => {
+        if (devices.length > 0) {
+            const allEnabled = devices.every(device => device.enabled);
+            const anyEnabled = devices.some(device => device.enabled);
+            setFingerBioActive(anyEnabled); // Change this to anyEnabled instead of allEnabled
+        } else {
+            setFingerBioActive(false);
+        }
+    }, [devices]);
+
+    const mainToggle = async () => {
+        try {
+            console.log("heyy")
+            setIsSaving(true)
+            await Promise.all(devices.map(device => deviceToggle(device)))
+            setFingerBioActive(prev => !prev)
+        } catch (error) {
+
+        } finally {
+            setIsSaving(false)
+        }
+    }
 
     const navigate = useNavigate()
+
+    function resetModal() {
+        setShowBioModal(false);
+        setDeviceName("")
+        setDeviceAddError(false)
+        setRemainingChar(24)
+        setShowFinger(false)
+    }
     return (
         <Card style={{ marginLeft: "1rem", height: "100%" }} id='two_factor'>
             <CardHeader style={{ background: '#FAFAFA', padding: window.innerWidth < 1000 && "0" }} className={`pb-0`}  >
@@ -473,12 +472,13 @@ const TwoFactorAuth = () => {
                                     </div>)
                                     :
                                     (
-                                        <Switch checked={fingerBioActive}
-                                            onClick={() => {
-                                                if (fingerBioActive) {
-                                                    sendOtp()
-                                                } else {
+                                        <Switch
+                                            checked={fingerBioActive}
+                                            callback={() => {
+                                                if (!devices.length && !fingerBioActive) {
                                                     setShowBioModal(true)
+                                                } else {
+                                                    mainToggle()
                                                 }
                                             }} disabled={isSaving} />
                                     )
@@ -519,7 +519,7 @@ const TwoFactorAuth = () => {
                                         <Switch callback={() => deviceToggle(device)} checked={device?.enabled} />
 
                                         <svg
-                                        style={{cursor: "pointer"}}
+                                            style={{ cursor: "pointer" }}
                                             onClick={() => setDelete({ showModal: true, deviceToDelete: device })}
                                             xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
                                             <path d="M6 2.604H10M2 4.604H14M12.6667 4.604L12.1991 11.6169C12.129 12.669 12.0939 13.1951 11.8667 13.594C11.6666 13.9452 11.3648 14.2275 11.0011 14.4038C10.588 14.604 10.0607 14.604 9.00623 14.604H6.99377C5.93927 14.604 5.41202 14.604 4.99889 14.4038C4.63517 14.2275 4.33339 13.9452 4.13332 13.594C3.90607 13.1951 3.871 12.669 3.80086 11.6169L3.33333 4.604" stroke="#D00416" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -559,7 +559,7 @@ const TwoFactorAuth = () => {
                                         <Switch callback={() => deviceToggle(device)} checked={device?.enabled} />
 
                                         <svg
-                                            style={{cursor: "pointer"}} 
+                                            style={{ cursor: "pointer" }}
                                             onClick={() => setDelete({ showModal: true, deviceToDelete: device })}
                                             xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
                                             <path d="M6 2.604H10M2 4.604H14M12.6667 4.604L12.1991 11.6169C12.129 12.669 12.0939 13.1951 11.8667 13.594C11.6666 13.9452 11.3648 14.2275 11.0011 14.4038C10.588 14.604 10.0607 14.604 9.00623 14.604H6.99377C5.93927 14.604 5.41202 14.604 4.99889 14.4038C4.63517 14.2275 4.33339 13.9452 4.13332 13.594C3.90607 13.1951 3.871 12.669 3.80086 11.6169L3.33333 4.604" stroke="#D00416" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -639,21 +639,13 @@ const TwoFactorAuth = () => {
 
 
                 <Modal isOpen={showFinger}>
-                    <ModalHeader toggle={() => setShowFinger(!showFinger)}>Confirm</ModalHeader>
+                    <ModalHeader toggle={resetModal}>Confirm</ModalHeader>
                     <ModalBody>
                         <OTPConfirmation
-                            callback={(setter, type, otp, setError) => {
-                                if (deviceName) {
-                                    createPasskey(setter, type, otp, setError)
-                                    return false
-                                } else {
-                                    fingerBioActive ? deletePasskey(setter, type, otp, setError) : createPasskey(setter, type, otp, setError)
-                                }
-                            }
-                            }
+                            callback={createPasskey}
                             setter={setShowSuccess}
                             setterValue={true}
-                            hideOtp={() => setShowFinger(false)}
+                            hideOtp={resetModal}
                             processing={isSaving}
                             resendHandler={sendOtp}
                             authType={codeType}
@@ -725,7 +717,14 @@ const TwoFactorAuth = () => {
 
 
                                 <div className={styles.modalBtns} style={{ display: "flex", alignItems: "center", gap: "8px", width: "100%" }}>
-                                    <button style={{ width: (window.innerWidth < 1000 || showSuccess) && "100%", background: showSuccess && "#5926F0", color: showSuccess && "white" }} onClick={() => { setShowBioModal(false); setDeviceName("") }} className={styles.back}>Back</button>
+                                    <button
+                                        style={{ width: (window.innerWidth < 1000 || showSuccess) && "100%", background: showSuccess && "#5926F0", color: showSuccess && "white" }}
+                                        onClick={() => {
+                                            resetModal()
+                                            setShowSuccess(false)
+                                        }}
+                                        className={styles.back}>
+                                        Back</button>
                                     {!showSuccess &&
                                         <button
                                             onClick={() => {
