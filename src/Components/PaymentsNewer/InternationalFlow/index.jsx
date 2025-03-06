@@ -1015,6 +1015,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
         }
     }, [transaction_status, code])
 
+    console.log(internationalData.currency)
     return (
         <>
             {
@@ -1042,9 +1043,9 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                     </ModalHeader>
                     <ModalBody>
                         <h3 style={{ fontSize: "18px", fontWeight: 600 }}>
-                            We understand that your current sending limit is up to {internationalData.exchange_rate?.limits_used?.daily_sending_limit_used.toFixed(2)}. However, at this time, we can only process a maximum of {internationalData.thunesBalance}.
+                            We understand that your current sending limit is up to {internationalData.exchange_rate?.limits_used?.daily_sending_limit_used.toFixed(2)} {internationalData.currency}. However, at this time, we can only process a maximum of {internationalData.thunesBalance}.
 
-                            You may proceed with {internationalData.thunesBalance} or try again later to be able to send {internationalData.amount} .
+                            You may proceed with {internationalData.thunesBalance} {internationalData.currency} or try again later to be able to send {internationalData.amount} {internationalData.currency} .
 
                             Thank you for your understanding.
                         </h3>

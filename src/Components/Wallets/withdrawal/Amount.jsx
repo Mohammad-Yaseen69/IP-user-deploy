@@ -46,6 +46,8 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
     const { authHeader, userWallets, userDetails } = useContext(UserContext)
     const balance = wallet?.balance?.available_balance
 
+    console.log(wallet)
+
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const p_amount = queryParams.get("amount")
@@ -117,7 +119,12 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
                             }
                             if (amount <= data.fee.amount) {
                                 setExchangeError("Invalid Amount Fee")
-                            } else {
+                            } 
+                            else if (wallet.balance.available < +String(formattedAmount)?.replaceAll(",", "")) {
+                                console.log(wallet.balance.available ,+String(formattedAmount)?.replaceAll(", ", ""))
+                                setExchangeError("insufficient balance")
+                            }
+                            else {
                                 setExchangeRate(data)
                                 setQuotationDetails(decrypted?.data)
                                 setExchangeError("")
@@ -139,6 +146,10 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
                             }
                             else if (typeof dec?.message === "string" ? dec?.message?.toLowerCase()?.includes("minimum") : dec?.message?.[0]?.message?.toLowerCase()?.includes("below the min")) {
                                 setExchangeError("min payer")
+                            }
+                            else if (wallet.balance.available < +String(formattedAmount)?.replaceAll(",", "")) {
+                                console.log(wallet.balance.available ,+String(formattedAmount)?.replaceAll(", ", ""))
+                                setExchangeError("insufficient balance")
                             }
                             else if (typeof dec?.message === "string" ? dec?.message?.toLowerCase()?.includes("payer is currently unavailable") : dec?.message?.[0]?.message?.toLowerCase()?.includes("payer is currently unavailable")) {
                                 setExchangeError("unavailable payer")
