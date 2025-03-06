@@ -64,7 +64,7 @@
 }
 
 .buttons {
-    margin: 0 25px 0 10px ;
+    margin: 0 25px 0 10px;
 }
 
 .buttons button {
@@ -132,7 +132,6 @@
     outline: none;
     font-size: 18px;
     font-weight: 600
-
 }
 
 .next {
@@ -149,8 +148,7 @@
     outline: none;
     font-size: 18px;
     font-weight: 600;
-   color: white
-
+    color: white
 }
 
 .modalRightSide .top {
@@ -195,6 +193,66 @@
 }
 
 
+.deleteModal {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 60px;
+}
+
+.deleteModal p,
+h3,
+button {
+    font-weight: 600;
+    margin-bottom: 0;
+    color: black;
+}
+
+
+.deleteModal h3 {
+    margin-bottom: 12px;
+}
+
+.deleteModal>div:nth-child(1) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--SPACING-spacing-3, 18px);
+    align-self: stretch;
+}
+
+.deleteModal button {
+    display: flex;
+    padding: var(--SPACING-spacing-1, 12px) var(--SPACING-spacing-2, 18px);
+    justify-content: center;
+    align-items: center;
+    gap: var(--SPACING-spacing-0, 8px);
+    border-radius: var(--RADIUS-radius-2, 8px);
+    border: none;
+    outline: none;
+}
+
+.deleteModal span {
+    padding: var(--RADIUS-radius-1, 4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--RADIUS-radius-2, 8px);
+    background: var(--COLORS-Red-200, #D00416);
+}
+
+.deleteModal .cancel {
+    background: #E8E8E8;
+}
+
+.deleteModal .delete {
+    flex: 1 0 0;
+    align-self: stretch;
+    color: white;
+   
+    background-color: #D00416;
+}
+
 
 @media screen and (max-width: 1000px) {
 
@@ -204,27 +262,27 @@
         min-width: fit-content;
     }
 
-    .modalBtns{
-        flex-direction: column-reverse !important;    
+    .modalBtns {
+        flex-direction: column-reverse !important;
     }
 
-    .back{
+    .back {
         width: 100% !important;
     }
 
-    .table td{
+    .table td {
         padding: 1rem 0;
     }
 
-    .table{
+    .table {
         background-color: #fbfbfb;
     }
-    
-    .modalRightSide{
+
+    .modalRightSide {
         gap: 40px;
     }
 
-    .devices{
+    .devices {
         margin: 0 !important;
     }
 }

@@ -28,6 +28,7 @@ import Finger from "./a_items/finger/finger.svg"
 import FingerSuccess from "./a_items/finger/finger_success.svg"
 import FingerFailed from "./a_items/finger/finger_failed.svg"
 import "./styles/styles.css"
+import { browserName, deviceDetect } from "react-device-detect"
 import _ from 'lodash';
 
 const TwoFactorAuth = () => {
@@ -48,14 +49,19 @@ const TwoFactorAuth = () => {
     const [showSuccess, setShowSuccess] = useState(false)
     const [codeType, setCodeType] = useState("sms")
     const [token, setToken] = useState(null)
-    const [showBioModal, setShowBioModal] = useState(true)
+    const [showBioModal, setShowBioModal] = useState(false)
 
     const [showDevices, setShowDevices] = useState(false)
     const [remainingChar, setRemainingChar] = useState(24)
     const [deviceName, setDeviceName] = useState("")
     const [showDeviceOtp, setShowDeviceOtp] = useState(false)
     const [devices, setDevices] = useState([])
-    const [deviceAddError, setDeviceAddError] = useState(true)
+    const [deviceAddError, setDeviceAddError] = useState(false)
+    const [deleteState, setDelete] = useState({
+        showModal: false,
+        deviceToDelete: {}
+    })
+
 
 
 
@@ -64,7 +70,7 @@ const TwoFactorAuth = () => {
             setSmsActive(userDetails?.sms_verification ?? false)
             setEmailActive(userDetails?.email_verification ?? false)
             setAuthenticatorActive(userDetails?.tfa ?? false)
-            setFingerBioActive(userDetails?.passkey ?? false)
+            setFingerBioActive(userDetails?.passkeys.length ?? false)
             console.log(userDetails)
             // if (typeof userDetails?.sms_verification == "undefined" || typeof userDetails?.email_verification == "undefined") {
             //     setFirstTime(true)
@@ -169,6 +175,7 @@ const TwoFactorAuth = () => {
     }, [userDetails])
 
     const createPasskey = async (setter, type, otp, setError) => {
+        const rdd = deviceDetect()
         setDeviceAddError(false)
         try {
             const data = {
@@ -200,7 +207,7 @@ const TwoFactorAuth = () => {
             const data2 = {
                 account_id: userDetails?._id,
                 credentials: registrationResult,
-                device_name: deviceName ? deviceName : undefined
+                device_name: deviceName ? deviceName : `${rdd.browserName} ${rdd.osName} ${rdd.osVersion}`
             }
 
             console.log(data2)
@@ -209,11 +216,17 @@ const TwoFactorAuth = () => {
             }, { headers: authHeader })
 
 
-            console.log(response2)
+
             setFingerBioActive(true)
             setShowFinger(false)
             deviceName && setShowBioModal(true)
             setShowSuccess(true)
+            setDevices(prev =>
+                [...prev, {
+                    deviceName: deviceName,
+                    credentialId: data2.credentials.id
+                }]
+            )
             setToken(null)
             console.log(decryptData(response2.data.data))
 
@@ -313,6 +326,48 @@ const TwoFactorAuth = () => {
         }
     }
 
+    const deviceToggle = async (device) => {
+        try {
+            const data = {
+                account_id: userDetails?._id,
+                credentialId: device?.credentialId,
+                enable: !device.enabled
+            }
+
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/enable-biometric-device`, { data: encryptData(data) }, {
+                headers: authHeader
+            })
+
+            console.log(res)
+            setDevices(prev => prev.map(d => d.credentialId == device.credentialId ? { ...d, enabled: !d.enabled } : d))
+        }
+        catch (error) {
+
+        }
+    }
+
+    const deleteDevice = async () => {
+        try {
+            const data = {
+                account_id: userDetails?._id,
+                credentialId: deleteState.deviceToDelete.credentialId
+            }
+
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/delete-biometric-device`, { data: encryptData(data) }, {
+                headers: authHeader
+            })
+
+            const dec = decryptData(res.data.data)
+
+            setDevices(prev => prev.filter(d => d.credentialId != deleteState.deviceToDelete.credentialId))
+            setDelete({ deviceToDelete: {}, showModal: false })
+
+        } catch (error) {
+
+        }
+
+    }
+
     const navigate = useNavigate()
     return (
         <Card style={{ marginLeft: "1rem", height: "100%" }} id='two_factor'>
@@ -401,12 +456,12 @@ const TwoFactorAuth = () => {
                             </td>
                             <td style={{ minWidth: window.innerWidth > 1000 && "400px" }} data-label={t("Finger Biometric")}>
 
-                                {window.innerWidth > 1000 &&
+                                {(window.innerWidth > 1000 && fingerBioActive) &&
                                     <div style={{ cursor: "pointer" }} onClick={() => setShowDevices(true)} className={styles.deviceDiv}>
                                         <img src={SettingsIcon} alt="" />
                                         <p style={{ marginBottom: "0" }}>Manage Devices/Biometrics</p>
                                         <p style={{ marginBottom: "0" }}>-</p>
-                                        <p style={{ marginBottom: "0" }}>3/3</p>
+                                        <p style={{ marginBottom: "0" }}>{devices.length}/3</p>
                                     </div>
                                 }
 
@@ -417,9 +472,16 @@ const TwoFactorAuth = () => {
                                         </div>
                                     </div>)
                                     :
-                                    (<Switch checked={fingerBioActive} callback={() => {
-                                        sendOtp()
-                                    }} disabled={isSaving} />)
+                                    (
+                                        <Switch checked={fingerBioActive}
+                                            onClick={() => {
+                                                if (fingerBioActive) {
+                                                    sendOtp()
+                                                } else {
+                                                    setShowBioModal(true)
+                                                }
+                                            }} disabled={isSaving} />
+                                    )
                                 }
                             </td>
                         </tr>
@@ -435,7 +497,7 @@ const TwoFactorAuth = () => {
                     </div>
                 }
 
-                {(showDevices && window.innerWidth > 1000) &&
+                {(showDevices && window.innerWidth > 1000 && fingerBioActive) &&
                     <div style={{ display: "flex", flexDirection: "column", gap: "18px", alignItems: "flex-end" }}>
                         <div className={styles.devices}>
                             <h4>Manage Your Biometric Devices</h4>
@@ -454,9 +516,12 @@ const TwoFactorAuth = () => {
                                     </div>
 
                                     <div style={{ display: "flex", alignItems: "center" }}>
-                                        <Switch checked={devices[idx].credentialId} />
+                                        <Switch callback={() => deviceToggle(device)} checked={device?.enabled} />
 
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
+                                        <svg
+                                        style={{cursor: "pointer"}}
+                                            onClick={() => setDelete({ showModal: true, deviceToDelete: device })}
+                                            xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
                                             <path d="M6 2.604H10M2 4.604H14M12.6667 4.604L12.1991 11.6169C12.129 12.669 12.0939 13.1951 11.8667 13.594C11.6666 13.9452 11.3648 14.2275 11.0011 14.4038C10.588 14.604 10.0607 14.604 9.00623 14.604H6.99377C5.93927 14.604 5.41202 14.604 4.99889 14.4038C4.63517 14.2275 4.33339 13.9452 4.13332 13.594C3.90607 13.1951 3.871 12.669 3.80086 11.6169L3.33333 4.604" stroke="#D00416" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                         </svg>
                                     </div>
@@ -477,44 +542,32 @@ const TwoFactorAuth = () => {
                         </div>
                     </div>
                 }
-                {(showDevices && window.innerWidth < 1000) &&
+                {(showDevices && window.innerWidth < 1000 && fingerBioActive) &&
                     <div style={{ display: "flex", flexDirection: "column", gap: "18px", alignItems: "flex-end", }}>
                         <div className={styles.devices} style={{ backgroundColor: "white", padding: "12px" }}>
                             <h4 style={{ fontSize: "12px" }}>Manage Your Biometric Devices</h4>
-                            <div className={styles.device}>
-                                <div>
+
+                            {devices?.map((device, idx) => (
+                                <div className={styles.device}>
                                     <div>
-                                        <p style={{ fontSize: "12px", color: "#333333" }}>iPhone 14 pro max</p>
+                                        <div>
+                                            <p style={{ fontSize: "12px", color: "#333333" }}>{device.deviceName} </p>
+                                        </div>
                                     </div>
 
-                                </div>
+                                    <div style={{ display: "flex", alignItems: "center" }}>
+                                        <Switch callback={() => deviceToggle(device)} checked={device?.enabled} />
 
-                                <div style={{ display: "flex", alignItems: "center" }}>
-                                    <Switch />
-
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
-                                        <path d="M6 2.604H10M2 4.604H14M12.6667 4.604L12.1991 11.6169C12.129 12.669 12.0939 13.1951 11.8667 13.594C11.6666 13.9452 11.3648 14.2275 11.0011 14.4038C10.588 14.604 10.0607 14.604 9.00623 14.604H6.99377C5.93927 14.604 5.41202 14.604 4.99889 14.4038C4.63517 14.2275 4.33339 13.9452 4.13332 13.594C3.90607 13.1951 3.871 12.669 3.80086 11.6169L3.33333 4.604" stroke="#D00416" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </div>
-                            </div>
-
-                            <div className={styles.device}>
-                                <div>
-                                    <div >
-                                        <p style={{ fontSize: "12px", color: "#333333" }}>iPhone 14 pro max</p>
+                                        <svg
+                                            style={{cursor: "pointer"}} 
+                                            onClick={() => setDelete({ showModal: true, deviceToDelete: device })}
+                                            xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
+                                            <path d="M6 2.604H10M2 4.604H14M12.6667 4.604L12.1991 11.6169C12.129 12.669 12.0939 13.1951 11.8667 13.594C11.6666 13.9452 11.3648 14.2275 11.0011 14.4038C10.588 14.604 10.0607 14.604 9.00623 14.604H6.99377C5.93927 14.604 5.41202 14.604 4.99889 14.4038C4.63517 14.2275 4.33339 13.9452 4.13332 13.594C3.90607 13.1951 3.871 12.669 3.80086 11.6169L3.33333 4.604" stroke="#D00416" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
                                     </div>
-
-
                                 </div>
+                            ))}
 
-                                <div style={{ display: "flex", alignItems: "center" }}>
-                                    <Switch />
-
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
-                                        <path d="M6 2.604H10M2 4.604H14M12.6667 4.604L12.1991 11.6169C12.129 12.669 12.0939 13.1951 11.8667 13.594C11.6666 13.9452 11.3648 14.2275 11.0011 14.4038C10.588 14.604 10.0607 14.604 9.00623 14.604H6.99377C5.93927 14.604 5.41202 14.604 4.99889 14.4038C4.63517 14.2275 4.33339 13.9452 4.13332 13.594C3.90607 13.1951 3.871 12.669 3.80086 11.6169L3.33333 4.604" stroke="#D00416" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </div>
-                            </div>
 
 
                         </div>
@@ -687,12 +740,34 @@ const TwoFactorAuth = () => {
                         </div>
                     </ModalBody>
                 </Modal>
-                <SuccessModal
-                    isOpen={showSuccess && !showBioModal}
-                    message={`Your finger biometric has been ${fingerBioActive ? "enabled" : "disabled"} successfully!`}
-                    subMessage={"Finger Biometric Updated"}
-                    toggle={() => setShowSuccess(false)}
-                />
+
+                <Modal isOpen={deleteState.showModal}>
+                    <ModalBody>
+                        <div className={styles.deleteModal}>
+                            <div>
+                                <div style={{ display: "flex", alignItems: 'center', gap: '10px' }}>
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 23 23" fill="none">
+                                            <path d="M8.75 3.25H14.25M3.25 6H19.75M17.9167 6L17.2738 15.6427C17.1774 17.0894 17.1291 17.8128 16.8167 18.3613C16.5416 18.8441 16.1266 19.2323 15.6265 19.4747C15.0585 19.75 14.3335 19.75 12.8836 19.75H10.1164C8.6665 19.75 7.94153 19.75 7.37348 19.4747C6.87336 19.2323 6.45841 18.8441 6.18332 18.3613C5.87085 17.8128 5.82263 17.0894 5.72618 15.6427L5.08333 6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                    </span>
+
+                                    <p style={{ fontSize: "16px" }}>Delete this Device</p>
+                                </div>
+
+                                <div>
+                                    <h3 style={{ fontSize: "20px", fontWeight: 700, marginBottom: '12px' }}>Are you sure you want to delete this device?</h3>
+                                    <p style={{ fontSize: "14px", color: "#777777" }}>This device will no longer be able to use biometric authentication. You will need to re-register it if you want to use it again.</p>
+                                </div>
+                            </div>
+
+                            <div style={{ display: 'flex', gap: '10px', alignItems: "center", width: "100%" }}>
+                                <button onClick={() => setDelete({ showModal: false, device: null })} className={styles.cancel}>Cancel</button>
+                                <button onClick={deleteDevice} className={styles.delete}>Yes, Remove Device</button>
+                            </div>
+                        </div>
+                    </ModalBody>
+                </Modal>
 
                 {/* <Modal isOpen={authenticatorDetails}>
                     <ModalHeader toggle={() => setAuthenticatorDetails(null)}>
