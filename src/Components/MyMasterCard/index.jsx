@@ -82,8 +82,6 @@ const MyMasterCard = () => {
     getTransactions()
   }, [current])
 
-  console.log(transactions)
-
   return (
     <div style={{ minHeight: "100vh" }} className={styles.container}>
       <div className={styles.top}>

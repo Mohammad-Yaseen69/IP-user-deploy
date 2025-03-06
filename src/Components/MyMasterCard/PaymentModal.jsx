@@ -190,20 +190,19 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
       setDefaultWallet(filteredWallets[0])
     }
 
-    console.log(defaultWallet)
   }, [filteredWallets])
 
 
 
   const sendOtp = async (e) => {
+    if (!feeDetails.token) return false
+
     e && e.preventDefault()
     setLoading(true)
     try {
       const twoYearsAhead = new Date();
       twoYearsAhead.setFullYear(twoYearsAhead.getFullYear() + 2);
 
-
-      console.log(feeDetails)
       const cardData = {
         data: {
           currency: "USD",
@@ -214,11 +213,13 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
         type: codeType
       }
 
-      if (selectedSaveCard?._id) {
-        cardData.data.pan = selectedSaveCard._id
-      } else {
-        cardData.data.is_card_save = saveCard
-        cardData.data.se_shambey = createShambeToken(cardDetail)
+      if (paymentType == "card") {
+        if (selectedSaveCard?._id) {
+          cardData.data.pan = selectedSaveCard._id
+        } else {
+          cardData.data.is_card_save = saveCard
+          cardData.data.se_shambey = createShambeToken(cardDetail)
+        }
       }
 
 
@@ -234,8 +235,11 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
         type: codeType
       }
 
-      console.log(cardData)
-      const encrypted = encryptData(paymentType === "wallet" ? data : paymentType === "card" && cardData)
+      if(paymentType == "paypal"){
+        data.data.token = feeDetails?.token
+      }
+
+      const encrypted = encryptData(paymentType === "card" ? cardData : data)
       const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
         data: encrypted
       }, {
@@ -247,11 +251,33 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
       setshowOtpModal(true)
     } catch (error) {
       const dec = decryptData(error.response.data.data)
-      console.log(dec)
       toast.error("Something went wrong while creating your virtual card! please try again.")
     }
     finally {
       setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (paymentType === "paypal") {
+      if (feeDetails.token) {
+        sendOtp()
+      }
+    }
+  }, [feeDetails, paymentType])
+
+  function errorHandler(err, setError) {
+    const decrypted = decryptData(err.response.data.data);
+    console.log(decrypted)
+    setError(decrypted?.message ?? "Invalid Verification Code")
+    if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+      const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
+      const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
+      setProfileLockTime(timeInSec)
+      const coun = localStorage.getItem("ip_country")
+      localStorage.clear()
+      localStorage.setItem("ip_country", coun)
+      navigate("/auth/login")
     }
   }
 
@@ -262,30 +288,19 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
       type: codeType,
       otp
     }
-    console.log(data)
     try {
       const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/virtual-card/create-vvc`, { data: encryptData(data) }, {
         headers: authHeader
       })
 
-      console.log(decryptData(res.data.data))
+
       setShowSuccess(true)
       setToken(null)
       setStep(4)
       setshowOtpModal(false)
 
     } catch (err) {
-      const decrypted = decryptData(err.response.data.data);
-      setError(decrypted?.message ?? "Invalid Verification Code")
-      if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
-        const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
-        setProfileLockTime(timeInSec)
-        const coun = localStorage.getItem("ip_country")
-        localStorage.clear()
-        localStorage.setItem("ip_country", coun)
-        navigate("/auth/login")
-      }
+      errorHandler(err, setError)
     }
   }
 
@@ -297,7 +312,6 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
           headers: authHeader
         })
         const dec = decryptData(res.data.data)
-        console.log(dec)
         setCards(dec?.panList)
 
       } catch {
@@ -375,39 +389,54 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
     if (selectedSaveCard?._id) {
       data.panData.pan = selectedSaveCard._id
     } else {
-      data.panDatais_card_save = saveCard
-      data.panDatase_shambey = createShambeToken(cardDetail)
+      data.panData.is_card_save = saveCard
+      data.panData.se_shambey = createShambeToken(cardDetail)
     }
 
     try {
       const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/virtual-card/initiate-vcc${selectedSaveCard._id ? "-pan" : ""}-card`, { data: encryptData(data) }, {
         headers: authHeader
       })
-
-      console.log(decryptData(res.data.data))
       setToken(null)
       setshowOtpModal(false)
       const dec = decryptData(res.data.data)
       setCardTransactionDetails(dec)
     } catch (err) {
-      const decrypted = decryptData(err.response.data.data);
-      console.log(decrypted)
-      setError(decrypted?.message ?? "Invalid Verification Code")
-      if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
-        const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
-        setProfileLockTime(timeInSec)
-        const coun = localStorage.getItem("ip_country")
-        localStorage.clear()
-        localStorage.setItem("ip_country", coun)
-        navigate("/auth/login")
-      }
+      errorHandler(err, setError)
     }
   }
 
 
 
-  console.log(feeDetails)
+
+  const initiatePaypalPayment = async (setter, type, otp, setError) => {
+    try {
+      const twoYearsAhead = new Date();
+      twoYearsAhead.setFullYear(twoYearsAhead.getFullYear() + 2);
+      const data = {
+        token: token,
+        type: codeType,
+        otp,
+      }
+
+
+      const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/virtual-card/initiate-vcc-paypal`, { data: encryptData(data) }, {
+        headers: authHeader
+      })
+
+
+      const dec = decryptData(res.data.data)
+      setToken(null)
+      window.location.href = dec?.url
+
+    } catch (err) {
+      errorHandler(err, setError)
+    }
+  }
+
+
+
+
   return (
     <div className='vvc-modal'>
       <Modal isOpen={isOpen && !showOtpModal} style={{ borderRadius: "16px", overflow: "hidden", minWidth: step === 4 ? "1000px" : '800px' }}>
@@ -447,7 +476,9 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
                       <div
                         onClick={() => {
                           setPaymentType(option.type)
-                          setStep(2)
+                          if (option.type !== "paypal") {
+                            setStep(2)
+                          }
                         }}
                         key={option.type}
                         className={styles.paymentOptions}>
@@ -748,7 +779,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
         <ModalHeader toggle={() => setshowOtpModal(false)}> Confirm </ModalHeader>
         <ModalBody>
           <OTPConfirmation
-            callback={paymentType === "wallet" ? createWallet : initiateCardVVC}
+            callback={paymentType === "wallet" ? createWallet : paymentType === "paypal" ? initiatePaypalPayment : initiateCardVVC}
             setter={setShowSuccess}
             setterValue={true}
             hideOtp={() => setshowOtpModal(false)}

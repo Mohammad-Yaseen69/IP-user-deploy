@@ -650,7 +650,7 @@ const TwoFactorAuth = () => {
                             resendHandler={sendOtp}
                             authType={codeType}
                             setAuthType={setCodeType}
-                            showAuthToggle={true}
+                            // showAuthToggle={true}
                         />
                     </ModalBody>
                 </Modal>
