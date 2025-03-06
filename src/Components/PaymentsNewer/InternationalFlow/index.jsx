@@ -1043,7 +1043,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                     </ModalHeader>
                     <ModalBody>
                         <h3 style={{ fontSize: "18px", fontWeight: 600 }}>
-                            We understand that your current sending limit is up to {internationalData.exchange_rate?.limits_used?.daily_sending_limit_used.toFixed(2)} {internationalData.currency}. However, at this time, we can only process a maximum of {internationalData.thunesBalance}.
+                            We understand that your remaining sending limit is up to {internationalData.exchange_rate?.limits_used?.daily_sending_limit_used.toFixed(2)} {internationalData.currency}. However, at this time, we can only process a maximum of {internationalData.thunesBalance} {internationalData.currency} .
 
                             You may proceed with {internationalData.thunesBalance} {internationalData.currency} or try again later to be able to send {internationalData.amount} {internationalData.currency} .
 

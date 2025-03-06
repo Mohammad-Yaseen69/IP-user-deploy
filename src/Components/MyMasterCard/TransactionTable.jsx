@@ -14,6 +14,11 @@ import requested_white from "../TransactionsNewApi/files/requested_white.png"
 import requested_grey from "../TransactionsNewApi/files/requested_grey.png"
 import quoted_white from "../TransactionsNewApi/files/quoted_white.png"
 import quoted_grey from "../TransactionsNewApi/files/quoted_grey.png"
+import send_grey from "../TransactionsNewApi/files/sent_grey.png"
+import send_white from "../TransactionsNewApi/files/sent_white.png"
+import recieved_white from "../TransactionsNewApi/files/received_white.png"
+import recieved_grey from "../TransactionsNewApi/files/received_grey.png"
+
 import { DateRangePicker } from "react-date-range";
 import TransactionItem from "../TransactionsNewApi/TransactionItem";
 import TransactionItemMobile from "../TransactionsNewApi/Mobile/TransactionItemMobile";
@@ -59,27 +64,27 @@ const TransactionsTable = ({ transactions = [], isLoading = false, cardNo }) => 
         },
         {
             id: 2,
-            name: "Sent",
+            name: "Debit",
             icon_white: sent_white,
-            icon_grey: sent_grey
+            icon_grey: send_grey
         },
         {
             id: 3,
-            name: "Received",
-            icon_white: received_white,
-            icon_grey: received_grey
+            name: "Credit",
+            icon_white: recieved_white,
+            icon_grey: recieved_grey
         },
         {
             id: 4,
-            name: "Requested",
-            icon_white: requested_white,
-            icon_grey: requested_grey
+            name: "Send",
+            icon_white: sent_white,
+            icon_grey: send_grey
         },
         {
             id: 5,
-            name: "Quoted",
-            icon_white: quoted_white,
-            icon_grey: quoted_grey
+            name: "Recieved",
+            icon_white: recieved_white,
+            icon_grey: recieved_grey
         },
     ]), [])
 
