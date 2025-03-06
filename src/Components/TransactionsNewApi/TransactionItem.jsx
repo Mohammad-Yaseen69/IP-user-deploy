@@ -23,7 +23,7 @@ export const service_name_formatter = (itemName) => {
     }
 }
 
-const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral = false, vvc = false }) => {
+const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral = false, vvc = false, cardNo }) => {
     const { t, i18n } = useTranslation()
     const [selectedCategory, setSelectedCategory] = useState([]);
     const { userDetails, authHeader, beneficiaries } = useContext(UserContext)
@@ -143,7 +143,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
             }}>
                 <div style={{ minWidth: "155px" }}>{new Date(item?.createdAt)?.toLocaleString()}</div>
                 {vvc && <div>{item?.transactionId}</div>}
-                {vvc && <div>••{item?.cardNo?.slice(-4)}</div>}
+                {vvc && <div>••{cardNo?.slice(-4)}</div>}
                 {vvc && <div>{item?.merchantName}</div>}
                 {vvc && <div>{item?.reason ?? "--"}</div>}
 

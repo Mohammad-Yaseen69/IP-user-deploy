@@ -24,7 +24,7 @@ const Toggle = ({ checked, onChange, isCheckbox = false }) => (
     </label>
 );
 
-const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent }) => {
+const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent ,currentCardDetails, setCurrentCardDetails }) => {
     const [checks, setChecks] = useState({
         cardStatus: true,
         onlinePurchases: true,
@@ -34,7 +34,6 @@ const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent }) => {
     const ref = useRef();
     const swiperRef = useRef()
     const { authHeader, userDetails } = useContext(UserContext)
-    const [currentCardDetails, setCurrentCardDetails] = useState({})
     const [cardLoading, setCardLoading] = useState(true)
     const [flippedCards, setFlippedCards] = useState({}); // Add this state for card flipping
 
@@ -100,9 +99,6 @@ const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent }) => {
             ref.current.scrollBy({ left: 200, behavior: 'smooth' });
         }
     };
-
-
-    console.log(currentCardDetails)
 
     return (
         <div className={styles.cardContainer}>

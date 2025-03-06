@@ -12,8 +12,9 @@ import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import ImagePreviewModal from "../../ImagePreviewModal.jsx"
 import TransactionItemDetails from "../TransactionItemDetails.jsx"
 import statuses from "../files/thunesTransactionStatus.json"
+import CitiesData from "../../CitiesDropDown/CitiesData.json"
 
-const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromReferral = false }) => {
+const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromReferral = false, vvc = false }) => {
     const { t, i18n } = useTranslation()
     const [selectedCategory, setSelectedCategory] = useState([]);
     const { userDetails, authHeader, beneficiaries } = useContext(UserContext)
@@ -22,10 +23,19 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
     const [isEditMode, setIsEditMode] = useState(false)
     const [message, setMessage] = useState("")
     const [currentImage, setCurrentImage] = useState("")
+    const [symbol, setSymbol] = useState("")
+
     useEffect(() => {
         setNote(item?.note)
         setIsEditMode(item?.note ? false : true)
     }, [item])
+
+    useEffect(() => {
+        if(vvc){
+            const data = CitiesData.find((d) => d.currency === item.currency)
+            setSymbol(data.currency_symbol)
+        }
+    },[item])
 
     const badgeColor = useMemo(() => {
         switch (item?.status?.toLowerCase()) {

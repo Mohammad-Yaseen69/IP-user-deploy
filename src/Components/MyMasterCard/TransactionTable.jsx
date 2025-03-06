@@ -18,7 +18,7 @@ import { DateRangePicker } from "react-date-range";
 import TransactionItem from "../TransactionsNewApi/TransactionItem";
 import TransactionItemMobile from "../TransactionsNewApi/Mobile/TransactionItemMobile";
 
-const TransactionsTable = ({ transactions = [], isLoading = false }) => {
+const TransactionsTable = ({ transactions = [], isLoading = false, cardNo }) => {
     const { t } = useTranslation()
     const [active, setActive] = useState("All")
     const [activeItem, setActiveItem] = useState(0)
@@ -145,6 +145,7 @@ const TransactionsTable = ({ transactions = [], isLoading = false }) => {
                                 setActiveItem={setActiveItem}
                                 index={index}
                                 vvc={true}
+                                cardNo={cardNo}
                             />
                         ))
                     ) : (
@@ -165,6 +166,7 @@ const TransactionsTable = ({ transactions = [], isLoading = false }) => {
                                 activeItem={activeItem}
                                 setActiveItem={setActiveItem}
                                 index={index}
+                                vvc={true}
                             />
                         ))
                     ) : (

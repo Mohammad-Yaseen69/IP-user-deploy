@@ -17,6 +17,7 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 const MyMasterCard = () => {
   const [cardPurchased, setCardPurchased] = useState(false)
   const { setTogglSidebar, sideBarToogle, togglSidebar } = useContext(CustomizerContext)
+  const [currentCardDetails, setCurrentCardDetails] = useState({})
   const { userDetails, authHeader } = useContext(UserContext)
   const [cards, setCards] = useState([])
   const [reRender, setReRender] = useState(false)
@@ -42,7 +43,7 @@ const MyMasterCard = () => {
         setCards(dec?.data ?? [])
         if (dec?.data.length) {
           setCardPurchased(true)
-        }else{
+        } else {
           setCardPurchased(false)
         }
 
@@ -65,13 +66,13 @@ const MyMasterCard = () => {
   useEffect(() => {
     const getTransactions = async () => {
       try {
-        const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/virtual-card/get-card-transcations`, {data: encryptData({cardId: cards[0].card_id})}, {
+        const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/virtual-card/get-card-transcations`, { data: encryptData({ cardId: cards[current].card_id }) }, {
           headers: authHeader
         })
-  
+
         const dec = decryptData(res.data.data)
         setTransactions(dec.data)
-        
+
       } catch (error) {
         const dec = decryptData(error.response.data.data)
         console.log(dec)
@@ -79,7 +80,7 @@ const MyMasterCard = () => {
     }
 
     getTransactions()
-  },[current])
+  }, [current])
 
   console.log(transactions)
 
@@ -94,12 +95,19 @@ const MyMasterCard = () => {
       <>
         {!loading ?
           <>
-            {cardPurchased ? 
+            {cardPurchased ?
               <>
-                <CardPurchased setLoading={setLoading} current={current} setCurrent={setCurrent} cards={cards} setCardPurchased={setCardPurchased} />
-                <TransactionsTable transactions={transactions} isLoading={loading}/>
-              </> 
-              :  <OnBoarding  alreadyHaveCard={cards.length !== 0} setReRender={setReRender} setCardPurchased={setCardPurchased}/>
+                <CardPurchased
+                  currentCardDetails={currentCardDetails}
+                  setCurrentCardDetails={setCurrentCardDetails}
+                  setLoading={setLoading} current={current}
+                  setCurrent={setCurrent}
+                  cards={cards}
+                  setCardPurchased={setCardPurchased}
+                />
+                <TransactionsTable  cardNo={currentCardDetails?.card_number} transactions={transactions} isLoading={loading} />
+              </>
+              : <OnBoarding alreadyHaveCard={cards.length !== 0} setReRender={setReRender} setCardPurchased={setCardPurchased} />
 
             }
           </>
