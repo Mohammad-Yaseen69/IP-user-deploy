@@ -87,7 +87,7 @@ const TransactionsTable = ({ transactions = [], isLoading = false }) => {
     const tableWrapperRefMobile = useRef(null)
 
     return (
-        <div className={styles.table}>
+        <div style={{marginTop: "1rem"}} className={styles.table}>
             <div className={styles.menu}>
                 <div className={styles.right}>
                     {menuData.map(item => (
