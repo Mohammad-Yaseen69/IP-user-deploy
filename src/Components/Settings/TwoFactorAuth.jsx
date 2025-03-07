@@ -50,7 +50,10 @@ const TwoFactorAuth = () => {
     const [codeType, setCodeType] = useState("sms")
     const [token, setToken] = useState(null)
     const [showBioModal, setShowBioModal] = useState(false)
-
+    const [bioTogglePassword, setBioTogglePassword] = useState({
+        action: "",
+        device: null
+    })
     const [showDevices, setShowDevices] = useState(false)
     const [remainingChar, setRemainingChar] = useState(24)
     const [deviceName, setDeviceName] = useState("")
@@ -305,8 +308,8 @@ const TwoFactorAuth = () => {
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/enable-biometric-device`, { data: encryptData(data) }, {
                 headers: authHeader
             })
-
-            console.log(res)
+            
+            setShowAuth(false)
             setDevices(prev => prev.map(d => d.credentialId == device.credentialId ? { ...d, enabled: !d.enabled } : d))
         }
         catch (error) {
@@ -356,6 +359,7 @@ const TwoFactorAuth = () => {
 
         } finally {
             setIsSaving(false)
+            setShowAuth(false)
         }
     }
 
@@ -478,7 +482,11 @@ const TwoFactorAuth = () => {
                                                 if (!devices.length && !fingerBioActive) {
                                                     setShowBioModal(true)
                                                 } else {
-                                                    mainToggle()
+                                                    setShowAuth(true)
+                                                    setBioTogglePassword({
+                                                        action: "main",
+                                                    })
+                                                    // mainToggle()
                                                 }
                                             }} disabled={isSaving} />
                                     )
@@ -493,7 +501,7 @@ const TwoFactorAuth = () => {
                         <img src={SettingsIcon} alt="" />
                         <p style={{ marginBottom: "0" }}>Manage Devices/Biometrics</p>
                         <p style={{ marginBottom: "0" }}>-</p>
-                        <p style={{ marginBottom: "0" }}>3/3</p>
+                        <p style={{ marginBottom: "0" }}>{remainingChar}/3</p>
                     </div>
                 }
 
@@ -516,7 +524,13 @@ const TwoFactorAuth = () => {
                                     </div>
 
                                     <div style={{ display: "flex", alignItems: "center" }}>
-                                        <Switch callback={() => deviceToggle(device)} checked={device?.enabled} />
+                                        <Switch callback={() => {
+                                            setShowAuth(true)
+                                            setBioTogglePassword({
+                                                action: "device",
+                                                device: device
+                                            })
+                                        }} checked={device?.enabled} />
 
                                         <svg
                                             style={{ cursor: "pointer" }}
@@ -556,7 +570,13 @@ const TwoFactorAuth = () => {
                                     </div>
 
                                     <div style={{ display: "flex", alignItems: "center" }}>
-                                        <Switch callback={() => deviceToggle(device)} checked={device?.enabled} />
+                                        <Switch callback={() => {
+                                            setShowAuth(true)
+                                            setBioTogglePassword({
+                                                action: "device",
+                                                device: device
+                                            })
+                                        }} checked={device?.enabled} />
 
                                         <svg
                                             style={{ cursor: "pointer" }}
@@ -625,6 +645,10 @@ const TwoFactorAuth = () => {
                         toggle={() => setShowAuth(false)}
                         emailActive={emailActive}
                         setAuthenticatorActive={setAuthenticatorActive}
+                        bioMetricHandler={() => {
+                            bioTogglePassword.action === "main" ? mainToggle() : deviceToggle(bioTogglePassword.device)
+                        }}
+                        isBiometricChecks={bioTogglePassword.action !== ""}
                         setEditMode={setEditMode}
                         smsActive={smsActive}
                         passwordNext={(c) => {
@@ -650,7 +674,7 @@ const TwoFactorAuth = () => {
                             resendHandler={sendOtp}
                             authType={codeType}
                             setAuthType={setCodeType}
-                            // showAuthToggle={true}
+                        // showAuthToggle={true}
                         />
                     </ModalBody>
                 </Modal>
@@ -677,7 +701,7 @@ const TwoFactorAuth = () => {
                                 <h2 style={{ marginBottom: "0", fontSize: "24px", fontWeight: 700 }}>{showSuccess ? "Fingerprint Registered Successfully" : deviceAddError ? "Fingerprint Not Recognized" : "Add a new device"}.</h2>
                                 <p style={{ marginBottom: "0", fontSize: "16px", fontWeight: 600, color: "#777777" }}>
                                     {showSuccess ?
-                                        `You can now use your fingerprint to log in on this device. You  ${devices.length < 1 ? "can" : "can't"} add ${devices.length == 0 ? "two" : devices.length === 1 ? "one" : ""} more devices as biometric authentication` :
+                                        `You can now use your fingerprint to log in on this device. You  ${devices.length <= 1 ? "can" : "can't"} add ${devices.length == 0 ? "two" : devices.length === 1 ? "one" : ""} more devices as biometric authentication` :
                                         deviceAddError ?
                                             "We couldn't capture a valid fingerprint. Please try again."
                                             :
@@ -698,8 +722,15 @@ const TwoFactorAuth = () => {
                                                 value={deviceName}
                                                 onChange={(e) => {
                                                     if (remainingChar !== 0) {
-                                                        setRemainingChar(prev => prev - 1)
                                                         setDeviceName(e.target.value)
+                                                    }
+                                                }}
+                                                placeholder='Enter Device Name'
+                                                onKeyDown={(e) => {
+                                                    if (e.key === "Backspace") {
+                                                        setRemainingChar(prev => Math.min(prev + 1, 24));
+                                                    } else if (remainingChar > 0) {
+                                                        setRemainingChar(prev => prev - 1)
                                                     }
                                                 }}
                                                 readOnly={showSuccess}
@@ -708,7 +739,8 @@ const TwoFactorAuth = () => {
 
 
                                             {!showSuccess &&
-                                                <p style={{ marginBottom: "0", position: 'absolute', top: "25%", right: "8px", fontSize: "10px", color: "#BBBBB", fontWeight: 600 }}>{remainingChar}/24 Characters Remaining
+                                                <p style={{ marginBottom: "0", position: 'absolute', top: "25%", right: "8px", fontSize: "10px", color: "#BBBBB", fontWeight: 600 }}>{remainingChar}/24
+                                                    {window.innerWidth > 1000 && "Characters Remaining"}
                                                 </p>
                                             }
                                         </div>
@@ -724,7 +756,8 @@ const TwoFactorAuth = () => {
                                             setShowSuccess(false)
                                         }}
                                         className={styles.back}>
-                                        Back</button>
+                                        {!showSuccess ? "Back" : "Close"}
+                                    </button>
                                     {!showSuccess &&
                                         <button
                                             onClick={() => {

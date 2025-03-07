@@ -22,6 +22,8 @@ const GoogleAuthenticatorModal = ({
     passwordNext = () => { },
     successTitle = "Google Two Factor Authentication is now linked to your InstaPay Account.",
     sideText = "Google Authenticator",
+    isBiometricChecks,
+    bioMetricHandler
 }) => {
     const { t } = useTranslation()
     const { userDetails, authHeader } = useContext(UserContext)
@@ -81,11 +83,17 @@ const GoogleAuthenticatorModal = ({
                 headers: authHeader
             })
             const dec = decryptData(response.data.data)
-            if (sideText == "Google Authenticator") {
-                console.log("he")
-                setStep(2)
-            } else {
-                passwordNext(() => setStep(3))
+
+            if(!isBiometricChecks){
+                if (sideText == "Google Authenticator") {
+                    console.log("he")
+                    setStep(2)
+                } else {
+                    passwordNext(() => setStep(3))
+                }
+            }
+            else{
+                bioMetricHandler()
             }
         } catch (error) {
             const dec = decryptData(error.response.data)
