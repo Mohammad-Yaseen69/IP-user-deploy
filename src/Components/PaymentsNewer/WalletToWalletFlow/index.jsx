@@ -560,11 +560,13 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                 else if (dec?.message?.toLowerCase()?.includes("insufficient")) {
                     dataHandler("exchange_rate_error", "insufficient balance payer")
                 }
-                else if (dec?.message?.toLowerCase()?.includes("exceeds max")) {
+                else if (dec?.message?.toLowerCase()?.includes("exceeds max") || dec?.message?.toLowerCase()?.includes("above the max")) {
                     dataHandler("exchange_rate_error", "max payer")
+                    dataHandler("exchange_rate_error_value", Number(dec?.value ?? 0)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
                 }
                 else if (dec?.message?.toLowerCase()?.includes("below the min") || dec?.message?.toLowerCase()?.includes("below the max")) {
                     dataHandler("exchange_rate_error", "min payer")
+                    dataHandler("exchange_rate_error_value", Number(dec?.value ?? 0)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
                 }
                 else {
                     dataHandler("exchange_rate_error", "sww")

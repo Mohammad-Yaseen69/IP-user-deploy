@@ -185,7 +185,7 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, pa
                 display: "flex",
                 flexDirection: "column",
                 borderRadius: "20px",
-                padding: "20px 30px",
+                padding: window.innerWidth > 1000 ? "20px 30px" : "20px",
                 background: "rgba(0,0,0,.03)",
                 paddingBottom: 0,
                 boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)"
@@ -232,7 +232,7 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, pa
                                     boxShadow: "0px 6px 13px -5.4094px rgba(89, 38, 240, 0.17)",
                                     borderRadius: "16px",
                                     padding: "1rem",
-                                    width: "85%",
+                                    width: window.innerWidth > 600 ? "85%" : "100%",
                                     margin: "1rem auto 0",
                                     overflow: "hidden"
                                 }}

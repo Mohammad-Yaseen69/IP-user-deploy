@@ -243,43 +243,42 @@ const WithdrawOldFlow = ({
         }
     }, [payoutChannel])
 
-    const createQuotation = () => {
+    const createQuotation = async () => {
         setIsLoading(true)
-        const data = {
-            amount: +amount,
-            token: quotationDetails?.token,
-            payerId: subService?.id,
-            wallet_id: wallet?._id,
-            transaction_type: userDetails?.account_type === "individual" ? "C2C" : "C2B",
-            service_name: payoutChannel?.value === "bank" ? "withdrawal_bank_transfer" : payoutChannel?.value === "mobile" ? "withdrawal_mobile_wallet" : payoutChannel?.value === "card" ? "withdrawal_card_payment" : payoutChannel?.value === "cash" ? "withdrawal_cash_pickup" : "",
-            channel_name: payoutChannel?.value === "bank" ? "bank_account" : payoutChannel?.value === "mobile" ? "mobile_money" : payoutChannel?.value === "card" ? "card_payment" : payoutChannel?.value === "cash" ? "cash_pickup" : "",
-            iso_code: userDetails?.country_iso_code,
-            avoid_balance: false,
-            currency_code: wallet?.currency?.code,
-            service_id: payoutChannel?.id,
-            account_id: userDetails?._id
-        }
-        // console.log(data)
-        const encrypted = encryptData(data)
-
-        axios.post(`${process.env.REACT_APP_THUNES_API}/create-quotation`, {
-            data: encrypted
-        },
-            {
-                headers: authHeader
+        try {
+            const data = {
+                amount: +amount,
+                token: quotationDetails?.token,
+                payerId: subService?.id,
+                wallet_id: wallet?._id,
+                transaction_type: userDetails?.account_type === "individual" ? "C2C" : "C2B",
+                service_name: payoutChannel?.value === "bank" ? "withdrawal_bank_transfer" : payoutChannel?.value === "mobile" ? "withdrawal_mobile_wallet" : payoutChannel?.value === "card" ? "withdrawal_card_payment" : payoutChannel?.value === "cash" ? "withdrawal_cash_pickup" : "",
+                channel_name: payoutChannel?.value === "bank" ? "bank_account" : payoutChannel?.value === "mobile" ? "mobile_money" : payoutChannel?.value === "card" ? "card_payment" : payoutChannel?.value === "cash" ? "cash_pickup" : "",
+                iso_code: userDetails?.country_iso_code,
+                avoid_balance: false,
+                currency_code: wallet?.currency?.code,
+                service_id: payoutChannel?.id,
+                account_id: userDetails?._id
             }
-        )
-            .then(res => {
-                setCreatedQuotation(decryptData(res.data.data))
-                setStep(prev => prev + 1)
-            })
-            .catch(err => {
-                const dec = decryptData(err.response.data.data)
-                setAmountError(dec?.message ?? "Something went wrong!")
-            })
-            .finally(() => {
-                setIsLoading(false)
-            })
+            // console.log(data)
+            const encrypted = encryptData(data)
+
+            const res = await axios.post(`${process.env.REACT_APP_THUNES_API}/create-quotation`, {
+                data: encrypted
+            },
+                {
+                    headers: authHeader
+                }
+            )
+
+            setCreatedQuotation(decryptData(res.data.data))
+            setStep(prev => prev + 1)
+        } catch (err) {
+            const dec = decryptData(err.response.data.data)
+            setAmountError(dec?.message ?? "Something went wrong!")
+        }
+
+        setIsLoading(false)
     }
 
     const clickHandler = async () => {

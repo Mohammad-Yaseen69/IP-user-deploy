@@ -154,9 +154,9 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
                             else if (typeof dec?.message === "string" ? dec?.message?.toLowerCase()?.includes("payer is currently unavailable") : dec?.message?.[0]?.message?.toLowerCase()?.includes("payer is currently unavailable")) {
                                 setExchangeError("unavailable payer")
                             }
-                            else {
-                                setExchangeError("sww")
-                            }
+                            // else {
+                            //     setExchangeError("sww")
+                            // }
                         })
                         .finally(() => {
                             setIsLoading(false)
