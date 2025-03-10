@@ -129,7 +129,7 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                                 data.service_types?.length > 0
                                     ?
                                     data.service_types?.map(item => (
-                                        <div className={`${styles.tab} ${data.service_type?.name === item?.name ? styles.tab_a : ""}`} key={item?.name} onClick={() => dataHandler("service_type", item)}>
+                                        <div style={{padding: window.innerWidth < 400 && ".6rem 1rem"}} className={`${styles.tab} ${data.service_type?.name === item?.name ? styles.tab_a : ""}`} key={item?.name} onClick={() => dataHandler("service_type", item)}>
                                             {t(item?.name?.toLowerCase())}
                                         </div>
                                     ))

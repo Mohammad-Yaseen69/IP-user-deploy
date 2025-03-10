@@ -18,8 +18,8 @@ const SelectedPaymentType = ({ paymentType, setSubStep, scheduleDate = "", subsc
                     justifyContent: "center",
                     alignItems: "center"
                 }}
-                    onClick={_ => setSubStep(4)}
-                >{t("change")}</span>
+                    onClick={_ => setpSubStep(4)}
+                >{t("change")[0].toUpperCase() + t("change").slice(1) }</span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
                 <div style={{
@@ -27,7 +27,7 @@ const SelectedPaymentType = ({ paymentType, setSubStep, scheduleDate = "", subsc
                     minWidth: "35px",
                     background: "linear-gradient(to top left, #e64067,#5926f0,#4828a0)",
                     display: "flex",
-                    justifyContent: "center",
+                    justifyContent: "center", 
                     alignItems: "center",
                     borderRadius: "12px",
                     boxShadow: "0px 4px 7px rgba(172, 53, 159, 0.31)"

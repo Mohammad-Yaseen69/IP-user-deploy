@@ -198,7 +198,7 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
         return () => {
             clearTimeout(timeout)
         }
-    }, [amount, balance, currency])
+    }, [amount, balance, currency]) 
 
     return (
         <CardBody style={{

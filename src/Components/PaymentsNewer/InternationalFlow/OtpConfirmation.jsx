@@ -127,9 +127,9 @@ const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHa
                         {
                             data.codeType === "sms"
                                 ?
-                                t("Two Factor Authentication Code")
-                                :
                                 t("OTP Verification Code")
+                                :
+                                t("Two Factor Authentication Code")
                         }
                     </label>
                     <div className={styles.inputs}>
