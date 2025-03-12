@@ -2,12 +2,14 @@ import React from 'react';
 
 const PhoneNumber = ({ number, setNumber, selectedCountry, setError, styles }) => {
     const handleChange = (e) => {
-        const input = e.target.value;
+        let input = e.target.value;
+
+        input = input.replace(/\D/g, '');
+
         if (input.length > selectedCountry?.maxLength) {
             e.preventDefault()
             return;
         }
-       // const numericInput = input.replace(/\D/g, '')
         setNumber(input);
     };
 

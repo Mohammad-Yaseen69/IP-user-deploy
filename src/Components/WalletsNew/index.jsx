@@ -12,6 +12,7 @@ import axios from "axios"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import { UserContext } from "../../Context/UserContext"
 import QrGenerate from "../Settings/QrGenerate"
+import { useLocation } from "react-router"
 
 
 export const getLimits = async (currentWallet, setData, authHeader, setLoading, setError) => {
@@ -163,6 +164,7 @@ const WalletsNew = () => {
 
         setCategories(updatedCategories);
     }, [currentType]);
+
 
     useEffect(() => {
         let timeeout;

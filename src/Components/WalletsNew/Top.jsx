@@ -14,7 +14,7 @@ import plus from "./files/plus.svg"
 import Card from "./Card"
 import DefaultWalletModal from "./DefaultWalletModal"
 import AddCurrencyModal from "../Wallets/AddCurrencyModal"
-import { useNavigate } from "react-router"
+import { useLocation, useNavigate } from "react-router"
 import Withdraw from "../Wallets/Withdraw"
 import DownloadStatement from "./DownloadStatement"
 import axios from "axios"
@@ -36,6 +36,10 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
     const [adminBlocked, setAdminBlocked] = useState(false)
     const [blocked, setBlocked] = useState(false)
     const [blocking, setBlocking] = useState(false)
+    const location = useLocation()
+    const queryParams = new URLSearchParams(location.search)
+    const action = queryParams.get("action")
+    const wallet_address = queryParams.get("wallet_address")
 
     useEffect(() => {
         if (userDetails) {
@@ -44,7 +48,21 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
     }, [userDetails])
 
     useEffect(() => {
-        if (userWallets?.length > 0) {
+        if (action && wallet_address) {
+            const wallet = userWallets?.find(item => item?.wallet_id === wallet_address)
+            const index = userWallets?.findIndex(item => item?.wallet_id === wallet_address)
+            console.log(index)
+            if (wallet?.wallet_id && action === "withdraw") {
+                setActiveDot(index)
+                setCurrentWallet(wallet)
+                setShowWithdrawalModal(true)
+            }
+
+        }
+    }, [action, wallet_address, userWallets])
+
+    useEffect(() => {
+        if (userWallets?.length > 0 && !currentWallet) {
             setCurrentWallet(userWallets?.[activeDot])
         }
     }, [userWallets, activeDot])
@@ -151,11 +169,11 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     :
                     ""
             }
-            <div className={styles.left} style={{alignItems: "flex-start"}}>
+            <div className={styles.left} style={{ alignItems: "flex-start" }}>
                 <div className={styles.top} >
                     <h2 >{currentWallet?.currency?.code}  {t("Wallet")}</h2>
                     <div className={styles.default}>
-                        <span style={{textAlign: "right"}}>
+                        <span style={{ textAlign: "right" }}>
                             {t("set as default Wallet").split(" ").map(item => service_name_formatter(item)).join(" ")}
                         </span>
                         <div
@@ -238,7 +256,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     <span>{t("Add Currency")}</span>
                 </div>
             </div>
-            <div className={styles.right} style={{minWidth: window.innerWidth > 600 ? "500px" :"auto"}}>
+            <div className={styles.right} style={{ minWidth: window.innerWidth > 600 ? "500px" : "auto" }}>
                 <div className={styles.top}>
                     <h2>
                         {t("Wallet Management")}
