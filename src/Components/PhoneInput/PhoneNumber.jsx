@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PhoneNumber = ({ number, setNumber, selectedCountry, setError }) => {
+const PhoneNumber = ({ number, setNumber, selectedCountry, setError, styles }) => {
     const handleChange = (e) => {
         const input = e.target.value;
         if (input.length > selectedCountry?.maxLength) {
@@ -17,7 +17,9 @@ const PhoneNumber = ({ number, setNumber, selectedCountry, setError }) => {
             style={{
                 all: "unset",
                 fontWeight: 700,
-                paddingRight: "1rem"
+                paddingRight: "1rem",
+                // padding: "12px",
+                // borderRadius: "0.375rem"
             }}
             placeholder="eg: 795396600"
             value={number}

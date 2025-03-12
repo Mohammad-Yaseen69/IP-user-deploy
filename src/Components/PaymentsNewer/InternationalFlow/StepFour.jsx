@@ -23,6 +23,18 @@ export const typesData = [
         status: "Active"
     },
     {
+        name: "InstaPay Wallet",
+        value: "wallet",
+        icon: instapay,
+        status: "Active"
+    },
+    {
+        name: "PayPal",
+        value: "paypal",
+        icon: paypal,
+        status: "Active"
+    },
+    {
         name: "Bank Transfer",
         value: "bank",
         icon: bank,
@@ -37,18 +49,6 @@ export const typesData = [
         status: "Coming Soon",
         sub_name: "wallet",
         id: 1
-    },
-    {
-        name: "InstaPay Wallet",
-        value: "wallet",
-        icon: instapay,
-        status: "Active"
-    },
-    {
-        name: "PayPal",
-        value: "paypal",
-        icon: paypal,
-        status: "Active"
     },
     {
         name: "Crypto",

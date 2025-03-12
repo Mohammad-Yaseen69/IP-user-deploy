@@ -1255,7 +1255,7 @@ export const en = {
     "PKR is not supported by Paypal, USD will be used as the default currency.": "PKR is not supported by PayPal, USD will be used as default.",
     "Amount in USD": "Amount in USD",
     "Send Top-up": "Send Top-Up",
-    "available sunservices": "Available Sunservices",
+    "available sunservices": "Available Subservices",
     "login with email": "Login With Email",
     "Already Have an Account?": "Already Have an Account? Log In",
     "profile picture": "Profile Picture",

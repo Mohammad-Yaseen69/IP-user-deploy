@@ -23,7 +23,8 @@ const NestedDropdown = ({
     return (
         <div disabled={disabled} className={styles.dropdown} style={{
             pointerEvents: disabled ? "none" : "all",
-            opacity: disabled ? .8 : 1
+            opacity: disabled ? .8 : 1,
+            background: disabled && "#e9ecef"
         }}>
             <div className={styles.value} onClick={() => setShowDropdown(!showDropdown)}>{t(parent?.[current] ?? child?.[current]) || t("Relationship With Beneficiary")}</div>
             {

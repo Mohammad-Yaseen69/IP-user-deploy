@@ -295,7 +295,7 @@ const ServiceDetails = ({ data }) => {
                                                 ))
                                         }
                                     </div>
-                                    <div style={{ flex: .6 }}>
+                                    <div style={{ flex: .6, alignItems: "flex-start" }}>
                                         {
                                             service_details_data.holidays?.[data.payoutChannel?.value]?.[isEuropean ? "eu" : "others"]
                                                 ?.map(item => (
