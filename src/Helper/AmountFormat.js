@@ -7,8 +7,9 @@ export const formatCurrency = (inputValue, blur, setValue) => {
     // Format currency, add $ and validate decimal side
     if (inputValue === "") return "";
 
+
     // Check for decimal
-    let inputVal = inputValue;
+    let inputVal = inputValue.toString();
     const originalLen = inputVal.length;
     let caretPos = inputVal.length; // fallback caret position
 

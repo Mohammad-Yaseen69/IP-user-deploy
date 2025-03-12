@@ -1019,7 +1019,7 @@ const OTPConfirmation = ({
                             </span>
                             :
                             <>
-                                <div style={{ display: 'flex', gap: '8px' }}>
+                                <div style={{ display: 'flex', gap: '8px', margin: "0.5rem 0" }}>
                                     {otpValues.map((value, index) => (
                                         <input
                                             key={index}
@@ -1106,7 +1106,8 @@ const OTPConfirmation = ({
                                     alignItems: "center",
                                     fontSize: "18px",
                                     opacity: isAnyFieldEmpty || isSaving ? 0.5 : 1,
-                                    pointerEvents: isAnyFieldEmpty || isSaving ? 'none' : 'auto'
+                                    pointerEvents: isAnyFieldEmpty || isSaving ? 'none' : 'auto',
+                                    marginTop: "0.5rem"
                                 }}
                                     className="i_t_button"
                                     disabled={isAnyFieldEmpty || isSaving}

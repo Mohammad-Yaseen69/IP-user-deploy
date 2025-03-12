@@ -33,6 +33,7 @@ import MobileWalletServices from "../InternationalFlow/MobileWalletServices";
 import { createShambeToken } from "../../../Helper/CreateToken";
 import NotFoundModal from "../../NotFound/NotFoundModal";
 import errors from "../../AddFunds/TrustPaymentErrors.json"
+import { formatCurrency } from "../../../Helper/AmountFormat";
 
 const leftSideContent = [
     "Choose the beneficiary!",
@@ -599,16 +600,17 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                 }
 
                 dataHandler("exchange_rate", exchange_rate_details)
-
+                
+                console.log(+exchange_rate_details?.receiver?.amount)
                 if (fromOrTo === "from") {
-                    dataHandler("recipient_amount", exchange_rate_details?.receiver?.amount)
+                   formatCurrency(+exchange_rate_details?.receiver?.amount, false, (e) => dataHandler("recipient_amount", e))
                 } else {
                     dataHandler("amount", exchange_rate_details?.sending?.amount)
                 }
                 return exchange_rate_details
             }
             catch (err) {
-                const dec = decryptData(err?.response.data.data)
+                const dec = decryptData(err?.response.data.data || err.response.data)
 
                 if (fromOrTo === "from") {
                     dataHandler("recipient_amount", 0)
@@ -785,7 +787,6 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
         }
     }, [transaction_status])
 
-    console.log(data.step)
 
     return (
         <>

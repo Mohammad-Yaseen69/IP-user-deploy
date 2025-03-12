@@ -88,7 +88,7 @@ const AccountLimits = ({ currentWallet, data, loading, error }) => {
                         {
                             window.innerWidth > 1000
                                 ?
-                                data?.others.map((item) => (
+                                data?.others?.map((item) => (
                                     <RightItem
                                         setCurrent={setCurrent}
                                         item={item}
@@ -135,7 +135,7 @@ const RightItem = ({ item, setCurrent }) => {
             }
             <div className={styles.r_limits}>
                 {
-                    Object.keys(item.limits).map((it, ind) => (
+                    Object.keys(item.limits)?.map((it, ind) => (
                         <LimitItem
                             item={item.limits?.[it]}
                             key={ind}
