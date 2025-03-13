@@ -105,15 +105,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                 <SidebarIcon /> {
                     (!togglSidebar && userDetails?._id) || inheritSize
                         ?
-                        <Form style={{ position: "relative", padding: "0 1rem", backgroundColor: "white", transform: "translateY(-2px)", zIndex: 100 }}>
-                            <Search color="grey" size={17} style={{ position: "absolute", top: "11px", left: "22px" }} />
-                            <Input type="search" placeholder={t("Search Here")} style={{
-                                padding: ".5rem .5rem .5rem 1.9rem",
-                                boxShadow: "0px 4.32752px 35.702px rgba(0, 0, 0, 0.06)",
-                                border: "none",
-                                outline: "none"
-                            }} />
-                        </Form>
+                        ""
                         : ""
                 }
                 <nav className="sidebar-main">

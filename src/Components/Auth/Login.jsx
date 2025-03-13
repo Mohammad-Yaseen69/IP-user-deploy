@@ -48,6 +48,9 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [isMobile, setIsMobile] = useState((rdd.isMobile || rdd.isMobileSafari) ?? false)
     const [isBioMetric, setIsBioMetric] = useState(false)
     const [isInstagramBrowser, setisInstagramBrowser] = useState()
+    const [previousResendMethod, setPreviousResendMethod] = useState("")
+    const [showDiffOtpMessage, setShowDiffOtpMessage] = useState(false)
+    const [lastOtpSentTo, setLastOtpSentTo] = useState(null); // 'sms' or 'instagram'
 
     useLayoutEffect(() => {
         const loginWith = localStorage.getItem("loginWith")
@@ -65,15 +68,18 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         function isInstagramBrowser() {
             return /Instagram/i.test(navigator.userAgent);
         }
-        
+
         if (isInstagramBrowser()) {
             setisInstagramBrowser(true)
         } else {
             setisInstagramBrowser(false);
         }
-    },[])
-    
-    
+    }, [])
+
+
+
+
+
 
 
     const loginHandler = (e, method = undefined) => {
@@ -90,15 +96,25 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 email,
                 password,
                 authenticator: isAuth,
-                platform: (isInsta && !isInstagramBrowser)  ? "instagram" : "",
+                platform: (isInsta && !isInstagramBrowser) ? "instagram" : "",
             }
             : {
                 phone: email,
                 password,
                 authenticator: isAuth,
-                platform:  (isInsta && !isInstagramBrowser) ? "instagram" : "",
+                platform: (isInsta && !isInstagramBrowser) ? "instagram" : "",
             };
         const encrypted = encryptData(credentials)
+
+
+
+        if (!isAuth && credentials.platform) {
+            setLastOtpSentTo("insta")
+        }
+        else if(!isAuth && credentials.platform === ""){
+            setLastOtpSentTo("sms")
+        }
+
         console.log(credentials)
 
         axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/send-login-otp`, {
@@ -107,7 +123,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             .then(async (res) => {
                 const decrypted = decryptData(res.data.data)
                 setUserAuthSetup(decrypted?.tfa)
-                if(!isInstagramBrowser){
+                if (!isInstagramBrowser) {
                     setIsInstagram(decrypted?.instagram)
                     setIsBioMetric(decrypted?.biometric)
                 }
@@ -138,6 +154,10 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 setLoginToken(decrypted?.token)
                 setStep(2)
                 setIsPressed(false)
+
+                if (method === 'sms' || method === 'insta') {
+                    setLastOtpSentTo(method);
+                }
             })
             .catch(error => {
                 setIsPressed(false)
@@ -426,13 +446,20 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const handleOtpMethod = (method) => {
         setOTPValues(Array(numberOfFields).fill(''))
         inputRefs?.current?.[0]?.focus()
-        if (resendTimer == 0) {
-            loginHandler({ preventDefault: () => { } }, method)
-            if (currentOtpMethod !== "sms" || currentOtpMethod !== "insta") {
-                setResendTimer(120)
-            }
+
+        // Only allow switching between SMS and Instagram if timer is running
+        if (resendTimer > 0 && lastOtpSentTo && (method === 'sms' || method === 'insta')) {
+            setCurrentOtpMethod(method);
+            return;
         }
-        setCurrentOtpMethod(method)
+
+        // For all other cases, send new OTP
+        if (method === 'sms' || method === 'insta') {
+            loginHandler({ preventDefault: () => { } }, method);
+            setResendTimer(120);
+        }
+
+        setCurrentOtpMethod(method);
     }
 
     const handleBiometricVerification = async () => {
@@ -572,6 +599,13 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     useEffect(() => {
         setIsLoginError("")
     }, [email, password])
+
+    useEffect(() => {
+        if (resendTimer === 0) {
+            setLastOtpSentTo(null);
+        }
+    }, [resendTimer]);
+
     return (
         <>
             <form onSubmit={emailVerified ? loginHandler : checkEmailHandler} className={styles.form_details} style={window.innerWidth > 1000 ? { opacity: step === 1 ? 1 : 0, pointerEvents: step === 1 ? "all" : "none" } : { display: step === 1 ? "inherit" : "none" }}>
@@ -866,17 +900,19 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         )}
                                     </div>
                                     {
-                                       ( currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" )
+                                        (currentOtpMethod !== "auth" && currentOtpMethod !== "biometric")
                                         &&
                                         <span>
                                             {
                                                 resendTimer > 0
-                                                    ?
-                                                    t("Resend code in 30 seconds".replace("30", resendTimer))
+                                                    ? (lastOtpSentTo && ['sms', 'insta'].includes(currentOtpMethod) && lastOtpSentTo !== currentOtpMethod)
+                                                        ? `You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : 'Instagram'}, wait ${resendTimer} seconds to get code on ${lastOtpSentTo === 'sms' ? 'Instagram' : 'SMS'}`
+                                                        : t("Resend code in 30 seconds".replace("30", resendTimer))
                                                     :
                                                     <>{t("Didn't receive OTP?") + " "} <span style={{ color: "#5926f0", cursor: "pointer" }} onClick={() => {
+                                                        setLastOtpSentTo(currentOtpMethod);
                                                         setOTPValues(Array(numberOfFields).fill(''))
-                                                        loginHandler({ preventDefault: () => { } }, "sms")
+                                                        loginHandler({ preventDefault: () => { } }, currentOtpMethod)
                                                         setResendTimer(120)
                                                     }}>{t("Resend Now")}</span></>
                                             }

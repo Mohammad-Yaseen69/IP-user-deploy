@@ -258,7 +258,7 @@ button {
 
     .table th:nth-child(1),
     .table td:nth-child(1) {
-        width: fit-content;
+        /* width: fit-content; */
         min-width: fit-content;
     }
 

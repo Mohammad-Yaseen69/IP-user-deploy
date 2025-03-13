@@ -719,6 +719,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             const dec = decryptData(res.data.data)
             console.log(dec)
             updateInternationalData("cardTransactionDetails", dec)
+            updateInternationalData("showOtpModal", false)
         } catch (err) {
             const decrypted = decryptData(err.response.data.data)
             console.log(decrypted)
@@ -940,6 +941,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             updateInternationalData("transaction_details", decrypted?.data ?? decrypted)
             updateInternationalData("otpError", "")
             setSubStep(prev => prev + 1)
+            updateInternationalData("showOtpModal", false)
         } catch (err) {
             const decrypted = decryptData(err.response.data.data)
             console.log(decrypted)

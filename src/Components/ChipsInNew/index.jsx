@@ -92,7 +92,7 @@ const ChipsInNew = () => {
                                 <h4 style={{ display: "flex", gap: "1rem", alignItems: "center" }}>{t("My QR Code Sticker")} <Info color='#5926f0' style={{ cursor: "pointer" }} onClick={() => setShowTooltip(!showTooltip)} size={16} /></h4>
                                 <TopRight />
                             </div>
-                            <div style={{ display: "flex", flexWrap: "wrap", gap: "2rem" }}>
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
                                 {/* <GeneralContainer currency={currency} setCurrency={setCurrency} currentWallet={currentWallet} setWalletRefresh={setWalletRefresh} authHeader={authHeader} defaultWal={defaultWal} showTooltip={showTooltip} setShowTooltip={setShowTooltip} /> */}
                                 <LeftContainer
                                     currency={currency}

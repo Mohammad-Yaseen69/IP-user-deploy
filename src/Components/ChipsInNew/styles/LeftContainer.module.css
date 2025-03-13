@@ -328,19 +328,20 @@
 
 .bt_bot {
     display: flex;
-    gap: 1rem;
+    gap: .3rem;
 }
 
 .bt_bot button {
     border-radius: 490px;
     background: #ECECEC;
-    padding: .8rem 1.5rem;
+    padding: .8rem 1.3rem;
     display: flex;
     align-items: center;
     gap: 1rem;
     justify-content: center;
     border: none;
     outline: none;
+    white-space: nowrap;
 }
 
 .bt_bot button img {

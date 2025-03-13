@@ -320,7 +320,7 @@ const ReferralsNew = () => {
                             </div>
                             <div className={`${styles.ref_dets_sub} ${styles.right}`}>
                                 <span>{t("Share Your Unique Referral Link")}: </span>
-                                <div className={styles.bot}>
+                                <div style={{gap: window.innerWidth < 500 && "0.5rem"}} className={styles.bot}>
                                     <div>
                                         <span>
                                             {referralLink}

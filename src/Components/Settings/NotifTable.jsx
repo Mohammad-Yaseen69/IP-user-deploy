@@ -11,7 +11,7 @@ import { CheckCircle } from 'react-feather'
 import InstaPayLoader from '../Loader'
 
 const NotifTable = () => {
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
     const { userDetails, authHeader, verifyToken } = useContext(UserContext)
     const [rpEmail, setRpEmail] = useState(false)
     const [bpEmail, setBpEmail] = useState(false)
@@ -163,7 +163,7 @@ const NotifTable = () => {
                                 <tr>
                                     <th>{t("Activity")}</th>
                                     <th>{t("Email")}</th>
-                                    <th>{t("Instagram")}</th>
+                                    <th>{window.innerWidth < 1000 && i18n.language === "en" ? "Insta"  : t("Instagram") }</th>
                                     <th>{t("SMS")}</th>
                                 </tr>
                             </thead>

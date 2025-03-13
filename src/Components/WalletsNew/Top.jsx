@@ -62,7 +62,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
     }, [action, wallet_address, userWallets])
 
     useEffect(() => {
-        if (userWallets?.length > 0 && !currentWallet) {
+        if (userWallets?.length > 0) {
             setCurrentWallet(userWallets?.[activeDot])
         }
     }, [userWallets, activeDot])

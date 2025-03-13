@@ -12,8 +12,8 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { toast } from "react-toastify";
 
 
-const Toggle = ({ checked, onChange, isCheckbox = false }) => (
-    <label className={isCheckbox ? styles.checkbox : styles.toggle}>
+const Toggle = ({ checked, onChange, isCheckbox = false, style }) => (
+    <label style={{...style}} className={isCheckbox ? styles.checkbox : styles.toggle}>
         <input
             type={isCheckbox ? "checkbox" : "checkbox"}
             checked={checked}
@@ -370,12 +370,14 @@ const GeoFencing = () => {
                                             checked={getRegionCheckStatus(region, "locationPaymentCheck")}
                                             onChange={(e) => handleCheckChange(e, "locationPaymentCheck", null, region, true)}
                                             isCheckbox={true}
+                                            style={{marginLeft:"-20px"}}
                                         />
                                     </div>
                                     <div className={styles.checkboxGroup}>
                                         <Toggle
                                             checked={getRegionCheckStatus(region, "accountQuotationCheck")}
                                             onChange={(e) => handleCheckChange(e, "accountQuotationCheck", null, region, true)}
+                                            style={{marginLeft: window.innerWidth >1000 && "25px"}}
                                             isCheckbox={true}
                                         />
                                         <Toggle
@@ -406,6 +408,7 @@ const GeoFencing = () => {
                                                 />
                                                 <Toggle
                                                     checked={country.locationPaymentCheck}
+                                                    style={{marginLeft: "-10px"}}
                                                     onChange={(e) => handleCheckChange(e, "locationPaymentCheck", country.isoCode, region)}
                                                 />
 
@@ -415,10 +418,12 @@ const GeoFencing = () => {
 
                                                 <Toggle
                                                     checked={country.accountQuotationCheck}
+                                                    style={{marginLeft: "30px"}}
                                                     onChange={(e) => handleCheckChange(e, "accountQuotationCheck", country.isoCode, region)}
                                                 />
                                                 <Toggle
                                                     checked={country.locationQuotationCheck}
+                                                    style={{marginLeft: "-5px"}}
                                                     onChange={(e) => handleCheckChange(e, "locationQuotationCheck", country.isoCode, region)}
                                                 />
 
@@ -434,7 +439,7 @@ const GeoFencing = () => {
 
             </div>
 
-            <div style={{ display: "flex", justifyContent: "right" }}>
+            <div style={{ display: "flex", justifyContent: "right", marginTop: "1rem" }}>
                 <button
                     onClick={submitChanges}
                     disabled={changes.length < 1}

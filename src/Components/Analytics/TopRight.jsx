@@ -113,6 +113,26 @@ const TopRight = ({ data, reports, currentWallet, setApiDates, isLoading }) => {
         setTotal(data?.total?.totalAmounts ?? 0)
     }, [data])
 
+    const addDecimals = (value) => {
+        const splitted = value.toString().split(".")
+        // "".split("").
+
+        if (splitted.length >= 2) {
+            if (splitted[1][0].length >= 2) {
+                return value
+            }
+            else if (splitted[1][0].length == 1) {
+                return `${value}0`
+            }
+            else {
+                return `${value}00`
+            }
+        }
+        else{
+            return `${value}.00`
+        }
+    }
+
     const chartData = useMemo(() => ({
         series: currentTab === tabsData[0] ? categories?.length > 0 ? categories?.map(it => it.value) : [] : categoriesType?.length > 0 ? categoriesType?.map(it => it.value) : [],
         options: {
@@ -146,7 +166,7 @@ const TopRight = ({ data, reports, currentWallet, setApiDates, isLoading }) => {
             tooltip: {
                 custom: function ({ seriesIndex, w }) {
                     const category = currentTab === tabsData[0] ? categories?.[seriesIndex] : categoriesType?.[seriesIndex];
-                    return `<div style="text-align: center; padding: 5px; display: flex; align-items:center; gap: 5px; background: ${category?.color};"><span>${category?.name}: ${currentWallet?.currency?.code} ${category?.value}</span></div>`;
+                    return `<div style="text-align: center; padding: 5px; display: flex; align-items:center; gap: 5px; background: ${category?.color};"><span>${category?.name}: ${currentWallet?.currency?.code} ${addDecimals(category?.value)}</span></div>`;
                 },
             },
             responsive: [

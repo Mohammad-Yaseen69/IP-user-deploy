@@ -303,8 +303,8 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
                                     display: "flex",
                                     justifyContent: "space-between"
                                 }}>
-                                    <span style={{ color: "#a0a0a0" }}>{t("Fees")}</span>
-                                    <span style={{ color: "#a0a0a0" }}>{Number(exchangeRate?.fee?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? ""} {currency}</span>
+                                    <span style={{ color: "black" }}>{t("Fees")}</span>
+                                    <span style={{ color: "black" }}>{Number(exchangeRate?.fee?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? ""} {currency}</span>
                                 </p>
                                 <p style={{
                                     marginBottom: "3px",
