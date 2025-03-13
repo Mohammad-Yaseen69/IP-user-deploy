@@ -454,7 +454,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
 
         // For all other cases, send new OTP
-        if (method === 'sms' || method === 'insta') {
+        if (method === 'sms' || method === 'insta' || method || "auth") {
             loginHandler({ preventDefault: () => { } }, method);
             setResendTimer(120);
         }
