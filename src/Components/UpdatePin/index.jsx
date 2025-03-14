@@ -144,7 +144,6 @@ const CreatePin = () => {
 
     const sendOtp = async (e) => {
         e && e.preventDefault()
-        const oldPin = oldPinFields.data.join('')
         const pin = pinFields.data.join('');
         const confirmPin = confirmPinFields.data.join('');
 
@@ -160,7 +159,6 @@ const CreatePin = () => {
             const data = {
                 data: {
                     account_id: userDetails?._id,
-                    old_pin: oldPin,
                     new_pin: pin
                 },
                 type: "sms"
@@ -222,7 +220,7 @@ const CreatePin = () => {
                             <h4>Need to change your PIN? Enter a new 4-digit PIN below.</h4>
 
                             <div className={styles.fields}>
-                                <PinFields
+                                {/* <PinFields
                                     label="Old PIN"
                                     data={oldPinFields}
                                     setter={setOldPinFields}
@@ -230,7 +228,7 @@ const CreatePin = () => {
                                     inputRefs={oldRefs}
                                     changeHandler={handleInputChange}
                                     handleInputKeyDown={handleInputKeyDown}
-                                />
+                                /> */}
                                 <PinFields
                                     label="New 4-digit PIN"
                                     data={pinFields}
@@ -306,7 +304,7 @@ const CreatePin = () => {
                                 </div>
 
                                 <div style={{ width: "70%", alignSelf: "center" }} className={styles.fields}>
-                                    <PinFields
+                                    {/* <PinFields
                                         label="Old PIN"
                                         data={oldPinFields}
                                         setter={setOldPinFields}
@@ -314,7 +312,7 @@ const CreatePin = () => {
                                         inputRefs={oldRefs}
                                         changeHandler={handleInputChange}
                                         handleInputKeyDown={handleInputKeyDown}
-                                    />
+                                    /> */}
                                     <PinFields
                                         label="New 4-digit PIN"
                                         data={pinFields}
