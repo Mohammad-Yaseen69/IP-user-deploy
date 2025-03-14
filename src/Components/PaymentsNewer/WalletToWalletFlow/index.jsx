@@ -579,6 +579,25 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
         }
     }
 
+    const addDecimals = (value) => {
+        const splitted = value.toString().split(".")
+
+        if (splitted.length >= 2) {
+            if (splitted[1][0].length >= 2) {
+                return value
+            }
+            else if (splitted[1][0].length == 1) {
+                return `${value}0`
+            }
+            else {
+                return `${value}00`
+            }
+        }
+        else{
+            return `${value}.00`
+        }
+    }
+
     const getExchangeRateConversion = async (amount, setLimitType, payment_method = "instant", from, setLoading, fromOrTo = "from") => {
         if (amount) {
             setLoading(true)
@@ -603,7 +622,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                 
                 console.log(+exchange_rate_details?.receiver?.amount)
                 if (fromOrTo === "from") {
-                   formatCurrency(+exchange_rate_details?.receiver?.amount, false, (e) => dataHandler("recipient_amount", e))
+                   formatCurrency(+exchange_rate_details?.receiver?.amount, false, (e) => dataHandler("recipient_amount", addDecimals(e)))
                 } else {
                     dataHandler("amount", exchange_rate_details?.sending?.amount)
                 }

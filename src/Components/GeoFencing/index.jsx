@@ -307,11 +307,11 @@ const GeoFencing = () => {
                     />
                 </div>
 
-                <span className={styles.filter}> Filter
+                {/* <span className={styles.filter}> Filter
                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6" fill="none">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M9.72583 0.416683C9.34592 0.0158128 8.71299 -0.00117671 8.31212 0.378733L5 3.51764L1.6879 0.378733C1.287 -0.00117671 0.654099 0.0158128 0.274199 0.416683C-0.1057 0.817543 -0.0887012 1.45048 0.312099 1.83034L4.3121 5.62124C4.6979 5.98684 5.3021 5.98684 5.6879 5.62124L9.68787 1.83034C10.0887 1.45048 10.1057 0.817543 9.72583 0.416683Z" fill="#252525" />
                     </svg>
-                </span>
+                </span> */}
             </div>
 
             <div className={styles.content}>
