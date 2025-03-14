@@ -1949,7 +1949,7 @@ export const en = {
     "Bargainable": "Bargainable",
     "Description": "Description",
     "Attached Files": "Attached Files",
-    "Sent": "SENT",
+    "Sent": "Sent",
     "Accepted": "Accepted",
     "Decline": "Decline",
     "Pending": "Pending",

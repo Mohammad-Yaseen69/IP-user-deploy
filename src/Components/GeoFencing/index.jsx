@@ -444,6 +444,7 @@ const GeoFencing = () => {
                     onClick={submitChanges}
                     disabled={changes.length < 1}
                     className={styles.saveBtn}
+                    style={{cursor: "pointer"}}
                 >
                     {!isSaving ? "Save Changes" : "Saving"}
                 </button>
