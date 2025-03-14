@@ -99,7 +99,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
   const [loading, setLoading] = useState(false)
   const [token, setToken] = useState(null)
   const [showOtpModal, setshowOtpModal] = useState(false)
-  const [codeType, setCodeType] = useState("authenticator")
+  const [codeType, setCodeType] = useState("sms")
   const [success, setShowSuccess] = useState(false)
   const [saveCard, setSaveCard] = useState(false)
   const [cards, setCards] = useState([])
@@ -128,7 +128,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
     setLoading(false);
     setToken(null);
     setshowOtpModal(false);
-    setCodeType("authenticator");
+    setCodeType("sms");
     setShowSuccess(false);
     setSaveCard(false);
     setSelectedSaveCard({});
@@ -141,6 +141,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
     });
   };
 
+  
   useEffect(() => {
     switch (step) {
       case 1:
@@ -195,7 +196,11 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
 
 
   const sendOtp = async (e) => {
-    if (!feeDetails.token) return false
+
+    
+    if(paymentType !== "wallet"){
+      if (!feeDetails.token) return false
+    }
 
     e && e.preventDefault()
     setLoading(true)
@@ -240,6 +245,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
       }
 
       const encrypted = encryptData(paymentType === "card" ? cardData : data)
+      console.log(encrypted, data)
       const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
         data: encrypted
       }, {
@@ -251,6 +257,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
       setshowOtpModal(true)
     } catch (error) {
       const dec = decryptData(error.response.data.data)
+      console.log(dec)
       toast.error("Something went wrong while creating your virtual card! please try again.")
     }
     finally {
@@ -317,6 +324,12 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
       } catch {
         setCards([])
       }
+    }
+
+    if(userDetails?.tfa){
+      setCodeType("authenticator")
+    }else{
+      setCodeType("sms")
     }
 
     if (userDetails?._id) {
