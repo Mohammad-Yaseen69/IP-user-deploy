@@ -115,7 +115,7 @@ const Amount = ({ data, dataHandler }) => {
                                             ?
                                             "Maximum transactional amount is " + data?.limits?.max
                                             :
-                                            t("Invalid Amount")
+                                            formattedAmount ? t("Invalid Amount") : ""
                             }</div>
                         :
                         ""

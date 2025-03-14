@@ -65,7 +65,7 @@ const QrDetails = ({ wallet, amount, currency, currentWallet }) => {
                 <div className={styles.qrCode} style={{ position: "relative" }}>
                     {/* <img src={wallet.qrCode?.url} /> */}
                     <img src={qrLink} />
-                    <img src={logo} style={{ position: "absolute", left: "50%", top: "40%", translate: "-50% -50%", width: window.innerWidth > 1000 ? "3rem" : "3.5rem", padding: ".6rem", background: "white", borderRadius: "10px" }} />
+                    <img src={logo} style={{ position: "absolute", left: "50%", top: "40%", translate: "-50% -50%", width: window.innerWidth > 1000 ? "2rem" : "2.5rem", padding: ".6rem", background: "white", borderRadius: "10px" }} />
                     {/* {
                         user?.username
                         &&
