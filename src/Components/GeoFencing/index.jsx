@@ -442,7 +442,7 @@ const GeoFencing = () => {
             <div style={{ display: "flex", justifyContent: "right", marginTop: "1rem" }}>
                 <button
                     onClick={submitChanges}
-                    disabled={changes.length < 1}
+                    disabled={changes.length < 1 || isSaving}
                     className={styles.saveBtn}
                     style={{cursor: "pointer"}}
                 >
