@@ -10,6 +10,7 @@ import { UserContext } from '../../Context/UserContext';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import InviteFriendModal from './InviteFriendModal';
 import { useLocation } from 'react-router';
+import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 
 export const getConstraints = () => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -71,13 +72,16 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
         }
         const formData = new FormData()
 
+        console.log(selectedFile, "Adadadasd")
+
         formData.append("file", selectedFile)
 
         axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-qr-details`,
-            formData, {
+          formData , {
             headers: authHeader
         })
             .then(res => {
+                
                 const decrypted = decryptData(res.data.data)
                 // console.log(decrypted?.walletDetails?.wallet_id)
                 setResult(decrypted?.walletDetails?.wallet_id)
@@ -85,6 +89,7 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
                 setIsReady(true)
             })
             .catch(err => {
+                console.log(err)
                 const decrypted = decryptData(err.response.data.data)
                 // console.log(decrypted)
                 setShowQRModal(false)
@@ -128,6 +133,7 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
                         constraints={{ facingMode: window.innerWidth < 1000 ? 'environment' : 'user' }}
                         delay={300}
                         onResult={(result, error) => {
+                            console.log(result)
                             if (result?.text) {
                                 const token = result?.text?.split("/qrpay/")[1]
                                 var bytes = CryptoJS.AES.decrypt(token, "QRCodeEncryption");

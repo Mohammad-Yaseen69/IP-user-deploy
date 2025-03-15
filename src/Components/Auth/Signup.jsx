@@ -43,7 +43,8 @@ const initialState = {
     email_signup_token: "",
     show_email_otp: false,
     verified: false,
-    phone_error: ""
+    phone_error: "",
+    account_created: false
 }
 
 function reducer(state, action) {
@@ -194,7 +195,8 @@ const Signup = ({ country, setIsLoginForm }) => {
             dataHandler("verified", true)
         }
         catch (error) {
-            // console.log(decryptData(error?.response?.data?.data))
+            console.log(decryptData(error?.response?.data?.data))
+            dataHandler("error", "An error occurred while setting your profile picture. You can still add it in the Settings under the Basic Info tab")
         }
         finally {
             dataHandler("loading", false)
@@ -216,9 +218,11 @@ const Signup = ({ country, setIsLoginForm }) => {
 
             const dec = decryptData(res.data.data)
             console.log(dec)
+            dataHandler("account_created", true)
+
             if (data.email.length < 1) {
                 if (data.dp) {
-                    uploadDp(dec?.token ?? dec?.im)
+                    await uploadDp(dec?.token ?? dec?.im)
                 } else {
                     console.log("verified")
                     // dataHandler("phone_otp_verfied", true)
@@ -230,6 +234,7 @@ const Signup = ({ country, setIsLoginForm }) => {
             }
         } catch (error) {
             setOtp(Array(numberOfFields).fill(""))
+            console.log(error)
             const dec = decryptData(error.response.data.data)
             dataHandler("error", dec?.message ?? "Something went wrong while sending OTP.")
         } finally {
@@ -249,6 +254,8 @@ const Signup = ({ country, setIsLoginForm }) => {
                 data: enc
             })
             const dec = decryptData(res.data.data)
+            dataHandler("account_created", true)
+
             if (data.dp) {
                 uploadDp(dec?.token ?? dec?.im)
             } else {
@@ -324,7 +331,12 @@ const Signup = ({ country, setIsLoginForm }) => {
                                 &&
                                 <ErrorModal
                                     isOpen={data.error}
-                                    toggle={() => dataHandler("error", "")}
+                                    toggle={() => {
+                                        dataHandler("error", "")
+                                        if(data.account_created){
+                                            dataHandler("verified", true)
+                                        }
+                                    }}
                                     heading="Signup Error"
                                     message={data.error}
                                 />

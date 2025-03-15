@@ -161,7 +161,7 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                         <div className={styles.btns}>
                             <button type="submit"
                                 className={styles.form_btn}
-                                disabled={isAnyFieldEmpty || otpValues.some(item => !item) || data.loading}
+                                disabled={isAnyFieldEmpty || otpValues.some(item => !item) || data.loading || data.account_created}
                             >
                                 <span>{
                                     data.loading
