@@ -6,6 +6,7 @@ import { UserContext } from "../../Context/UserContext.jsx"
 import Stepthree from "./Stepthree.jsx"
 import PaymentModal from "./PaymentModal.jsx"
 import Stepfour from "./Stepfour.jsx"
+import { useNavigate } from "react-router"
 
 
 
@@ -14,6 +15,7 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
     const [step, setStep] = useState(1)
     const { userDetails } = useContext(UserContext)
     const [showPaymentModal, setShowPaymentModal] = useState(false)
+    const navigate = useNavigate()
 
     return (
         <div className={styles.container}>
@@ -72,7 +74,7 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
                     {step !== 4 && <button onClick={() => setStep(prev => prev !== 1 ? --prev : alreadyHaveCard ? setCardPurchased(true) : 1)}>Back</button>}
                     <button
                         onClick={() => {
-                            if(step == 4){
+                            if(step === 4){
                                 setReRender(true)
                                 setCardPurchased(true)
                                 return 
@@ -83,6 +85,9 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
                             else {
                                 if (userDetails.user.kyc_status === "approved") {
                                     setShowPaymentModal(true)
+                                }
+                                else{
+                                    navigate("/settings?tab=verification")
                                 }
                             }
 
