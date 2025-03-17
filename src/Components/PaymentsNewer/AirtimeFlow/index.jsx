@@ -337,12 +337,14 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         const array = [1, 2, 4]
         if (array.includes(data.step)) {
             if (data.step === 4) {
+
                 if (!data.showCard) {
                     updateDataHandler("showCard", true)
                 } else {
                     getPackageDetails()
                 }
-            } else {
+            }
+            else {
                 updateDataHandler("step", data.step + 1)
             }
         }
@@ -854,39 +856,42 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                             <HelpCircle size={16} />
                                             {t("Trouble Sending Money")}
                                         </Link>
-                                        <div className={styles?.buttons} >
-                                            <button disabled={data.loading} onClick={() => {
-                                                if (data.verified) {
-                                                    navigate("/transactions")
-                                                } else {
-                                                    if (data.step === 1) {
-                                                        setCurrentFlow("")
-                                                        setAction("")
-                                                        setStep(1)
-                                                    } else if (data.payment_type?.value) {
-                                                        updateDataHandler("showCard", false)
-                                                        updateDataHandler("payment_type", {})
+
+                                        {data.step !== 4 &&
+                                            <div className={styles?.buttons} >
+                                                <button disabled={data.loading} onClick={() => {
+                                                    if (data.verified) {
+                                                        navigate("/transactions")
                                                     } else {
-                                                        updateDataHandler("step", data.step - 1)
+                                                        if (data.step === 1) {
+                                                            setCurrentFlow("")
+                                                            setAction("")
+                                                            setStep(1)
+                                                        } else if (data.payment_type?.value) {
+                                                            updateDataHandler("showCard", false)
+                                                            updateDataHandler("payment_type", {})
+                                                            updateDataHandler("step", data.step - 1)
+                                                        } else {
+                                                            updateDataHandler("step", data.step - 1)
+                                                        }
                                                     }
-                                                }
-                                            }}>
-                                                <ChevronLeft />
-                                            </button>
-                                            <button disabled={data.loading || disabled} className={styles.full} onClick={onClickHandler}>
-                                                {
-                                                    data.step === 5
-                                                        ?
-                                                        data.verified
+                                                }}>
+                                                    <ChevronLeft />
+                                                </button>
+                                                <button disabled={data.loading || disabled} className={styles.full} onClick={onClickHandler}>
+                                                    {
+                                                        data.step === 5
                                                             ?
-                                                            t("Dashboard")
+                                                            data.verified
+                                                                ?
+                                                                t("Dashboard")
+                                                                :
+                                                                t("Confirm")
                                                             :
-                                                            t("Confirm")
-                                                        :
-                                                        t("Continue")
-                                                }
-                                            </button>
-                                        </div>
+                                                            t("Continue")
+                                                    }
+                                                </button>
+                                            </div>}
                                     </div>
                                     {/* } */}
                                 </>

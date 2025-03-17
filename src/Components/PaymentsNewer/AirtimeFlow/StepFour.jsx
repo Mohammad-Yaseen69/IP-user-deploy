@@ -1,6 +1,6 @@
 import styles from "./styles/stepfour.module.css"
 import IntStepFour from '../InternationalFlow/StepFour'
-import { ChevronRight } from "react-feather"
+import { ChevronLeft, ChevronRight } from "react-feather"
 import { useTranslation } from "react-i18next"
 
 const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
@@ -10,6 +10,7 @@ const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
             <IntStepFour
                 data={data}
                 dataHandler={updateDataHandler}
+                isAirtime={true}
             />
             <div className={styles.buttons}>
                 <button disabled={data.loading} onClick={() => {
@@ -19,8 +20,10 @@ const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
                     else {
                         updateDataHandler("step", 3)
                     }
-                }} className={styles.trs}>{t("Back")}</button>
-                <button disabled={data.loading || !data.payment_type?.name || (data.payment_type?.value === "wallet" ? !data.wallet?._id : false)} onClick={() => {
+                }}>
+                    <ChevronLeft />
+                </button>
+                <button className={styles.full} disabled={data.loading || !data.payment_type?.name || (data.payment_type?.value === "wallet" ? !data.wallet?._id : false)} onClick={() => {
                     if (data.payment_type?.value === "card" && !data.showCard) {
                         updateDataHandler("showCard", true)
                     } else {
@@ -28,7 +31,7 @@ const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
                     }
                 }}>
                     {t("Next")}
-                    <ChevronRight color="white" size={17} />
+                    {window.innerWidth > 1000 && <ChevronRight color="white" size={17} />}
                 </button>
             </div>
         </div>

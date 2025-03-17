@@ -111,7 +111,7 @@ const MobileComponent = ({ wallet, current }) => {
                     <>
                         <h5>{title}</h5>
                         <p>
-                            {description?.length > 20 && !showFullDesc ? description?.slice(0, 20) + ".." : description}
+                            {description?.length > 20 && !showFullDesc ? description?.slice(0, 20) + ".." : wallet?.currency?.code}
                             {
                                 description?.length > 20
                                     ?

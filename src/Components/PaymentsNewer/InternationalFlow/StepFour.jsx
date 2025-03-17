@@ -58,7 +58,7 @@ export const typesData = [
     },
 ]
 
-const StepFour = ({ data, dataHandler, callback = () => { }, loading = false, error = "", filteringValue = "dummy", customStyles = {} }) => {
+const StepFour = ({ data, dataHandler, callback = () => { }, loading = false, error = "", filteringValue = "dummy", customStyles = {}, isAirtime }) => {
     const { t } = useTranslation()
 
     const types = useMemo(() => {
@@ -88,12 +88,12 @@ const StepFour = ({ data, dataHandler, callback = () => { }, loading = false, er
         }
     }, [types])
 
-    console.log( data.payment_type?.value === "paypal" && !data?.exchange_rate?.paypal?.paypal_currency_supported, data.payment_type?.value === "paypal" , !data?.exchange_rate?.paypal?.paypal_currency_supported)
+    console.log( data?.exchange_rate, data.payment_type?.value === "paypal", !data?.exchange_rate?.paypal?.paypal_currency_supported)
 
     return (
         <>
             {
-                window.innerWidth < 1000
+                window.innerWidth < 1000 && !isAirtime
                     ?
                     loading
                         ?
@@ -208,7 +208,12 @@ const StepFour = ({ data, dataHandler, callback = () => { }, loading = false, er
             <div className={styles.container} style={customStyles}>
                 {
                     types.filter(i => i.value !== filteringValue).map(item => (
-                        <div className={`${styles.item} ${item.status !== "Active" ? styles.disabled : ""}`} key={item.name} onClick={() => dataHandler("payment_type", item)}>
+                        <div className={`${styles.item} ${item.status !== "Active" ? styles.disabled : ""}`} key={item.name}
+                            onClick={() => {
+                                dataHandler("payment_type", item)
+                                console.log(data.payment_type)
+                            }
+                            }>
                             <img src={item.icon} alt="" className={styles.icon} />
                             <span>
                                 {t(item.name)}
