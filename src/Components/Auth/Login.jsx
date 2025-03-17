@@ -162,6 +162,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             .catch(error => {
                 setIsPressed(false)
                 const decrypted = decryptData(error.response.data?.data)
+                console.log(decrypted)
                 if (decrypted.message === "Account not found!" || decrypted.message === "Incorrect Password!" || decrypted.message?.toLowerCase()?.includes("incorrect") || decrypted.message === "User not found!") {
                     setIsLoginError(`Uh-Oh! The password/${isEmail.test(email) ? "email" : "phone number"} you entered is wrong.`)
                 }
