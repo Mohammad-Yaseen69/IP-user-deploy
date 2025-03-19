@@ -215,7 +215,7 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
                                         <h1>{t("Link Your Instagram Account to InstaPay").replace("Instagram", "Telegram")}</h1>
                                         <img src={close} alt="close" style={{ height: "50px", width: "50px" }} onClick={() => {
                                             if (ft) {
-                                                navigate("/settings?tab=verification&ft=true")
+                                                navigate("/settings?tab=withdrawal&ft=true")
                                             } else {
                                                 toggle()
                                             }
@@ -236,7 +236,7 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
                             toggle()
                             setShowSuccess(false)
                             if (ft) {
-                                navigate("/settings?tab=verification&ft=true")
+                                navigate("/settings?tab=withdrawal&ft=true")
                             }
                         }}
                     />

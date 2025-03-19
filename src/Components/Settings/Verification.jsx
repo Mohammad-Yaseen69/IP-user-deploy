@@ -144,9 +144,6 @@ const Verification = () => {
                 <Modal isOpen={showGuide} style={{ width: "100vw", maxWidth: "1200px" }}>
                     <ModalHeader toggle={() => {
                         setShowGuide(false)
-                        if (ft) {
-                            navigate("/settings?tab=withdrawal&ft=true")
-                        }
                     }}>
                         {t("Identity Verification Guide")}
                     </ModalHeader>

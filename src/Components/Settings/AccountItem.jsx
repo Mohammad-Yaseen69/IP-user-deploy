@@ -238,7 +238,7 @@ const AccountItem = ({ data }) => {
                         toggle={() => {
                             setShowModal(!showModal)
                             if (tab?.toLowerCase() === "social" && ft) {
-                                navigate("/settings?tab=verification&ft=true")
+                                navigate("/settings?tab=withdrawal&ft=true")
                             }
                         }}
                     />
@@ -251,7 +251,7 @@ const AccountItem = ({ data }) => {
                         toggle={() => {
                             setShowModal(!showModal)
                             if (tab?.toLowerCase() === "social" && ft) {
-                                navigate("/settings?tab=verification&ft=true")
+                                navigate("/settings?tab=withdrawal&ft=true")
                             }
                         }}
                     /> : ""
