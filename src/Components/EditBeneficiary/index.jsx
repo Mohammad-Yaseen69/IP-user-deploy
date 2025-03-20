@@ -701,6 +701,9 @@ const EditBeneficiary = () => {
     const [mobileNumberError, setMobileNumberError] = useState("")
     const [walletNumberError, setWalletNumberError] = useState("")
 
+    const [missingFields, setMissingFields] = useState([])
+    const [firstMissingField, setFirstMissingField] = useState(null)
+
     const editBenFun = () => {
         const account_types = [
             services.some(item => item?.name?.toLowerCase()?.includes("bank")) && completedBank ? "bank" : null,
@@ -809,19 +812,70 @@ const EditBeneficiary = () => {
                 // console.log(decryptData(err.response.data.data))
             })
     }
-   
-    
+
+
 
     const editBeneficiaryHandler = async () => {
         setMobileNumberError("")
         setWalletNumberError("")
+        setClicked(true)
 
+        // Check for missing required fields based on active tab
+        let missing = []
 
+        console.log(firstName, lastName, mobileNumber, city)
+        requiredFields.basic.forEach(field => {
+            if (!firstName && field === "first_name") missing.push(field)
+            if (!lastName && field === "last_name") missing.push(field)
+            if (!mobileNumber && field === "phone") missing.push(field)
+            if (!formData[field] && !country && field === "country") missing.push(field)
+            if (!formData[field] && !city && field === "city") missing.push(field)
+            if (!formData[field] && field !== 'city' && field !== 'phone' && field !== 'country' && field !== 'first_name' && field !== 'last_name') missing.push(field)
+        })
 
-        if(!formData.address){
-            return false
+        console.log(missing)
+
+        // Check fields based on active tab
+        switch (active) {
+            case 1: // Bank
+                requiredFields.bank.forEach(field => {
+                    if (!formData[field]) missing.push(field)
+                })
+                break;
+            case 2: // Mobile
+                requiredFields.mobile.forEach(field => {
+                    if (!formData[field]) missing.push(field)
+                })
+                break;
+            case 3: // Card
+                requiredFields.card.forEach(field => {
+                    if (!formData[field]) missing.push(field)
+                })
+                break;
+            case 4: // Crypto
+                requiredFields.crypto.forEach(field => {
+                    if (!formData[field]) missing.push(field)
+                })
+                break;
+            case 6: // Cash
+                if (!cashPickupType) missing.push("document_type")
+                if (!cashPickupNumber) missing.push("document_number")
+                break;
+            default:
+                break;
         }
-     
+
+        setMissingFields(missing)
+
+        // Focus on first missing field
+        if (missing.length > 0) {
+            const firstField = document.querySelector(`[name="${missing[0]}"]`)
+            if (firstField) {
+                firstField.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                firstField.focus()
+            }
+            return  
+        }
 
         try {
             const mobileCheck = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
@@ -1021,19 +1075,19 @@ const EditBeneficiary = () => {
                                         }}>
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <Label className="col-form-label" htmlFor="first-name">{t("First Name")} <span className="req_star">*</span></Label>
-                                                <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} id="first-name" type="text" placeholder={t("First Name")} required pattern="[A-Za-z]+" title="(A to Z | a to z)" value={firstName} onChange={e => setFirstName(e.target.value)} />
+                                                <Input name="first_name" readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("first_name") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} id="first-name" type="text" placeholder={t("First Name")} required pattern="[A-Za-z]+" title="(A to Z | a to z)" value={firstName} onChange={e => setFirstName(e.target.value)} />
                                             </FormGroup>
                                             {
                                                 fieldInfoValidate("required_receiving_entity_fields", "middlename")
                                                 &&
                                                 <FormGroup style={{ flex: 1, margin: 0 }}>
                                                     <Label className="col-form-label" htmlFor="middlename">{t("Middle Name")} <span className="req_star">*</span></Label>
-                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="middlename" id="middlename" type="text" placeholder={t('Middle Name')} value={basicExtras.middlename} onChange={handleBasicExtraChange} readOnly={!isEditMode} disabled={!isEditMode} />
+                                                    <Input  className="form-control" style={{ flex: 1, minWidth: "250px" }} name="middlename" id="middlename" type="text" placeholder={t('Middle Name')} value={basicExtras.middlename} onChange={handleBasicExtraChange} readOnly={!isEditMode} disabled={!isEditMode} />
                                                 </FormGroup>
                                             }
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <Label className="col-form-label" htmlFor="last-name">{t("Last Name")} <span className="req_star">*</span></Label>
-                                                <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} id="last-name" type="text" placeholder={t('Last Name')} required pattern="[A-Za-z]+" title="(A to Z | a to z)" value={lastName} onChange={e => setLastName(e.target.value)} />
+                                                <Input name="last_name" readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("last_name") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} id="last-name" type="text" placeholder={t('Last Name')} required pattern="[A-Za-z]+" title="(A to Z | a to z)" value={lastName} onChange={e => setLastName(e.target.value)} />
                                             </FormGroup>
                                         </div>
                                     </FormGroup>
@@ -1099,7 +1153,7 @@ const EditBeneficiary = () => {
                                             <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                 <Label className="col-form-label" htmlFor="city">{t("City")} <span className="req_star">*</span></Label>
                                                 {/* <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} id="city" type="text" placeholder='City/Town' onKeyPress={handleChangeAlpha} required name="city" value={formData?.city} onChange={inputChangeHandler} /> */}
-                                                <CitiesDropDown country={country} userCity={city} setUserCity={setCity} styles={{ flex: 1, minWidth: "250px" }} disabled={!isEditMode} iso_3={countryCode} />
+                                                <CitiesDropDown country={country} userCity={city} setUserCity={setCity} styles={{ flex: 1, minWidth: "250px", border: missingFields.includes("city") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} disabled={!isEditMode} iso_3={countryCode} />
                                             </FormGroup>
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <Label className="col-form-label" htmlFor="postal_code">{t("Postal Code")}</Label>
@@ -1128,7 +1182,8 @@ const EditBeneficiary = () => {
                                                         boxShadow: "none",
                                                         border: "1px solid #e9e9e9",
                                                         padding: "12px",
-                                                        borderRadius: "0.375rem"
+                                                        borderRadius: "0.375rem",
+                                                        border: missingFields.includes("phone") && clicked ? "1px solid red" : "1px solid #e9e9e9"
                                                     }}
                                                     phone={mobileNumber}
                                                     country={countryIsoCode}
@@ -1497,7 +1552,7 @@ const EditBeneficiary = () => {
                                                 </FormGroup>
                                                 <FormGroup style={{ flex: 1, margin: 0, position: "relative" }}>
                                                     <Label className="col-form-label" htmlFor="bank_account_number">{accNumType === "IBAN" ? t("IBAN Number") : t("Swift Code")}<span className="req_star">*</span></Label>
-                                                    <Input className="form-control" style={{ flex: 1, width: "100%", minWidth: "250px" }} placeholder={accNumType === "IBAN" ? t("IBAN Number") : t("Swift Code")} required name="bank_account_number" id="bank_account_number" value={ibanSwift} onChange={getBankDetails} maxLength={34} min={8} readOnly={!isEditMode} disabled={!isEditMode} />
+                                                    <Input className="form-control" style={{ flex: 1, width: "100%", minWidth: "250px", border: missingFields.includes("bank_account_number") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} placeholder={accNumType === "IBAN" ? t("IBAN Number") : t("Swift Code")} required name="bank_account_number" id="bank_account_number" value={ibanSwift} onChange={getBankDetails} maxLength={34} min={8} readOnly={!isEditMode} disabled={!isEditMode} />
                                                     {
                                                         bankDetailsError && <span style={{ color: "red", position: "absolute", bottom: "-25px", left: "10px" }} > {bankDetailsError}</span>
                                                     }
@@ -1512,39 +1567,39 @@ const EditBeneficiary = () => {
                                             } */}
                                                 <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                     <Label className="col-form-label" >{t("Account Number")}<span className="req_star">*</span></Label>
-                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" required /*readOnly={accNumType === "IBAN"}*/ value={formData.bank_account_number} name="bank_account_number" onChange={inputChangeHandler} disabled={!isValidIban || !isEditMode} />
+                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("bank_account_number") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} type="text" required /*readOnly={accNumType === "IBAN"}*/ value={formData.bank_account_number} name="bank_account_number" onChange={inputChangeHandler} disabled={!isValidIban || !isEditMode} />
                                                 </FormGroup>
                                                 {
                                                     accNumType === "IBAN"
                                                     &&
                                                     <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                         <Label className="col-form-label" >{t("Account Holder Name")}<span className="req_star">*</span></Label>
-                                                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="account_holder_name" type="text" value={formData.account_holder_name} onChange={inputChangeHandler} required disabled={!isValidIban || !isEditMode} />
+                                                        <Input className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("account_holder_name") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} name="account_holder_name" type="text" value={formData.account_holder_name} onChange={inputChangeHandler} required disabled={!isValidIban || !isEditMode} />
                                                     </FormGroup>
                                                 }
                                                 <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                     <Label className="col-form-label" >{t("Bank Name")}<span className="req_star">*</span></Label>
-                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="bank_name" type="text" required disabled={!isValidIban || !isEditMode} value={formData.bank_name} onChange={inputChangeHandler} />
+                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("bank_name") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} name="bank_name" type="text" required disabled={!isValidIban || !isEditMode} value={formData.bank_name} onChange={inputChangeHandler} />
                                                 </FormGroup>
                                                 <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                     <Label className="col-form-label" >{t("Branch Name")}<span className="req_star">*</span></Label>
-                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="branch_name" type="text" required disabled={!isValidIban || !isEditMode} value={formData.branch_name} onChange={inputChangeHandler} />
+                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("branch_name") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} name="branch_name" type="text" required disabled={!isValidIban || !isEditMode} value={formData.branch_name} onChange={inputChangeHandler} />
                                                 </FormGroup>
                                                 <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                     <Label className="col-form-label" >{t("Branch Street")}<span className="req_star">*</span></Label>
-                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" name="bank_branch_street" required disabled={!isValidIban || !isEditMode} value={formData.bank_branch_street} onChange={inputChangeHandler} />
+                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("bank_branch_street") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} type="text" name="bank_branch_street" required disabled={!isValidIban || !isEditMode} value={formData.bank_branch_street} onChange={inputChangeHandler} />
                                                 </FormGroup>
                                                 <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                     <Label className="col-form-label" >{t("City")}<span className="req_star">*</span></Label>
-                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" name="bank_city" required disabled={!isValidIban || !isEditMode} value={formData.bank_city} onChange={inputChangeHandler} />
+                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("bank_city") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} type="text" name="bank_city" required disabled={!isValidIban || !isEditMode} value={formData.bank_city} onChange={inputChangeHandler} />
                                                 </FormGroup>
                                                 <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                     <Label className="col-form-label" >{t("Province")}<span className="req_star">*</span></Label>
-                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" required disabled={!isValidIban || !isEditMode} name="bank_province" value={formData.bank_province} onChange={inputChangeHandler} />
+                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("bank_province") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} type="text" required disabled={!isValidIban || !isEditMode} name="bank_province" value={formData.bank_province} onChange={inputChangeHandler} />
                                                 </FormGroup>
                                                 <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                     <Label className="col-form-label" >{t("Postal Code")}<span className="req_star">*</span></Label>
-                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" required disabled={!isValidIban || !isEditMode} value={formData.bank_postal_code} name="bank_postal_code" onChange={inputChangeHandler} />
+                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("bank_postal_code") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} type="text" required disabled={!isValidIban || !isEditMode} value={formData.bank_postal_code} name="bank_postal_code" onChange={inputChangeHandler} />
                                                 </FormGroup>
                                                 {
                                                     Object.keys(bankExtras).map(item => {
@@ -1556,7 +1611,7 @@ const EditBeneficiary = () => {
                                                                 {
                                                                     item?.toString()?.toLowerCase() === "account_type"
                                                                         ?
-                                                                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} disabled={!isValidIban || !isEditMode} type="select" value={bankExtras[item]} name={item} onChange={handleBankExtraChange}>
+                                                                        <Input className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes(item) && clicked ? "1px solid red" : "1px solid #e9e9e9" }} disabled={!isValidIban || !isEditMode} type="select" value={bankExtras[item]} name={item} onChange={handleBankExtraChange}>
                                                                             <option value="">Select Account Type</option>
                                                                             {
                                                                                 Object.keys(AccountTypeData).map(item => (
@@ -1565,7 +1620,7 @@ const EditBeneficiary = () => {
                                                                             }
                                                                         </Input>
                                                                         :
-                                                                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} disabled={!isValidIban || !isEditMode} type="text" value={bankExtras[item]} name={item} onChange={handleBankExtraChange} />
+                                                                        <Input className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes(item) && clicked ? "1px solid red" : "1px solid #e9e9e9" }} disabled={!isValidIban || !isEditMode} type="text" value={bankExtras[item]} name={item} onChange={handleBankExtraChange} />
                                                                 }
                                                             </FormGroup>
                                                         )
@@ -1583,7 +1638,7 @@ const EditBeneficiary = () => {
                                             }}>
                                                 <FormGroup style={{ flex: 1, margin: 0 }}>
                                                     <Label className="col-form-label">{t("Mobile Money Provider")} <span className="req_star">*</span></Label>
-                                                    <Input readOnly={!isEditMode} disabled={!isEditMode} type="select" className="form-control" style={{ flex: 1, minWidth: "250px" }} value={formData?.mobile_wallet_provider} onChange={inputChangeHandler} name="mobile_wallet_provider">
+                                                    <Input readOnly={!isEditMode} disabled={!isEditMode} type="select" className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("mobile_wallet_provider") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} value={formData?.mobile_wallet_provider} onChange={inputChangeHandler} name="mobile_wallet_provider">
                                                         <option value="" disabled>Select Provider</option>
                                                         {
                                                             mobileProviders.map(item => (
@@ -1594,7 +1649,7 @@ const EditBeneficiary = () => {
                                                 </FormGroup>
                                                 <FormGroup style={{ flex: 1, margin: 0 }}>
                                                     <Label className="col-form-label" >{t("Wallet Name")} <span className="req_star">*</span></Label>
-                                                    <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" placeholder='Wallet Name' required id="account_holder_name" name="mobile_wallet_name" value={formData?.mobile_wallet_name} onChange={inputChangeHandler} />
+                                                    <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("mobile_wallet_name") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} type="text" placeholder='Wallet Name' required id="account_holder_name" name="mobile_wallet_name" value={formData?.mobile_wallet_name} onChange={inputChangeHandler} />
                                                 </FormGroup>
                                                 <FormGroup style={{ flex: 1, margin: 0 }}>
                                                     <Label className="col-form-label" htmlFor="mobile_wallet_account_number">{t("Wallet Number")} <span className="req_star">*</span></Label>
@@ -1602,7 +1657,8 @@ const EditBeneficiary = () => {
                                                     <PhoneInput
                                                         customStyles={{
                                                             boxShadow: "none",
-                                                            border: "1px solid #e9e9e9"
+                                                            border: "1px solid #e9e9e9",
+                                                            border: missingFields.includes("mobile_wallet_account_number") && clicked ? "1px solid red" : "1px solid #e9e9e9"
                                                         }}
                                                         phone={formData.mobile_wallet_account_number}
                                                         country={countryIsoCode}
@@ -1625,11 +1681,11 @@ const EditBeneficiary = () => {
                                                 }}>
                                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                                         <Label className="col-form-label" htmlFor="card-holder-name">Card Holder Name <span className="req_star">*</span></Label>
-                                                        <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" placeholder="Card holder name" name="card_holder_one" value={formData?.card_holder_one} onChange={inputChangeHandler} />
+                                                        <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("card_holder_one") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} type="text" placeholder="Card holder name" name="card_holder_one" value={formData?.card_holder_one} onChange={inputChangeHandler} />
                                                     </FormGroup>
                                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                                         <Label className="col-form-label" htmlFor="card-number">Card Number <span className="req_star">*</span></Label>
-                                                        <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="card_number_one" value={formData?.card_number_one} onChange={inputChangeHandler} placeholder='Card Number' required onKeyPress={handleChangeNumber} />
+                                                        <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("card_number_one") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} name="card_number_one" value={formData?.card_number_one} onChange={inputChangeHandler} placeholder='Card Number' required onKeyPress={handleChangeNumber} />
                                                     </FormGroup>
                                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                                         <Label className="col-form-label" htmlFor="card-expiry">
@@ -1638,7 +1694,7 @@ const EditBeneficiary = () => {
                                                         <div className="d-flex">
                                                             <Input readOnly={!isEditMode} disabled={!isEditMode}
                                                                 className="form-control"
-                                                                style={{ flex: 1, minWidth: "125px", marginRight: "10px" }}
+                                                                style={{ flex: 1, minWidth: "125px", marginRight: "10px", border: missingFields.includes("card_expiry_one") && clicked ? "1px solid red" : "1px solid #e9e9e9" }}
                                                                 onKeyPress={handleMonthKeyPress}
                                                                 type="text"
                                                                 placeholder="MM"
@@ -1646,7 +1702,7 @@ const EditBeneficiary = () => {
                                                             />
                                                             <Input readOnly={!isEditMode} disabled={!isEditMode}
                                                                 className="form-control"
-                                                                style={{ flex: 1, minWidth: "125px" }}
+                                                                style={{ flex: 1, minWidth: "125px", border: missingFields.includes("card_expiry_one") && clicked ? "1px solid red" : "1px solid #e9e9e9" }}
                                                                 onKeyPress={handleYearKeyPress}
                                                                 type="text"
                                                                 placeholder="YYYY"
@@ -1660,7 +1716,7 @@ const EditBeneficiary = () => {
                                                             &&
                                                             <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                                 <Label className="col-form-label">{t(service_name_formatter(item))}<span className="req_star">*</span></Label>
-                                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" value={cardExtras[item]} name={item} onChange={handleCardExtraChange} />
+                                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes(item) && clicked ? "1px solid red" : "1px solid #e9e9e9" }} type="text" value={cardExtras[item]} name={item} onChange={handleCardExtraChange} />
                                                             </FormGroup>
                                                         ))
                                                     }
@@ -1676,11 +1732,11 @@ const EditBeneficiary = () => {
                                                     }}>
                                                         <FormGroup style={{ flex: 1, margin: 0 }}>
                                                             <Label className="col-form-label" htmlFor="card-holder-name">Card Holder Name <span className="req_star">*</span></Label>
-                                                            <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" placeholder="Card holder name" name="card_holder_two" value={formData?.card_holder_two} onChange={inputChangeHandler} />
+                                                            <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("card_holder_two") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} type="text" placeholder="Card holder name" name="card_holder_two" value={formData?.card_holder_two} onChange={inputChangeHandler} />
                                                         </FormGroup>
                                                         <FormGroup style={{ flex: 1, margin: 0 }}>
                                                             <Label className="col-form-label" htmlFor="card-number">Card Number <span className="req_star">*</span></Label>
-                                                            <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="card_number_two" value={formData?.card_number_two} onChange={inputChangeHandler} placeholder='Card Number' required onKeyPress={handleChangeNumber} />
+                                                            <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("card_number_two") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} name="card_number_two" value={formData?.card_number_two} onChange={inputChangeHandler} placeholder='Card Number' required onKeyPress={handleChangeNumber} />
                                                         </FormGroup>
                                                         <FormGroup style={{ flex: 1, margin: 0 }}>
                                                             <Label className="col-form-label" htmlFor="card-expiry">
@@ -1689,7 +1745,7 @@ const EditBeneficiary = () => {
                                                             <div className="d-flex">
                                                                 <Input readOnly={!isEditMode} disabled={!isEditMode}
                                                                     className="form-control"
-                                                                    style={{ flex: 1, minWidth: "125px", marginRight: "10px" }}
+                                                                    style={{ flex: 1, minWidth: "125px", marginRight: "10px", border: missingFields.includes("card_expiry_two") && clicked ? "1px solid red" : "1px solid #e9e9e9" }}
                                                                     onKeyPress={handleMonthKeyPress}
                                                                     type="text"
                                                                     placeholder="MM"
@@ -1697,7 +1753,7 @@ const EditBeneficiary = () => {
                                                                 />
                                                                 <Input readOnly={!isEditMode} disabled={!isEditMode}
                                                                     className="form-control"
-                                                                    style={{ flex: 1, minWidth: "125px" }}
+                                                                    style={{ flex: 1, minWidth: "125px", border: missingFields.includes("card_expiry_two") && clicked ? "1px solid red" : "1px solid #e9e9e9" }}
                                                                     onKeyPress={handleYearKeyPress}
                                                                     type="text"
                                                                     placeholder="YYYY"
@@ -1717,11 +1773,11 @@ const EditBeneficiary = () => {
                                                     }}>
                                                         <FormGroup style={{ flex: 1, margin: 0 }}>
                                                             <Label className="col-form-label" htmlFor="card-holder-name">Card Holder Name <span className="req_star">*</span></Label>
-                                                            <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" placeholder="Card holder name" name="card_holder_three" value={formData?.card_holder_three} onChange={inputChangeHandler} />
+                                                            <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("card_holder_three") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} type="text" placeholder="Card holder name" name="card_holder_three" value={formData?.card_holder_three} onChange={inputChangeHandler} />
                                                         </FormGroup>
                                                         <FormGroup style={{ flex: 1, margin: 0 }}>
                                                             <Label className="col-form-label" htmlFor="card-number">Card Number <span className="req_star">*</span></Label>
-                                                            <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="card_number_three" value={formData?.card_number_three} onChange={inputChangeHandler} placeholder='Card Number' required onKeyPress={handleChangeNumber} />
+                                                            <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("card_number_three") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} name="card_number_three" value={formData?.card_number_three} onChange={inputChangeHandler} placeholder='Card Number' required onKeyPress={handleChangeNumber} />
                                                         </FormGroup>
                                                         <FormGroup style={{ flex: 1, margin: 0 }}>
                                                             <Label className="col-form-label" htmlFor="card-expiry">
@@ -1730,7 +1786,7 @@ const EditBeneficiary = () => {
                                                             <div className="d-flex">
                                                                 <Input readOnly={!isEditMode} disabled={!isEditMode}
                                                                     className="form-control"
-                                                                    style={{ flex: 1, minWidth: "125px", marginRight: "10px" }}
+                                                                    style={{ flex: 1, minWidth: "125px", marginRight: "10px", border: missingFields.includes("card_expiry_three") && clicked ? "1px solid red" : "1px solid #e9e9e9" }}
                                                                     onKeyPress={handleMonthKeyPress}
                                                                     type="text"
                                                                     placeholder="MM"
@@ -1738,7 +1794,7 @@ const EditBeneficiary = () => {
                                                                 />
                                                                 <Input readOnly={!isEditMode} disabled={!isEditMode}
                                                                     className="form-control"
-                                                                    style={{ flex: 1, minWidth: "125px" }}
+                                                                    style={{ flex: 1, minWidth: "125px", border: missingFields.includes("card_expiry_three") && clicked ? "1px solid red" : "1px solid #e9e9e9" }}
                                                                     onKeyPress={handleYearKeyPress}
                                                                     type="text"
                                                                     placeholder="YYYY"
@@ -1771,7 +1827,7 @@ const EditBeneficiary = () => {
                                             }}>
                                                 <FormGroup style={{ flex: 1, margin: 0 }}>
                                                     <Label className="col-form-label" htmlFor="card-holder-name">{t("Crypto Currency")} <span className="req_star">*</span></Label>
-                                                    <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="select" value={formData?.crypto_currency} onChange={inputChangeHandler} name="crypto_currency">
+                                                    <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("crypto_currency") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} type="select" value={formData?.crypto_currency} onChange={inputChangeHandler} name="crypto_currency">
                                                         <option value="Bitcoin">{t("Bitcoin")}</option>
                                                         <option value="Ethereum">{t("Ethereum")}</option>
                                                         <option value="Other">{t("Other")}</option>
@@ -1779,7 +1835,7 @@ const EditBeneficiary = () => {
                                                 </FormGroup>
                                                 <FormGroup style={{ flex: 1, margin: 0 }}>
                                                     <Label className="col-form-label" htmlFor="card-number">{t("Wallet Address")} <span className="req_star">*</span></Label>
-                                                    <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" value={formData?.crypto_wallet_address} onChange={inputChangeHandler} name="crypto_wallet_address" style={{ flex: 1, minWidth: "250px" }} placeholder="ABCD12345WAD2" />
+                                                    <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" value={formData?.crypto_wallet_address} onChange={inputChangeHandler} name="crypto_wallet_address" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("crypto_wallet_address") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} placeholder="ABCD12345WAD2" />
                                                 </FormGroup>
                                             </div>
                                         }
@@ -1799,7 +1855,8 @@ const EditBeneficiary = () => {
                                                                         className="form-control"
                                                                         style={{
                                                                             flex: 1,
-                                                                            minWidth: "250px"
+                                                                            minWidth: "250px",
+                                                                            border: missingFields.includes("wallet_id") && clicked ? "1px solid red" : "1px solid #e9e9e9"
                                                                         }}
                                                                         value={value.wallet_id}
                                                                         onChange={(e) => {
@@ -1854,7 +1911,7 @@ const EditBeneficiary = () => {
                                                 }}>
                                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                                         <Label className="col-form-label" htmlFor="card-holder-name">{t("Select Document Type")} <span className="req_star">*</span></Label>
-                                                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} type="select" value={cashPickupType} onChange={e => setCashPickupType(e.target.value)} name="crypto_currency" disabled={!mobileNumber || mobileNumber.length < 9 || !isEditMode} readOnly={!mobileNumber || mobileNumber.length < 9}>
+                                                        <Input className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("document_type") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} type="select" value={cashPickupType} onChange={e => setCashPickupType(e.target.value)} name="crypto_currency" disabled={!mobileNumber || mobileNumber.length < 9 || !isEditMode} readOnly={!mobileNumber || mobileNumber.length < 9}>
                                                             <option value="PASSPORT">{t("Passport")}</option>
                                                             <option value="NATIONAL_ID">{t("National Identity Card")}</option>
                                                             <option value="DRIVING_LICENSE">{t("Driving License")}</option>
@@ -1868,7 +1925,7 @@ const EditBeneficiary = () => {
                                                     </FormGroup>
                                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                                         <Label className="col-form-label" htmlFor="card-number">{t("Enter Document Number")} <span className="req_star">*</span></Label>
-                                                        <Input className="form-control" value={cashPickupNumber} onChange={e => setCashPickupNumber(e.target.value)} name="crypto_wallet_address" style={{ flex: 1, minWidth: "250px" }} placeholder="ABCD12345WAD2" disabled={!mobileNumber || mobileNumber.length < 9} readOnly={!mobileNumber || mobileNumber.length < 9 || !isEditMode} />
+                                                        <Input className="form-control" value={cashPickupNumber} onChange={e => setCashPickupNumber(e.target.value)} name="crypto_wallet_address" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("document_number") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} placeholder="ABCD12345WAD2" disabled={!mobileNumber || mobileNumber.length < 9} readOnly={!mobileNumber || mobileNumber.length < 9 || !isEditMode} />
                                                     </FormGroup>
                                                     {
                                                         Object.keys(cashExtras)?.map(item => (
@@ -1876,7 +1933,7 @@ const EditBeneficiary = () => {
                                                             &&
                                                             <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                                 <Label className="col-form-label">{t(service_name_formatter(item))}<span className="req_star">*</span></Label>
-                                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" value={cashExtras?.[item]} name={item} onChange={handleCashxtraChange} />
+                                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes(item) && clicked ? "1px solid red" : "1px solid #e9e9e9" }} type="text" value={cashExtras?.[item]} name={item} onChange={handleCashxtraChange} />
                                                             </FormGroup>
                                                         ))
                                                     }
@@ -1891,23 +1948,18 @@ const EditBeneficiary = () => {
                                     </FormGroup>
 
                                     {
-                                        isEditMode
-                                            ?
-                                            <div style={{ display: "Flex", justifyContent: "flex-end", width: "100%", marginTop: "2rem", gap: "2rem", alignItems: "center" }}>
+                                        isEditMode ? (
+                                            <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", marginTop: "2rem", gap: "2rem", alignItems: "center" }}>
                                                 <button onClick={() => setIsEditMode(false)} style={{ all: "unset", cursor: "pointer" }}>
                                                     {t("Cancel")}
                                                 </button>
-                                                <button type="button" onClick={() => {
-                                                    setClicked(true)
-                                                    editBeneficiaryHandler()
-                                                }}
+                                                <button type="button" onClick={editBeneficiaryHandler}
                                                     style={{
                                                         all: "unset",
                                                         padding: "1rem",
                                                         boxShadow: "0 0 3px rgba(128,128,128,0.4)",
                                                         textAlign: "center",
                                                         cursor: "pointer",
-                                                        type: "button",
                                                         borderRadius: "10px",
                                                         background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                                                         color: "white",
@@ -1915,17 +1967,14 @@ const EditBeneficiary = () => {
                                                         alignItems: "center",
                                                         gap: "1rem",
                                                         justifyContent: "center",
-                                                        transition: "250ms",
-                                                        opacity: (walletError || !firstName || !lastName || !country || !city || mobileNumber.length < 9 || (!completedBank && !completedCard && !completedCrypto && !completedWallet && !cashPickupCompleted && instapayWallets.some(item => item.length < 8 || item.length > 8))) ? .7 : 1
                                                     }}
-                                                    disabled={
-                                                        walletError || !firstName || !lastName || !country || !city || mobileNumber.length < 9 || (!completedBank && !completedCard && !completedCrypto && !completedWallet && !cashPickupCompleted && instapayWallets.some(item => item.length < 8 || item.length > 8)) || !formData.relation 
-                                                    }
-                                                >{t("Save")}</button>
+                                                >
+                                                    {t("Save")}
+                                                </button>
                                             </div>
-                                            :
-                                            <></>
+                                        ) : null
                                     }
+
                                     <ConfirmationModal isOpen={showConfirmation} toggle={() => setShowConfirmation(!showConfirmation)} onConfirm={changeUserDetailsAsPerBankDetails} onCancel={onCancelHandler} />
                                 </CardBody>
                         }
