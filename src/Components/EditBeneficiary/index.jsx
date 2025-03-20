@@ -174,6 +174,9 @@ const EditBeneficiary = () => {
                 [name]: value
             }
         })
+        if (value.length >= 3) {
+            setMissingFields(prev => prev.filter(field => field !== name))
+        }
     }
     // bank extra fields
 
@@ -196,6 +199,9 @@ const EditBeneficiary = () => {
                 [name]: value
             }
         })
+        if (value.length >= 3) {
+            setMissingFields(prev => prev.filter(field => field !== name))
+        }
     }
     // mobile extra fields
 
@@ -213,6 +219,9 @@ const EditBeneficiary = () => {
                 [name]: value
             }
         })
+        if (value.length >= 3) {
+            setMissingFields(prev => prev.filter(field => field !== name))
+        }
     }
     // card extra fields
 
@@ -230,6 +239,9 @@ const EditBeneficiary = () => {
                 [name]: value
             }
         })
+        if (value.length >= 3) {
+            setMissingFields(prev => prev.filter(field => field !== name))
+        }
     }
     // cash extra fields
 
@@ -315,6 +327,11 @@ const EditBeneficiary = () => {
                 [name]: value
             }
         })
+
+        // Remove border if field has at least 3 characters
+        if (value.length >= 3) {
+            setMissingFields(prev => prev.filter(field => field !== name))
+        }
     }
 
     const changeUserDetailsAsPerBankDetails = () => {
@@ -373,6 +390,9 @@ const EditBeneficiary = () => {
                 bank_account_number: ""
             }
         })
+        for (const key in bankExtras) {
+            handleBankExtraChange({ target: { name: key, value: "" } })
+        }
         setBankCountry("")
         setBankCountryCode("")
         setBankCity("")
@@ -815,27 +835,27 @@ const EditBeneficiary = () => {
 
 
 
+   const [saveloading, setsaveloading] = useState(false)
     const editBeneficiaryHandler = async () => {
         setMobileNumberError("")
         setWalletNumberError("")
         setClicked(true)
+        
 
-        // Check for missing required fields based on active tab
         let missing = []
 
+        
+        
         console.log(firstName, lastName, mobileNumber, city)
         requiredFields.basic.forEach(field => {
-            if (!firstName && field === "first_name") missing.push(field)
-            if (!lastName && field === "last_name") missing.push(field)
-            if (!mobileNumber && field === "phone") missing.push(field)
-            if (!formData[field] && !country && field === "country") missing.push(field)
-            if (!formData[field] && !city && field === "city") missing.push(field)
-            if (!formData[field] && field !== 'city' && field !== 'phone' && field !== 'country' && field !== 'first_name' && field !== 'last_name') missing.push(field)
+            if (!firstName?.trim() && field === "first_name") missing.push(field)
+            if (!lastName?.trim() && field === "last_name") missing.push(field)
+            if (!mobileNumber?.trim() && field === "phone") missing.push(field)
+            if (!formData[field]?.trim() && !country?.trim() && field === "country") missing.push(field)
+            if (!formData[field]?.trim() && !city?.trim() && field === "city") missing.push(field)
+            if (!formData[field]?.trim() && field !== 'city' && field !== 'phone' && field !== 'country' && field !== 'first_name' && field !== 'last_name') missing.push(field)
         })
 
-        console.log(missing)
-
-        // Check fields based on active tab
         switch (active) {
             case 1: // Bank
                 requiredFields.bank.forEach(field => {
@@ -874,9 +894,10 @@ const EditBeneficiary = () => {
                 firstField.scrollIntoView({ behavior: 'smooth', block: 'center' })
                 firstField.focus()
             }
-            return  
+            return
         }
 
+        setsaveloading(true)
         try {
             const mobileCheck = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
                 data: encryptData({ number: `+${mobileNumber}` })
@@ -899,6 +920,7 @@ const EditBeneficiary = () => {
             }
             console.log(decrypt)
         }
+        setsaveloading(false)
     }
 
 
@@ -1075,19 +1097,30 @@ const EditBeneficiary = () => {
                                         }}>
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <Label className="col-form-label" htmlFor="first-name">{t("First Name")} <span className="req_star">*</span></Label>
-                                                <Input name="first_name" readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("first_name") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} id="first-name" type="text" placeholder={t("First Name")} required pattern="[A-Za-z]+" title="(A to Z | a to z)" value={firstName} onChange={e => setFirstName(e.target.value)} />
+                                                <Input name="first_name" readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("first_name") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} id="first-name" type="text" placeholder={t("First Name")} required pattern="[A-Za-z]+" title="(A to Z | a to z)" value={firstName}
+                                                    onChange={e => {
+                                                        setFirstName(e.target.value)
+                                                        if (e.target.value.length >= 3) {
+                                                            setMissingFields(prev => prev.filter(field => field !== "first_name"))
+                                                        }
+                                                    }} />
                                             </FormGroup>
                                             {
                                                 fieldInfoValidate("required_receiving_entity_fields", "middlename")
                                                 &&
                                                 <FormGroup style={{ flex: 1, margin: 0 }}>
                                                     <Label className="col-form-label" htmlFor="middlename">{t("Middle Name")} <span className="req_star">*</span></Label>
-                                                    <Input  className="form-control" style={{ flex: 1, minWidth: "250px" }} name="middlename" id="middlename" type="text" placeholder={t('Middle Name')} value={basicExtras.middlename} onChange={handleBasicExtraChange} readOnly={!isEditMode} disabled={!isEditMode} />
+                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="middlename" id="middlename" type="text" placeholder={t('Middle Name')} value={basicExtras.middlename} onChange={handleBasicExtraChange} readOnly={!isEditMode} disabled={!isEditMode} />
                                                 </FormGroup>
                                             }
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <Label className="col-form-label" htmlFor="last-name">{t("Last Name")} <span className="req_star">*</span></Label>
-                                                <Input name="last_name" readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("last_name") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} id="last-name" type="text" placeholder={t('Last Name')} required pattern="[A-Za-z]+" title="(A to Z | a to z)" value={lastName} onChange={e => setLastName(e.target.value)} />
+                                                <Input name="last_name" readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("last_name") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} id="last-name" type="text" placeholder={t('Last Name')} required pattern="[A-Za-z]+" title="(A to Z | a to z)" value={lastName} onChange={e => {
+                                                    setLastName(e.target.value)
+                                                    if (e.target.value.length >= 3) {
+                                                        setMissingFields(prev => prev.filter(field => field !== "last_name"))
+                                                    }
+                                                }} />
                                             </FormGroup>
                                         </div>
                                     </FormGroup>
@@ -1153,7 +1186,12 @@ const EditBeneficiary = () => {
                                             <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                 <Label className="col-form-label" htmlFor="city">{t("City")} <span className="req_star">*</span></Label>
                                                 {/* <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} id="city" type="text" placeholder='City/Town' onKeyPress={handleChangeAlpha} required name="city" value={formData?.city} onChange={inputChangeHandler} /> */}
-                                                <CitiesDropDown country={country} userCity={city} setUserCity={setCity} styles={{ flex: 1, minWidth: "250px", border: missingFields.includes("city") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} disabled={!isEditMode} iso_3={countryCode} />
+                                                <CitiesDropDown country={country} userCity={city} setUserCity={(selectedCity) => {
+                                                    setCity(selectedCity)
+                                                    if (selectedCity) {
+                                                        setMissingFields(prev => prev.filter(field => field !== "city"))
+                                                    }
+                                                }} styles={{ flex: 1, minWidth: "250px", border: missingFields.includes("city") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} disabled={!isEditMode} iso_3={countryCode} />
                                             </FormGroup>
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <Label className="col-form-label" htmlFor="postal_code">{t("Postal Code")}</Label>
@@ -1187,7 +1225,12 @@ const EditBeneficiary = () => {
                                                     }}
                                                     phone={mobileNumber}
                                                     country={countryIsoCode}
-                                                    setPhone={(e) => setMobileNumber(e)}
+                                                    setPhone={(e) => {
+                                                        setMobileNumber(e)
+                                                        if (e.length >= 3) {
+                                                            setMissingFields(prev => prev.filter(field => field !== "phone"))
+                                                        }
+                                                    }}
                                                     disabled={!isEditMode}
                                                     required
                                                     error={mobileNumberError}
@@ -1953,7 +1996,8 @@ const EditBeneficiary = () => {
                                                 <button onClick={() => setIsEditMode(false)} style={{ all: "unset", cursor: "pointer" }}>
                                                     {t("Cancel")}
                                                 </button>
-                                                <button type="button" onClick={editBeneficiaryHandler}
+                                                {!saveloading &&
+                                                 <button type="button" onClick={editBeneficiaryHandler}
                                                     style={{
                                                         all: "unset",
                                                         padding: "1rem",
@@ -1970,7 +2014,13 @@ const EditBeneficiary = () => {
                                                     }}
                                                 >
                                                     {t("Save")}
-                                                </button>
+                                                </button>}
+
+                                                {saveloading && <div class="d-flex justify-content-center">
+                                                    <div class="spinner-border" color='primary' role="status">
+                                                        <span class="sr-only">Loading...</span>
+                                                    </div>
+                                                </div>}
                                             </div>
                                         ) : null
                                     }
