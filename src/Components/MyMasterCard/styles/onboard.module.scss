@@ -373,6 +373,7 @@
     align-items: center;
     gap: 12px;
     align-self: stretch;
+    min-width: fit-content;
 
 
     .circle {
@@ -875,6 +876,7 @@
     width: 100vw;
     background: #fff;
     overflow-y: auto;
+    display: none;
 
     .paymentContent {
         flex-direction: column;
@@ -917,6 +919,9 @@
 }
 
 @media screen and (max-width: 1000px) {
+    .mobileView{
+        display: block;
+    }
     .container {
         padding: 0;
         min-height: auto;
