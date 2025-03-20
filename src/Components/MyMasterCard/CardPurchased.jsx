@@ -63,7 +63,7 @@ const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent ,currentCa
         setCardLoading(true)
         const getCardDetail = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/virtual-card/get-card-details/${cards[current]._id}`, {
+                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-details/${cards[current]._id}`, {
                     headers: authHeader
                 })
 

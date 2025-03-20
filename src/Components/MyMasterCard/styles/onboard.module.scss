@@ -67,6 +67,7 @@
         }
     }
 
+
     .featuresDiv {
         display: flex;
         align-items: center;
@@ -223,34 +224,7 @@
         }
     }
 
-    .bottom {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        align-items: center;
 
-
-        .btns {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: var(--SPACING-spacing-3, 24px);
-
-            button {
-                display: flex;
-                padding: 8px 12px;
-                justify-content: center;
-                align-items: center;
-                gap: var(--SPACING-spacing-0, 8px);
-                border-radius: var(--RADIUS-radius-1, 4px);
-                font-size: 12px;
-                font-weight: 600;
-                border: none;
-                outline: none;
-                background-color: white;
-            }
-        }
-    }
 
     .stepTwo {
         display: flex;
@@ -360,6 +334,38 @@
         }
     }
 
+    .seprationLine {
+        display: none;
+    }
+}
+
+.bottom {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+
+
+    .btns {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: var(--SPACING-spacing-3, 24px);
+
+        button {
+            display: flex;
+            padding: 8px 12px;
+            justify-content: center;
+            align-items: center;
+            gap: var(--SPACING-spacing-0, 8px);
+            border-radius: var(--RADIUS-radius-1, 4px);
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            outline: none;
+            background-color: white;
+        }
+    }
 }
 
 .contact {
@@ -382,8 +388,10 @@
     }
 }
 
-
-.modal {
+.paymentContent {
+    display: flex;
+    align-items: center;
+    width: 100%;
 
     .left {
         display: flex;
@@ -490,6 +498,26 @@
 
                     h5 {
                         color: white
+                    }
+
+                    span {
+                        background-color: white;
+                    }
+
+                    .hover {
+                        display: block;
+                    }
+
+                    .normal {
+                        display: none;
+                    }
+                }
+
+                .paymentOptions.selected {
+                    background-color: #5926F0;
+
+                    h5 {
+                        color: white;
                     }
 
                     span {
@@ -815,27 +843,192 @@
             }
         }
 
-        .btns {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: var(--SPACING-spacing-3, 24px);
-            width: 100%;
-            margin-top: 25px;
 
-            button {
-                display: flex;
-                padding: 8px 12px;
-                justify-content: center;
-                align-items: center;
-                gap: var(--SPACING-spacing-0, 8px);
-                border-radius: var(--RADIUS-radius-1, 4px);
-                font-size: 12px;
-                font-weight: 600;
-                border: none;
-                outline: none;
-                background-color: white;
+    }
+}
+
+
+.btns {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: var(--SPACING-spacing-3, 24px);
+    width: 100%;
+    margin-top: 25px;
+
+    button {
+        display: flex;
+        padding: 8px 12px;
+        justify-content: center;
+        align-items: center;
+        gap: var(--SPACING-spacing-0, 8px);
+        border-radius: var(--RADIUS-radius-1, 4px);
+        font-size: 12px;
+        font-weight: 600;
+        border: none;
+        outline: none;
+        background-color: white;
+    }
+}
+
+.mobileView {
+    width: 100vw;
+    background: #fff;
+    overflow-y: auto;
+
+    .paymentContent {
+        flex-direction: column;
+        width: 100%;
+
+        .left {
+            padding: 1rem;
+            width: 100%;
+            background: transparent;
+
+            h1 {
+                font-size: 24px;
             }
         }
+
+
+        .right {
+            padding: 1rem;
+            width: 100%;
+
+            .step1,
+            .step2,
+            .step3,
+            .step4 {
+                padding: 0;
+                width: 100%;
+            }
+
+
+            // Add padding at bottom to prevent content being hidden behind fixed buttons
+            padding-bottom: 80px;
+        }
+    }
+
+    .bottom {
+        padding: 30px;
+        margin-top: 20px;
+        gap: 0px !important;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .container {
+        padding: 0;
+        min-height: auto;
+
+        .stepTwo {
+            >div {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+
+                >div:nth-child(2) {
+                    flex-direction: column-reverse;
+                    width: 100%;
+
+                    >div {
+                        justify-content: space-between;
+                        width: 100%;
+                    }
+                }
+            }
+
+            >div:nth-child(2) {
+                >div {
+                    flex-direction: column;
+                    width: 100% !important;
+                    gap: 12px !important;
+
+                    >div:nth-child(2) {
+                        width: 100% !important;
+                    }
+                }
+
+            }
+        }
+
+        .cardSelection {
+
+            .methodsSelect>div {
+                flex-direction: column !important;
+                width: 100% !important;
+                ;
+
+                span {
+                    justify-content: space-between !important;
+                    width: 100%;
+                }
+            }
+        }
+
+
+        .seprationLine {
+            display: block;
+            width: 100%;
+            height: .5px;
+            background-color: #8E8E8E;
+        }
+
+        .top {
+            p {
+                font-size: 14px;
+            }
+        }
+
+        .bottom {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 0px;
+            margin-top: 1rem;
+
+
+            .btns {
+                width: 100%;
+                flex-direction: column-reverse;
+                gap: 5px;
+
+                button {
+                    width: 100%;
+                    padding: 18px;
+                }
+            }
+        }
+
+        .featuresDiv {
+            flex-direction: column-reverse !important;
+            justify-content: center;
+            align-items: center;
+
+            .left {
+                width: 100% !important;
+
+                .features>div {
+                    grid-template-columns: 1fr !important;
+                    gap: 10px;
+                }
+            }
+        }
+
+        .paymentContent {
+            .right {
+                padding-bottom: 0;
+
+                >.step1 {
+                    background: #fff;
+                }
+            }
+        }
+
+
+    }
+
+    .contact {
+        align-self: center;
     }
 }

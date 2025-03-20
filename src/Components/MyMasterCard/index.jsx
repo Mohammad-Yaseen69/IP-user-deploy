@@ -10,6 +10,7 @@ import { UserContext } from '../../Context/UserContext';
 import InstaPayLoader from '../Loader';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
+import QrGenerate from '../Settings/QrGenerate';
 
 
 
@@ -34,7 +35,7 @@ const MyMasterCard = () => {
   useEffect(() => {
     const getCard = async () => {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/virtual-card/get-user-vvc`, {
+        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-user-vvc`, {
           headers: authHeader
         })
 
@@ -66,7 +67,7 @@ const MyMasterCard = () => {
   useEffect(() => {
     const getTransactions = async () => {
       try {
-        const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/virtual-card/get-card-transcations`, { data: encryptData({ cardId: cards[current].card_id }) }, {
+        const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-transcations`, { data: encryptData({ cardId: cards[current].card_id }) }, {
           headers: authHeader
         })
 
@@ -86,7 +87,7 @@ const MyMasterCard = () => {
     <div style={{ minHeight: "100vh" }} className={styles.container}>
       <div className={styles.top}>
         <h4>My Mastercard</h4>
-        <TopRight />
+        {window.innerWidth > 1000 && <TopRight />}
       </div>
 
 
@@ -103,7 +104,7 @@ const MyMasterCard = () => {
                   cards={cards}
                   setCardPurchased={setCardPurchased}
                 />
-                <TransactionsTable  cardNo={currentCardDetails?.card_number} transactions={transactions} isLoading={loading} />
+                <TransactionsTable cardNo={currentCardDetails?.card_number} transactions={transactions} isLoading={loading} />
               </>
               : <OnBoarding alreadyHaveCard={cards.length !== 0} setReRender={setReRender} setCardPurchased={setCardPurchased} />
 

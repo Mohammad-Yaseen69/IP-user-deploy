@@ -67,6 +67,8 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails }) => {
 
                     </div>
 
+                    <div className={styles.seprationLine}></div>
+
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                         <span style={{ borderColor: "#EC9100", padding: "8px 12px" }}>
                             <p style={{ color: "#EC9100" }}>USD</p>

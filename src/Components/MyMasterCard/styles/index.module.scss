@@ -8,7 +8,7 @@
         position: relative;
 
         h4 {
-            font-size: 3vw;
+            font-size: 32px;
             background: linear-gradient(3.1deg, #E64067 -102.47%, #5926F0 25.82%, #4828A0 128.05%), #FFFFFF;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -1174,5 +1174,12 @@
                 }
             }
         }
+    }
+}
+
+
+@media screen and (max-width: 1000px) {
+    .top{
+        margin-bottom: 0rem !important;
     }
 }
