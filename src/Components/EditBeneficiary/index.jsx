@@ -24,6 +24,7 @@ import DataCountries from "../PaymentsNewer/CountriesData.json"
 import { LocalizationProvider, MobileDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { minDate } from "../Settings/Basic";
+import { requiredFields } from "../AddBeneficiary/requiredFields";
 
 let debounceTimer;
 
@@ -86,6 +87,7 @@ const EditBeneficiary = () => {
     const [mobileProviders, setMobileProviders] = useState([])
     const [loading, setLoading] = useState(false)
     const [isAddressRequired, setIsAddressRequired] = useState(true)
+    const [clicked, setClicked] = useState(false)
 
     const fieldInfoValidate = (field_name, sub_field_name) => {
         if (fieldsInfo === null) return false;
@@ -305,6 +307,7 @@ const EditBeneficiary = () => {
     })
 
     const inputChangeHandler = (e) => {
+        setClicked(false)
         const { name, value } = e.target
         setFormData(prev => {
             return {
@@ -806,10 +809,20 @@ const EditBeneficiary = () => {
                 // console.log(decryptData(err.response.data.data))
             })
     }
+   
+    
 
     const editBeneficiaryHandler = async () => {
         setMobileNumberError("")
-        setWalletNumberError("") 
+        setWalletNumberError("")
+
+
+
+        if(!formData.address){
+            return false
+        }
+     
+
         try {
             const mobileCheck = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
                 data: encryptData({ number: `+${mobileNumber}` })
@@ -820,15 +833,14 @@ const EditBeneficiary = () => {
                 })
             }
 
-
-            await editBenFun()
+            await editBenFun() // This will now be called if all validations pass
         } catch (error) {
             const decrypt = decryptData(error.response.data.data)
 
-            if(decrypt.includes("`mobile_number`")){
+            if (decrypt.includes("`mobile_number`")) {
                 setWalletNumberError("Incorrect phone number, please enter a valid number")
             }
-            else if(decrypt.includes("mobile number")){
+            else if (decrypt.includes("mobile number")) {
                 setMobileNumberError("Incorrect phone number, please enter a valid number")
             }
             console.log(decrypt)
@@ -1097,7 +1109,7 @@ const EditBeneficiary = () => {
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                         <Label className="col-form-label" htmlFor="address">{t("Address Line")} {isAddressRequired && <span className="req_star">*</span>}</Label>
-                                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="address" id="address" type="textarea" placeholder={t('Address line')} value={formData.address} onChange={inputChangeHandler} disabled={!isEditMode} />
+                                        <Input className="form-control" style={{ flex: 1, minWidth: "250px", border: !formData.address && clicked ? "1px solid red" : "1px solid #e9e9e9" }} name="address" id="address" type="textarea" placeholder={t('Address line')} value={formData.address} onChange={inputChangeHandler} disabled={!isEditMode} />
                                     </FormGroup>
                                     <FormGroup className="mb-3">
                                         <div style={{
@@ -1122,7 +1134,7 @@ const EditBeneficiary = () => {
                                                     country={countryIsoCode}
                                                     setPhone={(e) => setMobileNumber(e)}
                                                     disabled={!isEditMode}
-                                                    required                      
+                                                    required
                                                     error={mobileNumberError}
                                                 />
                                             </FormGroup>
@@ -1885,7 +1897,10 @@ const EditBeneficiary = () => {
                                                 <button onClick={() => setIsEditMode(false)} style={{ all: "unset", cursor: "pointer" }}>
                                                     {t("Cancel")}
                                                 </button>
-                                                <button type="button" onClick={editBeneficiaryHandler}
+                                                <button type="button" onClick={() => {
+                                                    setClicked(true)
+                                                    editBeneficiaryHandler()
+                                                }}
                                                     style={{
                                                         all: "unset",
                                                         padding: "1rem",
@@ -1904,7 +1919,7 @@ const EditBeneficiary = () => {
                                                         opacity: (walletError || !firstName || !lastName || !country || !city || mobileNumber.length < 9 || (!completedBank && !completedCard && !completedCrypto && !completedWallet && !cashPickupCompleted && instapayWallets.some(item => item.length < 8 || item.length > 8))) ? .7 : 1
                                                     }}
                                                     disabled={
-                                                        walletError || !firstName || !lastName || !country || !city || mobileNumber.length < 9 || (!completedBank && !completedCard && !completedCrypto && !completedWallet && !cashPickupCompleted && instapayWallets.some(item => item.length < 8 || item.length > 8)) || !formData.relation || (isAddressRequired ? !formData.address : false)
+                                                        walletError || !firstName || !lastName || !country || !city || mobileNumber.length < 9 || (!completedBank && !completedCard && !completedCrypto && !completedWallet && !cashPickupCompleted && instapayWallets.some(item => item.length < 8 || item.length > 8)) || !formData.relation 
                                                     }
                                                 >{t("Save")}</button>
                                             </div>

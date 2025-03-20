@@ -24,7 +24,8 @@ import PhoneInput from "../PhoneInput";
 import { MobileDatePicker } from "@mui/x-date-pickers";
 import { minDate } from "../Settings/Basic";
 import africanCountries from "../../Data/AfricanCountries.json"
-
+import {requiredFields} from "./requiredFields"
+ 
 export const BeneficiaryRelation = {
     SELF: "My own account",
     FRIENDS_AND_FAMILY: "Friends & Family",
@@ -199,7 +200,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         return isInThere;
     }
 
-    const serviceFieldInfoValidate = (service, field_name, sub_field_name) => {
+     const serviceFieldInfoValidate = (service, field_name, sub_field_name) => {
         if (fieldsInfo === null) return false;
         let isInThere = false;
 
@@ -506,6 +507,10 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         setMobileError("")
         setWalletMobileError("")
         e.preventDefault()
+
+ 
+
+
 
         if (formData.mobile_wallet_account_number) {
             try {
