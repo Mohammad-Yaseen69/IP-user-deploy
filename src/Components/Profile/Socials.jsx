@@ -15,7 +15,7 @@ const Socials = () => {
             followers: "0" + t("Followers"),
         },
         {
-            name: "Facebook",
+            name: "Telegram",
             followers: "0" + t("Followers"),
         },
         {
@@ -38,7 +38,20 @@ const Socials = () => {
                         followers: typeof dec?.data?.[item] === "number" ? dec?.data?.[item] + " " + t("Followers") : dec?.data?.[item]
                     }
                 })
-                setSocialData(data)
+                console.log(data)
+                const arr = [...data];
+                const index1 = arr.findIndex(social => social.name.trim() === "Facebook:");
+                const index2 = arr.findIndex(social => social.name.trim() === "Telegram:");
+
+                const temp = arr[index1]
+
+                arr[index1] = arr[index2]
+                arr[index2] = temp
+
+                console.log(arr)
+
+
+                setSocialData(arr)
             } catch (error) {
                 const dec = decryptData(error.response.data.data)
                 console.log(dec)
@@ -55,7 +68,7 @@ const Socials = () => {
         <div className={styles.social_info} style={{ flexWrap: "wrap" }}>
             {
                 window.innerWidth > 600 ?
-                    socials_data.slice(0, showMore ? socials_data.length - 1 : 3).map(item => (
+                    socials_data.slice(0, showMore ? socials_data.length : 3).map(item => (
                         <div className={styles.item} key={item.name}>
                             <div className={styles.left}>
                                 <span>{item.name}</span>
@@ -80,7 +93,7 @@ const Socials = () => {
                     :
                     socials_data.slice(0, showMore ? socials_data.length - 1 : 3).map(item => (
                         <div className={styles.item} style={{ flexDirection: "column", alignItems: "flex-start", justifyContent: "center", gap: "0" }} key={item.name}>
-                            <div style={{display: "flex", alignItems: "center", justifyContent: "space-between", width: '100%'}}>
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: '100%' }}>
                                 <div className={styles.left}>
                                     <span>{item.name}</span>
                                 </div>
