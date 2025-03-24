@@ -12,6 +12,7 @@ import InstaPayLoader from "../../Loader"
 import FeesComponent from "./FeesComponent"
 import { getLimits } from "../../WalletsNew"
 import { removeCommasAndCurrency } from "../../WalletsNew/AccountLimits"
+import { encryptData } from "../../../Helper/EssentilaMethods/Encryption"
 
 const WalletsComponent = ({ data, dataHandler, loading = false }) => {
     const { t } = useTranslation()
@@ -107,10 +108,27 @@ const WalletsComponent = ({ data, dataHandler, loading = false }) => {
 
 export default WalletsComponent
 
-export const WalletCard = ({ wallet, data, dataHandler, loading, blocked = false, cardType, isInVCard = false, selectedWallet, setFeeDetail ,feeDetails }) => {
+export const WalletCard = ({
+    wallet,
+    data,
+    dataHandler,
+    loading,
+    blocked = false,
+    cardType,
+    isInVCard = false,
+    selectedWallet,
+    setFeeDetail,
+    feeDetails,
+    card,
+    amount,
+    addFunds,
+    paymentType,
+    filteredWallets
+}) => {
     const { t } = useTranslation()
     const { authHeader } = useContext(UserContext)
     const [walletData, setWalletData] = useState({})
+    const [walletfeeDetails, setWalletFeeDetails] = useState([])
 
     useEffect(() => {
         if (wallet?._id) {
@@ -125,7 +143,7 @@ export const WalletCard = ({ wallet, data, dataHandler, loading, blocked = false
                 headers: authHeader
             });
             const dec = decryptData(res?.data?.data);
-            
+
             return dec?.exchangeRate?.exchanged_amount ?? 0;
         } catch (error) {
             return 0; // return 0 in case of error
@@ -133,20 +151,51 @@ export const WalletCard = ({ wallet, data, dataHandler, loading, blocked = false
     };
 
     const getFee = async () => {
-        try {
-            const response = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-vvc-fee/${wallet?.wallet_id}/${cardType}/wallet`, {
-                headers: authHeader
-            })
+        if (!addFunds) {
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-vvc-fee/${wallet?.wallet_id}/${cardType}/wallet`, {
+                    headers: authHeader
+                })
 
-            const dec = decryptData(response?.data?.data)
-            setFeeDetail(dec?.data)
-            setIsSufficient(wallet?.balance?.available > dec.data?.fee)
-            console.log(dec)
-        } catch (error) {
-            const dec = decryptData(error.response?.data?.data)
-            console.log(dec)
+                const dec = decryptData(response?.data?.data)
+                setFeeDetail(dec?.data)
+                setIsSufficient(wallet?.balance?.available > dec.data?.fee)
+                console.log(dec)
+            } catch (error) {
+                const dec = decryptData(error.response?.data?.data)
+                console.log(dec)
+            }
+        } else {
+            if(walletfeeDetails.length && filteredWallets.length){
+                return false
+            }
+            const data = {
+                cardId: card._id,
+                walletId: wallet?._id,
+                amount: +String(amount)?.replaceAll(",", ""),
+                type: paymentType
+            }
+            const enc = encryptData(data)
+            try {
+                
+                const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-topup-fee`, { data: enc }, {
+                    headers: authHeader
+                })
+
+                const dec = decryptData(response?.data?.data)
+
+
+                console.log(dec)
+                setWalletFeeDetails(prev => [...prev, dec.data])
+                wallet.isSufficient = wallet?.balance?.available > dec.data?.feeDetails?.totalAmount
+                setIsSufficient(wallet?.balance?.available > dec.data?.feeDetails?.totalAmount)
+            } catch (error) {
+                const dec = decryptData(error.response?.data?.data)
+                console.log(dec)
+            }
         }
     }
+
 
     const [isSufficient, setIsSufficient] = useState(false)
     useEffect(() => {
@@ -162,7 +211,7 @@ export const WalletCard = ({ wallet, data, dataHandler, loading, blocked = false
                 }
                 if (data?.package_details?.filteredData?.[0]) {
                     amount = data.package_details?.filteredData?.[0]?.total
-                } 
+                }
 
                 const apidata = [data?.currency_wallet?.currency?.code ?? data?.airtime_currency?.currency?.code, wallet?.currency?.code, Number(amount)]
 
@@ -176,15 +225,21 @@ export const WalletCard = ({ wallet, data, dataHandler, loading, blocked = false
         }
     }, [wallet, blocked, cardType])
 
-    console.log(data)
+
+    const handleClick = () => {
+        if (isSufficient && !loading && !blocked) {
+            dataHandler("wallet", wallet)
+        }
+    }
+
 
     return (
         <div
             data-content={t("Insufficient Balance")}
-            style={{backgroundSize: isInVCard && "cover"}}
+            style={{ backgroundSize: isInVCard && "cover" }}
             data-block-content={t("Blocked Wallet")}
             className={`${styles.card} ${isSufficient ? "" : styles.disabled_card} ${blocked ? styles.blocked_card : ""} ${data?.wallet?._id === wallet?._id ? styles.active : ""}`}
-            onClick={() => isSufficient && !loading && !blocked ? dataHandler("wallet", wallet) : console.log("sdfgsfg")}
+            onClick={handleClick}
         >
             <div className={styles.top}>
                 <div className={styles.left}>

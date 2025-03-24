@@ -8,9 +8,10 @@ import { Lock, Freeze, plus, CreditCardR, Wallet2, FileDown, CreditCardP, Notifi
 import axios from 'axios';
 import { UserContext } from '../../Context/UserContext';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
-import { useStateManager } from 'react-select';
+// import { useStateManager } from 'react-select';
 import InstaPayLoader from '../Loader';
-import { toast } from 'react-toastify'; // Add this import at the top
+import { toast } from 'react-toastify';
+import AddFundsModal from "./AddFundsModal"
 
 
 const Toggle = ({ checked, onChange, isCheckbox = false }) => (
@@ -24,7 +25,7 @@ const Toggle = ({ checked, onChange, isCheckbox = false }) => (
     </label>
 );
 
-const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent ,currentCardDetails, setCurrentCardDetails }) => {
+const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCardDetails, setCurrentCardDetails }) => {
     const [checks, setChecks] = useState({
         cardStatus: true,
         onlinePurchases: true,
@@ -33,10 +34,10 @@ const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent ,currentCa
     });
     const ref = useRef();
     const swiperRef = useRef()
+    const [showFundsModal, setShowFundsModal] = useState(false)
     const { authHeader, userDetails } = useContext(UserContext)
     const [cardLoading, setCardLoading] = useState(true)
-    const [flippedCards, setFlippedCards] = useState({}); // Add this state for card flipping
-
+    const [flippedCards, setFlippedCards] = useState({});
     const handleCardFlip = (cardId) => {
         setFlippedCards(prev => ({
             ...prev,
@@ -119,10 +120,9 @@ const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent ,currentCa
 
                 <h2>My Primary MasterCard</h2>
 
-
-
                 <div style={{ width: '100%', position: 'relative' }}>
                     <Swiper
+                        slidesPerView={window.innerWidth <= 768 ? 1.5 : 3}
                         effect='coverflow'
                         coverflowEffect={{
                             rotate: 0,
@@ -133,7 +133,6 @@ const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent ,currentCa
 
                         }}
                         centeredSlides={true}
-                        slidesPerView={ 3}
                         initialSlide={1}
                         spaceBetween={-220}
                         slideToClickedSlide={true}
@@ -231,7 +230,7 @@ const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent ,currentCa
                     </Swiper>
                 </div>
 
-                <span style={{cursor: 'pointer'}} onClick={() => handleCardFlip(cards[current]._id)}  className={styles.tap}>Tap to see Details</span>
+                <span style={{ cursor: 'pointer' }} onClick={() => handleCardFlip(cards[current]._id)} className={styles.tap}>Tap to see Details</span>
 
                 <div className={styles.balance}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="222" height="160" viewBox="0 0 222 160" fill="none">
@@ -269,7 +268,7 @@ const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent ,currentCa
                 <div className={styles.detailsContainer}>
                     <h4 className={styles.title}>Manage My MasterCard</h4>
 
-                    <div style={{ display: "flex", flexWrap: "wrap", width: "100%", gap: "8px" }}>
+                    <div className={styles.column} style={{ display: "flex", flexWrap: "wrap", width: "100%", gap: "8px" }}>
                         <div className={styles.iconBox} style={{ flex: 2, justifyContent: "space-between", padding: "8px 16px" }}>
                             <span>Card Label</span>
                             <div className={styles.cardLabel}>
@@ -295,11 +294,11 @@ const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent ,currentCa
                         </div>
                     </div>
 
-                    <div style={{ display: "flex", alignItems: "flex-start", gap: "12px", width: "100%" }}>
+                    <div className={styles.column} style={{ display: "flex", alignItems: "flex-start", gap: "12px", width: "100%" }}>
                         <div style={{ display: "flex", flexDirection: "column", gap: '12px', justifyContent: "center", flex: 1 }}>
                             <div className={styles.iconBox}>
                                 <img src={plus} alt="" />
-                                <span>Add Funds</span>
+                                <span onClick={() => setShowFundsModal(true)} style={{ cursor: "pointer" }}>Add Funds</span>
                             </div>
                             <div className={styles.iconBox}>
                                 <img src={CreditCardR} alt="" />
@@ -334,7 +333,7 @@ const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent ,currentCa
                 <div className={styles.detailsContainer}>
                     <h4 className={styles.title}>Card Settings</h4>
 
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10px", width: "100%" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: window.innerWidth > 1000 ? "1fr 1fr 1fr" : "1fr", gap: "10px", width: "100%" }}>
                         <div style={{ justifyContent: "space-between" }} className={styles.iconBox}>
                             <span>Online Purchases</span>
 
@@ -352,7 +351,7 @@ const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent ,currentCa
                         </div>
                     </div>
 
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10px", width: "100%" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: window.innerWidth > 1000 ? "1fr 1fr 1fr" : "1fr", gap: "10px", width: "100%" }}>
                         <div className={styles.iconBox}>
                             <img src={CreditCardR} alt="" />
                             <span>Blocked Countries & Regions</span>
@@ -369,7 +368,7 @@ const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent ,currentCa
                     </div>
                 </div>
                 <div style={{ backgroundColor: "white" }} className={styles.detailsContainer}>
-                    <div style={{ display: "flex", justifyContent: "space-between", width: '100%', alignItems: 'center' }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", width: '100%', alignItems: window.innerWidth > 1000 && 'center', flexDirection: window.innerWidth < 1000 && "column", }}>
                         <h4 className={styles.title}>Mobile Payments</h4>
                         <span style={{ fontSize: '14px', color: '#9CA3AF', fontWeight: 600 }}>Manage devices and add your card to mobile wallets."</span>
                     </div>
@@ -377,7 +376,7 @@ const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent ,currentCa
                     <div className={styles.walletOptions}>
                         <h4>Wallet Options:</h4>
 
-                        <div >
+                        <div className={styles.column} style={{ width: window.innerWidth < 1000 && "100%" }} >
                             <div onClick={() => window.open("https://support.apple.com/en-us/108398", "_blank", "noopener,noreferrer")} className={styles.option}>
                                 <img src={Apay} alt="" />
                                 <h3>Add to Apple Pay</h3>
@@ -432,7 +431,7 @@ const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent ,currentCa
                                         <div style={{ alignItems: "flex-end" }} className={styles.row}>
                                             <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "6px" }}>
                                                 <p>Date Added</p>
-                                                <h4>Jan 2025</h4>
+                                                <h4>Jan 2025</p>
                                             </div>
                                             <p>Remove</p>
                                         </div>
@@ -468,6 +467,9 @@ const CardPurchased = ({ cards, setCardPurchased, current ,setCurrent ,currentCa
                     </div> */}
                 </div>
             </div>
+
+
+            <AddFundsModal card={cards[current]} isOpen={showFundsModal} setOpen={setShowFundsModal} />
 
         </div>
     );

@@ -70,7 +70,7 @@ export const MENU = [
                 url: `${process.env.PUBLIC_URL}/wallets`,
             },
             {
-                title: "My MasterCard",
+                title: "My Mastercard",
                 icon: <img src={mastercard} style={{ marginRight: "12px" }} />,
                 activeIcon: <img src={mastercard_a} style={{ marginRight: "12px" }} />,
                 type: "link",

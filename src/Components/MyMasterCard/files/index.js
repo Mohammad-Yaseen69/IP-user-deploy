@@ -32,6 +32,8 @@ import plus from "./plus.svg"
 import Wallet2 from "./wallet-01.svg"
 
 import Copy from "./Copy.svg"
+
+import AddFunds from "./add_funds.svg"
 // export them
 export  {
     Payment,
@@ -62,5 +64,6 @@ export  {
     Speaker,
     plus,
     Wallet2,
-    Copy
+    Copy,
+    AddFunds
 }

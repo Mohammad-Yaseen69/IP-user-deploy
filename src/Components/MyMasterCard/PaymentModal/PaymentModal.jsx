@@ -1,82 +1,21 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { Input, Modal, ModalBody, ModalHeader } from 'reactstrap'
-import styles from "./styles/onboard.module.scss"
-// import "./files/modal.reset.css"
-import { Bank, Bank_h, Down, Help, Mobile, Mobile_h, Payment, Payment_h, Paypal, Paypal_h, Share, Svg, Wallet, Wallet_h, Trans } from "./files"
-import { UserContext } from '../../Context/UserContext'
-import { WalletCard } from '../PaymentsNewer/InternationalFlow/WalletsComponent'
-import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
+import { Modal, ModalBody, ModalHeader } from 'reactstrap'
+import styles from "../styles/onboard.module.scss"
+import { UserContext } from '../../../Context/UserContext'
+import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import axios from 'axios'
-import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
+import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import { toast } from 'react-toastify'
-import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
+import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
 import { useNavigate } from 'react-router'
-import CardNumberInput from '../CreditInput/CardNumberInput'
-import CardCVC from '../CreditInput/CardCvc';
-import { CARD_TYPES } from '../CreditInput/CreditCardTypes';
-import CardExpiry from '../CreditInput/CardExpiry';
-import CardHolderName from '../CreditInput/CardHolderName';
-import { useTranslation } from 'react-i18next'
-import cardStyles from "../PaymentsNewer/InternationalFlow/styles/creditcard.module.css"
-import { Check } from 'react-feather'
-import logo_w from "../../assets/images/logo/logo_white.png"
-import { createShambeToken } from '../../Helper/CreateToken'
-import TrustpaymentPage from '../AddFunds/WalletFund/CreditTransaction'
+import { CARD_TYPES } from '../../CreditInput/CreditCardTypes';
+import { createShambeToken } from '../../../Helper/CreateToken'
+import TrustpaymentPage from '../../AddFunds/WalletFund/CreditTransaction'
+import PaymentSelect from './PaymentSelectStep'
+import PaymentStep from './PaymentStep'
+import ConfirmationStep from './ConfirmationStep'
+import SuccessStep from './SuccessStep'
 
-
-const options = [
-  {
-    type: "card",
-    text: "Card Payments",
-    icon: Payment,
-    hoverIcon: Payment_h
-  },
-  {
-    type: "wallet",
-    text: "Instapay Wallet",
-    icon: Wallet,
-    hoverIcon: Wallet_h
-  },
-  {
-    type: "paypal",
-    text: "Paypal",
-    icon: Paypal,
-    hoverIcon: Paypal_h
-
-  },
-  {
-    type: "mobile",
-    text: "Mobile money (coming soon)",
-    icon: Mobile,
-    hoverIcon: Mobile_h
-  },
-  {
-    type: "bank",
-    text: "Bank transfer (coming soon)",
-    icon: Bank,
-    hoverIcon: Bank_h
-  },
-]
-
-
-const paymentConfirmOptions = [
-  {
-    text: "Need help?",
-    icon: Help
-  },
-  {
-    text: "Share",
-    icon: Share
-  },
-  {
-    text: "Transation Details",
-    icon: Trans
-  },
-  {
-    text: "Download Receipt",
-    icon: Down
-  }
-]
 
 const PLACEHOLDER_CARD_TYPE = {
   type: 'placeholder',
@@ -91,7 +30,6 @@ const PLACEHOLDER_CARD_TYPE = {
 
 const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
   const [step, setStep] = useState(1)
-  const { t } = useTranslation()
   const { userWallets, getUserWallets, userDetails, authHeader, setProfileLockTime } = useContext(UserContext)
   const [walletState, setWalletState] = useState({})
   const [showOtp, setShowOtp] = useState()
@@ -155,6 +93,8 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
         break;
       case 4:
         setSideText("Your Payment is now Completed")
+      default:
+        break;
     }
   }, [step])
 
@@ -451,39 +391,11 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
     }
   }
 
-  const saveCardJSX = () => (
-    <div className={styles.field}>
-
-      <h3 className={styles.label} style={{ fontSize: "14px" }}>Select a saved payment card</h3>
-      <div style={{ maxWidth: '100%', display: 'flex', overflow: "auto", gap: "10px", padding: "10px 0" }}>
-
-        {cards.map(item => (
-          <div key={item?._id} className={cardStyles.card} onClick={() => {
-            Object.keys(cardDetail).forEach(key => cardDetail[key] = "")
-            setSelectedSaveCard(item)
-          }}>
-            <div className={cardStyles.c_top}>
-              <img src={logo_w} alt="" />
-            </div>
-            <div className={cardStyles.c_bot}>
-              <span>XXXX XXXX XXXX {item?.last4}</span>
-              {
-                selectedSaveCard?._id === item?._id
-                &&
-                <Check style={{ color: "white" }} size={20} />
-              }
-            </div>
-          </div>
-        ))}
-
-
-      </div>
-    </div>
-  )
+  
 
   const renderData = () => (
     <div className={styles.paymentContent} style={{ display: 'flex', alignItems: 'center' }}>
-      <div style={{ flex: step === 4 && 0.8 || step === 2 && 1.2, padding: window.innerWidth < 1000 && "1rem 1rem 0 1rem" }} className={styles.left}>
+      <div style={{ flex: (step === 4 && 0.8) || (step === 2 && 1.2), padding: window.innerWidth < 1000 && "1rem 1rem 0 1rem" }} className={styles.left}>
         <div>
           <h1>{sideText}</h1>
           {step === 4 && <p style={{ marginBottom: window.innerWidth < 1000 && "2rem " }}>Thanks for using InstaPay!</p>}
@@ -505,287 +417,49 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
       </div>
 
       <div style={{ padding: window.innerWidth < 1000 && "0rem 1rem 1rem 1rem" }} className={styles.right}>
-        {step == 1 &&
-          <div className={styles.step1}>
-            <div>
-              {options.map(option => (
-                <div
-                  onClick={() => {
-                    setPaymentType(option.type)
-                    if (option.type !== "paypal" && window.innerWidth > 1000) {
-                      setStep(2)
-                    }
-                  }}
-                  key={option.type}
-
-                  className={`${styles.paymentOptions} ${paymentType === option.type && styles.selected}`}>
-                  <div>
-
-                    <span>
-                      <img className={styles.normal} src={option.icon} alt="" />
-                      <img src={option.hoverIcon} alt="" className={styles.hover} />
-                    </span>
-
-                    <h5>{option.text}</h5>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        {step === 1 &&
+          <PaymentSelect paymentType={paymentType} setPaymentType={setPaymentType} setStep={setStep} />
         }
 
         {step === 2 &&
-          <div className={styles.step2}>
-            {paymentType == "wallet"
-              &&
-              <div className={styles.walletsDiv}>
-                {filteredWallets?.map(wallet_l => (
-                  <div style={{ boxShadow: window.innerWidth < 1000 && "none" }} key={wallet_l.name}>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                      <h3 className={styles.walletNameHead}>{wallet_l.name}</h3>
-                      <span className={styles.walletId}>
-                        {wallet_l.wallet_id}
-                      </span>
-                    </div>
-
-                    <WalletCard
-                      wallet={wallet_l}
-                      isActive={true}
-                      cardType={vvcCardType == "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual"}
-                      isInVCard={true}
-                      dataHandler={(_, wallet) => setWalletState(wallet)}
-                      data={{ wallet: walletState }}
-                      setFeeDetail={setFeeDetails}
-                    />
-                  </div>
-                ))}
-              </div>
-            }
-
-            {paymentType == "card" &&
-              <div className={styles.cardDiv}>
-                <div className={styles.texts}>
-                  <p>Complete your payment by providing your payment details</p>
-                </div>
-
-                <div className={styles.cardFormDiv}>
-                  {(cards.length > 0 && window.innerWidth < 1000) &&
-                    saveCardJSX()
-                  }
-                  <div className={styles.field}>
-                    <h3 className={styles.label}>Card Number {!cardDetail.cardNumber && "*"}:</h3>
-                    <CardNumberInput
-                      content={cardDetail.cardNumber}
-                      setContent={(e) => {
-                        setSelectedSaveCard({})
-                        setCardDetails(prev => ({ ...prev, cardNumber: e }))
-                      }}
-                      cardError={cardNumberError}
-                      cardType={cardType}
-                      isinVVC={true}
-                      widthFull={true}
-                    />
-                  </div>
-
-                  <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-                    <div className={styles.field}>
-                      <h3 className={styles.label}>CVC {!cardDetail.cardCVC && "*"}:</h3>
-                      <CardCVC
-                        content={cardDetail.cardCVC}
-                        setContent={(e) => {
-                          setSelectedSaveCard({})
-                          setCardDetails(prev => ({ ...prev, cardCVC: e }))
-                        }}
-                        maxLength={cardType.cvcLength}
-                        isinVVC={true}
-                        widthFull={true}
-                      />
-                    </div>
-
-                    <div className={styles.field}>
-                      <h3 className={styles.label}>Expiry date {!cardDetail.cardExpiry && "*"}:</h3>
-                      <CardExpiry
-                        content={cardDetail.cardExpiry}
-                        setContent={(e) => {
-                          setSelectedSaveCard({})
-                          setCardDetails(prev => ({ ...prev, cardExpiry: e }))
-                        }}
-                        isinVVC={true}
-                        widthFull={true}
-                      />
-                    </div>
-                  </div>
-                  <div className={styles.field}>
-                    <h3 className={styles.label}>Expiry Holder Name {!cardDetail.cardHolderName && "*"}:</h3>
-                    <CardHolderName
-                      content={cardDetail.cardHolderName}
-                      setContent={(e) => {
-                        setSelectedSaveCard({})
-                        setCardDetails(prev => ({ ...prev, cardHolderName: e }))
-                      }}
-                      isinVVC={true}
-                      widthFull={true}
-                    />
-
-                    <div style={{ display: "flex", alignItems: "center", gap: ".4rem", cursor: "pointer", marginTop: ".7rem" }}>
-                      <Input id='save_info' style={{ cursor: "pointer" }} type="checkbox" checked={saveCard} onChange={e => setSaveCard(e.target.checked)} />
-                      <label style={{ marginBottom: 0, color: "#8b8b8b", cursor: "pointer" }} htmlFor='save_info'>{t("save details to use next time.")}</label>
-                    </div>
-                  </div>
-
-                  {(cards.length > 0 && window.innerWidth > 1000) &&
-                    saveCardJSX()
-                  }
-                </div>
-              </div>
-            }
-
-            {window.innerWidth > 1000 &&
-              <div className={styles.btns}>
-                <button
-                  onClick={() => {
-                    setStep(1)
-                    setWalletState({})
-                    setSelectedSaveCard({})
-                  }}
-                >Back</button>
-                <button
-                  style={{ color: "white", backgroundColor: "#5926F0", opacity: disabledBtnS && 0.4 }}
-                  disabled={disabledBtnS}
-                  onClick={() => {
-                    setStep(3)
-                  }}
-                >
-                  Continue
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
-                    <path d="M5.25 11L8.75 7.5L5.25 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-
-                </button>
-              </div>
-            }
-
-          </div>
+          <PaymentStep
+            cardDetail={cardDetail}
+            cardNumberError={cardNumberError}
+            cardType={cardType}
+            cards={cards}
+            disabledBtnS={disabledBtnS}
+            filteredWallets={filteredWallets}
+            paymentType={paymentType}
+            saveCard={saveCard}
+            setCardDetails={setCardDetails}
+            setFeeDetails={setFeeDetails}
+            setSaveCard={setSaveCard}
+            setSelectedSaveCard={setSelectedSaveCard}
+            setStep={setStep}
+            setWalletState={setWalletState}
+            vvcCardType={vvcCardType}
+            walletState={walletState}
+          />
         }
 
-        {step == 3 &&
-          <div className={styles.step3}>
-            <div className={styles.infoDiv}>
-              <div className={styles.heads}>
-                {/* <h4>Review your payment details</h4> */}
-                <p>Please take a few moments to carefully review and verify the information to your payment details.</p>
-              </div>
-
-              <div className={styles.paymentInfo}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
-                  <p>You Have to Pay</p>
-                  <h1>{feeDetails.currency}{feeDetails.fee}</h1>
-                </div>
-
-
-                <img src={Svg} style={{ position: "absolute", right: "10px", top: "0px" }} alt="" />
-              </div>
-
-              <div style={{ padding: window.innerWidth < 1000 && "0px", background: window.innerWidth < 1000 && "white" }} className={styles.transactionInfo}>
-
-                <div>
-                  <div>
-                    <p>You are using</p>
-                    <div>
-                      <span>{walletState?.name} Wallet</span>
-                      <p>{walletState?.wallet_id}</p>
-                    </div>
-
-                    <button onClick={() => setStep(2)}>Change</button>
-                  </div>
-                </div>
-
-                <div>
-                  <h3>Card activation fee</h3>
-                  <h3>{feeDetails.currency}{feeDetails.fee}</h3>
-                </div>
-
-              </div>
-            </div>
-
-            {window.innerWidth > 1000 &&
-              <div className={styles.btns}>
-                <button onClick={() => setStep(2)}>Back</button>
-                <button
-                  style={{ color: "white", backgroundColor: "#5926F0" }}
-                  onClick={sendOtp}
-                >
-                  Proceed to Payment
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
-                    <path d="M5.25 11L8.75 7.5L5.25 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-
-                </button>
-              </div>}
-          </div>
+        {step === 3 &&
+          <ConfirmationStep
+            feeDetails={feeDetails}
+            sendOtp={sendOtp}
+            setStep={setStep}
+            walletState={walletState}
+          />
         }
 
         {step === 4 &&
-          <div className={styles.step4}>
-            <div style={{ gap: "12px" }} className={styles.infoDiv}>
-              <div className={styles.paymentInfo}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
-                  <p>You Have to Pay</p>
-                  <h1>{feeDetails.currency}{feeDetails.fee}</h1>
-                </div>
-
-
-                <img src={Svg} style={{ position: "absolute", right: "10px", top: "0px" }} alt="" />
-              </div>
-
-              <div style={{ padding: window.innerWidth < 1000 && "0px", background: window.innerWidth < 1000 && "white" }} className={styles.transactionInfo}>
-
-                <div>
-                  <div>
-                    <p>You are using</p>
-
-                    {paymentType === "wallet"
-                      &&
-                      <div>
-                        <span>{walletState?.name} Wallet</span>
-                        <p>{walletState?.wallet_id}</p>
-                      </div>
-                    }
-
-                    <button>Change</button>
-                  </div>
-                </div>
-
-                <div>
-                  <h3>Card activation fee</h3>
-                  <h3>{feeDetails.currency}{feeDetails.fee}</h3>
-                </div>
-
-              </div>
-
-              <div style={{ flexDirection: window.innerWidth < 660 && "column", width: window.innerWidth < 660 && "100%" }} className={styles.completeOptions}>
-                {paymentConfirmOptions.map(option => (
-                  <div style={{ width: window.innerWidth < 660 && "100%" }} key={option.text}>
-                    <img src={option.icon} alt="" />
-                    <p>{option.text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {window.innerWidth > 1000 &&
-              <div className={styles.btns}>
-                <button
-                  style={{ color: "white", backgroundColor: "#5926F0" }}
-                  onClick={() => {
-                    setStepParent(4)
-                    setIsOpen(false)
-                  }}
-                >
-                  Close
-                </button>
-              </div>}
-          </div>
+          <SuccessStep
+            feeDetails={feeDetails}
+            setStep={setStep}
+            paymentType={paymentType}
+            setIsOpen={setIsOpen}
+            setStepParent={setStepParent}
+            walletState={walletState}
+          />
         }
       </div>
     </div>

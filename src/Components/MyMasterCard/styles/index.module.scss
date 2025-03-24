@@ -78,7 +78,7 @@
                 background-position: center;
                 transform-style: preserve-3d;
                 transition: transform 0.6s;
-                cursor: pointer;
+                // cursor: pointer;
                 position: relative;
                 perspective: 1000px; // Add this
                 transform-style: preserve-3d;
@@ -1177,9 +1177,92 @@
     }
 }
 
+@media (min-width: 1200px) and (max-width: 1400px) {
+    .cardContainer {
+        padding: 10px !important;
+    }
+}
+
+@media screen and (max-width: 1400px) {
+    .cardContainer {
+        flex-direction: column !important;
+        align-items: center;
+        gap: 2rem;
+
+        .left {
+            width: 100% !important;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+
+            :global(.swiper) {
+                width: 100% !important;
+                max-width: 800px;
+                padding: 20px 0 !important;
+            }
+
+            :global(.swiper-slide) {
+                display: flex;
+                justify-content: center;
+            }
+
+            :global(.swiper-wrapper) {
+                align-items: center;
+            }
+        }
+    }
+}
 
 @media screen and (max-width: 1000px) {
-    .top{
+    .right {
+        width: 100% !important;
+
+        .detailsContainer {
+            gap: 10px !important;
+
+            .column {
+                flex-direction: column !important;
+                gap: 12px !important;
+
+                >div {
+                    width: 100%;
+                }
+            }
+        }
+
+        .walletOptions{
+            flex-direction: column !important;
+            gap: 12px !important;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .cardContainer {
+        .left {
+            :global(.swiper) {
+                .swiper-wrapper {
+                    gap: 0;
+                }
+
+                // .swiper-slide {
+                //     transform: none !important;
+
+                //     &-active {
+                //         transform: none !important;
+                //     }
+                // }
+            }
+        }
+
+        .detailsContainer {
+            grid-template-columns: 1fr !important;
+        }
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .top {
         margin-bottom: 0rem !important;
     }
 }

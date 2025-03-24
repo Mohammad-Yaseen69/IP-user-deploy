@@ -4,7 +4,7 @@ import Stepone from "./Stepone.jsx"
 import Steptwo from "./Steptwo.jsx"
 import { UserContext } from "../../Context/UserContext.jsx"
 import Stepthree from "./Stepthree.jsx"
-import PaymentModal from "./PaymentModal.jsx"
+import PaymentModal from "./PaymentModal/PaymentModal.jsx"
 import Stepfour from "./Stepfour.jsx"
 import { useNavigate } from "react-router"
 

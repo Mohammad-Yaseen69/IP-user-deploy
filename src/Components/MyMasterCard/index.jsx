@@ -48,7 +48,7 @@ const MyMasterCard = () => {
           setCardPurchased(false)
         }
 
-        console.log(dec)
+
       } catch (error) {
         const dec = decryptData(error.response.data.data)
         setCardPurchased(false)
@@ -99,7 +99,8 @@ const MyMasterCard = () => {
                 <CardPurchased
                   currentCardDetails={currentCardDetails}
                   setCurrentCardDetails={setCurrentCardDetails}
-                  setLoading={setLoading} current={current}
+                  setLoading={setLoading}
+                   current={current}
                   setCurrent={setCurrent}
                   cards={cards}
                   setCardPurchased={setCardPurchased}
