@@ -12,7 +12,7 @@ import "./sm.css"
 import { UserContext } from "../../Context/UserContext";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {useLocation} from "react-router-dom"
+import { useLocation } from "react-router-dom"
 
 const SidebarNew = ({ setShowModal, showModal }) => {
     const { t } = useTranslation()
@@ -100,7 +100,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
     const [inheritSize, setInheritSize] = useState(false)
 
     return (
-        <div className={`sidebar-wrapper ${togglSidebar ? "close_icon" : ""} `} id="sidebar-wrapper" ref={sidebarRef} style={{ background: "white", margin: "1rem", borderRadius: "16px", height: "calc(100vh - 2rem)", boxShadow: "15.1463px 4.32752px 242.341px rgba(0, 0, 0, 0.07)", display: (location.pathname === "/create-pin" || location.pathname === "/update-pin" ) && "none" }} onMouseEnter={() => setInheritSize(true)} onMouseLeave={() => setInheritSize(false)}>
+        <div className={`sidebar-wrapper ${togglSidebar ? "close_icon" : ""} `} id="sidebar-wrapper" ref={sidebarRef} style={{ background: "white", margin: "1rem", borderRadius: "16px", height: "calc(100vh - 2rem)", boxShadow: "15.1463px 4.32752px 242.341px rgba(0, 0, 0, 0.07)", display: (location.pathname === "/create-pin" || location.pathname === "/update-pin") && "none" }} onMouseEnter={() => setInheritSize(true)} onMouseLeave={() => setInheritSize(false)}>
             <div>
                 <SidebarIcon /> {
                     (!togglSidebar && userDetails?._id) || inheritSize
@@ -114,7 +114,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                         id="sidebar-menu"
                         style={wrapper.split(" ").includes("horizontal-wrapper") ? { marginLeft: margin + "px", transform: "translateY(-90px)" } : { margin: "0px", transform: "translateY(-90px)" }}>
                         <ul className="sidebar-links" style={{ display: "block" }} id="simple-bar">
-                            <SimpleBar style={{ height: "300px" }}>
+                            <SimpleBar style={{ height: window.innerWidth > 1200 ? "300px" : !togglSidebar ? "300px" : "550px" }}>
                                 <BackBtn />
                                 {
                                     userDetails?._id
