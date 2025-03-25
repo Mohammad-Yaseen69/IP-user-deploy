@@ -31,7 +31,7 @@ const WalletFund = ({ setAction }) => {
     const { t } = useTranslation()
     const [subStep, setSubStep] = useState(1);
     const [wallet, setWallet] = useState(null);
-    const [amount, setAmount] = useState(0);
+    const [amount, setAmount] = useState(0.00);
     const [channel, setChannel] = useState(null);
     const [cardNumber, setCardNumber] = useState('');
     const [cardError, setCardError] = useState('');
@@ -477,7 +477,7 @@ const WalletFund = ({ setAction }) => {
                                                         limits?.min && limits?.max
                                                             ?
                                                             <WalletAmount onBack={() => {
-                                                                setAmount(0)
+                                                                setAmount(0.00)
                                                                 setWallet(null)
                                                             }} setSubStep={setSubStep} amount={amount} setAmount={setAmount} wallet={wallet} limits={limits} setLimits={setLimits} />
                                                             :
@@ -766,7 +766,7 @@ const WalletFund = ({ setAction }) => {
                                                 limits?.min && limits?.max
                                                     ?
                                                     <WalletAmount onBack={() => {
-                                                        setAmount(0)
+                                                        setAmount(0.00)
                                                         setWallet(null)
                                                     }} setSubStep={setSubStep} amount={amount} setAmount={setAmount} wallet={wallet} limits={limits} setLimits={setLimits} />
                                                     :

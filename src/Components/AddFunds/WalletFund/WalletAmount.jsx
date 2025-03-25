@@ -1,34 +1,30 @@
 import { ChevronRight } from "react-feather"
 import { useTranslation } from "react-i18next"
 import { Button, Card, CardBody } from "reactstrap"
-import { NumberInputValidator } from "../../../Helper/NumberInput"
+// import { NumberInputValidator } from "../../../Helper/NumberInput"
 import { IoWarningOutline } from "react-icons/io5"
 import { AiFillInfoCircle } from "react-icons/ai"
 import { useContext, useEffect, useState } from "react"
-import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
-import axios from "axios"
 import { UserContext } from "../../../Context/UserContext"
-import InstaPayLoader from "../../Loader"
 import { useNavigate } from "react-router"
 import { formatCurrency } from "../../../Helper/AmountFormat"
 
 
 const isBig = window.innerWidth > 1000
-let timeout;
 
 const WalletAmount = ({ setSubStep, amount, setAmount, wallet, limits, setLimits, onBack = () => { } }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
 
     useEffect(() => {
-        if (amount === 0) {
+        if (amount === 0 || amount === 0.00 ) {
+            console.log("adfadf")
             setAmount((limits.min)?.toFixed(2))
         }
-    }, [limits, amount])
 
-    const [loading, setLoading] = useState(false)
-    const { authHeader, userDetails } = useContext(UserContext)
-    const [fee, setFee] = useState(0)
+    }, [limits, amount])
+    const {  userDetails } = useContext(UserContext)
+    // const [fee, setFee] = useState(0)
 
     // useEffect(() => {
     //     // setLoading(true)
@@ -97,6 +93,7 @@ const WalletAmount = ({ setSubStep, amount, setAmount, wallet, limits, setLimits
     // }, [amount])
 
     const [formattedAmount, setFormattedAmount] = useState(amount ?? 0.00)
+
     const handleKeyUp = (e) => {
         formatCurrency(e.target.value, false, setFormattedAmount);
     };
@@ -105,9 +102,15 @@ const WalletAmount = ({ setSubStep, amount, setAmount, wallet, limits, setLimits
         formatCurrency(e.target.value, true, setFormattedAmount);
     };
 
-    useEffect(() => {
+
+
+
+    useEffect(() => { 
+        console.log(formattedAmount)
         setAmount(Math.ceil(String(formattedAmount ?? "")?.replaceAll(",", "")))
     }, [formattedAmount])
+
+
 
     return (
         <Card style={{
@@ -165,7 +168,7 @@ const WalletAmount = ({ setSubStep, amount, setAmount, wallet, limits, setLimits
                     /> */}
                     <input
                         type="text"
-                        value={formattedAmount}
+                        value={formattedAmount === 0 ? 0.00 : formattedAmount}
                         maxLength={12}
                         onChange={(e) => setFormattedAmount(e.target.value)}
                         onKeyUp={handleKeyUp}
@@ -184,7 +187,7 @@ const WalletAmount = ({ setSubStep, amount, setAmount, wallet, limits, setLimits
                     />
                 </div>
                 {
-                    !amount || amount < limits.min || amount > limits.max
+                    ( formattedAmount.toString() !== "0") && (!amount || amount < limits.min || amount > limits.max)
                         ?
                         <div style={{
                             height: "100px",
@@ -315,7 +318,12 @@ const WalletAmount = ({ setSubStep, amount, setAmount, wallet, limits, setLimits
                             onClick={() => {
                                 setSubStep(prev => prev + 1)
                             }}
-                            disabled={!amount || amount < limits.min || amount > limits.max}
+                            disabled={
+                                Number(formattedAmount?.toString()?.replaceAll(",", "")) === 0 || 
+                                !amount || 
+                                amount < limits.min || 
+                                amount > limits.max
+                            }
                         >
                             {t("Next")} <ChevronRight size={20} />
                         </Button>

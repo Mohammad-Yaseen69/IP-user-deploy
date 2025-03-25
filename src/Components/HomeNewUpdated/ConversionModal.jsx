@@ -192,6 +192,10 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
                 .catch(err => {
                     const decrypted = decryptData(err.response.data.data)
                     console.log(decrypted)
+                    if(decrypted.message.toLowerCase() === "feature not available!"){
+                        toast.error("Currency conversion not available in your country at the moment,  please try again later")
+                        return
+                    }
                     const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
                     if (error) {
                         toast.error(error)
