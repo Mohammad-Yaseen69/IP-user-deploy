@@ -28,7 +28,7 @@ const PLACEHOLDER_CARD_TYPE = {
 
 
 
-const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
+const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay }) => {
   const [step, setStep] = useState(1)
   const { userWallets, getUserWallets, userDetails, authHeader, setProfileLockTime } = useContext(UserContext)
   const [walletState, setWalletState] = useState({})
@@ -93,8 +93,8 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
         break;
       case 4:
         setSideText("Your Payment is now Completed")
-      default:
         break;
+      default:
     }
   }, [step])
 
@@ -160,6 +160,12 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
         type: codeType
       }
 
+      if (applePay === true) {
+        cardData.data.cardType = "vcc_premium_plus_virtual"
+        cardData.data.apple_pay = true
+        cardData.data.google_pay = false
+      }
+
       if (paymentType == "card") {
         if (selectedSaveCard?._id) {
           cardData.data.pan = selectedSaveCard._id
@@ -184,6 +190,12 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
 
       if (paymentType == "paypal") {
         data.data.token = feeDetails?.token
+      }
+
+      if (applePay === true) {
+        data.data.cardType = "vcc_premium_plus_virtual"
+        data.data.apple_pay = true
+        data.data.google_pay = false
       }
 
       const encrypted = encryptData(paymentType === "card" ? cardData : data)
@@ -342,6 +354,14 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
       }
     }
 
+    if (applePay === true) {
+      data.panData.cardType = "vcc_premium_plus_virtual"
+      data.panData.apple_pay = true
+      data.panData.google_pay = false
+    }
+
+
+
 
     if (selectedSaveCard?._id) {
       data.panData.pan = selectedSaveCard._id
@@ -391,7 +411,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent }) => {
     }
   }
 
-  
+
 
   const renderData = () => (
     <div className={styles.paymentContent} style={{ display: 'flex', alignItems: 'center' }}>

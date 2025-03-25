@@ -1,8 +1,9 @@
 import styles from "./styles/onboard.module.scss"
 import CardIcon from "./files/card.svg"
-import { useState } from "react"
 import { standardFeatures, premiumFeatures } from "./files/data.js"
 import IpLogo from "./files/ip.svg"
+import { Gb, Euro, USD, Apay } from "./files"
+import { useState } from "react"
 
 const cardTypes = [
     {
@@ -15,8 +16,18 @@ const cardTypes = [
     },
 ]
 
+const Toggle = ({ checked, onChange, isCheckbox = false }) => (
+    <label style={{borderRadius: "999px"}} className={isCheckbox ? styles.checkbox : styles.toggle}>
+        <input
+            type={isCheckbox ? "checkbox" : "checkbox"}
+            checked={checked}
+            onChange={onChange}
+        />
+        <div className={isCheckbox ? styles.checkmark : styles.slider}></div>
+    </label>
+);
 
-const Stepone = ({ cardType, setCardType, setStep, userDetails }) => {
+const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApplePay }) => {
     return (
         <div style={{ display: "flex", gap: "8px", marginBottom: "7px", flexDirection: "column", maxWidth: "100%" }}>
             <div className={styles.top}>
@@ -51,14 +62,14 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails }) => {
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", width: "55%" }}>
 
                         {cardTypes.map((card, index) => (
-                            <span onClick={() => setCardType(card.type)} key={index} style={{ borderColor: cardType == card.type && "#EC9100", flex: "1 0 0", justifyContent: "space-between" }}>
+                            <span onClick={() => setCardType(card.type)} key={index} style={{ borderColor: cardType === card.type && "#EC9100", flex: "1 0 0", justifyContent: "space-between", padding: "18px" }}>
                                 <div style={{ display: "flex", alignItems: "center", gap: '10px' }}>
 
                                     <img src={CardIcon} alt="" />
-                                    <p style={{ color: cardType == card.type && "#EC9100" }}>{card.text}</p>
+                                    <p style={{ color: cardType === card.type && "#EC9100" }}>{card.text}</p>
                                 </div>
 
-                                {card.type == cardType && <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
+                                {card.type === cardType && <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
                                     <path d="M11.6673 4.00781L5.25065 10.4245L2.33398 7.50781" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>}
 
@@ -67,21 +78,59 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails }) => {
 
                     </div>
 
-                    <div className={styles.seprationLine}></div>
+                    {cardType === 'premium' && (<>
 
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <div className={styles.seprationLine} style={{ background: "var(--COLORS-Neutral-300, #D2D2D2)", height: ".5px", width: "100%", display: "block" }}></div>
+
+                        <div className={styles.applePay} style={{ display: "flex", alignItems: "center", gap: "8px", width: "55%" }}>
+                            <span style={{ width: "100%", padding: "15px" }}>
+                                <div>
+                                    <p>Enable</p>
+                                    <img src={Apay} alt="" />
+                                    <p>Support</p>
+                                    <div>+$2.00</div>
+                                </div>
+
+
+                                <Toggle checked={applePay} onChange={() => setApplePay(prev => !prev)} isCheckbox={false} />
+                            </span>
+                        </div>
+
+                    </>)}
+
+
+
+                    <div className={styles.seprationLine} style={{ background: "var(--COLORS-Neutral-300, #D2D2D2)", height: ".5px", width: "100%", display: "block" }}></div>
+
+                    <div className={styles.currencySelection} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                         <span style={{ borderColor: "#EC9100", padding: "8px 12px" }}>
-                            <p style={{ color: "#EC9100" }}>USD</p>
+                            <div>
+                                <img src={USD} alt="" />
+                                <p style={{ color: "#282B35" }}>US Dollars </p>
+                                <p>USD</p>
+                            </div>
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
                                 <path d="M11.6673 4.00781L5.25065 10.4245L2.33398 7.50781" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                         </span>
                         <span style={{ padding: "8px 12px" }}>
-                            <p style={{ color: "#A4A4A4" }}>GBP  (Coming Soon)</p>
+                            <div>
+                                <img src={Euro} alt="" />
+                                <p style={{ color: "#282B35" }}>Euro </p>
+                                <p>EUR</p>
+                            </div>
+
+                            <p>Coming Soon</p>
 
                         </span>
                         <span>
-                            <p style={{ color: "#A4A4A4" }}>EUR  (Coming Soon)</p>
+                            <div>
+                                <img src={Gb} alt="" />
+                                <p style={{ color: "#282B35" }}>British pound </p>
+                                <p>Gb</p>
+                            </div>
+
+                            <p>Coming Soon</p>
                         </span>
                     </div>
                 </div>
@@ -92,7 +141,7 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails }) => {
                     <div className={styles.top}>
                         <img src={CardIcon} alt="" />
                         <div>
-                            <h4>{cardType == "standard" ? "Standard" : "Premium"} Card</h4>
+                            <h4>{cardType === "standard" ? "Standard" : "Premium"} Card</h4>
                             <span color="#5926F0">FEATURES</span>
                         </div>
                     </div>

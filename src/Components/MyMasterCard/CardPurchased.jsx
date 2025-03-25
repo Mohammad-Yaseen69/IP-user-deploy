@@ -4,7 +4,7 @@ import Giftpng from "./files/gift-png.png"
 import IpLogo from "./files/ip.svg"
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from 'swiper'
-import { Lock, Freeze, plus, CreditCardR, Wallet2, FileDown, CreditCardP, Notification, Speaker, Apay, Gpay, Samsung, Apple, Copy } from "./files"
+import { Lock, Freeze, plus, CreditCardR, Wallet2, FileDown, CreditCardP, Notification, Speaker, Apay, Gpay, Samsung, Copy } from "./files"
 import axios from 'axios';
 import { UserContext } from '../../Context/UserContext';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 import AddFundsModal from "./AddFundsModal"
 
 
-const Toggle = ({ checked, onChange, isCheckbox = false }) => (
+export const Toggle = ({ checked, onChange, isCheckbox = false }) => (
     <label className={isCheckbox ? styles.checkbox : styles.toggle}>
         <input
             type={isCheckbox ? "checkbox" : "checkbox"}
@@ -32,9 +32,11 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
         bAndG: true,
         contactlessPay: true
     });
-    const ref = useRef();
     const swiperRef = useRef()
-    const [showFundsModal, setShowFundsModal] = useState(false)
+    const [showModals, setShowModals] = useState({
+        addFunds: false
+    })
+
     const { authHeader, userDetails } = useContext(UserContext)
     const [cardLoading, setCardLoading] = useState(true)
     const [flippedCards, setFlippedCards] = useState({});
@@ -95,11 +97,11 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
         }));
     };
 
-    const scrollToNext = () => {
-        if (ref.current) {
-            ref.current.scrollBy({ left: 200, behavior: 'smooth' });
-        }
-    };
+    // const scrollToNext = () => {
+    //     if (ref.current) {
+    //         ref.current.scrollBy({ left: 200, behavior: 'smooth' });
+    //     }
+    // };
 
     return (
         <div className={styles.cardContainer}>
@@ -110,7 +112,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                         <span>{cards.length}</span>
                     </div>
 
-                    <button style={{ opacity: cards.length === 3 && 0.5 }} disabled={cards.length == 3} onClick={() => setCardPurchased(false)}>
+                    <button style={{ opacity: cards.length === 3 && 0.5 }} disabled={cards.length === 3} onClick={() => setCardPurchased(false)}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
                             <path d="M8.67521 4.24182V13.5752M4.00854 8.90849H13.3419" stroke="white" stroke-width="1.56777" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
@@ -158,7 +160,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                             <SwiperSlide key={card._id}>
                                 <div
 
-                                    className={`${styles.card} ${card.type == "standard" ? styles.standard : styles.premium} ${flippedCards[card._id] ? styles.flipped : ''}`}
+                                    className={`${styles.card} ${card.type === "standard" ? styles.standard : styles.premium} ${flippedCards[card._id] ? styles.flipped : ''}`}
                                     onClick={() => handleCardFlip(card._id)}
                                 >
                                     <div className={styles.front}>
@@ -296,9 +298,9 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                     <div className={styles.column} style={{ display: "flex", alignItems: "flex-start", gap: "12px", width: "100%" }}>
                         <div style={{ display: "flex", flexDirection: "column", gap: '12px', justifyContent: "center", flex: 1 }}>
-                            <div className={styles.iconBox}>
+                            <div onClick={() => setShowModals(prev => ({ ...prev, addFunds: true }))} className={styles.iconBox}>
                                 <img src={plus} alt="" />
-                                <span onClick={() => setShowFundsModal(true)} style={{ cursor: "pointer" }}>Add Funds</span>
+                                <span style={{ cursor: "pointer" }}>Add Funds</span>
                             </div>
                             <div className={styles.iconBox}>
                                 <img src={CreditCardR} alt="" />
@@ -469,7 +471,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
             </div>
 
 
-            <AddFundsModal card={cards[current]} isOpen={showFundsModal} setOpen={setShowFundsModal} />
+            <AddFundsModal card={cards[current]} isOpen={showModals.addFunds} setOpen={setShowModals} />
 
         </div>
     );

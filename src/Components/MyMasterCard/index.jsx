@@ -10,14 +10,13 @@ import { UserContext } from '../../Context/UserContext';
 import InstaPayLoader from '../Loader';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
-import QrGenerate from '../Settings/QrGenerate';
 
 
 
 
 const MyMasterCard = () => {
   const [cardPurchased, setCardPurchased] = useState(false)
-  const { setTogglSidebar, sideBarToogle, togglSidebar } = useContext(CustomizerContext)
+  const { setTogglSidebar } = useContext(CustomizerContext)
   const [currentCardDetails, setCurrentCardDetails] = useState({})
   const { userDetails, authHeader } = useContext(UserContext)
   const [cards, setCards] = useState([])

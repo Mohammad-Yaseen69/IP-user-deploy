@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
 .container {
     display: flex;
     flex-direction: column;
@@ -32,19 +34,17 @@
 
     .cardSelection {
         display: flex;
-        padding: var(--SPACING-spacing-4, 32px) var(--SPACING-spacing-3, 24px);
         align-items: flex-start;
         flex-direction: column;
         gap: var(--SPACING-spacing-3, 24px);
         align-self: stretch;
-        border: 1px solid var(--COLORS-Neutral-500, #A4A4A4);
 
         .methodsSelect {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: flex-start;
-            gap: 10px;
+            gap: 18px;
             width: 100%;
             align-self: stretch;
 
@@ -54,15 +54,88 @@
                 align-items: center;
                 gap: 10px;
                 border-radius: var(--RADIUS-radius-2, 8px);
-                border: 1px solid var(--COLORS-Neutral-400, #BBB);
-                background: #FFF;
+                border: 0px solid var(--COLORS-Neutral-400, #BBB);
+                background: #F9F9F9;
                 cursor: pointer;
+                justify-content: space-between;
             }
 
             span p {
                 margin-bottom: 0;
                 font-size: 12px;
                 font-weight: 600;
+            }
+        }
+
+        .applePay {
+            span{
+                >div {
+                    display: flex;
+                    align-items: center;
+                    gap: 7px;
+    
+    
+                    p {
+                        color: var(--COLORS-Neutral-1000, #333);
+                        font-size: 14px;
+                        font-style: normal;
+                        font-weight: 600;
+                    }
+    
+                    div {
+                        display: flex;
+                        padding: 4px var(--Gaps-Gap-Small, 8px);
+                        align-items: flex-start;
+                        gap: 8px;
+                        border-radius: var(--Corner-Radius-Small-Roundness, 8px);
+                        background: var(--Alpha-alpha-grey, rgba(152, 155, 167, 0.10));
+                        color: var(--Text-text-primary, #282B35);
+                        font-family: "Inter", serif;
+                        font-size: 14px;
+                        font-weight: 600;
+                    }
+                }
+            }
+        }
+
+        .currencySelection {
+            width: 90%;
+
+            span {
+                display: flex;
+                height: 55px;
+                justify-content: space-between !important;
+                flex-shrink: 0;
+                padding: 16px var(--Gaps-Gap-Large, 16px);
+                align-items: center;
+                gap: var(--Gaps-Gap-Medium, 12px);
+                flex: 1 0 0;
+
+                >div {
+                    display: flex;
+                    align-items: end;
+                    gap: 7px;
+
+                    img {
+                        width: 20px;
+                    }
+
+
+                    p {
+                        color: var(--Text-text-secondary, #61667A);
+                        font-size: 14px;
+                        font-weight: 600;
+                        white-space: nowrap;
+                    }
+                }
+
+
+                >p {
+                    color: var(--Text-text-placeholder, #8E91A0);
+                    font-size: 12px;
+                    font-weight: 600;
+                    white-space: nowrap;
+                }
             }
         }
     }
@@ -339,6 +412,54 @@
     }
 }
 
+.toggle {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 20px;
+    border-radius: 999px   !important;
+    flex-shrink: 0;
+    margin-bottom: 0 !important;  
+
+    input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: grey !important;
+        transition: .4s;
+        border-radius: 34px;
+
+        &:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+    }
+
+    input:checked+.slider {
+        background-color: #00875A !important;
+    }
+
+    input:checked+.slider:before {
+        transform: translateX(16px);
+    }
+}
+
 .bottom {
     display: flex;
     justify-content: space-between;
@@ -436,7 +557,7 @@
         overflow: auto;
         flex: 2;
 
-        
+
 
         >.step1 {
             padding: 18px;
@@ -921,9 +1042,10 @@
 }
 
 @media screen and (max-width: 1000px) {
-    .mobileView{
+    .mobileView {
         display: block;
     }
+
     .container {
         padding: 0;
         min-height: auto;

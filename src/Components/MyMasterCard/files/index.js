@@ -34,7 +34,10 @@ import Wallet2 from "./wallet-01.svg"
 import Copy from "./Copy.svg"
 
 import AddFunds from "./add_funds.svg"
-// export them
+import Gb from "./GB.svg"
+import USD from "./USD.svg"
+import Euro from "./EURO.svg"
+
 export  {
     Payment,
     Paypal,
@@ -65,5 +68,8 @@ export  {
     plus,
     Wallet2,
     Copy,
-    AddFunds
+    AddFunds,
+    USD,
+    Euro,
+    Gb
 }

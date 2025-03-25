@@ -1,5 +1,5 @@
 import styles from "./styles/onboard.module.scss"
-import { useContext, useState, useRef } from "react"
+import { useContext, useState, useRef, useEffect } from "react"
 import Stepone from "./Stepone.jsx"
 import Steptwo from "./Steptwo.jsx"
 import { UserContext } from "../../Context/UserContext.jsx"
@@ -12,12 +12,19 @@ import { useNavigate } from "react-router"
 
 const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
     const [cardType, setCardType] = useState("premium")
+    const [applePay, setApplePay] = useState(false)
     const [step, setStep] = useState(1)
     const { userDetails } = useContext(UserContext)
     const [showPaymentModal, setShowPaymentModal] = useState(false)
     const navigate = useNavigate()
     const paymentModalRef = useRef(null)
 
+
+    useEffect(() => {
+        if(cardType === "standard"){
+            setApplePay(false)
+        } 
+    },[cardType])
     return (
         <div className={styles.container}>
             {step === 1 &&
@@ -25,6 +32,8 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
                     <Stepone
                         cardType={cardType}
                         setCardType={setCardType}
+                        applePay={applePay}
+                        setApplePay={setApplePay}
                         setStep={setStep}
                         userDetails={userDetails}
                     />
@@ -58,6 +67,7 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
                     isOpen={showPaymentModal}
                     setIsOpen={setShowPaymentModal}
                     setStepParent={setStep}
+                    applePay={applePay}
                     ref={paymentModalRef}
                 />
             }
