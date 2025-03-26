@@ -107,11 +107,11 @@ const Amount = ({ data, dataHandler }) => {
                                     t("⚠️ Invalid Amount: Your current  identity verification level limits the  maximum amount you can add. Please upgrade your identity verification to benefit from higher limits")
                                         .replace("⚠️ ", "")
                                     :
-                                    +String(data.amount ?? "")?.replaceAll(",", "") <= +formatCurrencyLocal(data.limits.min)
+                                    +String(data.amount ?? "")?.replaceAll(",", "") < +formatCurrencyLocal(data.limits.min)
                                         ?
                                         "Minimum transactional amount is " + data?.limits?.min
                                         :
-                                        +String(data.amount ?? "")?.replaceAll(",", "") >= +formatCurrencyLocal(data.limits.max)
+                                        +String(data.amount ?? "")?.replaceAll(",", "") > +formatCurrencyLocal(data.limits.max)
                                             ?
                                             "Maximum transactional amount is " + data?.limits?.max
                                             :
