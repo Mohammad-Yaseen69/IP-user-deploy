@@ -13,7 +13,6 @@ import Loader from "./Loader";
 import SidebarNew from "./SidebarNew/SidebarNew";
 import ProfileCompletionModal from "../Components/ProfileCompletionModal";
 import { UserContext } from "../Context/UserContext";
-import SocketsService from "../Services/Socket";
 import styles from "./Layout.module.css"
 import BottomNav from "./BottomNav";
 import TopBar from "./TopBar";

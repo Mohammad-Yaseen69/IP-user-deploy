@@ -20,7 +20,7 @@ const Beneficiaries = lazy(() => import('../Components/Beneficiaries'));
 const BroadcastSignup = lazy(() => import('../Components/BroadcastSignup'));
 const BroadcastVerify = lazy(() => import('../Components/BroadcastVerify'));
 const ChipsInNew = lazy(() => import('../Components/ChipsInNew'));
-const CreditSuccess = lazy(() => import('../Components/CreditSuccess'));
+// const CreditSuccess = lazy(() => import('../Components/CreditSuccess'));
 const EditBeneficiary = lazy(() => import('../Components/EditBeneficiary'));
 const HomeNewUpdated = lazy(() => import('../Components/HomeNewUpdated'));
 const OtherTransactions = lazy(() => import('../Components/OtherTransactions'));

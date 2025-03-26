@@ -1,35 +1,22 @@
 import QRCodeStyling from 'qr-code-styling';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import axios from 'axios';
-import logo from "../../assets/images/logo/logo.png";
+import logo from "../../assets/images/logo/logo.png"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 
-// Helper function to preload image
-const preloadImage = (src) => {
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => resolve(img);
-        img.onerror = reject;
-        img.crossOrigin = "anonymous";
-        img.src = src;
-    });
-};
-
-// Create QR code configuration
-const createQRConfig = (platform) => ({
-    width: platform === "telegram" ? 500 : 300,
-    height: platform === "telegram" ? 500 : 300,
+const qrCode = new QRCodeStyling({
+    width: 300,
+    height: 300,
     qrOptions: {
-        typeNumber: 0,
+        typeNumber: "0",
         mode: "Byte",
-        errorCorrectionLevel: "H",
+        errorCorrectionLevel: "Q",
     },
     image: logo,
     imageOptions: {
         hideBackgroundDots: true,
-        imageSize: 0.15,
-        margin: 5,
-        crossOrigin: "anonymous",
+        imageSize: 0.2,
+        margin: 10,
     },
     dotsOptions: {
         type: "extra-rounded",
@@ -43,128 +30,84 @@ const createQRConfig = (platform) => ({
             ],
         },
     },
-    cornersSquareOptions: {
-        type: "extra-rounded",
-        color: "#6a1a4c",
-    },
-    cornersDotOptions: {
-        type: "dot",
-        color: "#6a1a4c",
-    },
-    backgroundOptions: { 
-        color: "#ffffff",
-        clearBackground: true,
-    },
+    backgroundOptions: { color: "#ffffff" },
 });
 
 const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, platform }) => {
     const ref = useRef(null);
-    const [generated, setGenerated] = useState(0);
-    const [qrInstance, setQrInstance] = useState(null);
+    const [generated, setGenerated] = useState(0)
 
-    // Initialize QR code instance
     useEffect(() => {
-        const initQR = async () => {
-            try {
-                await preloadImage(logo);
-                const config = createQRConfig(platform);
-                const qrCode = new QRCodeStyling(config);
-                setQrInstance(qrCode);
-                
-                if (ref.current) {
-                    qrCode.append(ref.current);
-                }
-            } catch (error) {
-                console.error('Error initializing QR:', error);
-                setMessage("Error generating QR code");
-            }
-        };
+        qrCode.append(ref.current);
+    }, []);
 
-        initQR();
-        
-        return () => {
-            if (ref.current) {
-                ref.current.innerHTML = '';
-            }
-        };
-    }, [platform]);
+    const uploadQR = async (item) => {
+        setMessage("Generating Qr Code sticker.")
+        const url = `https://my.insta-pay.ch/q/${"NWVHPI47"}`
+        qrCode.update({ data: url });
+        const fileName = `qrcode.png`;
+        const mimeType = `image/png`;
 
-    const uploadQR = async (walletId) => {
-        if (!qrInstance) return;
+        console.log(qrCode)
 
-        try {
-            setMessage("Generating QR Code sticker.");
-            const url = `https://my.insta-pay.ch/q/${walletId}`;
-            
-            await qrInstance.update({ 
-                data: url,
-                width: platform === "telegram" ? 500 : 300,
-                height: platform === "telegram" ? 500 : 300,
-            });
+        // Get raw QR code data as a Blob
+        const blob = await qrCode.getRawData("png");
 
-            await new Promise(resolve => setTimeout(resolve, 100));
-
-            const blob = await qrInstance.getRawData("png");
-            const file = new File([blob], "qrcode.png", { type: "image/png" });
-            
-            const formData = new FormData();
-            formData.append('qrCode', file);
-            formData.append("wallet_id", walletId);
-            formData.append("chatbot", chatbot);
-            
-            if (platform === "telegram") {
-                formData.append("platform", platform);
-            }
-
-            const res = await axios.post(
-                `${process.env.REACT_APP_IP_DEV_API}/api/wallet/upload-qrcode`,
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                }
-            );
-
-            const dec = decryptData(res.data.data);
-            console.log("wallet_res = ", dec);
-            console.log("url = ", url);
-            setMessage("QR Code sticker generated successfully!");
-        } catch (error) {
-            console.error('Upload error:', error);
-            const dec = error.response?.data?.data ? decryptData(error.response.data.data) : null;
-            setMessage(dec?.message ?? "Something went wrong while generating QR Code sticker.");
-        } finally {
-            setGenerated(prev => prev + 1);
+        // Convert Blob to File
+        const file = new File([blob], fileName, { type: mimeType });
+        const formData = new FormData();
+        formData.append('qrCode', file);
+        formData.append("wallet_id", "NWVHPI47")
+        formData.append("chatbot", chatbot)
+        if(platform === "telegram"){
+            formData.appent("platform", platform)
         }
-    };
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/upload-qrcode`, formData)
+            const dec = decryptData(res.data.data)
+            console.log("wallet_res = ", dec)
+            console.log("url = ", url)
+            console.log("set url = ", qrCode._options.data)
+            setMessage("QR Code sticker generated successfully!")
+        } catch (error) {
+            const dec = decryptData(error.response.data.data)
+            setMessage(dec?.message ?? "Something went wrong while generating QR Code sticker.")
+            console.log(dec)
+        } finally {
+            setGenerated(prev => prev + 1)
+        }
+    }
 
     useLayoutEffect(() => {
         if (generated < wallets.length) {
             const generateQR = async () => {
                 for (const item of wallets) {
                     if (item?.wallet_type === "insta") {
-                        await uploadQR(item.wallet_id);
+                        await uploadQR(item);
                     }
                 }
-            };
+            }
+            const timeout = setTimeout(() => {
+                generateQR()
+            }, 3000)
 
-            const timeout = setTimeout(generateQR, 3000);
-            return () => clearTimeout(timeout);
+            return () => {
+                clearTimeout(timeout)
+            }
         }
-    }, [wallets, generated]);
+    }, [wallets, generated])
+
+    
+    useEffect(() => {
+        uploadQR()
+    },[])
 
     return (
-        <div style={{ 
-            position: "absolute", 
-            top: "-1000vh", 
-            left: "-100vw",
-            width: platform === "telegram" ? "500px" : "300px",
-            height: platform === "telegram" ? "500px" : "300px",
-        }}>
+        <div style={{ position: "absolute", top: "-1000vh", left: "-100vw" }}>
             <div ref={ref} />
-        </div>
-    );
-};
 
-export default QrGenerate;
+        </div>
+    )
+}
+
+export default QrGenerate

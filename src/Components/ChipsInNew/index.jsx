@@ -1,11 +1,9 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.scss"
 import TopRight from "../topRight";
-import GeneralContainer from "./GeneralContainer";
 import SpecificQrs from "./SpecificQrs";
 import axios from "axios";
 import { UserContext } from "../../Context/UserContext";
-import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { useContext, useEffect, useState } from "react"
 import { Info } from "react-feather";
@@ -18,7 +16,7 @@ import LeftContainer from "./LeftContainer";
 import QrGenerate from "../Settings/QrGenerate";
 
 const ChipsInNew = () => {
-    const { userWallets, authHeader, verifyToken, userDetails, setWalletRefresh, getUserWallets } = useContext(UserContext)
+    const { userWallets, authHeader, userDetails, setWalletRefresh, getUserWallets } = useContext(UserContext)
     const [currentWallet, setCurrentWallet] = useState({})
     const [currency, setCurrency] = useState("");
     const [defaultWal, setDefaultWal] = useState(null)
@@ -57,14 +55,8 @@ const ChipsInNew = () => {
                     }, {
                         headers: authHeader
                     })
-                        .then(res => {
-                            const decrypted = decryptData(res.data.data)
-                            // console.log(decrypted)
+                        .then(res => {                    
                             setWalletRefresh(prev => prev + 1)
-                        })
-                        .catch(err => {
-                            const decrypted = decryptData(err.response.data.data)
-                            // console.log(decrypted)
                         })
                 }
             })

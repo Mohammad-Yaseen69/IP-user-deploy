@@ -5,7 +5,7 @@ const SelectedPayoutChannel = ({ payoutChannel, setSubStep, step = 2 }) => {
     return (
         <div style={{ background: "rgba(89, 38, 240, 0.08)", borderRadius: "16px" }} className="i_t_selected">
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem" }}>{t("Payout Channel")}</span>
+                <span style={{ color: "black", fontSize: ".7rem" }}>{t("Payout Channel")}</span>
                 <span style={{
                     background: "white",
                     boxShadow: "0px 3.3496174812316895px 11.723660469055176px -3.3496174812316895px rgba(89, 38, 240, 0.25)",

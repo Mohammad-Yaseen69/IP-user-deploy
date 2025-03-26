@@ -138,7 +138,7 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
                                     setTitleEdit(true)
                                 }
                             }}>
-                                <span>{!titleEdit ? t("Edit")?.toLowerCase() : t("Save"?.toLowerCase())}</span>
+                                <span>{!titleEdit ? t("Edit") : t("Save")}</span>
                             </button>
                         </div>
                         <Input value={title} onChange={(e) => setTitle(e.target.value)} type="text" placeholder={"QR Code Title"} disabled={!titleEdit} />

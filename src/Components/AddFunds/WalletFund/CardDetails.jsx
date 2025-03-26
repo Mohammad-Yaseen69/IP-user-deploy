@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import logo_w from "../../../assets/images/logo/logo_white.png"
 import CreditCardInput from '../../CreditInput';
 import styles from "../../PaymentsNewer/InternationalFlow/styles/creditcard.module.css"
+import { encryptData } from '../../../Helper/EssentilaMethods/Encryption';
 
 const imgs = [green, purple, red]
 const isBig = window.innerWidth > 1000
@@ -94,6 +95,24 @@ const CardDetails = ({ setSubStep, cardNumber, setCardNumber, expiry, setExpiry,
       setCurrentCard(null)
     }
   }, [cvc, cardHolderName, expiry, cardNumber])
+
+  const expiryCheck = async (item) => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/check-card-expiry`, { data: encryptData({ card_id: item._id }) }, {
+        headers: authHeader
+      })
+
+      const dec = decryptData(response.data.data)
+      if (dec.isExpired) {
+        setCurrentCard(null)
+        setSavedCards(prev => prev.filter(card => card._id !== item._id))
+        toast.error(dec.message)
+      }
+    } catch (error) {
+      const dec = decryptData(error.response.data.data)
+      console.log(dec)
+    }
+  }
   return (
     <Card style={{
       marginBottom: 0,
@@ -134,6 +153,8 @@ const CardDetails = ({ setSubStep, cardNumber, setCardNumber, expiry, setExpiry,
             ?
             <>
               <h5>{t("Select Payment Card")}</h5>
+              asdfadfasdfa
+              asdfadfasdf
               <div className={styles.cards}>
                 {
                   savedCards.map(item => (
@@ -143,6 +164,7 @@ const CardDetails = ({ setSubStep, cardNumber, setCardNumber, expiry, setExpiry,
                       setExpiry("")
                       setCardNumber("")
                       setCardError("")
+                      expiryCheck(item)
                       setCurrentCard(prev => prev?._id === item?._id ? null : item)
                     }}>
                       <div className={styles.c_top}>

@@ -9,6 +9,8 @@ import { Check } from 'react-feather'
 import CreditCardInput from '../../CreditInput'
 import TrustpaymentPage from '../../AddFunds/WalletFund/CreditTransaction'
 import { Input } from 'reactstrap'
+import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
+import { toast } from 'react-toastify'
 // import green from "../../AddFunds/files/gy_card.png"
 // import purple from "../../AddFunds/files/pb_card.png"
 // import red from "../../AddFunds/files/rb_card.png"
@@ -38,6 +40,24 @@ const CreditCard = ({ data, dataHandler, url, tokenUrl, showCards = true, showSa
             getSavedCards()
         }
     }, [userDetails])
+    const expiryCheck = async (item) => {
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/check-card-expiry`, { data: encryptData({ card_id: item._id }) }, {
+                headers: authHeader
+            })
+
+            const dec = decryptData(response.data.data)
+            if(dec.isExpired){
+                dataHandler("selectedSavedCard", {})
+                dataHandler("cards", data.cards.filter(card => card._id !== item._id))
+                toast.error(dec.message)
+            }
+        } catch (error) {
+            const dec = decryptData(error.response.data.data)
+            console.log(dec)
+        }
+
+    }
 
     return (
         <div className={styles.container}>
@@ -59,6 +79,8 @@ const CreditCard = ({ data, dataHandler, url, tokenUrl, showCards = true, showSa
                                         dataHandler("cardError", "")
                                         dataHandler("cvc", "")
                                         dataHandler("selectedSavedCard", item)
+                                        expiryCheck(item)
+
                                     }}>
                                         <div className={styles.c_top}>
                                             <img src={logo_w} alt="" />

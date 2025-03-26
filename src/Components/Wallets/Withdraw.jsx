@@ -20,7 +20,7 @@ import { Link } from 'react-router-dom'
 
 const Withdraw = ({ isOpen, toggle, wallet }) => {
     const navigate = useNavigate()
-    const { userWithdrawals, userDetails, authHeader, getWithdrawals } = useContext(UserContext)
+    const { userWithdrawals, userDetails } = useContext(UserContext)
     const { t } = useTranslation()
     const [step, setStep] = useState(1)
     const [payoutChannel, setPayoutChannel] = useState("")
@@ -233,7 +233,7 @@ const WithdrawOldFlow = ({
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     console.log(decrypted, userWithdrawals?.[payoutChannel?.sub_value]?.[0]?.payer_id)
-                    const filtered = decrypted?.find(it => it?.id == userWithdrawals?.[payoutChannel?.sub_value]?.[0]?.payer_id)
+                    const filtered = decrypted?.find(it => it?.id === userWithdrawals?.[payoutChannel?.sub_value]?.[0]?.payer_id)
                     console.log(filtered)
                     setSubService(filtered)
                 })

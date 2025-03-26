@@ -1,4 +1,4 @@
-import { Card, CardBody, Modal, ModalBody, ModalHeader } from "reactstrap";
+import { Card, CardBody, Modal, ModalBody } from "reactstrap";
 import { Check, ChevronRight, XCircle } from "react-feather";
 import { useContext, useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
@@ -7,7 +7,7 @@ import SelectedRecipient from "./SelectedRecipient";
 import SelectedAmountAndCurrency from "./SelectedAmountAndCurrency";
 import SelectedPayoutChannel from "./SelectedPayoutChannel";
 import SelectedCountry from "./SelectedCountry";
-import SelectedPaymentType from "./SelectedPaymentType";
+// import SelectedPaymentType from "./SelectedPaymentType";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css"
 import faded_lines from "./files/faded_lines.png"
@@ -55,7 +55,7 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, pa
     useEffect(() => {
         if (profileCompleted) {
             if (userDetails?.user?.kyc_status) {
-                if (userDetails?.user?.kyc_status === "approved" || userDetails?.level?.level_no != 1) {
+                if (userDetails?.user?.kyc_status === "approved" || userDetails?.level?.level_no !== 1) {
                     setShowVerificationModal(false)
                 } else {
                     setShowVerificationModal(true)

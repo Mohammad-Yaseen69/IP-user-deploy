@@ -10,6 +10,12 @@ import { useTranslation } from 'react-i18next';
 import { Check } from 'react-feather';
 import cardStyles from "../../PaymentsNewer/InternationalFlow/styles/creditcard.module.css"
 import logo_w from "../../../assets/images/logo/logo_white.png"
+import axios from 'axios';
+import { useContext } from 'react';
+import { UserContext } from '../../../Context/UserContext';
+import { decryptData } from '../../../Helper/EssentilaMethods/Decryption';
+import { toast } from 'react-toastify';
+import { encryptData } from '../../../Helper/EssentilaMethods/Encryption';
 
 
 
@@ -34,12 +40,30 @@ const PaymentStep = (
         selectedSaveCard,
         card,
         addFunds,
-        amount
+        amount,
+        setCards
     }) => {
     const { t } = useTranslation()
+    const { authHeader } = useContext(UserContext)
 
+    const expiryCheck = async (item) => {
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/check-card-expiry`, { data: encryptData({ card_id: item._id }) }, {
+                headers: authHeader
+            })
 
-    console.log(paymentType)
+            const dec = decryptData(response.data.data)
+            if (dec.isExpired) {
+                setSelectedSaveCard(null)
+                setCards(prev => prev.filter(card => card._id !== item._id))
+                toast.error(dec.message)
+            }
+        } catch (error) {
+            const dec = decryptData(error.response.data.data)
+            console.log(dec)
+        }
+    }
+
     const saveCardJSX = () => (
         <div className={styles.field}>
 
@@ -49,6 +73,7 @@ const PaymentStep = (
                 {cards.map(item => (
                     <div key={item?._id} className={cardStyles.card} onClick={() => {
                         Object.keys(cardDetail).forEach(key => cardDetail[key] = "")
+                        expiryCheck(item)
                         setSelectedSaveCard(item)
                     }}>
                         <div className={cardStyles.c_top}>

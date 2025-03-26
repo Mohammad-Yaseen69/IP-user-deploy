@@ -424,6 +424,20 @@ const AmountAndCurrency = ({ setSubStep, amount, setAmount, currency, setCurrenc
     }, [formattedAmount])
 
     const [cardError, setCardError] = useState('');
+    const expiryCheck = async (item) => {
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/check-card-expiry`, { data: encryptData({ card_id: item._id }) }, {
+                headers: authHeader
+            })
+
+            const dec = decryptData(response.data.data)
+            console.log(dec)
+        } catch (error) {
+            const dec = decryptData(error.response.data.data)
+            console.log(dec)
+        }
+
+    }
     return (
         <Card style={{
             height: "100%",

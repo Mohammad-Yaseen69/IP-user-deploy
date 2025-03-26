@@ -37,7 +37,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
     const [saveCard, setSaveCard] = useState(false)
     const [walletState, setWalletState] = useState({})
     const [cardNumberError, setCardNumberError] = useState(null)
-    const [disabledBtnS, setDisabledBtn] = useState(false)
+    const [disabledBtnS,] = useState(false)
     const [amount, setAmount] = useState("")
     const [cardType, setCardType] = useState(PLACEHOLDER_CARD_TYPE)
     const [feeDetails, setFeeDetails] = useState({})
@@ -74,6 +74,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
         }
     }, [userDetails])
 
+ 
     const filteredWallets = useMemo(() => {
         return userWallets
             ?.filter(item =>
@@ -110,31 +111,6 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
         setCardType(type ?? PLACEHOLDER_CARD_TYPE)
     }, [cardDetail.cardNumber])
 
-    useEffect(() => {
-        const getSavedCards = async () => {
-            try {
-
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/get-user-pan-list/${userDetails?._id}`, {
-                    headers: authHeader
-                })
-                const dec = decryptData(res.data.data)
-                setCards(dec?.panList)
-
-            } catch {
-                setCards([])
-            }
-        }
-
-        if (userDetails?.tfa) {
-            setCodeType("authenticator")
-        } else {
-            setCodeType("sms")
-        }
-
-        if (userDetails?._id) {
-            getSavedCards()
-        }
-    }, [userDetails])
 
     const [token, setToken] = useState(null)
     const [loading, setLoading] = useState(false)
@@ -227,7 +203,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
             token: token,
             otp: otp,
             type: codeType
-        }   
+        }
 
         try {
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/wallet-to-card-transfer`, { data: encryptData(data) }, {
@@ -244,7 +220,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
     }
 
     return (
-        <Modal isOpen={isOpen} style={{ minWidth: '850px' }} toggle={() => setOpen(false)}>
+        <Modal isOpen={isOpen} style={{ minWidth: '850px' }} toggle={() => setOpen(prev => ({ ...prev, addFunds: false }))}>
             <ModalBody>
                 <div style={{ width: "100%", display: "flex", gap: "20px" }}>
                     <div className={styles.left}>
@@ -267,13 +243,13 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
                         <div>
                             <div className={styles.top}>
                                 <h4>Set the Value</h4>
-                                <p>STEP 0{step <= 2 ? step : step -1}</p>
+                                <p>STEP 0{step <= 2 ? step : step - 1}</p>
                             </div>
 
                             <div className={onboardStyles.paymentContent}>
                                 <div className={onboardStyles.right} style={{ padding: "0px", flex: 1 }}>
                                     {step === 2 &&
-                                        <PaymentSelect style={{marginTop: ""}} paymentType={paymentType} setPaymentType={setPaymentType} />
+                                        <PaymentSelect style={{ marginTop: "" }} paymentType={paymentType} setPaymentType={setPaymentType} />
                                     }
                                     {step === 3 &&
                                         <PaymentStep
@@ -295,6 +271,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
                                             setFeeDetails={setFeeDetails}
                                             cardNumberError={cardNumberError}
                                             addFunds={true}
+                                            setCards={setCards}
                                             card={card}
                                             amount={amount}
                                         />

@@ -459,6 +459,8 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
             setWalletState={setWalletState}
             vvcCardType={vvcCardType}
             walletState={walletState}
+            setCards={setCards}
+            selectedSaveCard={selectedSaveCard}
           />
         }
 
