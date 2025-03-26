@@ -318,7 +318,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                             :
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
                                 <span>{t("Exchange rate")}</span>
-                                <span>1.00 {data?.currency?.currency?.code} = {data?.exchange_rate?.exchange_rate ?? "?"} {data?.exchange_rate?.receiver?.currency ?? ""}</span>
+                                <span>1.00 {data?.currency?.currency?.code} = {data?.exchange_rate?.exchange_rate.toFixed(2) ?? "?"} {data?.exchange_rate?.receiver?.currency ?? ""}</span>
                             </div>
                     }
                     {/* <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>

@@ -986,7 +986,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                                                             fontStyle: 'normal',
                                                                                             lineHeight: 1.5,
                                                                                             letterSpacing: '-0.14px'
-                                                                                        }}>1.00 {data?.exchange_rate?.paypal?.fee?.currency} = {Number(data?.exchange_rate?.paypal?.paypal_rate?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 })} USD</strong>
+                                                                                        }}>1.00 {data?.exchange_rate?.paypal?.fee?.currency} = {Number(data?.exchange_rate?.paypal?.paypal_rate?.value).toFixed(2)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 })} USD</strong>
                                                                                 </div>
                                                                                 <div style={{
                                                                                     display: "flex",

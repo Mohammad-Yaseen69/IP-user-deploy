@@ -45,7 +45,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [otpVerified, setOtpVerified] = useState(false)
     const [startTyping, setStartTyping] = useState(false)
     const [currentOtpMethod, setCurrentOtpMethod] = useState("auth")
-    const [isMobile, setIsMobile] = useState((rdd.isMobile || rdd.isMobileSafari) ?? false)
+    const [isMobile] = useState(((rdd.isMobile || rdd.isMobileSafari) && (!rdd.isAndroid && !rdd.isIOS)) ?? false)
     const [isBioMetric, setIsBioMetric] = useState(false)
     const [isInstagramBrowser, setisInstagramBrowser] = useState()
     const [previousResendMethod, setPreviousResendMethod] = useState("")

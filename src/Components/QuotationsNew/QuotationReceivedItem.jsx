@@ -131,7 +131,7 @@ const QuotationReceivedItem = ({ item, activeItem, setActiveItem, index }) => {
                         padding: "5px",
                         borderRadius: "30px",
                         textAlign: "center"
-                    }} >{t(item?.status?.toUpperCase())}</div>
+                    }} >{t(item?.status)}</div>
                 </div>
                 {
                     status?.toLowerCase() !== "accepted" && status?.toLowerCase() !== "declined"

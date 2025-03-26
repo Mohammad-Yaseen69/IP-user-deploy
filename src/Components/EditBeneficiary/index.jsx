@@ -1701,7 +1701,9 @@ const EditBeneficiary = () => {
                                                         customStyles={{
                                                             boxShadow: "none",
                                                             border: "1px solid #e9e9e9",
-                                                            border: missingFields.includes("mobile_wallet_account_number") && clicked ? "1px solid red" : "1px solid #e9e9e9"
+                                                            border: missingFields.includes("mobile_wallet_account_number") && clicked ? "1px solid red" : "1px solid #e9e9e9",
+                                                            padding: "12px",
+                                                            borderRadius: "0.375rem",
                                                         }}
                                                         phone={formData.mobile_wallet_account_number}
                                                         country={countryIsoCode}

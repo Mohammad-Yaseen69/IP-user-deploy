@@ -49,7 +49,7 @@ const QuoteDetails = ({ item, type = "receive" }) => {
                             {t("Amount")}
                         </span>
                         <div className={styles.badge} style={{ background: badgeColor }}>
-                            {t(item?.status?.toUpperCase())}
+                            {t(item?.status)}
                         </div>
                     </div>
                     <h5>

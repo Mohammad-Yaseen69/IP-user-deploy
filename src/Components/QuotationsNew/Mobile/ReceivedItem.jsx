@@ -141,7 +141,7 @@ const ReceivedItemMobile = ({ item, activeItem, setActiveItem, index }) => {
                                 borderRadius: "7px",
                                 textAlign: "center",
                                 fontWeight: 800
-                            }}>{t(item?.status?.toUpperCase())}</div>
+                            }}>{t(item?.status)}</div>
                         </div>
                         {
                             activeItem !== index + 1
