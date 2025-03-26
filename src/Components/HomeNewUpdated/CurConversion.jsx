@@ -42,6 +42,10 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
 
     const balance = useMemo(() => userWallets.find(item => item?.currency?.code === userCurrency)?.balance?.available, [userWallets, userCurrency])
 
+
+
+
+
     const convertCurrency = async () => {
         setError("")
         const getRates = () => {
@@ -143,6 +147,13 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
         }
     }
 
+    const filteredWallets = useMemo(() => {
+        return userWallets
+            ?.filter(item => item?.wallet_type === "insta" && !item?.blocked && !item?.admin_blocked && item?.status === "active")
+            ?.sort((a, b) => (b?.default === true ? 1 : -1))
+            ?.map(item => ({ name: item?.currency?.code, ...item }))
+    }, [userWallets])
+
     const [formattedAmount, setFormattedAmount] = useState("1.00")
     const handleKeyUp = (e) => {
         formatCurrency(e.target.value, false, setFormattedAmount);
@@ -163,7 +174,7 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
                 <h4>{t("Currency")} {t("Conversion")}</h4>
             }
             {
-                userWallets?.filter(item => item?.wallet_type === "insta" && item?.status === "active" && !item?.blocked && !item?.admin_blocked)?.length > 1
+                filteredWallets.length > 1
                     ?
                     <Form onSubmit={(e) => {
                         e.preventDefault()
@@ -172,7 +183,7 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
                         <div className={styles.input_con}>
                             <select value={userCurrency} onChange={e => setUserCurrency(e.target.value)}>
                                 {
-                                    userWallets?.filter(item => item?.wallet_type === "insta" && item?.status && !item?.blocked && !item?.admin_blocked && !item?.blocked && !item?.admin_blocked && item?.currency?.code !== exchangedCurrency)?.map(item => (
+                                    filteredWallets?.filter(item => item?.wallet_type === "insta" && item?.status && !item?.blocked && !item?.admin_blocked && !item?.blocked && !item?.admin_blocked && item?.currency?.code !== exchangedCurrency)?.map(item => (
                                         <option value={item?.currency?.code} style={{ display: userCurrency === item?.currency?.code ? "none" : "inherit" }}>
                                             {item?.currency?.symbol}
                                         </option>

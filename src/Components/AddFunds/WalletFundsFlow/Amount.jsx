@@ -90,7 +90,7 @@ const Amount = ({ data, dataHandler }) => {
                     </span>
                 </div>
                 {
-                    !data.amount || +String(data.amount ?? "")?.replaceAll(",", "") <= +formatCurrencyLocal(data.limits.min) || +String(data.amount ?? "")?.replaceAll(",", "") >= +formatCurrencyLocal(data.limits.max)
+                    !data.amount || +String(data.amount ?? "")?.replaceAll(",", "") < +formatCurrencyLocal(data.limits.min) || +String(data.amount ?? "")?.replaceAll(",", "") > +formatCurrencyLocal(data.limits.max)
                         ?
                         <div style={{
                             height: "100px",
@@ -102,7 +102,7 @@ const Amount = ({ data, dataHandler }) => {
                             fontWeight: 600,
                             color: "red"
                         }}>{
-                                userDetails?.user?.kyc_status !== "approved" && +String(data.amount ?? "")?.replaceAll(",", "") >= +formatCurrencyLocal(data.limits.max)
+                                userDetails?.user?.kyc_status !== "approved" && +String(data.amount ?? "")?.replaceAll(",", "") > +formatCurrencyLocal(data.limits.max)
                                     ?
                                     t("⚠️ Invalid Amount: Your current  identity verification level limits the  maximum amount you can add. Please upgrade your identity verification to benefit from higher limits")
                                         .replace("⚠️ ", "")
