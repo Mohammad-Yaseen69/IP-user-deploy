@@ -47,9 +47,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [isMobile] = useState(((rdd.isMobile || rdd.isMobileSafari) && (!rdd.isAndroid || !rdd.isIOS)) ?? false)
     const [isBioMetric, setIsBioMetric] = useState(false)
     const [isInstagramBrowser, setisInstagramBrowser] = useState()
-    const [previousResendMethod, setPreviousResendMethod] = useState("")
-    const [showDiffOtpMessage, setShowDiffOtpMessage] = useState(false)
-    const [lastOtpSentTo, setLastOtpSentTo] = useState(null); // 'sms' or 'instagram'
+    const [lastOtpSentTo, setLastOtpSentTo] = useState(null);
 
     useLayoutEffect(() => {
         const loginWith = localStorage.getItem("loginWith")
@@ -146,7 +144,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
 
 
-                if (decrypted?.authenticator == true) {
+                if (decrypted?.authenticator === true) {
                     setResendTimer(0)
                 }
 
@@ -193,13 +191,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     }, [profileLockTIme])
 
     // service error
-    const [serviceError, setServiceError] = useState("")
-    useLayoutEffect(() => {
-        const error = sessionStorage.getItem("country_status_error")
-        if (error) {
-            setServiceError(error)
-        }
-    }, [sessionStorage])
 
     useLayoutEffect(() => {
         if (loginMethod === "email") return;
@@ -294,7 +285,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         newOTPValues[index] = numericValue;
         setOTPValues(newOTPValues);
 
-        if (index == 0) {
+        if (index === 0) {
             setCurrentActiveInput(1)
         }
 
@@ -367,7 +358,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 data: encrypted
                             })
                                 .then(res => {
-                                    const decrypted = decryptData(res.data.data)
                                     const path = sessionStorage.getItem("path")
                                     if (path && path !== "undefined") {
                                         navigate(path)
@@ -380,7 +370,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 .catch(err => {
                                     setIsPressed(false)
                                     setIsLoginError("Something went wrong while creating login details")
-                                    const decrypted = decryptData(err.response.data.data)
                                     const path = sessionStorage.getItem("path")
                                     console.log(path)
                                     if (path && path !== "undefined") {
@@ -392,7 +381,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 })
                         } else {
                             sessionStorage.setItem("country_status_error", "Service not available in your country!")
-                            setServiceError("Service not available in your country!")
                         }
                     })
                     .catch(err => {
@@ -523,7 +511,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                             data: encrypted
                         })
                             .then(res => {
-                                const decrypted = decryptData(res.data.data)
                                 const path = sessionStorage.getItem("path")
                                 if (path && path !== "undefined") {
                                     navigate(path)
@@ -536,7 +523,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                             .catch(err => {
                                 setIsPressed(false)
                                 setIsLoginError("Something went wrong while creating login details")
-                                const decrypted = decryptData(err.response.data.data)
                                 const path = sessionStorage.getItem("path")
                                 console.log(path)
                                 if (path && path !== "undefined") {
@@ -548,7 +534,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                             })
                     } else {
                         sessionStorage.setItem("country_status_error", "Service not available in your country!")
-                        setServiceError("Service not available in your country!")
                     }
                 })
                 .catch(err => {
@@ -980,16 +965,16 @@ export const AuthenticatorDetails = () => {
                 <h5>{t("Two-factor authentication (2FA) is the best way to protect yourself online.")}</h5>
                 <p>{t("We recommend you download and install the Google Authenticator app to ensure you receive your verification codes instantly, avoiding any SMS delays or issues.")}</p>
                 <div className={styles.download_info}>
-                    <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&pli=1" target="_blank">
+                    <a rel="noreferrer" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&pli=1" target="_blank">
                         <img src={gs} alt="" />
                     </a>
-                    <a href="https://apps.apple.com/us/app/google-authenticator/id388497605" target="_blank">
+                    <a rel="noreferrer" href="https://apps.apple.com/us/app/google-authenticator/id388497605" target="_blank">
                         <img src={as} alt="" />
                     </a>
                 </div>
             </div>
             <div className={styles.right}>
-                <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&pli=1" target="_blank">
+                <a rel="noreferrer" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&pli=1" target="_blank">
                     <img src={authenticator} alt="" />
                 </a>
                 <h4>{t("Strong security with Google Authenticator")}</h4>

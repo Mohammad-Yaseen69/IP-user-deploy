@@ -25,11 +25,11 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
     const [descEdit, setDescEdit] = useState(false);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const { userWallets, verifyToken } = useContext(UserContext)
+    const { userWallets } = useContext(UserContext)
     const [saving, setSaving] = useState(false)
 
     useEffect(() => {
-        setGeneralQRactive(currentWallet?.qrCode?.status == "true" ? true : false)
+        setGeneralQRactive(currentWallet?.qrCode?.status === "true" ? true : false)
         setTitle(currentWallet?.qrCode?.title ?? "")
         setDescription(currentWallet?.qrCode?.description ?? "")
     }, [currentWallet])
@@ -55,7 +55,7 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
                 setTitleEdit(false)
                 setDescEdit(false)
                 setCurrentWallet(currentWallet)
-                setter(decrypted?.walletDetails?.qrCode?.status == "false" ? false : true)
+                setter(decrypted?.walletDetails?.qrCode?.status === "false" ? false : true)
                 console.log(generalQRactive)
             })
             .catch(err => {
@@ -89,7 +89,7 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
                     <div className={styles.left}>
                         <Input type="select" value={currency} onChange={e => {
                             setCurrency(e.target.value)
-                            const wallet = userWallets?.find(item => item?.currency?.code == e.target.value)
+                            const wallet = userWallets?.find(item => item?.currency?.code === e.target.value)
                             setCurrentWallet(wallet)
                         }} className={styles.dropdown}>
                             {
@@ -164,7 +164,7 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
                         <Label>{t("Share your Insta-Pay unique payment link")}</Label>
                         <div className={styles.link}>
                             <span>https://my.insta-pay.ch/q/{currentWallet?.wallet_id}</span>
-                            <img src={copy} onClick={copyHandler} />
+                            <img alt="" src={copy} onClick={copyHandler} />
                         </div>
                     </div>
                     <div className={styles.bt_bot}>

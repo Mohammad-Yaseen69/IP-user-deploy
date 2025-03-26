@@ -10,7 +10,6 @@ import QRFlow from "./QRFlow"
 
 
 const SendPaymentType = ({ sendPaymentType, setStep, setSendPaymentType }) => {
-    const { t } = useTranslation()
     const [isInternational, setIsInternational] = useState(false)
     const [isWallet, setIsWallet] = useState(false)
     const { userDetails } = useContext(UserContext)

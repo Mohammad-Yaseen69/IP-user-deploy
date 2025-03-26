@@ -50,6 +50,7 @@ const initialState = {
     loading: false,
     step: 1,
     amount: 1.00,
+    recipient_amount: 0.00,
     new_amoount: 0.00,
     currency: {},
     currency_wallet: {},
@@ -112,8 +113,6 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
     };
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
-
-    const payment_type = queryParams.get("payment_type")
 
     useEffect(() => {
         if (userDetails?.tfa) {
@@ -428,7 +427,8 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
         }
     }
 
-    const getExchangeRate = async (amount, setLimitType, payment_method = "instant", from) => {
+    const getExchangeRate = async (amount, setLimitType, payment_method = "instant", from, setLoading) => {
+        setLoading(true)
         dataHandler("loading", true)
         dataHandler("exchange_rate_error", "")
         dataHandler("exchange_rate", {})
@@ -488,6 +488,13 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                     dataHandler("exchange_rate_error", "")
                 }
             }
+
+            if(exchange_rate_details.receiver?.amount ){
+                dataHandler("recipient_amount", exchange_rate_details.receiver?.amount)
+            }
+
+
+            console.log(exchange_rate_details)
             return exchange_rate_details
         }
         catch (err) {
@@ -520,6 +527,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
         }
         finally {
             dataHandler("loading", false)
+            setLoading(false)
         }
     }
 

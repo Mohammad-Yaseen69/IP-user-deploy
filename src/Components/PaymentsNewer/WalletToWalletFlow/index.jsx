@@ -11,7 +11,6 @@ import { ChevronLeft, ChevronRight, HelpCircle, Info } from "react-feather";
 import { useTranslation } from "react-i18next";
 import StepOne from "./StepOne";
 import { UserContext } from "../../../Context/UserContext";
-import { currencies } from "../InternationalFlow/StepOne";
 import StepTwo from "./StepTwo";
 import axios from "axios";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
@@ -26,7 +25,6 @@ import CreditCard from "../InternationalFlow/CreditCard";
 import OtpConfirmation from "../InternationalFlow/OtpConfirmation";
 import SchedulePayment from "../SchedulePayment";
 import Recursive from "../RecursivePayment";
-import { toast } from "react-toastify";
 import TrustpaymentPage from "../../AddFunds/WalletFund/CreditTransaction";
 import FeesComponent from "../InternationalFlow/FeesComponent";
 import MobileWalletServices from "../InternationalFlow/MobileWalletServices";
@@ -140,7 +138,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
             case 3:
                 return !data.reason
             case 4:
-                return !data.payment_type?.name || data.payment_type?.value === "wallet" ? !data.wallet?._id : false || data?.payment_duration?.value == "subscription" ? !data.payment_duration?.recStartDate || (!data.payment_duration?.cycles && !data.payment_duration?.unlimited) : data?.payment_duration?.value == "schedule" ? !data.payment_duration?.scheduleDate || !data.payment_duration?.scheduleTime : false
+                return !data.payment_type?.name || data.payment_type?.value === "wallet" ? !data.wallet?._id : false || data?.payment_duration?.value === "subscription" ? !data.payment_duration?.recStartDate || (!data.payment_duration?.cycles && !data.payment_duration?.unlimited) : data?.payment_duration?.value === "schedule" ? !data.payment_duration?.scheduleDate || !data.payment_duration?.scheduleTime : false
             case 5:
                 if (data.payment_type?.value === "card") {
                     const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
@@ -446,21 +444,21 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
         }
     }
 
-    const getTopupFees = async () => {
-        dataHandler("loading", true)
-        try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/get-tbc-fee/${data.currency_wallet?._id}/${data.amount?.toString()?.split(".")?.[0]?.replaceAll(",", "")}`, {
-                headers: authHeader
-            })
-            const dec = decryptData(res.data.data)
-            return +String(data.amount)?.replaceAll(",", "") - Number(dec?.feeDetails)
-        } catch (error) {
-            const dec = decryptData(error.response.data.data)
-            dataHandler("error", typeof dec === "string" ? dec : dec?.message ?? "Something went wrong, Please try again!")
-        } finally {
-            dataHandler("loading", false)
-        }
-    }
+    // const getTopupFees = async () => {
+    //     dataHandler("loading", true)
+    //     try {
+    //         const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/get-tbc-fee/${data.currency_wallet?._id}/${data.amount?.toString()?.split(".")?.[0]?.replaceAll(",", "")}`, {
+    //             headers: authHeader
+    //         })
+    //         const dec = decryptData(res.data.data)
+    //         return +String(data.amount)?.replaceAll(",", "") - Number(dec?.feeDetails)
+    //     } catch (error) {
+    //         const dec = decryptData(error.response.data.data)
+    //         dataHandler("error", typeof dec === "string" ? dec : dec?.message ?? "Something went wrong, Please try again!")
+    //     } finally {
+    //         dataHandler("loading", false)
+    //     }
+    // }
 
     const getPlainExchangeRate = async (from, to, amount) => {
         dataHandler("loading", true)
@@ -586,7 +584,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
             if (splitted[1][0].length >= 2) {
                 return value
             }
-            else if (splitted[1][0].length == 1) {
+            else if (splitted[1][0].length === 1) {
                 return `${value}0`
             }
             else {
@@ -789,14 +787,12 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
     }, [amount, currency, userWallets])
 
     const transaction_status = queryParams.get("transaction_status")
-    const transaction_token = queryParams.get("transaction_token")
-    const transaction_id = queryParams.get("transaction_id")
     const error_in_funds = queryParams.get("error_in_funds")
     const code = queryParams.get("code")
 
     useEffect(() => {
         const error_message = () => {
-            return errors.find(item => item?.code == code)?.message
+            return errors.find(item => item?.code === code)?.message
         }
         if (transaction_status === "error") {
             dataHandler("error", error_message() ?? error_in_funds?.toLowerCase() === "true" ? "We encountered an issue processing your selected payment method. Please try again later." : "We encountered an issue processing your wallet to wallet transfer, but your funds have been securely added to your wallet. Kindly check your transaction record, and when ready, you may retry the transfer at your convenience.")
@@ -1121,7 +1117,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                     </>
                                                 )
                                             }
-                                            {data.step == 6
+                                            {data.step === 6
                                                 &&
                                                 (
                                                     <div>
@@ -1226,7 +1222,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                                 ?
                                                                 t("Confirm")
                                                                 :
-                                                                data.step == 6
+                                                                data.step === 6
                                                                     ?
                                                                     t("Confirm and Proceed")
                                                                     :
@@ -1401,7 +1397,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                             )
                                                         }
 
-                                                        {data.step == 6
+                                                        {data.step === 6
                                                             &&
                                                             (
                                                                 <div>
@@ -1504,7 +1500,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                             ?
                                                             t("Confirm")
                                                             :
-                                                            data.step == 6
+                                                            data.step === 6
                                                                 ?
                                                                 t("Confirm and Proceed")
                                                                 :

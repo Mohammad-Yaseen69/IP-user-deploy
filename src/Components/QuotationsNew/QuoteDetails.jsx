@@ -35,7 +35,6 @@ const QuoteDetails = ({ item, type = "receive" }) => {
                 return "#C82333"
             default:
                 return "#FFA500"
-                break;
         }
     }, [item])
 

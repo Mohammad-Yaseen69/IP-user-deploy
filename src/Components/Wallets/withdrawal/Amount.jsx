@@ -102,9 +102,10 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
 
                     const encrypted = encryptData(data)
 
+                    console.log(subService)
                     axios.post(`${process.env.REACT_APP_THUNES_API}/get-withdrawal-rates/${subService?.id}`, {
                         data: encrypted
-                    }, {
+                    }, { 
                         headers: authHeader
                     })
                         .then(res => {
@@ -129,6 +130,7 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
                                 setQuotationDetails(decrypted?.data)
                                 setExchangeError("")
                             }
+                            console.log(data)
                         })
                         .catch(err => {
                             const dec = decryptData(err?.response.data.data)

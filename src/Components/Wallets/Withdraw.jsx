@@ -233,7 +233,7 @@ const WithdrawOldFlow = ({
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     console.log(decrypted, userWithdrawals?.[payoutChannel?.sub_value]?.[0]?.payer_id)
-                    const filtered = decrypted?.find(it => it?.id === userWithdrawals?.[payoutChannel?.sub_value]?.[0]?.payer_id)
+                    const filtered = decrypted?.find(it => it.id.toString() === userWithdrawals?.[payoutChannel?.sub_value]?.[0]?.payer_id)
                     console.log(filtered)
                     setSubService(filtered)
                 })
