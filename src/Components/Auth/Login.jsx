@@ -36,16 +36,15 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [isPressed, setIsPressed] = useState(false)
     const [loginToken, setLoginToken] = useState("")
     const [step, setStep] = useState(1)
-    const { allowedCountries, profileLockTIme, setProfileLockTime, setUserDetails } = useContext(UserContext)
+    const { profileLockTIme, setProfileLockTime, setUserDetails } = useContext(UserContext)
     const [loginMethod, setLoginMethod] = useState("phone")
     const [userAuthSetup, setUserAuthSetup] = useState(false)
     const [isInstagram, setIsInstagram] = useState(false)
     const [currentActiveInput, setCurrentActiveInput] = useState(1)
     const [isOtpCorrect, setIsOtpCorrect] = useState(false)
     const [otpVerified, setOtpVerified] = useState(false)
-    const [startTyping, setStartTyping] = useState(false)
     const [currentOtpMethod, setCurrentOtpMethod] = useState("auth")
-    const [isMobile] = useState(((rdd.isMobile || rdd.isMobileSafari) && (!rdd.isAndroid && !rdd.isIOS)) ?? false)
+    const [isMobile] = useState(((rdd.isMobile || rdd.isMobileSafari) && (!rdd.isAndroid || !rdd.isIOS)) ?? false)
     const [isBioMetric, setIsBioMetric] = useState(false)
     const [isInstagramBrowser, setisInstagramBrowser] = useState()
     const [previousResendMethod, setPreviousResendMethod] = useState("")
@@ -819,7 +818,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                     onPaste={handlePaste}
                                                     onChange={(e) => {
                                                         setIsLoginError("")
-                                                        setStartTyping(true)
                                                         handleInputChange(index, e.target.value)
                                                     }}
 
