@@ -60,7 +60,7 @@
 
 .tl_bot {
     display: flex;
-    gap: .8rem;
+    gap: .4rem;
     width: fit-content;
     margin-top: auto;
 }
@@ -114,8 +114,8 @@
 
 .switch {
     display: inline-block;
-    height: 24px;
-    width: 53px;
+    height: 16px;
+    width: 36px;
     background: #EDEDED;
     /* box-shadow: 0px 0px 12.15px -9.872px rgba(0, 0, 0, 0.14) inset; */
     border-radius: 100px;
@@ -135,15 +135,15 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    height: 15px;
-    width: 15px;
-    left: 5px;
+    height: 12px;
+    width: 12px;
+    left: 4px;
     transition: left 0.2s;
 }
 
 .thumb.active {
     background-color: #1fd531;
-    left: 30px;
+    left: 21px;
 }
 
 .right {

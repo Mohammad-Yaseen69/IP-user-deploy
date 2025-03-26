@@ -26,7 +26,7 @@ const Amount = ({ data, dataHandler }) => {
     };
 
     useEffect(() => {
-        dataHandler("amount", Math.ceil(String(formattedAmount ?? "")?.replaceAll(",", "")))
+        dataHandler("amount", String(formattedAmount ?? "")?.replaceAll(",", ""))
     }, [formattedAmount])
 
     const location = useLocation()

@@ -107,7 +107,7 @@ const WalletAmount = ({ setSubStep, amount, setAmount, wallet, limits, setLimits
 
     useEffect(() => { 
         console.log(formattedAmount)
-        setAmount(Math.ceil(String(formattedAmount ?? "")?.replaceAll(",", "")))
+        setAmount(String(formattedAmount ?? "")?.replaceAll(",", ""))
     }, [formattedAmount])
 
 

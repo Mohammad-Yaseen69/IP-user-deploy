@@ -153,7 +153,7 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
                                     setDescEdit(true)
                                 }
                             }}>
-                                <span>{!descEdit ? t("Edit")?.toLowerCase() : t("Save"?.toLowerCase())}</span>
+                                <span>{!descEdit ? t("Edit") : t("Save")}</span>
                             </button>
                         </div>
                         <Input value={description} onChange={(e) => setDescription(e.target.value)} type="textarea" placeholder={"Description"} disabled={!descEdit} />

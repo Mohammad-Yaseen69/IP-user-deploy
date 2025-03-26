@@ -306,6 +306,12 @@
     display: none;
 }
 
+
+@media screen and (max-width: 400px) {
+    .r_limits{
+        grid-template-columns: 1fr !important;
+    }
+}
 @media screen and (max-width: 1000px) {
     .container {
         flex-direction: column;

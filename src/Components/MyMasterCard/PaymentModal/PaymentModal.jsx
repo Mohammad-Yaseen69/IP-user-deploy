@@ -302,6 +302,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
         })
 
         const dec = decryptData(res.data.data)
+        console.log(dec)
         setFeeDetails(dec.data)
       } catch (error) {
         const dec = decryptData(error.response.data.data)
@@ -309,6 +310,8 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
       }
 
     }
+
+    
     if (paymentType === "card") {
       getFee("card")
     }
