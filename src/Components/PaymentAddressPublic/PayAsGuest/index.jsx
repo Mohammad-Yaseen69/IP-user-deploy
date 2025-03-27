@@ -455,7 +455,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                                 <>
                                                     <FeesComponent
                                                         data={data}
-                                                        receiverLabel={`They will get  ${data?.exchange_rate?.fee?.paymentAddressFee ? `(after a ${Number(data?.exchange_rate?.fee?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 }) ?? "0.00"} ${data.exchange_rate?.sending?.currency} receiver fee deduction)` :""}`}
+                                                        receiverLabel={`They will get  ${data?.exchange_rate?.fee?.paymentAddressFee ? `(after a ${Number(data?.exchange_rate?.fee?.amount)?.toFixed(2)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 }) ?? "0.00"} ${data.exchange_rate?.sending?.currency} receiver fee deduction)` :""}`}
                                                         error={data.exchange_rate_error}
                                                         feesLabel="Fees"
                                                         sendingLabel="Sending"

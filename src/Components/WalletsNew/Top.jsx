@@ -172,21 +172,24 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
             <div className={styles.left} style={{ alignItems: "flex-start" }}>
                 <div className={styles.top} >
                     <h2 >{currentWallet?.currency?.code}  {t("Wallet")}</h2>
-                    <div className={styles.default}>
-                        <span style={{ textAlign: "right" }}>
-                            {t("set as default Wallet").split(" ").map(item => service_name_formatter(item)).join(" ")}
-                        </span>
-                        <div
-                            className={`${styles.switch} ${currentDefault ? styles.disabled : ""}`}
-                            onClick={() => {
-                                if (!currentDefault) {
-                                    setShowConfirmationModal(true)
-                                }
-                            }}
-                        >
-                            <div className={`${styles.thumb} ${currentDefault ? styles.active : ""}`}></div>
-                        </div>
-                    </div>
+
+                    {currentWallet?.wallet_type !== "crypto" ?
+
+                        <div className={styles.default}>
+                            <span style={{ textAlign: "right" }}>
+                                {t("set as default Wallet").split(" ").map(item => service_name_formatter(item)).join(" ")}
+                            </span>
+                            <div
+                                className={`${styles.switch} ${currentDefault ? styles.disabled : ""}`}
+                                onClick={() => {
+                                    if (!currentDefault) {
+                                        setShowConfirmationModal(true)
+                                    }
+                                }}
+                            >
+                                <div className={`${styles.thumb} ${currentDefault ? styles.active : ""}`}></div>
+                            </div>
+                        </div> : null}
                 </div>
                 <div className={styles.cards}>
                     <Swiper

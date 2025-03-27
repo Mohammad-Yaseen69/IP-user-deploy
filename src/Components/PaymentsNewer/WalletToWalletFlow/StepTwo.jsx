@@ -109,6 +109,8 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
     const handleBlurR = (e) => {
         formatCurrency(e.target.value, true, setValueR);
     };
+
+    console.log(+data.recipient_amount, data.recipient_amount)
     return (
         <div className={styles.container}>
             <div className={styles.amount_and_currency}>

@@ -72,6 +72,13 @@ const ItemMobile = ({ item, activeItem, setActiveItem, index, type }) => {
     const [allRating, setAllRating] = useState(0)
     const [allReviews, setAllReviews] = useState([])
 
+    function capitalizeStatus(str) {
+        return str.toLowerCase() === "bargain-accepted" ? "Bargain-Accepted" : str
+            .split(" ")
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(" ");
+    }
+
     useEffect(() => {
         if (activeItem === index + 1) {
             axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-seller-reviews/${item?.sender?._id}/0/0`, {
@@ -151,7 +158,7 @@ const ItemMobile = ({ item, activeItem, setActiveItem, index, type }) => {
                             borderRadius: "7px",
                             textAlign: "center",
                             fontWeight: 800
-                        }}>{t(item?.status?.toUpperCase())}</div>
+                        }}>{t(capitalizeStatus(item?.status))}</div>
                     </div>
                     {
                         activeItem !== index + 1

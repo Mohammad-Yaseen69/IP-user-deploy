@@ -620,7 +620,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                 
                 console.log(+exchange_rate_details?.receiver?.amount)
                 if (fromOrTo === "from") {
-                   formatCurrency(+exchange_rate_details?.receiver?.amount, false, (e) => dataHandler("recipient_amount", addDecimals(e)))
+                   formatCurrency(+exchange_rate_details?.receiver?.amount, false, (e) => dataHandler("recipient_amount", addDecimals(e.toFixed(2))))
                 } else {
                     dataHandler("amount", exchange_rate_details?.sending?.amount)
                 }
