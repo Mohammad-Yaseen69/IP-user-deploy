@@ -581,10 +581,10 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
         const splitted = value.toString().split(".")
 
         if (splitted.length >= 2) {
-            if (splitted[1][0].length >= 2) {
+            if (splitted[1].length >= 2) {
                 return value
             }
-            else if (splitted[1][0].length === 1) {
+            else if (splitted[1].length === 1) {
                 return `${value}0`
             }
             else {
@@ -617,10 +617,13 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                 }
 
                 dataHandler("exchange_rate", exchange_rate_details)
-                
+
                 console.log(+exchange_rate_details?.receiver?.amount)
                 if (fromOrTo === "from") {
-                   formatCurrency(+exchange_rate_details?.receiver?.amount, false, (e) => dataHandler("recipient_amount", addDecimals(e.toFixed(2))))
+                    formatCurrency(+exchange_rate_details?.receiver?.amount.toFixed(2), false,
+                        (e) => {
+                            dataHandler("recipient_amount", addDecimals(e))
+                        })
                 } else {
                     dataHandler("amount", exchange_rate_details?.sending?.amount)
                 }
@@ -1161,7 +1164,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                     <HelpCircle size={16} />
                                                     {t("Trouble Sending Money")}
                                                 </Link>
-                                                <div style={{gap: data.step === 5 && "0.5rem"}} className={styles?.buttons}>
+                                                <div style={{ gap: data.step === 5 && "0.5rem" }} className={styles?.buttons}>
                                                     {
                                                         data.step > 1
                                                         &&

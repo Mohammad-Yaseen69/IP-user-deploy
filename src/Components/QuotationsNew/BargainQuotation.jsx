@@ -15,6 +15,7 @@ import int_styles from "../PaymentsNewer/Mobile/styles/International.module.css"
 import paym_styles from "../PaymentsNewer/InternationalFlow/styles/index.module.css"
 import recent from "../PaymentsNewer/Mobile/files/recent.svg"
 import success from "../PaymentsNewer/InternationalFlow/files/success.gif"
+import { capitalizeStatus } from "../PendingNew/ItemMobile"
 
 const counterTypes = ["10", "25", "50", "75", "Custom Amount"];
 let timeout;
@@ -119,7 +120,7 @@ const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor =
                                             {t("Amount")}
                                         </span>
                                         <div className={styles.badge} style={{ background: badgeColor }}>
-                                            {t(item?.status?.toUpperCase())}
+                                            {t(capitalizeStatus(item?.status))}
                                         </div>
                                     </div>
                                     <h5>
@@ -257,7 +258,7 @@ const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor =
                                                 {t("Amount")}
                                             </span>
                                             <div className={styles.badge} style={{ background: badgeColor }}>
-                                                {t(item?.status?.toUpperCase())}
+                                                {t(capitalizeStatus(item?.status))}
                                             </div>
                                         </div>
                                         <h5>

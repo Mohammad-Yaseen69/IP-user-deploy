@@ -4,6 +4,7 @@ import styles from "./styles/Right.module.scss"
 import { Check } from "react-feather"
 import { useTranslation } from "react-i18next"
 import { UserContext } from "../../Context/UserContext"
+import { capitalizeStatus } from "../PendingNew/ItemMobile"
 
 
 const TransactionItem = ({ color, item, activeItem, setActiveItem, index }) => {
@@ -104,7 +105,7 @@ const TransactionItem = ({ color, item, activeItem, setActiveItem, index }) => {
                         margin: "0 auto",
                         padding: "3px",
                         borderRadius: "30px"
-                    }}>{t(item?.status?.toUpperCase())}</div>
+                    }}>{t(capitalizeStatus(item?.status))}</div>
                 </div>
             </div>
         </div>

@@ -13,6 +13,7 @@ import ImagePreviewModal from "../../ImagePreviewModal.jsx"
 import TransactionItemDetails from "../TransactionItemDetails.jsx"
 import statuses from "../files/thunesTransactionStatus.json"
 import CitiesData from "../../CitiesDropDown/CitiesData.json"
+import { capitalizeStatus } from "../../PendingNew/ItemMobile.jsx"
 
 const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromReferral = false, vvc = false }) => {
     const { t, i18n } = useTranslation()
@@ -207,7 +208,7 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
                             borderRadius: "7px",
                             textAlign: "center",
                             fontWeight: 800
-                        }}>{t(item?.status?.toUpperCase())}</div>
+                        }}>{t(capitalizeStatus(item?.status))}</div>
                     </div>
                     {
                         activeItem !== index + 1

@@ -9,6 +9,7 @@ import BargainQuotation from '../BargainQuotation.jsx'
 import AcceptQuotation from '../AcceptQuotation.jsx'
 import { Button } from 'reactstrap'
 import AcceptBargainedAmount from '../AcceptBaragainedAmount.jsx'
+import { capitalizeStatus } from '../../PendingNew/ItemMobile.jsx'
 
 const SentItemMobile = ({ item, activeItem, setActiveItem, index }) => {
     const { t } = useTranslation()
@@ -135,7 +136,7 @@ const SentItemMobile = ({ item, activeItem, setActiveItem, index }) => {
                                 borderRadius: "7px",
                                 textAlign: "center",
                                 fontWeight: 800
-                            }}>{t(item?.status?.toUpperCase())}</div>
+                            }}>{t(capitalizeStatus(item?.status))}</div>
                         </div>
                         {
                             activeItem !== index + 1

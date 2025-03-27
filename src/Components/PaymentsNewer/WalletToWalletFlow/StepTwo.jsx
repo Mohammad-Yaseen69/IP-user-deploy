@@ -245,7 +245,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                                     :
                                     <div className={styles.er_item}>
                                         <img src={er_icon} alt="" />
-                                        <span>1.00 {data?.currency?.currency?.code} = {data?.exchange_rate?.exchange_rate ?? "?"} {data?.exchange_rate?.receiver?.currency ?? ""}</span>
+                                        <span>1.00 {data?.currency?.currency?.code} = {data?.exchange_rate?.exchange_rate?.toFixed(2) ?? "?"} {data?.exchange_rate?.receiver?.currency ?? ""}</span>
                                     </div>
                             }
                             {
@@ -285,7 +285,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                                         {data?.beneficiary_wallet?.currency?.code}
                                         <input
                                             type="text"
-                                            value={data.recipient_amount ?? 0}
+                                            value={data.recipient_amount}
                                             onChange={(e) => {
                                                 if (e.target.value == "") {
                                                     dataHandler("amount", '')

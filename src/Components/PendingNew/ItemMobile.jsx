@@ -14,6 +14,13 @@ import ImagePreviewModal from "../ImagePreviewModal.jsx"
 import t_styles from "../TransactionsNewApi/Mobile/TransactionItemMobile.module.css"
 import PendingItemDetails from "./PendingItemDetails.jsx"
 
+export function capitalizeStatus(str) {
+    return str.toLowerCase() === "bargain-accepted" ? "Bargain-Accepted" : str
+        .split(" ")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(" ");
+}
+
 const ItemMobile = ({ item, activeItem, setActiveItem, index, type }) => {
     const { t } = useTranslation()
     const { verifyToken, authHeader } = useContext(UserContext)
@@ -72,12 +79,7 @@ const ItemMobile = ({ item, activeItem, setActiveItem, index, type }) => {
     const [allRating, setAllRating] = useState(0)
     const [allReviews, setAllReviews] = useState([])
 
-    function capitalizeStatus(str) {
-        return str.toLowerCase() === "bargain-accepted" ? "Bargain-Accepted" : str
-            .split(" ")
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-            .join(" ");
-    }
+
 
     useEffect(() => {
         if (activeItem === index + 1) {

@@ -120,7 +120,6 @@ const QuotationReceivedItem = ({ item, activeItem, setActiveItem, index }) => {
                 </div>
                 <div>{item?.amount_reciever_currency?.currency?.code} {item?.amount ? item?.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"}</div>
                 <div>{item?.revised_amount ? `${item?.amount_reciever_currency?.currency?.code} ${item?.revised_amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "None"}</div>
-                {/* <div><Badge color={color}>{item?.status?.toUpperCase()}</Badge></div> */}
                 <div>
                     <div style={{
                         background: badgeColor,
