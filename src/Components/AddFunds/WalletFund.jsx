@@ -330,6 +330,12 @@ const WalletFund = ({ setAction }) => {
         }
     }, [subStep])
 
+    useEffect(() => {
+        if (limits?.min) {
+            setAmount(limits.min.toFixed(2))
+        }
+    }, [limits?.min]);
+
     return (
         <>
             {
