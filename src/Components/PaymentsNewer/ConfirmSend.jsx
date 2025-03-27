@@ -209,7 +209,7 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, pa
                 >
                     {
                         beneficiary.map((item, index) => (
-                            <SwiperSlide key={item.id}>
+                            <SwiperSlide style={{width: "100%"}} key={item.id}>
                                 <SelectedRecipient index={index} user={item} setSubStep={setSubStep} size={beneficiary.length} payoutChannel={payoutChannel.value} setBeneficiary={setBeneficiary} />
                             </SwiperSlide>
                         ))
