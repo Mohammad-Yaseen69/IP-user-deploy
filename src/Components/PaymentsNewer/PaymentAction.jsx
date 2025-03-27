@@ -1,13 +1,9 @@
 import ActionCard from "./Common/ActionCard";
-import w1 from "./files/w1.png"
 import sm from "./files/sm.svg"
-import w2 from "./files/w2.png"
 import rm from "./files/rm.svg"
-import w3 from "./files/w3.png"
 import q from "./files/q.svg"
 import airtime_s from "./files/airtime.svg"
 import ctf from "./files/ctf.png"
-import ctf_bg from "./files/ctf_bg.png"
 import { useTranslation } from "react-i18next";
 import { useContext, useState } from "react";
 import { UserContext } from "../../Context/UserContext";

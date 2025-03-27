@@ -19,7 +19,7 @@ const ActionCard = (props) => {
                 <div className={styles.item_dets}>
                     <div>
                         <img src={icon} alt={title} />
-                        <h5 style={{ height: "48px", fontSize: (language === "de" || language === "fr" || language === "pt" || language === "ru") && "20px" }}>{title}       </h5>
+                        <h5 style={{ height: "48px", fontSize: (language === "de" || language === "fr" || language === "pt" || language === "ru" || language === "es" || language === "uk" || language === "tr") && "20px" }}>{title}       </h5>
                     </div>
                     <p>{desc}</p>
                 </div>
