@@ -667,7 +667,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         }
                                     </div>
                                 </div>
-                                <Link to={"/auth/forgot-password"} className={styles.forgot_pass}>
+                                <Link to={"/forgot-password"} className={styles.forgot_pass}>
                                     {t("Forgot Password?")}
                                 </Link>
                             </div>
@@ -690,7 +690,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         }
                         <div className={styles.bottom_text}>
                             <span>{t("Don't Have an Account? Sign Up").split("?")?.[0]} </span>
-                            <Link to={"/auth/signup"} onClick={() => setIsLoginForm(false)}>{t("Sign Up")}</Link>
+                            <Link to={"/signup"} onClick={() => setIsLoginForm(false)}>{t("Sign Up")}</Link>
                         </div>
                         <div className={styles.btns}>
                             {
@@ -923,7 +923,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 }
                                 <div className={styles.bottom_text}>
                                     <span>{t("Don't Have an Account? Sign Up").split("?")?.[0]} </span>
-                                    <Link to={"/auth/signup"} onClick={() => setIsLoginForm(false)}>{t("Sign Up")}</Link>
+                                    <Link to={"/signup"} onClick={() => setIsLoginForm(false)}>{t("Sign Up")}</Link>
                                 </div>
                                 <div className={styles.btns}>
                                     {

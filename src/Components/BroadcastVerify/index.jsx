@@ -42,7 +42,7 @@ const BroadcastVerify = () => {
 
             const decrypted = decryptData(res.data.data)
             // console.log(decrypted)
-            navigate("/auth/login")
+            navigate("/login")
         } catch (error) {
             // console.log(decryptData(error?.response?.data?.data))
         } finally {

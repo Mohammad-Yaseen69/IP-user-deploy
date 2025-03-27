@@ -252,7 +252,7 @@ const LoginNew = ({ country, setIsLoginForm, setIsForgot }) => {
                                     <div className={styles.center_bottom}>
                                         <div className={styles.bottom_text}>
                                             <span>{t("Don't Have an Account? Sign Up").split("?")?.[0]} </span>
-                                            <Link to={"/auth/signup"} onClick={() => setIsLoginForm(false)}>{t("Sign Up")}</Link>
+                                            <Link to={"/signup"} onClick={() => setIsLoginForm(false)}>{t("Sign Up")}</Link>
                                         </div>
                                         <button type="button" className={styles.form_btn} disabled={isPressed || (emailVerified ? !password || (!isPhoneNumber.test(email) && !isEmail.test(email)) : (!isPhoneNumber.test(email) && !isEmail.test(email)))} onClick={emailVerified ? loginHandler : checkEmailHandler}>
                                             <span>{

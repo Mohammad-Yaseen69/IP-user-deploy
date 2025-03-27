@@ -90,7 +90,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                         const coun = localStorage.getItem("ip_country")
                         localStorage.clear()
                         localStorage.setItem("ip_country", coun)
-                        window.location.pathname = "/auth/login";
+                        window.location.pathname = "/login";
                     }
                     if (dec?.message === "Invalid card.") {
                         setShowCardModal(true)
@@ -129,7 +129,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                         const coun = localStorage.getItem("ip_country")
                         localStorage.clear()
                         localStorage.setItem("ip_country", coun)
-                        window.location.pathname = "/auth/login";
+                        window.location.pathname = "/login";
                     }
                     console.log(dec)
                     setError(dec?.message)
@@ -165,7 +165,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                         const coun = localStorage.getItem("ip_country")
                         localStorage.clear()
                         localStorage.setItem("ip_country", coun)
-                        window.location.pathname = "/auth/login";
+                        window.location.pathname = "/login";
                     }
                     setError(dec?.message)
                 }

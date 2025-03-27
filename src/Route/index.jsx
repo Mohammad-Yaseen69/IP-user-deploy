@@ -53,9 +53,9 @@ const Routers = () => {
             </Route>
             <Route path={`/requests/:id`} element={<Requests />} />
             <Route path={`${process.env.PUBLIC_URL}/callback`} render={() => <Callback />} />
-            <Route exact path={`${process.env.PUBLIC_URL}/auth/login`} element={<AuthNew />} />
-            <Route exact path={`${process.env.PUBLIC_URL}/auth/signup`} element={<AuthNew />} />
-            <Route exact path={`${process.env.PUBLIC_URL}/auth/signup/:code`} element={<AuthNew />} />
+            <Route exact path={`${process.env.PUBLIC_URL}/login`} element={<AuthNew />} />
+            <Route exact path={`${process.env.PUBLIC_URL}/signup`} element={<AuthNew />} />
+            <Route exact path={`${process.env.PUBLIC_URL}/signup/:code`} element={<AuthNew />} />
             {/* <Route exact path={`${process.env.PUBLIC_URL}/profile/:user_name`} element={<UserProfilePublic />} /> */}
             <Route exact path={`${process.env.PUBLIC_URL}/verify-phone`} element={<VerifyPhone />} />
             {authRoutes.map(({ path, Components }, i) => (

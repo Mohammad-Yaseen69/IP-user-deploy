@@ -203,7 +203,7 @@ const OTPConfirmation = ({
                         const coun = localStorage.getItem("ip_country")
                         localStorage.clear()
                         localStorage.setItem("ip_country", coun)
-                        navigate("/auth/login")
+                        navigate("/login")
                     } else {
                         setOtpError(decrypted?.message)
                     }
@@ -255,7 +255,7 @@ const OTPConfirmation = ({
                         const coun = localStorage.getItem("ip_country")
                         localStorage.clear()
                         localStorage.setItem("ip_country", coun)
-                        navigate("/auth/login")
+                        navigate("/login")
                     } else {
                         setOtpError("You have entered wrong OTP.")
                     }
@@ -314,7 +314,7 @@ const OTPConfirmation = ({
                                 const coun = localStorage.getItem("ip_country")
                                 localStorage.clear()
                                 localStorage.setItem("ip_country", coun)
-                                navigate("/auth/login")
+                                navigate("/login")
                             } else {
                                 setOtpError("You have entered wrong OTP.")
                             }
@@ -370,7 +370,7 @@ const OTPConfirmation = ({
                                 const coun = localStorage.getItem("ip_country")
                                 localStorage.clear()
                                 localStorage.setItem("ip_country", coun)
-                                navigate("/auth/login")
+                                navigate("/login")
                             } else {
                                 setOtpError("You have entered wrong OTP.")
                             }
@@ -426,7 +426,7 @@ const OTPConfirmation = ({
                                 const coun = localStorage.getItem("ip_country")
                                 localStorage.clear()
                                 localStorage.setItem("ip_country", coun)
-                                navigate("/auth/login")
+                                navigate("/login")
                             } else {
                                 setOtpError("You have entered wrong OTP.")
                             }
@@ -481,7 +481,7 @@ const OTPConfirmation = ({
                             const coun = localStorage.getItem("ip_country")
                             localStorage.clear()
                             localStorage.setItem("ip_country", coun)
-                            navigate("/auth/login")
+                            navigate("/login")
                         } else {
                             setOtpError("You have entered wrong OTP.")
                         }
@@ -520,7 +520,7 @@ const OTPConfirmation = ({
                             const coun = localStorage.getItem("ip_country")
                             localStorage.clear()
                             localStorage.setItem("ip_country", coun)
-                            navigate("/auth/login")
+                            navigate("/login")
                         } else {
                             setOtpError("You have entered wrong OTP.")
                         }
@@ -576,7 +576,7 @@ const OTPConfirmation = ({
                                 const coun = localStorage.getItem("ip_country")
                                 localStorage.clear()
                                 localStorage.setItem("ip_country", coun)
-                                navigate("/auth/login")
+                                navigate("/login")
                             } else {
                                 setOtpError("You have entered wrong OTP.")
                             }
@@ -621,7 +621,7 @@ const OTPConfirmation = ({
                                 const coun = localStorage.getItem("ip_country")
                                 localStorage.clear()
                                 localStorage.setItem("ip_country", coun)
-                                navigate("/auth/login")
+                                navigate("/login")
                             } else {
                                 setOtpError("You have entered wrong OTP.")
                             }
@@ -665,7 +665,7 @@ const OTPConfirmation = ({
                             const coun = localStorage.getItem("ip_country")
                             localStorage.clear()
                             localStorage.setItem("ip_country", coun)
-                            navigate("/auth/login")
+                            navigate("/login")
                         } else {
                             setOtpError("You have entered wrong OTP.")
                         }
@@ -709,7 +709,7 @@ const OTPConfirmation = ({
                             const coun = localStorage.getItem("ip_country")
                             localStorage.clear()
                             localStorage.setItem("ip_country", coun)
-                            navigate("/auth/login")
+                            navigate("/login")
                         } else {
                             setOtpError("You have entered wrong OTP.")
                         }

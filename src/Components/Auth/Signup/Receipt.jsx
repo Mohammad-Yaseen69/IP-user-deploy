@@ -17,7 +17,7 @@ const Receipt = ({ setLogin }) => {
                 setTimer(prev => prev - 1)
             }, 1000)
         } else {
-            navigate("/auth/login")
+            navigate("/login")
             setLogin(true)
         }
         return () => {

@@ -193,7 +193,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                     const coun = localStorage.getItem("ip_country")
                     localStorage.clear()
                     localStorage.setItem("ip_country", coun)
-                    navigate("/auth/login")
+                    navigate("/login")
                 }
             }
         }
@@ -234,7 +234,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                 const coun = localStorage.getItem("ip_country")
                 localStorage.clear()
                 localStorage.setItem("ip_country", coun)
-                navigate("/auth/login")
+                navigate("/login")
             }
         }
         finally {
@@ -270,7 +270,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                 const coun = localStorage.getItem("ip_country")
                 localStorage.clear()
                 localStorage.setItem("ip_country", coun)
-                navigate("/auth/login")
+                navigate("/login")
             }
         }
         finally {

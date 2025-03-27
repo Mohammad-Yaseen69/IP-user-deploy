@@ -166,7 +166,7 @@ const UserState = ({ children }) => {
                         localStorage.clear()
                         localStorage.setItem("ip_country", coun)
                         clearData()
-                        navigate("/auth/login")
+                        navigate("/login")
                     }
                     if (decrypted?.status !== "active") {
                         toast.error("Account Suspended!")
@@ -174,7 +174,7 @@ const UserState = ({ children }) => {
                         localStorage.clear()
                         localStorage.setItem("ip_country", coun)
                         clearData()
-                        navigate("/auth/login")
+                        navigate("/login")
                     }
                     // console.log(decryptData(res.data.data))
                 })
@@ -187,7 +187,7 @@ const UserState = ({ children }) => {
                         clearData()
                         if (!publicRoutes.some(item => window.location.pathname.toLowerCase().includes(item.path.toLowerCase().split(":")[0])) && !window.location.pathname.toLowerCase().includes("profile/")) {
                             sessionStorage.setItem("path", window.location.href?.split("pay.ch")?.[1])
-                            navigate("/auth/login")
+                            navigate("/login")
                         }
                     }
                 })
@@ -206,7 +206,7 @@ const UserState = ({ children }) => {
                     localStorage.clear()
                     localStorage.setItem("ip_country", coun)
                     clearData()
-                    navigate("/auth/login")
+                    navigate("/login")
                 }
                 if (decrypted?.status !== "active") {
                     toast.error("Account Suspended!")
@@ -214,7 +214,7 @@ const UserState = ({ children }) => {
                     localStorage.clear()
                     localStorage.setItem("ip_country", coun)
                     clearData()
-                    navigate("/auth/login")
+                    navigate("/login")
                 }
             })
             .catch(err => {
@@ -224,11 +224,11 @@ const UserState = ({ children }) => {
                 localStorage.setItem("ip_country", coun)
                 clearData()
                 if (dec?.message?.toLowerCase()?.includes("account not found")) {
-                    navigate("/auth/login")
+                    navigate("/login")
                 }
                 if (!publicRoutes.some(item => window.location.pathname.toLowerCase().includes(item.path.toLowerCase().split(":")[0])) && !window.location.pathname.toLowerCase().includes("profile/")) {
                     sessionStorage.setItem("path", window.location.href?.split("pay.ch")?.[1])
-                    navigate("/auth/login")
+                    navigate("/login")
                 }
             })
     }

@@ -492,7 +492,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                         const coun = localStorage.getItem("ip_country")
                         localStorage.clear()
                         localStorage.setItem("ip_country", coun)
-                        window.location.pathname = "/auth/login";
+                        window.location.pathname = "/login";
                     }
                     // console.log(decryptData(err.response.data.data))
                 })
@@ -633,7 +633,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                 const coun = localStorage.getItem("ip_country")
                                 localStorage.clear()
                                 localStorage.setItem("ip_country", coun)
-                                window.location.pathname = "/auth/login";
+                                window.location.pathname = "/login";
                             }
                             // console.log(decrypted)
                             setBankDetailsError("Invalid Details")
@@ -712,7 +712,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                 const coun = localStorage.getItem("ip_country")
                                 localStorage.clear()
                                 localStorage.setItem("ip_country", coun)
-                                window.location.pathname = "/auth/login";
+                                window.location.pathname = "/login";
                             }
                             setBankDetailsError("Invalid Details")
                             // console.log(decrypted)
@@ -847,7 +847,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                         const coun = localStorage.getItem("ip_country")
                         localStorage.clear()
                         localStorage.setItem("ip_country", coun)
-                        window.location.pathname = "/auth/login";
+                        window.location.pathname = "/login";
                     }
                     // console.log(decryptData(error.response.data.data))
                 }
@@ -883,7 +883,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                         const coun = localStorage.getItem("ip_country")
                         localStorage.clear()
                         localStorage.setItem("ip_country", coun)
-                        window.location.pathname = "/auth/login";
+                        window.location.pathname = "/login";
                     }
                     console.log(dec)
                 }

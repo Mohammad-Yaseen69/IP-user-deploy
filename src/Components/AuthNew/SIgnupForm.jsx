@@ -1395,7 +1395,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                                         <ChevronRight size={28} color="white" />
                                     </button>
                                     <div style={{ display: "flex", gap: "10px", alignItems: "center", justifyContent: "center" }}>
-                                        <Link style={{ fontWeight: "600" }} to={"/auth/login"} onClick={() => setIsLoginForm(true)}>{t("Sign In")}</Link>
+                                        <Link style={{ fontWeight: "600" }} to={"/login"} onClick={() => setIsLoginForm(true)}>{t("Sign In")}</Link>
                                         |
                                         <Link style={{ fontWeight: "600" }} to={"mailto:support@insta-pay.ch"}>{t("Contact Support")}</Link>
                                     </div>
@@ -1482,10 +1482,10 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                                         {t("Click below to login")}
                                     </p>
                                 </div>
-                                <Link to={"/auth/login"} style={{ color: "white" }}>
+                                <Link to={"/login"} style={{ color: "white" }}>
                                     <button className={styles.form_btn} onClick={() => {
                                         setIsLoginForm(true)
-                                        navigate("/auth/login")
+                                        navigate("/login")
                                     }} style={{ minWidth: "180px" }}>
                                         <span>{t("Login")}</span>
                                         <ChevronRight size={28} color="white" />
@@ -1689,7 +1689,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                             //     className={styles.resend_text}>Redirecting...</span>
                             // <button className={styles.form_btn} disabled={isPressed || !verified} onClick={() => {
                             //     setIsLoginForm(true)
-                            //     navigate("/auth/login")
+                            //     navigate("/login")
                             // }} style={{ marginTop: winWidth ? "100px" : "180px" }}>
                             //     <span>{isPressed ? "Finishing" : "Finish"}</span>
                             //     <ChevronRight size={28} color="white" />
@@ -1707,7 +1707,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                 &&
                 <div className={styles.bottom_text}>
                     <span>{t("Already have an account?")} </span>
-                    <Link to={"/auth/login"} onClick={() => setIsLoginForm(true)}>{t("Sign In")}</Link>
+                    <Link to={"/login"} onClick={() => setIsLoginForm(true)}>{t("Sign In")}</Link>
                 </div>
             }
             {

@@ -27,9 +27,9 @@ import AuthNew from '../Components/AuthNew';
 
 export const authRoutes = [
   // { path: `${process.env.PUBLIC_URL}/auth/login`, Components: <AuthComponent /> },
-  { path: `${process.env.PUBLIC_URL}/auth/login`, Components: <AuthNew /> },
-  { path: `${process.env.PUBLIC_URL}/auth/signup`, Components: <AuthNew /> },
-  { path: `${process.env.PUBLIC_URL}/auth/signup/:code`, Components: <AuthNew /> },
+  { path: `${process.env.PUBLIC_URL}/login`, Components: <AuthNew /> },
+  { path: `${process.env.PUBLIC_URL}/signup`, Components: <AuthNew /> },
+  { path: `${process.env.PUBLIC_URL}/signup/:code`, Components: <AuthNew /> },
   // { path: `${process.env.PUBLIC_URL}/login`, Components: <AuthComponent /> },
   { path: `${process.env.PUBLIC_URL}/authentication/login-simple`, Components: <LoginSample /> },
   { path: `${process.env.PUBLIC_URL}/authentication/login-img`, Components: <LoginOne /> },

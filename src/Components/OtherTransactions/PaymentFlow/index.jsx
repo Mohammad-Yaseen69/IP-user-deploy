@@ -406,7 +406,7 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                     const coun = localStorage.getItem("ip_country")
                     localStorage.clear()
                     localStorage.setItem("ip_country", coun)
-                    navigate("/auth/login")
+                    navigate("/login")
                 }
             }
         }
@@ -446,7 +446,7 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                 const coun = localStorage.getItem("ip_country")
                 localStorage.clear()
                 localStorage.setItem("ip_country", coun)
-                navigate("/auth/login")
+                navigate("/login")
             }
         }
         finally {
@@ -482,7 +482,7 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                 const coun = localStorage.getItem("ip_country")
                 localStorage.clear()
                 localStorage.setItem("ip_country", coun)
-                navigate("/auth/login")
+                navigate("/login")
             }
         }
         finally {

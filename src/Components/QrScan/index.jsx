@@ -13,7 +13,7 @@ const QRScan = () => {
             navigate(`/payments?payment_action=send_money&send_type=qr_pay&wallet_id=${wallet_id?.toUpperCase()}`)
         } else {
             sessionStorage.setItem("path", `/payments?payment_action=send_money&send_type=qr_pay&wallet_id=${wallet_id?.toUpperCase()}`)
-            navigate("/auth/login")
+            navigate("/login")
         }
     }, [userDetails])
 

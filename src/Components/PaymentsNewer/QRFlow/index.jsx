@@ -271,7 +271,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                 const coun = localStorage.getItem("ip_country")
                 localStorage.clear()
                 localStorage.setItem("ip_country", coun)
-                navigate("/auth/login")
+                navigate("/login")
             }
         } finally {
             dataHandler("loading", false)
@@ -346,7 +346,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                     const coun = localStorage.getItem("ip_country")
                     localStorage.clear()
                     localStorage.setItem("ip_country", coun)
-                    navigate("/auth/login")
+                    navigate("/login")
                 }
             }
         }
@@ -386,7 +386,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                 const coun = localStorage.getItem("ip_country")
                 localStorage.clear()
                 localStorage.setItem("ip_country", coun)
-                navigate("/auth/login")
+                navigate("/login")
             }
         }
         finally {

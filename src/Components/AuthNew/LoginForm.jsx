@@ -286,7 +286,7 @@ const LoginForm = ({ setIsLoginForm, setIsForgot, country }) => {
                         </button>
                         <div className={styles.bottom_text}>
                             <span>{t("Don't Have an Account? Sign Up").split("?")?.[0]} </span>
-                            <Link to={"/auth/signup"} onClick={() => setIsLoginForm(false)}>{t("Sign Up")}</Link>
+                            <Link to={"/signup"} onClick={() => setIsLoginForm(false)}>{t("Sign Up")}</Link>
                         </div>
                         {/* <GoogleLogin
                             onSuccess={credentialResponse => {

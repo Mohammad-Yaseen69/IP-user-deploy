@@ -68,7 +68,7 @@ const RegistrationCompleted = ({
                 <Button onClick={() => {
                     setStep(1)
                     setIsLoginForm(true)
-                    navigate("/auth/login")
+                    navigate("/login")
                 }}>
                     <span>Verify Your Account</span>
                     <ChevronRight />

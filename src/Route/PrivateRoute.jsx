@@ -18,7 +18,7 @@ const PrivateRoute = () => {
   return login && jwt_token ? (
     <Outlet />
   ) : (
-    <Navigate exact to={`${process.env.PUBLIC_URL}/auth/login`} />
+    <Navigate exact to={`${process.env.PUBLIC_URL}/login`} />
   );
 };
 

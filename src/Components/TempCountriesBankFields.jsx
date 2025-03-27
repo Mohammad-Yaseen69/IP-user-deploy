@@ -27,7 +27,7 @@ const TempCountriesBankFields = () => {
                 const coun = localStorage.getItem("ip_country")
                 localStorage.clear()
                 localStorage.setItem("ip_country", coun)
-                window.location.pathname = "/auth/login";
+                window.location.pathname = "/login";
             }
             return null;
         }

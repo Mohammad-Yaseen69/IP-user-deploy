@@ -29,7 +29,7 @@ const ProfileCompletionModal = ({ setShowModal, profileIncompleteReason }) => {
                             localStorage.clear()
                             localStorage.setItem("ip_country", coun)
                             clearData()
-                            navigate("/auth/login")
+                            navigate("/login")
                         }}
                         style={{
                             display: "flex",

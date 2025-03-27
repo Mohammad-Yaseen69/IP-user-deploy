@@ -263,7 +263,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                                                 onClick={() => {
                                                     setIsForgot(false)
                                                     setIsLoginForm(true)
-                                                    navigate("/auth/login")
+                                                    navigate("/login")
                                                 }}
                                             >{t("Back to Login")}</div>
                                         </div>
@@ -375,7 +375,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                                     onClick={() => {
                                         setIsForgot(false)
                                         setIsLoginForm(true)
-                                        navigate("/auth/login")
+                                        navigate("/login")
                                     }}
                                 >{t("Back to Login")}</div>
                             </div>
@@ -531,11 +531,11 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                             {t("Click below to login")}
                         </p>
                     </div>
-                    <Link to={"/auth/login"} style={{ color: "white" }}>
+                    <Link to={"/login"} style={{ color: "white" }}>
                         <button className={styles.form_btn} onClick={() => {
                             setIsForgot(false)
                             setIsLoginForm(true)
-                            navigate("/auth/login")
+                            navigate("/login")
                         }} style={{ minWidth: "180px" }}>
                             <span>{t("Login")}</span>
                             <ChevronRight size={28} color="white" />

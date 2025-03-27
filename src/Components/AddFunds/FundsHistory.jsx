@@ -22,7 +22,7 @@ const FundsHistory = ({ isOpen, toggle }) => {
                     const coun = localStorage.getItem("ip_country")
                     localStorage.clear()
                     localStorage.setItem("ip_country", coun)
-                    window.location.pathname = "/auth/login";
+                    window.location.pathname = "/login";
                 }
                 // console.log(decryptData(error.response.data.data));
             }

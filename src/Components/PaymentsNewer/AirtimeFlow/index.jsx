@@ -322,7 +322,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                 const coun = localStorage.getItem("ip_country")
                 localStorage.clear()
                 localStorage.setItem("ip_country", coun)
-                navigate("/auth/login")
+                navigate("/login")
             } else {
                 updateDataHandler("otpError", decrypted?.message ?? "Something went wrong while verifying OTP!")
             }
@@ -458,7 +458,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                     const coun = localStorage.getItem("ip_country")
                     localStorage.clear()
                     localStorage.setItem("ip_country", coun)
-                    navigate("/auth/login")
+                    navigate("/login")
                 }
             }
         }

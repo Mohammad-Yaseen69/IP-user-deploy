@@ -203,7 +203,7 @@ export const MENU = [
                 icon: <img src={logout} style={{ marginRight: "12px" }} />,
                 activeIcon: <img src={logout_a} style={{ marginRight: "12px" }} />,
                 type: "link",
-                url: `${process.env.PUBLIC_URL}/auth/login`,
+                url: `${process.env.PUBLIC_URL}/login`,
             }
         ]
     }

@@ -144,7 +144,7 @@ const SignupForm = ({ silf }) => {
                                 // console.log(decrypted)
                                 if (decrypted.status === true) {
                                     silf(true)
-                                    navigate("/auth/login")
+                                    navigate("/login")
                                 }
                             })
                             .catch(error => {
@@ -175,7 +175,7 @@ const SignupForm = ({ silf }) => {
                         const decrypted = decryptData(res.data.data)
                         if (decrypted.status === true) {
                             silf(true)
-                            navigate("/auth/login")
+                            navigate("/login")
                         }
                     })
                     .catch(error => {
@@ -202,7 +202,7 @@ const SignupForm = ({ silf }) => {
                         const decrypted = decryptData(res.data.data)
                         if (decrypted.status === true) {
                             silf(true)
-                            navigate("/auth/login")
+                            navigate("/login")
                         }
                     })
                     .catch(error => {
@@ -623,7 +623,7 @@ const SignupForm = ({ silf }) => {
                     </>
                 }
                 <p className="text-center">Already have an account?
-                    <Link to={"/auth/login"} onClick={() => silf(true)} style={{
+                    <Link to={"/login"} onClick={() => silf(true)} style={{
                         color: "var(--theme-default)",
                         fontWeight: 700,
                         cursor: 'pointer',

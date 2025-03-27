@@ -306,7 +306,7 @@ const Signup = ({ country, setIsLoginForm }) => {
                     //     <h3 className="mb-4 mt-4">{t("Signup Successful")}</h3>
                     //     <button onClick={() => {
                     //         setIsLoginForm(true)
-                    //         navigate("/auth/login")
+                    //         navigate("/login")
                     //     }} className={styles.form_btn}>
                     //         <span>{t("Login Now")}</span>
                     //     </button>
@@ -427,7 +427,7 @@ const Signup = ({ country, setIsLoginForm }) => {
                                                     }
                                                     <div className={styles.bottom_text}>
                                                         <span>{t("Already Have an Account?").split("?")?.[0]} </span>
-                                                        <Link onClick={() => setIsLoginForm(true)} to={"/auth/login"}>{t("Login")}</Link>
+                                                        <Link onClick={() => setIsLoginForm(true)} to={"/login"}>{t("Login")}</Link>
                                                     </div>
                                                     <div className={styles.btns}>
                                                         {

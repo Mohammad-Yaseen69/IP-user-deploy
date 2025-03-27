@@ -240,7 +240,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
       const coun = localStorage.getItem("ip_country")
       localStorage.clear()
       localStorage.setItem("ip_country", coun)
-      navigate("/auth/login")
+      navigate("/login")
     }
   }
 

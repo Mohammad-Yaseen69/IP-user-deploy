@@ -78,7 +78,7 @@ const BottomNav = ({ setShowModal }) => {
         {
             icon: signup,
             icon_active: signup,
-            link: "/auth/signup",
+            link: "/signup",
             type: "link",
             width: "29px",
             height: "22px",
@@ -91,7 +91,7 @@ const BottomNav = ({ setShowModal }) => {
         {
             icon: login,
             icon_active: login,
-            link: "/auth/login",
+            link: "/login",
             type: "link",
             width: "29px",
             height: "22px",

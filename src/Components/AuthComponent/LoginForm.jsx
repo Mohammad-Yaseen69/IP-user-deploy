@@ -155,7 +155,7 @@ const LoginForm = ({ silf }) => {
                     </UL>
                 </FormGroup>
                 <p className="text-center">Don't have an account?
-                    <Link to={"/auth/signup"} onClick={() => silf(false)} style={{
+                    <Link to={"/signup"} onClick={() => silf(false)} style={{
                         color: "var(--theme-default)",
                         fontWeight: 700,
                         cursor: 'pointer',

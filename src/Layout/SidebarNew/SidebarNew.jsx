@@ -132,7 +132,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                                         </>
                                         :
                                         <>
-                                            <Link to={"/auth/signup"} style={{
+                                            <Link to={"/signup"} style={{
                                                 display: "flex",
                                                 alignItems: "center",
                                                 gap: "1.2rem",
@@ -159,7 +159,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                                                 <span>Sign Up</span>
                                                 <ChevronRight style={{ position: "absolute", right: ".5rem" }} />
                                             </Link>
-                                            <Link to={"/auth/login"} style={{
+                                            <Link to={"/login"} style={{
                                                 display: "flex",
                                                 alignItems: "center",
                                                 gap: "1.2rem",

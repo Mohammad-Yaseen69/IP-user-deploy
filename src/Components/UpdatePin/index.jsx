@@ -135,7 +135,7 @@ const CreatePin = () => {
                 const coun = localStorage.getItem("ip_country")
                 localStorage.clear()
                 localStorage.setItem("ip_country", coun)
-                navigate("/auth/login")
+                navigate("/login")
             }
         } finally {
             setLoading(false)

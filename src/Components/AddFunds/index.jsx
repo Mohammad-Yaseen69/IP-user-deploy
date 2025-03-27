@@ -58,7 +58,7 @@ const AddFunds = () => {
                         const coun = localStorage.getItem("ip_country")
                         localStorage.clear()
                         localStorage.setItem("ip_country", coun)
-                        window.location.pathname = "/auth/login";
+                        window.location.pathname = "/login";
                     }
                     console.log(err)
                 } finally {
@@ -101,7 +101,7 @@ const AddFunds = () => {
                             const coun = localStorage.getItem("ip_country")
                             localStorage.clear()
                             localStorage.setItem("ip_country", coun)
-                            window.location.pathname = "/auth/login";
+                            window.location.pathname = "/login";
                         }
                         console.log(err)
                     }

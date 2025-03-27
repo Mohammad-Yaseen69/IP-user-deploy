@@ -19,7 +19,7 @@ const InactivityLogoutModal = ({ isOpen, toggle }) => {
                     const coun = localStorage.getItem("ip_country")
                     localStorage.clear()
                     localStorage.setItem("ip_country", coun)
-                    navigate("/auth/login")
+                    navigate("/login")
                 }}>
                     <span>{t("LOGIN AGAIN").toLowerCase()}</span>
                     <ChevronRight size={18} color="white" />

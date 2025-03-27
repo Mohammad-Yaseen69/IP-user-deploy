@@ -19,7 +19,7 @@ const SessionExpireModal = ({ isOpen, toggle }) => {
         clearData()
         toggle()
         setIsOpenState(false)
-        navigate("/auth/login")
+        navigate("/login")
     }
 
     useEffect(() => {

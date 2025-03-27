@@ -133,9 +133,9 @@ export const publicRoutes = [
 ]
 
 export const authRoutes = [
-    { path: `/auth/login`, component: <Auth /> },
-    { path: `/auth/forgot-password`, component: <AuthNew /> },
-    { path: `/auth/signup`, component: <Auth /> },
-    { path: `/auth/signup/:code`, component: <Auth /> },
+    { path: `/login`, component: <Auth /> },
+    { path: `/forgot-password`, component: <AuthNew /> },
+    { path: `/signup`, component: <Auth /> },
+    { path: `/signup/:code`, component: <Auth /> },
     { path: "*", component: <NotFound type='Page' /> }
 ]

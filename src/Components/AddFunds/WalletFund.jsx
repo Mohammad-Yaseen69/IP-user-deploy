@@ -83,7 +83,7 @@ const WalletFund = ({ setAction }) => {
                     const coun = localStorage.getItem("ip_country")
                     localStorage.clear()
                     localStorage.setItem("ip_country", coun)
-                    window.location.pathname = "/auth/login";
+                    window.location.pathname = "/login";
                 }
                 // console.log(dec)
             }
@@ -160,7 +160,7 @@ const WalletFund = ({ setAction }) => {
                 const coun = localStorage.getItem("ip_country")
                 localStorage.clear()
                 localStorage.setItem("ip_country", coun)
-                window.location.pathname = "/auth/login";
+                window.location.pathname = "/login";
             }
             toast.error("Something went wrong while getting mobile wallet channels.")
         }
@@ -181,7 +181,7 @@ const WalletFund = ({ setAction }) => {
                 const coun = localStorage.getItem("ip_country")
                 localStorage.clear()
                 localStorage.setItem("ip_country", coun)
-                window.location.pathname = "/auth/login";
+                window.location.pathname = "/login";
             }
             toast.error("Something went wrong while getting mobile wallet payers.")
         } finally {
@@ -231,7 +231,7 @@ const WalletFund = ({ setAction }) => {
                         const coun = localStorage.getItem("ip_country")
                         localStorage.clear()
                         localStorage.setItem("ip_country", coun)
-                        window.location.pathname = "/auth/login";
+                        window.location.pathname = "/login";
                     }
                     setError(dec?.message ?? "Something went wrong.")
                     console.log(dec)
@@ -298,7 +298,7 @@ const WalletFund = ({ setAction }) => {
                         const coun = localStorage.getItem("ip_country")
                         localStorage.clear()
                         localStorage.setItem("ip_country", coun)
-                        window.location.pathname = "/auth/login";
+                        window.location.pathname = "/login";
                     }
                     console.log(dec)
                     setError(dec?.message ?? "Something went wrong.")
