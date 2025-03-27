@@ -41,7 +41,7 @@ const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabledDropdow
                     setCountry={setCountry}
                     selectedCountry={selectedCountry}
                     setSelectedCountry={setSelectedCountry}
-                    disabledDropdown={disabledDropdown}
+                    disabledDropdown={disabled}
                     setNumber={setNumber}
                     phone={phone}
                 />
