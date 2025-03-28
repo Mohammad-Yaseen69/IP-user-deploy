@@ -122,12 +122,14 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
 
     const sendOtp = async () => {
         const data = {
-            sender_wallet_id: walletState?.wallet_id,
-            token: feeDetails.token,
-            account: userDetails._id
+            data: {
+                sender_wallet_id: walletState?._id,
+                token: feeDetails.token,
+                account: userDetails._id
+            },
+            type: codeType
         }
 
-        console.log(data)
 
         const encrypted = encryptData(data)
         try {
@@ -161,17 +163,19 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
     }
 
     useEffect(() => {
-        if (walletState.wallet_id) {
+        if (walletState.wallet_id && !feeDetails?.token) {
             async function getFee() {
                 const data = {
                     cardId: card._id,
-                    walletId: walletState?.wallet_id,
+                    walletId: walletState?._id,
                     amount: +String(amount)?.replaceAll(",", ""),
                     type: paymentType
                 }
 
                 console.log(data)
                 const enc = encryptData(data)
+
+
 
                 const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-topup-fee`, { data: enc }, {
                     headers: authHeader
@@ -203,15 +207,14 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
     }
 
     const walletTopup = async (setter, type, otp, setError) => {
-        const data = {
-            token: token,
-            otp: otp,
-            type: codeType
-        }
+        const data = new FormData()
 
+        data.append("type", codeType)
+        data.append("otp", otp)
+        data.append("token", token)
         console.log(data)
         try {
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/wallet-to-card-transfer`, { data: encryptData(data) }, {
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/wallet-to-card-transfer`, data, {
                 headers: authHeader
             })
             setToken(null)

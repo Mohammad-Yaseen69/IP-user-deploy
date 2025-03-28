@@ -1,5 +1,4 @@
 import styles from "../styles/onboard.module.scss"
-// import "./files/modal.reset.css"
 import { Svg } from "../files"
 
 const ConfirmationStep = ({feeDetails, walletState, setStep, sendOtp, addFunds}) => {
