@@ -37,6 +37,9 @@ import AddFunds from "./add_funds.svg"
 import Gb from "./GB.svg"
 import USD from "./USD.svg"
 import Euro from "./EURO.svg"
+import Currency from "./currency.svg"
+import CircleCheck from "./check-circle.svg"
+import Receipt from "./receipt.svg"
 
 export  {
     Payment,
@@ -71,5 +74,8 @@ export  {
     AddFunds,
     USD,
     Euro,
-    Gb
+    Gb,
+    Currency,
+    CircleCheck,
+    Receipt
 }

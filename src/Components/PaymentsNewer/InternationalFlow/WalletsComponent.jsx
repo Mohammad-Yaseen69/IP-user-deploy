@@ -160,7 +160,7 @@ export const WalletCard = ({
                 const dec = decryptData(response?.data?.data)
                 setFeeDetail(dec?.data)
                 setIsSufficient(wallet?.balance?.available > dec.data?.fee)
-                console.log(dec)
+                // console.log(dec)
             } catch (error) {
                 const dec = decryptData(error.response?.data?.data)
                 console.log(dec)
@@ -175,6 +175,7 @@ export const WalletCard = ({
                 amount: +String(amount)?.replaceAll(",", ""),
                 type: paymentType
             }
+            console.log(data)
             const enc = encryptData(data)
             try {
                 
@@ -185,7 +186,7 @@ export const WalletCard = ({
                 const dec = decryptData(response?.data?.data)
 
 
-                console.log(dec)
+                // console.log(dec)
                 setWalletFeeDetails(prev => [...prev, dec.data])
                 wallet.isSufficient = wallet?.balance?.available > dec.data?.feeDetails?.totalAmount
                 setIsSufficient(wallet?.balance?.available > dec.data?.feeDetails?.totalAmount)

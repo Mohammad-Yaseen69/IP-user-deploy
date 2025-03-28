@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import styles from "../styles/addFunds.module.scss"
 import { Modal, ModalBody, ModalHeader } from 'reactstrap'
-import { AddFunds } from '../files'
+import { AddFunds, Receipt, Currency, CircleCheck } from '../files'
 import ContactBox from '../PaymentModal/ContactBox'
 import onboardStyles from "../styles/onboard.module.scss"
 import PaymentSelect from '../PaymentModal/PaymentSelectStep'
@@ -17,6 +17,7 @@ import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import { toast } from 'react-toastify'
 import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
 import { useNavigate } from 'react-router'
+import SideProgress from './SideProgress'
 
 const PLACEHOLDER_CARD_TYPE = {
     type: 'placeholder',
@@ -74,7 +75,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
         }
     }, [userDetails])
 
- 
+
     const filteredWallets = useMemo(() => {
         return userWallets
             ?.filter(item =>
@@ -116,6 +117,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
     const [loading, setLoading] = useState(false)
     const [showOtpModal, setshowOtpModal] = useState(false)
     const [showSuccess, setShowSuccess] = useState(false)
+    const [sideText, setSideText] = useState("Set the Value")
     const navigate = useNavigate()
 
     const sendOtp = async () => {
@@ -163,10 +165,12 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
             async function getFee() {
                 const data = {
                     cardId: card._id,
-                    walletId: walletState?._id,
+                    walletId: walletState?.wallet_id,
                     amount: +String(amount)?.replaceAll(",", ""),
                     type: paymentType
                 }
+
+                console.log(data)
                 const enc = encryptData(data)
 
                 const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-topup-fee`, { data: enc }, {
@@ -205,6 +209,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
             type: codeType
         }
 
+        console.log(data)
         try {
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/wallet-to-card-transfer`, { data: encryptData(data) }, {
                 headers: authHeader
@@ -219,6 +224,28 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
         }
     }
 
+
+    useEffect(() => {
+        switch (step) {
+            case 1:
+                setSideText("Set The Value")
+                break;
+
+            case 2:
+                setSideText("Choose the method")
+                break;
+            case 3:
+                setSideText("Choose the method")
+                break;
+
+            case 4:
+                setSideText("Review Your Payment Details")
+                break;
+
+            default:
+                break;
+        }
+    }, [step])
     return (
         <Modal isOpen={isOpen} style={{ minWidth: '850px' }} toggle={() => setOpen(prev => ({ ...prev, addFunds: false }))}>
             <ModalBody>
@@ -226,9 +253,18 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
                     <div className={styles.left}>
 
 
-                        <div className={styles.top}>
-                            <img src={AddFunds} alt="" />
-                            <h2>Add Funds</h2>
+                        <div>
+                            <div className={styles.top}>
+                                <img src={AddFunds} alt="" />
+                                <h2>Add Funds</h2>
+                            </div>
+
+                            <div className={styles.progressEffect} style={{ marginTop: "2rem" }}>
+                                <SideProgress isActive={step === 1} isCompleted={step > 1} Icon={Currency} Text={"Enter the amount"} step={1} />
+                                <SideProgress isActive={step === 2 || step === 3} isCompleted={step > 3} Icon={Receipt} Text={"Select the method"} step={2} />
+                                <SideProgress isActive={step === 4} isCompleted={step > 4} Icon={CircleCheck} Text={"Review and Confirm"} step={3} />
+
+                            </div>
                         </div>
 
 
@@ -241,18 +277,19 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
 
                     <div className={styles.right}>
                         <div>
-                            <div className={styles.top}>
-                                <h4>Set the Value</h4>
+                            {step !== 5 && <div className={styles.top}>
+                                <h4>{sideText}</h4>
                                 <p>STEP 0{step <= 2 ? step : step - 1}</p>
-                            </div>
+                            </div>}
 
                             <div className={onboardStyles.paymentContent}>
                                 <div className={onboardStyles.right} style={{ padding: "0px", flex: 1 }}>
                                     {step === 2 &&
-                                        <PaymentSelect style={{ marginTop: "" }} paymentType={paymentType} setPaymentType={setPaymentType} />
+                                        <PaymentSelect marginTop={"1rem"} style={{ marginTop: "" }} paymentType={paymentType} setPaymentType={setPaymentType} />
                                     }
                                     {step === 3 &&
                                         <PaymentStep
+                                            marginTop={"1rem"}
                                             paymentType={paymentType}
                                             filteredWallets={filteredWallets}
                                             cardDetail={cardDetail}

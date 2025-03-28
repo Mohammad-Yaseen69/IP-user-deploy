@@ -323,7 +323,7 @@ const UserState = ({ children }) => {
             .then(res => {
                 const decrypted = decryptData(res.data.data)
                 const url = decrypted?.url.split("/signup/")
-                const formattedUrl = `https://my.insta-pay.ch/auth/signup/${url[1]}`
+                const formattedUrl = `https://my.insta-pay.ch/signup/${url[1]}`
                 setReferralLink(formattedUrl)
             })
             .catch(err => {

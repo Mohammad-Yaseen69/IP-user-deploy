@@ -97,7 +97,7 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                 window.innerWidth > 1000
                     ?
                     <div className={styles.banner}>
-                        <img src={airtime} />
+                        <img src={airtime} alt="" />
                         <span>{t("Mobile Airtime")}</span>
                     </div>
                     :

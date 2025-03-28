@@ -41,7 +41,8 @@ const PaymentStep = (
         card,
         addFunds,
         amount,
-        setCards
+        setCards,
+        marginTop 
     }) => {
     const { t } = useTranslation()
     const { authHeader } = useContext(UserContext)
@@ -65,7 +66,7 @@ const PaymentStep = (
     }
 
     const saveCardJSX = () => (
-        <div className={styles.field}>
+        <div className={styles.field} >
 
             <h3 className={styles.label} style={{ fontSize: "14px" }}>Select a saved payment card</h3>
             <div style={{ maxWidth: '100%', display: 'flex', overflow: "auto", gap: "10px", padding: "10px 0" }}>
@@ -95,7 +96,7 @@ const PaymentStep = (
         </div>
     )
     return (
-        <div className={styles.step2}>
+        <div className={styles.step2} style={{marginTop: marginTop ?? ""}}>
             {paymentType === "wallet"
                 &&
                 <div className={styles.walletsDiv}>

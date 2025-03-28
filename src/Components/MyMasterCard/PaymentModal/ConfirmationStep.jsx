@@ -3,6 +3,7 @@ import styles from "../styles/onboard.module.scss"
 import { Svg } from "../files"
 
 const ConfirmationStep = ({feeDetails, walletState, setStep, sendOtp, addFunds}) => {
+    console.log(feeDetails)
     return (
         <div className={styles.step3}>
             <div className={styles.infoDiv}>

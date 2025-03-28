@@ -356,6 +356,12 @@
     line-height: normal;
 }
 
+@media screen  and (max-width: 600px){
+    .tab.tab_a::before{
+        display: none !important;
+    }
+}
+
 @media screen and (max-width: 1000px) {
     .container {
         max-height: unset;
