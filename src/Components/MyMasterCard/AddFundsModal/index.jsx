@@ -30,7 +30,7 @@ const PLACEHOLDER_CARD_TYPE = {
 
 
 const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
-    const [step, setStep] = useState(5)
+    const [step, setStep] = useState(1)
     const [paymentType, setPaymentType] = useState("")
     const [selectedSaveCard, setSelectedSaveCard] = useState(null)
     const { userWallets, authHeader, userDetails, setProfileLockTime } = useContext(UserContext)
