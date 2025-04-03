@@ -16,8 +16,9 @@ import { formatCurrency } from '../../../Helper/AmountFormat'
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import { toast } from 'react-toastify'
 import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import SideProgress from './SideProgress'
+import useWindowWidth from '../../../utils/useWindowWidth'
 
 const PLACEHOLDER_CARD_TYPE = {
     type: 'placeholder',
@@ -29,7 +30,7 @@ const PLACEHOLDER_CARD_TYPE = {
 
 
 const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
-    const [step, setStep] = useState(1)
+    const [step, setStep] = useState(5)
     const [paymentType, setPaymentType] = useState("")
     const [selectedSaveCard, setSelectedSaveCard] = useState(null)
     const { userWallets, authHeader, userDetails, setProfileLockTime } = useContext(UserContext)
@@ -40,6 +41,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
     const [cardNumberError, setCardNumberError] = useState(null)
     const [disabledBtnS,] = useState(false)
     const [amount, setAmount] = useState("")
+    const width = useWindowWidth()
     const [cardType, setCardType] = useState(PLACEHOLDER_CARD_TYPE)
     const [feeDetails, setFeeDetails] = useState({})
     const [cardDetail, setCardDetails] = useState({
@@ -74,6 +76,32 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
             getSavedCards()
         }
     }, [userDetails])
+
+    const handleClose = () => {
+        setAmount("")
+        setOpen(prev => ({ ...prev, addFunds: false }));
+        setStep(1);
+        setPaymentType("");
+        setWalletState({});
+        setLoading(false);
+        setFeeDetails({})
+        setToken(null);
+        setshowOtpModal(false);
+        setCodeType("sms");
+        setShowSuccess(false);
+        setSaveCard(false);
+        setSelectedSaveCard({});
+        setCardDetails({
+            cardNumber: "",
+            cardExpiry: "",
+            cardCVC: "",
+            cardHolderName: "",
+        });
+
+        if(width < 1000){
+            navigate("/my-mastercard")
+        }
+    };
 
 
     const filteredWallets = useMemo(() => {
@@ -119,6 +147,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
     const [showSuccess, setShowSuccess] = useState(false)
     const [sideText, setSideText] = useState("Set the Value")
     const navigate = useNavigate()
+    const [disabled, setDisabled] = useState(false)
 
     const sendOtp = async () => {
         const data = {
@@ -155,6 +184,10 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
 
 
     const handleNext = () => {
+        if (step === 5) {
+            handleClose()
+            return
+        }
         if (step === 4) {
             sendOtp()
             return
@@ -162,8 +195,10 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
         setStep(prev => prev + 1)
     }
 
+
+
     useEffect(() => {
-        if (walletState.wallet_id && !feeDetails?.token) {
+        if (walletState.wallet_id) {
             async function getFee() {
                 const data = {
                     cardId: card._id,
@@ -231,164 +266,215 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
     useEffect(() => {
         switch (step) {
             case 1:
-                setSideText("Set The Value")
+                setSideText(width > 1000 ? "Set The Value" : "")
+                setDisabled(!amount)
                 break;
 
             case 2:
-                setSideText("Choose the method")
+                setSideText(width > 1000 ? "Choose the method" : "Select Payment Type")
+                setDisabled(!paymentType)
                 break;
             case 3:
-                setSideText("Choose the method")
+                setDisabled(!feeDetails.token && !walletState._id)
+                setSideText(width > 1000 ? "Choose the method" : paymentType === 'wallet' ? "Choose the wallet" : "Payment Details")
                 break;
 
             case 4:
+                setDisabled(false)
                 setSideText("Review Your Payment Details")
                 break;
 
+            case 5:
+                setSideText(width < 1000 ? "Your Payment is now Completed" : "")
+                break;
+
             default:
+                setDisabled(false)
                 break;
         }
-    }, [step])
-    return (
-        <Modal isOpen={isOpen} style={{ minWidth: '850px' }} toggle={() => setOpen(prev => ({ ...prev, addFunds: false }))}>
-            <ModalBody>
-                <div style={{ width: "100%", display: "flex", gap: "20px" }}>
-                    <div className={styles.left}>
 
 
-                        <div>
-                            <div className={styles.top}>
-                                <img src={AddFunds} alt="" />
-                                <h2>Add Funds</h2>
-                            </div>
-
-                            <div className={styles.progressEffect} style={{ marginTop: "2rem" }}>
-                                <SideProgress isActive={step === 1} isCompleted={step > 1} Icon={Currency} Text={"Enter the amount"} step={1} />
-                                <SideProgress isActive={step === 2 || step === 3} isCompleted={step > 3} Icon={Receipt} Text={"Select the method"} step={2} />
-                                <SideProgress isActive={step === 4} isCompleted={step > 4} Icon={CircleCheck} Text={"Review and Confirm"} step={3} />
-
-                            </div>
-                        </div>
+    }, [step, amount, feeDetails, walletState, paymentType, width])
 
 
-                        <div className={styles.contactBox}>
-                            <ContactBox />
-                        </div>
 
 
+
+    const renderData = () => (
+        <div style={{ width: "100%", display: "flex", gap: "20px", flexDirection: width < 1000 ? "column" : "" }}>
+            <div style={{ display: width < 1000 && "none" }} className={styles.left}>
+                <div>
+                    <div className={styles.top}>
+                        <img src={AddFunds} alt="" />
+                        <h2>Add Funds</h2>
                     </div>
 
-                    <div className={styles.right}>
-                        <div>
-                            {step !== 5 && <div className={styles.top}>
-                                <h4>{sideText}</h4>
-                                <p>STEP 0{step <= 2 ? step : step - 1}</p>
-                            </div>}
+                    <div className={styles.progressEffect} style={{ marginTop: "2rem" }}>
+                        <SideProgress isActive={step === 1} isCompleted={step > 1} Icon={Currency} Text={"Enter the amount"} step={1} />
+                        <SideProgress isActive={step === 2 || step === 3} isCompleted={step > 3} Icon={Receipt} Text={"Select the method"} step={2} />
+                        <SideProgress isActive={step === 4} isCompleted={step > 4} Icon={CircleCheck} Text={"Review and Confirm"} step={3} />
 
-                            <div className={onboardStyles.paymentContent}>
-                                <div className={onboardStyles.right} style={{ padding: "0px", flex: 1 }}>
-                                    {step === 2 &&
-                                        <PaymentSelect marginTop={"1rem"} style={{ marginTop: "" }} paymentType={paymentType} setPaymentType={setPaymentType} />
-                                    }
-                                    {step === 3 &&
-                                        <PaymentStep
-                                            marginTop={"1rem"}
-                                            paymentType={paymentType}
-                                            filteredWallets={filteredWallets}
-                                            cardDetail={cardDetail}
-                                            cards={cards}
-                                            disabledBtnS={disabledBtnS}
-                                            vvcCardType={vvcCardType}
-                                            walletState={walletState}
-                                            setWalletState={setWalletState}
-                                            cardType={cardType}
-                                            saveCard={saveCard}
-                                            setSaveCard={setSaveCard}
-                                            setCardDetails={setCardDetails}
-                                            selectedSaveCard={selectedSaveCard}
-                                            setSelectedSaveCard={setSelectedSaveCard}
-                                            feeDetails={feeDetails}
-                                            setFeeDetails={setFeeDetails}
-                                            cardNumberError={cardNumberError}
-                                            addFunds={true}
-                                            setCards={setCards}
-                                            card={card}
-                                            amount={amount}
-                                        />
-                                    }
+                    </div>
+                </div>
 
-                                    {step === 4 &&
-                                        <ConfirmationStep
-                                            feeDetails={feeDetails}
-                                            walletState={walletState}
-                                            sendOtp={sendOtp}
-                                            addFunds={true}
-                                            setStep={setStep}
-                                        />
-                                    }
 
-                                    {step === 5 &&
-                                        <SuccessStep
-                                            feeDetails={feeDetails}
-                                            walletState={walletState}
-                                            setIsOpen={setOpen}
-                                            paymentType={paymentType}
-                                            addFunds={true}
-                                        />}
-                                </div>
-                            </div>
+                <div className={styles.contactBox}>
+                    <ContactBox />
+                </div>
+
+
+            </div>
+
+            {width < 1000 &&
+                <div className={styles.top}>
+                    <img src={AddFunds} alt="" />
+                    <h2>Add Funds</h2>
+                </div>
+            }
+            <div style={{ minHeight: width < 1000 && "76vh", width: width < 1000 && "100%", padding: width < 1000 && "0", border: width < 1000 && "none" }} className={styles.right}>
+
+                <div>
+                    {(step !== 5) &&
+                        <div className={styles.top}>
+                            <h4>{sideText}</h4>
+                            {width > 1000 && <p>STEP 0{step <= 2 ? step : step - 1}</p>}
                         </div>
+                    }
 
-                        {step === 1 &&
-                            <div className={styles.amount}>
-                                <p>Amount</p>
-                                <input
-                                    value={amount}
-                                    onChange={(e) => {
-                                        if (e.target.value === "") {
-                                            setAmount("");
-                                            return;
-                                        }
-                                        setAmount(e.target.value);
-                                    }}
-                                    onKeyUp={(e) => formatCurrency(e.target.value, false, setAmount)}
-                                    onBlur={(e) => formatCurrency(e.target.value, true, setAmount)}
-                                    type="text"
-                                    placeholder='30.00'
-                                    data-type="currency"
+                    <div className={onboardStyles.paymentContent}>
+                        <div className={onboardStyles.right} style={{ padding: "0px", flex: 1 }}>
+                            {step === 2 &&
+                                <PaymentSelect styling={{ marginTop: "1rem", backgroundColor: width < 1000 && "white", padding: width < 1000 && "0" }} paymentType={paymentType} setPaymentType={setPaymentType} />
+                            }
+                            {step === 3 &&
+                                <PaymentStep
+                                    marginTop={"1rem"}
+                                    paymentType={paymentType}
+                                    filteredWallets={filteredWallets}
+                                    cardDetail={cardDetail}
+                                    cards={cards}
+                                    disabledBtnS={disabledBtnS}
+                                    vvcCardType={vvcCardType}
+                                    walletState={walletState}
+                                    setWalletState={setWalletState}
+                                    cardType={cardType}
+                                    saveCard={saveCard}
+                                    setSaveCard={setSaveCard}
+                                    setCardDetails={setCardDetails}
+                                    selectedSaveCard={selectedSaveCard}
+                                    setSelectedSaveCard={setSelectedSaveCard}
+                                    feeDetails={feeDetails}
+                                    setFeeDetails={setFeeDetails}
+                                    cardNumberError={cardNumberError}
+                                    addFunds={true}
+                                    setCards={setCards}
+                                    card={card}
+                                    amount={amount}
                                 />
-                            </div>
-                        }
+                            }
 
+                            {step === 4 &&
+                                <ConfirmationStep
+                                    feeDetails={feeDetails}
+                                    walletState={walletState}
+                                    sendOtp={sendOtp}
+                                    addFunds={true}
+                                    setStep={setStep}
+                                    cardDets={card}
+                                />
+                            }
 
-
-                        <div className={styles.btns}>
-                            {step !== 1 && <button onClick={() => setStep(prev => prev - 1)} className={styles.cancel}>Cancel</button>}
-                            <button onClick={handleNext} className={styles.continue}>
-                                Continue
-                            </button>
+                            {step === 5 &&
+                                <SuccessStep
+                                    feeDetails={feeDetails}
+                                    walletState={walletState}
+                                    setIsOpen={setOpen}
+                                    paymentType={paymentType}
+                                    addFunds={true}
+                                    cardDets={card}
+                                />}
                         </div>
                     </div>
                 </div>
 
-                <Modal isOpen={showOtpModal}>
-                    <ModalHeader toggle={() => setshowOtpModal(false)}> Confirm </ModalHeader>
-                    <ModalBody>
-                        <OTPConfirmation
-                            callback={walletTopup}
-                            setter={setShowSuccess}
-                            setterValue={true}
-                            hideOtp={() => setshowOtpModal(false)}
-                            processing={loading}
-                            resendHandler={sendOtp}
-                            authType={codeType}
-                            setAuthType={setCodeType}
-                            showAuthToggle={true}
+                {step === 1 &&
+                    <div className={styles.amount}>
+                        <p>Amount</p>
+                        <input
+                            value={amount}
+                            onChange={(e) => {
+                                if (e.target.value === "") {
+                                    setAmount("");
+                                    return;
+                                }
+                                setAmount(e.target.value);
+                            }}
+                            onKeyUp={(e) => formatCurrency(e.target.value, false, setAmount)}
+                            onBlur={(e) => formatCurrency(e.target.value, true, setAmount)}
+                            type="text"
+                            placeholder='30.00'
+                            data-type="currency"
                         />
-                    </ModalBody>
-                </Modal>
-            </ModalBody>
-        </Modal>
+                    </div>
+                }
+
+
+
+                <div style={{ display: width < 1000 && "flex", flexDirection: width < 1000 && "column" }} className={styles.btns}>
+                    {((step !== 1 || step === 5) && (width > 1000)) && <button onClick={() => setStep(prev => prev - 1)} className={styles.cancel}>Cancel</button>}
+                    {width < 1000 && <ContactBox />}
+                    <button disabled={disabled} style={{ padding: width < 1000 && "18px", marginTop: width < 1000 && "12px", width: width < 1000 && "100%", opacity: disabled && 0.6 }} onClick={handleNext} className={styles.continue}>
+                        {step !== 5 ? "Continue" : "Close"}
+                    </button>
+                    <button onClick={() => {
+                        if (step === 1) {
+                            handleClose()
+                            navigate("/my-mastercard")
+                        }
+                        else {
+                            setStep(prev => prev - 1)
+                        }
+                    }} className={styles.cancel} style={{ backgroundColor: "white",display: (width > 1000 && step !== 5) || step === 5 ? "none" : "flex", width: "100%" }} >
+                        Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    )
+    return (
+        <>
+
+            <Modal isOpen={isOpen && width > 1000} style={{ minWidth: '850px' }} toggle={handleClose}>
+                <ModalBody>
+                    {renderData()}
+
+                </ModalBody>
+            </Modal>
+
+            {width < 1000 &&
+                <div >
+                    {renderData()}
+                </div >
+            }
+
+
+            <Modal isOpen={showOtpModal}>
+                <ModalHeader toggle={() => setshowOtpModal(false)}> Confirm </ModalHeader>
+                <ModalBody>
+                    <OTPConfirmation
+                        callback={walletTopup}
+                        setter={setShowSuccess}
+                        setterValue={true}
+                        hideOtp={() => setshowOtpModal(false)}
+                        processing={loading}
+                        resendHandler={sendOtp}
+                        authType={codeType}
+                        setAuthType={setCodeType}
+                        showAuthToggle={true}
+                    />
+                </ModalBody>
+            </Modal>
+        </>
     )
 }
 

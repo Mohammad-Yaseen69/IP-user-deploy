@@ -6,23 +6,6 @@
     width: 40%;
     align-self: stretch;
 
-    .top {
-        display: flex;
-        align-items: center;
-        gap: var(--SPACING-spacing-2, 18px);
-        align-self: stretch;
-
-
-        h2 {
-            color: var(--COLORS-Neutral-1000, #333);
-            font-size: 32px;
-            font-style: normal;
-            font-weight: 700;
-            line-height: 38px;
-            /* 118.75% */
-            letter-spacing: -0.96px;
-        }
-    }
 
     .contactBox {
         display: flex;
@@ -35,6 +18,24 @@
     }
 }
 
+
+.top {
+    display: flex;
+    align-items: center;
+    gap: var(--SPACING-spacing-2, 18px);
+    align-self: stretch;
+
+
+    h2 {
+        color: var(--COLORS-Neutral-1000, #333);
+        font-size: 32px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 38px;
+        /* 118.75% */
+        letter-spacing: -0.96px;
+    }
+}
 
 .right {
     border-radius: var(--RADIUS-radius-4, 16px);

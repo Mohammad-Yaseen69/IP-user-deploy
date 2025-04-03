@@ -35,9 +35,9 @@ const options = [
     },
 ]
 
-const PaymentSelect = ({ setPaymentType, setStep, paymentType, marginTop }) => {
+const PaymentSelect = ({ setPaymentType, setStep, paymentType, marginTop, styling }) => {
     return (
-        <div className={styles.step1} style={{marginTop}}>
+        <div className={styles.step1} style={{...styling}}>
             <div>
                 {options.map(option => (
                     <div

@@ -10,6 +10,8 @@ import { UserContext } from '../../Context/UserContext';
 import InstaPayLoader from '../Loader';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
+import useWindowWidth from '../../utils/useWindowWidth';
+import { useLocation } from 'react-router';
 
 
 
@@ -24,6 +26,10 @@ const MyMasterCard = () => {
   const [loading, setLoading] = useState(true)
   const [current, setCurrent] = useState(0)
   const [transactions, setTransactions] = useState([])
+  const width = useWindowWidth()
+  const location = useLocation()
+  const queryParams = new URLSearchParams(location.search)
+  const addFundsMobile = queryParams.get("addFundsMobile")
 
   useEffect(() => {
     if (cardPurchased) {
@@ -66,7 +72,7 @@ const MyMasterCard = () => {
   useEffect(() => {
     const getTransactions = async () => {
       try {
-        const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-transcations`, { data: encryptData({ cardId: cards[current].card_id }) }, {
+        const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-transcations`, { data: encryptData({ cardId: cards[current].card_id, account_id: userDetails._id }) }, {
           headers: authHeader
         })
 
@@ -85,8 +91,8 @@ const MyMasterCard = () => {
   return (
     <div style={{ minHeight: "100vh" }} className={styles.container}>
       <div className={styles.top}>
-        <h4>My Mastercard</h4>
-        {window.innerWidth > 1000 && <TopRight />}
+        <h4 style={{ display: (width < 1000 && addFundsMobile) && "none" }}>My Mastercard</h4>
+        {width > 1000 && <TopRight />}
       </div>
 
 
@@ -99,12 +105,12 @@ const MyMasterCard = () => {
                   currentCardDetails={currentCardDetails}
                   setCurrentCardDetails={setCurrentCardDetails}
                   setLoading={setLoading}
-                   current={current}
+                  current={current}
                   setCurrent={setCurrent}
                   cards={cards}
                   setCardPurchased={setCardPurchased}
                 />
-                <TransactionsTable cardNo={currentCardDetails?.card_number} transactions={transactions} isLoading={loading} />
+                {(!addFundsMobile || width > 1000)  && <TransactionsTable cardNo={currentCardDetails?.card_number} transactions={transactions} isLoading={loading} />}
               </>
               : <OnBoarding alreadyHaveCard={cards.length !== 0} setReRender={setReRender} setCardPurchased={setCardPurchased} />
 

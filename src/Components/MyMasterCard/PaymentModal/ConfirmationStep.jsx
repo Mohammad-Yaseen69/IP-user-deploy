@@ -1,8 +1,7 @@
 import styles from "../styles/onboard.module.scss"
 import { Svg } from "../files"
 
-const ConfirmationStep = ({feeDetails, walletState, setStep, sendOtp, addFunds}) => {
-    console.log(feeDetails)
+const ConfirmationStep = ({feeDetails, walletState, setStep, sendOtp, addFunds, cardDets}) => {
     return (
         <div className={styles.step3}>
             <div className={styles.infoDiv}>
@@ -35,10 +34,37 @@ const ConfirmationStep = ({feeDetails, walletState, setStep, sendOtp, addFunds})
                         </div>
                     </div>
 
-                    <div>
-                        <h3>Card activation fee</h3>
-                        <h3>{!addFunds ? feeDetails.currency: feeDetails?.feeDetails?.currency}{!addFunds ? feeDetails.fee : feeDetails?.feeDetails?.totalAmount}</h3>
-                    </div>
+                   {!addFunds &&
+                        <div className={styles.feeInfo}>
+                            <h3>Card activation fee</h3>
+                            <h3>{feeDetails.currency}{feeDetails.fee}</h3>
+                        </div>}
+
+                    {addFunds && (
+                        <>
+                            <div className={styles.feeInfo}>
+                                <h3>Entered Amount:</h3>
+                                <h3>{cardDets?.currency}{feeDetails?.feeDetails?.amount}</h3>
+                            </div>
+
+                            <div className={styles.feeInfo}>
+                                <h3>Fee:</h3>
+                                <h3>{cardDets?.currency}{feeDetails?.feeDetails?.fee}</h3>
+                            </div>
+                            <div className={styles.feeInfo}>
+                                <h3>Total Funds to be Added:</h3>
+                                <h3>{cardDets?.currency}{feeDetails?.feeDetails?.amountToTopup}</h3>
+                            </div>
+                            <div className={styles.feeInfo}>
+                                <h3>Total Amount:</h3>
+                                <h3>{feeDetails?.feeDetails?.currency} {feeDetails?.feeDetails?.totalAmount}</h3>
+                            </div>
+                            <div className={styles.feeInfo}>
+                                <h3>Exchage Rate:</h3>
+                                <h3>{feeDetails?.feeDetails?.currency} {feeDetails?.feeDetails?.exchangeRate?.toFixed(2)}</h3>
+                            </div>
+                        </>
+                    )}
 
                 </div>
             </div>
