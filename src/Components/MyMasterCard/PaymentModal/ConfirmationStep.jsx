@@ -61,7 +61,7 @@ const ConfirmationStep = ({feeDetails, walletState, setStep, sendOtp, addFunds, 
                             </div>
                             <div className={styles.feeInfo}>
                                 <h3>Exchage Rate:</h3>
-                                <h3>{feeDetails?.feeDetails?.currency} {feeDetails?.feeDetails?.exchangeRate?.toFixed(2)}</h3>
+                                <h3>{feeDetails?.feeDetails?.currency} {Number(feeDetails?.feeDetails?.exchangeRate?.replace(/[,]/g, ""))?.toFixed(2)}</h3>
                             </div>
                         </>
                     )}

@@ -1,0 +1,257 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+.left {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 40%;
+    align-self: stretch;
+    border-radius: 16px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    background: #FAFAFA;
+    padding: 24px;
+
+
+    .label {
+        color: #5926F0;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 5.04px;
+        text-transform: uppercase;
+    }
+
+    .head {
+        color: #000;
+        font-size: 32px;
+        font-weight: 800;
+        line-height: 130%;
+    }
+}
+
+.right {
+    display: flex;
+    padding: 36px;
+    align-items: flex-start;
+    gap: 18px;
+    flex: 1 0 0;
+    align-self: stretch;
+
+    .cont {
+        display: flex;
+        // padding: var(--SPACING-spacing-3, 24px);
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+        align-items: center;
+        align-self: stretch;
+
+        .rSelect {
+            display: flex;
+            padding: 10px 11px;
+            flex-direction: column;
+            gap: 16px;
+            border-radius: var(--RADIUS-radius-2, 8px);
+            background: #FAFAFA;
+            width: 100%;
+
+
+            .customDropdown {
+                width: 100%;
+                overflow: hidden;
+
+                .dropdownHeader {
+                    display: flex;
+                    padding: var(--SPACING-spacing-1, 12px) 18px var(--SPACING-spacing-1, 12px) var(--SPACING-spacing-1, 12px);
+                    justify-content: space-between;
+                    align-items: center;
+                    align-self: stretch;
+                    border-radius: var(--RADIUS-radius-2, 8px);
+                    background: #FFF;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+
+                    div {
+                        display: flex;
+                        align-items: center;
+                        gap: var(--RADIUS-radius-3, 12px);
+
+                        span {
+                            display: flex;
+                            padding: var(--SPACING-spacing-0, 8px);
+                            align-items: center;
+                            gap: 10px;
+                            border-radius: var(--RADIUS-radius-2, 8px);
+                            background: #5926F0;
+                        }
+
+                        h3 {
+                            color: #000;
+                            font-size: 18px;
+                            font-weight: 600;
+                            line-height: 24px;
+                            letter-spacing: -0.54px;
+                            margin-bottom: 0;
+                        }
+                    }
+
+                    &.active {
+                        border-bottom-left-radius: 0;
+                        border-bottom-right-radius: 0;
+
+                        .arrow {
+                            transform: rotate(180deg);
+                        }
+                    }
+
+                    .arrow {
+                        transition: transform 0.3s ease;
+                        font-size: 12px;
+                    }
+                }
+
+                .dropdownContent {
+                    transform-origin: top;
+                    animation: slideDown 0.3s ease forwards;
+                    background: white;
+                    border-bottom-left-radius: 12px;
+                    border-bottom-right-radius: 12px;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+                    .user {
+                        display: flex;
+                        border-radius: var(--SPACING-spacing-1, 12px);
+                        background: #FAFAFA;
+                        padding: 14.428px 24px 14.428px 13.851px;
+                        justify-content: space-between;
+                        align-items: center;
+                        align-self: stretch;
+                        font-family: "Inter", serif;
+
+
+                        .info {
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                        }
+
+                        img {
+                            display: flex;
+                            width: 48px;
+                            height: 48px;
+                            justify-content: center;
+                            align-items: center;
+                            border-radius: 100%;
+                        }
+
+
+                        h4 {
+                            color: var(--Text-text-primary, #282B35);
+                            font-size: 16px;
+                            font-weight: 600;
+                            margin-bottom: 0;
+                        }
+
+                        span {
+                            color: var(--Text-text-secondary, #61667A);
+                            font-size: 12px;
+                            font-weight: 500;
+                        }
+
+                    }
+
+                    .searchNumbers {
+                        display: flex;
+                        height: 84px;
+                        padding: var(--SPACING-spacing-3, 24px) var(--SPACING-spacing-2, 18px);
+                        justify-content: space-between;
+                        align-items: center;
+                        align-self: stretch;
+                        border-radius: var(--SPACING-spacing-1, 12px);
+                        background: #FAFAFA;
+
+                        .nums {
+                            display: flex;
+                            align-items: center;
+                            gap: var(--RADIUS-radius-1, 8px);
+
+                            input {
+                                display: flex;
+                                width: 36px;
+                                text-align: center;
+                                height: 36px;
+                                flex-direction: column;
+                                justify-content: center;
+                                align-items: center;
+                                border-radius: 6px;
+                                border: 1px solid rgba(0, 0, 0, 0.13);
+                                background: #FFF;
+                                color: #000;
+                                font-size: 16px;
+                                outline: none;
+                                font-weight: 600;
+                            }
+
+                            input:focus-visible {
+                                border: 1px solid rgba(0, 0, 0, 0.13) !important;
+                            }
+                        }
+
+                        button {
+                            display: flex;
+                            width: 124px;
+                            height: 36px;
+                            padding: 11px 24px;
+                            justify-content: center;
+                            align-items: center;
+                            gap: 10px;
+                            border-radius: 6px;
+                            border: 1px solid #E64067;
+                            background: #FFF;
+                            color: #000;
+                            font-size: 14px;
+                            font-weight: 600;
+                        }
+                    }
+
+
+                    .dropdownItem {
+                        padding: 12px 16px;
+                        cursor: pointer;
+                        transition: background-color 0.2s ease;
+
+                        &:hover {
+                            background-color: #f5f5f5;
+                        }
+
+                        &:last-child {
+                            border-bottom-left-radius: 12px;
+                            border-bottom-right-radius: 12px;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        .btns {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            align-self: stretch;
+        }
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: scaleY(0);
+    }
+
+    to {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+}

@@ -14,6 +14,7 @@ import { toast } from 'react-toastify';
 import AddFundsModal from "./AddFundsModal"
 import { useLocation, useNavigate } from 'react-router';
 import useWindowWidth from '../../utils/useWindowWidth';
+import CardtoCard from './CardtoCardModal';
 
 
 export const Toggle = ({ checked, onChange, isCheckbox = false }) => (
@@ -36,7 +37,8 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
     });
     const swiperRef = useRef()
     const [showModals, setShowModals] = useState({
-        addFunds: false
+        addFunds: false,
+        ctc: false
     })
 
     const { authHeader, userDetails } = useContext(UserContext)
@@ -108,6 +110,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const addFundsMobile = queryParams.get("addFundsMobile")
+    const ctcMobile = queryParams.get("ctcMobile")
 
     console.log(addFundsMobile)
 
@@ -264,7 +267,11 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                             <div className={styles.bottom}>
                                 {!cardLoading && <h2>${currentCardDetails?.balance}</h2>}
-                                {cardLoading && <InstaPayLoader />}
+                                {cardLoading &&
+                                <div style={{width: '150px'}}>
+                                    <InstaPayLoader />
+                                </div> 
+                                }
                                 {/* <div>
                             <span>
                                 +3,8%
@@ -308,18 +315,27 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                             <div className={styles.column} style={{ display: "flex", alignItems: "flex-start", gap: "12px", width: "100%" }}>
                                 <div style={{ display: "flex", flexDirection: "column", gap: '12px', justifyContent: "center", flex: 1 }}>
-                                    <div onClick={() => {
-                                        setShowModals(prev => ({ ...prev, addFunds: true }))
-                                        if (width < 1000) {
-                                            navigate("/my-mastercard?addFundsMobile=true")
-                                        }
-                                    }}
+                                    <div
+                                        onClick={() => {
+                                            setShowModals(prev => ({ ...prev, addFunds: true }))
+                                            if (width < 1000) {
+                                                navigate("/my-mastercard?addFundsMobile=true")
+                                            }
+                                        }}
                                         className={styles.iconBox}
                                     >
                                         <img src={plus} alt="" />
                                         <span style={{ cursor: "pointer" }}>Add Funds</span>
                                     </div>
-                                    <div className={styles.iconBox}>
+                                    <div
+                                        onClick={() => {
+                                            setShowModals(prev => ({ ...prev, ctc: true }))
+                                            if (width < 1000) {
+                                                navigate("/my-mastercard?ctcMobile=true")
+                                            }
+                                        }}
+                                        className={styles.iconBox}
+                                    >
                                         <img src={CreditCardR} alt="" />
                                         <span>Card to Card Transfer</span>
                                     </div>
@@ -490,6 +506,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                 </div>}
 
             {(showModals.addFunds || addFundsMobile) && <AddFundsModal card={cards[current]} isOpen={showModals.addFunds || addFundsMobile} setOpen={setShowModals} />}
+            {(showModals.ctc || ctcMobile) && <CardtoCard card={cards[current]} isOpen={showModals.ctc || ctcMobile} setOpen={setShowModals} />}
         </>
     );
 };

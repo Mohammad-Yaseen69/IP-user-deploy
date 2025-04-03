@@ -16,7 +16,7 @@ import { formatCurrency } from '../../../Helper/AmountFormat'
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import { toast } from 'react-toastify'
 import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
-import { useLocation, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 import SideProgress from './SideProgress'
 import useWindowWidth from '../../../utils/useWindowWidth'
 
@@ -88,7 +88,6 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
         setToken(null);
         setshowOtpModal(false);
         setCodeType("sms");
-        setShowSuccess(false);
         setSaveCard(false);
         setSelectedSaveCard({});
         setCardDetails({
@@ -144,7 +143,6 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
     const [token, setToken] = useState(null)
     const [loading, setLoading] = useState(false)
     const [showOtpModal, setshowOtpModal] = useState(false)
-    const [showSuccess, setShowSuccess] = useState(false)
     const [sideText, setSideText] = useState("Set the Value")
     const navigate = useNavigate()
     const [disabled, setDisabled] = useState(false)
@@ -463,7 +461,6 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
                 <ModalBody>
                     <OTPConfirmation
                         callback={walletTopup}
-                        setter={setShowSuccess}
                         setterValue={true}
                         hideOtp={() => setshowOtpModal(false)}
                         processing={loading}

@@ -32,13 +32,11 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
   const [step, setStep] = useState(1)
   const { userWallets, getUserWallets, userDetails, authHeader, setProfileLockTime } = useContext(UserContext)
   const [walletState, setWalletState] = useState({})
-  const [showOtp, setShowOtp] = useState()
   const [paymentType, setPaymentType] = useState("")
   const [loading, setLoading] = useState(false)
   const [token, setToken] = useState(null)
   const [showOtpModal, setshowOtpModal] = useState(false)
   const [codeType, setCodeType] = useState("sms")
-  const [success, setShowSuccess] = useState(false)
   const [saveCard, setSaveCard] = useState(false)
   const [cards, setCards] = useState([])
   const [selectedSaveCard, setSelectedSaveCard] = useState({})
@@ -62,12 +60,10 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
     setStep(1);
     setPaymentType("");
     setWalletState({});
-    setShowOtp(false);
     setLoading(false);
     setToken(null);
     setshowOtpModal(false);
     setCodeType("sms");
-    setShowSuccess(false);
     setSaveCard(false);
     setSelectedSaveCard({});
     setCardTransactionDetails({});
@@ -149,13 +145,16 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
     try {
       const twoYearsAhead = new Date();
       twoYearsAhead.setFullYear(twoYearsAhead.getFullYear() + 2);
+      twoYearsAhead.setDate(twoYearsAhead.getDate() - 1);
+
+      const formattedDate = `${twoYearsAhead.getFullYear()}-${String(twoYearsAhead.getMonth() + 1).padStart(2, '0')}-${String(twoYearsAhead.getDate()).padStart(2, '0')}`;
 
       const cardData = {
         data: {
           currency: "USD",
-          expdate: `${twoYearsAhead.getFullYear()}-${String(twoYearsAhead.getMonth() + 1).padStart(2, '0')}-${String(twoYearsAhead.getDate()).padStart(2, '0')}`,
+          expdate: formattedDate,
           token: feeDetails?.token,
-          cardType: vvcCardType == "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual",
+          cardType: vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual",
         },
         type: codeType
       }
@@ -166,7 +165,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
         cardData.data.google_pay = false
       }
 
-      if (paymentType == "card") {
+      if (paymentType === "card") {
         if (selectedSaveCard?._id) {
           cardData.data.pan = selectedSaveCard._id
         } else {
@@ -180,15 +179,15 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
         data: {
           account_id: userDetails?._id,
           wallet_id: walletState?.wallet_id,
-          cardType: vvcCardType == "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual",
+          cardType: vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual",
           currency: "USD",
-          expdate: `${twoYearsAhead.getFullYear()}-${String(twoYearsAhead.getMonth() + 1).padStart(2, '0')}-${String(twoYearsAhead.getDate()).padStart(2, '0')}`
+          expdate: formattedDate
 
         },
         type: codeType
       }
 
-      if (paymentType == "paypal") {
+      if (paymentType === "paypal") {
         data.data.token = feeDetails?.token
       }
 
@@ -252,12 +251,10 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
       otp
     }
     try {
-      const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/create-vvc`, { data: encryptData(data) }, {
+      await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/create-vvc`, { data: encryptData(data) }, {
         headers: authHeader
       })
 
-
-      setShowSuccess(true)
       setToken(null)
       setStep(4)
       setshowOtpModal(false)
@@ -296,8 +293,9 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
 
   useEffect(() => {
     const getFee = async (method) => {
+
       try {
-        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-vvc-fee/${walletState?.wallet_id ? walletState?.wallet_id : defaultWallet?.wallet_id}/${vvcCardType == "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual"}/${method}`, {
+        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-vvc-fee/${walletState?.wallet_id ? walletState?.wallet_id : defaultWallet?.wallet_id}/${vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual"}/${method}`, {
           headers: authHeader
         })
 
@@ -311,17 +309,19 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
 
     }
 
-    
-    if (paymentType === "card") {
-      getFee("card")
+
+    if(walletState.wallet_id){
+      if (paymentType === "card") {
+        getFee("card")
+      }
+      else if (paymentType === "wallet") {
+        getFee("wallet")
+      }
+      else if (paymentType === "paypal") {
+        getFee("paypal")
+      }
     }
-    else if (paymentType === "wallet") {
-      getFee("wallet")
-    }
-    else if (paymentType === "paypal") {
-      getFee("paypal")
-    }
-  }, [paymentType])
+  }, [paymentType, walletState])
 
   useEffect(() => {
     const disabledBtn = () => {
@@ -344,6 +344,9 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
   const initiateCardVVC = async (setter, type, otp, setError) => {
     const twoYearsAhead = new Date();
     twoYearsAhead.setFullYear(twoYearsAhead.getFullYear() + 2);
+    twoYearsAhead.setDate(twoYearsAhead.getDate() - 1); // Subtract one day
+
+    const formattedDate = `${twoYearsAhead.getFullYear()}-${String(twoYearsAhead.getMonth() + 1).padStart(2, '0')}-${String(twoYearsAhead.getDate()).padStart(2, '0')}`;
     setLoading(true)
     const data = {
       token: token,
@@ -351,9 +354,9 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
       otp,
       panData: {
         currency: "USD",
-        expdate: `${twoYearsAhead.getFullYear()}-${String(twoYearsAhead.getMonth() + 1).padStart(2, '0')}-${String(twoYearsAhead.getDate()).padStart(2, '0')}`,
+        expdate: formattedDate,
         token: feeDetails?.token,
-        cardType: vvcCardType == "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual",
+        cardType: vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual",
       }
     }
 
@@ -389,10 +392,9 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
 
 
 
+
   const initiatePaypalPayment = async (setter, type, otp, setError) => {
     try {
-      const twoYearsAhead = new Date();
-      twoYearsAhead.setFullYear(twoYearsAhead.getFullYear() + 2);
       const data = {
         token: token,
         type: codeType,
@@ -585,7 +587,6 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
         <ModalBody>
           <OTPConfirmation
             callback={paymentType === "wallet" ? createWallet : paymentType === "paypal" ? initiatePaypalPayment : initiateCardVVC}
-            setter={setShowSuccess}
             setterValue={true}
             hideOtp={() => setshowOtpModal(false)}
             processing={loading}
