@@ -421,9 +421,12 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
                 <div style={{ display: width < 1000 && "flex", flexDirection: width < 1000 && "column" }} className={styles.btns}>
                     {((step !== 1 || step === 5) && (width > 1000)) && <button onClick={() => setStep(prev => prev - 1)} className={styles.cancel}>Cancel</button>}
                     {width < 1000 && <ContactBox />}
+                    
                     <button disabled={disabled} style={{ padding: width < 1000 && "18px", marginTop: width < 1000 && "12px", width: width < 1000 && "100%", opacity: disabled && 0.6 }} onClick={handleNext} className={styles.continue}>
                         {step !== 5 ? "Continue" : "Close"}
                     </button>
+
+                   {step !== 5 &&
                     <button onClick={() => {
                         if (step === 1) {
                             handleClose()
@@ -435,6 +438,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
                     }} className={styles.cancel} style={{ backgroundColor: "white",display: (width > 1000 && step !== 5) || step === 5 ? "none" : "flex", width: "100%" }} >
                         Back
                     </button>
+                    }
                 </div>
             </div>
         </div>

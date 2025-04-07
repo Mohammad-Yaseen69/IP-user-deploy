@@ -39,12 +39,12 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
     }, [item])
 
     useEffect(() => {
-        if(vvc){
+        if (vvc) {
             const data = CitiesData.find((d) => d.currency === item.currency)
             setSymbol(data.currency_symbol)
         }
-    },[item])
-    
+    }, [item])
+
 
     const badgeColor = useMemo(() => {
         switch (item?.status?.toLowerCase()) {
@@ -73,7 +73,6 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                 break;
         }
     }, [item])
-
     const addCategoriesToTransaction = () => {
         setMessage("")
         setIsSaving(true)
@@ -118,7 +117,6 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
     }, [beneficiaries, item])
 
 
-    const [currentImage, setCurrentImage] = useState("")
 
     const externalStatusDescription = useMemo(() => {
         return statuses?.[item?.external_status?.split("_")?.[1]]?.[i18n.language]?.message ?? ""
@@ -129,6 +127,24 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
             .split(" ")
             .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
             .join(" ");
+    }
+    const addDecimals = (value) => {
+        const splitted = value.toString().split(".")
+
+        if (splitted.length >= 2) {
+            if (splitted[1][0].length >= 2) {
+                return value
+            }
+            else if (splitted[1][0].length == 1) {
+                return `${value}0`
+            }
+            else {
+                return `${value}00`
+            }
+        }
+        else {
+            return `${value}.00`
+        }
     }
     return (
         <div>
@@ -203,7 +219,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                                                                         ?
                                                                         `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)
                                                                         :
-                                                                        `${internationalReceiver?.first_name} ${internationalReceiver?.last_name}`.slice(0, 20)
+                                                                        `${internationalReceiver?.first_name ?? item?.account?.user?.first_name} ${internationalReceiver?.last_name ?? item?.account?.user?.last_name}`.slice(0, 20)
                                                     }
                                                 </>
                                                 :
@@ -220,9 +236,9 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
 
 
                 {vvc &&
-                 <div>
-                    {symbol}{item?.billAmount}
-                </div>
+                    <div style={{marginRight: "2.3rem"}}>
+                        {symbol}{addDecimals(item?.billAmount)}
+                    </div>
                 }
 
                 <div>

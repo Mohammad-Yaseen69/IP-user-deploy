@@ -78,6 +78,7 @@ const MyMasterCard = () => {
         })
 
         const dec = decryptData(res.data.data)
+        console.log(dec)
         setTransactions(dec.data)
 
       } catch (error) {
@@ -87,7 +88,7 @@ const MyMasterCard = () => {
     }
 
     getTransactions()
-  }, [current])
+  }, [current, cards])
 
   return (
     <div style={{ minHeight: "100vh" }} className={styles.container}>
