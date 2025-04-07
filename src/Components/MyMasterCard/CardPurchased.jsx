@@ -15,6 +15,10 @@ import AddFundsModal from "./AddFundsModal"
 import { useLocation, useNavigate } from 'react-router';
 import useWindowWidth from '../../utils/useWindowWidth';
 import CardtoCard from './CardtoCardModal';
+import { Modal, ModalBody, ModalHeader, Input } from 'reactstrap';
+import FormCheckInput from 'react-bootstrap/esm/FormCheckInput';
+import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
+import OTPConfirmation from "../UserSettingsNew/OTPConfirmation"
 
 
 export const Toggle = ({ checked, onChange, isCheckbox = false }) => (
@@ -41,9 +45,10 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
         ctc: false
     })
 
-    const { authHeader, userDetails } = useContext(UserContext)
+    const { authHeader, userDetails, setUserDetails } = useContext(UserContext)
     const [cardLoading, setCardLoading] = useState(true)
     const width = useWindowWidth()
+    const [showEmailModal, setShowEmailModal] = useState(false)
     const [flippedCards, setFlippedCards] = useState({});
     const handleCardFlip = (cardId) => {
         setFlippedCards(prev => ({
@@ -51,8 +56,6 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
             [cardId]: !prev[cardId]
         }));
     };
-
-    console.log(showModals)
 
     const formatCardNumber = (number) => {
         if (!number) return '';
@@ -96,9 +99,6 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
     }, [current])
 
 
-
-
-
     const handleToggle = (property) => {
         setChecks(prev => ({
             ...prev,
@@ -112,11 +112,106 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
     const addFundsMobile = queryParams.get("addFundsMobile")
     const ctcMobile = queryParams.get("ctcMobile")
 
-    console.log(addFundsMobile)
+
+    const openModal = (modalName) => {
+        setShowModals({
+            addFunds: false,
+            ctc: false,
+            [modalName]: true
+        });
+    };
+
+    const [missingEmail, setMissingEmail] = useState("")
+    const [isSaving, setIsSaving] = useState(false)
+    const [otpType, setOtpType] = useState("sms")
+    const [otpToken, setOtpToken] = useState(null)
+    const [showOtp, setShowOtp] = useState(false)
+    const [codeType, setCodeType] = useState("sms")
+
+
+    const sendOtp = async (type = "") => {
+        setIsSaving(true)
+        setOtpType(type === "email" ? "email" : "phone")
+
+
+
+        try {
+            const body = {
+                email: missingEmail,
+                account_id: userDetails?._id,
+                authenticator: otpType === "authenticator"
+            }
+
+            const encrypted = encryptData(body)
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/set-${type}-otp`, {
+                data: encrypted
+            }, {
+                headers: authHeader
+            })
+
+            const data = decryptData(res.data.data)
+
+            setOtpToken(data?.token)
+            setShowOtp(true)
+        } catch (err) {
+            const dec = decryptData(err.response.data.data)
+            console.log(dec)
+            toast.error("Something went wrong while sending otp to your " + type)
+        }
+        setIsSaving(false)
+    }    
+
+    const updateCardEmail = async () => {
+        try {
+            const data = {
+                card_id: cards[current]._id,
+                card_email: missingEmail,
+            }
+
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/update-email`, { data: encryptData(data) }, {
+                headers: authHeader
+            })
+
+            const dec = decryptData(res.data.data)
+            setShowOtp(false)
+            console.log(dec)
+        } catch (err) {
+            const dec = decryptData(err.response.data.data)
+            console.log(dec)
+        }
+    }
+    const verifyOTP = async (setter, type = "", otp) => {
+        setIsSaving(true)
+        try {
+            const data = {
+                token: otpToken,
+                otp,
+                email: missingEmail,
+                account_id: userDetails?._id
+            }
+
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/verify-${type}-otp`, {
+                data: encryptData(data)
+            }, {
+                headers: authHeader
+            })
+
+            setUserDetails(prev => ({
+                ...prev,
+                email: missingEmail
+            }))
+            setShowEmailModal(false)
+            updateCardEmail()
+
+        } catch (err) {
+            toast.error("Something went wrong while verifying otp!")
+        }
+        setIsSaving(false)
+    }
 
     return (
         <>
-            {((!showModals.addFunds && !addFundsMobile) || width > 1000) &&
+            {(((!showModals.addFunds && !addFundsMobile) && (!showModals.ctc && !ctcMobile)) || width > 1000) &&
                 <div className={styles.cardContainer} style={{ padding: width < 600 && "0", boxShadow: width < 600 && "none" }}>
                     <div className={styles.left}>
                         <div className={styles.topInfo}>
@@ -174,7 +269,13 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                         <div
 
                                             className={`${styles.card} ${card.type === "standard" ? styles.standard : styles.premium} ${flippedCards[card._id] ? styles.flipped : ''}`}
-                                            onClick={() => handleCardFlip(card._id)}
+                                            onClick={() => {
+                                                if (cards[current]?.premium_features?.apple_pay === true && !userDetails.email) {
+                                                    setShowEmailModal(true)
+                                                } else {
+                                                    handleCardFlip(card._id)
+                                                }
+                                            }}
                                         >
                                             <div className={styles.front}>
                                                 <div>
@@ -189,11 +290,10 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                                 </div>
 
                                                 <div>
-                                                    <h2>{userDetails.first_name} {userDetails.last_name}</h2>
+                                                    <h2>{userDetails?.first_name} {userDetails?.last_name}</h2>
 
                                                     <h3>
-                                                        Virtual
-                                                        <br /> Card
+                                                        Virtual <br /> Card
                                                     </h3>
                                                 </div>
                                             </div>
@@ -245,7 +345,16 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                             </Swiper>
                         </div>
 
-                        <span style={{ cursor: 'pointer' }} onClick={() => handleCardFlip(cards[current]._id)} className={styles.tap}>Tap to see Details</span>
+                        <span style={{ cursor: 'pointer' }}
+                            onClick={() => {
+                                if (cards[current]?.premium_features?.apple_pay === true && !userDetails.email) {
+                                    setShowEmailModal(true)
+                                } else {
+                                    handleCardFlip(cards[current]._id)
+                                }
+                            }}
+                            className={styles.tap}
+                        >Tap to see Details</span>
 
                         <div className={styles.balance}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="222" height="160" viewBox="0 0 222 160" fill="none">
@@ -268,9 +377,9 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                             <div className={styles.bottom}>
                                 {!cardLoading && <h2>${currentCardDetails?.balance}</h2>}
                                 {cardLoading &&
-                                <div style={{width: '150px'}}>
-                                    <InstaPayLoader />
-                                </div> 
+                                    <div style={{ width: '150px' }}>
+                                        <InstaPayLoader />
+                                    </div>
                                 }
                                 {/* <div>
                             <span>
@@ -317,7 +426,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                 <div style={{ display: "flex", flexDirection: "column", gap: '12px', justifyContent: "center", flex: 1 }}>
                                     <div
                                         onClick={() => {
-                                            setShowModals(prev => ({ ...prev, addFunds: true }))
+                                            openModal("addFunds")
                                             if (width < 1000) {
                                                 navigate("/my-mastercard?addFundsMobile=true")
                                             }
@@ -329,7 +438,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     </div>
                                     <div
                                         onClick={() => {
-                                            setShowModals(prev => ({ ...prev, ctc: true }))
+                                            openModal("ctc")
                                             if (width < 1000) {
                                                 navigate("/my-mastercard?ctcMobile=true")
                                             }
@@ -505,6 +614,37 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                 </div>}
 
+
+            <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
+                <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
+                <ModalBody>
+                    <OTPConfirmation type={userDetails?.account_type === "individual" ? "email" : "phone"} callback={verifyOTP} setterValue={true} hideOtp={() => setShowOtp(false)} processing={isSaving} resendHandler={sendOtp} authType={codeType} setAuthType={setCodeType} showAuthToggle={false} hideTfaSwitch={true} otpTypeOnProfile={otpType} />
+                </ModalBody>
+            </Modal>
+            <Modal isOpen={showEmailModal}>
+                <ModalHeader toggle={() => setShowEmailModal(false)}    >
+                    <h5 style={{ fontWeight: 600, fontSize: "16px", marginBottom: "0px" }}>Email is Required</h5>
+                </ModalHeader>
+                <ModalBody>
+                    <p style={{ fontSize: "14px", color: "#71767A", marginBottom: "0px" }}>Please add your email to see Sensitive Information.</p>
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            sendOtp("email")
+                        }}
+                        className={styles.emailModal}>
+                        <Input
+                            label="Email"
+                            type="email"
+                            placeholder="Enter your email"
+                            value={missingEmail}
+                            onChange={(e) => setMissingEmail(e.target.value)}
+                            style={{ margin: "1rem 0" }}
+                        />
+                        <button type="submit" style={{ border: 'none', outline: 'none', padding: "10px 18px", fontWeight: 600, fontSize: "15px", borderRadius: "8px", background: "#5926F0", color: "white", float: "inline-end" }} >Submit</button>
+                    </form>
+                </ModalBody>
+            </Modal>
             {(showModals.addFunds || addFundsMobile) && <AddFundsModal card={cards[current]} isOpen={showModals.addFunds || addFundsMobile} setOpen={setShowModals} />}
             {(showModals.ctc || ctcMobile) && <CardtoCard card={cards[current]} isOpen={showModals.ctc || ctcMobile} setOpen={setShowModals} />}
         </>

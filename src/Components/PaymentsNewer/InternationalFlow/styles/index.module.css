@@ -147,29 +147,15 @@
 
 .noticeDiv p {
     color: var(--COLORS-Neutral-800, #606060);
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
-    line-height: 24px;
-    letter-spacing: -0.32px;
 }
 
 .noticeHead {
     color: var(--COLORS-Tertiary-300, #6039CD);
-    leading-trim: both;
-    text-edge: cap;
-
-    /* Big Screen/HeadingXLarge */
-    font-family: Manrope;
     font-size: 32px;
-    font-style: normal;
     font-weight: 700;
-    line-height: 38px;
-    /* 118.75% */
-    letter-spacing: -0.96px;
 }
 
 @media screen and (max-width: 600px) {

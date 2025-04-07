@@ -160,11 +160,11 @@ const RecipientSelect = ({ dataHandler, data }) => {
                             </form>
 
                             <div style={{ marginTop: "2rem", display: "flex", flexDirection: "column", gap: "12px" }}>
-                                {searchState.last4.loading ? (
+                                {searchState.last4?.loading ? (
                                     <div style={{ width: "100px" }}>
                                         <InstaPayLoader />
                                     </div>
-                                ) : searchState.last4.error ? (
+                                ) : searchState.last4?.error ? (
                                     <div className={styles.error}>{searchState.last4.error}</div>
                                 ) : (
                                     searchState.last4.data?.map((item) => (

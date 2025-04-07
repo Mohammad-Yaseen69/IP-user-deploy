@@ -73,49 +73,6 @@
         }
     }
 
-    .amount {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        align-self: stretch;
-
-        p {
-            color: #7D7D7D;
-            leading-trim: both;
-            text-edge: cap;
-            font-family: Manrope;
-            font-size: 21.784px;
-            font-style: normal;
-            font-weight: 600;
-            line-height: 150%;
-            margin-bottom: 0;
-            text-transform: capitalize;
-        }
-
-        input {
-            background-color: white;
-            border: none;
-            outline: none;
-            color: #000;
-            width: 300px;
-            text-align: center;
-            overflow: hidden;
-            font-size: 63.017px;
-            font-weight: 600;
-            letter-spacing: -2.206px;
-
-            &::placeholder {
-                color: #EBEBEB;
-                font-size: 63.017px;
-                font-style: normal;
-                font-weight: 600;
-                line-height: normal;
-                letter-spacing: -2.206px;
-            }
-
-        }
-    }
-
     .btns {
         display: flex;
         width: 100%;
@@ -154,6 +111,49 @@
     }
 }
 
+
+.amount {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: stretch;
+
+    p {
+        color: #7D7D7D;
+        leading-trim: both;
+        text-edge: cap;
+        font-family: Manrope;
+        font-size: 21.784px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 150%;
+        margin-bottom: 0;
+        text-transform: capitalize;
+    }
+
+    input {
+        background-color: white;
+        border: none;
+        outline: none;
+        color: #000;
+        width: 300px;
+        text-align: center;
+        overflow: hidden;
+        font-size: 63.017px;
+        font-weight: 600;
+        letter-spacing: -2.206px;
+
+        &::placeholder {
+            color: #EBEBEB;
+            font-size: 63.017px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+            letter-spacing: -2.206px;
+        }
+
+    }
+}
 
 .progressEffect {
     display: flex;

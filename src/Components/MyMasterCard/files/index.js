@@ -41,6 +41,10 @@ import Currency from "./currency.svg"
 import CircleCheck from "./check-circle.svg"
 import Receipt from "./receipt.svg"
 
+import PremiumLabel from "./premium-label.png"
+import StandardLabel from "./standard-label.png"
+import ctc from "./ctc.svg"
+
 export  {
     Payment,
     Paypal,
@@ -77,5 +81,8 @@ export  {
     Gb,
     Currency,
     CircleCheck,
-    Receipt
+    Receipt,
+    PremiumLabel,
+    StandardLabel,
+    ctc
 }

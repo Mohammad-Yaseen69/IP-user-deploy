@@ -94,7 +94,7 @@ const SuccessStep = ({ feeDetails, walletState, setStep, paymentType, setStepPar
                         flexDirection: width < 660 && "column",
                         width: (width < 660 || !setStepParent) && "100%",
                         display: !setStepParent && "grid",
-                        gridTemplateColumns: (!setStepParent && width > 700)?"1fr 1fr": "1fr",
+                        gridTemplateColumns: (!setStepParent && width > 700) ? "1fr 1fr" : "1fr",
 
                     }}
                     className={styles.completeOptions}

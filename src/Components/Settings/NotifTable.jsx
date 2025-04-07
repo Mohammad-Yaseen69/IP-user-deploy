@@ -34,7 +34,13 @@ const NotifTable = () => {
     const [rqPush, setRqPush] = useState(false)
     const [sqPush, setSqPush] = useState(false)
     const [refPush, setRefPush] = useState(false)
-
+    const [rpTelegram, setRpTelegram] = useState(false)
+    const [bpTelegram, setBpTelegram] = useState(false)
+    const [prTelegram, setPrTelegram] = useState(false)
+    const [afTelegram, setAfTelegram] = useState(false)
+    const [rqTelegram, setRqTelegram] = useState(false)
+    const [sqTelegram, setSqTelegram] = useState(false)
+    const [refTelegram, setRefTelegram] = useState(false)
 
     const [isLoading, setIsLoading] = useState(true)
 
@@ -68,6 +74,13 @@ const NotifTable = () => {
                 setRqPush(n?.quotation?.instagram ?? false)
                 setSqPush(n?.login?.instagram ?? false)
                 setRefPush(n?.referrals?.instagram ?? false)
+                setRpTelegram(n?.payments?.telegram ?? false)
+                setBpTelegram(n?.bulk_payments?.telegram ?? false)
+                setPrTelegram(n?.payment_requests?.telegram ?? false)
+                setAfTelegram(n?.add_funds?.telegram ?? false)
+                setRqTelegram(n?.quotation?.telegram ?? false)
+                setSqTelegram(n?.login?.telegram ?? false)
+                setRefTelegram(n?.referrals?.telegram ?? false)
             } catch (error) {
                 // console.log(decryptData(error.response.data.data))
             } finally {
@@ -91,37 +104,44 @@ const NotifTable = () => {
             payments: {
                 email: rpEmail,
                 phone: rpPhone,
-                instagram: rpPush
+                instagram: rpPush,
+                telegram: rpTelegram
             },
             bulk_payments: {
                 email: bpEmail,
                 phone: bpPhone,
-                instagram: bpPush
+                instagram: bpPush,
+                telegram: bpTelegram
             },
             payment_requests: {
                 email: prEmail,
                 phone: prPhone,
-                instagram: prPush
+                instagram: prPush,
+                telegram: prTelegram
             },
             add_funds: {
                 email: afEmail,
                 phone: afPhone,
-                instagram: afPush
+                instagram: afPush,
+                telegram: afTelegram
             },
             quotation: {
                 email: rqEmail,
                 phone: rqPhone,
-                instagram: rqPush
+                instagram: rqPush,
+                telegram: rqTelegram
             },
             login: {
                 email: sqEmail,
                 phone: sqPhone,
-                instagram: sqPush
+                instagram: sqPush,
+                telegram: sqTelegram
             },
             referrals: {
                 email: refEmail,
                 phone: refPhone,
-                instagram: refPush
+                instagram: refPush,
+                telegram: refTelegram
             }
         }
         const enc = encryptData(payload)
@@ -163,7 +183,8 @@ const NotifTable = () => {
                                 <tr>
                                     <th>{t("Activity")}</th>
                                     <th>{t("Email")}</th>
-                                    <th>{window.innerWidth < 1000 && i18n.language === "en" ? "Insta"  : t("Instagram") }</th>
+                                    <th>{window.innerWidth < 1000 && i18n.language === "en" ? "Insta" : t("Instagram")}</th>
+                                    <th>{t("Telegram")}</th>
                                     <th>{t("SMS")}</th>
                                 </tr>
                             </thead>
@@ -175,6 +196,9 @@ const NotifTable = () => {
                                     </td>
                                     <td data-label={t("Instagram")}>
                                         <Switch checked={rpPush} callback={() => setRpPush(!rpPush)} disabled={!editMode || isSaving} />
+                                    </td>
+                                    <td data-label={t("Telegram")}>
+                                        <Switch checked={rpTelegram} callback={() => setRpTelegram(!rpTelegram)} disabled={!editMode || isSaving} />
                                     </td>
                                     <td data-label={t("SMS")}>
                                         <Switch checked={rpPhone} callback={() => setRpPhone(!rpPhone)} disabled={!editMode || isSaving} />
@@ -188,6 +212,9 @@ const NotifTable = () => {
                         <td data-label={t("Instagram")}>
                             <Switch checked={bpPush} callback={() => setBpPush(!bpPush)} disabled={!editMode || isSaving} />
                         </td>
+                        <td data-label={t("Telegram")}>
+                            <Switch checked={bpTelegram} callback={() => setBpTelegram(!bpTelegram)} disabled={!editMode || isSaving} />
+                        </td>
                         <td data-label={t("SMS")}>
                             <Switch checked={bpPhone} callback={() => setBpPhone(!bpPhone)} disabled={!editMode || isSaving} />
                         </td>
@@ -199,6 +226,9 @@ const NotifTable = () => {
                                     </td>
                                     <td data-label={t("Instagram")}>
                                         <Switch checked={prPush} callback={() => setPrPush(!prPush)} disabled={!editMode || isSaving} />
+                                    </td>
+                                    <td data-label={t("Telegram")}>
+                                        <Switch checked={prTelegram} callback={() => setPrTelegram(!prTelegram)} disabled={!editMode || isSaving} />
                                     </td>
                                     <td data-label={t("SMS")}>
                                         <Switch checked={prPhone} callback={() => setPrPhone(!prPhone)} disabled={!editMode || isSaving} />
@@ -212,6 +242,9 @@ const NotifTable = () => {
                                     <td data-label={t("Instagram")}>
                                         <Switch checked={afPush} callback={() => setAfPush(!afPush)} disabled={!editMode || isSaving} />
                                     </td>
+                                    <td data-label={t("Telegram")}>
+                                        <Switch checked={afTelegram} callback={() => setAfTelegram(!afTelegram)} disabled={!editMode || isSaving} />
+                                    </td>
                                     <td data-label={t("SMS")}>
                                         <Switch checked={afPhone} callback={() => setAfPhone(!afPhone)} disabled={!editMode || isSaving} />
                                     </td>
@@ -223,6 +256,9 @@ const NotifTable = () => {
                                     </td>
                                     <td data-label={t("Instagram")}>
                                         <Switch checked={rqPush} callback={() => setRqPush(!rqPush)} disabled={!editMode || isSaving} />
+                                    </td>
+                                    <td data-label={t("Telegram")}>
+                                        <Switch checked={rqTelegram} callback={() => setRqTelegram(!rqTelegram)} disabled={!editMode || isSaving} />
                                     </td>
                                     <td data-label={t("SMS")}>
                                         <Switch checked={rqPhone} callback={() => setRqPhone(!rqPhone)} disabled={!editMode || isSaving} />
@@ -236,6 +272,9 @@ const NotifTable = () => {
                                     <td data-label={t("Instagram")}>
                                         <Switch checked={refPush} callback={() => setRefPush(!refPush)} disabled={!editMode || isSaving} />
                                     </td>
+                                    <td data-label={t("Telegram")}>
+                                        <Switch checked={refTelegram} callback={() => setRefTelegram(!refTelegram)} disabled={!editMode || isSaving} />
+                                    </td>
                                     <td data-label={t("SMS")}>
                                         <Switch checked={refPhone} callback={() => setRefPhone(!refPhone)} disabled={!editMode || isSaving} />
                                     </td>
@@ -247,6 +286,9 @@ const NotifTable = () => {
                                     </td>
                                     <td data-label={t("Instagram")}>
                                         <Switch checked={sqPush} callback={() => setSqPush(!sqPush)} disabled={!editMode || isSaving} />
+                                    </td>
+                                    <td data-label={t("Telegram")}>
+                                        <Switch checked={sqTelegram} callback={() => setSqTelegram(!sqTelegram)} disabled={!editMode || isSaving} />
                                     </td>
                                     <td data-label={t("SMS")}>
                                         <Switch checked={sqPhone} callback={() => setSqPhone(!sqPhone)} disabled={!editMode || isSaving} />

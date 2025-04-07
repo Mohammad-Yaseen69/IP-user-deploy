@@ -1,5 +1,4 @@
 import styles from "./styles/onboard.module.scss"
-import { useState } from "react"
 import CardIcon from "./files/card-icon.svg"
 import PremiumLabel from "./files/premium-label.png"
 import DollarIcon from "./files/dollar-icon.svg"
@@ -26,7 +25,7 @@ const Steptwo = ({ cardType, setStep, userDetails }) => {
                             Virtual Card : {cardType[0].toUpperCase() + cardType.slice(1)} Card (USD)
 
                         </span>
-                        <div    style={{display: "flex", gap: "10px", alignItems: "center"}}>
+                        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
                             <div style={{ background: `url(${cardType === "premium" ? PremiumLabel : StandardLabel})`, backgroundSize: "cover", backgroundPosition: "center" }} className={styles.cardLabel}>
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="36" height="22" viewBox="0 0 36 22" fill="none">
@@ -50,7 +49,7 @@ const Steptwo = ({ cardType, setStep, userDetails }) => {
                 </div>
 
                 <div>
-                    <div style={{ display: "flex", alignItems: "flex-start", gap: "50px", width: window.innerWidth > 1000 ?"55%" : "100%" }}>
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: "50px", width: window.innerWidth > 1000 ? "55%" : "100%" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                             <img src={DollarIcon} alt="" />
                             <p style={{ marginBottom: "0", fontSize: "14px", fontWeight: 600 }}> Pricing & Payment Summary</p>

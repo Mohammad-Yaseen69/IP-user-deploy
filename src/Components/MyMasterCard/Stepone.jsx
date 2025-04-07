@@ -17,7 +17,7 @@ const cardTypes = [
 ]
 
 const Toggle = ({ checked, onChange, isCheckbox = false }) => (
-    <label style={{borderRadius: "999px"}} className={isCheckbox ? styles.checkbox : styles.toggle}>
+    <label style={{ borderRadius: "999px" }} className={isCheckbox ? styles.checkbox : styles.toggle}>
         <input
             type={isCheckbox ? "checkbox" : "checkbox"}
             checked={checked}
@@ -69,9 +69,11 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApp
                                     <p style={{ color: cardType === card.type && "#EC9100" }}>{card.text}</p>
                                 </div>
 
-                                {card.type === cardType && <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
-                                    <path d="M11.6673 4.00781L5.25065 10.4245L2.33398 7.50781" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>}
+                                {card.type === cardType &&
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
+                                        <path d="M11.6673 4.00781L5.25065 10.4245L2.33398 7.50781" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                }
 
                             </span>
                         ))}

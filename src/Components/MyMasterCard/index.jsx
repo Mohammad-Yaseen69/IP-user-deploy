@@ -30,6 +30,7 @@ const MyMasterCard = () => {
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const addFundsMobile = queryParams.get("addFundsMobile")
+  const ctcMobile = queryParams.get("ctcMobile")
 
   useEffect(() => {
     if (cardPurchased) {
@@ -91,7 +92,7 @@ const MyMasterCard = () => {
   return (
     <div style={{ minHeight: "100vh" }} className={styles.container}>
       <div className={styles.top}>
-        <h4 style={{ display: (width < 1000 && addFundsMobile) && "none" }}>My Mastercard</h4>
+        <h4 style={{ display: (width < 1000 && (addFundsMobile || ctcMobile) ) && "none" }}>My Mastercard</h4>
         {width > 1000 && <TopRight />}
       </div>
 
@@ -110,7 +111,7 @@ const MyMasterCard = () => {
                   cards={cards}
                   setCardPurchased={setCardPurchased}
                 />
-                {(!addFundsMobile || width > 1000)  && <TransactionsTable cardNo={currentCardDetails?.card_number} transactions={transactions} isLoading={loading} />}
+                {((!addFundsMobile && !ctcMobile) || width > 1000)  && <TransactionsTable cardNo={currentCardDetails?.card_number} transactions={transactions} isLoading={loading} />}
               </>
               : <OnBoarding alreadyHaveCard={cards.length !== 0} setReRender={setReRender} setCardPurchased={setCardPurchased} />
 

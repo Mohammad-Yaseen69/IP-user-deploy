@@ -29,12 +29,11 @@ import InstaPayLoader from "../../Loader"
 import TrustpaymentPage from "../../AddFunds/WalletFund/CreditTransaction"
 import FeesComponent from "./FeesComponent"
 import MobileWalletServices from "./MobileWalletServices"
-import { createJwtToken, createShambeToken } from "../../../Helper/CreateToken"
+import {  createShambeToken } from "../../../Helper/CreateToken"
 import NotFoundModal from "../../NotFound/NotFoundModal"
 import errors from "../../AddFunds/TrustPaymentErrors.json"
 import AddBeneficiaryRequiredFields from "../../AddBeneficiaryRequiredFields"
-import { Modal, ModalBody, Button, ModalHeader } from "reactstrap"
-import { update } from "lodash"
+import { Modal, ModalBody, ModalHeader } from "reactstrap"
 
 const leftSideContent = [
     "Enter The Amount",
@@ -155,7 +154,7 @@ function reducer(state, action) {
 const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsInternational }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
-    const { userDetails, authHeader, setProfileLockTime, userWallets } = useContext(UserContext)
+    const { userDetails, authHeader, setProfileLockTime } = useContext(UserContext)
     const [subStep, setSubStep] = useState(0)
     const [internationalData, dispatch] = useReducer(reducer, initialState);
     const [showDetailsModal, setShowDetailsModal] = useState(false)
@@ -171,15 +170,11 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
     })
     const [showRequiredFieldsModal, setShowRequiredFieldsModal] = useState(false)
     const [showBalanceModal, setShowBalanceModal] = useState(false)
-    const [requiredFields, setRequiredFields] = useState({
+    const [requiredFields] = useState({
         basic: [],
         extras: []
     })
 
-    const handleRequiredFields = (fields) => {
-        setRequiredFields(fields)
-        setShowRequiredFieldsModal(true)
-    }
 
     const updateInternationalData = (field, value) => {
         dispatch({ type: "UPDATE_FIELD", field, value });
@@ -235,7 +230,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             updateInternationalData("payerRequiredFields", dec?.data?.payer_required_fields)
             return dec?.data?.destination_currency
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
             updateInternationalData("exchange_rate_error", "sww")
         }
     }
@@ -786,21 +780,21 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
         }
     }
 
-    const getTopupFees = async () => {
-        setLoading(true)
-        try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/get-tbc-fee/${internationalData.currency_wallet?._id}/${internationalData.amount?.toString()?.split(".")?.[0]?.replaceAll(",", "")}`, {
-                headers: authHeader
-            })
-            const dec = decryptData(res.data.data)
-            return +String(internationalData.amount)?.replaceAll(",", "") - Number(dec?.feeDetails)
-        } catch (error) {
-            const dec = decryptData(error.response.data.data)
-            updateInternationalData("error", typeof dec === "string" ? dec : dec?.message ?? "Something went wrong, Please try again!")
-        } finally {
-            setLoading(false)
-        }
-    }
+    // const getTopupFees = async () => {
+    //     setLoading(true)
+    //     try {
+    //         const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/get-tbc-fee/${internationalData.currency_wallet?._id}/${internationalData.amount?.toString()?.split(".")?.[0]?.replaceAll(",", "")}`, {
+    //             headers: authHeader
+    //         })
+    //         const dec = decryptData(res.data.data)
+    //         return +String(internationalData.amount)?.replaceAll(",", "") - Number(dec?.feeDetails)
+    //     } catch (error) {
+    //         const dec = decryptData(error.response.data.data)
+    //         updateInternationalData("error", typeof dec === "string" ? dec : dec?.message ?? "Something went wrong, Please try again!")
+    //     } finally {
+    //         setLoading(false)
+    //     }
+    // }
 
 
     const handleClick = () => {
@@ -968,7 +962,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
     const queryParams = new URLSearchParams(location.search)
     const transaction_status = queryParams.get("transaction_status")
     const transaction_token = queryParams.get("transaction_token")
-    const transaction_id = queryParams.get("transaction_id")
     const error_in_funds = queryParams.get("error_in_funds")
     const code = queryParams.get("code")
 
@@ -991,7 +984,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 const dec = decryptData(res.data.data)
                 updateInternationalData("transaction_details", dec?.data ?? dec)
             } catch (error) {
-                const dec = decryptData(error.response.data.data)
                 updateInternationalData("error", "Something went wrong while completing the transactions, But don't worry your funds have been added to your InstaPay Wallet.")
             }
             finally {

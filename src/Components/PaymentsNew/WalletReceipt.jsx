@@ -1,8 +1,10 @@
 import { Card, CardBody } from "reactstrap";
 import w from "./files/where.png"
 import s from "./files/share.png"
+import { useTranslation } from "react-i18next";
 
 const WalletReceipt = ({ wallet, amount, currency, setShowStatus, setIsWallet }) => {
+    const {t} = useTranslation()
     return (
         <Card style={{
             height: "100%",
