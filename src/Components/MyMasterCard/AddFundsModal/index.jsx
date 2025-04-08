@@ -97,7 +97,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
             cardHolderName: "",
         });
 
-        if(width < 1000){
+        if (width < 1000) {
             navigate("/my-mastercard")
         }
     };
@@ -123,6 +123,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
                 return b?.balance?.available - a?.balance?.available;
             });
     }, [userWallets, amount]);
+
 
     useEffect(() => {
         const getCardTypeByValue = function getCardTypeByValue(value) {
@@ -150,12 +151,23 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
     const sendOtp = async () => {
         const data = {
             data: {
-                sender_wallet_id: walletState?._id,
                 token: feeDetails.token,
                 account: userDetails._id
             },
             type: codeType
         }
+
+        if (paymentType === "wallet") {
+            data.data.sender_wallet_id = walletState?._id
+        }
+
+        if(paymentType === "paypal"){
+            data.data.accountId = userDetails._id
+        }
+
+
+        console.log(data)
+
 
 
         const encrypted = encryptData(data)
@@ -167,12 +179,11 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
             })
 
             const dec = decryptData(res.data.data)
-            console.log(dec)
             setshowOtpModal(true)
             setToken(dec?.token)
         } catch (error) {
             const dec = decryptData(error.response.data.data)
-            console.log(dec)
+
             toast.error("Something went wrong while creating your virtual card! please try again.")
         }
         finally {
@@ -190,39 +201,45 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
             sendOtp()
             return
         }
-        setStep(prev => prev + 1)
+        if (paymentType === "paypal" && step === 2) {
+            setStep(prev => prev + 2)
+        } else {
+            setStep(prev => prev + 1)
+        }
     }
 
+    async function getFee() {
+        const data = {
+            cardId: card._id,
+            walletId: walletState?._id ?? filteredWallets.find(w => w.default)._id,
+            amount: +String(amount)?.replaceAll(",", ""),
+            type: paymentType
+        }
+
+        console.log(data)
+        const enc = encryptData(data)
+
+
+
+        const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-topup-fee`, { data: enc }, {
+            headers: authHeader
+        })
+
+        const dec = decryptData(response?.data?.data)
+
+        console.log(dec)
+        setFeeDetails(dec.data)
+    }
 
 
     useEffect(() => {
         if (walletState.wallet_id) {
-            async function getFee() {
-                const data = {
-                    cardId: card._id,
-                    walletId: walletState?._id,
-                    amount: +String(amount)?.replaceAll(",", ""),
-                    type: paymentType
-                }
-
-                console.log(data)
-                const enc = encryptData(data)
-
-
-
-                const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-topup-fee`, { data: enc }, {
-                    headers: authHeader
-                })
-
-                const dec = decryptData(response?.data?.data)
-
-                console.log(dec)
-                setFeeDetails(dec.data)
-            }
-
             getFee()
         }
-    }, [walletState])
+        if (paymentType === "paypal") {
+            getFee()
+        }
+    }, [walletState, paymentType])
 
     function errorHandler(err, setError) {
         const decrypted = decryptData(err.response.data.data);
@@ -239,6 +256,28 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
         }
     }
 
+    const paypalTopup = async (setter, type, otp, setError) => {
+        const data = {
+            otp: otp,
+            token: token,
+            type: codeType,
+        }
+
+
+        const enc = encryptData(data)
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/topup-by-paypal`, { data: enc }, {
+                headers: authHeader
+            })
+            const dec = decryptData(res.data.data)
+
+            window.location.href = dec?.data?.url
+            console.log(dec)
+        }
+        catch (err) {
+            errorHandler(err, setError)
+        }
+    }
     const walletTopup = async (setter, type, otp, setError) => {
         const data = new FormData()
 
@@ -270,7 +309,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
 
             case 2:
                 setSideText(width > 1000 ? "Choose the method" : "Select Payment Type")
-                setDisabled(!paymentType)
+                setDisabled(!paymentType || (paymentType === "paypal" && !feeDetails.token))
                 break;
             case 3:
                 setDisabled(!feeDetails.token && !walletState._id)
@@ -295,6 +334,15 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
     }, [step, amount, feeDetails, walletState, paymentType, width])
 
 
+    const handleBack = () => {
+        if (step === 2) {
+            setPaymentType("")
+            setStep(prev => prev - 1)
+        }
+        if (step === 4 && paymentType === "paypal") {
+            setStep(prev => prev - 2)
+        }
+    }
 
 
 
@@ -419,25 +467,25 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
 
 
                 <div style={{ display: width < 1000 && "flex", flexDirection: width < 1000 && "column" }} className={styles.btns}>
-                    {((step !== 1 && step !== 5) && (width > 1000)) && <button onClick={() => setStep(prev => prev - 1)} className={styles.cancel}>Cancel</button>}
+                    {((step !== 1 && step !== 5) && (width > 1000)) && <button onClick={handleBack} className={styles.cancel}>Cancel</button>}
                     {width < 1000 && <ContactBox />}
-                    
+
                     <button disabled={disabled} style={{ padding: width < 1000 && "18px", marginTop: width < 1000 && "12px", width: width < 1000 && "100%", opacity: disabled && 0.6 }} onClick={handleNext} className={styles.continue}>
                         {step !== 5 ? "Continue" : "Close"}
                     </button>
 
-                   {step !== 5 &&
-                    <button onClick={() => {
-                        if (step === 1) {
-                            handleClose()
-                            navigate("/my-mastercard")
-                        }
-                        else {
-                            setStep(prev => prev - 1)
-                        }
-                    }} className={styles.cancel} style={{ backgroundColor: "white",display: (width > 1000 && step !== 5) || step === 5 ? "none" : "flex", width: "100%" }} >
-                        Back
-                    </button>
+                    {step !== 5 &&
+                        <button onClick={() => {
+                            if (step === 1) {
+                                handleClose()
+                                navigate("/my-mastercard")
+                            }
+                            else {
+                                setStep(prev => prev - 1)
+                            }
+                        }} className={styles.cancel} style={{ backgroundColor: "white", display: (width > 1000 && step !== 5) || step === 5 ? "none" : "flex", width: "100%" }} >
+                            Back
+                        </button>
                     }
                 </div>
             </div>
@@ -464,7 +512,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
                 <ModalHeader toggle={() => setshowOtpModal(false)}> Confirm </ModalHeader>
                 <ModalBody>
                     <OTPConfirmation
-                        callback={walletTopup}
+                        callback={paymentType === "wallet" ? walletTopup : paymentType === "paypal" ? paypalTopup : null}
                         setterValue={true}
                         hideOtp={() => setshowOtpModal(false)}
                         processing={loading}
