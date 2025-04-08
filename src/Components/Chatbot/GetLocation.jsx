@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react'
 // import RequestLocation from '../RequestLocation'
 import { CustomDatePickerContainer, SuccessImage } from './schedule-calendar'
@@ -27,7 +28,7 @@ const GetLocation = () => {
                 recipientId: recipient_id,
                 accept
             }
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-location-bot${platform === "telegram" ? "-telegram" :""}`, { data: encryptData(payload) })
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-location-bot${platform === "telegram" ? "-telegram" : ""}`, { data: encryptData(payload) })
             const dec = decryptData(res.data.data)
             console.log(dec)
         }
@@ -207,6 +208,7 @@ const RequestLocation = ({ coords, setCoords, isOpen, toggle, cancelPayment, dis
                         ?
                         <>
                             <iframe
+                               title='google map'
                                 src={`//maps.google.com/maps?q=${coords?.latitude},${coords?.longitude}&z=15&output=embed`}
                                 style={{
                                     width: "100%",

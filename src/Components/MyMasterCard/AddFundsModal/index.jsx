@@ -592,8 +592,8 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
                     currency={cardTransactionDetails?.currency}
                     transaction={cardTransactionDetails}
                     amount={cardTransactionDetails?.amount}
-                    url={`${process.env.REACT_APP_IP_DEV_API}api/trust-payment/confirm-chatbot-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
-                    tokenUrl={() => `${process.env.REACT_APP_IP_DEV_API}api/trust-payment/confirm-chatbot-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
+                    url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-chatbot-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
+                    tokenUrl={() => `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-chatbot-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
                 />
                 :
                 <></>
