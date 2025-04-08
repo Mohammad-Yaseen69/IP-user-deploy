@@ -19,6 +19,8 @@ import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
 import { useNavigate } from 'react-router'
 import SideProgress from './SideProgress'
 import useWindowWidth from '../../../utils/useWindowWidth'
+import { createShambeToken } from '../../../Helper/CreateToken'
+import TrustpaymentPage from '../../AddFunds/WalletFund/CreditTransaction'
 
 const PLACEHOLDER_CARD_TYPE = {
     type: 'placeholder',
@@ -147,6 +149,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
     const [sideText, setSideText] = useState("Set the Value")
     const navigate = useNavigate()
     const [disabled, setDisabled] = useState(false)
+    const [cardTransactionDetails, setCardTransactionDetails] = useState({})
 
     const sendOtp = async () => {
         const data = {
@@ -161,8 +164,19 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
             data.data.sender_wallet_id = walletState?._id
         }
 
-        if(paymentType === "paypal"){
+        if (paymentType === "paypal" || paymentType === "card") {
             data.data.accountId = userDetails._id
+        }
+
+        if (paymentType === "card") {
+            if (paymentType === "card") {
+                if (selectedSaveCard?._id) {
+                    data.data.pan = selectedSaveCard._id
+                } else {
+                    data.data.is_card_save = saveCard
+                    data.data.se_shambey = createShambeToken(cardDetail)
+                }
+            }
         }
 
 
@@ -239,6 +253,9 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
         if (paymentType === "paypal") {
             getFee()
         }
+        if (paymentType === "card") {
+            getFee()
+        }
     }, [walletState, paymentType])
 
     function errorHandler(err, setError) {
@@ -253,6 +270,44 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
             localStorage.clear()
             localStorage.setItem("ip_country", coun)
             navigate("/login")
+        }
+    }
+
+    const cardTopup = async (setter, type, otp, setError) => {
+        const data = {
+            otp,
+            type: codeType,
+            token,
+            panData: {
+                token: feeDetails.token,
+                accountId: userDetails._id
+            }
+        }
+
+        if (paymentType === "card") {
+            if (paymentType === "card") {
+                if (selectedSaveCard?._id) {
+                    data.panData.pan = selectedSaveCard._id
+                } else {
+                    data.panData.is_card_save = saveCard
+                    data.panData.se_shambey = createShambeToken(cardDetail)
+                }
+            }
+        }
+
+        const enc = encryptData(data)
+
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/topup-by-card`, { data: enc }, {
+                headers: authHeader
+            })
+            setToken(null)
+            setshowOtpModal(false)
+            const dec = decryptData(res.data.data)
+            setCardTransactionDetails(dec.data)
+            console.log(dec)
+        } catch (err) {
+            errorHandler(err, setError)
         }
     }
 
@@ -337,11 +392,14 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
     const handleBack = () => {
         if (step === 2) {
             setPaymentType("")
-            setStep(prev => prev - 1)
         }
         if (step === 4 && paymentType === "paypal") {
             setStep(prev => prev - 2)
         }
+        else{
+            setStep(prev => prev - 1)
+        }
+
     }
 
 
@@ -512,7 +570,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
                 <ModalHeader toggle={() => setshowOtpModal(false)}> Confirm </ModalHeader>
                 <ModalBody>
                     <OTPConfirmation
-                        callback={paymentType === "wallet" ? walletTopup : paymentType === "paypal" ? paypalTopup : null}
+                        callback={paymentType === "wallet" ? walletTopup : paymentType === "paypal" ? paypalTopup : cardTopup}
                         setterValue={true}
                         hideOtp={() => setshowOtpModal(false)}
                         processing={loading}
@@ -523,6 +581,23 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
                     />
                 </ModalBody>
             </Modal>
+
+            {cardTransactionDetails?.transaction_id
+                ?
+                <TrustpaymentPage
+                    paymentWithSavedCard={selectedSaveCard?._id ? true : false}
+                    card_cvc={cardDetail.cardCVC}
+                    card_expiry={cardDetail.cardExpiry}
+                    card_number={cardDetail.cardNumber}
+                    currency={cardTransactionDetails?.currency}
+                    transaction={cardTransactionDetails}
+                    amount={cardTransactionDetails?.amount}
+                    url={`${process.env.REACT_APP_IP_DEV_API}api/trust-payment/confirm-chatbot-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
+                    tokenUrl={() => `${process.env.REACT_APP_IP_DEV_API}api/trust-payment/confirm-chatbot-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
+                />
+                :
+                <></>
+            }
         </>
     )
 }

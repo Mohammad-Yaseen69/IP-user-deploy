@@ -5,18 +5,18 @@ import { Svg } from "../files"
 function getCurrencySymbol(currencyCode) {
     if (!currencyCode) return currencyCode
     const formatted = new Intl.NumberFormat('en', {
-      style: 'currency',
-      currency: currencyCode,
-      currencyDisplay: 'symbol',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
+        style: 'currency',
+        currency: currencyCode,
+        currencyDisplay: 'symbol',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
     }).format(1);
-  
-    return formatted.replace(/[0-9.,\s]/g, '');
-  }
-  
 
-const ConfirmationStep = ({feeDetails, walletState, setStep, sendOtp, addFunds, cardDets}) => {
+    return formatted.replace(/[0-9.,\s]/g, '');
+}
+
+
+const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds, cardDets }) => {
     return (
         <div className={styles.step3}>
             <div className={styles.infoDiv}>
@@ -28,7 +28,7 @@ const ConfirmationStep = ({feeDetails, walletState, setStep, sendOtp, addFunds, 
                 <div className={styles.paymentInfo}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
                         <p>You Have to Pay</p>
-                        <h1>{!addFunds ? feeDetails.currency: getCurrencySymbol(feeDetails?.feeDetails?.currency)}{!addFunds ? feeDetails.fee : feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}</h1>
+                        <h1>{!addFunds ? feeDetails.currency : getCurrencySymbol(feeDetails?.feeDetails?.currency)}{!addFunds ? feeDetails.fee : feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}</h1>
                     </div>
 
 
@@ -49,7 +49,7 @@ const ConfirmationStep = ({feeDetails, walletState, setStep, sendOtp, addFunds, 
                         </div>
                     </div>
 
-                   {!addFunds &&
+                    {!addFunds &&
                         <div className={styles.feeInfo}>
                             <h3>Card activation fee</h3>
                             <h3>{feeDetails.currency}{feeDetails.fee}</h3>
@@ -74,10 +74,12 @@ const ConfirmationStep = ({feeDetails, walletState, setStep, sendOtp, addFunds, 
                                 <h3>Total Amount:</h3>
                                 <h3>{getCurrencySymbol(feeDetails?.feeDetails?.currency)} {feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}</h3>
                             </div>
-                            <div className={styles.feeInfo}>
-                                <h3>Exchage Rate:</h3>
-                                <h3>{getCurrencySymbol(feeDetails?.feeDetails?.currency)} {Number(feeDetails?.feeDetails?.exchangeRate?.replace(/[,]/g, ""))?.toFixed(2)}</h3>
-                            </div>
+                            {feeDetails?.feeDetails?.exchangeRate &&
+                                <div className={styles.feeInfo}>
+                                    <h3>Exchage Rate:</h3>
+                                    <h3>{getCurrencySymbol(feeDetails?.feeDetails?.currency)} {Number(feeDetails?.feeDetails?.exchangeRate?.replace(/[,]/g, ""))?.toFixed(2)}</h3>
+                                </div>
+                            }
                         </>
                     )}
 
@@ -99,7 +101,7 @@ const ConfirmationStep = ({feeDetails, walletState, setStep, sendOtp, addFunds, 
                     </button>
                 </div>}
 
-                
+
         </div>
     )
 }

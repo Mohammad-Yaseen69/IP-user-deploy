@@ -389,10 +389,6 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
     }
   }
 
-
-
-
-
   const initiatePaypalPayment = async (setter, type, otp, setError) => {
     try {
       const data = {
@@ -415,8 +411,6 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
       errorHandler(err, setError)
     }
   }
-
-
 
   const renderData = () => (
     <div className={styles.paymentContent} style={{ display: 'flex', alignItems: 'center' }}>
