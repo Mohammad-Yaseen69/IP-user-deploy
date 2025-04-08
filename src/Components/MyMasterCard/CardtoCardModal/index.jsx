@@ -297,11 +297,11 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
 
 
     try {
-      const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/card-to-card-transfer`, { data: encrypted }, {
+      await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/card-to-card-transfer`, { data: encrypted }, {
         headers: authHeader
       })
 
-      const dec = decryptData(res.data.data)
+      // const dec = decryptData(res.data.data)
 
       updateHandler("showOtpModal", false)
       updateHandler("token", "")

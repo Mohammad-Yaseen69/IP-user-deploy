@@ -602,8 +602,8 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
           currency={"USD"}
           transaction={cardTransactionDetails}
           amount={feeDetails?.totalFee}
-          url={`${process.env.REACT_APP_IP_DEV_API}api/mastercard/confirm-vcc${selectedSaveCard._id ? "-pan" : ""}-card/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
-          tokenUrl={() => `${process.env.REACT_APP_IP_DEV_API}api/mastercard/confirm-vcc${selectedSaveCard._id ? "-pan" : ""}-card/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
+          url={`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/confirm-vcc${selectedSaveCard._id ? "-pan" : ""}-card/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
+          tokenUrl={() => `${process.env.REACT_APP_IP_DEV_API}/api/mastercard/confirm-vcc${selectedSaveCard._id ? "-pan" : ""}-card/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
         />
         :
         <></>

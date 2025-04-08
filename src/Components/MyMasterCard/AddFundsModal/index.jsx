@@ -196,8 +196,6 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
             setshowOtpModal(true)
             setToken(dec?.token)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
-
             toast.error("Something went wrong while creating your virtual card! please try again.")
         }
         finally {

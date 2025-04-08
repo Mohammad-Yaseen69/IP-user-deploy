@@ -491,6 +491,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
 
             const res = await axios.get(url, { headers: authHeader })
             const decrypted = decryptData(res.data.data)
+            console.log(decrypted?.data?.sending?.value)
             const exchange_rate_details = {
                 exchange_rate: decrypted?.data?.exchanged_rate?.value,
                 receiver: { currency: decrypted?.data?.recipient?.currency, amount: decrypted?.data?.recipient?.value },

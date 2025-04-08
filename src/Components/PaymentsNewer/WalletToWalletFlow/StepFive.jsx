@@ -12,6 +12,8 @@ const StepFive = ({ data, sending_currency = "", showMid = true }) => {
     const { authHeader } = useContext(UserContext)
     const [exchangedAmount, setExchangedAmount] = useState(0)
 
+
+    console.log(data.exchange_rate?.sending?.amount)
     useEffect(() => {
         if (data.payment_type?.value === "wallet" && data?.wallet?._id && data.currency_wallet?._id !== data?.wallet?._id) {
             const getExchangedAmounts = async () => {
@@ -30,6 +32,7 @@ const StepFive = ({ data, sending_currency = "", showMid = true }) => {
             getExchangedAmounts()
         }
     }, [data?.currency_wallet, data?.wallet])
+
     return (
         <div className={styles.container}>
             <h4>{data.beneficiary?.first_name ?? data.beneficiary?.firstName ?? data.beneficiary?.user?.first_name} {data?.beneficiary?.last_name ?? data.beneficiary?.lastName ?? data?.beneficiary?.user?.last_name}</h4>
@@ -51,7 +54,7 @@ const StepFive = ({ data, sending_currency = "", showMid = true }) => {
                             &&
                             <div className={styles.er_details}>
                                 <img src={er_icon} alt="" />
-                                <span>1.00 {data?.currency_wallet?.currency?.code}  = {Number(exchangedAmount / data.amount)?.toLocaleString("en-US", { minimumFractionDigits: 3, maximumFractionDigits: 4 })} {data.payment_type?.value === "card" ? data.currency_wallet?.currency?.code : data.wallet?.currency?.code} </span>
+                                <span>1.00 {data?.currency_wallet?.currency?.code}  = {Number(exchangedAmount / data.amount?.replace(/,/g,""))?.toLocaleString("en-US", { minimumFractionDigits: 3, maximumFractionDigits: 4 })} {data.payment_type?.value === "card" ? data.currency_wallet?.currency?.code : data.wallet?.currency?.code} </span>
                             </div>
                         }
                         <div className={styles.right}>
