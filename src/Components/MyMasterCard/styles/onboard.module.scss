@@ -68,20 +68,20 @@
         }
 
         .applePay {
-            span{
+            span {
                 >div {
                     display: flex;
                     align-items: center;
                     gap: 7px;
-    
-    
+
+
                     p {
                         color: var(--COLORS-Neutral-1000, #333);
                         font-size: 14px;
                         font-style: normal;
                         font-weight: 600;
                     }
-    
+
                     div {
                         display: flex;
                         padding: 4px var(--Gaps-Gap-Small, 8px);
@@ -415,9 +415,9 @@
     display: inline-block;
     width: 36px;
     height: 20px;
-    border-radius: 999px   !important;
+    border-radius: 999px !important;
     flex-shrink: 0;
-    margin-bottom: 0 !important;  
+    margin-bottom: 0 !important;
 
     input {
         opacity: 0;
@@ -861,6 +861,38 @@
                     border-radius: 6px;
                     background: rgba(109, 41, 220, 0.04);
                     width: 100%;
+                    flex-direction: column;
+                    gap: 5px;
+
+                    .er_details {
+                        display: flex;
+                        align-items: center;
+                        border-radius: 4px;
+                        background: rgba(89, 38, 240, 0.13);
+                        padding: .5rem .7rem;
+
+
+
+
+                        img {
+                            width: 15px;
+                            height: 14px;
+                            object-fit: contain;
+                        }
+
+                        span {
+                            color: #5926F0;
+                            leading-trim: both;
+                            text-edge: cap;
+                            font-family: Manrope;
+                            font-size: 10px;
+                            font-style: normal;
+                            font-weight: 600;
+                            line-height: normal;
+                            letter-spacing: -0.2px;
+                        }
+                    }
+
 
                     >div {
                         display: flex;
@@ -879,7 +911,7 @@
                         div {
                             display: flex;
                             flex-direction: column;
-                            align-items: flex-start;
+                            align-items: flex-end;
                             gap: 5px;
 
                             span {
@@ -891,7 +923,7 @@
 
                             p {
                                 color: #6C6C6C;
-                                font-size: 10px;
+                                font-size: 7px;
                                 font-weight: 600;
                                 margin-bottom: 0;
                             }

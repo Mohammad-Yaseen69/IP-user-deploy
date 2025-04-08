@@ -1,5 +1,6 @@
 import styles from "../styles/onboard.module.scss"
 import { Svg } from "../files"
+import er_icon from "../../PaymentsNewer/InternationalFlow/files/exchange_rate.svg"
 
 
 function getCurrencySymbol(currencyCode) {
@@ -40,13 +41,25 @@ const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds,
                     <div>
                         <div>
                             <p>You are using</p>
-                            <div>
+                            <div style={{gap: "0"}}>
                                 <span>{walletState?.name} Wallet</span>
                                 <p>{walletState?.wallet_id}</p>
                             </div>
-
-                            <button onClick={() => setStep(prev => prev - 1)}>Change</button>
                         </div>
+                        {(addFunds && feeDetails?.feeDetails?.exchangeRate) &&
+                            <div style={{justifyContent: "center"}}>
+                                <div style={{flexDirection: "row"}} className={styles.er_details}>
+                                    <img src={er_icon} alt="" />
+                                    <span>1.00 {cardDets?.currency}  = {getCurrencySymbol(feeDetails?.feeDetails?.currency)} {Number(feeDetails?.feeDetails?.exchangeRate?.replace(/[,]/g, ""))?.toFixed(2)} </span>
+                                </div>
+                            </div>
+                        }
+                        {addFunds &&
+                            <div>
+                                <h3 style={{ marginBottom: "0", fontSize: "18px" }}>{getCurrencySymbol(cardDets?.currency)}{feeDetails?.feeDetails?.amount}</h3>
+                                <h3 style={{ marginBottom: "0", fontSize: "18px" }}>{getCurrencySymbol(feeDetails?.feeDetails?.currency)} {feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}</h3>
+                            </div>
+                        }
                     </div>
 
                     {!addFunds &&
@@ -57,10 +70,6 @@ const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds,
 
                     {addFunds && (
                         <>
-                            <div className={styles.feeInfo}>
-                                <h3>Entered Amount:</h3>
-                                <h3>{getCurrencySymbol(cardDets?.currency)}{feeDetails?.feeDetails?.amount}</h3>
-                            </div>
 
                             <div className={styles.feeInfo}>
                                 <h3>Fee:</h3>
@@ -74,12 +83,6 @@ const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds,
                                 <h3>Total Amount:</h3>
                                 <h3>{getCurrencySymbol(feeDetails?.feeDetails?.currency)} {feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}</h3>
                             </div>
-                            {feeDetails?.feeDetails?.exchangeRate &&
-                                <div className={styles.feeInfo}>
-                                    <h3>Exchage Rate:</h3>
-                                    <h3>{getCurrencySymbol(feeDetails?.feeDetails?.currency)} {Number(feeDetails?.feeDetails?.exchangeRate?.replace(/[,]/g, ""))?.toFixed(2)}</h3>
-                                </div>
-                            }
                         </>
                     )}
 
