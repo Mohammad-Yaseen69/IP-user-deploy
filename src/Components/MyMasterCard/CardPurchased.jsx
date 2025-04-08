@@ -646,7 +646,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                 </ModalBody>
             </Modal>
             {(showModals.addFunds || addFundsMobile) && <AddFundsModal card={cards[current]} isOpen={showModals.addFunds || addFundsMobile} setOpen={setShowModals} />}
-            {(showModals.ctc || ctcMobile) && <CardtoCard card={cards[current]} isOpen={showModals.ctc || ctcMobile} setOpen={setShowModals} />}
+            {(showModals.ctc || ctcMobile) && <CardtoCard currentCardDetails={currentCardDetails} card={cards[current]} isOpen={showModals.ctc || ctcMobile} setOpen={setShowModals} />}
         </>
     );
 };

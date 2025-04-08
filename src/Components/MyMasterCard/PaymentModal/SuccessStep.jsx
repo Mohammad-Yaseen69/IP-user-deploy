@@ -66,15 +66,15 @@ const SuccessStep = ({ feeDetails, walletState, setStep, paymentType, setStepPar
                         <>
                             <div className={styles.feeInfo}>
                                 <h3>Entered Amount</h3>
-                                <h3>{feeDetails?.feeDetails?.amount}</h3>
+                                <h3>{cardDets?.currency}{feeDetails?.feeDetails?.amount}</h3>
                             </div>
                             <div className={styles.feeInfo}>
                                 <h3>Fee</h3>
-                                <h3>{feeDetails?.feeDetails?.fee}</h3>
+                                <h3>{cardDets?.currency}{feeDetails?.feeDetails?.fee}</h3>
                             </div>
                             <div className={styles.feeInfo}>
                                 <h3>Total Funds to be Added</h3>
-                                <h3>{feeDetails?.feeDetails?.amountToTopup}</h3>
+                                <h3>{cardDets?.currency}{feeDetails?.feeDetails?.amountToTopup}</h3>
                             </div>
                             <div className={styles.feeInfo}>
                                 <h3>Total Amount</h3>

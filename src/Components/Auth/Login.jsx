@@ -290,7 +290,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
 
         if (numericValue && index < numberOfFields - 1) {
-            inputRefs.current[index + 1].focus();
+            inputRefs.current[index + 1]?.focus();
             setCurrentActiveInput(prev => prev < 6 ? prev += 1 : prev)
         }
         const isEmpty = newOTPValues.some(val => val === '');
@@ -301,7 +301,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const handleInputKeyDown = (index, event) => {
         if (event.key === 'Backspace') {
             if (otpValues[index] === '' && index > 0) {
-                inputRefs.current[index - 1].focus();
+                inputRefs.current[index - 1]?.focus();
                 setCurrentActiveInput(prev => prev -= 1)
             } else if (index > 0) {
                 const newOTPValues = [...otpValues];
@@ -402,7 +402,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     setOTPValues(Array(numberOfFields).fill(""))
                     setTimeout(() => {
                         setOtpVerified(false)
-                        inputRefs.current[0].focus()
+                        inputRefs.current[0]?.focus()
                         setCurrentActiveInput(1)
                     }, 2000);
                 }

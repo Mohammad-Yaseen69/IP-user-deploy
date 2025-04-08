@@ -16,6 +16,7 @@ import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import { toast } from 'react-toastify'
 import OtpConfirmation from "../../PaymentsNewer/InternationalFlow/OtpConfirmation"
 import { useNavigate } from 'react-router'
+import InstaPayLoader from '../../Loader'
 
 
 const initialState = {
@@ -30,7 +31,10 @@ const initialState = {
   codeType: "sms",
   cards: [],
   loading: false,
-  otpError: ""
+  otpError: "",
+  feeDetails: {},
+  getFee: false,
+  feeToken: null
 }
 
 
@@ -67,17 +71,101 @@ function reducer(state, action) {
 }
 
 
-const CardtoCard = ({ setOpen, isOpen, card }) => {
+
+function getCurrencySymbol(currencyCode) {
+  if (!currencyCode) return currencyCode
+  const formatted = new Intl.NumberFormat('en', {
+    style: 'currency',
+    currency: currencyCode,
+    currencyDisplay: 'symbol',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(1);
+
+  return formatted.replace(/[0-9.,\s]/g, ''); // removes numbers, dots, commas, and spaces
+}
+
+
+
+const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
   const width = useWindowWidth()
   const [data, dispatch] = useReducer(reducer, initialState)
   const { userDetails, authHeader } = useContext(UserContext)
   const { t } = useTranslation()
 
+  const formatAmountWithSymbol = (amount, currency, addCheck = false) => {
+    if (!amount || !currency) return "N/A";
+    if (addCheck) {
+      if (+data.feeDetails?.total_amount > +currentCardDetails.balance) {
+        return "N/A"
+      }
+    }
+    const symbol = getCurrencySymbol(currency);
+    return `${symbol}${amount}`;
+  }
 
   const updateHandler = (field, value) => {
     dispatch({ type: "UPDATE_FIELD", field, value })
   }
 
+
+
+  useEffect(() => {
+    let debounceTimer;
+    if (data.getFee) {
+      updateHandler("loading", true)
+      updateHandler("feeToken", null)
+      updateHandler("feeDetails", {})
+
+      const getFee = async () => {
+        const apiData = {
+          senderCardId: card._id,
+          receiverCardId: data.recipient.card.id,
+          amount: +data.amount.replace(/,/g, ""),
+        }
+
+        const enc = encryptData(apiData)
+
+
+        try {
+          const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/card-to-card-fee`, {
+            data: enc
+          }, {
+            headers: authHeader
+          })
+
+
+          const dec = decryptData(res.data.data)
+
+          console.log(dec)
+
+          updateHandler("feeDetails", dec?.data?.feeDetails)
+          updateHandler("feeToken", dec?.data?.token)
+          updateHandler("getFee", false)
+        } catch (err) {
+          const dec = decryptData(err.response.data.data)
+          console.log(dec)
+          toast.error(dec.message || "Something went wrong while getting exchange rate.")
+        }
+        finally {
+          updateHandler("loading", false)
+        }
+      }
+
+
+      clearTimeout(debounceTimer)
+
+
+      debounceTimer = setTimeout(() => {
+        getFee()
+      }, 300)
+
+
+      return () => {
+        clearTimeout(debounceTimer)
+      }
+    }
+  }, [data.amount])
 
 
   useEffect(() => {
@@ -120,12 +208,12 @@ const CardtoCard = ({ setOpen, isOpen, card }) => {
         senderCardId: card._id,
         receiverCardId: data.recipient.card.id,
         amount: +data.amount.replace(/,/g, ""),
-        note: data.note
+        note: data.note,
+        token: data.feeToken,
       },
       type: data.codeType
     }
 
-    console.log(data, apiData)
 
     const encrypted = encryptData(apiData)
     updateHandler("loading", true)
@@ -137,12 +225,12 @@ const CardtoCard = ({ setOpen, isOpen, card }) => {
       })
 
       const dec = decryptData(res.data.data)
-      console.log(dec)
+
       updateHandler("showOtpModal", true)
       updateHandler("token", dec?.token)
     } catch (error) {
       const dec = decryptData(error.response.data.data)
-      console.log(dec)
+  
       toast.error(dec.message || "Something went wrong while creating your virtual card! please try again.")
     }
     finally {
@@ -175,7 +263,7 @@ const CardtoCard = ({ setOpen, isOpen, card }) => {
 
       case 2:
         updateHandler("sideText", "Specify Amount")
-        updateHandler("disabled", data.amount === "" || data.amount === "0")
+        updateHandler("disabled", data.amount === "" || data.amount === "0" || +data.feeDetails?.total_amount > +currentCardDetails.balance || !data.feeDetails?.total_amount)
         break;
 
       case 3:
@@ -194,7 +282,7 @@ const CardtoCard = ({ setOpen, isOpen, card }) => {
       default:
         updateHandler("disabled", false)
     }
-  }, [data.amount, data.step])
+  }, [data.amount, data.step, data.feeDetails])
 
 
 
@@ -207,13 +295,14 @@ const CardtoCard = ({ setOpen, isOpen, card }) => {
 
     const encrypted = encryptData(apiData)
 
+
     try {
       const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/card-to-card-transfer`, { data: encrypted }, {
         headers: authHeader
       })
 
       const dec = decryptData(res.data.data)
-      console.log(dec)
+
       updateHandler("showOtpModal", false)
       updateHandler("token", "")
       updateHandler("otpError", "")
@@ -221,7 +310,7 @@ const CardtoCard = ({ setOpen, isOpen, card }) => {
 
     } catch (error) {
       const dec = decryptData(error.response.data.data)
-      console.log(dec)
+
       toast.error(dec.message.split("_").map((w) => w[0].toUpperCase() + w.slice(1)).join(" ") ?? "Something went wrong while making the transaction please try again!")
       updateHandler("showOtpModal", false)
       updateHandler("token", "")
@@ -255,7 +344,50 @@ const CardtoCard = ({ setOpen, isOpen, card }) => {
     </div>
   )
 
-  console.log(card)
+  const feeContent = () => (
+    <>
+      <div className={`${styles.feeDiv} ${styles.fx}`}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M22 10H2M11 19L18.8 19C19.9201 19 20.4802 19 20.908 18.782C21.2843 18.5903 21.5903 18.2843 21.782 17.908C22 17.4802 22 16.9201 22 15.8V8.2C22 7.0799 22 6.51984 21.782 6.09202C21.5903 5.7157 21.2843 5.40974 20.908 5.21799C20.4802 5 19.9201 5 18.8 5H17M11 19L13 21M11 19L13 17M7 19H5.2C4.07989 19 3.51984 19 3.09202 18.782C2.71569 18.5903 2.40973 18.2843 2.21799 17.908C2 17.4802 2 16.9201 2 15.8V8.2C2 7.0799 2 6.51984 2.21799 6.09202C2.40973 5.71569 2.7157 5.40973 3.09202 5.21799C3.51984 5 4.0799 5 5.2 5H13M13 5L11 7M13 5L11 3" stroke="#5926F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+
+
+        {!data.loading ? (
+          <p>
+            {formatAmountWithSymbol(data.feeDetails?.recipient_amount, data.feeDetails?.sending_currency, true)} = {formatAmountWithSymbol(data.feeDetails?.recipient_amount, data.feeDetails?.recipient_currency, true)}
+          </p>
+        ) : (
+          <div style={{ width: "50px" }}>
+            <InstaPayLoader />
+          </div>
+        )}
+      </div>
+
+      <div className={`${styles.feeDiv}`}>
+        <p style={{ color: "black" }}>Fees & Charges</p>
+        {!data.loading ? (
+          <p>{formatAmountWithSymbol(data.feeDetails?.fee, data.feeDetails?.sending_currency, true)}</p>
+        ) : (
+          <div style={{ width: "50px" }}>
+            <InstaPayLoader />
+          </div>
+        )}
+      </div>
+
+      <div className={`${styles.feeDiv}`}>
+        <p style={{ color: "black" }}>Total amount to be deducted</p>
+        {!data.loading ? (
+          <p>{formatAmountWithSymbol(data.feeDetails?.total_amount, data.feeDetails?.sending_currency, true)}</p>
+        ) : (
+          <div style={{ width: "50px" }}>
+            <InstaPayLoader />
+          </div>
+        )}
+      </div>
+
+    </>
+  )
+
   const renderData = () => (
     <>
       {
@@ -263,10 +395,10 @@ const CardtoCard = ({ setOpen, isOpen, card }) => {
           <div className={styles.successDiv}>
             <div className={styles.purpleDiv}>
               <img src={logo} alt="" />
-             {width > 1000 && <p onClick={handleClose}>Close</p>}
+              {width > 1000 && <p onClick={handleClose}>Close</p>}
             </div>
 
-            <div style={{padding: width < 1000 && "0px"}} className={styles.whiteDiv}>
+            <div style={{ padding: width < 1000 && "0px" }} className={styles.whiteDiv}>
               <div className={styles.content}>
                 <div className={styles.textDiv}>
                   <h2>Your payment is being processed</h2>
@@ -340,7 +472,7 @@ const CardtoCard = ({ setOpen, isOpen, card }) => {
                       </div>
 
                       <div>
-                        <h4>$23,550.00</h4>
+                        <h4>{formatAmountWithSymbol(data.feeDetails?.total_amount ? (currentCardDetails?.balance - data.feeDetails.total_amount).toFixed(2) : currentCardDetails?.balance, card?.currency)}</h4>
                         <h4>{card?.last4?.slice(-8)}</h4>
                       </div>
                     </div>
@@ -383,6 +515,7 @@ const CardtoCard = ({ setOpen, isOpen, card }) => {
                           <input
                             value={data.amount}
                             onChange={(e) => {
+                              updateHandler("getFee", true)
                               if (e.target.value === "") {
                                 updateHandler("amount", "");
                                 return;
@@ -396,24 +529,15 @@ const CardtoCard = ({ setOpen, isOpen, card }) => {
                             data-type="currency"
                           />
                         </div>
+
+                        {((+data.feeDetails?.total_amount > +currentCardDetails.balance) && data.feeDetails?.total_amount) &&
+                          <p style={{ marginTop: "2rem", color: "red", fontWeight: 600, fontSize: "12px" }}>Insufficient Balance</p>
+                        }
                       </div>
 
                       {width < 1000 &&
                         <div className={styles.feeDetails}>
-                          <div className={`${styles.feeDiv} ${styles.fx}`}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                              <path d="M22 10H2M11 19L18.8 19C19.9201 19 20.4802 19 20.908 18.782C21.2843 18.5903 21.5903 18.2843 21.782 17.908C22 17.4802 22 16.9201 22 15.8V8.2C22 7.0799 22 6.51984 21.782 6.09202C21.5903 5.7157 21.2843 5.40974 20.908 5.21799C20.4802 5 19.9201 5 18.8 5H17M11 19L13 21M11 19L13 17M7 19H5.2C4.07989 19 3.51984 19 3.09202 18.782C2.71569 18.5903 2.40973 18.2843 2.21799 17.908C2 17.4802 2 16.9201 2 15.8V8.2C2 7.0799 2 6.51984 2.21799 6.09202C2.40973 5.71569 2.7157 5.40973 3.09202 5.21799C3.51984 5 4.0799 5 5.2 5H13M13 5L11 7M13 5L11 3" stroke="#5926F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                            <p>1.00 EUR= 1.16 USD</p>
-                          </div>
-                          <div className={`${styles.feeDiv}`}>
-                            <p style={{ color: "black" }}>Fees & Charges</p>
-                            <p>$1.00</p>
-                          </div>
-                          <div className={`${styles.feeDiv}`}>
-                            <p style={{ color: "black" }}>Total amount to be deducted</p>
-                            <p>$32.00</p>
-                          </div>
+                          {feeContent()}
                         </div>
                       }
                     </div>
@@ -443,7 +567,7 @@ const CardtoCard = ({ setOpen, isOpen, card }) => {
                             </div>
 
                             <div>
-                              <h4>{card.currency}{card.balance}</h4>
+                              <h4>{formatAmountWithSymbol(data.feeDetails?.total_amount ? (currentCardDetails?.balance - data.feeDetails.total_amount).toFixed(2) : currentCardDetails?.balance, card?.currency)}</h4>
                               <h4>{card?.last4?.slice(-8)}</h4>
                             </div>
                           </div>
@@ -487,7 +611,7 @@ const CardtoCard = ({ setOpen, isOpen, card }) => {
                     <div className={styles.paymentInfo}>
                       <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
                         <p>You Have to Pay</p>
-                        <h1>$31.00</h1>
+                        <h1>{formatAmountWithSymbol(data.feeDetails?.total_amount, data.feeDetails?.sending_currency)}</h1>
                       </div>
 
 
@@ -519,10 +643,10 @@ const CardtoCard = ({ setOpen, isOpen, card }) => {
                         </div>
                       </div>
 
-                      {feeCol("Sending", "$30.00")}
-                      {feeCol("Transfer fees", "$1.00")}
-                      {feeCol("Available Balance after transfer", "$8,869.00")}
-                      {feeCol("Total to Pay", "$31.00", true)}
+                      {feeCol("Sending", formatAmountWithSymbol(data.feeDetails?.recipient_amount, data.feeDetails?.sending_currency))}
+                      {feeCol("Transfer fees", formatAmountWithSymbol(data.feeDetails?.fee, data.feeDetails?.sending_currency))}
+                      {feeCol("Available Balance after transfer", formatAmountWithSymbol((data.feeDetails?.total_amount - currentCardDetails?.balance).toFixed(2), data.feeDetails?.sending_currency))}
+                      {feeCol("Total to Pay", formatAmountWithSymbol(data.feeDetails?.total_amount, data.feeDetails?.sending_currency), true)}
                     </div>
 
                   </div>
@@ -548,20 +672,7 @@ const CardtoCard = ({ setOpen, isOpen, card }) => {
 
                 {(data.step === 2 && width > 1000) ?
                   <div className={styles.feeDetails}>
-                    <div className={`${styles.feeDiv} ${styles.fx}`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path d="M22 10H2M11 19L18.8 19C19.9201 19 20.4802 19 20.908 18.782C21.2843 18.5903 21.5903 18.2843 21.782 17.908C22 17.4802 22 16.9201 22 15.8V8.2C22 7.0799 22 6.51984 21.782 6.09202C21.5903 5.7157 21.2843 5.40974 20.908 5.21799C20.4802 5 19.9201 5 18.8 5H17M11 19L13 21M11 19L13 17M7 19H5.2C4.07989 19 3.51984 19 3.09202 18.782C2.71569 18.5903 2.40973 18.2843 2.21799 17.908C2 17.4802 2 16.9201 2 15.8V8.2C2 7.0799 2 6.51984 2.21799 6.09202C2.40973 5.71569 2.7157 5.40973 3.09202 5.21799C3.51984 5 4.0799 5 5.2 5H13M13 5L11 7M13 5L11 3" stroke="#5926F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                      </svg>
-                      <p>1.00 EUR= 1.16 USD</p>
-                    </div>
-                    <div className={`${styles.feeDiv}`}>
-                      <p style={{ color: "black" }}>Fees & Charges</p>
-                      <p>$1.00</p>
-                    </div>
-                    <div className={`${styles.feeDiv}`}>
-                      <p style={{ color: "black" }}>Total amount to be deducted</p>
-                      <p>$32.00</p>
-                    </div>
+                    {feeContent()}
                     {buttons()}
                   </div> :
                   data.recipient?.user ?

@@ -16,6 +16,7 @@ import { useLocation } from 'react-router';
 
 
 
+
 const MyMasterCard = () => {
   const [cardPurchased, setCardPurchased] = useState(false)
   const { setTogglSidebar } = useContext(CustomizerContext)
