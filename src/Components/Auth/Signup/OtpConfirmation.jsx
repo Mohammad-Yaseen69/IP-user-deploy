@@ -101,7 +101,7 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                 <div className={styles.right}>
                     <div className={styles.top}>
                         <div className={styles.otp_inp}>
-                            <label>{t(`Enter the SMS code sent to +41********4053`).replace("+41********4053", `${data?.[type]?.slice(0, data?.[type]?.length - 4).split("").map(_ => "*").join("")}${data?.[type]?.slice(data?.[type]?.length - 4)}`).replace("SMS", type === "phone" ? "SMS" : "Email").replace("SMS", userDetails?.phone?.slice(0, 3) === "971" ? "Whatsapp": "SMS")}</label>
+                            <label>{t(`Enter the SMS code sent to +41********4053`).replace("+41********4053", `${data?.[type]?.slice(0, data?.[type]?.length - 4).split("").map(_ => "*").join("")}${data?.[type]?.slice(data?.[type]?.length - 4)}`).replace("SMS", type === "phone" ? "SMS" : "Email").replace("SMS", data?.phone?.slice(0, 3) === "971" ? "Whatsapp": "SMS")}</label>
                             <div
                                 style={{
                                     fontSize: ".8rem",

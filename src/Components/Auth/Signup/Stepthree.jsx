@@ -4,6 +4,8 @@ import PhoneInput from "../../PhoneInput"
 
 const Stepthree = ({ data, dataHandler }) => {
     const { t } = useTranslation()
+
+    console.log(data.phone)
     return (
         <div className={styles.container}>
             <div className={styles.inp}>
@@ -14,6 +16,8 @@ const Stepthree = ({ data, dataHandler }) => {
                     phone={data.phone}
                     setCountry={e => dataHandler("country", e?.alpha3 ?? "")}
                 />
+
+                {data.phone?.slice(0 ,3) === "971" && <p style={{margin: "0", fontSize: "14px", fontWeight: 600}}>We’ll send the OTP to your WhatsApp. Ensure the number exists.</p>}
             </div>
             {
                 data?.phone_error
