@@ -20,7 +20,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
     const [receivingAmountLoading, setReceivingAmountLoading] = useState(false)
 
     useEffect(() => {
-        if (userWallets?.length > 0 && !data.currency?._id && !data.currency_wallet?._id) {
+        if (userWallets?.length > 0 && !data.currency?._id && !data.currency_wallet?._id && !data.wallet?._id) {
             const def = userWallets?.[0]?.wallet_type === "insta" && !userWallets?.[0]?.blocked && !userWallets?.[0]?.admin_blocked && userWallets?.[0]?.status?.toLowerCase() === "active"
                 ?
                 userWallets?.[0]
@@ -30,7 +30,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
             dataHandler("currency", wallet)
             dataHandler("currency_wallet", wallet)
         }
-    }, [userWallets, data.currency, data.currency_wallet])
+    }, [userWallets, data.currency, data.currency_wallet, data.wallet])
 
     const setter = (e) => {
         dataHandler("loading", e)

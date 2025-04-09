@@ -9,10 +9,11 @@ import paypal from "./files/paypal.svg"
 import i from "../files/i.svg"
 import { useTranslation } from "react-i18next"
 import { Check, Info } from "react-feather"
-import { useEffect, useMemo } from "react"
+import { useContext, useEffect, useMemo } from "react"
 import FeesComponent from "./FeesComponent"
 import InstaPayLoader from "../../Loader"
 import TypingSpan from "../../TypingSpan"
+import { UserContext } from "../../../Context/UserContext"
 // import { ReactTyped } from "react-typed"
 
 export const typesData = [
@@ -88,7 +89,7 @@ const StepFour = ({ data, dataHandler, callback = () => { }, loading = false, er
         }
     }, [types])
 
-    console.log( data?.exchange_rate, data.payment_type?.value === "paypal", !data?.exchange_rate?.paypal?.paypal_currency_supported)
+    console.log(data?.exchange_rate, data.payment_type?.value === "paypal", !data?.exchange_rate?.paypal?.paypal_currency_supported)
 
     return (
         <>
@@ -210,6 +211,9 @@ const StepFour = ({ data, dataHandler, callback = () => { }, loading = false, er
                     types.filter(i => i.value !== filteringValue).map(item => (
                         <div className={`${styles.item} ${item.status !== "Active" ? styles.disabled : ""}`} key={item.name}
                             onClick={() => {
+                                if (item.value !== "wallet") {
+                                    dataHandler("wallet", {})
+                                }
                                 dataHandler("payment_type", item)
                                 console.log(data.payment_type)
                             }

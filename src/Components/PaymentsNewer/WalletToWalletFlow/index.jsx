@@ -30,6 +30,7 @@ import FeesComponent from "../InternationalFlow/FeesComponent";
 import MobileWalletServices from "../InternationalFlow/MobileWalletServices";
 import { createShambeToken } from "../../../Helper/CreateToken";
 import NotFoundModal from "../../NotFound/NotFoundModal";
+import { currencies } from "../InternationalFlow/StepOne"
 import errors from "../../AddFunds/TrustPaymentErrors.json"
 import { formatCurrency } from "../../../Helper/AmountFormat";
 
@@ -126,6 +127,17 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
         if (data.wallet?._id) {
             if (data?.wallet?._id === data?.currency?._id) return;
             dataHandler("currency", data.wallet)
+        } else {
+            if (userWallets?.length > 0) {
+                const def = userWallets?.[0]?.wallet_type === "insta" && !userWallets?.[0]?.blocked && !userWallets?.[0]?.admin_blocked && userWallets?.[0]?.status?.toLowerCase() === "active"
+                    ?
+                    userWallets?.[0]
+                    :
+                    userWallets?.find(item => item?.default)
+                const wallet = { ...def, ...currencies.find(item => item.currency_code === def?.currency?.code) }
+                dataHandler("currency", wallet)
+                dataHandler("currency_wallet", wallet)
+            }
         }
     }, [data.wallet])
 
@@ -486,6 +498,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
         setLoading(true)
         dataHandler("exchange_rate_error", "")
         dataHandler("exchange_rate", {})
+        console.log(data)
         try {
             const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=${payment_type ?? "wallet_to_wallet"}&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${data.beneficiary_wallet?._id}&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}`
 
@@ -592,7 +605,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                 return `${value}00`
             }
         }
-        else{
+        else {
             return `${value}.00`
         }
     }
@@ -691,7 +704,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
             }, 100)
         }
         return () => clearTimeout(timeout)
-    }, [data.payment_type?.value, data.wallet?._id])
+    }, [data.payment_type?.value, data.wallet?._id, data.payment_type, data.currency])
 
     const handleClick = () => {
         switch (data.step) {

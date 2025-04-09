@@ -17,7 +17,7 @@ const Stepthree = ({ data, dataHandler }) => {
                     setCountry={e => dataHandler("country", e?.alpha3 ?? "")}
                 />
 
-                {data.phone?.slice(0 ,3) === "971" && <p style={{margin: "0", fontSize: "14px", fontWeight: 600}}>We’ll send the OTP to your WhatsApp. Ensure the number exists.</p>}
+                {data.phone?.slice(0 ,3) === "971" && <p style={{margin: "0", fontSize: "14px", fontWeight: 600}}>A verification code will be sent via <span style={{color: "#25D366"}}>WhatsApp</span>.</p>}
             </div>
             {
                 data?.phone_error
