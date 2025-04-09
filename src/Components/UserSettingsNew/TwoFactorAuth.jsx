@@ -132,7 +132,7 @@ const TwoFactorAuth = () => {
                         flexWrap: "wrap",
                     }}>
                         <div>
-                            <H5>{t("SMS Number")}</H5>
+                            <H5>{t("SMS Number").replace("SMS", userDetails.slice(0, 3) === "971" ? "Whatsapp" : "SMS")}</H5>
                         </div>
                         <div style={switchStyle} onClick={() => {
                             // if (!emailActive || !editMode || firstTime) return;

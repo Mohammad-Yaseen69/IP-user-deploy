@@ -116,7 +116,7 @@ const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHa
                         {
                             data.codeType === "sms"
                                 ?
-                                t("SMS/Email Verification Code")
+                                t("SMS/Email Verification Code").replace("SMS", userDetails.slice(0, 3) === "971" ? "Whatsapp" : "SMS")
                                 :
                                 t("Google Authenticator")
                         }
@@ -185,7 +185,7 @@ const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHa
                                     }
                                     dataHandler("codeType", data.codeType === "sms" ? "authenticator" : "sms")
                                 }}>
-                                    {data.codeType !== "sms" ? "Verify Using SMS/Email" : "Verify Using Authenticator"}
+                                    {data.codeType !== "sms" ? "Verify Using SMS/Email".replace("SMS", userDetails.slice(0, 3) === "971" ? "Whatsapp" : "SMS") : "Verify Using Authenticator"}
                                 </button>
                             </div>
                             :

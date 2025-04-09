@@ -71,6 +71,9 @@ const MyMasterCard = () => {
     getCard()
   }, [userDetails, reRender])
 
+
+  
+  console.log(userDetails)
   useEffect(() => {
     const getTransactions = async () => {
       try {
@@ -79,7 +82,6 @@ const MyMasterCard = () => {
         })
 
         const dec = decryptData(res.data.data)
-        console.log(dec)
         setTransactions(dec.data)
 
       } catch (error) {

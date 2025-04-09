@@ -36,7 +36,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [isPressed, setIsPressed] = useState(false)
     const [loginToken, setLoginToken] = useState("")
     const [step, setStep] = useState(1)
-    const { profileLockTIme, setProfileLockTime, setUserDetails } = useContext(UserContext)
+    const { profileLockTIme, setProfileLockTime, setUserDetails, userDetails } = useContext(UserContext)
     const [loginMethod, setLoginMethod] = useState("phone")
     const [userAuthSetup, setUserAuthSetup] = useState(false)
     const [isInstagram, setIsInstagram] = useState(false)
@@ -890,7 +890,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             {
                                                 resendTimer > 0
                                                     ? (lastOtpSentTo && ['sms', 'insta'].includes(currentOtpMethod) && lastOtpSentTo !== currentOtpMethod)
-                                                        ? `You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : 'Instagram'}, wait ${resendTimer} seconds to get code on ${lastOtpSentTo === 'sms' ? 'Instagram' : 'SMS'}`
+                                                        ? `You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : 'Instagram'}, wait ${resendTimer} seconds to get code on ${lastOtpSentTo === 'sms' ? 'Instagram' : 'SMS'}`.replace("SMS", userDetails.slice(0, 3) === "971" ? "Whatsapp" : "SMS")
                                                         : t("Resend code in 30 seconds".replace("30", resendTimer))
                                                     :
                                                     <>{t("Didn't receive OTP?") + " "} <span style={{ color: "#5926f0", cursor: "pointer" }} onClick={() => {

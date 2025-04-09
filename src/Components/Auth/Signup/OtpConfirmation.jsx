@@ -1,11 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { AlertTriangle, ChevronRight } from 'react-feather'
 import LanguagePicker from '../../LanguagePicker'
 import { useTranslation } from 'react-i18next'
 import styles from "../styles/index.module.css"
+import { UserContext } from '../../../Context/UserContext'
 
 const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = "phone", data, dataHandler }) => {
     const { t } = useTranslation()
+    const {userDetails} = useContext(UserContext)
 
     const [resendTimer, setResendTimer] = useState(timer)
     const numberOfFields = 6;
@@ -88,7 +90,7 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                 verifyOTpHandler(otpValues.join(""), setOTPValues, numberOfFields)
             }} className={styles.otp} style={{ marginTop: 0 }}>
                 <div className={styles.left}>
-                    <h1>{t("SMS Verification").replace("SMS", type === "phone" ? "SMS" : "Email")}</h1>
+                    <h1>{t("SMS Verification").replace("SMS", type === "phone" ? "SMS" : "Email").replace("SMS", userDetails?.phone?.slice(0, 3) === "971" ? "Whatsapp": "SMS")}</h1>
                     <p>{t("Start Your InstaPay Journey Today!")}</p>
                     {
                         window.innerWidth < 1000
@@ -99,7 +101,7 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                 <div className={styles.right}>
                     <div className={styles.top}>
                         <div className={styles.otp_inp}>
-                            <label>{t(`Enter the SMS code sent to +41********4053`).replace("+41********4053", `${data?.[type]?.slice(0, data?.[type]?.length - 4).split("").map(_ => "*").join("")}${data?.[type]?.slice(data?.[type]?.length - 4)}`).replace("SMS", type === "phone" ? "SMS" : "Email")}</label>
+                            <label>{t(`Enter the SMS code sent to +41********4053`).replace("+41********4053", `${data?.[type]?.slice(0, data?.[type]?.length - 4).split("").map(_ => "*").join("")}${data?.[type]?.slice(data?.[type]?.length - 4)}`).replace("SMS", type === "phone" ? "SMS" : "Email").replace("SMS", userDetails?.phone?.slice(0, 3) === "971" ? "Whatsapp": "SMS")}</label>
                             <div
                                 style={{
                                     fontSize: ".8rem",
