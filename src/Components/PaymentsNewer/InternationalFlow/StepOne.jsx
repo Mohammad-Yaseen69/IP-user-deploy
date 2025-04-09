@@ -30,6 +30,7 @@ import { possibleErrors } from "../OTPConfirmation"
 import CurrencyInput from 'react-currency-input-field';
 import { formatCurrency } from "../../../Helper/AmountFormat"
 import { countriesInDiffLangs } from "../../../Data/CountriesWithTranslations/countries"
+import CitiesData from "../../CitiesDropDown/CitiesData.json"
 
 export const currencies = allCurrencies.map(item => {
     const country = allCountries.find(it => it.alpha3 === item.country_iso)
@@ -63,12 +64,12 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     }
 
     useEffect(() => {
+        const localCurrency = () => {
+            const cont =  CitiesData.find(item => item.iso3?.toUpperCase() === userDetails?.country_iso_code?.toUpperCase())
+            return cont.currency
+        }
         const getWallet = () => {
-            const wallet = userWallets?.[0]?.wallet_type === "insta" && !userWallets?.[0]?.blocked && !userWallets?.[0]?.admin_blocked && userWallets?.[0]?.status?.toLowerCase() === "active"
-                ?
-                userWallets?.[0]
-                :
-                userWallets?.find(item => item?.default)
+            const wallet = userWallets?.find(item => item?.currency?.code === localCurrency())
             if (wallet?.currency?.code) {
                 return { ...currencies.find(item => item.currency_code === wallet?.currency?.code), ...wallet }
             }
@@ -79,7 +80,6 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
             dataHandler("currency_wallet", getWallet())
         }
     }, [currencies, data.currency, data.currency_wallet])
-
 
     // country
     const [countries, setCountries] = useState([])
