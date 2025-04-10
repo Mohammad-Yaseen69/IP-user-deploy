@@ -30,7 +30,7 @@ const Basic = () => {
     const [firstName, setFirstName] = useState(userDetails?.user?.first_name);
     const [lastName, setLastName] = useState(userDetails?.user?.last_name);
     const [gender, setGender] = useState(userDetails?.gender ?? "");
-    const [dateOfBirth, setDateOfBirth] = useState(userDetails?.date_of_birth ?? "");
+    const [dateOfBirth, setDateOfBirth] = useState(userDetails?.dob ?? "");
     const [address, setAddress] = useState(userDetails?.address);
     const [city, setCity] = useState(userDetails?.city);
     const [postalCode, setPostalCode] = useState(userDetails?.postal_code);
@@ -52,6 +52,7 @@ const Basic = () => {
     }, [userDetails])
 
     const isVerified = useMemo(() => userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "verified", [userDetails])
+
 
     const handleDateChange = (e) => {
         const selected = new Date(e.target.value);
@@ -190,7 +191,7 @@ const Basic = () => {
                 // postal_code: postalCode,
                 about_me: aboutMe,
                 // gender,
-                // dob: dateOfBirth !== userDetails?.dob ? dateOfBirth?.split("-")?.reverse()?.join("-") : dateOfBirth,
+                dob: dateOfBirth !== userDetails?.dob ? dateOfBirth?.split("-")?.reverse()?.join("-") : dateOfBirth,
                 timezone: timezone
             }
             // console.log(data)
@@ -224,7 +225,7 @@ const Basic = () => {
                 // postal_code: postalCode,
                 about_me: aboutMe,
                 // gender,
-                // dob: dateOfBirth !== userDetails?.dob ? dateOfBirth?.split("-")?.reverse()?.join("-") : dateOfBirth,
+                dob: dateOfBirth !== userDetails?.dob ? dateOfBirth?.split("-")?.reverse()?.join("-") : dateOfBirth,
                 timezone: timezone
             }
             // console.log(data)
@@ -543,8 +544,6 @@ const Basic = () => {
                     </FormGroup>
                 }
                 {
-                    (typeof userDetails?.dob === "string" && !userDetails?.dob?.toLowerCase()?.includes("undefined"))
-                    &&
                     <FormGroup style={{ position: "relative" }}>
                         {
                             !dateOfBirth
