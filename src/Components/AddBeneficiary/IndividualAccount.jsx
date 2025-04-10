@@ -6,7 +6,7 @@ import { countries } from "country-list-json";
 // import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import "./req_star.css"
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import {  useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
@@ -1261,11 +1261,16 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                 addresses.map(item => (
                                                     <div
                                                         key={item}
-                                                        onClick={() => {
-                                                            inputChangeHandler({ target: { name: "address", value: item } })
-                                                            setTimeout(() => {
-                                                                setAddressInFocus(false)
-                                                            }, 100)
+                                                        onMouseDown={(e) => {
+                                                            // Prevent blur event from firing before click
+                                                            e.preventDefault();
+                                                            inputChangeHandler({ 
+                                                                target: { 
+                                                                    name: "address", 
+                                                                    value: item 
+                                                                } 
+                                                            });
+                                                            setAddressInFocus(false);
                                                         }}
                                                         style={{
                                                             padding: "1rem",
@@ -1720,6 +1725,10 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                 const value = e.target.value.replace(/[^a-zA-Z0-9]/g, '')
                                                 inputChangeHandler({ target: { name: e.target.name, value } })
                                             }} />
+                                        </FormGroup>
+                                        <FormGroup style={{ flex: 1, margin: 0, position: "relative" }}>
+                                            <Label className="col-form-label" htmlFor="bank_account_number">Bank Country <span className="req_star">*</span></Label>
+                                            <Input className="form-control" disabled={!bankCountry}  readOnly={true} style={{ flex: 1, width: "100%", minWidth: "250px" }} required name="bank_account_country" id="bank_account_country" value={bankCountry} />
                                         </FormGroup>
                                         {
                                             Object.keys(bankExtras).map(item => {
