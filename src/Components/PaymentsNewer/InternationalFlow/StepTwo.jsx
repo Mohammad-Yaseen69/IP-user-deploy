@@ -56,18 +56,18 @@ const StepTwo = ({ data, dataHandler }) => {
 
         if (data.country?.alpha3) {
             fil = fil.filter(item => {
-                console.log(item?.bank_details, data.country?.alpha3)
-                if (item?.bank_details?.[0]?.extras?.country_iso_code === data.country?.alpha3) {
-                    return true
-                }
-                else if (item?.country_iso_code === data.country?.alpha3) {
-                    return true
+                const bankIsoCode = item?.bank_details?.[0]?.extras?.country_iso_code
+                if (bankIsoCode && data.payoutChannel?.value === "bank") {
+                    if (bankIsoCode === data.country?.alpha3) {
+                        return true
+                    }
                 } else {
-                    return false
+                    if (item?.country_iso_code === data.country?.alpha3) {
+                        return true
+                    }
                 }
+                return false
             })
-
-            console.log(fil)
             setMessage(`No beneficiary found from ${data.country?.name} having ${data.payoutChannel?.value} details.`)
         }
 
@@ -108,9 +108,19 @@ const StepTwo = ({ data, dataHandler }) => {
     const bankBens = useMemo(() => {
         let fil = beneficiaries.filter(item => item.account_type.some(item => item.toLowerCase().includes(data.payoutChannel?.value?.toLowerCase())))
 
-        if (data.country?.alpha3) {
-            fil = fil.filter(item => item?.country_iso_code === data.country?.alpha3)
-        }
+        fil = fil.filter(item => {
+            const bankIsoCode = item?.bank_details?.[0]?.extras?.country_iso_code
+            if (bankIsoCode) {
+                if (bankIsoCode === data.country?.alpha3) {
+                    return true
+                }
+            } else {
+                if (item?.country_iso_code === data.country?.alpha3) {
+                    return true
+                }
+            }
+            return false
+        })
 
         return fil
     }, [beneficiaries])
