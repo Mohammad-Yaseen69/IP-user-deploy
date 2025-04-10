@@ -1,4 +1,4 @@
-import { Modal, ModalBody } from "reactstrap";
+import { Input, Modal, ModalBody } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.css"
 import { useEffect, useMemo, useReducer, useState } from "react";
@@ -21,6 +21,8 @@ import paym_styles from "../../PaymentsNewer/InternationalFlow/styles/index.modu
 import ErrorModal from "../../PaymentsNewer/InternationalFlow/ErrorModal";
 import { createShambeToken } from "../../../Helper/CreateToken";
 import NotFoundModal from "../../NotFound/NotFoundModal";
+import { minDate } from "../../Settings/Basic";
+import { toast } from "react-toastify";
 
 
 const initialState = {
@@ -41,7 +43,8 @@ const initialState = {
     exchange_rate_error: "",
     paypal_fx: {},
     error: "",
-    phone_error: ""
+    phone_error: "",
+    dob: ""
 }
 
 function reducer(state, action) {
@@ -78,7 +81,8 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                 token: data.exchange_rate?.paypal_token,
                 name: data.fullName,
                 email: data.email,
-                phone: data.phone
+                phone: data.phone,
+                dob: data.dob
             })
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/guest-pay/initiate-paypal`, {
                 data: payload
@@ -105,7 +109,8 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                 name: data.fullName,
                 email: data.email,
                 phone: data.phone,
-                iso_code: data.country?.alpha3
+                iso_code: data.country?.alpha3,
+                dob: data.dob
 
             })
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/guest-pay/initiate-card-payment`, {
@@ -210,7 +215,13 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
         }
     }
 
+    
+    useEffect(() => {
+        console.log(data)
+    },[data])
     const disabled = useMemo(() => {
+
+       
         let disabled = false;
         if (data.step === 1) {
             disabled = !data.country?.name
@@ -220,7 +231,10 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
         }
         if (data.step === 3) {
             if (data.payment_type?.value === "paypal") {
-                disabled = data.fullName.length < 3 || data.phone.length < 9 || (data.email?.length > 0 ? !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(data.email) : false)
+                disabled = data.fullName.length < 3 || 
+                data.phone.length < 9 || 
+                !data.dob ||
+                (data.email?.length > 0 ? !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(data.email) : false)
             }
             if (data.payment_type?.value === "card") {
                 const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
@@ -235,7 +249,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
         }
         if (data.step === 4) {
             if (data.payment_type?.value === "card") {
-                disabled = data.fullName.length < 3 || data.phone.length < 9 || (data.email?.length > 0 ? !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(data.email) : false)
+                disabled = data.fullName.length < 3 || !data.dob || data.phone.length < 9 || (data.email?.length > 0 ? !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(data.email) : false)
             }
         }
         return disabled;
@@ -455,7 +469,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                                 <>
                                                     <FeesComponent
                                                         data={data}
-                                                        receiverLabel={`They will get  ${data?.exchange_rate?.fee?.paymentAddressFee ? `(after a ${Number(data?.exchange_rate?.fee?.amount)?.toFixed(2)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 }) ?? "0.00"} ${data.exchange_rate?.sending?.currency} receiver fee deduction)` :""}`}
+                                                        receiverLabel={`They will get  ${data?.exchange_rate?.fee?.paymentAddressFee ? `(after a ${Number(data?.exchange_rate?.fee?.amount)?.toFixed(2)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 }) ?? "0.00"} ${data.exchange_rate?.sending?.currency} receiver fee deduction)` : ""}`}
                                                         error={data.exchange_rate_error}
                                                         feesLabel="Fees"
                                                         sendingLabel="Sending"
@@ -1097,6 +1111,15 @@ export default PayAsGuest
 
 const RecipientDetails = ({ data, dataHandler }) => {
     const { t } = useTranslation()
+    const handleDateChange = (e) => {
+        const selected = new Date(e.target.value);
+
+        if (selected <= minDate) {
+            dataHandler("dob", e.target.value);
+        } else {
+            toast.error('Please select a date at least 15 years ago or earlier.');
+        }
+    };
     return (
         <div style={{ height: "100%" }}>
             <div className={styles.bot_top}>
@@ -1129,6 +1152,17 @@ const RecipientDetails = ({ data, dataHandler }) => {
                             {t("Incorrect phone number, please enter a valid number.")}
                         </div>
                     }
+                </div>
+                <div className={styles.inpt_co}>
+                    <label>{t("Date of Birth")} </label>
+                    <Input
+                        required={true}
+                        type="date"
+                        placeholder="Enter your Date of birth"
+                        value={data.dob}
+                        onChange={handleDateChange}
+                        max={minDate.toISOString().split("T")[0]}
+                    />
                 </div>
                 <div className={styles.inpt_co}>
                     <label>{t("Email")} ({t("Optional")}) </label>

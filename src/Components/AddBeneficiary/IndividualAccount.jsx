@@ -295,7 +295,8 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         ifs_code: "",
         clabe: "",
         msisdn: "",
-        sort_code: ""
+        sort_code: "",
+        country_iso_code: ""
     })
 
     const handleBankExtraChange = (e) => {
@@ -392,6 +393,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
             instapayWallets.every(item => item.length !== 8) || walletError ? null : "wallet"
         ]
 
+
         const data = {
             first_name: firstName,
             last_name: lastName,
@@ -466,6 +468,8 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                 },
             ] : []
         }
+
+        console.log(data)
         if (completedBank) {
             if (accNumType === "IBAN") {
                 data.bank_details[0].swift_code = ""
@@ -484,6 +488,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
             })
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
+                    console.log(decrypted)
                     toggleSuccess()
                 })
                 .catch(err => {
@@ -531,61 +536,61 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         })
     }
 
-    const changeUserDetailsAsPerBankDetails = () => {
-        setCountryChangedFromModal(true)
-        setFormData((prev) => {
-            return {
-                ...prev,
-                card_holder_one: "",
-                card_number_one: "",
-                card_expiry_one: "",
-                card_holder_two: "",
-                card_number_two: "",
-                card_expiry_two: "",
-                card_holder_three: "",
-                card_number_three: "",
-                card_expiry_three: "",
-                mobile_wallet_provider: "",
-                mobile_wallet_name: "",
-                mobile_wallet_account_number: ""
-            }
-        })
-        setCountry(bankCountry)
-        setCountryCode(bankCountryCode)
-        setCity(bankCity)
-        setShowConfirmation(false)
-        setMobileNumber("")
-        setCountryIsoCode(iso2Toiso3Convert(bankCountryCode))
-    }
+    // const changeUserDetailsAsPerBankDetails = () => {
+    //     setCountryChangedFromModal(true)
+    //     setFormData((prev) => {
+    //         return {
+    //             ...prev,
+    //             card_holder_one: "",
+    //             card_number_one: "",
+    //             card_expiry_one: "",
+    //             card_holder_two: "",
+    //             card_number_two: "",
+    //             card_expiry_two: "",
+    //             card_holder_three: "",
+    //             card_number_three: "",
+    //             card_expiry_three: "",
+    //             mobile_wallet_provider: "",
+    //             mobile_wallet_name: "",
+    //             mobile_wallet_account_number: ""
+    //         }
+    //     })
+    //     setCountry(bankCountry)
+    //     setCountryCode(bankCountryCode)
+    //     setCity(bankCity)
+    //     setShowConfirmation(false)
+    //     setMobileNumber("")
+    //     setCountryIsoCode(iso2Toiso3Convert(bankCountryCode))
+    // }
 
-    const onCancelHandler = () => {
-        setBankDetailsError("Invalid Details")
-        setFormData(prev => {
-            return {
-                ...prev,
-                bank_name: "",
-                branch_name: "",
-                bank_branch_street: "",
-                bank_city: "",
-                bank_province: "",
-                bank_postal_code: "",
-                bank_account_number: ""
-            }
-        })
-        setBankCountry("")
-        setBankCountryCode("")
-        setBankCity("")
-        setShowConfirmation(false)
-    }
+    // const onCancelHandler = () => {
+    //     setBankDetailsError("Invalid Details")
+    //     setFormData(prev => {
+    //         return {
+    //             ...prev,
+    //             bank_name: "",
+    //             branch_name: "",
+    //             bank_branch_street: "",
+    //             bank_city: "",
+    //             bank_province: "",
+    //             bank_postal_code: "",
+    //             bank_account_number: ""
+    //         }
+    //     })
+    //     setBankCountry("")
+    //     setBankCountryCode("")
+    //     setBankCity("")
+    //     setShowConfirmation(false)
+    // }
 
     useEffect(() => {
-        console.log(bankCountryCode, countryIsoCode)
-        if (bankCountryCode && countryIsoCode && bankCountryCode !== countryIsoCode) {
-            setShowConfirmation(true)
+        if (bankCountryCode) {
+            setBankExtras(prev => ({
+                ...prev,
+                country_iso_code: bankCountryCode
+            }));
         }
-    }, [bankCountryCode, countryIsoCode])
-
-
+    }, [bankCountryCode]);
 
     const getBankDetails = (e) => {
         setIbanSwift(e.target.value?.replace(/[^a-zA-Z0-9]/g, ''))
@@ -857,6 +862,30 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         }
     }, [countryId])
 
+
+    const getCountryFields = async (alpha3, service) => {
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/thunes/get-required-fields-by-country/${alpha3}/${service?.id}/C2C`, {
+                headers: authHeader
+            });
+
+            const dec = decryptData(res.data.data);
+            setFieldsInfo(prev => ({ ...prev, [service?.name?.split(" ")?.[0]]: dec?.data }))
+        } catch (error) {
+            const dec = decryptData(error.response.data.data)
+            if (dec?.message === "Unauthorize to access this route") {
+                const coun = localStorage.getItem("ip_country")
+                localStorage.clear()
+                localStorage.setItem("ip_country", coun)
+                window.location.pathname = "/login";
+            }
+            console.log(dec)
+        }
+    }
+
+
+    console.log(fieldsInfo)
+
     useEffect(() => {
         if (countryIsoCode) {
             setActive(5)
@@ -865,37 +894,14 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                 setBankDetailsError("")
             }
             setLoading(true)
-            const getCountryFields = async (alpha3, service) => {
-                try {
-                    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/thunes/get-required-fields-by-country/${alpha3}/${service?.id}/C2C`, {
-                        headers: authHeader
-                    });
-
-                    const dec = decryptData(res.data.data);
-                    setFieldsInfo(prev => ({ ...prev, [service?.name?.split(" ")?.[0]]: dec?.data }))
-                    // const isAddReq = dec?.data?.required_sending_entity_fields?.find(item => item === "address")
-                    // if (isAddReq) {
-                    //     setIsAddressRequired(true)
-                    // }
-                } catch (error) {
-                    const dec = decryptData(error.response.data.data)
-                    if (dec?.message === "Unauthorize to access this route") {
-                        const coun = localStorage.getItem("ip_country")
-                        localStorage.clear()
-                        localStorage.setItem("ip_country", coun)
-                        window.location.pathname = "/login";
-                    }
-                    console.log(dec)
-                }
-            }
 
             const getChannels = async () => {
                 setFieldsInfo(null)
                 axios.get(`${process.env.REACT_APP_THUNES_API}/services/${countryIsoCode}`)
                     .then(res => {
-                        // console.log(decryptData(res.data.data))
                         const decrypted = decryptData(res.data.data)
                         setServices(decrypted)
+                        console.log(decrypted)
                         if (decrypted?.length > 0) {
                             for (const ser of decrypted) {
                                 getCountryFields(countryIsoCode, ser)
@@ -914,7 +920,6 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                     setMobileProviders(dec)
                                 })
                                 .catch(err => {
-                                    // console.log(err)
                                 })
                         }
                     })
@@ -929,6 +934,12 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
             getChannels()
         }
     }, [countryIsoCode])
+
+    useEffect(() => {
+        if (bankCountryCode !== countryIsoCode) {
+            getCountryFields(bankCountryCode, services.find(service => service.name === "BankAccount"))
+        }
+    }, [bankCountryCode])
 
 
     // address suggestions
@@ -2068,7 +2079,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                             >
                                 {t("Add Beneficiary")}
                             </Button>
-                            <ConfirmationModal isOpen={showConfirmation} toggle={() => setShowConfirmation(!showConfirmation)} onConfirm={changeUserDetailsAsPerBankDetails} onCancel={onCancelHandler} />
+                            {/* <ConfirmationModal isOpen={showConfirmation} toggle={() => setShowConfirmation(!showConfirmation)} onConfirm={changeUserDetailsAsPerBankDetails} onCancel={onCancelHandler} /> */}
                         </CardFooter>
                     </>
             }

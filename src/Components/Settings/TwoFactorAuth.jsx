@@ -70,13 +70,6 @@ const TwoFactorAuth = () => {
             setSmsActive(userDetails?.sms_verification ?? false)
             setEmailActive(userDetails?.email_verification ?? false)
             setAuthenticatorActive(userDetails?.tfa ?? false)
-
-            console.log(userDetails)
-            // if (typeof userDetails?.sms_verification == "undefined" || typeof userDetails?.email_verification == "undefined") {
-            //     setFirstTime(true)
-            // } else {
-            //     setFirstTime(false)
-            // }
         }
     }, [userDetails])
 

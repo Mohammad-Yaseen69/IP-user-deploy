@@ -71,9 +71,6 @@ const MyMasterCard = () => {
     getCard()
   }, [userDetails, reRender])
 
-
-  
-  console.log(userDetails)
   useEffect(() => {
     const getTransactions = async () => {
       try {
