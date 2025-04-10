@@ -103,6 +103,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
         }
     };
 
+    console.log(email)
     const sendOTP = async (e) => {
         e.preventDefault()
         setError("")
@@ -122,7 +123,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
         } catch (error) {
             const dec = decryptData(error.response.data.data)
             console.log(dec)
-            setError("Invalid Email / Phone number")
+            setError("Invalid Email / Phone number").replace("Phone" ,email?.slice(0, 3) === "971" ? "Whatsapp" : "Phone")
         } finally {
             setIsPressed(false)
         }
@@ -173,7 +174,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
         } catch (error) {
             const dec = decryptData(error.response.data.data)
             console.log(dec)
-            setError("Invalid Email / Phone number")
+            setError("Invalid Email / Phone number".replace("Phone",email?.slice(0, 3) === "971" ? "Whatsapp" : "Phone"))
         } finally {
             setIsPressed(false)
         }
@@ -237,7 +238,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                                 </div>
                                 <div className={styles.input_group}>
                                     <div className={styles.input_container}>
-                                        <label>{loginMethod === "phone" ? t("Phone Number") : t("Email")}</label>
+                                        <label>{loginMethod === "phone" ? t("Phone Number").replace("Phone" ,email?.slice(0, 3) === "971" ? "Whatsapp" : "Phone") : t("Email")}</label>
                                         {
                                             loginMethod === "phone"
                                                 ?
@@ -256,7 +257,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                                                     setEmail("")
                                                 }}
                                             >
-                                                {t("Continue with")} {loginMethod === "email" ? t("Phone Number") : t("Email")}
+                                                {t("Continue with")} {loginMethod === "email" ? t("Phone Number").replace("Phone" ,email?.slice(0, 3) === "971" ? "Whatsapp" : "Phone") : t("Email")}
                                             </div>
                                             |
                                             <div style={{ cursor: "pointer", fontSize: ".8rem", fontWeight: 900, color: "#5926f0" }}
@@ -306,7 +307,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                                                 ?
                                                 t("Verification code has been verified, Please continue to the next step.")
                                                 :
-                                                t("A Verification code has been sent to your email and number.")
+                                                t("A Verification code has been sent to your email and number.").replace("number" ,email?.slice(0, 3) === "971" ? "Whatsapp" : "number")
                                         }
                                     </p>
                                 </div>

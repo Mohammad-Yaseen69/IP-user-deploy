@@ -3,6 +3,7 @@ import otp_icon from '../PaymentsNewer/files/otp_icon.png';
 import { Button } from 'reactstrap';
 import { ChevronRight } from 'react-feather';
 import { InactivityContext } from '../../InactivityWrapper';
+import { UserContext } from '../../Context/UserContext';
 
 const OTPConfirmation = ({ setter, callback, setterValue, hideOtp }) => {
     const numberOfFields = 4;
@@ -19,6 +20,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp }) => {
     const [otpError, setOtpError] = useState("")
     const { setIsExtended } = useContext(InactivityContext)
     const [isSaving, setIsSaving] = useState(false)
+    const { userDetails } = useContext(UserContext)
 
     useEffect(() => {
         setIsExtended(true)
@@ -139,7 +141,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp }) => {
                             Enter Code
                         </h4>
                         <p style={{ maxWidth: "212px", fontSize: "14px", fontWeight: 600 }}>
-                            A Verification code has been sent to your email and number.
+                            {"A Verification code has been sent to your email and number".replace("number", userDetails?.phone?.slice(0, 3) === "971" ? "Whatsapp" : "number")}
                         </p>
                     </div>
                     <>

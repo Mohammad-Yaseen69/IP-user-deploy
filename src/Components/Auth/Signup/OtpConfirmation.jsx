@@ -90,7 +90,7 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                 verifyOTpHandler(otpValues.join(""), setOTPValues, numberOfFields)
             }} className={styles.otp} style={{ marginTop: 0 }}>
                 <div className={styles.left}>
-                    <h1>{t("SMS Verification").replace("SMS", type === "phone" ? "SMS" : "Email").replace("SMS", userDetails?.phone?.slice(0, 3) === "971" ? "Whatsapp": "SMS")}</h1>
+                    <h1>{t("SMS Verification").replace("SMS", type === "phone" ? "SMS" : "Email").replace("SMS", data?.phone?.slice(0, 3) === "971" ? "Whatsapp": "SMS")}</h1>
                     <p>{t("Start Your InstaPay Journey Today!")}</p>
                     {
                         window.innerWidth < 1000

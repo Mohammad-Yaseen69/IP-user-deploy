@@ -690,7 +690,7 @@ const OTPConfirmation = ({
                         const decrypted = decryptData(res.data.data)
                         setIsSaving(false)
                         // console.log(decrypted)
-                        if (decrypted.status == "true") {
+                        if (decrypted.status === "true") {
                             setVerified(true)
                             setTransactionDetails(decrypted.subscribtionDetails)
                             setOtpError("")
@@ -1004,7 +1004,7 @@ const OTPConfirmation = ({
                                     (
                                         authType === "sms"
                                             ?
-                                            t("A one-time verification code has been sent to your email address  and phone number.")
+                                            t("A one-time verification code has been sent to your email address  and phone number.".replace("phone", userDetails.phone.slice(0, 3) === "971"? "whatsapp": "phone"))
                                             :
                                             t("Enter a code shown in the app to make sure everything works fine.")
                                     )

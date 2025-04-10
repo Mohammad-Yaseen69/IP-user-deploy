@@ -562,7 +562,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             setIsLoginError("")
         }
     }, [profileLockTIme])
-
+ 
     useEffect(() => {
         let timeout;
         if (resendTimer > 0) {
@@ -590,6 +590,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             setLastOtpSentTo(null);
         }
     }, [resendTimer]);
+
+    console.log(email)
 
     return (
         <>
@@ -741,7 +743,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                             <h1>{currentOtpMethod === "biometric" ? t("Biometric Verification") :
                                 currentOtpMethod === "auth" ? t("Google Authenticator") :
                                     currentOtpMethod === "insta" ? "Instagram" :
-                                        t("SMS Verification")}</h1>
+                                        t("SMS Verification").replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")}</h1>
                             <p>{t("Start Your InstaPay Journey Today!")}</p>
                             {
                                 window.innerWidth < 1000
@@ -790,7 +792,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                                     `${email.slice(0, 4).split("").map(_ => "*").join("")}${email.slice(4)}`
                                                                     :
                                                                     `${email.slice(0, email.length - 4).split("").map(_ => "*").join("")}${email.slice(email.length - 4)}`
-                                                            )
+                                                            ).replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")
                                             }
                                         </label>
                                         <FaceAnimation currentInput={currentActiveInput} verification={otpVerified} isCorrect={isOtpCorrect} startTyping />
@@ -855,7 +857,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                 {currentOtpMethod !== "sms" && (
                                                     <button className={styles.otpMethodButton} type="button" disabled={isPressed} onClick={() => handleOtpMethod("sms")}>
                                                         <img style={{ width: "33px" }} src={SmsSvg} alt="" />
-                                                        <p style={{ marginBottom: "0" }}>{t("Verify Using Sms/Email")}</p>
+                                                        <p style={{ marginBottom: "0" }}>{t("Verify Using Sms/Email").replace("Sms", email.slice(0, 3) === "971" ? "Whatsapp" : "Sms")}</p>
                                                     </button>
                                                 )}
                                             </>
@@ -877,7 +879,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
                                                 {currentOtpMethod !== "sms" && (
                                                     <button className={styles.otpMethodButton} type="button" disabled={isPressed} onClick={() => handleOtpMethod("sms")}>
-                                                        <img style={{ width: "33px" }} src={SmsSvg} alt="" /> <p style={{ marginBottom: "0" }}>{t("Verify Using Sms/Email")}</p>
+                                                        <img style={{ width: "33px" }} src={SmsSvg} alt="" /> <p style={{ marginBottom: "0" }}>{t("Verify Using Sms/Email").replace("Sms", email.slice(0, 3) === "971" ? "Whatsapp" : "Sms")}</p>
                                                     </button>
                                                 )}
                                             </>
@@ -890,7 +892,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             {
                                                 resendTimer > 0
                                                     ? (lastOtpSentTo && ['sms', 'insta'].includes(currentOtpMethod) && lastOtpSentTo !== currentOtpMethod)
-                                                        ? `You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : 'Instagram'}, wait ${resendTimer} seconds to get code on ${lastOtpSentTo === 'sms' ? 'Instagram' : 'SMS'}`.replace("SMS", userDetails.slice(0, 3) === "971" ? "Whatsapp" : "SMS")
+                                                        ? `You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : 'Instagram'}, wait ${resendTimer} seconds to get code on ${lastOtpSentTo === 'sms' ? 'Instagram' : 'SMS'}`.replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")
                                                         : t("Resend code in 30 seconds".replace("30", resendTimer))
                                                     :
                                                     <>{t("Didn't receive OTP?") + " "} <span style={{ color: "#5926f0", cursor: "pointer" }} onClick={() => {

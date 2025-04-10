@@ -2,7 +2,6 @@ import { useLocation, useNavigate } from "react-router"
 import styles from "./styles/steptwo.module.css"
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import search_icon from "./files/search.svg"
-import active from "./files/active.svg"
 import { UserContext } from "../../../Context/UserContext"
 import { Link } from "react-router-dom"
 import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem"
@@ -67,11 +66,13 @@ const StepTwo = ({ data, dataHandler }) => {
                     return false
                 }
             })
+
+            console.log(fil)
             setMessage(`No beneficiary found from ${data.country?.name} having ${data.payoutChannel?.value} details.`)
         }
 
         if (data.payoutChannel?.value === "mobile") {
-            fil = fil.filter(item => item?.mobile_wallet?.[0]?.money_provider == data.payer?.id)
+            fil = fil.filter(item => item?.mobile_wallet?.[0]?.money_provider === data.payer?.id)
             setMessage(`No beneficiary found from ${data.country?.name} having ${data.payer?.name} details.`)
         }
 
@@ -150,6 +151,7 @@ const StepTwo = ({ data, dataHandler }) => {
             <div className={styles.search}>
                 <img
                     src={search_icon}
+                    alt="asdadf"
                 />
                 <input
                     type="search"
