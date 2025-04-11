@@ -169,21 +169,15 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
         }
 
         if (paymentType === "card") {
-            if (paymentType === "card") {
-                if (selectedSaveCard?._id) {
-                    data.data.pan = selectedSaveCard._id
-                } else {
-                    data.data.is_card_save = saveCard
-                    data.data.se_shambey = createShambeToken(cardDetail)
-                }
+            if (selectedSaveCard?._id) {
+                data.data.pan = selectedSaveCard?._id
+            } else {
+                data.data.is_card_save = saveCard
+                data.data.se_shambey = createShambeToken(cardDetail)
             }
         }
 
-
         console.log(data)
-
-
-
         const encrypted = encryptData(data)
         try {
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
@@ -222,8 +216,8 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
 
     async function getFee() {
         const data = {
-            cardId: card._id,
-            walletId: walletState?._id ?? filteredWallets.find(w => w.default)._id,
+            cardId: card?._id,
+            walletId: walletState?._id ?? filteredWallets.find(w => w.default)?._id,
             amount: +String(amount)?.replaceAll(",", ""),
             type: paymentType
         }
@@ -278,25 +272,24 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
             token,
             panData: {
                 token: feeDetails.token,
-                accountId: userDetails._id
+                accountId: userDetails?._id
             }
         }
 
         if (paymentType === "card") {
-            if (paymentType === "card") {
-                if (selectedSaveCard?._id) {
-                    data.panData.pan = selectedSaveCard._id
-                } else {
-                    data.panData.is_card_save = saveCard
-                    data.panData.se_shambey = createShambeToken(cardDetail)
-                }
+            if (selectedSaveCard?._id) {
+                data.panData.pan = selectedSaveCard._id
+            } else {
+                data.panData.is_card_save = saveCard
+                data.panData.se_shambey = createShambeToken(cardDetail)
             }
         }
 
         const enc = encryptData(data)
 
+        console.log(data)
         try {
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/topup-by-card`, { data: enc }, {
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/topup-by${!selectedSaveCard?._id ? "-new" :""}-card`, { data: enc }, {
                 headers: authHeader
             })
             setToken(null)
@@ -394,7 +387,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
         if (step === 4 && paymentType === "paypal") {
             setStep(prev => prev - 2)
         }
-        else{
+        else {
             setStep(prev => prev - 1)
         }
 
@@ -590,8 +583,8 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
                     currency={cardTransactionDetails?.currency}
                     transaction={cardTransactionDetails}
                     amount={cardTransactionDetails?.amount}
-                    url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-chatbot-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
-                    tokenUrl={() => `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-chatbot-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
+                    url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm${selectedSaveCard?._id ? "-chatbot" :""}-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
+                    tokenUrl={() => `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm${selectedSaveCard?._id ? "-chatbot" :""}-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
                 />
                 :
                 <></>
