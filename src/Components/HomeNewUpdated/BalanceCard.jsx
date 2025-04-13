@@ -17,7 +17,7 @@ const BalanceComponent = () => {
     const [totalBalance, setTotalBalance] = useState(0)
 
     const getExchangedAmounts = async (from, to, amount) => {
-        if(amount == undefined) return
+        if(amount === undefined) {return 0}
         setIsLoading(true);
         try {
             const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {

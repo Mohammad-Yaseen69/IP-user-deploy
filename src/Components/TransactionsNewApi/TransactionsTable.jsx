@@ -336,7 +336,8 @@ const TransactionsTable = () => {
                             <div key={item.id} style={{
                                 background: active === item.name ? "linear-gradient(346deg, #E64067 0%, #5926F0 55.65%, #4828A0 100%), #D9D9D9" : "#f8f8f8",
                                 boxShadow: active === item.name ? "0px 11.90068244934082px 8.655041694641113px rgba(89, 38, 240, 0.17)" : "none",
-                                color: active === item.name ? "white" : "#848484"
+                                color: active === item.name ? "white" : "#848484",
+                                minWidth : "125px"
                             }} className={styles.menu_item} onClick={() => setActive(item.name)}>
                                 <img src={active === item.name ? item.icon_white : item.icon_grey} style={{ width: "18px" }} />
                                 <span>{t(item.name)}</span>

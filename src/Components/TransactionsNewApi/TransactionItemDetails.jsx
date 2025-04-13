@@ -262,6 +262,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                         <span>{item?.display_name}</span>
                                     </div>
                                     <iframe
+                                        title="map"
                                         src={`//maps.google.com/maps?q=${item?.lat},${item?.long}&z=15&output=embed`}
                                         className={styles.map_img}
                                     ></iframe>

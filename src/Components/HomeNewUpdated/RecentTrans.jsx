@@ -49,6 +49,7 @@ const RecentTrans = ({ currentWallet }) => {
                     const transactionDates = decrypted.transactionList.map(transaction => new Date(transaction.createdAt).toDateString());
 
 
+                    console.log(decrypted)
                     decrypted.transactionList = decrypted.transactionList.map((item, i) => {
                         let headerText;
 

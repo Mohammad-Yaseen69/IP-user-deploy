@@ -483,6 +483,11 @@ const AmountAndCurrency = ({ setSubStep, amount, setAmount, currency, setCurrenc
                         onKeyUp={handleKeyUp}
                         onBlur={handleBlur}
                         placeholder="10.00"
+                        onKeyDown={(e) => {
+                            if (!/^\d*\.?\d*$/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== "Tab" && e.key !== "Enter") {
+                                e.preventDefault();
+                            }
+                        }}
                         data-type="currency"
                         style={{
                             width: "100%",

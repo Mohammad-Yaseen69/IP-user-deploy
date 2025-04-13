@@ -1,29 +1,20 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.scss"
 import calendar from "../TransactionsNewApi/files/calendar.png"
-import { useCallback, useState, useRef, useMemo } from "react";
+import { useCallback, useState, useRef, useMemo, useEffect } from "react";
 import { Search } from "react-feather";
 import { Input } from "reactstrap";
 import all_white from "../TransactionsNewApi/files/all_white.png"
 import all_grey from "../TransactionsNewApi/files/all_grey.png"
 import sent_white from "../TransactionsNewApi/files/sent_white.png"
-import sent_grey from "../TransactionsNewApi/files/sent_grey.png"
-import received_white from "../TransactionsNewApi/files/received_white.png"
-import received_grey from "../TransactionsNewApi/files/received_grey.png"
-import requested_white from "../TransactionsNewApi/files/requested_white.png"
-import requested_grey from "../TransactionsNewApi/files/requested_grey.png"
-import quoted_white from "../TransactionsNewApi/files/quoted_white.png"
-import quoted_grey from "../TransactionsNewApi/files/quoted_grey.png"
 import send_grey from "../TransactionsNewApi/files/sent_grey.png"
-import send_white from "../TransactionsNewApi/files/sent_white.png"
 import recieved_white from "../TransactionsNewApi/files/received_white.png"
 import recieved_grey from "../TransactionsNewApi/files/received_grey.png"
-
 import { DateRangePicker } from "react-date-range";
 import TransactionItem from "../TransactionsNewApi/TransactionItem";
 import TransactionItemMobile from "../TransactionsNewApi/Mobile/TransactionItemMobile";
 
-const TransactionsTable = ({ transactions = [], isLoading = false, cardNo }) => {
+const TransactionsTable = ({ transactions = [], isLoading = false, cardNo, ref }) => {
     const { t } = useTranslation()
     const [active, setActive] = useState("All")
     const [activeItem, setActiveItem] = useState(0)
@@ -35,16 +26,10 @@ const TransactionsTable = ({ transactions = [], isLoading = false, cardNo }) => 
     const [showDatePicker, setShowDatePicker] = useState(false);
     const datePickerRef = useRef(null);
     const [searchQuery, setSearchQuery] = useState("")
-    // const [transactions, settransactions] = useState(transactions)
-    console.log(transactions)
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+    const [filteredTransactions, setFilteredTransactions] = useState(transactions)
 
-    const handleClickOutside = useCallback((event) => {
-        if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
-            setShowDatePicker(false);
-        }
-    }, []);
 
+    console.log("transactions", transactions)
     const handleDatePickerClick = useCallback(() => {
         setShowDatePicker(true);
     }, []);
@@ -74,25 +59,39 @@ const TransactionsTable = ({ transactions = [], isLoading = false, cardNo }) => 
             icon_white: recieved_white,
             icon_grey: recieved_grey
         },
-        {
-            id: 4,
-            name: "Send",
-            icon_white: sent_white,
-            icon_grey: send_grey
-        },
-        {
-            id: 5,
-            name: "Recieved",
-            icon_white: recieved_white,
-            icon_grey: recieved_grey
-        },
+        // {
+        //     id: 4,
+        //     name: "Send",
+        //     icon_white: sent_white,
+        //     icon_grey: send_grey
+        // },
+        // {
+        //     id: 5,
+        //     name: "Recieved",
+        //     icon_white: recieved_white,
+        //     icon_grey: recieved_grey
+        // },
     ]), [])
 
     const tableWrapperRef = useRef(null)
     const tableWrapperRefMobile = useRef(null)
 
+    useEffect(() => {
+        if (active === "Debit") {
+            setFilteredTransactions(transactions?.filter((t) => t.type === "debit"))
+        } else if (active === "Credit") {
+            setFilteredTransactions(transactions?.filter((t) => t.type === "credit"))
+        }
+        else if (active === "All") {
+            setFilteredTransactions(transactions)
+        }
+    }, [active])
+
+    useEffect(() => {
+        setFilteredTransactions(transactions)
+    }, [transactions])
     return (
-        <div style={{marginTop: "1rem"}} className={styles.table}>
+        <div ref={ref ?? null} style={{ marginTop: "1rem" }} className={styles.table}>
             <div className={styles.menu}>
                 <div className={styles.right}>
                     {menuData.map(item => (
@@ -129,7 +128,8 @@ const TransactionsTable = ({ transactions = [], isLoading = false, cardNo }) => 
                     <div>{t("Date & Time")}</div>
                     <div>{t("Transaction ID")}</div>
                     <div>{t("Card No")}</div>
-                    <div>{t("Merchant Name")}</div>
+                    <div>{t("Type")}</div>
+                    <div>{t("Transaction Type")}</div>
                     <div>{t("Reason")}</div>
                     <div>{t("Amount")}</div>
                     <div>{t("Status")}</div>
@@ -138,12 +138,12 @@ const TransactionsTable = ({ transactions = [], isLoading = false, cardNo }) => 
                 <div className={styles.table_body} ref={tableWrapperRef}>
                     {isLoading ? (
                         <div style={{ textAlign: "center", marginTop: "2rem" }}>{t("Loading...")}</div>
-                    ) : transactions.length > 0 ? (
-                        transactions.map((item, index) => (
+                    ) : filteredTransactions.length > 0 ? (
+                        filteredTransactions.map((item, index) => (
                             <TransactionItem
-                                color={item?.status?.toLowerCase() === "completed" ? "#15bd43" : 
-                                       item?.status?.toLowerCase() === "pending" ? "rgba(89, 38, 240, 0.55)" : 
-                                       item?.status?.toLowerCase() === "cancelled" ? "#ed1d1d" : ""}
+                                color={item?.status?.toLowerCase() === "completed" ? "#15bd43" :
+                                    item?.status?.toLowerCase() === "pending" ? "rgba(89, 38, 240, 0.55)" :
+                                        item?.status?.toLowerCase() === "cancelled" ? "#ed1d1d" : ""}
                                 item={item}
                                 key={item._id}
                                 activeItem={activeItem}
@@ -160,12 +160,12 @@ const TransactionsTable = ({ transactions = [], isLoading = false, cardNo }) => 
                 <div className={styles.table_body_mobile} ref={tableWrapperRefMobile} style={{ minHeight: "300px" }}>
                     {isLoading ? (
                         <div style={{ textAlign: "center", marginTop: "2rem" }}>{t("Loading...")}</div>
-                    ) : transactions.length > 0 ? (
-                        transactions.map((item, index) => (
+                    ) : filteredTransactions.length > 0 ? (
+                        filteredTransactions.map((item, index) => (
                             <TransactionItemMobile
-                                color={item?.status?.toLowerCase() === "completed" ? "#15bd43" : 
-                                       item?.status?.toLowerCase() === "pending" ? "rgba(89, 38, 240, 0.55)" : 
-                                       item?.status?.toLowerCase() === "cancelled" ? "#ed1d1d" : ""}
+                                color={item?.status?.toLowerCase() === "completed" ? "#15bd43" :
+                                    item?.status?.toLowerCase() === "pending" ? "rgba(89, 38, 240, 0.55)" :
+                                        item?.status?.toLowerCase() === "cancelled" ? "#ed1d1d" : ""}
                                 item={item}
                                 key={item._id}
                                 activeItem={activeItem}

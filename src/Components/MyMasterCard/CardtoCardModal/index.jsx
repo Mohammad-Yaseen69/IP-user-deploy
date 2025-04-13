@@ -17,6 +17,8 @@ import { toast } from 'react-toastify'
 import OtpConfirmation from "../../PaymentsNewer/InternationalFlow/OtpConfirmation"
 import { useNavigate } from 'react-router'
 import InstaPayLoader from '../../Loader'
+import { update } from 'lodash'
+import { Link } from 'react-router-dom'
 
 
 const initialState = {
@@ -33,7 +35,7 @@ const initialState = {
   loading: false,
   otpError: "",
   feeDetails: {},
-  getFee: false,
+  getFee: true,
   feeToken: null
 }
 
@@ -41,20 +43,14 @@ const initialState = {
 const paymentConfirmOptions = [
   {
     text: "Need help?",
-    icon: Help
-  },
-  {
-    text: "Share",
-    icon: Share
+    icon: Help,
+    navigate: `mailto:support@insta-pay.ch`
   },
   {
     text: "Transation Details",
-    icon: Trans
+    icon: Trans,
+    navigate: "/my-mastercard?showT=true"
   },
-  {
-    text: "Download Receipt",
-    icon: Down
-  }
 ]
 
 
@@ -94,10 +90,10 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
   const { t } = useTranslation()
 
   const formatAmountWithSymbol = (amount, currency, addCheck = false) => {
-    if (!amount || !currency) return "N/A";
+    if (!amount || !currency) return <div style={{ width: "50px" }}><InstaPayLoader /></div>;
     if (addCheck) {
       if (+data.feeDetails?.total_amount > +currentCardDetails.balance) {
-        return "N/A"
+        return <div style={{ width: "50px" }}><InstaPayLoader /></div>;
       }
     }
     const symbol = getCurrencySymbol(currency);
@@ -112,15 +108,15 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
 
   useEffect(() => {
     let debounceTimer;
-    if (data.getFee) {
+    updateHandler("feeToken", null)
+    updateHandler("feeDetails", {})
+    if (data.getFee && data.amount.replace(/,/g, "") !== "") {
       updateHandler("loading", true)
-      updateHandler("feeToken", null)
-      updateHandler("feeDetails", {})
 
       const getFee = async () => {
         const apiData = {
           senderCardId: card._id,
-          receiverCardId: data.recipient.card.id,
+          receiverCardId: data.recipient?.card?.id,
           amount: +data.amount.replace(/,/g, ""),
         }
 
@@ -206,7 +202,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
     const apiData = {
       data: {
         senderCardId: card._id,
-        receiverCardId: data.recipient.card.id,
+        receiverCardId: data.recipient?.card?.id,
         amount: +data.amount.replace(/,/g, ""),
         note: data.note,
         token: data.feeToken,
@@ -230,7 +226,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
       updateHandler("token", dec?.token)
     } catch (error) {
       const dec = decryptData(error.response.data.data)
-  
+
       toast.error(dec.message || "Something went wrong while creating your virtual card! please try again.")
     }
     finally {
@@ -243,15 +239,25 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
       sendOtp()
       return
     }
+
+    if (data.step === 1) {
+      updateHandler("amount", "1.00")
+    }
     updateHandler("step", data.step + 1)
   }
 
   const handleBack = () => {
     if (data.step === 1) {
       updateHandler("recipient", {})
-    } else {
-      updateHandler("step", data.step - 1)
     }
+    else if (data.step === 2) {
+      updateHandler("feeDetails", {})
+      updateHandler("feeToken", null)
+      updateHandler("amount", "")
+    }
+
+    updateHandler("step", data.step - 1)
+
   }
 
 
@@ -259,11 +265,12 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
     switch (data.step) {
       case 1:
         updateHandler("sideText", "Choose The Recipient")
+        updateHandler("disabled", false)
         break;
 
       case 2:
         updateHandler("sideText", "Specify Amount")
-        updateHandler("disabled", data.amount === "" || data.amount === "0" || +data.feeDetails?.total_amount > +currentCardDetails.balance || !data.feeDetails?.total_amount)
+        updateHandler("disabled", data.amount === "" || data.amount === "0" || +data.feeDetails?.total_amount?.replace(/,/g, "") > +currentCardDetails.balance || !data.feeDetails?.total_amount)
         break;
 
       case 3:
@@ -352,8 +359,8 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
         </svg>
 
 
-        {!data.loading ? (
-          <p>
+        {(!data.loading || data.feeDetails?.recipient_amount) ? (
+          <p style={{ display: "flex" }}>
             {formatAmountWithSymbol(data.feeDetails?.recipient_amount, data.feeDetails?.sending_currency, true)} = {formatAmountWithSymbol(data.feeDetails?.recipient_amount, data.feeDetails?.recipient_currency, true)}
           </p>
         ) : (
@@ -365,7 +372,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
 
       <div className={`${styles.feeDiv}`}>
         <p style={{ color: "black" }}>Fees & Charges</p>
-        {!data.loading ? (
+        {(!data.loading || data.feeDetails?.fee) ? (
           <p>{formatAmountWithSymbol(data.feeDetails?.fee, data.feeDetails?.sending_currency, true)}</p>
         ) : (
           <div style={{ width: "50px" }}>
@@ -376,7 +383,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
 
       <div className={`${styles.feeDiv}`}>
         <p style={{ color: "black" }}>Total amount to be deducted</p>
-        {!data.loading ? (
+        {(!data.loading || data.feeDetails?.total_amount) ? (
           <p>{formatAmountWithSymbol(data.feeDetails?.total_amount, data.feeDetails?.sending_currency, true)}</p>
         ) : (
           <div style={{ width: "50px" }}>
@@ -387,6 +394,8 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
 
     </>
   )
+
+  console.log(data.feeDetails)
 
   const renderData = () => (
     <>
@@ -408,14 +417,18 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
 
                 <div className={styles.paymentOptions}>
                   {paymentConfirmOptions.map(option => (
-                    <div
+                    <Link to={option.navigate}>
+                      <div
 
-                      className={styles.option}
-                      key={option.text}
-                    >
-                      <img src={option.icon} alt="" />
-                      <p>{option.text}</p>
-                    </div>
+                        className={styles.option}
+                        key={option.text}
+                      >
+                        <img src={option.icon} alt="" />
+                        <p>{option.text}</p>
+                      </div>
+                    </Link>
+
+
                   ))}
 
                   {width < 1000 && (
@@ -457,11 +470,11 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
                   </div>
 
                   <div>
-                    <img src={card.type === "premium_plus" ? PremiumLabel : StandardLabel} alt="" />
+                    <img src={card?.type === "premium_plus" ? PremiumLabel : StandardLabel} alt="" />
 
                     <div>
                       <div>
-                        <p>{card.type === "premium_plus" ? "Premium" : ""}</p>
+                        <p>{card?.type === "premium_plus" ? "Premium" : ""}</p>
                         <span>
                           <svg xmlns="http://www.w3.org/2000/svg" width="19" height="12" viewBox="0 0 19 12" fill="none">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M7.00635 10.321H11.8271V1.67969H7.00635V10.321Z" fill="#FF5F00" />
@@ -472,7 +485,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
                       </div>
 
                       <div>
-                        <h4>{formatAmountWithSymbol(data.feeDetails?.total_amount ? (currentCardDetails?.balance - data.feeDetails.total_amount).toFixed(2) : currentCardDetails?.balance, card?.currency)}</h4>
+                        <h4>{formatAmountWithSymbol(data.feeDetails?.total_amount?.replace(/,/g, "") ? (currentCardDetails?.balance - data.feeDetails?.total_amount?.replace(/,/g, "")).toFixed(2) : currentCardDetails?.balance, card?.currency)}</h4>
                         <h4>{card?.last4?.slice(-8)}</h4>
                       </div>
                     </div>
@@ -530,7 +543,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
                           />
                         </div>
 
-                        {((+data.feeDetails?.total_amount > +currentCardDetails.balance) && data.feeDetails?.total_amount) &&
+                        {((+data.feeDetails?.total_amount?.replace(/,/g, "") > +currentCardDetails.balance) && data.feeDetails?.total_amount) &&
                           <p style={{ marginTop: "2rem", color: "red", fontWeight: 600, fontSize: "12px" }}>Insufficient Balance</p>
                         }
                       </div>
@@ -567,7 +580,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
                             </div>
 
                             <div>
-                              <h4>{formatAmountWithSymbol(data.feeDetails?.total_amount ? (currentCardDetails?.balance - data.feeDetails.total_amount).toFixed(2) : currentCardDetails?.balance, card?.currency)}</h4>
+                              <h4>{formatAmountWithSymbol(data.feeDetails?.total_amount?.replace(/,/g, "") ? (currentCardDetails?.balance - data.feeDetails.total_amount?.replace(/,/g, "")).toFixed(2) : currentCardDetails?.balance, card?.currency)}</h4>
                               <h4>{card?.last4?.slice(-8)}</h4>
                             </div>
                           </div>

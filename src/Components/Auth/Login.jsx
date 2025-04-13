@@ -591,7 +591,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
     }, [resendTimer]);
 
-    console.log(email)
 
     return (
         <>
@@ -937,7 +936,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     }
                                     <button type="submit"
                                         className={styles.form_btn}
-                                        disabled={isAnyFieldEmpty || otpValues.some(item => !item) || isPressed}
+                                        disabled={isAnyFieldEmpty || otpValues.some(item => !item) || isPressed || isLoginError}
                                     >
                                         <span>{
                                             isPressed

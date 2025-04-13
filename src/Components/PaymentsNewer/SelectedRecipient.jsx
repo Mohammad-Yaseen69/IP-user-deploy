@@ -99,7 +99,8 @@ const SelectedRecipient = ({ user, setSubStep, index, size, payoutChannel = "", 
                     width: "60px",
                     display: "flex",
                     justifyContent: "center",
-                    alignItems: "center"
+                    alignItems: "center",
+                    marginLeft: ".3rem"
                 }}
                     onClick={_ => {
                         setSubStep(step)

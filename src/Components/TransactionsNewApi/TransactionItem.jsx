@@ -149,18 +149,17 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
     return (
         <div>
             <div className={styles.body_item} onClick={() => {
-                if (!vvc) {
-                    if (!activeItem || activeItem !== index + 1) {
-                        setActiveItem(index + 1)
-                    } else {
-                        setActiveItem(0)
-                    }
+                if (!activeItem || activeItem !== index + 1) {
+                    setActiveItem(index + 1)
+                } else {
+                    setActiveItem(0)
                 }
             }}>
                 <div style={{ minWidth: "155px" }}>{new Date(item?.createdAt)?.toLocaleString()}</div>
                 {vvc && <div>{item?.transactionId}</div>}
                 {vvc && <div>••{cardNo?.slice(-4)}</div>}
-                {vvc && <div>{item?.merchantName}</div>}
+                {vvc && <div>{item?.type}</div>}
+                {vvc && <div>{item?.transaction_type ?? "--"} </div>}
                 {vvc && <div>{item?.reason ?? "--"}</div>}
 
 
@@ -236,8 +235,8 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
 
 
                 {vvc &&
-                    <div style={{marginRight: "2.3rem"}}>
-                        {symbol}{addDecimals(item?.billAmount)}
+                    <div style={{ marginRight: "2.3rem", color: item?.type === "credit" ? "green" : "red" }}>
+                        {symbol}{addDecimals(item?.billAmount)} {item?.type === "credit" ? "+" : "-"}
                     </div>
                 }
 
@@ -254,16 +253,16 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                     }} >{t(capitalizeStatus(item?.status))}</div>
                 </div>
 
-                {!vvc &&
-                    <div style={{ maxWidth: "15px" }}>{
-                        activeItem === index + 1
-                            ?
-                            <ChevronDown />
-                            :
-                            <ChevronRight />
-                    }
-                    </div>
+
+                <div style={{ maxWidth: "15px" }}>{
+                    activeItem === index + 1
+                        ?
+                        <ChevronDown />
+                        :
+                        <ChevronRight />
                 }
+                </div>
+
             </div>
             {
                 activeItem === index + 1

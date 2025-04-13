@@ -25,7 +25,8 @@ export const possibleErrors = {
     rdl400: "Receiver's Daily Receiving Limit exceeded",
     rml400: "Receiver's Monthly Receiving Limit exceeded",
     ryl400: "Receiver's Yearly Receiving Limit exceeded",
-    rbl400: "Receiver's Balance Limit Reached."
+    rbl400: "Receiver's Balance Limit Reached.",
+    "Feature not available!": "Feature not available!"
 }
 
 export const LimitsErrorMessage = (message = "") => {
@@ -1004,7 +1005,7 @@ const OTPConfirmation = ({
                                     (
                                         authType === "sms"
                                             ?
-                                            t("A one-time verification code has been sent to your email address  and phone number.".replace("phone", userDetails.phone.slice(0, 3) === "971"? "whatsapp": "phone"))
+                                            t("A one-time verification code has been sent to your email address  and phone number.".replace("phone", userDetails?.phone?.slice(0, 3) === "971"? "whatsapp": "phone"))
                                             :
                                             t("Enter a code shown in the app to make sure everything works fine.")
                                     )

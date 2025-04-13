@@ -145,7 +145,7 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
                                                                         ?
                                                                         `${transaction?.receiver?.user?.first_name} ${transaction?.receiver?.user?.last_name}`.slice(0, 20)
                                                                         :
-                                                                        `${internationalReceiver?.first_name} ${internationalReceiver?.last_name}`.slice(0, 20)
+                                                                        `${internationalReceiver?.first_name ?? transaction?.account?.user?.first_name} ${internationalReceiver?.last_name ?? transaction?.account?.user?.last_name}`.slice(0, 20)
                                                     }
                                                 </>
                                                 :

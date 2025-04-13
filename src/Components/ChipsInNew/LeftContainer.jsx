@@ -34,7 +34,7 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
         setDescription(currentWallet?.qrCode?.description ?? "")
     }, [currentWallet])
 
-    const updateQr = (setter) => {
+    const updateQr = (setter, type) => {
         setSaving(true)
     
         const data = {
@@ -52,8 +52,7 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
-                setTitleEdit(false)
-                setDescEdit(false)
+                type(false)
                 setCurrentWallet(currentWallet)
                 setter(decrypted?.walletDetails?.qrCode?.status === "false" ? false : true)
                 console.log(generalQRactive)
@@ -133,7 +132,7 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
                             <Label>{t("QR Code Title")}</Label>
                             <button disabled={saving || (titleEdit && !title)} onClick={() => {
                                 if (titleEdit) {
-                                    updateQr()
+                                    updateQr(undefined, setTitleEdit)
                                 } else {
                                     setTitleEdit(true)
                                 }
@@ -148,7 +147,7 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
                             <Label>{t("Description")}</Label>
                             <button disabled={saving || (descEdit && !description)} onClick={() => {
                                 if (descEdit) {
-                                    updateQr()
+                                    updateQr(undefined, setDescEdit)
                                 } else {
                                     setDescEdit(true)
                                 }
