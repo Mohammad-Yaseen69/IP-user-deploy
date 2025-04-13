@@ -393,6 +393,11 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                             :
                             <input
                                 type="text"
+                                onKeyDown={(e) => {
+                                    if (!/^\d*\.?\d*$/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== "Tab" && e.key !== "Enter") {
+                                        e.preventDefault();
+                                    }
+                                }}
                                 value={data.amount}
                                 onChange={(e) => dataHandler("amount", e.target.value)}
                                 onKeyUp={handleKeyUp}
@@ -534,6 +539,11 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                                         <input
                                             disabled={!data?.currency || !data?.payer?.id || !data.country || !data?.payoutChannel?.id}
                                             type="text"
+                                            onKeyDown={(e) => {
+                                                if (!/^\d*\.?\d*$/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== "Tab" && e.key !== "Enter") {
+                                                    e.preventDefault();
+                                                }
+                                            }}
                                             value={data.receiving_amount ?? 0}
                                             onChange={(e) => dataHandler("receiving_amount", e.target.value)}
                                             onKeyUp={handleKeyUpR}

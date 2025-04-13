@@ -633,6 +633,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             updateInternationalData("showOtpModal", true)
         } catch (error) {
             const dec = decryptData(error.response.data.data)
+            console.log(dec)
             updateInternationalData("error", typeof dec === "string" ? `${dec} Quotation ID:${internationalData.created_quotation?.QuotationID}` : `${dec?.message} Quotation ID: ${internationalData.created_quotation?.QuotationID}` ?? `Something went wrong, Please try again! Quotation ID: ${internationalData.created_quotation?.QuotationID}`)
         }
         finally {

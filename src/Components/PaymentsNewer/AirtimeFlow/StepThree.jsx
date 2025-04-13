@@ -62,9 +62,11 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                         data: encryptData(dataa)
                     }, { headers: authHeader })
                     const dec = await decryptData(res.data.data)
+                    const packageVar = Array.isArray(dec?.data) ? dec?.data?.[0] : dec?.data
                     console.log(dec)
                     dataHandler("packages", Array.isArray(dec?.data) ? dec?.data : [dec?.data])
-                    dataHandler("package", Array.isArray(dec?.data) ? dec?.data?.[0] : dec?.data)
+                    dataHandler("package", packageVar)
+                    dataHandler("airtime_amount", packageVar?.baseAmount?.min)
                 } catch (error) {
                     const dec = decryptData(error.response.data.data)
                     dataHandler("packages", [])

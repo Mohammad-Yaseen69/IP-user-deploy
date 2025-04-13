@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import TopRight from '../topRight'
 import OnBoarding from './OnBoarding';
 import CardPurchased from './CardPurchased';
@@ -32,12 +32,20 @@ const MyMasterCard = () => {
   const queryParams = new URLSearchParams(location.search)
   const addFundsMobile = queryParams.get("addFundsMobile")
   const ctcMobile = queryParams.get("ctcMobile")
+  const showT = queryParams.get("showT")
+  const ref = useRef(null)
 
   useEffect(() => {
     if (cardPurchased) {
       setTogglSidebar(true)
     }
   }, [userDetails, cardPurchased])
+
+  useEffect(() => {
+    if(showT){
+      ref.current.scrollIntoView({ behavior: "smooth" })
+    }
+  },[showT])
 
   useEffect(() => {
     const getCard = async () => {
@@ -73,6 +81,7 @@ const MyMasterCard = () => {
 
   useEffect(() => {
     const getTransactions = async () => {
+      console.log(cards[current])
       try {
         const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-transcations`, { data: encryptData({ cardId: cards[current].card_id, account_id: userDetails._id }) }, {
           headers: authHeader
@@ -88,7 +97,7 @@ const MyMasterCard = () => {
     }
 
     getTransactions()
-  }, [current, cards])
+  }, [current, cards, userDetails, reRender])
 
   return (
     <div style={{ minHeight: "100vh" }} className={styles.container}>
@@ -112,7 +121,7 @@ const MyMasterCard = () => {
                   cards={cards}
                   setCardPurchased={setCardPurchased}
                 />
-                {((!addFundsMobile && !ctcMobile) || width > 1000)  && <TransactionsTable cardNo={currentCardDetails?.card_number} transactions={transactions} isLoading={loading} />}
+                {((!addFundsMobile && !ctcMobile) || width > 1000)  && <TransactionsTable ref={ref} cardNo={currentCardDetails?.card_number} transactions={transactions} isLoading={loading} />}
               </>
               : <OnBoarding alreadyHaveCard={cards.length !== 0} setReRender={setReRender} setCardPurchased={setCardPurchased} />
 

@@ -21,6 +21,7 @@ import QuoteDetails from '../QuoteDetails.jsx'
 import DeclineQuotation from '../DeclineQuotation.jsx'
 import BargainQuotation from '../BargainQuotation.jsx'
 import AcceptQuotation from '../AcceptQuotation.jsx'
+import { capitalizeStatus } from '../../PendingNew/ItemMobile.jsx'
 
 const ReceivedItemMobile = ({ item, activeItem, setActiveItem, index }) => {
     const { t } = useTranslation()
@@ -141,7 +142,7 @@ const ReceivedItemMobile = ({ item, activeItem, setActiveItem, index }) => {
                                 borderRadius: "7px",
                                 textAlign: "center",
                                 fontWeight: 800
-                            }}>{t(item?.status)}</div>
+                            }}>{t(t(capitalizeStatus(item.status)))}</div>
                         </div>
                         {
                             activeItem !== index + 1

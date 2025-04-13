@@ -127,10 +127,15 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                                 type="text"
                                 value={data.amount}
                                 onChange={(e) => {
-                                    if (e.target.value == "") {
+                                    if (e.target.value === "") {
                                         dataHandler("recipient_amount", "")
                                     }
                                     dataHandler("amount", e.target.value)
+                                }}
+                                onKeyDown={(e) => {
+                                    if (!/^\d*\.?\d*$/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== "Tab" && e.key !== "Enter") {
+                                        e.preventDefault();
+                                    }
                                 }}
                                 onKeyUp={handleKeyUp}
                                 onBlur={handleBlur}

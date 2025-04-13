@@ -11,6 +11,8 @@ import QuoteDetails from './QuoteDetails'
 import DeclineQuotation from './DeclineQuotation'
 import BargainQuotation from './BargainQuotation'
 import AcceptQuotation from './AcceptQuotation'
+import { capitalizeStatus } from '../PendingNew/ItemMobile.jsx'
+
 
 const QuotationReceivedItem = ({ item, activeItem, setActiveItem, index }) => {
     const { t } = useTranslation()
@@ -130,7 +132,7 @@ const QuotationReceivedItem = ({ item, activeItem, setActiveItem, index }) => {
                         padding: "5px",
                         borderRadius: "30px",
                         textAlign: "center"
-                    }} >{t(item?.status)}</div>
+                    }} >{t(capitalizeStatus(item.status))}</div>
                 </div>
                 {
                     status?.toLowerCase() !== "accepted" && status?.toLowerCase() !== "declined"
