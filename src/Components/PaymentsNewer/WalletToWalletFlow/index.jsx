@@ -610,6 +610,19 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
         }
     }
 
+    const getDecimalPointIndex = (val) => {
+        if (val) {
+            const [_, decimals] = val?.toString()?.split(".");
+
+            if (decimals) {
+                for (let idx = 0; idx < decimals.length; idx++) {
+                    if (decimals[idx] !== "0") {
+                        return idx + 1;
+                    }
+                }
+            }
+        }
+    }
     const getExchangeRateConversion = async (amount, setLimitType, payment_method = "instant", from, setLoading, fromOrTo = "from") => {
         if (amount) {
             setLoading(true)
@@ -632,12 +645,21 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
 
                 dataHandler("exchange_rate", exchange_rate_details)
 
-                console.log(+exchange_rate_details?.receiver?.amount)
+                console.log(+exchange_rate_details?.receiver?.amount >= 0.01)
                 if (fromOrTo === "from") {
-                    formatCurrency(+exchange_rate_details?.receiver?.amount.toFixed(2), false,
+                    formatCurrency(
+                        (+exchange_rate_details?.receiver?.amount >= 0.01
+                            ? +exchange_rate_details?.receiver?.amount.toFixed(2)
+                            : +exchange_rate_details?.receiver?.amount.toFixed(
+                                  getDecimalPointIndex(+exchange_rate_details?.receiver?.amount))
+                        ),
+                        false,
                         (e) => {
-                            dataHandler("recipient_amount", addDecimals(e))
-                        })
+                            dataHandler("recipient_amount", addDecimals(e));
+                        }
+                    );
+                    
+
                 } else {
                     dataHandler("amount", exchange_rate_details?.sending?.amount)
                 }

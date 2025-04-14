@@ -3,17 +3,25 @@ const formatNumber = (num) => {
     return num.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
+const getDecimalPointIndex = (val) => {
+    if (val) {
+        const [_, decimals] = val?.toString()?.split(".");
+
+        if (decimals) {
+            for (let idx = 0; idx < decimals.length; idx++) {
+                if (decimals[idx] !== "0") {
+                    return idx + 1;
+                }
+            }
+        }
+    }
+    return 2; // Default to 2 decimal places if no significant digits found
+};
+
 export const formatCurrency = (inputValue, blur, setValue) => {
-    // Format currency, add $ and validate decimal side
     if (inputValue === "") return "";
 
-
-    // Check for decimal
     let inputVal = inputValue.toString();
-    const originalLen = inputVal.length;
-    let caretPos = inputVal.length; // fallback caret position
-
-    // inputVal = parseFloat(Number(num.replace(/,/g, '')))
 
     if (inputVal.indexOf(".") >= 0) {
         const decimalPos = inputVal.indexOf(".");
@@ -26,21 +34,26 @@ export const formatCurrency = (inputValue, blur, setValue) => {
         // Validate right side
         rightSide = formatNumber(rightSide);
 
-        // On blur, ensure 2 decimal places
-        if (blur) rightSide += "00";
+        // Get number of decimal places based on value
+        const numDecimals = Number(inputVal) >= 0.01 ? 2 : getDecimalPointIndex(inputVal);
 
-        // Limit decimal to only 2 digits
-        rightSide = rightSide.substring(0, 2);
+        // On blur, ensure proper decimal places
+        if (blur) rightSide += "0".repeat(numDecimals);
+
+        // Limit decimal to calculated number of digits
+        rightSide = rightSide.substring(0, numDecimals);
 
         // Combine left and right sides
         inputVal = `${leftSide}.${rightSide}`;
     } else {
         // No decimal entered
         inputVal = formatNumber(inputVal);
-        inputVal = `${inputVal}`;
 
         // Final formatting on blur
-        if (blur) inputVal += ".00";
+        if (blur) {
+            const numDecimals = Number(inputVal) >= 0.01 ? 2 : getDecimalPointIndex(inputVal);
+            inputVal += "." + "0".repeat(numDecimals);
+        }
     }
 
     setValue(inputVal);
