@@ -110,7 +110,20 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
         formatCurrency(e.target.value, true, setValueR);
     };
 
-    console.log(+data.recipient_amount, data.recipient_amount)
+    const getDecimalPointIndex = (val) => {
+        if (val) {
+            const [_, decimals] = val?.toString()?.split(".");
+
+            if (decimals) {
+                for (let idx = 0; idx < decimals.length; idx++) {
+                    if (decimals[idx] !== "0") {
+                        return idx + 1;
+                    }
+                }
+            }
+        }
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.amount_and_currency}>
@@ -250,7 +263,17 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                                     :
                                     <div className={styles.er_item}>
                                         <img src={er_icon} alt="" />
-                                        <span>1.00 {data?.currency?.currency?.code} = {data?.exchange_rate?.exchange_rate?.toFixed(2) ?? "?"} {data?.exchange_rate?.receiver?.currency ?? ""}</span>
+
+                                        <span>1.00 {data?.currency?.currency?.code} =
+                                            {
+                                                data?.exchange_rate?.exchange_rate
+                                                    ? (data?.exchange_rate?.exchange_rate >= 0.01
+                                                        ? data?.exchange_rate?.exchange_rate.toFixed(2)
+                                                        : Number(data?.exchange_rate?.exchange_rate).toFixed(getDecimalPointIndex(data?.exchange_rate?.exchange_rate)).replace(/\.?0+$/, ''))
+                                                    : "?"
+                                            }
+                                            {data?.exchange_rate?.receiver?.currency ?? ""}
+                                        </span>
                                     </div>
                             }
                             {
@@ -325,7 +348,16 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                             :
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
                                 <span>{t("Exchange rate")}</span>
-                                <span>1.00 {data?.currency?.currency?.code} = {data?.exchange_rate?.exchange_rate.toFixed(2) ?? "?"} {data?.exchange_rate?.receiver?.currency ?? ""}</span>
+                                <span>1.00 {data?.currency?.currency?.code} =
+                                    {
+                                        data?.exchange_rate?.exchange_rate
+                                            ? (data?.exchange_rate?.exchange_rate >= 0.01
+                                                ? data?.exchange_rate?.exchange_rate.toFixed(2)
+                                                : Number(data?.exchange_rate?.exchange_rate).toFixed(getDecimalPointIndex(data?.exchange_rate?.exchange_rate)).replace(/\.?0+$/, ''))
+                                            : "?"
+                                    }
+                                    {data?.exchange_rate?.receiver?.currency ?? ""}
+                                </span>
                             </div>
                     }
                     {/* <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
