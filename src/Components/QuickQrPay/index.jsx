@@ -10,19 +10,20 @@ import { useLocation, useNavigate } from "react-router";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import countries from "../PaymentsNewer/CountriesData.json";
+import { get } from "lodash";
 
 const QuickQrPay = () => {
     const [method, setMethod] = useState("qr")
-    const [data, setData] = useState("")
     const [step, setStep] = useState(1)
     const [error, setError] = useState(null)
     const [walletDetails, setWalletDetails] = useState({})
-    const [countryFlag, setCountryFlag] = useState(null)
+    const [walletInput, setWalletInput] = useState("")
 
     const location = useLocation()
     const query = new URLSearchParams(location.search)
     const bot_id = query.get("bot_id")
     const platform = query.get("bot")
+    const [disable, setDisabled] = useState(false)
 
 
 
@@ -31,32 +32,50 @@ const QuickQrPay = () => {
         return country?.file_url || ''
     }
 
+
+    useEffect(() => {
+        let timeout;
+        if (step === 2) {
+            setDisabled(false)
+            timeout = setTimeout(() => {
+                setDisabled(true)
+            }, 400)
+        }
+
+
+        return () => {
+            clearTimeout(timeout)
+        }
+    }, [step])
+    const getDetails = async (walletId) => {
+        setError(null)
+        try {
+            const data = {
+                "wallet_id": walletId,
+                "recipientId": bot_id
+            }
+
+            console.log(data)
+
+            const enc = encryptData(data)
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-wallet-details-public`, { data: enc })
+            const dec = decryptData(res.data.data)
+            setWalletDetails(dec?.walletDetails)
+            setStep(prev => prev + 1)
+            console.log(dec)
+        } catch (error) {
+            const dec = decryptData(error.response.data.data)
+            console.log(dec)
+            setError(dec.message || "Invalid QR Code")
+        }
+    }
+
     const handleScan = async (scanData) => {
         console.log(`loaded data data`, scanData);
         if (scanData && scanData !== "") {
             const splitted = scanData.split("://")
             const wallet_id = splitted[1].split("/")[2]
-
-            try {
-                const data = {
-                    "wallet_id": wallet_id,
-                    "recipientId": bot_id
-                }
-
-                console.log(data)
-
-                const enc = encryptData(data)
-                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-wallet-details-public`, { data: enc })
-                const dec = decryptData(res.data.data)
-                setWalletDetails(dec?.walletDetails)
-                setStep(prev => prev + 1)
-                console.log(dec)
-            } catch (error) {
-                const dec = decryptData(error.response.data.data)
-                console.log(dec)
-                setError(dec.message || "Invalid QR Code")
-            }
-            setData(scanData)
+            getDetails(wallet_id)
         }
     };
 
@@ -67,6 +86,7 @@ const QuickQrPay = () => {
 
 
     const setDetails = async () => {
+        setWalletInput("")
         try {
             const data = {
                 platform: platform,
@@ -86,7 +106,10 @@ const QuickQrPay = () => {
     }
 
     const clickHandler = () => {
-        if (step === 2) {
+        if (step === 1) {
+            getDetails(walletInput)
+        }
+        else if (step === 2) {
             setDetails()
         }
     }
@@ -113,28 +136,31 @@ const QuickQrPay = () => {
             {step === 1 &&
                 <>
                     {method === "qr" &&
-                        <div className={styles.qr_cont}>
-                            <QrReader
-                                delay={1000}
-                                onError={handleError}
-                                onScan={handleScan}
-                                showViewFinder={false}
-                                constraints={{
-                                    facingMode: "environment"  // This forces the back camera
-                                }}
-                                facingMode={{ facingMode:"environment" }}
+                        <>
+                            <div className={styles.qr_cont}>
+                                <QrReader
+                                    delay={1000}
+                                    onError={handleError}
+                                    onScan={handleScan}
+                                    showViewFinder={false}
+                                    constraints={{
+                                        facingMode: "environment"  // This forces the back camera
+                                    }}
+                                    facingMode={{ facingMode: "environment" }}
                                 // style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                            />
+                                />
 
-                            <div className={styles.mobileBtn}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="26" viewBox="0 0 25 26" fill="none">
-                                    <path d="M21.5867 20.4045V6.13452C21.5867 5.01331 20.6693 4.09595 19.5481 4.09595H5.27809C4.15688 4.09595 3.23952 5.01331 3.23952 6.13452V20.4045C3.23952 21.5258 4.15688 22.4431 5.27809 22.4431H19.5481C20.6693 22.4431 21.5867 21.5258 21.5867 20.4045ZM9.25331 15.2877L11.3938 17.8665L14.5536 13.7996C14.7575 13.5345 15.1652 13.5345 15.369 13.8098L18.9467 18.58C19.0035 18.6557 19.0381 18.7458 19.0466 18.84C19.0551 18.9343 19.0372 19.0291 18.9949 19.1137C18.9525 19.1984 18.8875 19.2696 18.8069 19.3193C18.7264 19.3691 18.6337 19.3954 18.539 19.3954H6.31776C5.88966 19.3954 5.65523 18.9062 5.92024 18.5698L8.45827 15.3081C8.65193 15.0431 9.03926 15.0329 9.25331 15.2877Z" fill="#404040" />
-                                </svg>
+                                <div className={styles.mobileBtn}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="26" viewBox="0 0 25 26" fill="none">
+                                        <path d="M21.5867 20.4045V6.13452C21.5867 5.01331 20.6693 4.09595 19.5481 4.09595H5.27809C4.15688 4.09595 3.23952 5.01331 3.23952 6.13452V20.4045C3.23952 21.5258 4.15688 22.4431 5.27809 22.4431H19.5481C20.6693 22.4431 21.5867 21.5258 21.5867 20.4045ZM9.25331 15.2877L11.3938 17.8665L14.5536 13.7996C14.7575 13.5345 15.1652 13.5345 15.369 13.8098L18.9467 18.58C19.0035 18.6557 19.0381 18.7458 19.0466 18.84C19.0551 18.9343 19.0372 19.0291 18.9949 19.1137C18.9525 19.1984 18.8875 19.2696 18.8069 19.3193C18.7264 19.3691 18.6337 19.3954 18.539 19.3954H6.31776C5.88966 19.3954 5.65523 18.9062 5.92024 18.5698L8.45827 15.3081C8.65193 15.0431 9.03926 15.0329 9.25331 15.2877Z" fill="#404040" />
+                                    </svg>
+                                </div>
+                                {/* {data && <p>Scanned Code: {data}</p>} */}
                             </div>
-                            {/* {data && <p>Scanned Code: {data}</p>} */}
-                        </div>
+                            {(error && step === 1) && <p className={styles.error} style={{ fontWeight: 600, color: "red", marginTop: ".5rem" }}>{error}</p>}
+                        </>
                     }
-                    {error && <p className={styles.error} style={{ fontWeight: 600, color: "red" }}>{error}</p>}
+
 
 
                     {
@@ -143,7 +169,7 @@ const QuickQrPay = () => {
                             <h5>Enter the Merchant Code</h5>
 
                             <div style={{ position: "relative", width: "100%" }}>
-                                <input type="text" />
+                                <input value={walletInput} onChange={(e) => setWalletInput(e.target.value)} type="text" />
 
                                 <h5 style={{
                                     position: "absolute",
@@ -161,6 +187,7 @@ const QuickQrPay = () => {
                                 </div>
                                 <button><p>Invite them</p></button>
                             </div>
+                            {error && <p className={styles.error} style={{ fontWeight: 600, color: "red" }}>{error}</p>}
                         </div>
                     }
                 </>
@@ -206,7 +233,7 @@ const QuickQrPay = () => {
                             </div>
 
 
-                            <button onClick={() =>  navigate(`https://my.insta-pay.ch/profile/${walletDetails?.username}`)}>
+                            <button onClick={() => navigate(`/profile/${walletDetails?.username}`)}>
                                 View Profile
                             </button>
                         </div>
@@ -263,17 +290,17 @@ const QuickQrPay = () => {
                 <div style={{ background: `url(${adBG})`, backgroundSize: "cover", backgroundPosition: "left" }} className={styles.ad}>
                     <h2>Advertisement Placeholder</h2>
                 </div>}
+           {step === 2 &&
             <div className={styles.btns}>
                 {(method !== "qr" || step === 2) && <button onClick={clickHandler} style={{ background: "#5926F0", color: "white" }}>{step === 1 ? "Verify" : "Next"}</button>}
-                {step === 2 && <button
+               <button
                     onClick={() => {
                         setWalletDetails({})
                         setStep(prev => prev - 1)
-                        setCountryFlag(null)
                         setError(null)
-                        setData("")
-                    }} style={{ background: "white" }}>Back</button>}
+                    }} style={{ background: "white" }}>Back</button>
             </div>
+            }
         </div>
     )
 }
