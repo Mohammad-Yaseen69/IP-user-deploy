@@ -122,7 +122,7 @@ const QuickQrPay = () => {
                                 constraints={{
                                     facingMode: "environment"  // This forces the back camera
                                 }}
-                                facingMode={{ facingMode: window.innerWidth < 1000 ? "environment" : "user" }}
+                                facingMode={{ facingMode:"environment" }}
                                 // style={{ width: "100%", height: "100%", objectFit: "cover" }}
                             />
 
