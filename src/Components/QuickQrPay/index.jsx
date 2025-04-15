@@ -290,17 +290,19 @@ const QuickQrPay = () => {
                 <div style={{ background: `url(${adBG})`, backgroundSize: "cover", backgroundPosition: "left" }} className={styles.ad}>
                     <h2>Advertisement Placeholder</h2>
                 </div>}
-           {step === 2 &&
-            <div className={styles.btns}>
-                {(method !== "qr" || step === 2) && <button onClick={clickHandler} style={{ background: "#5926F0", color: "white" }}>{step === 1 ? "Verify" : "Next"}</button>}
-               <button
-                    onClick={() => {
-                        setWalletDetails({})
-                        setStep(prev => prev - 1)
-                        setError(null)
-                    }} style={{ background: "white" }}>Back</button>
-            </div>
-            }
+          
+                <div className={styles.btns}>
+                    {(method !== "qr" || step === 2) && <button onClick={clickHandler} style={{ background: "#5926F0", color: "white" }}>{step === 1 ? "Verify" : "Next"}</button>}
+                    {step === 2 &&
+                    <button
+                        onClick={() => {
+                            setWalletDetails({})
+                            setStep(prev => prev - 1)
+                            setError(null)
+                        }} style={{ background: "white" }}>Back</button>
+                        }
+                </div>
+            
         </div>
     )
 }
