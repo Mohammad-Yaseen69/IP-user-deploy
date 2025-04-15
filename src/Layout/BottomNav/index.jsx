@@ -145,10 +145,10 @@ const BottomNav = ({ setShowModal }) => {
                                 <span>{t("Send Payment")}</span>
                             </div>
                         </Link>
-                        <Link to={"/payments?payment_action=send_money&send_type=qr_pay"} onClick={verifyToken}>
+                        <Link to={"/quick-qrpay"} onClick={verifyToken}>
                             <div className={`${styles.f_btn}`}>
                                 <img src={qr} alt="" />
-                                <span>{t("Scan QR Code")}</span>
+                                <span>{t("Quick QR Pay")}</span>
                             </div>
                         </Link>
                     </div>

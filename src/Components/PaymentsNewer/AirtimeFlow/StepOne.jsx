@@ -25,13 +25,18 @@ const StepOne = ({ data, dataHandler, setCurrentFlow, setAction, setStep }) => {
                     </div>
                     <img src={air_dude} alt="" />
                 </div>
-                <div className={`${styles.card} ${data.flow === "e-sim" ? styles.active : ""}`} /*onClick={() => {
+                <div
+                    onClick={() => {
+                        dataHandler("flow", "e-sim")
+                    }}
+                    className={`${styles.card} ${data.flow === "e-sim" ? styles.active : ""}`} /*onClick={() => {
                     if (window.innerWidth < 1000) {
                         dataHandler("step", 2)
                     }
                     dataHandler("flow", "e-sim")
                 }}*/>
-                    <div className={styles.c_left}>
+                    <div
+                        className={styles.c_left}>
                         <img src={esim} alt="" className={styles.icon} />
                         <span>{t("E-SIM")}</span>
                     </div>

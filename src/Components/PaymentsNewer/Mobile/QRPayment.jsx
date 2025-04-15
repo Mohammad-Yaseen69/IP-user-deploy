@@ -4,14 +4,7 @@ import { useTranslation } from "react-i18next"
 import { useContext, useEffect, useState } from "react"
 import { ChevronLeft } from "react-feather"
 import TopIcon from "./files/Top"
-import PWizard from "../PWizard"
 import { UserContext } from "../../../Context/UserContext"
-import AddQRDetails from "./AddQRDetails"
-import QRRecipient from "./QRRecipient"
-import OTPConfirmation from "../OTPConfirmation"
-import WalletReceipt from "../WalletReceipt"
-import AmountAndCurrency from "./AmountAndCurrency"
-import ConfirmQRPayment from "../ConfirmQRPayment"
 import QRFlow from "../QRFlow"
 
 const QRPayment = ({ step, setStep, setCurrentFlow, setSendPaymentType, sendPaymentType, setAction }) => {
@@ -25,9 +18,8 @@ const QRPayment = ({ step, setStep, setCurrentFlow, setSendPaymentType, sendPaym
     const [reason, setReason] = useState("")
     const [comment, setComment] = useState("")
     const [files, setFiles] = useState([])
-    const [extra, setExtra] = useState(0)
 
-    const [transactionDetails, setTransactionDetails] = useState(null)
+
 
     useEffect(() => {
         setWallet("")
@@ -39,13 +31,6 @@ const QRPayment = ({ step, setStep, setCurrentFlow, setSendPaymentType, sendPaym
         setConfirmed(false)
     }, [sendPaymentType])
 
-    const [cardNumber, setCardNumber] = useState('');
-    const [expiry, setExpiry] = useState('');
-    const [cvc, setCVC] = useState('');
-    const [cardHolderName, setCardHolderName] = useState('');
-    const [sendType, setSendType] = useState("wallet")
-    const [saveCard, setSaveCard] = useState(false)
-    const [token, setToken] = useState("")
     const [codeType, setCodeType] = useState("sms")
 
     useEffect(() => {

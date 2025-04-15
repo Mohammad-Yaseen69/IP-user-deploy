@@ -10,10 +10,13 @@ import country_styles from "../InternationalFlow/styles/stepone.module.css"
 import { ChevronRight } from "react-feather"
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import axios from "axios"
+import esim from "./files/esim.svg"
+import e_dude from "./files/e_dude.png"
 import allCountries from "../CountriesData.json"
 import { UserContext } from "../../../Context/UserContext"
 import ListModal from "../InternationalFlow/ListModal"
 import PhoneInput from "../../PhoneInput"
+import warn from "./files/warn.svg"
 import InstaPayLoader from "../../Loader"
 
 const StepTwo = ({ data, dataHandler }) => {
@@ -81,13 +84,13 @@ const StepTwo = ({ data, dataHandler }) => {
                 <div className={styles.b_left}>
                     <span>{t("Send Top-up").toUpperCase()}</span>
                     <div>
-                        <img src={airtime} alt="" />
-                        <span>{t("Mobile Airtime")}</span>
+                        <img src={data.flow === "airtime" ? airtime : esim} alt="" />
+                        <span>{t(`${data.flow === "airtime" ? "Mobile Airtime" : "eSim"}`)}</span>
                     </div>
                 </div>
-                <img src={air_dude} alt="" />
+                <img src={data.flow === "airtime" ? air_dude : e_dude} alt="" />
             </div>
-            {
+            {data.flow === "airtime" ?
                 loadingCountries
                     ?
                     <div style={{ height: "200px", width: "200px", margin: "1rem auto" }}>
@@ -180,6 +183,62 @@ const StepTwo = ({ data, dataHandler }) => {
                             </button>
                         </div>
                     </div>
+                : null
+            }
+            {
+                data.flow === "e-sim" && (
+                    loadingCountries
+                        ?
+                        <div style={{ height: "200px", width: "200px", margin: "1rem auto" }}>
+                            <InstaPayLoader />
+                        </div> :
+                        <div className={styles.eSim}>
+                            <div className={styles.warningDiv}>
+                                <div>
+                                    <img src={warn} alt="" />
+                                    <p>
+                                        Not all devices support eSIM. Perform a compatibility check to ensure a seamless user experience.
+                                    </p>
+                                </div>
+
+                                <button>
+                                    Check device compatibility.
+                                </button>
+                            </div>
+
+                            <div className={styles.contentDiv}>
+                                <h4>Travel Distance</h4>
+
+                                <div style={{flex: 0, width: "fit-content", minWidth: 'fit-content'}} className={`${country_styles.country} ${styles.country}`} onClick={() => setShowModal(true)}>
+                                    <div className={country_styles.main}>
+                                        <div className={data?.country?.file_url ? "" : country_styles.grad_icon}>
+                                            <img src={data?.country?.file_url ?? country} alt="" />
+                                        </div>
+                                        <span>{data?.country?.name ? t(data?.country?.name)?.slice(0, 30) : t("Select Destination Country")}</span>
+                                    </div>
+                                    <img src={chev_down} alt="" />
+                                </div>
+
+                            </div>
+
+
+                            <div style={{alignItems: "flex-start"}} className={styles.contentDiv}>
+                                <h4>Or Choose a Region</h4>
+
+                                <div className={styles.regions}>
+                                    <div className={styles.region}>
+                                        <h2>Asia</h2>
+                                    </div>
+                                    <div className={styles.region}>
+                                        <h2>Soth Africa</h2>
+                                    </div>
+                                    <div className={styles.region}>
+                                        <h2>Europe</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                )
             }
             {
                 (showModal && countries?.length > 0)

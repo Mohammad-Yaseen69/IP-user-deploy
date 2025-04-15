@@ -1,16 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Button, Card, CardBody, Input, Modal, ModalBody, ModalHeader } from 'reactstrap'
+import {  Card, CardBody, Input, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import { QrReader } from 'react-qr-reader';
 import CryptoJS from 'crypto-js';
 import invite from "./files/invite.png"
 import { useTranslation } from 'react-i18next';
-import { ChevronRight, HelpCircle } from 'react-feather';
 import axios from 'axios';
 import { UserContext } from '../../Context/UserContext';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import InviteFriendModal from './InviteFriendModal';
 import { useLocation } from 'react-router';
-import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 
 export const getConstraints = () => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -29,7 +27,6 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
 
     useEffect(() => {
         if (result && result?.length === 8) {
-            // axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-by-wallet-id/${result}`, {
             axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-user-wallets/${result}`, {
                 headers: authHeader
             })
@@ -50,7 +47,6 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
                     }
                 })
                 .catch(err => {
-                    // const decrypted = decryptData(err.response.data.data)
                     console.log(err)
                     setShowQRModal(false)
                     setWalletError("Invalid Wallet ID!")
@@ -91,7 +87,6 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
             .catch(err => {
                 console.log(err)
                 const decrypted = decryptData(err.response.data.data)
-                // console.log(decrypted)
                 setShowQRModal(false)
                 setWalletError("Invalid QR Code!")
                 setIsReady(false)

@@ -58,6 +58,7 @@ const CreatePin = lazy(() => import("../Components/CreatePin"))
 const UpdatePin = lazy(() => import("../Components/UpdatePin"))
 const CreatePinChatBot = lazy(() => import("../Components/Chatbot/Pin/CreatePin"))
 const VerifyPinChatBot = lazy(() => import("../Components/Chatbot/Pin/VerifyPin"))
+const QuickQrPay = lazy(() => import("../Components/QuickQrPay"))
 
 
 export const routes = [
@@ -100,6 +101,7 @@ export const routes = [
     { path: "/my-mastercard", component: <MyMasterCard /> },
     { path: "/create-pin", component: <CreatePin /> },
     { path: "/update-pin", component: <UpdatePin /> },
+ 
     { path: "*", component: <NotFound type='Page' /> }
 ]
 
@@ -127,6 +129,7 @@ export const publicRoutes = [
     { path: "/chatbot/get-location", component: <GetLocation /> },
     { path: "/chatbot/payment-request", component: <ShowLocation /> },
     { path: "/create-password/:token", component: <CreatePassword /> },
+    { path: "/quick-qrpay", component: <QuickQrPay />},
     { path: "/set-account-pin/:accountId/:platformType", component: <CreatePinChatBot /> },
     { path: "/verify-bot-pin/:accountId/:platformType", component: <VerifyPinChatBot />},
     { path: "*", component: <NotFound type='Page' /> }
