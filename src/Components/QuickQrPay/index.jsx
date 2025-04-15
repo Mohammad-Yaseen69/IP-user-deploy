@@ -93,7 +93,7 @@ const QuickQrPay = () => {
 
     const navigate = useNavigate()
 
-    
+
     return (
         <div className={styles.container}>
             <h1>QR Quick Pay</h1>
@@ -119,6 +119,9 @@ const QuickQrPay = () => {
                                 onError={handleError}
                                 onScan={handleScan}
                                 showViewFinder={false}
+                                constraints={{
+                                    facingMode: "environment"  // This forces the back camera
+                                }}
                                 facingMode={{ facingMode: window.innerWidth < 1000 ? "environment" : "user" }}
                                 // style={{ width: "100%", height: "100%", objectFit: "cover" }}
                             />
