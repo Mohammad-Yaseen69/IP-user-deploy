@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Card, CardBody } from 'reactstrap'
+import {  Card, CardBody } from 'reactstrap'
 import invite from "./files/invite.png"
-import { ChevronLeft, ChevronRight, HelpCircle } from 'react-feather'
-import verified from "../../assets/verified.png"
 import countries from "./CountriesData.json"
 import { useNavigate } from 'react-router'
 import InviteFriendModal from './InviteFriendModal'
@@ -55,6 +53,7 @@ const QRRecipient = ({ wallet, dataHandler }) => {
                                             wallet?.profileImage
                                                 ?
                                                 <img
+                                                    alt='adfaf'
                                                     src={wallet?.profileImage}
                                                     style={{
                                                         width: "100%",

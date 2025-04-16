@@ -29,13 +29,13 @@ const BottomNav = ({ setShowModal }) => {
     useEffect(() => {
         if (location.pathname.includes("pin")) {
             console.log("Dont show")
-            setDontShow(true) 
+            setDontShow(true)
         } else {
             setDontShow(false)
         }
     }, [location.pathname])
-    
-    
+
+
     const navData = userDetails ? [
         {
             icon: Home,
@@ -145,7 +145,7 @@ const BottomNav = ({ setShowModal }) => {
                                 <span>{t("Send Payment")}</span>
                             </div>
                         </Link>
-                        <Link to={"/quick-qrpay"} onClick={verifyToken}>
+                        <Link to={"/payments?payment_action=send_money&send_type=qr_pay"} onClick={verifyToken}>
                             <div className={`${styles.f_btn}`}>
                                 <img src={qr} alt="" />
                                 <span>{t("Quick QR Pay")}</span>
