@@ -155,30 +155,48 @@ const QuickQrPay = () => {
             {showInstruction &&
                 <div className={styles.instructionsMain}>
                     <div>
-                        <h4>Instructions: </h4>
+                        <h4>How to Scan a QR Code Perfectly</h4>
 
                         <div className={styles.instructions}>
                             <div>
-                                <h5>1. Keep the QR Code Flat and Visible Make sure the QR code is not bent, wrinkled, or partially hidden.</h5>
-                                <h5>2. Good Lighting is Key Scan in a well-lit environment. Avoid shadows or glare on the QR code.</h5>
-                                <h5>3. Hold Your Phone Steady Keep your phone still for a second or two until the app detects the QR code.</h5>
-                                <h5>4. Center the QR Code in the Frame Align the QR code inside the on-screen frame. Try to keep all edges visible.</h5>
-                                <h5>5. Avoid Zooming In or Out Let the app handle the focus. Moving your phone closer or farther can affect clarity.</h5>
-                                <h5>6. Clean Your Camera Lens A dirty or smudged lens can blur the image. Wipe it gently if needed.</h5>
-                                <h5>7. Check for Damage Make sure the QR code isn't torn, faded, or distorted.</h5>
+                                <h5>Keep the QR Code Flat and Visible</h5>
+                                <p>Make sure the QR code is not bent, wrinkled, or partially hidden.</p>
+                            </div>
+                            <div>
+                                <h5>Good Lighting is Key</h5>
+                                <p>Scan in a well-lit environment. Avoid shadows or glare on the QR code.</p>
+                            </div>
+                            <div>
+                                <h5>Center the QR Code in the Frame</h5>
+                                <p>Align the QR code inside the on-screen frame. Try to keep all edges visible.</p>
+                            </div>
+                            <div>
+                                <h5>Avoid Zooming In or Out</h5>
+                                <p>Let the app handle the focus. Moving your phone closer or farther can affect clarity.</p>
+                            </div>
+                            <div>
+                                <h5>Clean Your Camera Lens</h5>
+                                <p>A dirty or smudged lens can blur the image. Wipe it gently if needed.</p>
+                            </div>
+                            <div>
+                                <h5>Check for Damage</h5>
+                                <p>Make sure the QR code isn't torn, faded, or distorted.</p>
                             </div>
                         </div>
                     </div>
 
 
-                    <button
-                        onClick={() => {
-                            setShowInstruction(false)
-                            setStep(1)
-                            setMethod("qr")
-                        }}
-                        className={styles.gradientBtn}
-                    >Proceed</button>
+                    <div className={styles.btns}>
+                        <button
+                            style={{ background: "#5926F0", color: "white" }}
+                            onClick={() => {
+                                setShowInstruction(false)
+                                setStep(1)
+                                setMethod("qr")
+                            }}
+                            className={styles.gradientBtn}
+                        >Proceed</button>
+                    </div>
 
 
                 </div>

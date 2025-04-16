@@ -85,28 +85,28 @@
 
 }
 
- .btns {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 7px;
-        align-self: stretch;
+.btns {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 7px;
+    align-self: stretch;
 
-        button {
-            display: flex;
-            padding: var(--RADIUS-radius-5, 14px) 0;
-            width: 100%;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            align-self: stretch;
-            border-radius: var(--RADIUS-radius-2, 8px);
-            font-size: 18px;
-            font-weight: 600;
-            border: none;
-            outline: none;
-        }
+    button {
+        display: flex;
+        padding: var(--RADIUS-radius-5, 14px) 0;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        align-self: stretch;
+        border-radius: var(--RADIUS-radius-2, 8px);
+        font-size: 18px;
+        font-weight: 600;
+        border: none;
+        outline: none;
     }
+}
 
 .merchantInfo {
     display: flex;
@@ -257,28 +257,52 @@
             }
         }
 
-       
+
 
 
     }
 }
 
 
-.instructionsMain{
+.instructionsMain {
     padding: 14px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
-    .instructions{
+
+    h4 {
+        color: #5926F0;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 700;
+    }
+
+    .instructions {
         margin-top: 1em;
-        h5{
-            margin-bottom: 16px;
-            color: #6b6262 !important;
+        div{
+            margin-bottom: 6px;
+        }
+
+        h5 {
+            color: #000;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 600;
+        }
+
+        p {
+            color: #848484;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 20px;
+            letter-spacing: -0.14px;
         }
     }
 }
+
 .gradientBtn {
     display: flex;
     max-height: fit-content;
