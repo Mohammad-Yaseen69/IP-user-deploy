@@ -34,6 +34,21 @@ const QuickQrPay = () => {
         return country?.file_url || ''
     }
 
+    const isTelegramWebview = () => {
+        const userAgent = navigator.userAgent.toLowerCase();
+        return userAgent.includes('telegram') ||
+            window.Telegram !== undefined ||
+            window.TelegramWebviewProxy !== undefined
+    };
+
+    // useEffect(() => {
+    //     if (isTelegramWebview()) {
+    //         window.onload = () => {
+    //             window.location.reload()
+    //         }
+    //     }
+    // }, []);
+
 
     useEffect(() => {
         let timeout;
@@ -52,6 +67,7 @@ const QuickQrPay = () => {
         }
     }, [step])
     const getDetails = async (walletId) => {
+        if(walletId === "") return false
         setError(null)
         try {
             const data = {
@@ -65,7 +81,7 @@ const QuickQrPay = () => {
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-wallet-details-public`, { data: enc })
             const dec = decryptData(res.data.data)
             setWalletDetails(dec?.walletDetails)
-            setStep(prev => prev + 1)
+            setStep(2)
             console.log(dec)
         } catch (error) {
             const dec = decryptData(error.response.data.data)
@@ -108,7 +124,8 @@ const QuickQrPay = () => {
             })
     }
 
-    const setDetails = async () => {
+    const setDetails = async (btnClicked) => {
+        if(!btnClicked) return false
         setWalletInput("")
         try {
             const data = {
@@ -120,7 +137,7 @@ const QuickQrPay = () => {
             const enc = encryptData(data)
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/set-qrpay-wallet`, { data: enc })
             const dec = decryptData(res.data.data)
-            setStep(prev => prev + 1)
+            setStep(3)
             console.log(dec)
         } catch (error) {
             const dec = decryptData(error.response.data.data)
@@ -133,7 +150,7 @@ const QuickQrPay = () => {
             getDetails(walletInput)
         }
         else if (step === 2) {
-            setDetails()
+            setDetails(true)
         }
     }
 
