@@ -81,7 +81,11 @@
         }
     }
 
-    .btns {
+
+
+}
+
+ .btns {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -103,10 +107,6 @@
             outline: none;
         }
     }
-
-
-}
-
 
 .merchantInfo {
     display: flex;
@@ -257,26 +257,45 @@
             }
         }
 
-        button {
-            display: flex;
-            padding: var(--Gaps-Gap-Large, 16px) var(--Gaps-Gap-Medium, 12px);
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            flex: 1 0 0;
-            border-radius: var(--Corner-Radius-Small-Roundness, 8px);
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%), #E5E5E5;
-            background-blend-mode: overlay, normal, normal;
-            color: var(--neutral-neutral-1100, #FFF);
-            font-size: 14px;
-            font-weight: 600;
-            border: none;
-            width: 100%;
-            outline: none;
-        }
+       
 
 
     }
+}
+
+
+.instructionsMain{
+    padding: 14px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    .instructions{
+        margin-top: 1em;
+        h5{
+            margin-bottom: 16px;
+            color: #6b6262 !important;
+        }
+    }
+}
+.gradientBtn {
+    display: flex;
+    max-height: fit-content;
+    padding: var(--Gaps-Gap-Large, 16px) var(--Gaps-Gap-Medium, 12px);
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex: 1 0 0;
+    border-radius: var(--Corner-Radius-Small-Roundness, 8px);
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%), #E5E5E5;
+    background-blend-mode: overlay, normal, normal;
+    color: var(--neutral-neutral-1100, #FFF);
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    width: 100%;
+    outline: none;
 }
 
 .method_selection {

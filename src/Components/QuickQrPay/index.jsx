@@ -24,8 +24,7 @@ const QuickQrPay = () => {
     const bot_id = query.get("bot_id")
     const platform = query.get("bot")
     const [disable, setDisabled] = useState(false)
-    const [loading, setLoading] = useState(true)
-
+    const [showInstruction, setShowInstruction] = useState(true)
 
 
     const [method, setMethod] = useState("qr")
@@ -86,9 +85,28 @@ const QuickQrPay = () => {
 
     const handleError = (error) => {
         console.error(error);
-        // setError(error);
     }
 
+    const setFileHandler = (e) => {
+        const selectedFile = e.target.files[0];
+        if (!selectedFile?.type?.toLowerCase()?.includes("image")) {
+            setError("Only images are allowed.")
+            return
+        }
+        const formData = new FormData()
+        formData.append("file", selectedFile)
+
+        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-qr-details`,
+            formData)
+            .then(res => {
+                const decrypted = decryptData(res.data.data)
+                getDetails(decrypted?.walletDetails?.wallet_id)
+            })
+            .catch(err => {
+                console.log(err)
+                setError("Invalid QR Code!")
+            })
+    }
 
     const setDetails = async () => {
         setWalletInput("")
@@ -121,7 +139,6 @@ const QuickQrPay = () => {
 
     const navigate = useNavigate()
 
-    // make a function that copy the wallet id to clipboard
     const copyToClipboard = (text) => {
         navigator.clipboard.writeText(text).then(() => {
             toast.success('Copied to clipboard');
@@ -131,218 +148,230 @@ const QuickQrPay = () => {
     };
 
 
-    useEffect(() => {
-        let tm;
-        function fixCamera(){
-            setLoading(true)
-            setMethod("code")
-            tm = setTimeout(() => {
-                setMethod("qr")
-                setLoading(false)
-            },1000)
-        }
-
-        fixCamera()
-
-        return () => {
-            clearTimeout(tm)
-        }
-    }, [])
 
     console.log(method)
     return (
         <>
-            {!loading ?
-                <div className={styles.container}>
-                    <h1>QR Quick Pay</h1>
+            {showInstruction &&
+                <div className={styles.instructionsMain}>
+                    <div>
+                        <h4>Instructions: </h4>
 
-                    {step === 1 &&
-                        <div className={styles.method_selection}>
-                            <div style={{ background: method === "qr" && "#5926F0", width: "45%" }} onClick={() => setMethod("qr")} className={styles.tab}>
-                                <span style={{ color: method === "qr" && "#FFF" }}>Scan Qr</span>
-                            </div>
-
-                            <div style={{ background: method === "code" && "#5926F0", width: "55%" }} onClick={() => setMethod("code")} className={styles.tab}>
-                                <span style={{ color: method === "code" && "#FFF", }}>Enter Merchant Code</span>
-                            </div>
-                        </div>
-                    }
-
-                    {step === 1 &&
-                        <>
-                            {method === "qr" &&
-                                <>
-                                    <div className={styles.qr_cont}>
-                                        <QrReader
-                                            delay={1000}
-                                            onError={handleError}
-                                            onScan={handleScan}
-                                            showViewFinder={false}
-                                            constraints={{
-                                                facingMode: "environment"  // This forces the back camera
-                                            }}
-                                            facingMode={{ facingMode: "environment" }}
-                                        // style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                                        />
-
-                                        <div className={styles.mobileBtn}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="26" viewBox="0 0 25 26" fill="none">
-                                                <path d="M21.5867 20.4045V6.13452C21.5867 5.01331 20.6693 4.09595 19.5481 4.09595H5.27809C4.15688 4.09595 3.23952 5.01331 3.23952 6.13452V20.4045C3.23952 21.5258 4.15688 22.4431 5.27809 22.4431H19.5481C20.6693 22.4431 21.5867 21.5258 21.5867 20.4045ZM9.25331 15.2877L11.3938 17.8665L14.5536 13.7996C14.7575 13.5345 15.1652 13.5345 15.369 13.8098L18.9467 18.58C19.0035 18.6557 19.0381 18.7458 19.0466 18.84C19.0551 18.9343 19.0372 19.0291 18.9949 19.1137C18.9525 19.1984 18.8875 19.2696 18.8069 19.3193C18.7264 19.3691 18.6337 19.3954 18.539 19.3954H6.31776C5.88966 19.3954 5.65523 18.9062 5.92024 18.5698L8.45827 15.3081C8.65193 15.0431 9.03926 15.0329 9.25331 15.2877Z" fill="#404040" />
-                                            </svg>
-                                        </div>
-                                        {/* {data && <p>Scanned Code: {data}</p>} */}
-                                    </div>
-                                    {(error && step === 1) && <p className={styles.error} style={{ fontWeight: 600, color: "red", marginTop: ".5rem" }}>{error}</p>}
-                                </>
-                            }
-
-
-
-                            {
-                                method === "code" &&
-                                <div className={styles.code_cont}>
-                                    <h5>Enter the Merchant Code</h5>
-
-                                    <div style={{ position: "relative", width: "100%" }}>
-                                        <input value={walletInput} onChange={(e) => setWalletInput(e.target.value)} type="text" />
-
-                                        <h5 style={{
-                                            position: "absolute",
-                                            top: "29%",
-                                            left: "13px",
-                                        }}>#INSTAPAY-</h5>
-                                    </div>
-
-                                    <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
-                                        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-                                            <img src={addU} alt="" />
-                                            <span>
-                                                Recipient Not on InstaPay?
-                                            </span>
-                                        </div>
-                                        <button><p>Invite them</p></button>
-                                    </div>
-                                    {error && <p className={styles.error} style={{ fontWeight: 600, color: "red" }}>{error}</p>}
-                                </div>
-                            }
-                        </>
-                    }
-
-                    {step === 2 &&
-                        <div className={styles.merchantInfo}>
+                        <div className={styles.instructions}>
                             <div>
-                                <h4>Merchant Details</h4>
-                                <p>Please take a few moments to carefully verify the information to your payee details.</p>
-                            </div>
-
-
-                            <div className={styles.info}>
-                                {walletDetails?.coverPicture &&
-                                    <div className={styles.banner}>
-                                        <img src={walletDetails?.coverPicture} alt="" />
-                                    </div>
-                                }
-
-                                <div className={styles.dets}>
-                                    <div className={styles.u_info}>
-                                        {walletDetails?.profilePicture ? <img src={walletDetails?.profilePicture} className={styles.pfp} alt="" /> : <div className={styles.pfp_placeHolder}>{walletDetails?.name?.split(' ')[0][0]?.toUpperCase()}{walletDetails?.name?.split(' ')[1][0]?.toUpperCase()}</div>}
-                                        <h2>{walletDetails?.name}</h2>
-                                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                                            <p>@{walletDetails?.username}</p>
-                                            <span>Personal Account</span>
-                                        </div>
-
-                                        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                                            <img style={{ width: "20px" }} src={getFileUrl(walletDetails.country)} alt="" />
-                                            <h6 style={{ fontSize: "10px", color: "#6C6C6C", fontWeight: 600 }}>{walletDetails?.country}</h6>
-                                        </div>
-                                    </div>
-
-                                    <div className={styles.w_info}>
-                                        <div>
-                                            <p>{walletDetails?.wallet_id}</p>
-                                            <span>{walletDetails?.currency?.code} Wallet</span>
-                                        </div>
-
-                                        <img onClick={copyToClipboard} style={{ cursor: 'pointer' }} src={copy} alt="" />
-                                    </div>
-
-
-                                    <button disabled={disable} onClick={() => navigate(`/profile/${walletDetails?.username}`)}>
-                                        View Profile
-                                    </button>
-                                </div>
+                                <h5>1. Keep the QR Code Flat and Visible Make sure the QR code is not bent, wrinkled, or partially hidden.</h5>
+                                <h5>2. Good Lighting is Key Scan in a well-lit environment. Avoid shadows or glare on the QR code.</h5>
+                                <h5>3. Hold Your Phone Steady Keep your phone still for a second or two until the app detects the QR code.</h5>
+                                <h5>4. Center the QR Code in the Frame Align the QR code inside the on-screen frame. Try to keep all edges visible.</h5>
+                                <h5>5. Avoid Zooming In or Out Let the app handle the focus. Moving your phone closer or farther can affect clarity.</h5>
+                                <h5>6. Clean Your Camera Lens A dirty or smudged lens can blur the image. Wipe it gently if needed.</h5>
+                                <h5>7. Check for Damage Make sure the QR code isn't torn, faded, or distorted.</h5>
                             </div>
                         </div>
-                    }
-
-                    {step === 3 &&
-                        <div style={{
-                            margin: "auto",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            padding: "20px"
-                        }}>
-                            <div style={{
-
-                                width: "100%",
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: "80px",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                position: "relative",
-                                borderRadius: "16px",
-                            }}>
-                                <div style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    gap: "20px"
-                                }}>
-                                    <img
-                                        style={{ width: "180px" }}
-                                        src={gif}
-                                        alt=""
-                                    />
-                                    <p style={{
-                                        width: "100%",
-                                        textAlign: "center",
-                                        fontSize: "20px",
-                                        fontWeight: 700,
-                                        color: "black",
-                                        lineHeight: "26px"
-                                    }}>
-                                        You can now close this window and go back to chatbot.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    }
-
-                    {step === 1 &&
-                        <div style={{ background: `url(${adBG})`, backgroundSize: "cover", backgroundPosition: "left" }} className={styles.ad}>
-                            <h2>Advertisement Placeholder</h2>
-                        </div>}
-
-                    <div className={styles.btns}>
-                        {(method !== "qr" || step === 2) && <button disabled={disable} onClick={clickHandler} style={{ background: "#5926F0", color: "white" }}>{step === 1 ? "Verify" : "Next"}</button>}
-                        {(step === 2 && step !== 3) &&
-                            <button
-                                onClick={() => {
-                                    setWalletDetails({})
-                                    setStep(prev => prev - 1)
-                                    setError(null)
-                                }} style={{ background: "white" }}>Back</button>
-                        }
                     </div>
 
-                </div> :
-                <div>
-                    <InstaPayLoader />
+
+                    <button
+                        onClick={() => {
+                            setShowInstruction(false)
+                            setStep(1)
+                            setMethod("qr")
+                        }}
+                        className={styles.gradientBtn}
+                    >Proceed</button>
+
+
                 </div>
             }
+
+            {!showInstruction && <div className={styles.container}>
+                <h1>QR Quick Pay</h1>
+
+                {step === 1 &&
+                    <div className={styles.method_selection}>
+                        <div style={{ background: method === "qr" && "#5926F0", width: "45%" }} onClick={() => setMethod("qr")} className={styles.tab}>
+                            <span style={{ color: method === "qr" && "#FFF" }}>Scan Qr</span>
+                        </div>
+
+                        <div style={{ background: method === "code" && "#5926F0", width: "55%" }} onClick={() => setMethod("code")} className={styles.tab}>
+                            <span style={{ color: method === "code" && "#FFF", }}>Enter Merchant Code</span>
+                        </div>
+                    </div>
+                }
+
+                {step === 1 &&
+                    <>
+                        {method === "qr" &&
+                            <>
+                                <div className={styles.qr_cont}>
+                                    <QrReader
+                                        delay={1000}
+                                        onError={handleError}
+                                        onScan={handleScan}
+                                        showViewFinder={false}
+                                        constraints={{
+                                            facingMode: "environment"  // This forces the back camera
+                                        }}
+                                        facingMode={{ facingMode: "environment" }}
+                                    // style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                    />
+
+                                    <label htmlFor="input_qr" className={styles.mobileBtn}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="26" viewBox="0 0 25 26" fill="none">
+                                            <path d="M21.5867 20.4045V6.13452C21.5867 5.01331 20.6693 4.09595 19.5481 4.09595H5.27809C4.15688 4.09595 3.23952 5.01331 3.23952 6.13452V20.4045C3.23952 21.5258 4.15688 22.4431 5.27809 22.4431H19.5481C20.6693 22.4431 21.5867 21.5258 21.5867 20.4045ZM9.25331 15.2877L11.3938 17.8665L14.5536 13.7996C14.7575 13.5345 15.1652 13.5345 15.369 13.8098L18.9467 18.58C19.0035 18.6557 19.0381 18.7458 19.0466 18.84C19.0551 18.9343 19.0372 19.0291 18.9949 19.1137C18.9525 19.1984 18.8875 19.2696 18.8069 19.3193C18.7264 19.3691 18.6337 19.3954 18.539 19.3954H6.31776C5.88966 19.3954 5.65523 18.9062 5.92024 18.5698L8.45827 15.3081C8.65193 15.0431 9.03926 15.0329 9.25331 15.2877Z" fill="#404040" />
+                                        </svg>
+                                    </label>
+                                    <input type="file" name="input_qr" id="input_qr" hidden onChange={setFileHandler} accept="image/*" />
+                                    {/* {data && <p>Scanned Code: {data}</p>} */}
+                                </div>
+                                {(error && step === 1) && <p className={styles.error} style={{ fontWeight: 600, color: "red", marginTop: ".5rem" }}>{error}</p>}
+                            </>
+                        }
+
+
+
+                        {
+                            method === "code" &&
+                            <div className={styles.code_cont}>
+                                <h5>Enter the Merchant Code</h5>
+
+                                <div style={{ position: "relative", width: "100%" }}>
+                                    <input value={walletInput} onChange={(e) => setWalletInput(e.target.value)} type="text" />
+
+                                    <h5 style={{
+                                        position: "absolute",
+                                        top: "29%",
+                                        left: "13px",
+                                    }}>#INSTAPAY-</h5>
+                                </div>
+
+                                <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                                        <img src={addU} alt="" />
+                                        <span>
+                                            Recipient Not on InstaPay?
+                                        </span>
+                                    </div>
+                                    <button><p>Invite them</p></button>
+                                </div>
+                                {error && <p className={styles.error} style={{ fontWeight: 600, color: "red" }}>{error}</p>}
+                            </div>
+                        }
+                    </>
+                }
+
+                {step === 2 &&
+                    <div className={styles.merchantInfo}>
+                        <div>
+                            <h4>Merchant Details</h4>
+                            <p>Please take a few moments to carefully verify the information to your payee details.</p>
+                        </div>
+
+
+                        <div className={styles.info}>
+                            {walletDetails?.coverPicture &&
+                                <div className={styles.banner}>
+                                    <img src={walletDetails?.coverPicture} alt="" />
+                                </div>
+                            }
+
+                            <div className={styles.dets}>
+                                <div className={styles.u_info}>
+                                    {walletDetails?.profilePicture ? <img src={walletDetails?.profilePicture} className={styles.pfp} alt="" /> : <div className={styles.pfp_placeHolder}>{walletDetails?.name?.split(' ')[0][0]?.toUpperCase()}{walletDetails?.name?.split(' ')[1][0]?.toUpperCase()}</div>}
+                                    <h2>{walletDetails?.name}</h2>
+                                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                        <p>@{walletDetails?.username}</p>
+                                        <span>Personal Account</span>
+                                    </div>
+
+                                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                        <img style={{ width: "20px" }} src={getFileUrl(walletDetails.country)} alt="" />
+                                        <h6 style={{ fontSize: "10px", color: "#6C6C6C", fontWeight: 600 }}>{walletDetails?.country}</h6>
+                                    </div>
+                                </div>
+
+                                <div className={styles.w_info}>
+                                    <div>
+                                        <p>{walletDetails?.wallet_id}</p>
+                                        <span>{walletDetails?.currency?.code} Wallet</span>
+                                    </div>
+
+                                    <img onClick={copyToClipboard} style={{ cursor: 'pointer' }} src={copy} alt="" />
+                                </div>
+
+
+                                <button className={styles.gradientBtn} disabled={disable} onClick={() => navigate(`/profile/${walletDetails?.username}`)}>
+                                    View Profile
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                {step === 3 &&
+                    <div style={{
+                        margin: "auto",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: "20px"
+                    }}>
+                        <div style={{
+
+                            width: "100%",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "80px",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            position: "relative",
+                            borderRadius: "16px",
+                        }}>
+                            <div style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                gap: "20px"
+                            }}>
+                                <img
+                                    style={{ width: "180px" }}
+                                    src={gif}
+                                    alt=""
+                                />
+                                <p style={{
+                                    width: "100%",
+                                    textAlign: "center",
+                                    fontSize: "20px",
+                                    fontWeight: 700,
+                                    color: "black",
+                                    lineHeight: "26px"
+                                }}>
+                                    You can now close this window and go back to chatbot.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                {step === 1 &&
+                    <div style={{ background: `url(${adBG})`, backgroundSize: "cover", backgroundPosition: "left" }} className={styles.ad}>
+                        <h2>Advertisement Placeholder</h2>
+                    </div>}
+
+                <div className={styles.btns}>
+                    {(method !== "qr" || step === 2) && <button disabled={disable} onClick={clickHandler} style={{ background: "#5926F0", color: "white" }}>{step === 1 ? "Verify" : "Next"}</button>}
+                    {(step === 2 && step !== 3) &&
+                        <button
+                            onClick={() => {
+                                setWalletDetails({})
+                                setStep(prev => prev - 1)
+                                setError(null)
+                            }} style={{ background: "white" }}>Back</button>
+                    }
+                </div>
+
+            </div>}
+
         </>
     )
 }
