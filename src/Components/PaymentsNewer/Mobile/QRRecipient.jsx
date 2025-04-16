@@ -63,7 +63,7 @@ const QRRecipient = ({ wallet, dataHandler }) => {
                         }} />
                     </div>
 
-                    <button onClick={() => navigate(`/profile/${wallet?.username}`)}>
+                    <button className={styles.gradientBtn} onClick={() => navigate(`/profile/${wallet?.username}`)}>
                         {t("View Profile")}
                     </button>
 
@@ -74,7 +74,7 @@ const QRRecipient = ({ wallet, dataHandler }) => {
                             navigate("/payments?payment_action=send_money&send_type=qr_pay")
                             window.history.replaceState(null, null, window.location.search?.split("&wallet_id")?.[0])
                         }} 
-                        className={styles.backButton}
+                        className={styles.gradientBtn}
                     >
                         {t("Go Back")}
                     </button>

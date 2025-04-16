@@ -114,8 +114,6 @@ const AddQRDetails = ({ setSubStep, dataHandler }) => {
             {method === "qr" && (
                 <div className={styles.qr_cont}>
                     <QrReader
-                        delay={1000}
-                        onError={(error) => console.error(error)}
                         onScan={async (result) => {
                             if (result) {
                                 const splitted = result.split("://")
@@ -123,10 +121,11 @@ const AddQRDetails = ({ setSubStep, dataHandler }) => {
                                 setResult(wallet_id)
                             }
                         }}
+                        onError={(error) => console.error(error)}
+                        delay={1000}
                         showViewFinder={false}
-                        // legacyMode={true}
                         constraints={{
-                            facingMode: "environment"
+                            facingMode: "environment"  // This forces the back camera
                         }}
                         facingMode={{ facingMode: "environment" }}
                     />
