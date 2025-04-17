@@ -428,10 +428,10 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
     }
 
     const getExchangeRate = async (amount, setLimitType, payment_method = "instant", from, setLoading) => {
-        setLoading(true)
         dataHandler("loading", true)
         dataHandler("exchange_rate_error", "")
         dataHandler("exchange_rate", {})
+        console.log(amount)
         try {
             const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=qr_pay&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${data.beneficiary_wallet?._id}&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}`
             console.log(url)
@@ -466,6 +466,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                 token: decrypted?.data?.token ?? ""
             }
 
+            console.log(decrypted)
             if (decrypted?.data?.paypal) exchange_rate_details.paypal = decrypted?.data?.paypal;
 
             dataHandler("exchange_rate", exchange_rate_details)
@@ -499,7 +500,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
         }
         catch (err) {
             const dec = decryptData(err?.response.data.data)
-            console.log(dec)
+            console.log(dec, err)
             if (typeof dec?.message == "object") {
                 if (dec?.message?.[0]?.code === "1003007") {
                     dataHandler("exchange_rate_error", "payer_unavailable")
@@ -527,7 +528,6 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
         }
         finally {
             dataHandler("loading", false)
-            setLoading(false)
         }
     }
 
@@ -539,10 +539,9 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                 if (data.payment_type?.value === "wallet" && data?.wallet?.currency && data?.wallet?.currency?.code !== data?.currency_wallet?.currency?.code) {
                     amount = await getPlainExchangeRate(data?.currency_wallet?.currency?.code, data?.wallet?.currency?.code, data.amount)
                 } else {
-
                     amount = data?.amount
                 }
-                return +amount
+                return Number(typeof amount === "string" ? amount?.replace(/,/g, "") : amount)
             }
             timeout = setTimeout(() => {
                 getAmount()
@@ -621,6 +620,8 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
         }
     }, [data.beneficiary_wallet?.wallet_id])
 
+
+    // console.log(data.payment_type)
     return (
         <>
             {
@@ -824,10 +825,10 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                                                         fontWeight: 700,
                                                                                         lineHeight: 1.7,
                                                                                         letterSpacing: '-0.8px'
-                                                                                    }}>{Number(data?.exchange_rate?.paypal?.paypal_converted?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</strong>
+                                                                                    }}>{Number(data?.exchange_rate?.paypal?.paypal_converted?.value)} USD</strong>
                                                                                 </div>
                                                                             </div>
-                                                                        </>
+                                                                        </> 
                                                                         :
                                                                         ""
                                                                 }

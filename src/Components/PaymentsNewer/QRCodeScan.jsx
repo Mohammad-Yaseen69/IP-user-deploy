@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import {  Card, CardBody, Input, Modal, ModalBody, ModalHeader } from 'reactstrap'
-import { QrReader } from 'react-qr-reader';
+import QrReader from 'react-qr-reader';
 import CryptoJS from 'crypto-js';
 import invite from "./files/invite.png"
 import { useTranslation } from 'react-i18next';
@@ -125,17 +125,20 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
                 </ModalHeader>
                 <ModalBody>
                     <QrReader
-                        constraints={{ facingMode: window.innerWidth < 1000 ? 'environment' : 'user' }}
-                        delay={300}
-                        onResult={(result, error) => {
-                            console.log(result)
-                            if (result?.text) {
-                                const token = result?.text?.split("/qrpay/")[1]
-                                var bytes = CryptoJS.AES.decrypt(token, "QRCodeEncryption");
-                                var pass = bytes.toString(CryptoJS.enc.Utf8);
-                                setResult(pass)
+                        onScan={async (result) => {
+                            if (result) {
+                                const splitted = result.split("://")
+                                const wallet_id = splitted[1].split("/")[2]
+                                setResult(wallet_id)
                             }
                         }}
+                        onError={(error) => console.error(error)}
+                        delay={1000}
+                        showViewFinder={false}
+                        constraints={{
+                            facingMode: "environment"  // This forces the back camera
+                        }}
+                        facingMode={{ facingMode: "environment" }}
                         style={{ width: '100%', height: '500px' }}
                     />
                     {result && (
