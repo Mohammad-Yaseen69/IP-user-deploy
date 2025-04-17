@@ -202,13 +202,14 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
 
     const sendOtp = async (codeType = "") => {
         dataHandler("loading", true)
+        console.log(data.amount, data.recipient_amount)
         try {
             let payload = {
                 data: {
                     "receiver_wallet_id": data.beneficiary_wallet?.wallet_id,
                     "sender_wallet_id": data.payment_type?.value !== "wallet" ? data.currency?._id : data?.wallet?._id,
                     "purpose": data.reason,
-                    "amount": data.payment_type?.value !== "wallet" ? data.amount : data?.new_amoount > 0 ? data?.new_amoount : data.amount,
+                    "amount": data.recipient_amount,
                     "type": "instant",
                     "payment_type": "qr_pay",
                     'description': data.comment,
@@ -431,10 +432,9 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
         dataHandler("loading", true)
         dataHandler("exchange_rate_error", "")
         dataHandler("exchange_rate", {})
-        console.log(amount)
         try {
             const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=qr_pay&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${data.beneficiary_wallet?._id}&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}`
-            console.log(url)
+            // console.log(url)
             const res = await axios.get(url, { headers: authHeader })
 
             const decrypted = decryptData(res.data.data)
