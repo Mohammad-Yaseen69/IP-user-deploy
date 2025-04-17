@@ -249,10 +249,12 @@ const TwoFactorAuth = () => {
     const ft = queryParams.get("ft")
 
     useEffect(() => {
-        if (ft) {
-            setGuideModal(true)
+        if(userDetails){
+            if (ft && !userDetails?.tfa) {
+                setGuideModal(true)
+            }
         }
-    }, [ft])
+    }, [ft, userDetails])
 
     const sendOtp = async (e, isDevice) => {
         setShowBioModal(false)

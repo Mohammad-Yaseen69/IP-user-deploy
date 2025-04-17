@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Badges, H4, P } from '../../AbstractElements'
+import { H4, P } from '../../AbstractElements'
 import styles from "./styles/Accounts.module.scss"
-import { Trash } from 'react-feather'
-import { Badge, Modal, ModalBody, ModalHeader } from 'reactstrap'
+import { Modal, ModalBody, ModalHeader } from 'reactstrap'
 import axios from 'axios'
 import { UserContext } from '../../Context/UserContext'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
@@ -19,8 +18,6 @@ const AccountItem = ({ data }) => {
     const { t } = useTranslation()
     const [checked, setChecked] = useState(false)
     const [showModal, setShowModal] = useState(false)
-    const [timer, setTimer] = useState(120);
-    const [conLink, setConLink] = useState("")
     const { userDetails, authHeader, verifyToken } = useContext(UserContext)
     const [showOtp, setShowOtp] = useState(false)
     const [showDelOtp, setShowDelOtp] = useState(false)
@@ -33,7 +30,7 @@ const AccountItem = ({ data }) => {
         setCodeType(userDetails?.tfa ? "authenticator" : "sms")
     }, [userDetails])
 
-    console.log(data)
+   
     const onChange = () => {
         if ((data.name.toLowerCase().includes("insta") || data.name.toLowerCase().includes("telegram")) && !checked) {
             if (userDetails?.username) {
@@ -100,25 +97,6 @@ const AccountItem = ({ data }) => {
             })
     }
 
-    const getInstaLink = () => {
-        // console.log("got insta link!")
-        if (userDetails) {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-insta-link-code/${userDetails?._id}`, {
-                headers: authHeader
-            })
-                .then(res => {
-                    const decrypted = decryptData(res.data.data)
-                    setConLink(decrypted.link_code?.split(":")?.[1])
-                    setTimer(120)
-                })
-                .catch(err => {
-                    // console.log(err)
-                })
-        }
-    }
-
-    console.log(userDetails)
-
     useEffect(() => {
         if (data.name.toLowerCase().includes("insta")) {
             setChecked(userDetails?.insta_username ? true : false)
@@ -128,7 +106,6 @@ const AccountItem = ({ data }) => {
         }
     }, [userDetails])
 
-    console.log(userDetails)
 
     const conRef = useRef()
     const location = useLocation()
@@ -145,10 +122,22 @@ const AccountItem = ({ data }) => {
     }, [tab])
 
     useEffect(() => {
-        if (ft) {
-            setShowModal(true)
+        if (userDetails) {
+            // console.log(userDetails?.insta_username)
+            if (data.name.toLowerCase().includes("insta")) {
+                console.log(ft)
+                if (ft && !userDetails?.insta_username) {
+                    console.log("Asdfasfd")
+                    setShowModal(true)
+                }
+            }
+            else if (data.name.toLowerCase().includes("telegram")) {
+                if (ft && !userDetails?.telegram_bot && userDetails?.insta_username) {
+                    setShowModal(true)
+                }
+            }
         }
-    }, [ft])
+    }, [ft, userDetails])
     return (
         <div className={styles.card} ref={data.name.toLowerCase().includes("insta") ? conRef : null}>
             <div className={styles.top}>
@@ -213,17 +202,17 @@ const AccountItem = ({ data }) => {
                         t("Add Your Account")}
                 </P>
 
-                <span 
-                style={{
-                     backgroundColor: (data.name.toLowerCase().includes("insta") || (data.name.toLowerCase().includes("telegram"))) 
-                        ? checked ? "#84EBB4" : "#ffebed" 
-                        : "#FFDB43",
-                    color: (data.name.toLowerCase().includes("insta") || (data.name.toLowerCase().includes("telegram"))) 
-                        ? checked ? "#00875A" : "#D00416" 
-                        : "#DFB400",
+                <span
+                    style={{
+                        backgroundColor: (data.name.toLowerCase().includes("insta") || (data.name.toLowerCase().includes("telegram")))
+                            ? checked ? "#84EBB4" : "#ffebed"
+                            : "#FFDB43",
+                        color: (data.name.toLowerCase().includes("insta") || (data.name.toLowerCase().includes("telegram")))
+                            ? checked ? "#00875A" : "#D00416"
+                            : "#DFB400",
                     }}>
                     {(data.name.toLowerCase().includes("insta") || (data.name.toLowerCase().includes("telegram")))
-                        ? 
+                        ?
                         checked ? "Connected" : "Not Connected"
                         :
                         "Coming Soon"
