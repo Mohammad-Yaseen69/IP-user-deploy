@@ -43,12 +43,11 @@ const Socials = () => {
                 const index1 = arr.findIndex(social => social.name.trim() === "Facebook:");
                 const index2 = arr.findIndex(social => social.name.trim() === "Telegram:");
 
+                arr[index2].followers =  userDetails?.telegram_bot ? "connected" : "not connected"
                 const temp = arr[index1]
 
                 arr[index1] = arr[index2]
                 arr[index2] = temp
-
-                console.log(arr)
 
 
                 setSocialData(arr)

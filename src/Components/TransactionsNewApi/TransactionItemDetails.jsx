@@ -12,7 +12,7 @@ import { Check } from "react-feather"
 import { Button } from "reactstrap"
 import ImageSwiperView from "../ImageSwiperView"
 
-const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver, selectedCategory, setSelectedCategory, isEditMode, showCategories = false, addCategoriesToTransaction, message, setMessage, setIsEditMode, isSaving, note, setNote, fromReferral = false }) => {
+const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver, selectedCategory, setSelectedCategory, isEditMode, showCategories = false, addCategoriesToTransaction, message, setMessage, setIsEditMode, isSaving, note, setNote, fromReferral = false, vvc, amount }) => {
     const { t } = useTranslation()
 
     const country = useMemo(() => {
@@ -40,8 +40,9 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                         </div>
                     </div>
                     <h5>
-                        {
-                            item?.payment_type?.toLowerCase() === "commission" && fromReferral
+                        {!vvc ?
+                            <>
+                                item?.payment_type?.toLowerCase() === "commission" && fromReferral
                                 ?
                                 <>
                                     {Number(item?.replacement_currency?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item?.replacement_currency?.code}
@@ -50,23 +51,29 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                 <>
                                     {Number(item?.total)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item?.currency?.code}
                                 </>
+                            </>
+                            : amount
                         }
                     </h5>
                 </div>
                 {
-                    item?.payment_type?.toLowerCase() === "commission" && fromReferral
-                        ?
-                        ""
-                        :
-                        item?.transaction_type === "debit"
+                    !vvc &&
+                    <>
+                        {item?.payment_type?.toLowerCase() === "commission" && fromReferral
                             ?
-                            <div className={styles.er_item}>
-                                <span>{t("Amount To Send")}: {Number(item?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item?.currency?.code}  </span>
-                            </div>
+                            ""
                             :
-                            <div className={styles.er_item}>
-                                <span>{t("Received Amount")}: {Number(item?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item?.currency?.code}  </span>
-                            </div>
+                            item?.transaction_type === "debit"
+                                ?
+                                <div className={styles.er_item}>
+                                    <span>{t("Amount To Send")}: {Number(item?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item?.currency?.code}  </span>
+                                </div>
+                                :
+                                <div className={styles.er_item}>
+                                    <span>{t("Received Amount")}: {Number(item?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item?.currency?.code}  </span>
+                                </div>
+                        }
+                    </>
                 }
                 <div className={styles.er_item}>
                     <span>{t("Fees")}: {Number(item?.fee ?? 0)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item?.currency?.code} </span>
@@ -162,7 +169,9 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                                             `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)?.[0]
                                     }
                                 </div>
-                                <div className={styles.r_details}>
+                                {
+                                    
+                                    <div className={styles.r_details}>
                                     <h5>
                                         {
                                             item?.service_type === "payment_address" && item?.guest_details
@@ -193,7 +202,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                                                                 ?
                                                                                 `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`
                                                                                 :
-                                                                                `${internationalReceiver?.first_name} ${internationalReceiver?.last_name}`
+                                                                                `${internationalReceiver?.first_name ?? item.receiverCard?.account?.first_name} ${internationalReceiver?.last_name ?? item.receiverCard?.account?.first_name}`
                                                                 }
                                                             </>
                                                             :
@@ -211,7 +220,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                             :
                                             <p>INSTA-{item?.wallet_id}</p>
                                     }
-                                </div>
+                                </div>}
                             </div>
                         </div>
                         {

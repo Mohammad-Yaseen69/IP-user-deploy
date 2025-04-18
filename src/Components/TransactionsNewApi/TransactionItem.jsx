@@ -149,6 +149,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
     return (
         <div>
             <div className={styles.body_item} onClick={() => {
+                if(vvc) return
                 if (!activeItem || activeItem !== index + 1) {
                     setActiveItem(index + 1)
                 } else {
@@ -254,6 +255,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                 </div>
 
 
+               {!vvc &&
                 <div style={{ maxWidth: "15px" }}>{
                     activeItem === index + 1
                         ?
@@ -261,7 +263,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                         :
                         <ChevronRight />
                 }
-                </div>
+                </div>}
 
             </div>
             {
@@ -283,7 +285,9 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                     setIsEditMode={setIsEditMode}
                     setMessage={setMessage}
                     note={note}
+                    vvc={vvc}
                     setNote={setNote}
+                    amount={`${symbol}${addDecimals(item?.billAmount)}`}
                 />
             }
         </div>

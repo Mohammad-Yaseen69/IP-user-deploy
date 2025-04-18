@@ -980,7 +980,7 @@ export const en = {
     "Fast transfer directly to recipient’s bank card": "Fast transfer directly to recipient’s bank card",
     "CRYPTO WALLET": "CRYPTO WALLET",
     "Fast transfer directly to a crypto wallet": "Fast transfer directly to a crypto wallet",
-    "Review transfer": "Review transfer",
+    "Review transfer": "Review Transfer",
     "Receiver's Details": "Receiver's Details",
     "Edit": "Edit",
     "Name": "Name",

@@ -203,7 +203,7 @@ const LinkToInstagramModal = ({ isOpen, toggle }) => {
                                     </div>
                                 }
                                 <video src={window.innerWidth > 1000 ? guide_video : isnta} autoPlay={true} muted loop></video>
-                                <button style={{ border: "none", outline: "none", backgroundColor: "transparent", padding: "0", cursor: "pointer", textAlign: "right", marginLeft: "calc(100% = 32px)", marginTop: "1rem" }} onClick={toggle}>{t("Skip")}</button>
+                                <button style={{ border: "none", outline: "none", backgroundColor: "transparent", padding: "0", cursor: "pointer", textAlign: "right", marginLeft: "7px", marginTop: "1rem" }} onClick={toggle}>{t("Skip")}</button>
                             </div>
                         </ModalBody>
                     </Modal>

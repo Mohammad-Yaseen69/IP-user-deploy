@@ -705,8 +705,9 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                             for (const key in bankExtras) {
                                 handleBankExtraChange({ target: { name: key, value: "" } })
                             }
-                            setBankCountry(decrypted?.bicDetails?.structured_address?.country_name[0] + decrypted?.bicDetails?.structured_address?.country_name.slice(1).toLowerCase() ?? "")
-                            setBankCountryCode(decrypted?.bicDetails?.structured_address?.country_code ?? "")
+                            console.log(decrypted)
+                            setBankCountry(decrypted?.structured_address?.country_name[0] + decrypted?.structured_address?.country_name.slice(1).toLowerCase() ?? "")
+                            setBankCountryCode(decrypted?.structured_address?.country_code ?? "")
                             setBankCity(decrypted?.bicDetails?.structured_address?.town_name[0] + decrypted?.bicDetails?.structured_address?.town_name.slice(1).toLowerCase() ?? "")
                             setBankDetailsError("")
                             setIsValidIban(true)
@@ -883,8 +884,6 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         }
     }
 
-
-    console.log(fieldsInfo)
 
     useEffect(() => {
         if (countryIsoCode) {
