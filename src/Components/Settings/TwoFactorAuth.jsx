@@ -249,7 +249,7 @@ const TwoFactorAuth = () => {
     const ft = queryParams.get("ft")
 
     useEffect(() => {
-        if(userDetails){
+        if (userDetails) {
             if (ft && !userDetails?.tfa) {
                 setGuideModal(true)
             }
@@ -488,7 +488,7 @@ const TwoFactorAuth = () => {
                         <img src={SettingsIcon} alt="" />
                         <p style={{ marginBottom: "0" }}>Manage Devices/Biometrics</p>
                         <p style={{ marginBottom: "0" }}>-</p>
-                        <p style={{ marginBottom: "0" }}>3/3</p>
+                        <p style={{ marginBottom: "0" }}>{devices.length}/3</p>
                     </div>
                 }
 
@@ -573,7 +573,7 @@ const TwoFactorAuth = () => {
                                 <p style={{ marginBottom: "0" }}>Close</p>
                             </button>
 
-                            <button className={styles.plus}>
+                            <button onClick={() => setShowBioModal(true)} className={styles.plus}>
                                 <img src={Plus} alt="" />
                                 <p style={{ marginBottom: "0" }}>Register Biometric</p>
                             </button>
@@ -645,7 +645,7 @@ const TwoFactorAuth = () => {
                             resendHandler={sendOtp}
                             authType={codeType}
                             setAuthType={setCodeType}
-                            // showAuthToggle={true}
+                        // showAuthToggle={true}
                         />
                     </ModalBody>
                 </Modal>
