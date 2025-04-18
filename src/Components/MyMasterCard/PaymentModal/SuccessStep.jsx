@@ -2,6 +2,7 @@ import styles from "../styles/onboard.module.scss"
 // import "./files/modal.reset.css""
 import { Down, Help, Share, Svg, Trans } from "../files"
 import useWindowWidth from "../../../utils/useWindowWidth"
+import { useNavigate } from "react-router"
 
 
 const paymentConfirmOptions = [
@@ -9,16 +10,19 @@ const paymentConfirmOptions = [
         text: "Need help?",
         icon: Help,
         navigate: `mailto:support@insta-pay.ch`
-      },
-      {
+    },
+    {
         text: "Transation Details",
         icon: Trans,
         navigate: "/my-mastercard?showT=true"
-      },
+    },
 ]
 
 const SuccessStep = ({ feeDetails, walletState, setStep, paymentType, setStepParent, setIsOpen, addFunds, cardDets }) => {
     const width = useWindowWidth()
+
+
+    const navigate = useNavigate()
     return (
         <div className={styles.step4}>
             <div style={{ gap: "12px" }} className={styles.infoDiv}>
@@ -94,7 +98,7 @@ const SuccessStep = ({ feeDetails, walletState, setStep, paymentType, setStepPar
                     className={styles.completeOptions}
                 >
                     {paymentConfirmOptions.map(option => (
-                        <div style={{ width: width < 660 && "100%" }} key={option.text}>
+                        <div onClick={() => navigate(option.navigate)} style={{ width: width < 660 && "100%" }} key={option.text}>
                             <img src={option.icon} alt="" />
                             <p>{option.text}</p>
                         </div>

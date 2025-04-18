@@ -179,6 +179,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
 
     const [mobileError, setMobileError] = useState("")
     const [walletMobileError, setWalletMobileError] = useState("")
+    const [benLoading, setBenLoading] = useState(false)
 
     const handleInputChange = (index, value) => {
         const newOTPValues = [...instapayWallets];
@@ -393,6 +394,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
             instapayWallets.every(item => item.length !== 8) || walletError ? null : "wallet"
         ]
 
+        setBenLoading(true)
 
         const data = {
             first_name: firstName,
@@ -506,6 +508,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
             setMobileError("Incorrect phone number, please enter a valid number.")
             console.log(dec)
         })
+        setBenLoading(false)
     }
     const addBeneficiaryHandler = async (e) => {
         setMobileError("")
@@ -2081,7 +2084,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                             }}
                                 className="i_t_button"
                                 disabled={
-                                    duplicateWallet || walletError || !firstName || !lastName || !country || !city || mobileNumber.length < 9 || (!completedBank && !completedCard && !completedCrypto && !completedWallet && !cashPickupCompleted && instapayWallets.some(item => item.length < 8 || item.length > 8)) || !formData.relation || (isAddressRequired ? !formData.address : false)
+                                    duplicateWallet || walletError || !firstName || !lastName || !country || !city || mobileNumber.length < 9 || (!completedBank && !completedCard && !completedCrypto && !completedWallet && !cashPickupCompleted && instapayWallets.some(item => item.length < 8 || item.length > 8)) || !formData.relation || (isAddressRequired ? !formData.address : false) || benLoading
                                 }
                                 onClick={addBeneficiaryHandler}
                             >

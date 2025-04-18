@@ -202,7 +202,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         if (step === 5) {
             setCurrentCardDetails(prev => ({
                 ...prev,
-                balance: feeDetails?.feeDetails?.amountToTopup,
+                balance: prev.balance + feeDetails?.feeDetails?.amountToTopup,
             }))
             handleClose()
             return
