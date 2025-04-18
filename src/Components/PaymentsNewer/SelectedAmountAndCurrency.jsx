@@ -16,7 +16,8 @@ const SelectedAmountAndCurrency = ({ amount, currency, setSubStep, step, type = 
                     width: "60px",
                     display: "flex",
                     justifyContent: "center",
-                    alignItems: "center"
+                    alignItems: "center",
+                    color: "black"
                 }}
                     onClick={_ => setSubStep(step)}
                 >{t("edit")}</span>
