@@ -5,7 +5,10 @@ import DollarIcon from "./files/dollar-icon.svg"
 import StandardLabel from "./files/standard-label.png"
 
 
-const Steptwo = ({ cardType, setStep, userDetails }) => {
+const Steptwo = ({ cardType, setStep, userDetails, applePay }) => {
+    const cardFee = cardType === "standard" ? 5 : 10;
+
+    const total = cardFee + (applePay ? 2 : 0) + (!userDetails.user.kyc_status ? 4.99 : 0)
     return (
         <div style={{ width: "100%" }}>
             <div className={styles.top}>
@@ -66,14 +69,20 @@ const Steptwo = ({ cardType, setStep, userDetails }) => {
 
                                 <p style={{ fontSize: "10px", color: "#A4A4A4" }}> Total Cost </p>
 
-                                <h3 style={{ fontSize: "16px", color: "black" }}>$5 (Card Fee)</h3>
-                                {!userDetails.user.kyc_status &&
+                                <h3 style={{ fontSize: "16px", color: "black" }}>${cardType === "standard" ? "5" : "10"} (Card Fee)</h3>
+                                {(!userDetails.user.kyc_status || applePay) &&
                                     <div style={{ width: "fit-content" }}>
-                                        <h3 style={{ fontSize: "16px", color: "black" }}>$4.99 (Identity Verification)</h3>
+                                        {!userDetails.user.kyc_status && <h3 style={{ fontSize: "16px", color: "black" }}>$4.99 (Identity Verification)</h3>}
+                                        {applePay && <h3 style={{ fontSize: "16px", color: "black", marginTop :"4px" }}>$2.00 (Apple Pay)</h3>}
                                         <div style={{ width: "100%", height: "1px", background: "black", margin: "5px 0" }}></div>
                                     </div>
                                 }
-                                {!userDetails.user.kyc_status && <h3 style={{ fontSize: "16px", color: "black" }}>$9.99</h3>
+
+
+                                {(!userDetails.user.kyc_status || applePay) &&
+                                    <h3 style={{ fontSize: "16px", color: "black" }}>
+                                        $ {total.toFixed(2)}
+                                    </h3>
                                 }
                             </div>
 

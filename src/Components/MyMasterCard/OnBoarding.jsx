@@ -44,6 +44,7 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
                 (
                     <Steptwo
                         cardType={cardType}
+                        applePay={applePay}
                         setStep={setStep}
                         userDetails={userDetails}
                     />

@@ -31,7 +31,7 @@ const PLACEHOLDER_CARD_TYPE = {
 }
 
 
-const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
+const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetails }) => {
     const [step, setStep] = useState(1)
     const [paymentType, setPaymentType] = useState("")
     const [selectedSaveCard, setSelectedSaveCard] = useState(null)
@@ -200,6 +200,10 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
 
     const handleNext = () => {
         if (step === 5) {
+            setCurrentCardDetails(prev => ({
+                ...prev,
+                balance: feeDetails?.feeDetails?.amountToTopup,
+            }))
             handleClose()
             return
         }
@@ -289,7 +293,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
 
         console.log(data)
         try {
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/topup-by${!selectedSaveCard?._id ? "-new" :""}-card`, { data: enc }, {
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/topup-by${!selectedSaveCard?._id ? "-new" : ""}-card`, { data: enc }, {
                 headers: authHeader
             })
             setToken(null)
@@ -583,8 +587,8 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card }) => {
                     currency={cardTransactionDetails?.currency}
                     transaction={cardTransactionDetails}
                     amount={cardTransactionDetails?.amount}
-                    url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm${selectedSaveCard?._id ? "-chatbot" :""}-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
-                    tokenUrl={() => `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm${selectedSaveCard?._id ? "-chatbot" :""}-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
+                    url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm${selectedSaveCard?._id ? "-chatbot" : ""}-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
+                    tokenUrl={() => `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm${selectedSaveCard?._id ? "-chatbot" : ""}-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
                 />
                 :
                 <></>

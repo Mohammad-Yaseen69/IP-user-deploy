@@ -7,20 +7,14 @@ import useWindowWidth from "../../../utils/useWindowWidth"
 const paymentConfirmOptions = [
     {
         text: "Need help?",
-        icon: Help
-    },
-    {
-        text: "Share",
-        icon: Share
-    },
-    {
+        icon: Help,
+        navigate: `mailto:support@insta-pay.ch`
+      },
+      {
         text: "Transation Details",
-        icon: Trans
-    },
-    {
-        text: "Download Receipt",
-        icon: Down
-    }
+        icon: Trans,
+        navigate: "/my-mastercard?showT=true"
+      },
 ]
 
 const SuccessStep = ({ feeDetails, walletState, setStep, paymentType, setStepParent, setIsOpen, addFunds, cardDets }) => {

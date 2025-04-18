@@ -61,6 +61,8 @@ function reducer(state, action) {
         ...state,
         [action.field]: action.value
       };
+    case "RESET" : 
+      return initialState  
     default:
       return state;
   }
@@ -83,16 +85,19 @@ function getCurrencySymbol(currencyCode) {
 
 
 
-const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
+const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardDetails }) => {
   const width = useWindowWidth()
   const [data, dispatch] = useReducer(reducer, initialState)
   const { userDetails, authHeader } = useContext(UserContext)
   const { t } = useTranslation()
 
   const formatAmountWithSymbol = (amount, currency, addCheck = false) => {
-    if (!amount || !currency) return <div style={{ width: "50px" }}><InstaPayLoader /></div>;
+    if (!amount || !currency) {
+      return <div style={{ width: "50px" }}><InstaPayLoader /></div>;
+    }
     if (addCheck) {
       if (+data.feeDetails?.total_amount > +currentCardDetails.balance) {
+        console.log("asdfasdf")
         return <div style={{ width: "50px" }}><InstaPayLoader /></div>;
       }
     }
@@ -107,10 +112,10 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
 
 
   useEffect(() => {
-    let debounceTimer;
-    updateHandler("feeToken", null)
-    updateHandler("feeDetails", {})
-    if (data.getFee && data.amount.replace(/,/g, "") !== "") {
+    if (data.getFee && data.amount.replace(/,/g, "") !== "" && data.amount !== ".") {
+      let debounceTimer;
+      updateHandler("feeToken", null)
+      updateHandler("feeDetails", {})
       updateHandler("loading", true)
 
       const getFee = async () => {
@@ -193,7 +198,14 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
   const navigate = useNavigate()
 
   const handleClose = () => {
-    navigate("/my-mastercard")
+    // navigate("/my-mastercard")
+    if((data.step === 5 || data.step === 6) && data.feeDetails?.total_amount){
+      setCurrentCardDetails(prev => ({
+        ...prev,
+        balance: (prev.balance - data.feeDetails?.total_amount?.replace(/,/g, "")).toFixed(2)
+      }))
+    }
+    // dispatch({ type: "RESET" })
     setOpen(prev => ({ ...prev, ctc: false }));
   }
 
@@ -658,7 +670,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails }) => {
 
                       {feeCol("Sending", formatAmountWithSymbol(data.feeDetails?.recipient_amount, data.feeDetails?.sending_currency))}
                       {feeCol("Transfer fees", formatAmountWithSymbol(data.feeDetails?.fee, data.feeDetails?.sending_currency))}
-                      {feeCol("Available Balance after transfer", formatAmountWithSymbol((data.feeDetails?.total_amount - currentCardDetails?.balance).toFixed(2), data.feeDetails?.sending_currency))}
+                      {feeCol("Available Balance after transfer", formatAmountWithSymbol((currentCardDetails?.balance - data.feeDetails?.total_amount).toFixed(2), data.feeDetails?.sending_currency))}
                       {feeCol("Total to Pay", formatAmountWithSymbol(data.feeDetails?.total_amount, data.feeDetails?.sending_currency), true)}
                     </div>
 
