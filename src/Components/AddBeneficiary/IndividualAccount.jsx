@@ -394,8 +394,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
             instapayWallets.every(item => item.length !== 8) || walletError ? null : "wallet"
         ]
 
-        setBenLoading(true)
-
+        
         const data = {
             first_name: firstName,
             last_name: lastName,
@@ -480,6 +479,8 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
             }
         }
         const encrypted = encryptData(data)
+        setBenLoading(true)
+        
         axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
             data: encryptData({ number: `+${mobileNumber}` })
         }).then(() => {
@@ -501,14 +502,16 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                         localStorage.setItem("ip_country", coun)
                         window.location.pathname = "/login";
                     }
-                    // console.log(decryptData(err.response.data.data))
+                })
+                .finally(() => {
+                    setBenLoading(false)
                 })
         }).catch(err => {
             const dec = decryptData(err.response.data.data)
             setMobileError("Incorrect phone number, please enter a valid number.")
             console.log(dec)
+            setBenLoading(false)
         })
-        setBenLoading(false)
     }
     const addBeneficiaryHandler = async (e) => {
         setMobileError("")
@@ -2084,11 +2087,11 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                             }}
                                 className="i_t_button"
                                 disabled={
-                                    duplicateWallet || walletError || !firstName || !lastName || !country || !city || mobileNumber.length < 9 || (!completedBank && !completedCard && !completedCrypto && !completedWallet && !cashPickupCompleted && instapayWallets.some(item => item.length < 8 || item.length > 8)) || !formData.relation || (isAddressRequired ? !formData.address : false) || benLoading
+                                   benLoading || duplicateWallet || walletError || !firstName || !lastName || !country || !city || mobileNumber.length < 9 || (!completedBank && !completedCard && !completedCrypto && !completedWallet && !cashPickupCompleted && instapayWallets.some(item => item.length < 8 || item.length > 8)) || !formData.relation || (isAddressRequired ? !formData.address : false)
                                 }
                                 onClick={addBeneficiaryHandler}
                             >
-                                {t("Add Beneficiary")}
+                                 {benLoading ? t("Adding...") : t("Add Beneficiary")} {/* Add loading state text */}
                             </Button>
                             {/* <ConfirmationModal isOpen={showConfirmation} toggle={() => setShowConfirmation(!showConfirmation)} onConfirm={changeUserDetailsAsPerBankDetails} onCancel={onCancelHandler} /> */}
                         </CardFooter>

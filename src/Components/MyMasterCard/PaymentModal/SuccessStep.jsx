@@ -18,7 +18,16 @@ const paymentConfirmOptions = [
     },
 ]
 
-const SuccessStep = ({ feeDetails, walletState, setStep, paymentType, setStepParent, setIsOpen, addFunds, cardDets }) => {
+const SuccessStep = ({ 
+    feeDetails,
+     walletState, 
+     setStep,
+     paymentType,
+      setStepParent,
+       setIsOpen, 
+       addFunds,
+        cardDets
+     }) => {
     const width = useWindowWidth()
 
 
