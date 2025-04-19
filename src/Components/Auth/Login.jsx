@@ -130,7 +130,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 setCurrentOtpMethod(() => {
                     if (method === undefined) {
                         console.log(typeof method)
-                        if (isMobile && decrypted?.biometric && !isInstagramBrowser) return "biometric";
+                        if (decrypted?.biometric && !isInstagramBrowser) return "biometric";
                         if (decrypted?.tfa && decrypted?.authenticator) return "auth";
                         if (decrypted?.instagram && !isInstagramBrowser) return "insta";
                         return "sms";
