@@ -40,8 +40,8 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
 
     useEffect(() => {
         if (vvc) {
-            const data = CitiesData?.find((d) => d?.currency === item?.currency)
-            setSymbol(data?.currency_symbol ?? '')
+            const data = CitiesData.find((d) => d.currency === item.currency)
+            setSymbol(data.currency_symbol)
         }
     }, [item])
 
@@ -113,29 +113,29 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
 
     const internationalReceiver = useMemo(() => {
         if (!item?.beneficiary) return null;
-        return beneficiaries?.filter(benef => benef?._id === item?.beneficiary)?.[0]
+        return beneficiaries.filter(benef => benef?._id === item?.beneficiary)?.[0]
     }, [beneficiaries, item])
 
 
 
     const externalStatusDescription = useMemo(() => {
-        return statuses?.[item?.external_status?.split("_")?.[1]]?.[i18n?.language]?.message ?? ""
+        return statuses?.[item?.external_status?.split("_")?.[1]]?.[i18n.language]?.message ?? ""
     }, [item, i18n])
 
     function capitalizeStatus(str) {
         return str
-            ?.split(" ")
-            ?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())
-            ?.join(" ") ?? "";
+            .split(" ")
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(" ");
     }
     const addDecimals = (value) => {
-        const splitted = value?.toString()?.split(".")
+        const splitted = value.toString().split(".")
 
-        if (splitted?.length >= 2) {
-            if (splitted?.[1]?.[0]?.length >= 2) {
+        if (splitted.length >= 2) {
+            if (splitted[1][0].length >= 2) {
                 return value
             }
-            else if (splitted?.[1]?.[0]?.length == 1) {
+            else if (splitted[1][0].length == 1) {
                 return `${value}0`
             }
             else {
@@ -151,16 +151,16 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
             <div className={styles.body_item} onClick={() => {
                 if(vvc) return
                 if (!activeItem || activeItem !== index + 1) {
-                    setActiveItem?.(index + 1)
+                    setActiveItem(index + 1)
                 } else {
-                    setActiveItem?.(0)
+                    setActiveItem(0)
                 }
             }}>
                 <div style={{ minWidth: "155px" }}>{new Date(item?.createdAt)?.toLocaleString()}</div>
                 {vvc && <div>{item?.transactionId}</div>}
                 {vvc && <div>••{cardNo?.slice(-4)}</div>}
                 {vvc && <div>{item?.type}</div>}
-                {vvc && <div>{item?.transaction_type ?? "--"}</div>}
+                {vvc && <div>{item?.transaction_type ?? "--"} </div>}
                 {vvc && <div>{item?.reason ?? "--"}</div>}
 
 
@@ -213,21 +213,21 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                                                                 :
                                                                 item?.service_type === "withdrawal"
                                                                     ?
-                                                                    `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`?.slice(0, 20)
+                                                                    `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)
                                                                     :
                                                                     item?.receiver
                                                                         ?
-                                                                        `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`?.slice(0, 20)
+                                                                        `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)
                                                                         :
-                                                                        `${internationalReceiver?.first_name ?? item?.account?.user?.first_name} ${internationalReceiver?.last_name ?? item?.account?.user?.last_name}`?.slice(0, 20)
+                                                                        `${internationalReceiver?.first_name ?? item?.account?.user?.first_name} ${internationalReceiver?.last_name ?? item?.account?.user?.last_name}`.slice(0, 20)
                                                     }
                                                 </>
                                                 :
                                                 item?.service_type === "topup"
                                                     ?
-                                                    `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`?.slice(0, 20)
+                                                    `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)
                                                     :
-                                                    `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`?.slice(0, 20)
+                                                    `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)
                             }
                         </div>
                         <div style={{ color: item?.transaction_type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234" }} >{item?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}{item?.payment_type?.toLowerCase() === "commission" && fromReferral ? "$" : item?.currency?.code} {item?.payment_type?.toLowerCase() === "commission" && fromReferral ? item?.replacement_currency?.value?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : item?.total?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
@@ -285,9 +285,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                     setIsEditMode={setIsEditMode}
                     setMessage={setMessage}
                     note={note}
-                    vvc={vvc}
                     setNote={setNote}
-                    amount={`${symbol}${addDecimals(item?.billAmount)}`}
                 />
             }
         </div>
