@@ -34,7 +34,7 @@ const RefItem = ({ item }) => {
                         No Profile Link
                     </div>
             }
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <div style={{ display: "flex", justifyContent: "" }}>
                 <div className={styles.badge}>
                     ${item?.amount}
                 </div>

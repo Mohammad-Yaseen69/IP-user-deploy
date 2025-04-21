@@ -476,6 +476,7 @@ const ReferralItemMobile = ({ referral }) => {
     const [isOpen, setIsOpen] = useState("")
     const navigate = useNavigate()
 
+    console.log(referral)
     return (
         <>
             <div className={styles.ref_card} onClick={() => setIsOpen(referral?._id)}>
