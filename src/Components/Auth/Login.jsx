@@ -48,6 +48,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [isBioMetric, setIsBioMetric] = useState(false)
     const [isInstagramBrowser, setisInstagramBrowser] = useState()
     const [lastOtpSentTo, setLastOtpSentTo] = useState(null);
+    const [consecutiveCount, setConsecutiveCount] = useState(0)
 
     useLayoutEffect(() => {
         const loginWith = localStorage.getItem("loginWith")
@@ -82,6 +83,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const loginHandler = (e, method = undefined) => {
         e.preventDefault()
         setIsPressed(true)
+        setConsecutiveCount(1)
         setIsLoginError("")
         console.log(currentOtpMethod, method)
         const isAuth = method ? (method === "auth") : (currentOtpMethod === "auth");
@@ -108,7 +110,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         if (!isAuth && credentials.platform) {
             setLastOtpSentTo("insta")
         }
-        else if(!isAuth && credentials.platform === ""){
+        else if (!isAuth && credentials.platform === "") {
             setLastOtpSentTo("sms")
         }
 
@@ -400,6 +402,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 } else {
                     setIsLoginError("Uh-Oh! You entered incorrect OTP.")
                     setOTPValues(Array(numberOfFields).fill(""))
+                    setConsecutiveCount(prev => prev + 1)
                     setTimeout(() => {
                         setOtpVerified(false)
                         inputRefs.current[0]?.focus()
@@ -562,7 +565,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             setIsLoginError("")
         }
     }, [profileLockTIme])
- 
+
     useEffect(() => {
         let timeout;
         if (resendTimer > 0) {
@@ -815,7 +818,15 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     </div>
                                 )}
 
+
                                 <div style={{ paddingTop: "10px" }} className={styles.toggle_sms}>
+                                    {
+                                        (consecutiveCount >= 3 && !isLoginError.includes('account is locked')) &&
+                                        <div className={styles.input_error}>
+                                            <span>Having trouble receiving/verifying your code? Choose another method below or <a style={{color: '#3117b3'}} href="https://guide.insta-pay.ch/faq/troubleshooting-guide">contact support</a>.</span>
+                                        </div>
+                                    }
+
                                     {
                                         currentOtpMethod === "auth"
                                         &&
