@@ -1,36 +1,17 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-// import { countries as countriesJSON } from "country-list-json"
-import countriesJSON from "../CitiesDropDown/CitiesData.json"
-// import countries from "../PaymentsNewer/CountriesData.json"
 import { UserContext } from '../../Context/UserContext'
 import styles from "./styles/CountryCode.module.css"
 import { ChevronDown } from 'react-feather'
 import CountryBasedPhone from "./PhoneNumberBasedOnCountry.json"
 import { useTranslation } from 'react-i18next'
-
 import { countriesInDiffLangs } from '../../Data/CountriesWithTranslations/countries'
 import Fuse from 'fuse.js'
 
 const CountryCode = ({ country, selectedCountry, setSelectedCountry, setCountry, disabledDropdown = false, setNumber, phone = "", number }) => {
-    // search
     const { t, i18n } = useTranslation()
     const [searchTerm, setSearchTerm] = useState("")
 
     const { allowedCountries } = useContext(UserContext)
-    // const countriesData = useMemo(() => {
-    //     return countries
-    //         .map(item => {
-    //             const current = countriesJSON.filter(it => item?.alpha3 === it?.iso3)?.[0]
-
-    //             return {
-    //                 ...item,
-    //                 dial_code: current?.phone_code
-    //             }
-    //         })
-    //         .filter(item => {
-    //             return allowedCountries?.some(it => it?.country_iso_code === item?.alpha3)
-    //         })
-    // }, [allowedCountries, countriesJSON, countries])
 
     const countriesData = useMemo(() => {
         return countriesInDiffLangs[i18n.language]
@@ -55,7 +36,6 @@ const CountryCode = ({ country, selectedCountry, setSelectedCountry, setCountry,
         if (!searchTerm) return countriesData;
 
         const fuseResults = fuse.search(searchTerm).map(result => result.item);
-        console.log(fuseResults)
         if (fuseResults.length > 0) {
             return fuseResults
         } else {

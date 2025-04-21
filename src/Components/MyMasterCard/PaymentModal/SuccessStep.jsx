@@ -9,6 +9,7 @@ const paymentConfirmOptions = [
     {
         text: "Need help?",
         icon: Help,
+        link: true,
         navigate: `mailto:support@insta-pay.ch`
     },
     {
@@ -18,16 +19,16 @@ const paymentConfirmOptions = [
     },
 ]
 
-const SuccessStep = ({ 
+const SuccessStep = ({
     feeDetails,
-     walletState, 
-     setStep,
-     paymentType,
-      setStepParent,
-       setIsOpen, 
-       addFunds,
-        cardDets
-     }) => {
+    walletState,
+    setStep,
+    paymentType,
+    setStepParent,
+    setIsOpen,
+    addFunds,
+    cardDets
+}) => {
     const width = useWindowWidth()
 
 
@@ -107,9 +108,11 @@ const SuccessStep = ({
                     className={styles.completeOptions}
                 >
                     {paymentConfirmOptions.map(option => (
-                        <div onClick={() => navigate(option.navigate)} style={{ width: width < 660 && "100%" }} key={option.text}>
+                        <div onClick={() => !option.link && navigate(option.navigate)} style={{ width: width < 660 && "100%" }} key={option.text}>
                             <img src={option.icon} alt="" />
-                            <p>{option.text}</p>
+                            <p>
+                                {option.link ? <a style={{color: "black"}} href={option.navigate}>{option.text}</a> : option.text}
+                            </p>
                         </div>
                     ))}
                 </div>

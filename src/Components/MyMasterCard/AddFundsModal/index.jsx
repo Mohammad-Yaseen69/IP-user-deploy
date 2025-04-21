@@ -99,6 +99,12 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             cardHolderName: "",
         });
 
+        if(feeDetails?.feeDetails?.amountToTopup){
+            setCurrentCardDetails(prev => ({
+                ...prev,
+                balance: (+prev.balance + +feeDetails?.feeDetails?.amountToTopup).toFixed(2),
+            }))
+        }
         if (width < 1000) {
             navigate("/my-mastercard")
         }
@@ -200,10 +206,6 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
 
     const handleNext = () => {
         if (step === 5) {
-            setCurrentCardDetails(prev => ({
-                ...prev,
-                balance: prev.balance + feeDetails?.feeDetails?.amountToTopup,
-            }))
             handleClose()
             return
         }
@@ -270,6 +272,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
     }
 
     const cardTopup = async (setter, type, otp, setError) => {
+        setLoading(true)
         const data = {
             otp,
             type: codeType,
@@ -304,6 +307,9 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         } catch (err) {
             errorHandler(err, setError)
         }
+        finally {
+            setLoading(false)
+        }
     }
 
     const paypalTopup = async (setter, type, otp, setError) => {
@@ -315,6 +321,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
 
 
         const enc = encryptData(data)
+        setLoading(true)
         try {
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/topup-by-paypal`, { data: enc }, {
                 headers: authHeader
@@ -327,6 +334,9 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         catch (err) {
             errorHandler(err, setError)
         }
+        finally {
+            setLoading(false)
+        }
     }
     const walletTopup = async (setter, type, otp, setError) => {
         const data = new FormData()
@@ -335,6 +345,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         data.append("otp", otp)
         data.append("token", token)
         console.log(data)
+        setLoading(true)
         try {
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/wallet-to-card-transfer`, data, {
                 headers: authHeader
@@ -346,6 +357,9 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             console.log(dec)
         } catch (err) {
             errorHandler(err, setError)
+        }
+        finally {
+            setLoading(true)
         }
     }
 

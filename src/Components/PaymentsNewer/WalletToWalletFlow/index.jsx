@@ -609,20 +609,6 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
             return `${value}.00`
         }
     }
-
-    const getDecimalPointIndex = (val) => {
-        if (val) {
-            const [_, decimals] = val?.toString()?.split(".");
-
-            if (decimals) {
-                for (let idx = 0; idx < decimals.length; idx++) {
-                    if (decimals[idx] !== "0") {
-                        return idx + 1;
-                    }
-                }
-            }
-        }
-    }
     const getExchangeRateConversion = async (amount, setLimitType, payment_method = "instant", from, setLoading, fromOrTo = "from") => {
         if (amount) {
             setLoading(true)
@@ -650,15 +636,14 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                     formatCurrency(
                         (+exchange_rate_details?.receiver?.amount >= 0.01
                             ? +exchange_rate_details?.receiver?.amount.toFixed(2)
-                            : +exchange_rate_details?.receiver?.amount.toFixed(
-                                  getDecimalPointIndex(+exchange_rate_details?.receiver?.amount))
+                            : +exchange_rate_details?.receiver?.amount
                         ),
                         false,
                         (e) => {
                             dataHandler("recipient_amount", addDecimals(e));
                         }
                     );
-                    
+
 
                 } else {
                     dataHandler("amount", exchange_rate_details?.sending?.amount)
@@ -1021,7 +1006,12 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                                                             fontStyle: 'normal',
                                                                                             lineHeight: 1.5,
                                                                                             letterSpacing: '-0.14px'
-                                                                                        }}>1.00 {data?.exchange_rate?.paypal?.fee?.currency} = {Number(data?.exchange_rate?.paypal?.paypal_rate?.value).toFixed(2)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 })} USD</strong>
+                                                                                        }}>
+                                                                                        1.00 {data?.exchange_rate?.paypal?.fee?.currency} =
+                                                                                        {(data?.exchange_rate?.paypal?.paypal_rate?.value >= 0.01 ?
+                                                                                            Number(data?.exchange_rate?.paypal?.paypal_rate?.value).toFixed(2) :
+                                                                                            Number(data?.exchange_rate?.paypal?.paypal_rate?.value))} USD
+                                                                                    </strong>
                                                                                 </div>
                                                                                 <div style={{
                                                                                     display: "flex",
@@ -1046,7 +1036,9 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                                                         fontWeight: 700,
                                                                                         lineHeight: 1.7,
                                                                                         letterSpacing: '-0.8px'
-                                                                                    }}>{Number(data?.exchange_rate?.paypal?.paypal_converted?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</strong>
+                                                                                    }}>
+                                                                                        {Number(data?.exchange_rate?.paypal?.paypal_converted?.value) >= 0.01 ? Number(data?.exchange_rate?.paypal?.paypal_converted?.value).toFixed(2) : Number(data?.exchange_rate?.paypal?.paypal_converted?.value)}
+                                                                                        USD</strong>
                                                                                 </div>
                                                                             </div>
                                                                         </>

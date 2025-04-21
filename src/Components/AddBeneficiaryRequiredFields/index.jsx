@@ -55,7 +55,7 @@ const AddBeneficiaryRequiredFields = ({ isOpen, toggle, beneficiary, close, requ
                 return acc;
             }, {});
 
-           
+
 
             const data = {
                 ...beneficiary,
@@ -76,7 +76,7 @@ const AddBeneficiaryRequiredFields = ({ isOpen, toggle, beneficiary, close, requ
             console.log(dec);
             toast.success(`Fields updated for "${beneficiary?.first_name} ${beneficiary?.last_name}"`)
             dataHandler("beneficiary", dec?.beneficiaryData)
-            close() 
+            close()
             toggle()
         }
         catch (err) {
@@ -92,8 +92,10 @@ const AddBeneficiaryRequiredFields = ({ isOpen, toggle, beneficiary, close, requ
     return (
         <Modal isOpen={isOpen} style={{ maxWidth: "920px", width: "100vw" }}>
             <ModalHeader style={{ width: "100%" }}>
-                <div style={{ display: "flex", minWidth: "100%", alignItems: "center", justifyContent: "space-between" }}>
-                    Add Required Fields For Beneficiary
+                <div style={{ display: "flex", minWidth: "100%", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+                    <p style={{marginBottom: "0"}}>
+                        Add Required Fields For Beneficiary
+                    </p>
                     <X onClick={close} />
                 </div>
             </ModalHeader>

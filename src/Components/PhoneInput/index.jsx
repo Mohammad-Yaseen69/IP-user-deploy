@@ -8,7 +8,7 @@ function extractNumber(value) {
     return digits;
 }
 
-const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabledDropdown = false, disabled = false, phone = "", customStyles = {}, error, setError, inputStyles }) => {
+const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabled = false, phone = "", customStyles = {}, error, setError, inputStyles }) => {
     const [selectedCountry, setSelectedCountry] = useState({})
     const [number, setNumber] = useState("")
 

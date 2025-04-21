@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import {  Card, CardBody, Input, Modal, ModalBody, ModalHeader } from 'reactstrap'
+import { Card, CardBody, Input, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import QrReader from 'react-qr-reader';
 import CryptoJS from 'crypto-js';
 import invite from "./files/invite.png"
@@ -24,6 +24,7 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
     const [result, setResult] = useState("");
     const { t } = useTranslation()
     const { authHeader, userDetails } = useContext(UserContext)
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         if (result && result?.length === 8) {
@@ -72,12 +73,13 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
 
         formData.append("file", selectedFile)
 
+        setLoading(true)
         axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-qr-details`,
-          formData , {
+            formData, {
             headers: authHeader
         })
             .then(res => {
-                
+
                 const decrypted = decryptData(res.data.data)
                 // console.log(decrypted?.walletDetails?.wallet_id)
                 setResult(decrypted?.walletDetails?.wallet_id)
@@ -90,6 +92,8 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
                 setShowQRModal(false)
                 setWalletError("Invalid QR Code!")
                 setIsReady(false)
+            }).finally(() => {
+                setLoading(false)
             })
     }
 
@@ -192,7 +196,7 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
                                 {t("Scan QR with Your Camera or Upload from Your Device.")}
                             </span>
                         </div>
-                        <label htmlFor='input_qr' style={{
+                        <label aria-disabled htmlFor='input_qr' style={{
                             display: "flex",
                             width: "100%",
                             height: "30px",
@@ -214,9 +218,11 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
                                 WebkitBackgroundClip: "text",
                                 fontSize: "11px",
                                 fontWeight: 600
-                            }}>{t("Upload from Your Device.")}</span>
+                            }}>
+                                {loading ? t("Searching..") : t("Upload from Your Device.")}
+                            </span>
                         </label>
-                        <input type="file" name="input_qr" id="input_qr" hidden onChange={setFileHandler} accept="image/*" />
+                        <input disabled={loading} type="file" name="input_qr" id="input_qr" hidden onChange={setFileHandler} accept="image/*" />
                         <div className='qr_text_mt'>
                             <p style={{ fontSize: "12px", fontWeight: 600 }}>{t("Alternatively, Use the InstaPay AlphaNumeric QR Code.")}</p>
                             <Input type="text" placeholder={t('Enter InstaPay UPA')} style={{

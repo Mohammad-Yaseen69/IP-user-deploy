@@ -19,6 +19,7 @@ import { Modal, ModalBody, ModalHeader, Input } from 'reactstrap';
 import FormCheckInput from 'react-bootstrap/esm/FormCheckInput';
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 import OTPConfirmation from "../UserSettingsNew/OTPConfirmation"
+import { getDecimalPointIndex } from '../../Helper/getDecimalIndex';
 
 
 export const Toggle = ({ checked, onChange, isCheckbox = false }) => (
@@ -159,7 +160,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
             toast.error("Something went wrong while sending otp to your " + type)
         }
         setIsSaving(false)
-    }    
+    }
 
     const updateCardEmail = async () => {
         try {
@@ -375,7 +376,10 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                             </div>
 
                             <div className={styles.bottom}>
-                                {!cardLoading && <h2>${currentCardDetails?.balance}</h2>}
+                                {!cardLoading &&
+                                    <h2>
+                                        ${currentCardDetails?.balance >= 0.01 ? Number(currentCardDetails.balance)?.toFixed(2) : Number(currentCardDetails?.balance).toFixed(getDecimalPointIndex(+currentCardDetails?.balance))}
+                                    </h2>}
                                 {cardLoading &&
                                     <div style={{ width: '150px' }}>
                                         <InstaPayLoader />
