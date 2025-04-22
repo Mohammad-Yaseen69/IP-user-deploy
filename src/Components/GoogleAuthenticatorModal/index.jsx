@@ -23,7 +23,8 @@ const GoogleAuthenticatorModal = ({
     successTitle = "Google Two Factor Authentication is now linked to your InstaPay Account.",
     sideText = "Google Authenticator",
     isBiometricChecks,
-    bioMetricHandler
+    bioMetricHandler,
+    wpActive
 }) => {
     const { t } = useTranslation()
     const { userDetails, authHeader } = useContext(UserContext)

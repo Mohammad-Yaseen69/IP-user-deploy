@@ -36,6 +36,7 @@ const TwoFactorAuth = () => {
     const { userDetails, authHeader, verifyToken, setProfileLockTime } = useContext(UserContext)
     const [emailActive, setEmailActive] = useState(false)
     const [smsActive, setSmsActive] = useState(false)
+    const [wpActive, setWpActive] = useState(false)
     const [authenticatorActive, setAuthenticatorActive] = useState(false)
     const [fingerBioActive, setFingerBioActive] = useState(false)
 
@@ -70,15 +71,17 @@ const TwoFactorAuth = () => {
             setSmsActive(userDetails?.sms_verification ?? false)
             setEmailActive(userDetails?.email_verification ?? false)
             setAuthenticatorActive(userDetails?.tfa ?? false)
+            setWpActive(userDetails?.whatsapp_verification ?? false)
         }
     }, [userDetails])
 
-    const updateHandler = async (sms, email, callback) => {
+    const updateHandler = async (sms, email, whatsapp, callback) => {
         setIsSaving(true)
         try {
             const data = {
                 sms_verification: sms,
-                email_verification: email
+                email_verification: email,
+                whatsapp_verification: whatsapp
             }
             const encrypted = encryptData(data)
             const response = await axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/tfa-settings/${userDetails?._id}`, {
@@ -89,6 +92,7 @@ const TwoFactorAuth = () => {
 
             const decrypted = await decryptData(response.data.data)
 
+            console.log(decrypted)
             setSaved(true)
             verifyToken()
             callback()
@@ -423,6 +427,18 @@ const TwoFactorAuth = () => {
                         </tr>
                         <tr>
                             <td style={{ width: "100%", fontWeight: 600 }} data-label="Phone Number">
+                                <img src={PhoneIcon} style={{ width: window.innerWidth > 1000 ? "22px" : "14px", height: "22px", aspectRadio: "1/1", marginRight: "7px" }} alt="" />
+                                {t("Whatsapp")}
+                            </td>
+                            <td data-label={t("Whatsapp")}>
+                                <Switch checked={wpActive} callback={() => {
+                                    setShowAuth(true)
+                                    setCurrent("WP")
+                                }} disabled={isSaving} />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{ width: "100%", fontWeight: 600 }} data-label="Phone Number">
                                 <img src={AuthIcon} style={{ width: window.innerWidth > 1000 ? "22px" : "14px", height: "22px", aspectRadio: "1/1", marginRight: "7px" }} alt="" />
                                 {t("Google Authenticator")}
                             </td>
@@ -622,10 +638,12 @@ const TwoFactorAuth = () => {
                         setAuthenticatorActive={setAuthenticatorActive}
                         setEditMode={setEditMode}
                         smsActive={smsActive}
+                        wpActive={wpActive}
                         passwordNext={(c) => {
-                            const sms = current == "SMS" ? !smsActive : smsActive
-                            const email = current == "Email" ? !emailActive : emailActive
-                            updateHandler(sms, email, c)
+                            const sms = current === "SMS" ? !smsActive : smsActive
+                            const email = current === "Email" ? !emailActive : emailActive
+                            const whatsapp = current === "WP" ? !wpActive : wpActive
+                            updateHandler(sms, email, whatsapp, c)
                         }}
                         successTitle={current !== "Google" ? 'Two Factor Authentication Updated Succsessfully!' : "Google Two Factor Authentication is now linked to your InstaPay Account."}
                         sideText={`${current} Authenticator`}
