@@ -81,7 +81,7 @@
     border-radius: 8px;
 }
 
-.otp{
+.otp {
     min-height: 450px !important;
 }
 
@@ -203,9 +203,10 @@
 }
 
 
-.input_error a{
+.input_error a {
     color: #F32D2D;
 }
+
 .center_bottom {
     display: flex;
     gap: 1rem;
@@ -401,11 +402,19 @@
 }
 
 .toggle_sms {
-    margin-top: 24px;
     display: flex;
-    gap: 1rem;
-    flex-direction: column;
     align-items: center;
+    gap: var(--Gaps-Gap-Medium, 7px);
+    align-self: stretch;
+    flex-direction: column;
+}
+
+.toggle_sms p {
+    margin-bottom: 0 !important;
+    color: #000;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 1rem;
 }
 
 .toggle_sms span {
@@ -425,15 +434,6 @@
 }
 
 .toggle_sms button {
-    /* border-radius: 6px;
-    color: white;
-    border: none;
-    outline: none;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
-    background-blend-mode: overlay, normal;
-    padding: .3rem 1.2rem;
-    font-size: 12px;
-    font-weight: 600; */
     border: none;
     outline: none;
     border-radius: 4px;
@@ -451,44 +451,79 @@
     text-decoration-line: underline;
 }
 
-.shake{
+.shake {
     display: none !important;
 }
 
-.otp_methods{
-    display: flex;
-    gap: 12px;
-    margin-bottom: 12px !important;
-    flex-direction: column;
+.otp_methods {
+    display: grid;
+    align-items: flex-start;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--Gaps-Gap-Medium, 12px);
+    align-self: stretch;
 }
 
-.otpMethodButton{
+.otpMethodButton {
     display: flex !important;
+    padding: var(--Gaps-Gap-Medium, 10px) !important;
     align-items: center !important;
-    text-decoration-line: none !important;
-    gap: 8px !important;
-    border: 1px solid rgba(0, 0, 0, 0.216);
-    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px, rgba(0, 0, 0, 0.07) 0px 8px 8px, rgba(0, 0, 0, 0.07) 0px 16px 16px !important;
+    gap: 6px !important;
+    flex: 1 0 0 !important;
+    border-radius: var(--RADIUS-radius-2, 8px) !important;
+    border: 1px solid var(--neutral-neutral-420, rgba(18, 18, 18, 0.20)) !important;
+    background: #FFF !important;
 }
 
 
-.otp_inputs button img{
+.otpMethodButton img {
+    width: 20px;
+}
+
+.otpMethodButton span {
+    color: #000;
+    font-size: 12px;
+    margin-bottom: 0;
+    white-space: nowrap !important;
+    font-weight: 600;
+    text-decoration: underline !important;
+    text-decoration-color: white !important;
+}
+
+
+.otp_inputs button img {
     width: 20px !important;
 }
 
 @keyframes horizontal-shaking {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(5px); }
-    50% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
-    100% { transform: translateX(0); }
-  }
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(5px);
+    }
+
+    50% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
 
 .biometric_section {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2rem 0;
+    /* padding: 1rem 0; */
+    gap: .5rem;
+    margin-bottom: 2rem;
+    flex-direction: column;
 }
 
 .biometric_button {
@@ -740,8 +775,8 @@
     }
 }
 
-@media screen and (max-width: 600px){
-    .otp_methods{
+@media screen and (max-width: 600px) {
+    .otp_methods {
         flex-direction: column;
     }
 }

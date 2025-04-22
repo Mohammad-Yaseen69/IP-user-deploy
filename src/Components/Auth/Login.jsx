@@ -21,6 +21,7 @@ import AuthSvg from "../../assets/icons/auth.svg"
 import BiometricSvg from "../../assets/icons/fingerprint.png" // Add this import
 import { startAuthentication } from "@simplewebauthn/browser"
 import * as rdd from "react-device-detect";
+import { authIcon, biometricIcon, instaIcon, smsIcon, whatsappIcon } from "./files"
 import "./styles/index.module.css";
 
 const Login = ({ country, setIsLoginForm, setIsForgot }) => {
@@ -38,17 +39,49 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [step, setStep] = useState(1)
     const { profileLockTIme, setProfileLockTime, setUserDetails, userDetails } = useContext(UserContext)
     const [loginMethod, setLoginMethod] = useState("phone")
-    const [userAuthSetup, setUserAuthSetup] = useState(false)
-    const [isInstagram, setIsInstagram] = useState(false)
     const [currentActiveInput, setCurrentActiveInput] = useState(1)
     const [isOtpCorrect, setIsOtpCorrect] = useState(false)
     const [otpVerified, setOtpVerified] = useState(false)
     const [currentOtpMethod, setCurrentOtpMethod] = useState("auth")
     const [isMobile] = useState(((rdd.isMobile || rdd.isMobileSafari) && (!rdd.isAndroid || !rdd.isIOS)) ?? false)
-    const [isBioMetric, setIsBioMetric] = useState(false)
     const [isInstagramBrowser, setisInstagramBrowser] = useState()
     const [lastOtpSentTo, setLastOtpSentTo] = useState(null);
     const [consecutiveCount, setConsecutiveCount] = useState(0)
+    const [firstTime, setFirstTime] = useState(true)
+    // convert this object into an array of object it should just have a type property which should tell like whatsapp insta biometric instead of a object property
+
+    const [methods, setMethods] = useState([
+        {
+            avail: false,
+            icon: whatsappIcon,
+            attr: "wp",
+            text: "Whatsapp"
+        },
+        {
+            avail: false,
+            icon: instaIcon,
+            attr: "insta",
+            text: "Instagram"
+        },
+        {
+            avail: false,
+            icon: authIcon,
+            attr: "auth",
+            text: "Google Authenticator"
+        },
+        {
+            avail: false,
+            icon: BiometricSvg,
+            attr: "biometric",
+            text: "Biometric"
+        },
+        {
+            avail: true,
+            icon: smsIcon,
+            attr: "sms",
+            text: "SMS/Email"
+        }
+    ])
 
     useLayoutEffect(() => {
         const loginWith = localStorage.getItem("loginWith")
@@ -88,6 +121,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         console.log(currentOtpMethod, method)
         const isAuth = method ? (method === "auth") : (currentOtpMethod === "auth");
         const isInsta = method ? (method === "insta") : (currentOtpMethod === "insta" || currentOtpMethod !== "sms");
+        const isWp = method ? (method === "wp") : (currentOtpMethod === "wp");
 
 
         const credentials = isEmail.test(email)
@@ -95,68 +129,85 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 email,
                 password,
                 authenticator: isAuth,
-                platform: (isInsta && !isInstagramBrowser) ? "instagram" : "",
+                platform: (isInsta && !isInstagramBrowser) ? "instagram" : isWp ? "whatsapp" : "",
+                first_time: firstTime
             }
             : {
                 phone: email,
                 password,
                 authenticator: isAuth,
-                platform: (isInsta && !isInstagramBrowser) ? "instagram" : "",
+                platform: (isInsta && !isInstagramBrowser) ? "instagram" : isWp ? "whatsapp" : "",
+                first_time: firstTime
             };
         const encrypted = encryptData(credentials)
 
+        console.log(credentials)
 
 
-        if (!isAuth && credentials.platform) {
+        if (!isAuth && credentials.platform === "instagram") {
             setLastOtpSentTo("insta")
+        }
+        else if (!isAuth && credentials.platform === "whatsapp") {
+            setLastOtpSentTo("wp")
         }
         else if (!isAuth && credentials.platform === "") {
             setLastOtpSentTo("sms")
         }
-
-        console.log(credentials)
 
         axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/send-login-otp`, {
             data: encrypted
         })
             .then(async (res) => {
                 const decrypted = decryptData(res.data.data)
-                setUserAuthSetup(decrypted?.tfa)
-                if (!isInstagramBrowser) {
-                    setIsInstagram(decrypted?.instagram)
-                    setIsBioMetric(decrypted?.biometric)
-                }
+                setFirstTime(false)
+                // console.log(decrypted)
+                setMethods(prevMethods => prevMethods.map(method => {
+                    switch (method.attr) {
+                        case 'auth':
+                            return { ...method, avail: decrypted?.tfa || false };
+                        case 'wp':
+                            return { ...method, avail: decrypted?.whatsapp || false };
+                        case 'insta':
+                            return { ...method, avail: !isInstagramBrowser && (decrypted?.instagram || false) };
+                        case 'biometric':
+                            return { ...method, avail: !isInstagramBrowser && (decrypted?.biometric || false) };
+                        case 'sms':
+                            return { ...method, avail: true };
+                        default:
+                            return method;
+                    }
+                }));
 
-                console.log(decrypted)
+                console.log(methods)
 
-                setCurrentOtpMethod(() => {
+                const handleMethods = () => {
                     if (method === undefined) {
-                        console.log(typeof method)
                         if (decrypted?.biometric && !isInstagramBrowser) return "biometric";
                         if (decrypted?.tfa && decrypted?.authenticator) return "auth";
-                        if (decrypted?.instagram && !isInstagramBrowser) return "insta";
+                        if (decrypted?.message === "instagram" && !isInstagramBrowser) return "insta";
+                        if (decrypted?.message === "whatsapp") return "wp";
                         return "sms";
                     } else {
                         return method
                     }
-                })
-
-                setResendTimer(120)
-                console.log(decrypted)
-
-
-
-                if (decrypted?.authenticator === true) {
-                    setResendTimer(0)
                 }
+                
+                setCurrentOtpMethod(handleMethods())
+
+                if ((handleMethods() === "insta" || handleMethods() === "sms" || handleMethods() === "wp")) {
+                    setResendTimer(120)
+                }
+                // console.log(decrypted)
+
+
+
+                // if (decrypted?.authenticator === true) {
+                //     setResendTimer(0)
+                // }
 
                 setLoginToken(decrypted?.token)
                 setStep(2)
                 setIsPressed(false)
-
-                if (method === 'sms' || method === 'insta') {
-                    setLastOtpSentTo(method);
-                }
             })
             .catch(error => {
                 setIsPressed(false)
@@ -263,7 +314,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             }
         }
     }
-    const [resendTimer, setResendTimer] = useState(120)
+    const [resendTimer, setResendTimer] = useState(0)
     const numberOfFields = 6;
     const [otpValues, setOTPValues] = useState(Array(numberOfFields).fill(''));
     const inputRefs = useRef(Array(numberOfFields).fill(null));
@@ -438,15 +489,14 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         setOTPValues(Array(numberOfFields).fill(''))
         inputRefs?.current?.[0]?.focus()
 
-        // Only allow switching between SMS and Instagram if timer is running
-        if (resendTimer > 0 && lastOtpSentTo && (method === 'sms' || method === 'insta')) {
+        if (resendTimer > 0 && lastOtpSentTo && (method === 'sms' || method === 'insta' || method === "wp")) {
             setCurrentOtpMethod(method);
             return;
         }
 
-        // For all other cases, send new OTP
-        if (method === 'sms' || method === 'insta' || method || "auth") {
+        if ((method !== "biometric") && (method === "auth" || resendTimer === 0)) {
             loginHandler({ preventDefault: () => { } }, method);
+            console.log("asdfasfd")
             setResendTimer(120);
         }
 
@@ -744,7 +794,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         <div className={styles.left}>
                             <h1>{currentOtpMethod === "biometric" ? t("Biometric Verification") :
                                 currentOtpMethod === "auth" ? t("Google Authenticator") :
-                                    currentOtpMethod === "insta" ? "Instagram" :
+                                    currentOtpMethod === "insta" ? "Instagram" : currentOtpMethod === "wp" ? "Whatsapp" :
                                         t("SMS Verification").replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")}</h1>
                             <p>{t("Start Your InstaPay Journey Today!")}</p>
                             {
@@ -757,6 +807,9 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                             <div className={styles.top}>
                                 {currentOtpMethod === "biometric" ? (
                                     <div className={styles.biometric_section}>
+                                        <h4 style={{ color: "#545454", fontSize: "1rem", fontWeight: 600 }}>
+                                            Verify identity using your created Passkey on this device
+                                        </h4>
                                         <button
                                             onClick={handleBiometricVerification}
                                             className={styles.otpMethodButton}
@@ -766,11 +819,14 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                 outline: "none",
                                                 backgroundColor: "#f5f5f5",
                                                 padding: "10px 1.5rem",
-                                                borderRadius: "5px"
+                                                borderRadius: "5px",
+                                                width: "100%"
                                             }}
                                         >
                                             <img width={30} src={BiometricSvg} alt="" />
-                                            Continue with Biometric
+                                            <span>
+                                                Click to Continue with Biometric
+                                            </span>
                                         </button>
                                     </div>
                                 ) : (
@@ -786,15 +842,19 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                         ?
                                                         "Enter the code sent to your Instagram Account"
                                                         :
-                                                        t(`Enter the SMS code sent to +41********4053`)
-                                                            .replace(
-                                                                "+41********4053",
-                                                                isEmail.test(email)
-                                                                    ?
-                                                                    `${email.slice(0, 4).split("").map(_ => "*").join("")}${email.slice(4)}`
-                                                                    :
-                                                                    `${email.slice(0, email.length - 4).split("").map(_ => "*").join("")}${email.slice(email.length - 4)}`
-                                                            ).replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")
+                                                        currentOtpMethod === "wp"
+                                                            ?
+                                                            "Enter the code send on your Whatsapp"
+                                                            :
+                                                            t(`Enter the SMS code sent to +41********4053`)
+                                                                .replace(
+                                                                    "+41********4053",
+                                                                    isEmail.test(email)
+                                                                        ?
+                                                                        `${email.slice(0, 4).split("").map(_ => "*").join("")}${email.slice(4)}`
+                                                                        :
+                                                                        `${email.slice(0, email.length - 4).split("").map(_ => "*").join("")}${email.slice(email.length - 4)}`
+                                                                ).replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")
                                             }
                                         </label>
                                         <FaceAnimation currentInput={currentActiveInput} verification={otpVerified} isCorrect={isOtpCorrect} startTyping />
@@ -823,7 +883,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     {
                                         (consecutiveCount >= 3 && !isLoginError.includes('account is locked')) &&
                                         <div className={styles.input_error}>
-                                            <span>Having trouble receiving/verifying your code? Choose another method below or <a style={{color: '#3117b3'}} href="https://guide.insta-pay.ch/faq/troubleshooting-guide">contact support</a>.</span>
+                                            <span>Having trouble receiving/verifying your code? Choose another method below or <a style={{ color: '#3117b3' }} href="https://guide.insta-pay.ch/faq/troubleshooting-guide">contact support</a>.</span>
                                         </div>
                                     }
 
@@ -832,66 +892,61 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         &&
                                         <span>{t("Problem with the token?")}</span>
                                     }
+                                    <p style={{ alignSelf: "baseline" }}>
+                                        Choose your preferred method to verify your identity:
+                                    </p>
                                     <div className={styles.otp_methods}>
                                         {isMobile ? (
                                             // Mobile priority flow
                                             <>
-                                                {currentOtpMethod !== "biometric" && isBioMetric && (
-                                                    <button
-                                                        className={styles.otpMethodButton}
-                                                        type="button"
-                                                        onClick={() => handleOtpMethod("biometric")}
-                                                    >
-                                                        <img style={{ width: "30px" }} src={BiometricSvg} alt="" />
-                                                        <p style={{ marginBottom: "0" }}>Verify using Biometric</p>
-                                                    </button>
-                                                )}
-                                                {currentOtpMethod !== "auth" && userAuthSetup && (
-                                                    <button
-                                                        className={styles.otpMethodButton}
-                                                        type="button"
-                                                        disabled={isPressed}
-                                                        onClick={() => handleOtpMethod("auth")}
-                                                    >
-                                                        <img style={{ width: "30px" }} src={AuthSvg} alt="" />
-                                                        <p style={{ marginBottom: "0" }}>{t("Verify Using Authenticator")}</p>
-                                                    </button>
-                                                )}
-                                                {/* ...existing Instagram and SMS buttons... */}
-                                                {(currentOtpMethod !== "insta" && isInstagram) && (
-                                                    <button className={styles.otpMethodButton} type="button" disabled={isPressed} onClick={() => handleOtpMethod("insta")}>
-                                                        <img style={{ width: "30px" }} src={InstaSvg} alt="" /> <p style={{ marginBottom: "0" }}>Verify Using Instagram</p>
-                                                    </button>
-                                                )}
-
-                                                {currentOtpMethod !== "sms" && (
-                                                    <button className={styles.otpMethodButton} type="button" disabled={isPressed} onClick={() => handleOtpMethod("sms")}>
-                                                        <img style={{ width: "33px" }} src={SmsSvg} alt="" />
-                                                        <p style={{ marginBottom: "0" }}>{t("Verify Using Sms/Email").replace("Sms", email.slice(0, 3) === "971" ? "Whatsapp" : "Sms")}</p>
-                                                    </button>
-                                                )}
+                                                {methods.map((method, index) => {
+                                                    if (method.avail && method.attr !== currentOtpMethod) {
+                                                        return (
+                                                            <button
+                                                                key={index}
+                                                                className={styles.otpMethodButton}
+                                                                type="button"
+                                                                disabled={isPressed}
+                                                                onClick={() => handleOtpMethod(method.attr)}
+                                                            >
+                                                                <img
+                                                                    src={method.icon}
+                                                                    alt=""
+                                                                />
+                                                                <spaspan style={{ marginBottom: "0" }}>
+                                                                    {method.text}
+                                                                </spaspan>
+                                                            </button>
+                                                        )
+                                                    }
+                                                    return null;
+                                                })}
                                             </>
                                         ) : (
-                                            // Desktop original flow
+                                            // Desktop flow
                                             <>
-                                                {/* ...existing verification buttons... */}
-                                                {(currentOtpMethod !== "auth" && userAuthSetup) && (
-                                                    <button className={styles.otpMethodButton} type="button" disabled={isPressed} onClick={() => handleOtpMethod("auth")}>
-                                                        <img style={{ width: "30px" }} src={AuthSvg} alt="" /> <p style={{ marginBottom: "0" }}>{t("Verify Using Authenticator")}</p>
-                                                    </button>
-                                                )}
-
-                                                {(currentOtpMethod !== "insta" && isInstagram) && (
-                                                    <button className={styles.otpMethodButton} type="button" disabled={isPressed} onClick={() => handleOtpMethod("insta")}>
-                                                        <img style={{ width: "30px" }} src={InstaSvg} alt="" /> <p style={{ marginBottom: "0" }}>Verify Using Instagram</p>
-                                                    </button>
-                                                )}
-
-                                                {currentOtpMethod !== "sms" && (
-                                                    <button className={styles.otpMethodButton} type="button" disabled={isPressed} onClick={() => handleOtpMethod("sms")}>
-                                                        <img style={{ width: "33px" }} src={SmsSvg} alt="" /> <p style={{ marginBottom: "0" }}>{t("Verify Using Sms/Email").replace("Sms", email.slice(0, 3) === "971" ? "Whatsapp" : "Sms")}</p>
-                                                    </button>
-                                                )}
+                                                {methods.map((method, index) => {
+                                                    if (method.avail && method.attr !== currentOtpMethod) {
+                                                        return (
+                                                            <button
+                                                                key={index}
+                                                                className={styles.otpMethodButton}
+                                                                type="button"
+                                                                disabled={isPressed}
+                                                                onClick={() => handleOtpMethod(method.attr)}
+                                                            >
+                                                                <img
+                                                                    src={method.icon}
+                                                                    alt=""
+                                                                />
+                                                                <span style={{ marginBottom: "0" }}>
+                                                                    {method.text}
+                                                                </span>
+                                                            </button>
+                                                        )
+                                                    }
+                                                    return null;
+                                                })}
                                             </>
                                         )}
                                     </div>
@@ -901,9 +956,10 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         <span>
                                             {
                                                 resendTimer > 0
-                                                    ? (lastOtpSentTo && ['sms', 'insta'].includes(currentOtpMethod) && lastOtpSentTo !== currentOtpMethod)
-                                                        ? `You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : 'Instagram'}, wait ${resendTimer} seconds to get code on ${lastOtpSentTo === 'sms' ? 'Instagram' : 'SMS'}`.replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")
-                                                        : t("Resend code in 30 seconds".replace("30", resendTimer))
+                                                    ? (lastOtpSentTo && ['sms', 'insta', 'wp'].includes(currentOtpMethod) && lastOtpSentTo !== currentOtpMethod)
+                                                        ? `You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : lastOtpSentTo === "wp" ? "Whatsapp" : 'Instagram'}, wait ${resendTimer} seconds to get code on ${currentOtpMethod}`
+                                                        :
+                                                        t("Resend code in 30 seconds".replace("30", resendTimer))
                                                     :
                                                     <>{t("Didn't receive OTP?") + " "} <span style={{ color: "#5926f0", cursor: "pointer" }} onClick={() => {
                                                         setLastOtpSentTo(currentOtpMethod);

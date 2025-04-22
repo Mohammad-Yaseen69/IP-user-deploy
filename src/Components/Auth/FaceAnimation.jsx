@@ -6,8 +6,7 @@ const FaceAnimation = ({ input, currentInput, isCorrect, verification, startTypi
     const getEyePosition = (currentInput) => {
         let xOffset = 0;
         let yOffset = 0;
-
-        // More controlled movement pattern
+        
         switch(currentInput) {
             case 1: // Start - looking more left and slightly up
                 xOffset = -8; // More to the left
