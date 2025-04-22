@@ -183,7 +183,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 const handleMethods = () => {
                     if (method === undefined) {
                         if (decrypted?.biometric && !isInstagramBrowser) return "biometric";
-                        if (decrypted?.tfa && decrypted?.authenticator) return "auth";
+                        if (decrypted?.tfa && decrypted?.message === "authenticator") return "auth";
                         if (decrypted?.message === "instagram" && !isInstagramBrowser) return "insta";
                         if (decrypted?.message === "whatsapp") return "wp";
                         return "sms";
@@ -194,7 +194,9 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 
                 setCurrentOtpMethod(handleMethods())
 
+                console.log(handleMethods())
                 if ((handleMethods() === "insta" || handleMethods() === "sms" || handleMethods() === "wp")) {
+                    console.log("RESET")
                     setResendTimer(120)
                 }
                 // console.log(decrypted)
@@ -497,7 +499,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         if ((method !== "biometric") && (method === "auth" || resendTimer === 0)) {
             loginHandler({ preventDefault: () => { } }, method);
             console.log("asdfasfd")
-            setResendTimer(120);
         }
 
         setCurrentOtpMethod(method);
