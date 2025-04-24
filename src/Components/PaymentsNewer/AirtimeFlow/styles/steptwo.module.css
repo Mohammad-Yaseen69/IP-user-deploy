@@ -277,7 +277,7 @@
 }
 
 .contentDiv h4 {
-    color: #000; 
+    color: #000;
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -311,16 +311,16 @@
     background: #FFD29C;
 }
 
-.regions{
+.regions {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
     gap: 10px;
-    max-height: 400px;
+    max-height: 260px;
     overflow-y: auto;
     width: 70%;
 }
 
-.region{
+.region {
     height: 86px;
     padding: 24px;
     border-radius: 15px;
@@ -330,13 +330,57 @@
     justify-content: flex-start;
 }
 
-.region h2{
-    color: #FFF; 
+.region h2 {
+    color: #FFF;
     font-size: 16px;
     font-style: normal;
     font-weight: 800;
 }
 
+.btns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.btns .nxt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    border-radius: 6px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
+    background-blend-mode: overlay, normal;
+    box-shadow: 0px 11.901px 8.655px -5.409px rgba(89, 38, 240, 0.17);
+    color: #FFF;
+    font-size: 17.31px;
+    font-weight: 600;
+    border: none;
+    padding: 5px 12px;
+}
+
+
+.btns .back {
+    color: #808080;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    cursor: pointer;
+}
+
+.info {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+}
+.info span {
+    color: #A6A6A6;
+    font-weight: 600;
+    font-size: 12px;
+}
 
 
 .eSim {

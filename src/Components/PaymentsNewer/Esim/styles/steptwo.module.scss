@@ -1,0 +1,185 @@
+.cont {
+    padding: 15px;
+
+
+
+    >h3 {
+        margin: 2rem 0;
+        color: #000;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 600;
+    }
+
+    .plans {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 12px;
+        max-height: 400px;
+        overflow: auto;
+
+        .inputs {
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 18px;
+
+            .input {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+                align-self: stretch;
+
+                label {
+                    color: #000;
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: 150%;
+                }
+
+                input {
+                    border-radius: 4px;
+                    border: 1px solid rgba(0, 0, 0, 0.13);
+                    background: #FFF;
+                    outline: none;
+                    width: 100%;
+                    padding: 9px 12px;
+                }
+            }
+        }
+
+        .plan {
+            padding: 18px;
+            border-radius: 11.781px;
+            border: 0.736px solid rgba(0, 0, 0, 0.06);
+            background: #FFF;
+            cursor: pointer;
+            box-shadow: 0px 1.473px 3.313px 0px rgba(0, 0, 0, 0.08);
+
+
+            >div {
+                display: flex;
+                flex-direction: column;
+                gap: .7rem;
+
+                .amount {
+                    display: flex;
+                    width: 100%;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    h4 {
+                        color: #5926F0;
+                        font-size: 24px;
+                        margin-bottom: 0;
+                        font-weight: 800;
+                    }
+                }
+
+                .planData {
+                    display: flex;
+                    width: 100%;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 18px;
+                    margin-top: .7rem;
+
+                    .detsDiv {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 12px;
+                        align-self: stretch;
+
+                        .dets {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            align-self: stretch;
+
+                            .det {
+                                display: flex;
+                                flex-direction: column;
+                                align-items: flex-start;
+
+                                span {
+                                    color: #7F7F7F;
+                                    font-size: 10px;
+                                    font-style: normal;
+                                    font-weight: 600;
+                                }
+
+                                p {
+                                    margin-bottom: 0;
+                                    color: #000;
+                                    font-size: 11px;
+                                    font-weight: 700;
+                                }
+                            }
+                        }
+                    }
+
+                    .usageDiv {
+                        display: flex;
+                        align-items: flex-end;
+                        gap: 24px;
+                        align-self: stretch;
+
+                        >div {
+                            display: flex;
+                            border-radius: 6px;
+                            background: rgba(0, 0, 0, 0.04);
+                            padding: 12px 14px;
+                            flex-direction: column;
+                            align-items: flex-start;
+                            gap: 7px;
+
+                            span {
+                                color: #6D6D6D;
+                                font-size: 11px;
+                                font-style: normal;
+                                font-weight: 600;
+                            }
+
+                            p {
+                                color: #7A7A7A;
+                                font-size: 9px;
+                                font-style: normal;
+                                font-weight: 600;
+                                line-height: 150%;
+                                margin-bottom: 0;
+                                align-self: stretch;
+                                letter-spacing: -0.17px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .plan.selected {
+            background: linear-gradient(124deg, #5926F0 29.75%, #33168A 108.51%);
+            box-shadow: 0px 1.473px 3.313px 0px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+
+            h4 {
+                color: white !important;
+                transition: all 0.3s ease;
+            }
+
+            p {
+                color: white !important;
+                transition: all 0.3s ease;
+            }
+
+
+            span {
+                color: #C0C0C0 !important;
+                transition: all 0.3s ease;
+            }
+        }
+    }
+}

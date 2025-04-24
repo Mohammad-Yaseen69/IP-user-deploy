@@ -29,6 +29,9 @@ import Receipt from "../InternationalFlow/Receipt";
 import InstaPayLoader from "../../Loader";
 import TrustpaymentPage from "../../AddFunds/WalletFund/CreditTransaction";
 import errors from "../../AddFunds/TrustPaymentErrors.json"
+import StepTwoE from "../Esim/StepTwo"
+import StepFourE from "../Esim/StepFour"
+import ReceiptE from "../Esim/Receipt"
 
 const initialState = {
     loading: false,
@@ -64,7 +67,13 @@ const initialState = {
     selectedSavedCard: {},
     cardTransactionDetails: {},
     showCard: false,
-    default_wallet: {}
+    default_wallet: {},
+    eSimData: {
+        region: "",
+        selectedPlan: {},
+        phone: "",
+        email: ''
+    }
 }
 
 function reducer(state, action) {
@@ -75,6 +84,16 @@ function reducer(state, action) {
                 [action.field]: action.value
             };
         // other cases can be added here
+        case "UPDATE_FIELD_ESIM":
+            return {
+                ...state,
+                eSimData: {
+                    ...state.eSimData,
+                    [action.field]: action.value
+                }
+            }
+
+
         default:
             return state;
     }
@@ -90,6 +109,9 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         dispatch({ type: "UPDATE_FIELD", field, value });
     };
 
+    const updateEsimHandler = (field, value) => {
+        dispatch({ type: "UPDATE_FIELD_ESIM", field, value })
+    }
     useEffect(() => {
         if (userDetails?.tfa) {
             updateDataHandler("codeType", "authenticator")
@@ -148,7 +170,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
     const getPackageRates = async () => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/service-products-details/${data.airtime_currency?._id}/${data.package?.id}`, {
+            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/service-products-details/${data.airtime_currency?._id}/${data.package?.id || data.eSimData.selectedPlan?.productId}`, {
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
@@ -186,11 +208,12 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                 userWallets?.find(item => item?.default)
             const dataa =
             {
-                "product_id": data?.package?.id,
+                "product_id": data?.package?.id || data.eSimData.selectedPlan?.productId,
                 "payment_method": data.payment_type?.value,
                 "wallet_id": data.payment_type === "wallet" ? data.airtime_currency?._id : data.default_wallet?._id,
-                "sub_service_id": data.service_type?.id,
+                "sub_service_id": data.service_type?.id || 12,
                 "local_wallet_id": def?._id,
+                "type": data.flow === "e-sim" && "esim"
             }
             if (isOpenRange) {
                 dataa.amount = +String(data?.airtime_amount)?.replaceAll(",", "")
@@ -260,9 +283,16 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                 data: {
                     wallet_id: data.airtime_currency?._id,
                     token: data.package_details?.data?.token,
-                    number: `+${data.recipient}`,
+                    number: data.recipient ? `+${data.recipient}` : data.eSimData.phone ? `+${data.eSimData.phone}` : `+${userDetails.phone}`,
+                    type: data.flow === "e-sim" && "esim"
                 },
                 type: codeType || data.codeType
+            }
+
+
+
+            if (data.eSimData.email) {
+                payload.data.email = data.eSimData.email
             }
             const encrypted = encryptData(payload)
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
@@ -273,6 +303,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
             const dec = decryptData(res.data.data)
             updateDataHandler("created_transaction", dec)
+            console.log("otpshow", "transactioncreated")
             updateDataHandler("show_otp", true)
         } catch (error) {
             const dec = decryptData(error.response.data.data)
@@ -299,15 +330,29 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             // const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/confirm${isFixedAirtime ? "-airtime" : ""}-transaction`, {    
             const isOpenRange = +String(data?.airtime_amount)?.replaceAll(",", "") > 0 && data.service_type?.name?.toLowerCase()?.includes("airtime");
             let url;
-            if (data.payment_type.value === "paypal") {
-                url = `${process.env.REACT_APP_IP_DEV_API}${isOpenRange ? "/api/paypal/initiate-airtime-ranged-payment" : "/api/paypal/initiate-airtime-fixed-payment"}`
-            } else {
-                url = `${process.env.REACT_APP_IP_DEV_API}/api/dt/confirm${isOpenRange ? "-ranged" : ""}-airtime-transaction`
+
+            if (data.flow === "airtime") {
+                if (data.payment_type.value === "paypal") {
+                    url = `${process.env.REACT_APP_IP_DEV_API}${isOpenRange ? "/api/paypal/initiate-airtime-ranged-payment" : "/api/paypal/initiate-airtime-fixed-payment"}`
+                } else {
+                    url = `${process.env.REACT_APP_IP_DEV_API}/api/dt/confirm${isOpenRange ? "-ranged" : ""}-airtime-transaction`
+                }
+            }
+            else {
+                if (data.payment_type.value === "wallet") {
+                    url = `${process.env.REACT_APP_IP_DEV_API}/api/dt/confirm-esim-transaction`
+                }
+                else if (data.payment_type.value === "paypal") {
+                    url = `${process.env.REACT_APP_IP_DEV_API}/api/paypal/initiate-esim`
+                }
             }
             const res = await axios.post(url, { data: enc }, { headers: authHeader })
 
             const dec = decryptData(res.data.data)
             console.log(dec)
+            if(data.payment_type.value === "paypal"){
+                window.location.href = dec.url
+            }
             updateDataHandler("verified", true)
             updateDataHandler("show_otp", false)
         } catch (err) {
@@ -423,10 +468,15 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                 type: data.codeType,
                 panData: {
                     wallet_id: data.airtime_currency?._id,
-                    number: `+${data.recipient}`,
+                    number: data.recipient ? `+${data.recipient}` : data.eSimData.phone ? `+${data.eSimData.phone}` : `+${userDetails.phone}`,
                     payment_type: data.payment_type?.value ?? "card",
-                    airtime_token: data.package_details?.data?.token
+                    airtime_token: data.package_details?.data?.token,
+                    type: data.flow === "e-sim" && "esim"
                 }
+            }
+
+            if (data.flow === "e-sim" && data.eSimData.email) {
+                payload.panData.email = data.eSimData.email;
             }
             data.selectedSavedCard?._id ? payload.panData.pan = data.selectedSavedCard?._id : payload.panData.is_card_save = data?.saveCard
             data.selectedSavedCard?._id ? console.log("") : payload.panData.se_shambey = createShambeToken(data)
@@ -470,8 +520,6 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const transaction_status = queryParams.get("transaction_status")
-    const transaction_token = queryParams.get("transaction_token")
-    const transaction_id = queryParams.get("transaction_id")
     const error_in_funds = queryParams.get("error_in_funds")
     const code = queryParams.get("code")
 
@@ -486,6 +534,26 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             updateDataHandler("error", error_message() ?? "It appears that the add funds request was canceled. Please try again later when you're ready.")
         }
     }, [transaction_status])
+
+
+    const otpConfirmJSX = () => (
+        data.show_otp
+        &&
+        <OtpConfirmation
+            callback={data.payment_type?.value === "card" ? initiateCardPayment : verifyOtp}
+            // callback={verifyOtp}
+            data={data}
+            dataHandler={updateDataHandler}
+            isLoading={data.loading}
+            isOpen={data.show_otp}
+            toggle={() => {
+                updateDataHandler("show_otp", false)
+            }}
+            resendHandler={createTransaction}
+            error={data.otpError}
+        />
+    )
+
 
     return (
         <>
@@ -579,36 +647,42 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                         }
                                         <h2>
 
-                                            {
-                                                data.step === 1
-                                                &&
-                                                t("SEND TOP-UP AND E-SIM")
-                                            }
-                                            {
-                                                data.step === 2
-                                                &&
-                                                t("Send Top-up")
-                                            }
-                                            {
-                                                data.step === 3
-                                                &&
-                                                t("available sunservices")
-                                            }
-                                            {
-                                                data.step === 4
-                                                &&
-                                                t("Select Payment Type")
-                                            }
-                                            {
-                                                data.step === 5
-                                                &&
-                                                (
-                                                    data.verified
-                                                        ?
-                                                        t("Top-Up Initiated")
-                                                        :
-                                                        t("Top-Up Summary")
-                                                )
+                                            {data.flow === "e-sim" ? "eSim"
+                                                :
+                                                <>
+                                                    {
+                                                        data.step === 1
+                                                        &&
+                                                        t("SEND TOP-UP AND E-SIM")
+                                                    }
+                                                    {
+                                                        data.step === 2
+                                                        &&
+                                                        t("Send Top-up")
+                                                    }
+                                                    {
+                                                        data.step === 3
+                                                        &&
+                                                        t("available sunservices")
+                                                    }
+                                                    {
+                                                        data.step === 4
+                                                        &&
+                                                        t("Select Payment Type")
+                                                    }
+                                                    {
+                                                        data.step === 5
+                                                        &&
+                                                        (
+                                                            data.verified
+                                                                ?
+                                                                t("Top-Up Initiated")
+                                                                :
+                                                                t("Top-Up Summary")
+                                                        )
+                                                    }
+
+                                                </>
                                             }
                                         </h2>
                                     </div>
@@ -628,16 +702,24 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                             <StepTwo
                                                 data={data}
                                                 dataHandler={updateDataHandler}
+                                                eSimDataHandler={updateEsimHandler}
                                             />
                                         }
                                         {
                                             data.step === 3
                                             &&
-                                            <StepThree
-                                                getPackageDetails={getPackageDetails}
-                                                data={data}
-                                                dataHandler={updateDataHandler}
-                                            />
+                                            (data.flow === "airtime" ?
+                                                <StepThree
+                                                    getPackageDetails={getPackageDetails}
+                                                    data={data}
+                                                    dataHandler={updateDataHandler}
+                                                /> :
+                                                <StepTwoE
+                                                    data={data}
+                                                    dataHandler={updateDataHandler}
+                                                    dataHandlerE={updateEsimHandler}
+                                                />
+                                            )
                                         }
                                         {
                                             data.step === 4
@@ -685,28 +767,23 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                             data.step === 5
                                             &&
                                             <>
-                                                <StepFive
-                                                    data={data}
-                                                    dataHandler={updateDataHandler}
-                                                    createTransaction={createTransaction}
-                                                />
                                                 {
-                                                    data.show_otp
-                                                    &&
-                                                    <OtpConfirmation
-                                                        callback={data.payment_type?.value === "card" ? initiateCardPayment : verifyOtp}
-                                                        // callback={verifyOtp}
-                                                        data={data}
-                                                        dataHandler={updateDataHandler}
-                                                        isLoading={data.loading}
-                                                        isOpen={data.show_otp}
-                                                        toggle={() => {
-                                                            updateDataHandler("show_otp", false)
-                                                        }}
-                                                        resendHandler={createTransaction}
-                                                        error={data.otpError}
-                                                    />
+                                                    data.flow === "airtime" ?
+                                                        <StepFive
+                                                            data={data}
+                                                            dataHandler={updateDataHandler}
+                                                            createTransaction={createTransaction}
+                                                        /> :
+                                                        <StepFourE
+                                                            data={data}
+                                                            dataHandler={updateDataHandler}
+                                                            dataHandlerE={updateEsimHandler}
+                                                        />
                                                 }
+
+
+
+                                                {otpConfirmJSX()}
                                             </>
                                         }
                                         {
@@ -718,6 +795,17 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                                 />
                                                 : ""
                                         }
+                                        {data.step === 6 && (
+                                            <>
+                                                <ReceiptE
+                                                    data={data}
+                                                    dataHandler={updateDataHandler}
+                                                    createTransaction={createTransaction}
+                                                />
+
+                                                {otpConfirmJSX()}
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                         }
@@ -777,16 +865,24 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                                         <StepTwo
                                                             data={data}
                                                             dataHandler={updateDataHandler}
+                                                            eSimDataHandler={updateEsimHandler}
                                                         />
                                                     }
                                                     {
                                                         data.step === 3
                                                         &&
-                                                        <StepThree
-                                                            getPackageDetails={getPackageDetails}
-                                                            data={data}
-                                                            dataHandler={updateDataHandler}
-                                                        />
+                                                        (data.flow === "airtime" ?
+                                                            <StepThree
+                                                                getPackageDetails={getPackageDetails}
+                                                                data={data}
+                                                                dataHandler={updateDataHandler}
+                                                            /> :
+                                                            <StepTwoE
+                                                                data={data}
+                                                                dataHandler={updateDataHandler}
+                                                                dataHandlerE={updateEsimHandler}
+                                                            />
+                                                        )
                                                     }
                                                     {
                                                         data.step === 4
@@ -821,30 +917,34 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                                         data.step === 5
                                                         &&
                                                         <>
-                                                            <StepFive
+                                                            {
+                                                                data.flow === "airtime" ?
+                                                                    <StepFive
+                                                                        data={data}
+                                                                        dataHandler={updateDataHandler}
+                                                                        createTransaction={createTransaction}
+                                                                    /> :
+                                                                    <StepFourE
+                                                                        data={data}
+                                                                        dataHandler={updateDataHandler}
+                                                                        dataHandlerE={updateEsimHandler}
+                                                                    />
+                                                            }
+                                                            {otpConfirmJSX()}
+                                                        </>
+                                                    }
+                                                    {data.step === 6 && (
+                                                        <>
+                                                            <ReceiptE
                                                                 data={data}
                                                                 dataHandler={updateDataHandler}
                                                                 createTransaction={createTransaction}
                                                             />
-                                                            {
-                                                                data.show_otp
-                                                                &&
-                                                                <OtpConfirmation
-                                                                    callback={data.payment_type?.value === "card" ? initiateCardPayment : verifyOtp}
-                                                                    // callback={verifyOtp}
-                                                                    data={data}
-                                                                    dataHandler={updateDataHandler}
-                                                                    isLoading={data.loading}
-                                                                    isOpen={data.show_otp}
-                                                                    toggle={() => {
-                                                                        updateDataHandler("show_otp", false)
-                                                                    }}
-                                                                    resendHandler={createTransaction}
-                                                                    error={data.otpError}
-                                                                />
-                                                            }
+
+
+                                                            {otpConfirmJSX()}
                                                         </>
-                                                    }
+                                                    )}
                                                 </>
                                         }
                                     </div>

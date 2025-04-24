@@ -16,10 +16,10 @@ import allCountries from "../CountriesData.json"
 import { UserContext } from "../../../Context/UserContext"
 import ListModal from "../InternationalFlow/ListModal"
 import PhoneInput from "../../PhoneInput"
-import warn from "./files/warn.svg"
+import ESimStep from "../Esim/StepOne"
 import InstaPayLoader from "../../Loader"
 
-const StepTwo = ({ data, dataHandler }) => {
+const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
     const { t } = useTranslation()
     const [showModal, setShowModal] = useState(false)
     const { allowedCountries, authHeader, userDetails } = useContext(UserContext)
@@ -37,7 +37,6 @@ const StepTwo = ({ data, dataHandler }) => {
                 const countriesArray = allCountries.filter((item) => {
                     return decrypted.some(apiCountry => apiCountry.iso_code === item?.alpha3)
                 })
-                console.log(countriesArray)
                 const allowed = allowedCountries?.map(allowed => {
                     const coun = countriesArray?.find(item => item?.alpha3 == allowed?.country_iso_code)
                     if (!coun) return null;
@@ -46,6 +45,7 @@ const StepTwo = ({ data, dataHandler }) => {
                         id: allowed?._id
                     }
                 })?.filter(item => item != null)
+                console.log(allowed)
                 setCountries(allowed?.sort((a, b) => String(a?.name)?.localeCompare(b?.name)))
                 const coun = allowed?.find(item => item?.alpha3 === userDetails?.country_iso_code)
                 dataHandler("country", coun ?? {})
@@ -185,61 +185,17 @@ const StepTwo = ({ data, dataHandler }) => {
                     </div>
                 : null
             }
-            {
-                data.flow === "e-sim" && (
-                    loadingCountries
-                        ?
-                        <div style={{ height: "200px", width: "200px", margin: "1rem auto" }}>
-                            <InstaPayLoader />
-                        </div> :
-                        <div className={styles.eSim}>
-                            <div className={styles.warningDiv}>
-                                <div>
-                                    <img src={warn} alt="" />
-                                    <p>
-                                        Not all devices support eSIM. Perform a compatibility check to ensure a seamless user experience.
-                                    </p>
-                                </div>
-
-                                <button>
-                                    Check device compatibility.
-                                </button>
-                            </div>
-
-                            <div className={styles.contentDiv}>
-                                <h4>Travel Distance</h4>
-
-                                <div style={{flex: 0, width: "fit-content", minWidth: 'fit-content'}} className={`${country_styles.country} ${styles.country}`} onClick={() => setShowModal(true)}>
-                                    <div className={country_styles.main}>
-                                        <div className={data?.country?.file_url ? "" : country_styles.grad_icon}>
-                                            <img src={data?.country?.file_url ?? country} alt="" />
-                                        </div>
-                                        <span>{data?.country?.name ? t(data?.country?.name)?.slice(0, 30) : t("Select Destination Country")}</span>
-                                    </div>
-                                    <img src={chev_down} alt="" />
-                                </div>
-
-                            </div>
-
-
-                            <div style={{alignItems: "flex-start"}} className={styles.contentDiv}>
-                                <h4>Or Choose a Region</h4>
-
-                                <div className={styles.regions}>
-                                    <div className={styles.region}>
-                                        <h2>Asia</h2>
-                                    </div>
-                                    <div className={styles.region}>
-                                        <h2>Soth Africa</h2>
-                                    </div>
-                                    <div className={styles.region}>
-                                        <h2>Europe</h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                )
+            {data.flow === "e-sim" ?
+                <ESimStep
+                    data={data}
+                    dataHandler={dataHandler}
+                    dataEsimHandler={eSimDataHandler}
+                    loadingCountries={loadingCountries}
+                    setShowModal={setShowModal}
+                />
+                : null
             }
+
             {
                 (showModal && countries?.length > 0)
                     ?
@@ -254,6 +210,7 @@ const StepTwo = ({ data, dataHandler }) => {
                         onSelectHandler={(item) => {
                             dataHandler("recipient", "")
                             dataHandler("country", item)
+                            eSimDataHandler("region", {})
                         }}
                         toggle={() => setShowModal(false)}
                         searchable={true}
@@ -261,6 +218,8 @@ const StepTwo = ({ data, dataHandler }) => {
                     : ""
             }
         </div>
+
+
     )
 }
 

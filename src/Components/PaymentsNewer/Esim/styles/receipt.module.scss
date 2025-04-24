@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+.cont {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 12px;
+    gap: 10px;
+
+    margin-top: 2rem;
+
+    .receipt {
+        width: 450px;
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: #f8f8f8;
+
+        .top {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 80px;
+        }
+
+        .middle {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding: 14px;
+
+            >h3 {
+                color: #000;
+                text-align: center;
+                margin-bottom: 0;
+                font-size: 24px;
+                font-style: normal;
+                font-weight: 700;
+                line-height: normal;
+            }
+
+            .qrBox {
+                display: flex;
+                padding: 18px 24px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 10px;
+                align-self: stretch;
+                border-radius: 8px;
+                background: #FFF;
+
+                >div:nth-child(1) {
+                    display: flex;
+                    width: 60%;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    gap: 10px;
+                    align-items: flex-start;
+                    align-self: stretch;
+
+
+                    h3 {
+                        color: #000;
+                        font-family: "Inter", serif;
+                        font-size: 14px;
+                        font-weight: 600;
+                        margin-bottom: 0;
+                    }
+
+                    p {
+                        color: #7F7F7F;
+                        font-size: 10px;
+                        font-weight: 600;
+                        margin-bottom: 0;
+                    }
+                }
+            }
+
+            .dets {
+                display: flex;
+                padding: 12px 18px;
+                justify-content: space-between;
+                border-radius: 4px;
+                background: #FFF;
+                align-items: center;
+                gap: 10px;
+                align-self: stretch;
+
+                span {
+                    color: #000;
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 600;
+                }
+
+                &.purple {
+                    background: #5926F0;
+                    padding: 18px;
+
+                    span {
+                        color: white;
+                        font-size: 16px;
+                    }
+                }
+            }
+        }
+
+        .bottom {
+            background: #5926F0;
+            padding: 19px 0;
+            flex-direction: column;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+
+
+            h4 {
+                color: #FFF;
+                text-align: center;
+                font-size: 7.432px;
+                margin-bottom: 0;
+                font-weight: 500;
+                font-family: "Inter", serif;
+            }
+
+            p {
+                color: rgba(255, 255, 255, 0.46);
+                text-align: center;
+                font-size: 8.472px;
+                font-style: normal;
+                font-weight: 600;
+                margin: 10px 0;
+            }
+
+        }
+    }
+
+    .transaction_details {
+        padding: .75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+
+        div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+
+            span {
+                color: #8A8A8A;
+
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 150%;
+                /* 21px */
+                letter-spacing: -0.14px;
+            }
+
+            span:nth-child(2) {
+                text-align: right;
+            }
+        }
+    }
+
+
+
+}
