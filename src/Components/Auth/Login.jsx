@@ -53,15 +53,9 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [methods, setMethods] = useState([
         {
             avail: false,
-            icon: whatsappIcon,
-            attr: "wp",
-            text: "Whatsapp"
-        },
-        {
-            avail: false,
-            icon: instaIcon,
-            attr: "insta",
-            text: "Instagram"
+            icon: BiometricSvg,
+            attr: "biometric",
+            text: "Biometric"
         },
         {
             avail: false,
@@ -71,9 +65,15 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         },
         {
             avail: false,
-            icon: BiometricSvg,
-            attr: "biometric",
-            text: "Biometric"
+            icon: instaIcon,
+            attr: "insta",
+            text: "Instagram"
+        },
+        {
+            avail: false,
+            icon: whatsappIcon,
+            attr: "wp",
+            text: "Whatsapp"
         },
         {
             avail: true,
@@ -191,7 +191,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         return method
                     }
                 }
-                
+
                 setCurrentOtpMethod(handleMethods())
 
                 console.log(handleMethods())
@@ -477,8 +477,10 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         pasteData.split('').forEach((char, index) => {
             newOTPValues[index] = char;
         });
+        setCurrentActiveInput(6)
 
         setOTPValues(newOTPValues);
+
 
         const isEmpty = newOTPValues.some(val => val === '');
         setIsAnyFieldEmpty(isEmpty);
@@ -866,6 +868,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                     maxLength={1}
                                                     value={value}
                                                     onPaste={handlePaste}
+                                                    // disabled={currentActiveInput !== index + 1}
                                                     onChange={(e) => {
                                                         setIsLoginError("")
                                                         handleInputChange(index, e.target.value)
@@ -879,7 +882,23 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     </div>
                                 )}
 
-
+                                {window.innerWidth < 1000 && (
+                                    <div className={styles.btns}>
+                                        <button type="submit"
+                                            className={styles.form_btn}
+                                            disabled={isAnyFieldEmpty || otpValues.some(item => !item) || isPressed || isLoginError}
+                                        >
+                                            <span>{
+                                                isPressed
+                                                    ?
+                                                    t("Verifying")
+                                                    :
+                                                    t("Verify")
+                                            }</span>
+                                            <ChevronRight size={28} color="white" />
+                                        </button>
+                                    </div>
+                                )}
                                 <div style={{ paddingTop: "10px" }} className={styles.toggle_sms}>
                                     {
                                         (consecutiveCount >= 3 && !isLoginError.includes('account is locked')) &&
@@ -893,6 +912,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         &&
                                         <span>{t("Problem with the token?")}</span>
                                     }
+
                                     <p style={{ alignSelf: "baseline" }}>
                                         Choose your preferred method to verify your identity:
                                     </p>
@@ -1002,19 +1022,21 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             {t("Back")}
                                         </button>
                                     }
-                                    <button type="submit"
-                                        className={styles.form_btn}
-                                        disabled={isAnyFieldEmpty || otpValues.some(item => !item) || isPressed || isLoginError}
-                                    >
-                                        <span>{
-                                            isPressed
-                                                ?
-                                                t("Verifying")
-                                                :
-                                                t("Verify")
-                                        }</span>
-                                        <ChevronRight size={28} color="white" />
-                                    </button>
+                                    {window.innerWidth > 1000 &&
+                                        <button type="submit"
+                                            className={styles.form_btn}
+                                            disabled={isAnyFieldEmpty || otpValues.some(item => !item) || isPressed || isLoginError}
+                                        >
+                                            <span>{
+                                                isPressed
+                                                    ?
+                                                    t("Verifying")
+                                                    :
+                                                    t("Verify")
+                                            }</span>
+                                            <ChevronRight size={28} color="white" />
+                                        </button>
+                                    }
                                 </div>
                             </div>
                         </div>
