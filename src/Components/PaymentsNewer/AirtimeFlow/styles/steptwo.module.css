@@ -415,6 +415,7 @@
     }
 }
 
+
 @media screen and (max-width: 1000px) {
     .container {
         max-height: unset;
@@ -468,5 +469,48 @@
 
     .buttons {
         display: none;
+    }
+
+    .btns button {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        border-radius: 6px;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
+        background-blend-mode: overlay, normal;
+        box-shadow: 0px 11.901px 8.655px -5.409px rgba(89, 38, 240, 0.17);
+        display: flex;
+        padding: .4rem 1rem;
+        align-items: center;
+        color: #FFF;
+        leading-trim: both;
+        text-edge: cap;
+        font-family: Manrope;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        letter-spacing: -0.16px;
+        gap: 16px;
+        outline: none;
+        border: none;
+    }
+
+    .btns .back {
+        all: unset;
+        cursor: pointer;
+        color: #808080;
+        leading-trim: both;
+        text-edge: cap;
+        font-family: Manrope;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 150%;
+        /* 21px */
+    }
+
+    .bottom button:disabled {
+        opacity: .7;
     }
 }

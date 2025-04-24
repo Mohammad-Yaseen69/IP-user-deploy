@@ -350,7 +350,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
             const dec = decryptData(res.data.data)
             console.log(dec)
-            if(data.payment_type.value === "paypal"){
+            if (data.payment_type.value === "paypal") {
                 window.location.href = dec.url
             }
             updateDataHandler("verified", true)
@@ -842,7 +842,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                 <>
                                     <div className={styles.flow}>
                                         {
-                                            data.step === 4 && data.payment_type?.value === "wallet"
+                                            data.step === 4 && data.payment_type?.value === "wallet" && data.flow !== "e-sim"
                                                 ?
                                                 <WalletsComponent
                                                     data={data}
@@ -951,48 +951,50 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                     {/* {
                             data.step > 1
                             && */}
-                                    <div className={styles.bottom}>
-                                        <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
-                                            <HelpCircle size={16} />
-                                            {t("Trouble Sending Money")}
-                                        </Link>
+                                    { data.flow !== "e-sim" &&
+                                        <div className={styles.bottom}>
+                                            <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
+                                                <HelpCircle size={16} />
+                                                {t("Trouble Sending Money")}
+                                            </Link>
 
-                                        {data.step !== 4 &&
-                                            <div className={styles?.buttons} >
-                                                <button disabled={data.loading} onClick={() => {
-                                                    if (data.verified) {
-                                                        navigate("/transactions")
-                                                    } else {
-                                                        if (data.step === 1) {
-                                                            setCurrentFlow("")
-                                                            setAction("")
-                                                            setStep(1)
-                                                        } else if (data.payment_type?.value) {
-                                                            updateDataHandler("showCard", false)
-                                                            updateDataHandler("payment_type", {})
-                                                            updateDataHandler("step", data.step - 1)
+                                            {data.step !== 4 &&
+                                                <div className={styles?.buttons} >
+                                                    <button disabled={data.loading} onClick={() => {
+                                                        if (data.verified) {
+                                                            navigate("/transactions")
                                                         } else {
-                                                            updateDataHandler("step", data.step - 1)
+                                                            if (data.step === 1) {
+                                                                setCurrentFlow("")
+                                                                setAction("")
+                                                                setStep(1)
+                                                            } else if (data.payment_type?.value) {
+                                                                updateDataHandler("showCard", false)
+                                                                updateDataHandler("payment_type", {})
+                                                                updateDataHandler("step", data.step - 1)
+                                                            } else {
+                                                                updateDataHandler("step", data.step - 1)
+                                                            }
                                                         }
-                                                    }
-                                                }}>
-                                                    <ChevronLeft />
-                                                </button>
-                                                <button disabled={data.loading || disabled} className={styles.full} onClick={onClickHandler}>
-                                                    {
-                                                        data.step === 5
-                                                            ?
-                                                            data.verified
+                                                    }}>
+                                                        <ChevronLeft />
+                                                    </button>
+                                                    <button disabled={data.loading || disabled} className={styles.full} onClick={onClickHandler}>
+                                                        {
+                                                            data.step === 5
                                                                 ?
-                                                                t("Dashboard")
+                                                                data.verified
+                                                                    ?
+                                                                    t("Dashboard")
+                                                                    :
+                                                                    t("Confirm")
                                                                 :
-                                                                t("Confirm")
-                                                            :
-                                                            t("Continue")
-                                                    }
-                                                </button>
-                                            </div>}
-                                    </div>
+                                                                t("Continue")
+                                                        }
+                                                    </button>
+                                                </div>}
+                                        </div>
+                                    }
                                     {/* } */}
                                 </>
                         }

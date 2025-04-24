@@ -4,9 +4,11 @@ import ipLogo from './files/iplogo.svg'
 import eSimBanner from './files/eSimBanner.svg'
 import receiptBg from "../AirtimeFlow/files/rec_bg.png"
 import styles2 from "../AirtimeFlow/styles/steptwo.module.css"
+import useWindowWidth from '../../../utils/useWindowWidth'
 
 const Receipt = ({ data, dataHandler, createTransaction }) => {
 
+  const width = useWindowWidth()
 
   const detsJSX = (label, val, purple) => (
     <div className={`${styles.dets}  ${purple ? styles.purple : ""}`}>
@@ -22,9 +24,9 @@ const Receipt = ({ data, dataHandler, createTransaction }) => {
         <img style={{ maxWidth: "100%" }} src={eSimBanner} alt="" />
       </div>
 
-      <div className={styles.cont}>
+      <div style={{flexDirection: width < 700 && 'column'}} className={styles.cont}>
 
-        <div className={styles.receipt}>
+        <div style={{width: width < 700 && '100%'}} className={styles.receipt}>
           <div style={{ background: `url(${receiptBg})`, }} className={styles.top}>
             <img src={ipLogo} alt="" />
           </div>

@@ -13,8 +13,9 @@ import FeesComponent from "./FeesComponent"
 import { getLimits } from "../../WalletsNew"
 import { removeCommasAndCurrency } from "../../WalletsNew/AccountLimits"
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption"
+import useWindowWidth from "../../../utils/useWindowWidth"
 
-const WalletsComponent = ({ data, dataHandler, loading = false }) => {
+const WalletsComponent = ({ data, dataHandler, loading = false, inEsim }) => {
     const { t } = useTranslation()
     const { userWallets, getUserWallets } = useContext(UserContext)
     useEffect(() => {
@@ -32,6 +33,8 @@ const WalletsComponent = ({ data, dataHandler, loading = false }) => {
         return userWallets?.filter(item => item?.wallet_type === "insta" && (item?.blocked || item?.admin_blocked || item?.status !== "active"))?.map(item => ({ name: item?.currency?.code, ...item }))
     }, [userWallets])
 
+    const width = useWindowWidth()
+
     return (
         <>
             {
@@ -43,7 +46,7 @@ const WalletsComponent = ({ data, dataHandler, loading = false }) => {
                             <InstaPayLoader />
                         </div>
                         :
-                        (data.payment_type?.value === "wallet" ? data.wallet?._id : true)
+                        (data.payment_type?.value === "wallet" && !inEsim  ? data.wallet?._id : true)
                             ?
                             <FeesComponent
                                 data={data}
@@ -94,8 +97,8 @@ const WalletsComponent = ({ data, dataHandler, loading = false }) => {
                         }}>You have selected <strong style={{ fontWeight: "900", fontSize: "1rem" }}>{data.wallet?.currency?.code}</strong> currency wallet for this transaction.</p>
                     }
                     {
-                        filteredWallets?.length > 1
-                        &&
+                        filteredWallets?.length > 1 && (!inEsim)
+                         &&
                         <CurConversion
                             showHeading={false}
                         />

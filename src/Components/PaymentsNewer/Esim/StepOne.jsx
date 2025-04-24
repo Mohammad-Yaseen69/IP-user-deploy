@@ -7,10 +7,12 @@ import country_styles from "../InternationalFlow/styles/stepone.module.css"
 import warn from "../AirtimeFlow/files/warn.svg"
 import info from "./files/info.svg"
 import bg from "./files/bg.png"
+import useWindowWidth from "../../../utils/useWindowWidth"
 
 
 const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShowModal }) => {
     const { t } = useTranslation()
+    const width = useWindowWidth()
 
     const regions = [
         {
@@ -34,11 +36,11 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                         <div style={{ height: "200px", width: "200px", margin: "1rem auto" }}>
                             <InstaPayLoader />
                         </div> :
-                        <div className={styles.eSim} style={{ padding: "12px" }}>
-                            <div className={styles.warningDiv}>
+                        <div className={styles.eSim} style={{ padding: "12px"}}>
+                            <div style={{flexDirection: width < 1000 && 'column' }} className={styles.warningDiv}>
                                 <div>
                                     <img src={warn} alt="" />
-                                    <p>
+                                    <p style={{width: width < 1000 && '100%' }}>
                                         Not all devices support eSIM. Perform a compatibility check to ensure a seamless user experience.
                                     </p>
                                 </div>
@@ -48,10 +50,10 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                                 </button>
                             </div>
 
-                            <div className={styles.contentDiv}>
+                            <div className={styles.contentDiv} style={{flexDirection: width < 600 && "column" }}>
                                 <h4>Travel Distance</h4>
 
-                                <div style={{ flex: 0, width: "fit-content", minWidth: 'fit-content' }} className={`${country_styles.country} ${styles.country}`} onClick={() => setShowModal(true)}>
+                                <div style={{ flex: 0, width: width < 600 ? "100%" : "fit-content", minWidth: 'fit-content' }} className={`${country_styles.country} ${styles.country}`} onClick={() => setShowModal(true)}>
                                     <div className={country_styles.main}>
                                         <div className={data?.country?.file_url ? "" : country_styles.grad_icon}>
                                             <img src={data?.country?.file_url ?? country} alt="" />
@@ -64,9 +66,9 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                             </div>
 
 
-                            <div style={{ alignItems: "flex-start" }} className={styles.contentDiv}>
+                            <div style={{ alignItems: "flex-start", flexDirection: width < 1000 && "column" }} className={styles.contentDiv}>
                                 <h4>Or Choose a Region</h4>
-                                <div className={styles.regions}>
+                                <div style={{width: width < 1000 && "100%"}} className={styles.regions}>
                                     {regions.map((region, index) => (
                                         <div style={{ cursor: "pointer", background: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center", position: 'relative', overflow: "hidden" }}
                                             onClick={() => {
