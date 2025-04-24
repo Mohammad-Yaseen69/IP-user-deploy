@@ -951,7 +951,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                     {/* {
                             data.step > 1
                             && */}
-                                    { data.flow !== "e-sim" &&
+                                    { (data.flow !== "e-sim" || data.step === 1) &&
                                         <div className={styles.bottom}>
                                             <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
                                                 <HelpCircle size={16} />

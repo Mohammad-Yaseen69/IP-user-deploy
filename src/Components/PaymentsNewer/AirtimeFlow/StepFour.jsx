@@ -21,7 +21,7 @@ const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
                 </>
             }
             <div className={styles.container}>
-                {((data.flow === "e-sim" && width < 1000 && (data.payment_type?.value !== "wallet" || !data.payment_type?.value)) || data.flow === "airtime") &&
+                {((data.flow === "e-sim" && width < 1000 && (data.payment_type?.value !== "wallet" || !data.payment_type?.value)) || data.flow === "airtime" || width > 1000) &&
                     <IntStepFour
                         data={data}
                         dataHandler={updateDataHandler}
