@@ -17,11 +17,15 @@ import Profile from './Profile'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import logo from "../../assets/images/logo/logo_white.png"
+import { Toggle } from "../MyMasterCard/CardPurchased"
+import info from "./files/info.svg"
+import AddPortfolioItem from '../Portfolio/AddPortfolioItem'
+import PortfolioCard from '../Portfolio/PortfolioCard'
 
 const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const { t } = useTranslation()
     const [userCountry, setUserCountry] = useState({})
-    const { authHeader, userWallets, setWalletRefresh, verifyToken } = useContext(UserContext)
+    const { authHeader, userWallets, getUserVideos, verifyToken, userVideos } = useContext(UserContext)
     const [paymentAddressDetails, setPaymentAddressDetails] = useState(null)
     const [title, setTitle] = useState('');
     const [currency, setCurrency] = useState('');
@@ -31,7 +35,8 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const [cover, setCover] = useState(null)
     const [saved, setSaved] = useState(false)
     const [isAllowed, SetIsAllowed] = useState(undefined)
-
+    const [videoCheck, setVideoCheck] = useState(true)
+    const [showModal, setShowModal] = useState(false)
 
     useEffect(() => {
         if (userDetails?.country_name) {
@@ -67,6 +72,11 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                     })
             }
             getPaymentAddress()
+        }
+
+        if (userDetails._id) {
+            getUserVideos()
+            console.log(userVideos)
         }
 
     }, [userDetails])
@@ -175,7 +185,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     }
 
     // pa link
-    const pa_link = `https://my.insta-pay.ch/pay/${userDetails?.username}`;  
+    const pa_link = `https://my.insta-pay.ch/pay/${userDetails?.username}`;
     const [urlCopied, setUrlCopied] = useState(false)
     const copyHandler = () => {
         navigator?.clipboard?.writeText(pa_link)
@@ -360,33 +370,47 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                             </div>
                                         </div>
                                     </div>
-                                    {/* {
-                                        window.innerWidth < 1000
-                                        &&
-                                        <div style={{
-                                            background: "#5926f0",
-                                            padding: "10px 16px",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "10px",
-                                            height: "fit-content",
-                                            color: "white",
-                                            borderRadius: "12px",
-                                            fontSize: "16px",
-                                            fontWeight: "600"
-                                        }}>
-                                            <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "90%" }}>{pa_link}</span>
-                                            {
-                                                urlCopied
-                                                    ?
-                                                    <CheckCircle size={15} color='white' />
-                                                    :
-                                                    <img src={copy} style={{ cursor: "pointer", height: "14px", width: "14px", objectFit: "contain" }} onClick={copyHandler} />
-                                            }
+
+
+                                    <div className={styles.videoCont}>
+                                        <div className={styles.head}>
+                                            <div>
+                                                <span>Add Video</span>
+                                                <img src={info} alt="" />
+                                            </div>
+
+                                            <Toggle checked={videoCheck} onChange={(e) => { setVideoCheck(e.target.checked) }} />
                                         </div>
-                                    } */}
+
+                                        <div className={styles.videoDiv}>
+                                            <div className={styles.topV}>
+                                                <p>You can add videos in your public payment address page. </p>
+                                                <button onClick={() => setShowModal(true)}>Add Video</button>
+                                            </div>
+
+                                            <div>
+                                                {userVideos && userVideos.length > 0 ? (
+                                                    userVideos.map((item, index) => (
+                                                        <PortfolioCard
+                                                            item={item}
+                                                            key={item?._id}
+                                                            index={index}
+                                                            pAddress={true}
+                                                            // handleSort={handleSort}
+                                                        />
+                                                    ))
+                                                ) : (
+                                                    <div className="text-center my-4">{t("No Video Items")}</div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+
+
                                 </CardBody>
                             </Card>
+
+                            <AddPortfolioItem isOpen={showModal} toggle={() => setShowModal(false)} pAddress={true} />
                         </>
                         :
                         <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
@@ -395,6 +419,8 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                             </CardBody>
                         </Card>
             }
+
+
         </div>
     )
 }

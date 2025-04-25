@@ -21,13 +21,32 @@ import PayAsGuest from './PayAsGuest'
 import { formatCurrency } from '../../Helper/AmountFormat'
 import { toast } from 'react-toastify'
 import InstaPayLoader from '../Loader'
+import { BackgroundColor } from '../../Constant'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Pagination } from 'swiper'
+import 'swiper/css'
+import 'swiper/css/pagination'
+import './styles/swiper.reset.css'
+import PortfolioCard from '../Portfolio/PortfolioCard'
 
-let timeout;
-const PaymentAddressComponent = ({ userDetails }) => {
+<style>
+{`
+    .swiper-pagination-bullet {
+        background-color: #5926f0 !important;
+        opacity: 1 !important;
+        width: 8px !important;
+        height: 8px !important;
+    }
+    .swiper-pagination-bullet-active {
+        background-color: #5926f0 !important;
+    }
+`}
+</style>
+
+const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     const { t } = useTranslation()
     const [userCountry, setUserCountry] = useState({})
     const [paymentAddressDetails, setPaymentAddressDetails] = useState(null)
-    const { verifyToken } = useContext(UserContext)
     const [title, setTitle] = useState('');
     const [currency, setCurrency] = useState('');
     const [description, setDescription] = useState('');
@@ -37,6 +56,10 @@ const PaymentAddressComponent = ({ userDetails }) => {
     const [amount, setAmount] = useState("1.00")
     const [formattedAmount, setFormattedAmount] = useState("1.00")
     const [loading, setLoading] = useState(true)
+
+
+   
+
     const handleKeyUp = (e) => {
         formatCurrency(e.target.value, false, setFormattedAmount);
     };
@@ -72,9 +95,6 @@ const PaymentAddressComponent = ({ userDetails }) => {
                     setLimits(decrypted?.limits)
                 })
                 .catch(err => {
-                    // console.log(err)
-                    const decrypted = decryptData(err.response.data.data)
-                    // console.log(decrypted)
                 })
                 .finally(() => {
                     setLoading(false)
@@ -85,18 +105,14 @@ const PaymentAddressComponent = ({ userDetails }) => {
 
     const [showAboutModal, setShowAboutModal] = useState(false)
 
-    console.log(currentWallet)
-    // pa link
-    const pa_link = `https://my.insta-pay.ch/pay/${user_name}`;
-    const [urlCopied, setUrlCopied] = useState(false)
 
-    const copyHandler = () => {
-        navigator.clipboard.writeText(pa_link)
-        setUrlCopied(true)
-        setTimeout(() => {
-            setUrlCopied(false)
-        }, 2500)
-    }
+    // const copyHandler = () => {
+    //     navigator.clipboard.writeText(pa_link)
+    //     setUrlCopied(true)
+    //     setTimeout(() => {
+    //         setUrlCopied(false)
+    //     }, 2500)
+    // }
 
     const [showCreditModal, setShowCreditModal] = useState(false)
     const [guestPayError, setGuestPayError] = useState("")
@@ -120,11 +136,9 @@ const PaymentAddressComponent = ({ userDetails }) => {
         }
     }
 
-    const [cardNumber, setCardNumber] = useState('');
-    const [expiry, setExpiry] = useState('');
-    const [cvc, setCVC] = useState('');
-    const [cardHolderName, setCardHolderName] = useState('');
-    const [cardError, setCardError] = useState('');
+    const [cardNumber] = useState('');
+    const [expiry] = useState('');
+    const [cvc] = useState('');
 
     const [isValid, setIsValid] = useState(false)
 
@@ -205,60 +219,95 @@ const PaymentAddressComponent = ({ userDetails }) => {
                                         username={user_name}
                                     />
                                 }
-                                <div className={styles.cover_container}>
-                                    <img src={cover ?? coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: "300px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important" }} />
-                                </div>
+
                                 <Card style={{ marginBottom: "0", boxShadow: "unset" }} className={styles.sub_container}>
                                     <CardBody className={styles.sc_body}>
-
-
-                                        {/* basic info */}
-                                        <div className={styles.top}>
-                                            <div className={styles.left}>
-                                                <div className={styles.dp_container}>
-                                                    {
-                                                        dp
-                                                            ?
-                                                            <img src={dp} className={styles.dp} alt="profile picture" style={{ background: "transparent" }} />
-                                                            :
-                                                            <div className={styles.dp} style={{ overflow: "hidden" }}>{userDetails?.first_name?.[0]}</div>
-                                                    }
+                                        <div style={{ flex: 2 }} className={styles.left}>
+                                            {userDetails.about_me &&
+                                                <div className={styles.about}>
+                                                    <h4 style={{ marginBottom: "0px" }}>About Me:</h4>
+                                                    <p style={{ fontSize: "14px", fontWeight: 600, color: "#7E7E7E" }}>{userDetails.about_me}</p>
                                                 </div>
-                                                <div className={styles.basic_dets}>
-                                                    <div className={styles.badge}>{userDetails?.account_type === "individual" ? "Personal" : "Business"} Account</div>
-                                                    <div style={{ position: "relative", /*display: "flex", alignItems: "flex-end", gap: ".3rem"*/ }}>
-                                                        <h4 style={{ cursor: "pointer", display: "inline" }} onClick={() => navigate(`/profile/${user_name}`)}>{userDetails?.first_name} {userDetails?.last_name}</h4>
-                                                        {
-                                                            userDetails?.kyc_status === "approved"
-                                                            &&
-                                                            <>
-                                                                <img onMouseEnter={() => setShowVerTT(true)} onMouseLeave={() => setShowVerTT(false)} src={verified} alt="" style={{ height: window.innerWidth > 780 ? "25px" : "17px", width: window.innerWidth > 780 ? "25px" : "17px", objectFit: "contain", transform: "translateY(-3px)", marginLeft: ".3rem" }} />
-                                                                {
-                                                                    showVerTT
-                                                                    &&
-                                                                    <div style={{
-                                                                        position: "absolute",
-                                                                        top: "100%",
-                                                                        right: "0",
-                                                                        background: "#5926f0",
-                                                                        color: "white",
-                                                                        fontSize: window.innerWidth > 780 ? ".8rem" : ".65rem",
-                                                                        fontWeight: 500,
-                                                                        padding: window.innerWidth > 780 ? "6px 18px" : "3px 10px",
-                                                                        borderRadius: window.innerWidth > 780 ? "8px" : "4px",
-                                                                        whiteSpace: "nowrap"
-                                                                    }}>{t("User Identity Verified")}</div>
-                                                                }
-                                                            </>
-                                                        }
-                                                    </div>
-                                                    <div className={styles.country}>
-                                                        <img src={userCountry?.file_url} alt={userCountry?.alpha3} style={{ boxShadow: "0 0 5px #afafaf" }} />
-                                                        <span>{userCountry?.name}</span>
-                                                    </div>
+                                            }
+
+                                            {userVideos && userVideos.length > 0 && (
+                                                <div className='p-swiper-videos-123' style={{ marginTop: "20px", marginBottom: "40px" }}>
+                                                    <Swiper
+                                                        modules={[Pagination]}
+                                                        pagination={{ clickable: true }}
+                                                        spaceBetween={20}
+                                                        slidesPerView={1}
+                                                    >
+                                                        {userVideos.map((video, index) => (
+                                                            <SwiperSlide key={video._id || index}>
+                                                                <PortfolioCard item={video} pAddress={true} publicP={true} />
+                                                            </SwiperSlide>
+                                                        ))}
+                                                    </Swiper>
                                                 </div>
+                                            )}
+
+                                            <QrDetails
+                                                wallet={currentWallet}
+                                                user={userDetails}
+                                                amount={amount}
+                                                currency={currency}
+                                                currentWallet={currentWallet}
+                                            />
+
+                                        </div>
+
+                                        <div style={{ flex: .5, borderRadius: '16px' }} className={styles.right}>
+                                            <div className={styles.cover_container}>
+                                                <img src={cover ?? coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: "210px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important" }} />
                                             </div>
-                                            {/* <div className={styles.link} style={{
+                                            <div style={{ backgroundColor: 'white', borderRadius: "16px", padding: "14px" }}>
+                                                <div style={{ flexDirection: "column", alignItems: "center", gap: "0", padding: "0px", position: 'relative', top: "-50px" }} className={styles.top}>
+                                                    <div style={{ flexDirection: "column", alignItems: "center", }} className={styles.left}>
+                                                        <div className={styles.dp_container}>
+                                                            {
+                                                                dp
+                                                                    ?
+                                                                    <img src={dp} className={styles.dp} alt="profile" style={{ background: "transparent" }} />
+                                                                    :
+                                                                    <div className={styles.dp} style={{ overflow: "hidden" }}>{userDetails?.first_name?.[0]}</div>
+                                                            }
+                                                        </div>
+                                                        <div style={{ alignItems: 'center' }} className={styles.basic_dets}>
+                                                            <div className={styles.badge}>{userDetails?.account_type === "individual" ? "Personal" : "Business"} Account</div>
+                                                            <div style={{ position: "relative", /*display: "flex", alignItems: "flex-end", gap: ".3rem"*/ }}>
+                                                                <h4 style={{ cursor: "pointer", display: "inline" }} onClick={() => navigate(`/profile/${user_name}`)}>{userDetails?.first_name} {userDetails?.last_name}</h4>
+                                                                {
+                                                                    userDetails?.kyc_status === "approved"
+                                                                    &&
+                                                                    <>
+                                                                        <img onMouseEnter={() => setShowVerTT(true)} onMouseLeave={() => setShowVerTT(false)} src={verified} alt="" style={{ height: window.innerWidth > 780 ? "25px" : "17px", width: window.innerWidth > 780 ? "25px" : "17px", objectFit: "contain", transform: "translateY(-3px)", marginLeft: ".3rem" }} />
+                                                                        {
+                                                                            showVerTT
+                                                                            &&
+                                                                            <div style={{
+                                                                                position: "absolute",
+                                                                                top: "100%",
+                                                                                right: "0",
+                                                                                background: "#5926f0",
+                                                                                color: "white",
+                                                                                fontSize: window.innerWidth > 780 ? ".8rem" : ".65rem",
+                                                                                fontWeight: 500,
+                                                                                padding: window.innerWidth > 780 ? "6px 18px" : "3px 10px",
+                                                                                borderRadius: window.innerWidth > 780 ? "8px" : "4px",
+                                                                                whiteSpace: "nowrap"
+                                                                            }}>{t("User Identity Verified")}</div>
+                                                                        }
+                                                                    </>
+                                                                }
+                                                            </div>
+                                                            <div className={styles.country}>
+                                                                <img src={userCountry?.file_url} alt={userCountry?.alpha3} style={{ boxShadow: "0 0 5px #afafaf" }} />
+                                                                <span>{userCountry?.name}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {/* <div className={styles.link} style={{
                                             background: "#5926f0",
                                             padding: "10px 16px",
                                             display: "flex",
@@ -281,123 +330,117 @@ const PaymentAddressComponent = ({ userDetails }) => {
                                             }
                                         </div> */}
 
-                                            <div className={vpa_styles.left}>
-                                                <h4 style={{ textAlign: window.innerWidth > 1000 ? "right" : "left" }}>{title}</h4>
-                                                <p style={{ textAlign: window.innerWidth > 1000 ? "right" : "left" }}>{description?.length > 200 ? description.slice(0, 200) + ".." : description}
-                                                    {
-                                                        description?.length > 200
-                                                        &&
-                                                        <span style={{ fontSize: "12px", color: "black", cursor: "pointer" }} onClick={() => setShowAboutModal(!showAboutModal)}>Read more {">"}</span>
-                                                    }
-                                                </p>
-                                                <Modal isOpen={showAboutModal} toggle={() => setShowAboutModal(!showAboutModal)}>
-                                                    <ModalHeader toggle={() => setShowAboutModal(!showAboutModal)}>
-                                                        Description
-                                                    </ModalHeader>
-                                                    <ModalBody>{description}</ModalBody>
-                                                </Modal>
-                                            </div>
-                                            <div>
-
-                                            </div>
-                                        </div>
-
-                                        <div className={vpa_styles.container}>
-                                            <QrDetails
-                                                wallet={currentWallet}
-                                                user={userDetails}
-                                                amount={amount}
-                                                currency={currency}
-                                                currentWallet={currentWallet}
-                                            />
-                                            {
-                                                window.innerWidth < 1000
-                                                &&
-                                                <div className={styles.go_back} onClick={() => window.history.back()}>
-                                                    <ChevronLeft size={16} color='black' />
-                                                    <span>
-                                                        {t("Go back (Cancel Payment)")}
-                                                    </span>
-                                                </div>
-                                            }
-                                            <div className={vpa_styles.right}>
-                                                <div className={vpa_styles.currency}>
-                                                    <div>{currentWallet?.currency?.code} </div>
-                                                    {/* <p>{currency}</p> */}
-                                                </div>
-                                                <div className={vpa_styles.amount}>
-                                                    <label >{t("Enter The Amount")}</label>
-                                                    <div>
-                                                        <span>{currentWallet?.currency?.code} </span>
-                                                        {/* <Input value={amount} onChange={e => e.target.value < 0 ? console.log("") : setAmount(e.target.value)} placeholder='10.00' type='number' /> */}
-                                                        <input
-                                                            type="text"
-                                                            value={formattedAmount}
-                                                            maxLength={12}
-                                                            onChange={(e) => setFormattedAmount(e.target.value)}
-                                                            onKeyUp={handleKeyUp}
-                                                            onBlur={handleBlur}
-                                                            placeholder="10.00"
-                                                            data-type="currency"
-                                                            style={{ width: "100%", outlineColor: "white", border: "none", outline: "none" }}
-                                                        />
+                                                    <div className={vpa_styles.left} style={{ display: "none" }}>
+                                                        <h4 style={{ textAlign: window.innerWidth > 1000 ? "right" : "left" }}>{title}</h4>
+                                                        <p style={{ textAlign: window.innerWidth > 1000 ? "right" : "left" }}>{description?.length > 200 ? description.slice(0, 200) + ".." : description}
+                                                            {
+                                                                description?.length > 200
+                                                                &&
+                                                                <span style={{ fontSize: "12px", color: "black", cursor: "pointer" }} onClick={() => setShowAboutModal(!showAboutModal)}>Read more {">"}</span>
+                                                            }
+                                                        </p>
+                                                        <Modal isOpen={showAboutModal} toggle={() => setShowAboutModal(!showAboutModal)}>
+                                                            <ModalHeader toggle={() => setShowAboutModal(!showAboutModal)}>
+                                                                Description
+                                                            </ModalHeader>
+                                                            <ModalBody>{description}</ModalBody>
+                                                        </Modal>
                                                     </div>
                                                 </div>
-                                                <div className={vpa_styles.buttons}>
-                                                    <Link to={"#"} onClick={toggleCreditModal} className={vpa_styles.button}
-                                                        style={{
-                                                            opacity: amount <= 0 ? .7 : 1,
-                                                            pointerEvents: amount <= 0 ? "none" : "all",
-                                                            position: "relative"
-                                                        }}
-                                                    >
-                                                        <div>
-                                                            <img src={addFunds} alt="A" />
+
+                                                <div style={{ marginBottom: "0px" }} className={vpa_styles.container}>
+
+                                                    {
+                                                        window.innerWidth < 1000
+                                                        &&
+                                                        <div className={styles.go_back} onClick={() => window.history.back()}>
+                                                            <ChevronLeft size={16} color='black' />
+                                                            <span>
+                                                                {t("Go back (Cancel Payment)")}
+                                                            </span>
                                                         </div>
-                                                        <span>Pay As Guest</span>
-                                                        {
-                                                            guestPayError
-                                                            &&
-                                                            <div
-                                                                style={{
-                                                                    position: "absolute",
-                                                                    top: "100%",
-                                                                    left: 0,
-                                                                    background: "white",
-                                                                    color: "red",
-                                                                    maxHeight: "unset",
-                                                                    height: "fit-content",
-                                                                    padding: "1rem",
-                                                                    whiteSpace: "nowrap"
-                                                                }}
-                                                                className={vpa_styles.gperror}
-                                                            >
-                                                                {guestPayError}
+                                                    }
+                                                    <div className={vpa_styles.right}>
+                                                        <div className={vpa_styles.currency}>
+                                                            <div>{currentWallet?.currency?.code} </div>
+                                                            {/* <p>{currency}</p> */}
+                                                        </div>
+                                                        <div className={vpa_styles.amount}>
+                                                            <label >{t("Enter The Amount")}</label>
+                                                            <div>
+                                                                <span>{currentWallet?.currency?.code} </span>
+                                                                {/* <Input value={amount} onChange={e => e.target.value < 0 ? console.log("") : setAmount(e.target.value)} placeholder='10.00' type='number' /> */}
+                                                                <input
+                                                                    type="text"
+                                                                    value={formattedAmount}
+                                                                    maxLength={12}
+                                                                    onChange={(e) => setFormattedAmount(e.target.value)}
+                                                                    onKeyUp={handleKeyUp}
+                                                                    onBlur={handleBlur}
+                                                                    placeholder="10.00"
+                                                                    data-type="currency"
+                                                                    style={{ width: "100%", outlineColor: "white", border: "none", outline: "none" }}
+                                                                />
                                                             </div>
-                                                        }
-                                                    </Link>
-                                                    <Link onClick={(e) => {
-                                                        if (amount > 0) {
-                                                            const path = url
-                                                            sessionStorage.setItem("path", path)
-                                                        }
-                                                        else {
-                                                            e.preventDefault()
-                                                        }
-                                                    }} to={amount > 0 ? url : ""} className={vpa_styles.button}
-                                                        style={{
-                                                            opacity: amount <= 0 ? .7 : 1,
-                                                            pointerEvents: amount <= 0 ? "none" : "all",
-                                                        }}
-                                                    >
-                                                        <div>
-                                                            <img src={logo} alt="A" />
                                                         </div>
-                                                        <span>Pay With InstaPay</span>
-                                                    </Link>
+                                                        <div className={vpa_styles.buttons}>
+                                                            <Link to={"#"} onClick={toggleCreditModal} className={vpa_styles.button}
+                                                                style={{
+                                                                    opacity: amount <= 0 ? .7 : 1,
+                                                                    pointerEvents: amount <= 0 ? "none" : "all",
+                                                                    position: "relative"
+                                                                }}
+                                                            >
+                                                                <div>
+                                                                    <img src={addFunds} alt="A" />
+                                                                </div>
+                                                                <span>Pay As Guest</span>
+                                                                {
+                                                                    guestPayError
+                                                                    &&
+                                                                    <div
+                                                                        style={{
+                                                                            position: "absolute",
+                                                                            top: "100%",
+                                                                            left: 0,
+                                                                            background: "white",
+                                                                            color: "red",
+                                                                            maxHeight: "unset",
+                                                                            height: "fit-content",
+                                                                            padding: "1rem",
+                                                                            whiteSpace: "nowrap"
+                                                                        }}
+                                                                        className={vpa_styles.gperror}
+                                                                    >
+                                                                        {guestPayError}
+                                                                    </div>
+                                                                }
+                                                            </Link>
+                                                            <Link onClick={(e) => {
+                                                                if (amount > 0) {
+                                                                    const path = url
+                                                                    sessionStorage.setItem("path", path)
+                                                                }
+                                                                else {
+                                                                    e.preventDefault()
+                                                                }
+                                                            }} to={amount > 0 ? url : ""} className={vpa_styles.button}
+                                                                style={{
+                                                                    opacity: amount <= 0 ? .7 : 1,
+                                                                    pointerEvents: amount <= 0 ? "none" : "all",
+                                                                }}
+                                                            >
+                                                                <div>
+                                                                    <img src={logo} alt="A" />
+                                                                </div>
+                                                                <span>Pay With InstaPay</span>
+                                                            </Link>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        {/* basic info */}
 
                                     </CardBody>
                                 </Card>

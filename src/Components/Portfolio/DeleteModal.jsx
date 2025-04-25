@@ -5,8 +5,8 @@ import { UserContext } from '../../Context/UserContext'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { toast } from 'react-toastify'
 
-const DeleteModal = ({ isOpen, toggle, item }) => {
-    const { authHeader, getUserDocuments } = useContext(UserContext)
+const DeleteModal = ({ isOpen, toggle, item, pAddress }) => {
+    const { authHeader, getUserDocuments, getUserVideos } = useContext(UserContext)
     const [deleting, setDeleting] = useState(false)
 
     const deleteHandler = () => {
@@ -16,7 +16,11 @@ const DeleteModal = ({ isOpen, toggle, item }) => {
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
-                getUserDocuments()
+                if(pAddress){
+                    getUserVideos()
+                }else{
+                    getUserDocuments()
+                }
                 // console.log(decrypted)
                 toggle()
             })

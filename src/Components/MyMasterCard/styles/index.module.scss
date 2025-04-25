@@ -538,52 +538,7 @@
                         letter-spacing: -0.14px;
                     }
 
-                    .toggle {
-                        position: relative;
-                        display: inline-block;
-                        width: 36px;
-                        height: 20px;
-                        flex-shrink: 0;
-                        margin-bottom: 0 !important;
-
-                        input {
-                            opacity: 0;
-                            width: 0;
-                            height: 0;
-                        }
-
-                        .slider {
-                            position: absolute;
-                            cursor: pointer;
-                            top: 0;
-                            left: 0;
-                            right: 0;
-                            bottom: 0;
-                            background-color: #ccc;
-                            transition: .4s;
-                            border-radius: 34px;
-
-                            &:before {
-                                position: absolute;
-                                content: "";
-                                height: 16px;
-                                width: 16px;
-                                left: 2px;
-                                bottom: 2px;
-                                background-color: white;
-                                transition: .4s;
-                                border-radius: 50%;
-                            }
-                        }
-
-                        input:checked+.slider {
-                            background-color: #00875A;
-                        }
-
-                        input:checked+.slider:before {
-                            transform: translateX(16px);
-                        }
-                    }
+                 
                 }
 
                 .walletOptions {
@@ -1216,6 +1171,55 @@
         }
     }
 }
+
+
+.toggle {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-bottom: 0 !important;
+
+    input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+
+        &:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+    }
+
+    input:checked+.slider {
+        background-color: #00875A;
+    }
+
+    input:checked+.slider:before {
+        transform: translateX(16px);
+    }
+}
+
 
 @media screen and (max-width: 1000px) {
     .right {

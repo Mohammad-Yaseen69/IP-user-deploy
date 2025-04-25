@@ -19,7 +19,7 @@ import audioPl from "./files/audio.jpeg"
 import pdfPl from "./files/pdf.jpeg"
 import docPl from "./files/doc.jpeg"
 
-const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort }) => {
+const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress, publicP }) => {
     const { t } = useTranslation()
     const [showMenu, setShowMenu] = useState(false)
     const menuRef = useRef(null)
@@ -66,6 +66,10 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort }) => {
                 setShowModal(true)
             }}
             onDragEnd={handleSort}
+            style={{
+                height: (pAddress && !publicP) ? '150px' : publicP ? "220px" : '',
+                minWidth: publicP && "100%"
+            }}
         >
             <PortfolioItemModal
                 item={item}
@@ -99,7 +103,8 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort }) => {
                     top: "20px",
                     right: "20px",
                     filter: "drop-shadow(0px 0px 1px #0000005e)",
-                    zIndex: 101
+                    zIndex: 101,
+                    display: publicP && "none"
                 }}
                     ref={menuRef}
                 >
@@ -156,7 +161,7 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort }) => {
                                         width: "100%",
                                         height: "100%",
                                         left: 0,
-                                        top: 0,
+                                        top: (pAddress && !publicP) ? -32 : 0,
                                         backgroundColor: "rgba(0,0,0,0.2)",
                                         display: "flex",
                                         alignItems: "center",
@@ -183,7 +188,7 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort }) => {
                                         width: "100%",
                                         height: "100%",
                                         left: 0,
-                                        top: 0,
+                                        top: (pAddress && !publicP) ? -32 : 0,
                                         backgroundColor: "rgba(0,0,0,0.2)",
                                         zIndex: 100,
                                         display: "flex",
@@ -207,7 +212,7 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort }) => {
 
                 }
             </div>
-            <div className={styles.item_card_body}>
+            <div style={{ display: pAddress && "none" }} className={styles.item_card_body}>
                 <h5>{item?.title}</h5>
                 <div style={{ position: "relative" }}>
                     <p
@@ -276,12 +281,12 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort }) => {
             {
                 showEdit
                 &&
-                <EditModal isOpen={showEdit} toggle={() => setShowEdit(!showEdit)} item={item} />
+                <EditModal isOpen={showEdit} toggle={() => setShowEdit(!showEdit)} item={item} pAddress={pAddress} />
             }
             {
                 showDelete
                 &&
-                <DeleteModal isOpen={showDelete} toggle={() => setShowDelete(!showDelete)} item={item} />
+                <DeleteModal isOpen={showDelete} toggle={() => setShowDelete(!showDelete)} pAddress={pAddress} item={item} />
             }
         </div>
     )

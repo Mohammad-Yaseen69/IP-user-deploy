@@ -8,15 +8,16 @@ import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
+import bg from '../PaymentAddress/files/bg.png'
 
-const AddPortfolioItem = ({ isOpen, toggle }) => {
+const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
     const { t } = useTranslation()
     const [file, setFile] = useState(null);
     const [fileType, setFileType] = useState(null);
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
     const [isSaving, setIsSaving] = useState(false)
-    const { authHeader, userDetails, getUserDocuments } = useContext(UserContext)
+    const { authHeader, userDetails, getUserDocuments, getUserVideos } = useContext(UserContext)
 
     const addPortfolioItemAws = () => {
         if (file && title && fileType) {
@@ -26,6 +27,7 @@ const AddPortfolioItem = ({ isOpen, toggle }) => {
             formData.append('title', title);
             formData.append('description', description);
             formData.append('file_type', fileType);
+            formData.append('type', pAddress ? "address" : "portfolio")
 
             axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/upload-portfolio/${userDetails?._id}`,
                 formData, {
@@ -37,7 +39,12 @@ const AddPortfolioItem = ({ isOpen, toggle }) => {
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     toast.success(decrypted?.message)
-                    getUserDocuments()
+                    if (pAddress) {
+                        getUserVideos()
+                    } else {
+
+                        getUserDocuments()
+                    }
                     toggle()
                     setFile(null)
                     setFileType(null)
@@ -57,7 +64,8 @@ const AddPortfolioItem = ({ isOpen, toggle }) => {
             const data = {
                 "account_id": userDetails?._id,
                 "media_id": media_id,
-                "file_type": file?.type
+                "file_type": file?.type,
+                "type": pAddress ? "address" : "portfolio"
             }
             const enc = encryptData(data)
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-jw-media-status`,
@@ -71,7 +79,11 @@ const AddPortfolioItem = ({ isOpen, toggle }) => {
             console.log(dec)
             const message = dec?.data?.status === "ready" ? "Uploaded successfully, and ready to play." : "Uploaded successfully, it might take a few minutes to load."
             toast.success(message)
-            getUserDocuments()
+            if (pAddress) {
+                getUserVideos()
+            } else {
+                getUserDocuments()
+            }
             toggle()
             setFile(null)
             setFileType(null)
@@ -122,7 +134,8 @@ const AddPortfolioItem = ({ isOpen, toggle }) => {
                 description,
                 username: userDetails?.username,
                 file_type: file?.type,
-                language: userDetails?.language ?? "en"
+                language: userDetails?.language ?? "en",
+                type: pAddress ? "address" : "portfolio"
             }
             const enc = encryptData(data)
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/add-portfolio-item`,
@@ -167,55 +180,64 @@ const AddPortfolioItem = ({ isOpen, toggle }) => {
                 {
                     window.innerWidth > 1000
                     &&
-                    <img src={modal} alt="add item" style={{
-                        width: "40%",
-                        borderRadius: "30px"
+                    <img src={pAddress ? bg : modal} alt="add item" style={{
+                        width: !pAddress ? "50%" : "40%",
+                        borderRadius: "30px",
+                        backgroundSize: "cover"
                     }} />
                 }
                 <div style={{
-                    flex: 1
+                    flex: 1,
+                    display: pAddress && "flex",
+                    justifyContent: pAddress && "space-between",
+                    flexDirection: pAddress && "column",
                 }}>
-                    <Dropzone file={file} setFile={setFile} setFileType={setFileType} />
-                    <div>
-                        <Label style={{
-                            color: '#000',
-                            leadingTrim: 'both',
-                            textEdge: 'cap',
-                            fontFamily: 'Manrope',
-                            fontSize: 18.512,
-                            fontStyle: 'normal',
-                            fontWeight: 700,
-                            lineHeight: 'normal',
-                            marginTop: "24px"
-                        }}>
-                            Title
-                        </Label>
-                        <Input type='text' style={{
-                            borderRadius: "12px",
-                            background: "rgba(65, 1, 255, 0.06)"
-                        }} value={title} onChange={e => setTitle(e.target.value)} />
-                    </div>
-                    <div>
-                        <Label style={{
-                            color: '#000',
-                            leadingTrim: 'both',
-                            textEdge: 'cap',
-                            fontFamily: 'Manrope',
-                            fontSize: 18.512,
-                            fontStyle: 'normal',
-                            fontWeight: 700,
-                            lineHeight: 'normal',
-                            marginTop: "24px"
-                        }}>
-                            Description
-                        </Label>
-                        <Input type='textarea' style={{
-                            borderRadius: "12px",
-                            background: "rgba(65, 1, 255, 0.06)",
-                            resize: "none",
-                            height: "100px"
-                        }} value={description} onChange={e => setDescription(e.target.value)} />
-                    </div>
+                    <Dropzone pAddress={pAddress} file={file} setFile={setFile} setFileType={setFileType} />
+                    {!pAddress
+                        &&
+                        <>
+                            <div>
+                                <Label style={{
+                                    color: '#000',
+                                    leadingTrim: 'both',
+                                    textEdge: 'cap',
+                                    fontFamily: 'Manrope',
+                                    fontSize: 18.512,
+                                    fontStyle: 'normal',
+                                    fontWeight: 700,
+                                    lineHeight: 'normal',
+                                    marginTop: "24px"
+                                }}>
+                                    Title
+                                </Label>
+                                <Input type='text' style={{
+                                    borderRadius: "12px",
+                                    background: "rgba(65, 1, 255, 0.06)"
+                                }} value={title} onChange={e => setTitle(e.target.value)} />
+                            </div>
+                            <div>
+                                <Label style={{
+                                    color: '#000',
+                                    leadingTrim: 'both',
+                                    textEdge: 'cap',
+                                    fontFamily: 'Manrope',
+                                    fontSize: 18.512,
+                                    fontStyle: 'normal',
+                                    fontWeight: 700,
+                                    lineHeight: 'normal',
+                                    marginTop: "24px"
+                                }}>
+                                    Description
+                                </Label>
+                                <Input type='textarea' style={{
+                                    borderRadius: "12px",
+                                    background: "rgba(65, 1, 255, 0.06)",
+                                    resize: "none",
+                                    height: "100px"
+                                }} value={description} onChange={e => setDescription(e.target.value)} />
+                            </div>
+                        </>
+                    }
                     <div style={{
                         display: "flex",
                         justifyContent: "space-between",
@@ -264,10 +286,10 @@ const AddPortfolioItem = ({ isOpen, toggle }) => {
                                             border: "none",
                                             outline: "none",
                                             padding: "9px 16px",
-                                            opacity: !title || !file || isSaving ? .7 : 1,
-                                            cursor: !title || !file || isSaving ? "not-allowed" : "pointer"
+                                            opacity: ((!title) && !pAddress) || !file || isSaving ? .7 : 1,
+                                            cursor: ((!title) && !pAddress) || !file  || isSaving ? "not-allowed" : "pointer"
                                         }}
-                                        disabled={!title || !file || isSaving}
+                                        disabled={((!title) && !pAddress) || !file || isSaving}
                                         onClick={String(file?.type)?.toLowerCase()?.includes("video") || String(file?.type)?.toLowerCase()?.includes("audio") ? addPortfolioItem : addPortfolioItemAws}
                                     >{t("Save And Post")}</button>
                                 </div>

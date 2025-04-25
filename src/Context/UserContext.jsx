@@ -7,7 +7,7 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { publicRoutes } from "../RouteNew/Routes";
 import questionsData from "../Components/Settings/questions.json"
-import Modal from "../Components/SessionExpireModal" 
+import Modal from "../Components/SessionExpireModal"
 
 axios.defaults.timeout = 10000;
 axios.defaults.timeoutErrorMessage = "Server Timeout."
@@ -85,6 +85,7 @@ const UserState = ({ children }) => {
     const [allowedWithdrawals, setAllowedWithdrawals] = useState(null)
     const [allowedCountries, setAllowedCountries] = useState([])
     const [userPortfolio, setUserPortfolio] = useState([])
+    const [userVideos, setUserVideos] = useState([])
     const [portfolioRef, setPortfolioRef] = useState(0)
     const [profileCompleted, setProfileCompleted] = useState(null)
     const [profileCompletedPercentage, setProfileCompletedPercentage] = useState(0)
@@ -400,7 +401,7 @@ const UserState = ({ children }) => {
 
     // user portfolio
     const getUserDocuments = () => {
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-all-document/${userDetails._id}`, {
+        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-all-document/${userDetails._id}/portfolio`, {
             headers: authHeader
         })
             .then(res => {
@@ -408,8 +409,21 @@ const UserState = ({ children }) => {
                 setUserPortfolio(decrypted.result)
             })
             .catch(err => {
+            })
+    }
+    const getUserVideos = (userId = null) => {
+        const id = userId ?? userDetails?._id
+        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-all-document/${id}/address`, {
+            headers: authHeader
+        })
+            .then(res => {
+                const decrypted = decryptData(res.data.data)
+                console.log(decrypted) 
+                setUserVideos(decrypted.result)
+            })
+            .catch(err => {
                 const decrypted = decryptData(err.response.data.data)
-                // console.log(decrypted)
+                console.log(decrypted)
             })
     }
 
@@ -512,9 +526,9 @@ const UserState = ({ children }) => {
     }, [userDetails])
 
     return (
-        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, setRefresh, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, setPage, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, setUserRefresh, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, setWalletRefresh, allowedCountries, userPortfolio, setPortfolioRef, profileIncompleteReason, setUserPortfolio, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, clearData }}>
-              {showModalState && <Modal isOpen={showModalState}  toggle={() => window.history.replaceState(null, null, "")} />}
-              {children}
+        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, setRefresh, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, setPage, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, setUserRefresh, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, setWalletRefresh, allowedCountries, userPortfolio, setPortfolioRef, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, clearData }}>
+            {showModalState && <Modal isOpen={showModalState} toggle={() => window.history.replaceState(null, null, "")} />}
+            {children}
         </UserContext.Provider>
     )
 }

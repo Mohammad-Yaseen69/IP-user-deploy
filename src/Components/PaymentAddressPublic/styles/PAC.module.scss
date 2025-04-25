@@ -1,13 +1,13 @@
 .container {
-    padding: 0 0 1rem;
-    max-width: 1200px;
+    padding: 24px;
+    max-width: 100%;
     width: 100%;
     box-shadow: 0 0 100px #ffffffe7;
-    border-radius: 60px;
+    border-radius: 16px;
 
     .cover_container {
         box-shadow: 0 0 3px rgba(0, 0, 0, 0.103);
-        border-radius: 60px 60px 0px 0px;
+        border-radius: 16px 16px 0px 0px;
         margin-bottom: -50px;
         overflow: hidden;
         height: 248px;
@@ -19,11 +19,22 @@
     }
 
     .sub_container {
-        border-radius: 60px;
+        border-radius: 16px;
+        background-color: transparent;
         // filter: drop-shadow(15.146323204040527px 4.327520847320557px 242.34117126464844px rgba(0, 0, 0, 0.07)) drop-shadow(0px -17px 58px rgba(0, 0, 0, 0.02));
 
         .sc_body {
             padding: 0 50px;
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-end;
+
+            >.left{
+                padding: 24px;
+                background-color: white;
+                border-radius: 16px;
+                overflow: hidden;
+            }
 
             .top {
                 display: flex;
@@ -36,8 +47,6 @@
                     gap: 1rem;
 
                     .dp_container {
-                        position: relative;
-                        top: -70px;
 
                         .dp {
                             min-width: 172px;
@@ -45,7 +54,7 @@
                             max-width: 172px;
                             max-height: 172px;
                             object-fit: cover;
-                            border-radius: 30px;
+                            border-radius: 16px;
                             display: flex;
                             justify-content: center;
                             align-items: center;
@@ -61,7 +70,7 @@
                                 position: absolute;
                                 top: 0;
                                 left: 0;
-                                border-radius: 60px;
+                                border-radius: 16px;
                                 background: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.00) 50%), lightgray -85.141px -187.708px / 157.607% 234.773% no-repeat;
                                 box-shadow: 0px 42px 29px -30px #AECFFF;
                                 width: 100%;
@@ -247,11 +256,11 @@
 
                         .dp_container {
                             .dp {
-                                min-height: 200px;
-                                min-width: 200px;
-                                max-height: 200px;
-                                max-width: 200px;
-                                border-radius: 47px;
+                                min-height: 172px;
+                                min-width: 172px;
+                                max-height: 172px;
+                                max-width: 172px;
+                                border-radius: 16px;
                                 font-size: 7.5rem;
                             }
                         }

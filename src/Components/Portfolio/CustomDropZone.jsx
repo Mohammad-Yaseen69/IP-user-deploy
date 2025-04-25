@@ -3,7 +3,7 @@ import { AlertTriangle } from 'react-feather';
 import { Modal, ModalHeader, ModalBody, Button, ModalFooter } from 'reactstrap';
 import InstaPayLoader from '../Loader';
 
-const Dropzone = ({ file, setFile, setFileType }) => {
+const Dropzone = ({ file, setFile, setFileType, pAddress }) => {
     const [isDragging, setIsDragging] = useState(false);
     const [temp, setTemp] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -91,7 +91,7 @@ const Dropzone = ({ file, setFile, setFileType }) => {
                 justifyContent: 'center',
                 padding: '20px',
                 textAlign: 'center',
-                height: "200px"
+                height:  pAddress ? "250px" :"200px"
             }}
             onClick={() => {
                 if (inputRef.current) {
