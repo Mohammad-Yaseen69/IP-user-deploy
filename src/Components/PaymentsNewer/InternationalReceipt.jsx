@@ -34,7 +34,7 @@ const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, paymen
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
                         {
-                            transactionDetails?.destination?.currency !== currency
+                            (transactionDetails?.destination?.currency !== currency && transactionDetails?.wholesale_fx_rate)
                             &&
                             <div style={{
                                 background: "rgba(89,38,240,0.06)",
@@ -51,20 +51,22 @@ const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, paymen
                                 {t("Exchange Rate")}: <span style={{ color: "black", fontWeight: 600 }}>{String(transactionDetails?.wholesale_fx_rate)?.slice(0, 4)} {transactionDetails?.destination?.currency}</span>
                             </div>
                         }
-                        <div style={{
-                            background: "rgba(89,38,240,0.06)",
-                            padding: "16px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: ".5rem",
-                            borderRadius: "50px",
-                            flex: 1,
-                            color: "#8a8a8a",
-                            fontSize: window.innerWidth > 1500 ? ".8rem" : ".6rem"
-                        }}>
-                            {t("Receiver Gets")}: <span style={{ color: "black", fontWeight: 600 }}>{transactionDetails?.destination?.amount} {transactionDetails?.destination?.currency}</span>
-                        </div>
+                        {transactionDetails?.destination?.amount &&
+                            <div style={{
+                                background: "rgba(89,38,240,0.06)",
+                                padding: "16px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                gap: ".5rem",
+                                borderRadius: "50px",
+                                flex: 1,
+                                color: "#8a8a8a",
+                                fontSize: window.innerWidth > 1500 ? ".8rem" : ".6rem"
+                            }}>
+                                {t("Receiver Gets")}: <span style={{ color: "black", fontWeight: 600 }}>{transactionDetails?.destination?.amount} {transactionDetails?.destination?.currency}</span>
+                            </div>
+                        }
                     </div>
                     {/* recipient */}
                     {
