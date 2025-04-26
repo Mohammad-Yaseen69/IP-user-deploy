@@ -102,7 +102,7 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
                                     style={{ aspectRatio: "16/9" }}
                                 >
                                     <ReactJWPlayer
-                                        playerId={process.env.REACT_APP_JW_PLAYER_ID}
+                                       playerId={`${process.env.REACT_APP_JW_PLAYER_ID}_${item?.jw_media?.mediaId}`} 
                                         playerScript={process.env.REACT_APP_JW_PLAYER_URL}
                                         controls={true}
                                         autoStart={true}
@@ -118,7 +118,7 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
                                         style={{ aspectRatio: "16/9" }}
                                     >
                                         <ReactJWPlayer
-                                            playerId={process.env.REACT_APP_JW_PLAYER_ID}
+                                            playerId={`${process.env.REACT_APP_JW_PLAYER_ID}_${item?.jw_media?.mediaId}`} 
                                             playerScript={process.env.REACT_APP_JW_PLAYER_URL}
                                             controls={true}
                                             autoStart={true}

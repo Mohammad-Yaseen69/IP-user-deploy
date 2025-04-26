@@ -1,3 +1,7 @@
-.p-address-123456 .jw-wrapper {
+.p-address-123456 .jwplayer.jw-flag-fullscreen .jw-wrapper {
+    height: 100% !important;
+}
+
+.p-address-123456 .jwplayer .jw-wrapper{
     height: 220px !important;
 }
