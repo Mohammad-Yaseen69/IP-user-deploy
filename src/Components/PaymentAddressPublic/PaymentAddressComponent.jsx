@@ -28,9 +28,11 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 import './styles/swiper.reset.css'
 import PortfolioCard from '../Portfolio/PortfolioCard'
+import useWindowWidth from '../../utils/useWindowWidth'
+import ip from "./instapay_black.svg"
 
 <style>
-{`
+    {`
     .swiper-pagination-bullet {
         background-color: #5926f0 !important;
         opacity: 1 !important;
@@ -56,9 +58,9 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     const [amount, setAmount] = useState("1.00")
     const [formattedAmount, setFormattedAmount] = useState("1.00")
     const [loading, setLoading] = useState(true)
+    const width = useWindowWidth()
 
 
-   
 
     const handleKeyUp = (e) => {
         formatCurrency(e.target.value, false, setFormattedAmount);
@@ -190,6 +192,52 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     //         clearTimeout(timeout)
     //     }
     // }, [amount])
+
+
+    const leftJSX = () => (
+        <div style={{ flex: 2 }} className={styles.left}>
+            {width > 1000 &&
+                <div style={{paddingBottom: "2rem"}}>
+                    <img style={{float: 'right'}} src={ip} alt="" />
+                </div>
+            }
+            {userDetails.about_me &&
+                <div className={styles.about}>
+                    <h4 style={{ marginBottom: "0px" }}>About Me:</h4>
+                    <p style={{ fontSize: "14px", fontWeight: 600, color: "#7E7E7E" }}>{userDetails.about_me}</p>
+                </div>
+            }
+
+            {userVideos && userVideos.length > 0 && (
+                <div className='p-swiper-videos-123' style={{ marginTop: "20px", marginBottom: "40px" }}>
+                    <Swiper
+                        modules={[Pagination]}
+                        pagination={{ clickable: true }}
+                        spaceBetween={20}
+                        slidesPerView={1}
+                    >
+                        {userVideos.map((video, index) => (
+                            <SwiperSlide key={video._id || index}>
+                                <PortfolioCard item={video} pAddress={true} publicP={true} />
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                </div>
+            )}
+
+            <QrDetails
+                wallet={currentWallet}
+                user={userDetails}
+                amount={amount}
+                currency={currency}
+                address={true}
+                currentWallet={currentWallet}
+            />
+
+        </div>
+
+    )
+
     return (
         <>
             <div className={styles.container}>
@@ -222,42 +270,13 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
 
                                 <Card style={{ marginBottom: "0", boxShadow: "unset" }} className={styles.sub_container}>
                                     <CardBody className={styles.sc_body}>
-                                        <div style={{ flex: 2 }} className={styles.left}>
-                                            {userDetails.about_me &&
-                                                <div className={styles.about}>
-                                                    <h4 style={{ marginBottom: "0px" }}>About Me:</h4>
-                                                    <p style={{ fontSize: "14px", fontWeight: 600, color: "#7E7E7E" }}>{userDetails.about_me}</p>
+                                        {width > 1000 && leftJSX()}
+                                        <div style={{ flex: width > 1000 && .5, borderRadius: '16px', width: width < 1000 && "100%", overflow: width < 100 && 'hidden' }} className={styles.right}>
+                                            {width < 1000 &&
+                                                <div style={{ padding: '1rem 0', display: 'flex', justifyContent: 'center', background: "white" }}>
+                                                    <img src={ip} alt="" />
                                                 </div>
                                             }
-
-                                            {userVideos && userVideos.length > 0 && (
-                                                <div className='p-swiper-videos-123' style={{ marginTop: "20px", marginBottom: "40px" }}>
-                                                    <Swiper
-                                                        modules={[Pagination]}
-                                                        pagination={{ clickable: true }}
-                                                        spaceBetween={20}
-                                                        slidesPerView={1}
-                                                    >
-                                                        {userVideos.map((video, index) => (
-                                                            <SwiperSlide key={video._id || index}>
-                                                                <PortfolioCard item={video} pAddress={true} publicP={true} />
-                                                            </SwiperSlide>
-                                                        ))}
-                                                    </Swiper>
-                                                </div>
-                                            )}
-
-                                            <QrDetails
-                                                wallet={currentWallet}
-                                                user={userDetails}
-                                                amount={amount}
-                                                currency={currency}
-                                                currentWallet={currentWallet}
-                                            />
-
-                                        </div>
-
-                                        <div style={{ flex: .5, borderRadius: '16px' }} className={styles.right}>
                                             <div className={styles.cover_container}>
                                                 <img src={cover ?? coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: "210px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important" }} />
                                             </div>
@@ -349,18 +368,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                 </div>
 
                                                 <div style={{ marginBottom: "0px" }} className={vpa_styles.container}>
-
-                                                    {
-                                                        window.innerWidth < 1000
-                                                        &&
-                                                        <div className={styles.go_back} onClick={() => window.history.back()}>
-                                                            <ChevronLeft size={16} color='black' />
-                                                            <span>
-                                                                {t("Go back (Cancel Payment)")}
-                                                            </span>
-                                                        </div>
-                                                    }
-                                                    <div className={vpa_styles.right}>
+                                                    <div style={{ padding: width < 400 && "20px" }} className={vpa_styles.right}>
                                                         <div className={vpa_styles.currency}>
                                                             <div>{currentWallet?.currency?.code} </div>
                                                             {/* <p>{currency}</p> */}
@@ -435,9 +443,25 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                                 </div>
                                                                 <span>Pay With InstaPay</span>
                                                             </Link>
+                                                            {
+                                                                window.innerWidth < 1000
+                                                                &&
+                                                                <div className={styles.go_back} onClick={() => window.history.back()}>
+                                                                    <ChevronLeft size={16} color='black' />
+                                                                    <span>
+                                                                        {t("Go back (Cancel Payment)")}
+                                                                    </span>
+                                                                </div>
+                                                            }
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                {width < 1000 &&
+                                                    <div style={{ marginTop: '2rem' }}>
+                                                        {leftJSX()}
+                                                    </div>
+                                                }
                                             </div>
                                         </div>
                                         {/* basic info */}

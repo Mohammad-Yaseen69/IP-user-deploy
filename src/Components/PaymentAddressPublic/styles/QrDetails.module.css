@@ -139,7 +139,11 @@
 
 @media screen and (max-width: 1000px) {
     .qr {
-        width: 100%;
+        align-self: center !important;
+    }
+
+    .container{
+        flex-direction: column;
     }
 
     .details>h5 {

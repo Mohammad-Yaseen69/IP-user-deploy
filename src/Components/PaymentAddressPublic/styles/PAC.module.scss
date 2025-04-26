@@ -6,7 +6,7 @@
     border-radius: 16px;
 
     .cover_container {
-        box-shadow: 0 0 3px rgba(0, 0, 0, 0.103);
+        box-shadow: none;
         border-radius: 16px 16px 0px 0px;
         margin-bottom: -50px;
         overflow: hidden;
@@ -339,6 +339,7 @@
 @media screen and (max-width: 1000px) {
     .container {
         border-radius: 0px !important;
+        padding: 0 !important;
 
         .cover_container {
             border-radius: 0px 0px 40px 40px;
@@ -348,9 +349,14 @@
             }
         }
 
+        .go_back{
+            justify-content: flex-start;
+            gap: .5rem;
+        }
+
         .sub_container {
-            margin-left: 1.25rem;
-            margin-right: 1.25rem;
+            margin-left: 0rem;
+            margin-right: 0rem;
             border-radius: 20px;
             padding: 0;
             background: transparent;
@@ -363,9 +369,9 @@
                 .top {
                     padding: 1rem;
                     flex-direction: column;
-                    background-color: white;
-                    border-radius: 30px;
-                    box-shadow: 15.146323204040527px 4.327520847320557px 242.34117126464844px rgba(0, 0, 0, 0.07);
+                    background-color: transparent;
+                    border-radius: 0px;
+                    box-shadow: none;
 
                     .left {
                         align-items: center;
@@ -374,10 +380,10 @@
                             top: 0;
 
                             .dp {
-                                min-width: 100px;
-                                min-height: 100px;
-                                max-width: 100px;
-                                max-height: 100px;
+                                min-width: 138px;
+                                min-height: 138px;
+                                max-width: 138px;
+                                max-height: 138px;
                                 border-radius: 1rem;
                             }
                         }

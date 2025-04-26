@@ -37,7 +37,7 @@ const qrCode = new QRCodeStyling({
     backgroundOptions: { color: "#ffffff" },
 });
 
-const QrDetails = ({ wallet, amount, currency, currentWallet }) => {
+const QrDetails = ({ wallet, amount, currency, currentWallet, address }) => {
     const { t } = useTranslation()
     const ref = useRef(null)
     const [qrLink, setQrLink] = useState("")
@@ -61,20 +61,20 @@ const QrDetails = ({ wallet, amount, currency, currentWallet }) => {
     }, [amount]);
     return (
         <div className={styles.container}>
-            <div className={styles.qr}>
+            <div style={{flex: address && '0 0 auto'}} className={styles.qr}>
                 <div className={styles.qrCode} style={{ position: "relative" }}>
                     {/* <img src={wallet.qrCode?.url} /> */}
-                    <img src={qrLink} />
+                    <img src={qrLink} style={{height: address && "221px"}}/>
                     <img src={logo} style={{ position: "absolute", left: "50%", top: "40%", translate: "-50% -50%", width: window.innerWidth > 1000 ? "2rem" : "2.5rem", padding: ".6rem", background: "white", borderRadius: "10px" }} />
                     {/* {
-                        user?.username
+                        user?.username 
                         &&
                         <div className={styles.qr_user}>{user?.username}</div>
                     } */}
                     <div className={styles.qr_id}>{wallet?.wallet_id}</div>
                 </div>
             </div>
-            <div className={styles.details}>
+            <div  className={styles.details}>
                 <h5>{t("How to Pay Using QR Code")}:</h5>
 
                 <ul className={styles.list}>
