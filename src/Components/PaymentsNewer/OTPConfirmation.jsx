@@ -508,6 +508,7 @@ const OTPConfirmation = ({
                         const decrypted = decryptData(res.data.data)
                         setTransactionDetails(decrypted)
                         // console.log(decrypted)
+                        setSubStep(prev => prev + 1)
                         if (decrypted.TransactionID) {
                             setVerified(true)
                         }
