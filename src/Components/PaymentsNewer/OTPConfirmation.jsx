@@ -247,6 +247,7 @@ const OTPConfirmation = ({
                     setIsSaving(false)
                     const decrypted = decryptData(err.response.data.data)
                     const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
+                    console.log(decrypted)
                     if (error) {
                         setOtpError(error)
                     } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
@@ -496,6 +497,8 @@ const OTPConfirmation = ({
                 });
                 data.append("type", authType)
                 data.append("description", intComment)
+            
+                    // console.log(token, createdTransaction.token, intComment)
 
                 data.forEach(item => "a") // console.log(item))
                 axios.post(`${process.env.REACT_APP_THUNES_API}/confirmTransaction`, data, {
@@ -512,6 +515,7 @@ const OTPConfirmation = ({
                     .catch(err => {
                         const decrypted = decryptData(err.response.data.data)
                         const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
+                        console.log(decrypted)
                         if (error) {
                             setOtpError(error)
                         } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
@@ -523,7 +527,7 @@ const OTPConfirmation = ({
                             localStorage.setItem("ip_country", coun)
                             navigate("/login")
                         } else {
-                            setOtpError("You have entered wrong OTP.")
+                            setOtpError(decrypted.message ?? "You have entered wrong OTP.")
                         }
                     })
                     .finally(() => setIsSaving(false))

@@ -36,13 +36,15 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, pa
 
     const isMounted = useRef(true);
 
+    const [isDraggable, setIsDraggable] = useState(true);
+
+    // Modify the useEffect cleanup
     useEffect(() => {
-        // Component is mounted, set isMounted to true
         isMounted.current = true;
 
         return () => {
-            // Component will unmount, set isMounted to false
             isMounted.current = false;
+            setIsDraggable(false); // Disable dragging on unmount
         };
     }, []);
 
@@ -132,6 +134,7 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, pa
 
 
     const handleDrag = (e, ui) => {
+        if (!isMounted.current) return;
         const { x } = ui;
         pRef.current.style.transform = `translateX(${(x * 90) / 100}px)`
         svgRef.current.style.transform = `translateX(${x}px)`
@@ -144,17 +147,26 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, pa
     };
 
     useEffect(() => {
+        if (!isMounted.current) return;
+        let timeoutId;
         if (isSlided) {
             if (showCompletionModal) {
-                setTimeout(() => {
+                timeoutId = setTimeout(() => {
                     navigate("/settings?tab=basic")
                 }, 200);
             } else if (showVerificationModal) {
-                setTimeout(() => {
+                timeoutId = setTimeout(() => {
                     navigate("/settings?tab=verification")
                 }, 200);
             } else {
                 createTransaction()
+            }
+        }
+
+
+        return () => {
+            if (timeoutId) {
+                clearTimeout(timeoutId)
             }
         }
     }, [isSlided])
@@ -209,7 +221,7 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, pa
                 >
                     {
                         beneficiary.map((item, index) => (
-                            <SwiperSlide style={{width: "100%"}} key={item.id}>
+                            <SwiperSlide style={{ width: "100%" }} key={item.id}>
                                 <SelectedRecipient index={index} user={item} setSubStep={setSubStep} size={beneficiary.length} payoutChannel={payoutChannel.value} setBeneficiary={setBeneficiary} />
                             </SwiperSlide>
                         ))
@@ -238,7 +250,15 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, pa
                                 }}
                             >
                                 <img src={faded_lines} alt="faded" style={{ position: "absolute", left: "-130px", display: complete ? "none" : "inherit", width: "130px" }} ref={svgRef} />
-                                <Draggable axis="x" bounds="parent" onDrag={handleDrag}>
+                                <Draggable
+                                    axis="x"
+                                    bounds="parent"
+                                    onDrag={handleDrag}
+                                    onStop={() => {
+                                        if (!isMounted.current) return;
+                                    }}
+                                    disabled={!isDraggable}
+                                >
                                     <div
                                         style={{
                                             position: "absolute",
