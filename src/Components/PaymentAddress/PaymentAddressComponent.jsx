@@ -101,8 +101,6 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
             const data = await decryptData(response.data.data)
             // console.log(data)
             setIsSaving(false)
-            setSaved(true)
-            setTimeout(() => setSaved(false), 3000)
 
         } catch (err) {
             const decrypted = await decryptData(err.response.data.data)
@@ -256,7 +254,68 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                         {/* {
                                             window.innerWidth > 1000
                                             && */}
-                                        <div style={{
+                                        <div className={styles.copyMain}>
+                                            <div className={styles.topHead}>
+                                                <div>
+                                                    <span>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 16 15" fill="none">
+                                                            <path d="M6.16601 2.00769L4.33459 12.9962M11.0498 2.00769L9.21836 12.9962M12.8812 5.06006H2.50317M12.2708 9.94385H1.8927" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                        </svg>
+                                                    </span>
+                                                    <p>
+                                                        My Virtual Payment Address
+                                                    </p>
+                                                </div>
+
+                                                <Toggle checked={isActive} onChange={handleChangeStatus} />
+                                            </div>
+
+                                            <div onClick={() => setShowCurrencyDropdown(!showCurrencyDropdown)} className={styles.curr}>
+                                                <p>Set the currency</p>
+
+                                                <div style={{ position: 'relative' }}>
+                                                    {
+                                                        showCurrencyDropdown
+                                                        &&
+                                                        <ul className={styles.dropdown}>
+                                                            {
+                                                                userWallets?.length > 0 &&
+                                                                userWallets?.filter(item => item?.status?.toLowerCase() === "active" && item?.wallet_type === "insta" && item?.currency?.code !== currency && !item?.blocked && !item?.admin_blocked && !item?.blocked)?.map((item) => (
+                                                                    <li key={item?._id} onClick={() => setCurrency(item?.currency?.code)}>
+                                                                        <p>{item?.currency?.code} </p>
+                                                                    </li>
+                                                                ))
+                                                            }
+                                                        </ul>
+                                                    }
+                                                    {
+                                                        userWallets?.length > 0 &&
+                                                        <li>
+                                                            <p>{currency}</p>
+                                                            <ChevronDown width={15} height={15} />
+                                                        </li>
+                                                    }
+                                                </div>
+
+                                            </div>
+
+                                            <div className={styles.copyDiv}>
+                                                <p>
+                                                    my.insta-pay.ch/pay/
+                                                </p>
+                                                <span>
+                                                    shaheen
+                                                    {
+                                                        urlCopied
+                                                            ?
+                                                            <CheckCircle size={15} color='white' />
+                                                            :
+                                                            <img src={copy} style={{ cursor: "pointer", height: "14px", width: "14px", objectFit: "contain" }} onClick={copyHandler} />
+                                                    }
+                                                </span>
+                                            </div>
+                                        </div>
+                                        {/* <div style={{
                                             background: "#5926f0",
                                             padding: "10px 16px",
                                             display: "flex",
@@ -269,108 +328,64 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                             fontWeight: "600"
                                         }}>
                                             <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "90%" }}>{pa_link}</span>
-                                            {
-                                                urlCopied
-                                                    ?
-                                                    <CheckCircle size={15} color='white' />
-                                                    :
-                                                    <img src={copy} style={{ cursor: "pointer", height: "14px", width: "14px", objectFit: "contain" }} onClick={copyHandler} />
-                                            }
-                                        </div>
+
+                                        </div> */}
                                         {/* } */}
                                     </div>
 
-                                    <div className={vpa_styles.vpa_details}>
-                                        <h4>{t("InstaPay VPA:")}</h4>
+                                    {/* <div className={vpa_styles.vpa_details}>
                                         <div className={vpa_styles.vpad_bottom}>
-                                            <div className={vpa_styles.vpad_left}>
-                                                <div className={vpa_styles.top}>
-                                                    <div>
-                                                        <label style={{ marginBottom: "5px", color: "white", fontWeight: 500, padding: "0 0 0 3px" }}>{t("Currency")}</label>
-                                                        <div className={vpa_styles.dropdown} onClick={() => setShowCurrencyDropdown(!showCurrencyDropdown)}>
-                                                            {
-                                                                showCurrencyDropdown
-                                                                &&
-                                                                <ul className={vpa_styles.dropdown_menu}>
-                                                                    {
-                                                                        userWallets?.length > 0 &&
-                                                                        userWallets?.filter(item => item?.status?.toLowerCase() === "active" && item?.wallet_type === "insta" && item?.currency?.code !== currency && !item?.blocked && !item?.admin_blocked && !item?.blocked)?.map((item) => (
-                                                                            <li key={item?._id} onClick={() => setCurrency(item?.currency?.code)}>
-                                                                                <div>{item?.currency?.code} </div>
-                                                                                <p>{item?.currency?.code} </p>
-                                                                            </li>
-                                                                        ))
-                                                                    }
-                                                                </ul>
-                                                            }
-                                                            {
-                                                                userWallets?.length > 0 &&
-                                                                <li>
-                                                                    <div>{currentWallet?.currency?.code} </div>
-                                                                    <p>{currency}</p>
-                                                                    <ChevronDown />
-                                                                </li>
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                    <img src={logo_white} alt='instapay' />
-                                                </div>
+                                           
+                                        </div>
+                                    </div> */}
 
-                                                <div className={vpa_styles.bottom}>
-                                                    <div className={vpa_styles.wall_dets}>
-                                                        <span>INSTA-{currentWallet?.wallet_id}</span>
-                                                        {
-                                                            copied
-                                                                ?
-                                                                <Check />
-                                                                :
-                                                                <img src={copy} alt="c" style={{ height: "20px", width: "20px", objectFit: "contain" }} onClick={handleCopy} />
-                                                        }
-                                                        {/* <img src={copy} alt="copy" style={{ width: "20px" }} /> */}
-                                                    </div>
-                                                    <div style={switchStyle} onClick={handleChangeStatus}>
-                                                        <div style={thumbStyle}></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className={vpa_styles.vpad_right}>
+
+                                    <div className={styles.infoCont}>
+                                        <div className={styles.infoTop}>
+                                            <p>Public Page</p>
+
+                                            <Button
+                                                style={{
+                                                    background: saved ? "#4bb543" : 'linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)',
+                                                    border: 'none',
+                                                    outline: 'none',
+                                                    borderRadius: "10px",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    gap: "10px",
+                                                    transition: "250ms"
+                                                }}
+                                                disabled={!title|| !currency || isSaving  || !isActive}
+                                                onClick={addUpdatePaymentAddress}
+                                            >
+                                                {
+                                                    saved
+                                                        ?
+                                                        <>
+                                                            <CheckCircle size={17} />
+                                                            {t("Updated Successfully")}
+                                                        </>
+                                                        :
+                                                        <>
+                                                            {paymentAddressDetails?.title ? (isSaving ? t("Updating") : t('Update')) : (isSaving ? t("Adding") : t('Add'))}
+                                                        </>
+                                                }
+                                            </Button>
+                                        </div>
+                                        <div className={styles.main}>
+
+                                            <div className={styles.inputBox}>
                                                 <label>{t("Payment Address Title")}</label>
                                                 <Input placeholder='Title' value={title} onChange={e => setTitle(e.target.value)} />
+                                            </div>
+
+                                            <div className={styles.inputBox}>
                                                 <label>{t("Payment Address Description")}</label>
                                                 <Input type='textarea' placeholder='Description' value={description} onChange={e => setDescription(e.target.value)} />
-                                                <Col style={{ display: 'flex', justifyContent: 'flex-end', marginTop: "16px" }}>
-                                                    <Button
-                                                        style={{
-                                                            background: saved ? "#4bb543" : 'linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)',
-                                                            border: 'none',
-                                                            outline: 'none',
-                                                            borderRadius: "10px",
-                                                            display: "flex",
-                                                            alignItems: "center",
-                                                            gap: "10px",
-                                                            transition: "250ms"
-                                                        }}
-                                                        disabled={!title || !description || !currency || isSaving || saved || !isActive}
-                                                        onClick={addUpdatePaymentAddress}
-                                                    >
-                                                        {
-                                                            saved
-                                                                ?
-                                                                <>
-                                                                    <CheckCircle size={17} />
-                                                                    {t("Updated Successfully")}
-                                                                </>
-                                                                :
-                                                                <>
-                                                                    {paymentAddressDetails?.title ? (isSaving ? t("Updating") : t('Update')) : (isSaving ? t("Adding") : t('Add New'))}
-                                                                </>
-                                                        }
-                                                    </Button>
-                                                </Col>
                                             </div>
+
                                         </div>
                                     </div>
-
 
                                     <div className={styles.videoCont}>
                                         <div className={styles.head}>
@@ -396,7 +411,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                             key={item?._id}
                                                             index={index}
                                                             pAddress={true}
-                                                            // handleSort={handleSort}
+                                                        // handleSort={handleSort}
                                                         />
                                                     ))
                                                 ) : (

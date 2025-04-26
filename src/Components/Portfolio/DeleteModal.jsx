@@ -4,10 +4,12 @@ import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import { UserContext } from '../../Context/UserContext'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router'
 
 const DeleteModal = ({ isOpen, toggle, item, pAddress }) => {
     const { authHeader, getUserDocuments, getUserVideos } = useContext(UserContext)
     const [deleting, setDeleting] = useState(false)
+    const navigate = useNavigate()
 
     const deleteHandler = () => {
         setDeleting(true)
@@ -18,6 +20,7 @@ const DeleteModal = ({ isOpen, toggle, item, pAddress }) => {
                 const decrypted = decryptData(res.data.data)
                 if(pAddress){
                     getUserVideos()
+                    navigate("/payment-address")
                 }else{
                     getUserDocuments()
                 }
