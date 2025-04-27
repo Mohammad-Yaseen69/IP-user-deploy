@@ -54,6 +54,7 @@ const StepTwo = ({ data, dataHandler }) => {
     const bens = useMemo(() => {
         let fil = beneficiaries.filter(item => item.account_type.some(item => item.toLowerCase().includes(data.payoutChannel?.value?.toLowerCase())))
 
+        console.log(fil)
         if (data.country?.alpha3) {
             fil = fil.filter(item => {
                 const bankIsoCode = item?.bank_details?.[0]?.extras?.country_iso_code
@@ -68,11 +69,13 @@ const StepTwo = ({ data, dataHandler }) => {
                 }
                 return false
             })
+            console.log(fil)
             setMessage(`No beneficiary found from ${data.country?.name} having ${data.payoutChannel?.value} details.`)
         }
 
         if (data.payoutChannel?.value === "mobile") {
-            fil = fil.filter(item => item?.mobile_wallet?.[0]?.money_provider === data.payer?.id)
+            fil = fil.filter(item => +item?.mobile_wallet?.[0]?.money_provider === +data.payer?.id)
+            console.log(fil, data.payer)
             setMessage(`No beneficiary found from ${data.country?.name} having ${data.payer?.name} details.`)
         }
 
