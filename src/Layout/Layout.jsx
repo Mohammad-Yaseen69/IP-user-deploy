@@ -221,7 +221,7 @@ const Layout = ({ children, classNames, ...rest }) => {
             ?
             <div className={styles.pc_layout}>
               {
-                ((showModal === true && typeof profileCompleted === "boolean") || (showModal && showKyc))
+                ((showModal === true && typeof profileCompleted === "boolean") || (showModal && showKyc && !window.location.pathname.toLowerCase().includes("/settings")))
                 &&
                 <ProfileCompletionModal setShowModal={setShowModal} profileIncompleteReason={profileIncompleteReason} kyc={showKyc && profileCompleted} />
               }
@@ -254,7 +254,7 @@ const Layout = ({ children, classNames, ...rest }) => {
             :
             <>
               {
-                ((showModal === true && typeof profileCompleted === "boolean") || (showModal && showKyc))
+                ((showModal === true && typeof profileCompleted === "boolean") || (showModal && showKyc && !window.location.pathname.toLowerCase().includes("/settings")))
                 &&
                 <ProfileCompletionModal setShowModal={setShowModal} profileIncompleteReason={profileIncompleteReason} kyc={showKyc && profileCompleted} />
               }
