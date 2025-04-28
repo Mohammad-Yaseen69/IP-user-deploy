@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import styles from "./styles/PAC.module.scss"
 import { Button, Card, CardBody, CardText, Col, Input, Modal, ModalBody, ModalHeader, } from 'reactstrap'
 import countries from "../PaymentsNewer/CountriesData.json"
@@ -193,6 +193,33 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
         }, 2500)
     }
 
+    const [isWrapped, setIsWrapped] = useState(false);
+    const leftRef = useRef()
+    const topRef = useRef()
+
+    useEffect(() => {
+        if (!leftRef.current || !topRef.current) return;
+    
+        const resizeObserver = new ResizeObserver(entries => {
+            for (let entry of entries) {
+                const leftRect = leftRef.current.getBoundingClientRect();
+                const topRect = topRef.current.getBoundingClientRect();
+                
+                // If the top of copyDiv is below the bottom of left div, they're wrapped
+                if (leftRef.current && topRef.current) {
+                    setIsWrapped(leftRect.bottom < topRect.bottom);
+                }
+            }
+        });
+    
+        resizeObserver.observe(topRef.current);
+    
+        return () => {
+            resizeObserver.disconnect();
+        };
+    }, []);
+    
+
 
     const [showAboutModal, setShowAboutModal] = useState(false)
     return (
@@ -215,7 +242,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
 
                                     {/* basic info */}
                                     <div className={styles.top}>
-                                        <div className={styles.left}>
+                                        <div ref={leftRef} className={styles.left}>
                                             <Profile dp={dp} setDp={setDp} />
                                             <div className={styles.basic_dets}>
                                                 <div className={styles.badge}>{userDetails?.account_type === "individual" ? t("Personal") : t("Business")} {t("Account")}</div>
@@ -254,7 +281,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                         {/* {
                                             window.innerWidth > 1000
                                             && */}
-                                        <div className={styles.copyMain}>
+                                        <div ref={topRef} style={{width: isWrapped && "100%", marginBottom: window.innerWidth < 1000 && "1.5rem", flexShrink: window.innerWidth < 400 && "none"}} className={styles.copyMain}>
                                             <div className={styles.topHead}>
                                                 <div>
                                                     <span>
@@ -339,87 +366,91 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                         </div>
                                     </div> */}
 
+                                    <div className={styles.wrapper}>
+                                        <div className={styles.infoCont}>
+                                            <div className={styles.infoTop}>
+                                                <p>Public Page</p>
 
-                                    <div className={styles.infoCont}>
-                                        <div className={styles.infoTop}>
-                                            <p>Public Page</p>
-
-                                            <Button
-                                                style={{
-                                                    background: saved ? "#4bb543" : 'linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)',
-                                                    border: 'none',
-                                                    outline: 'none',
-                                                    borderRadius: "10px",
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    gap: "10px",
-                                                    transition: "250ms"
-                                                }}
-                                                disabled={!title|| !currency || isSaving  || !isActive}
-                                                onClick={addUpdatePaymentAddress}
-                                            >
-                                                {
-                                                    saved
-                                                        ?
-                                                        <>
-                                                            <CheckCircle size={17} />
-                                                            {t("Updated Successfully")}
-                                                        </>
-                                                        :
-                                                        <>
-                                                            {paymentAddressDetails?.title ? (isSaving ? t("Updating") : t('Update')) : (isSaving ? t("Adding") : t('Add'))}
-                                                        </>
-                                                }
-                                            </Button>
-                                        </div>
-                                        <div className={styles.main}>
-
-                                            <div className={styles.inputBox}>
-                                                <label>{t("Payment Address Title")}</label>
-                                                <Input placeholder='Title' value={title} onChange={e => setTitle(e.target.value)} />
+                                                <Button
+                                                    style={{
+                                                        background: saved ? "#4bb543" : 'linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)',
+                                                        border: 'none',
+                                                        outline: 'none',
+                                                        borderRadius: "10px",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        gap: "10px",
+                                                        transition: "250ms"
+                                                    }}
+                                                    disabled={!title || !currency || isSaving || !isActive}
+                                                    onClick={addUpdatePaymentAddress}
+                                                >
+                                                    {
+                                                        saved
+                                                            ?
+                                                            <>
+                                                                <CheckCircle size={17} />
+                                                                {t("Updated Successfully")}
+                                                            </>
+                                                            :
+                                                            <>
+                                                                {paymentAddressDetails?.title ? (isSaving ? t("Updating") : t('Update')) : (isSaving ? t("Adding") : t('Add'))}
+                                                            </>
+                                                    }
+                                                </Button>
                                             </div>
+                                            <div className={styles.main}>
 
-                                            <div className={styles.inputBox}>
-                                                <label>{t("Payment Address Description")}</label>
-                                                <Input type='textarea' placeholder='Description' value={description} onChange={e => setDescription(e.target.value)} />
+                                                <div className={styles.inputBox}>
+                                                    <label>{t("Payment Address Title")}</label>
+                                                    <Input placeholder='Title' value={title} onChange={e => setTitle(e.target.value)} />
+                                                </div>
+
+                                                <div className={styles.inputBox}>
+                                                    <label>{t("Payment Address Description")}</label>
+                                                    <Input type='textarea' placeholder='Description' value={description} onChange={e => setDescription(e.target.value)} />
+                                                </div>
+
                                             </div>
-
-                                        </div>
-                                    </div>
-
-                                    <div className={styles.videoCont}>
-                                        <div className={styles.head}>
-                                            <div>
-                                                <span>Add Video</span>
-                                                <img src={info} alt="" />
-                                            </div>
-
-                                            <Toggle checked={videoCheck} onChange={(e) => { setVideoCheck(e.target.checked) }} />
                                         </div>
 
-                                        <div className={styles.videoDiv}>
+                                        <div className={styles.videoCont}>
+                                            <div className={styles.head}>
+                                                <div>
+                                                    <span>Add Video</span>
+                                                    <img src={info} alt="" />
+                                                </div>
+
+                                                <Toggle checked={videoCheck} onChange={(e) => { setVideoCheck(e.target.checked) }} />
+                                            </div>
+
                                             <div className={styles.topV}>
                                                 <p>You can add videos in your public payment address page. </p>
-                                                <button onClick={() => setShowModal(true)}>Add Video</button>
                                             </div>
 
-                                            <div>
-                                                {userVideos && userVideos.length > 0 ? (
-                                                    userVideos.map((item, index) => (
-                                                        <PortfolioCard
-                                                            item={item}
-                                                            key={item?._id}
-                                                            index={index}
-                                                            pAddress={true}
-                                                        // handleSort={handleSort}
-                                                        />
-                                                    ))
-                                                ) : (
-                                                    <div className="text-center my-4">{t("No Video Items")}</div>
-                                                )}
+                                            <div className={styles.videoDiv}>
+                                                <div>
+                                                    {userVideos && userVideos.length > 0 ? (
+                                                        userVideos.map((item, index) => (
+                                                            <PortfolioCard
+                                                                item={item}
+                                                                key={item?._id}
+                                                                index={index}
+                                                                pAddress={true}
+                                                            // handleSort={handleSort}
+                                                            />
+                                                        ))
+                                                    ) : (
+                                                        <div className="text-center my-4">{t("No Video Items")}</div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div className={styles.bottomV}>
+                                                <button onClick={() => setShowModal(true)}>Add Video</button>
                                             </div>
                                         </div>
                                     </div>
+
 
 
                                 </CardBody>

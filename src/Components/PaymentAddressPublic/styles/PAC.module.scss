@@ -312,6 +312,19 @@
     }
 }
 
+@media screen and (min-width: 1550px) {
+    .sc_body{
+        display: grid !important;
+        grid-template-columns: .4fr 1fr .3fr;
+        >.bigLogo{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+    }
+}
+
 @media screen and (max-width: 1350px) {
     .container {
         .sub_container {

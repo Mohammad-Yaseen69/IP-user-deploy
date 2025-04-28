@@ -30,6 +30,7 @@ import './styles/swiper.reset.css'
 import PortfolioCard from '../Portfolio/PortfolioCard'
 import useWindowWidth from '../../utils/useWindowWidth'
 import ip from "./instapay_black.svg"
+import ip_white from "./ip-white.png"
 
 <style>
     {`
@@ -197,8 +198,8 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     const leftJSX = () => (
         <div style={{ flex: 2 }} className={styles.left}>
             {width > 1000 &&
-                <div style={{paddingBottom: "2rem"}}>
-                    <img style={{float: 'right'}} src={ip} alt="" />
+                <div style={{ paddingBottom: "2rem" }}>
+                    <img style={{ float: 'right' }} src={ip} alt="" />
                 </div>
             }
             {userDetails.about_me &&
@@ -270,6 +271,11 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
 
                                 <Card style={{ marginBottom: "0", boxShadow: "unset" }} className={styles.sub_container}>
                                     <CardBody className={styles.sc_body}>
+                                        {width > 1550 &&
+                                            <div className={styles.bigLogo}>
+                                                <img src={ip_white} alt="" />
+                                            </div>
+                                        }
                                         {width > 1000 && leftJSX()}
                                         <div style={{ flex: width > 1000 && .5, borderRadius: '16px', width: width < 1000 && "100%", overflow: width < 100 && 'hidden' }} className={styles.right}>
                                             {width < 1000 &&
