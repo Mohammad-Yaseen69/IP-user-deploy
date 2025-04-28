@@ -118,6 +118,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const tab = queryParams.get("tab")
+    const ft = queryParams.get("ft")
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -150,9 +151,9 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             {
                 tabsData.filter(item => item.name.length > 0).map(item => (
                     <div
-                        className={`${styles.tab} ${currentTab === item.name ? styles.active : ""} ${item.name !== "Basic Info" && profileIncompleteReason === "basic" ? styles.disabled : ""}`}
+                        className={`${styles.tab} ${currentTab === item.name ? styles.active : ""} ${((item.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails.country?.kyc_required && item.name !== "Verification" && !ft && userDetails?.user?.kyc_status !== "approved")) ? styles.disabled : ""} ${(userDetails.country?.kyc_required && item.name !== "Verification") ? styles.kyc : ""}`}
                         onClick={() => {
-                            if (item.name !== "Basic Info" && profileIncompleteReason === "basic") return;
+                            if ((item.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails.country?.kyc_required && item.name !== "Verification" && !ft && userDetails?.user?.kyc_status !== "approved")) return;
                             window.history.replaceState(null, null, "")
                             setCurrentTab(item.name)
                             verifyToken()

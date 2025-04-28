@@ -172,7 +172,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     //         if (amount) {
     //             let value = amount;
     //             if (String(value).includes(".") && !String(value).endsWith(".") && String(value).split(".")?.[1]?.length === 2) {
-    //                 return;
+    //                  return;
     //             }
     //             else {
     //                 if (!String(value).includes(".")) {

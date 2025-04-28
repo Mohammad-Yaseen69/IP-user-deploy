@@ -47,6 +47,8 @@ const WithdrawalsNew = () => {
         getCountries()
     }, [])
 
+    
+
     const [showWithdrawalGuide, setShowWithdrawalGuide] = useState(true)
     useLayoutEffect(() => {
         const shown = sessionStorage.getItem("withdrawal_guide")

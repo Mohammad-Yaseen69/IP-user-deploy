@@ -26,6 +26,7 @@ import CountriesDropdown from "./Dropdown"
 import wd from "./files/wd.png"
 import Switch from "../Switch"
 import SuccessModal from "../../AddBeneficiary/SuccessModal"
+import { useLocation, useNavigate } from "react-router"
 
 const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdrawal }) => {
     const { t } = useTranslation()
@@ -212,6 +213,9 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
     const [accNumType, setAccNumType] = useState("IBAN")
     const [isEditMode, setIsEditMode] = useState(true)
     const [isSaving, setIsSaving] = useState(false)
+    const location = useLocation()
+    const queryParam = new URLSearchParams(location.search)
+    const ft = queryParam.get("ft")
 
     // completion states 
     const [bankCompleted, setBankCompleted] = useState(false)
@@ -410,6 +414,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
     const [showSuccess, setShowSuccess] = useState(false)
 
 
+    const navigate = useNavigate()
     const addWithDrawal = () => {
         setIsSaving(true)
         const account_types = [
@@ -520,6 +525,10 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                 setIsEditMode(false)
                 setIsSaving(false)
                 setNewWithdrawal(false)
+                console.log(ft)
+                if (ft) {
+                    navigate("/settings?tab=verification")
+                }
             })
             .catch(err => {
                 const decrypted = decryptData(err.response.data.data)
@@ -640,6 +649,10 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                 setShowSuccess(true)
                 setIsSaving(false)
                 setNewWithdrawal(false)
+                console.log(ft)
+                if (ft) {
+                    navigate("/settings?tab=verification")
+                }
             })
             .catch(err => {
                 const decrypted = decryptData(err.response.data.data)

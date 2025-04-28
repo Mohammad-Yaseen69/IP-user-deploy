@@ -70,6 +70,12 @@
     transition: 250ms all;
 }
 
+.tab.disabled.kyc::before{
+    content: "Please Verify Your Identity Before Using Instapay";
+}
+
+
+
 .tab.disabled:hover::before {
     opacity: 1;
 }

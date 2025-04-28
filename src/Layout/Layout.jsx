@@ -85,6 +85,7 @@ const Layout = ({ children, classNames, ...rest }) => {
   // }, []);
 
   const [showModal, setShowModal] = useState(null)
+  const [showKyc, setShowKyc] = useState(false)
 
   const {
     profileCompleted,
@@ -113,6 +114,10 @@ const Layout = ({ children, classNames, ...rest }) => {
   useEffect(() => {
     setShowModal(!profileCompleted)
   }, [profileCompleted])
+
+
+
+
 
   useEffect(() => {
     if (showModal && location.pathname.toLowerCase().includes("settings")) {
@@ -162,6 +167,11 @@ const Layout = ({ children, classNames, ...rest }) => {
 
   useEffect(() => {
     setShowSourceModal(!userDetails?.user?.source_of_funds && userDetails?.user?.occupation)
+
+    if (userDetails?.user?.kyc_status !== "approved" && userDetails.country?.kyc_required) {
+      setShowModal(true)
+      setShowKyc(true)
+    }
   }, [userDetails])
   return (
     <Fragment>
@@ -211,9 +221,9 @@ const Layout = ({ children, classNames, ...rest }) => {
             ?
             <div className={styles.pc_layout}>
               {
-                showModal === true && typeof profileCompleted === "boolean"
+                ((showModal === true && typeof profileCompleted === "boolean") || (showModal && showKyc))
                 &&
-                <ProfileCompletionModal setShowModal={setShowModal} profileIncompleteReason={profileIncompleteReason} />
+                <ProfileCompletionModal setShowModal={setShowModal} profileIncompleteReason={profileIncompleteReason} kyc={showKyc && profileCompleted} />
               }
               <Loader />
               <TapTop />
@@ -244,9 +254,9 @@ const Layout = ({ children, classNames, ...rest }) => {
             :
             <>
               {
-                showModal === true && typeof profileCompleted === "boolean"
+                ((showModal === true && typeof profileCompleted === "boolean") || (showModal && showKyc))
                 &&
-                <ProfileCompletionModal setShowModal={setShowModal} profileIncompleteReason={profileIncompleteReason} />
+                <ProfileCompletionModal setShowModal={setShowModal} profileIncompleteReason={profileIncompleteReason} kyc={showKyc && profileCompleted} />
               }
               <div style={{
                 pointerEvents: userDetails && (is30Days || showModal) ? "none" : "all",

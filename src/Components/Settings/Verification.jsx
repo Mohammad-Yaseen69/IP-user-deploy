@@ -61,6 +61,8 @@ const Verification = () => {
         setSourceOfFund(userDetails?.user?.source_of_funds ?? "")
     }, [userDetails])
 
+    console.log(userDetails)
+
     const handleVerify = async () => {
         setLoading(true)
         const postData = {
