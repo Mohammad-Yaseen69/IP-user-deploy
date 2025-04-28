@@ -168,7 +168,7 @@ const Layout = ({ children, classNames, ...rest }) => {
   useEffect(() => {
     setShowSourceModal(!userDetails?.user?.source_of_funds && userDetails?.user?.occupation)
 
-    if (userDetails?.user?.kyc_status !== "approved" && userDetails.country?.kyc_required) {
+    if (userDetails?.user?.kyc_status !== "approved" && userDetails?.country?.kyc_required) {
       setShowModal(true)
       setShowKyc(true)
     }

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next"
 import download from "./download.svg";
 import edit from "./edit.svg"
 import styles from "./styles/Mobile.module.css"
-import s from "../PaymentsNew/files/share.png"
+import s from "../PaymentsNewer/files/PaymentsNewFiles/share.png"
 import { UserContext } from "../../Context/UserContext";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";

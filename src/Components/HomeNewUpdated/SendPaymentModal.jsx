@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Button, Card, CardBody, Input, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import { payoutChannelData } from '../PaymentsNewer/PayoutChannel'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import countries from "../PaymentsNewer/CountriesData.json"
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
@@ -174,12 +174,6 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
 
     useEffect(() => {
         if (payoutChannel) {
-            // const data = { country: country.alpha3 }
-            // // console.log(country)
-            // const encrypted = encryptData(data)
-            // axios.post(`${process.env.REACT_APP_THUNES_API}/Services`, {
-            //     data: encrypted
-            // })
             axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country.alpha3}`)
                 .then(res => {
                     const decrypted = decryptData(res.data.data)

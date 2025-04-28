@@ -10,7 +10,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css"
 import { useDispatch } from "react-redux";
 import faded_lines from "./files/faded_lines.png"
-import { newTransaction } from "../../store/slices/Transactions";
 import { FaRegFilePdf, FaRegFileVideo } from "react-icons/fa";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import axios from "axios";

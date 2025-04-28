@@ -5,8 +5,6 @@ import Draggable from "react-draggable";
 import { useTranslation } from "react-i18next";
 import SelectedAmountAndCurrency from "./SelectedAmountAndCurrency";
 import SelectedWallet from "./SelectedWallet";
-// import { useDispatch } from "react-redux";
-// import { newTransaction } from "../../store/slices/Transactions";
 import faded_lines from "./files/faded_lines.png"
 import SelectedPaymentType from "./SelectedPaymentType";
 import { UserContext } from "../../Context/UserContext";

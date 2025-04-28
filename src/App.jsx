@@ -15,8 +15,6 @@ import TodoProvider from "./Helper/Todo/TodoProvider"
 import TableProvider from "./Helper/Table/TableProvider"
 import Leatning from "./Helper/Leatning/LearningProvider"
 import FAQProvider from './Helper/Faq/FaqProvider'
-import JobSearchProvider from './Helper/JobSearch/JobSearchProvider'
-import GalleryProvider from "./Helper/Gallery/GalleryProvider"
 import GoogleChartProvider from "./Helper/GoogleChart/GoogleChartProvider"
 import ChartistProvider from "./Helper/Chartist/ChartistProvider"
 import AnimationThemeProvider from './Helper/AnimationTheme/AnimationThemeProvider'
@@ -121,20 +119,16 @@ const App = () => {
                                           <TableProvider>
                                             <Leatning>
                                               <FAQProvider>
-                                                <JobSearchProvider>
-                                                  <GalleryProvider>
-                                                    <GoogleChartProvider>
-                                                      <ChartistProvider>
-                                                        <BookmarkProvider>
-                                                          <AnimationThemeProvider>
-                                                            {" "}
-                                                            <Routers />
-                                                          </AnimationThemeProvider>{" "}
-                                                        </BookmarkProvider>
-                                                      </ChartistProvider>
-                                                    </GoogleChartProvider>
-                                                  </GalleryProvider>
-                                                </JobSearchProvider>
+                                                <GoogleChartProvider>
+                                                  <ChartistProvider>
+                                                    <BookmarkProvider>
+                                                      <AnimationThemeProvider>
+                                                        {" "}
+                                                        <Routers />
+                                                      </AnimationThemeProvider>{" "}
+                                                    </BookmarkProvider>
+                                                  </ChartistProvider>
+                                                </GoogleChartProvider>
                                               </FAQProvider>
                                             </Leatning>
                                           </TableProvider>

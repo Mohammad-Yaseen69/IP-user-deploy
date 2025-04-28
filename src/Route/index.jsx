@@ -11,7 +11,7 @@ import LayoutRoutes from "../Route/LayoutRoutes";
 import PrivateRoute from "./PrivateRoute";
 import VerifyPhone from "../Components/VerifyPhone/VerifyPhone";
 import Requests from "../Components/Requests";
-import NewLayout from "../Components/NewDsLayout";
+// import NewLayout from "../Components/NewDsLayout";
 import AuthNew from "../Components/AuthNew";
 import UserProfilePublic from "../Components/UserProfilePublic";
 
@@ -44,7 +44,7 @@ const Routers = () => {
                 <>
                   <Route exact path={`${process.env.PUBLIC_URL}`} element={<Navigate to={`${process.env.PUBLIC_URL}/dashboard/default`} />} />
                   <Route exact path={`/`} element={<Navigate to={`${process.env.PUBLIC_URL}/dashboard/default`} />} />
-                  <Route path={`/new-dashboard`} element={<NewLayout />} />
+                  {/* <Route path={`/new-dashboard`} element={<NewLayout />} /> */}
                   <Route path={`/*`} element={<LayoutRoutes />} />
                 </>
               ) : (

@@ -1,6 +1,6 @@
 import { Card, CardBody } from "reactstrap";
 // import QRCode from "qrcode.react"
-import share from "../PaymentsNew/files/share.png"
+import share from "../PaymentsNewer/files/PaymentsNewFiles/share.png"
 // import { Download, Share } from "react-feather";
 import download from "./download_b.svg"
 import styles from "./styles/QRCard.module.scss"

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Btn } from "../../AbstractElements";
-import GradientButton from "../User/UserSettings/GradientButton";
+// import GradientButton from "../User/UserSettings/GradientButton";
 import styles from "./styles/Recursive.module.scss";
 
 
@@ -9,7 +9,7 @@ const Recursive = () => {
     const [selectedDay, setSelectedDay] = useState("Monday")
 
     const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-
+ 
     return (
         <div className={styles.container}>
             <h3>Pay Recursively</h3>
@@ -89,7 +89,7 @@ const Recursive = () => {
                 }
             </div>
             <div className={styles.button}>
-                <GradientButton value={"Continue"} size="m" />
+                {/* <GradientButton value={"Continue"} size="m" /> */}
             </div>
         </div>
     )

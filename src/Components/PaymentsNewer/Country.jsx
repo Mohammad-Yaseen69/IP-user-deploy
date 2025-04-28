@@ -56,13 +56,6 @@ const PaymentCountry = ({ country, setCountry, setSubStep, setServices, type = "
     useEffect(() => {
         if (country) {
             if (type === "thunes") {
-                // const data = { country: country.alpha3 }
-                // // console.log(data)
-                // const encrypted = encryptData(data)
-                // // axios.post("https://thunes-backend-96737ef512a8.herokuapp.com/Services", {
-                // axios.post(`${process.env.REACT_APP_THUNES_API}/Services`, {
-                //     data: encrypted
-                // })
                 axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country.alpha3}`)
                     .then(res => {
                         // console.log(decryptData(res.data.data))

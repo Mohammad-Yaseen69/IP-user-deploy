@@ -18,7 +18,6 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { toast } from "react-toastify";
 import RequestLocation from "../RequestLocation";
 import CitiesData from '../CitiesDropDown/CitiesData.json';
-// import { newTransaction } from "../../store/slices/Transactions";
 
 const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, paymentType, setConfirmed, setSubStep, setPaymentType, scheduleDate, scheduleTime, recStartDate, recCycle, setNotInstant, setToken, requestObject, totalBalance, coords, setCoords, prefrencesFunc, preferences, isPreferencesCheck }) => {
     const { t } = useTranslation()

@@ -44,11 +44,6 @@ const WithdrawalChannels = () => {
                     const country = countries.find(item => item.name.includes(userDetails?.country_name));
                     // const data = { country: country.alpha3 };
                     // const encrypted = encryptData(data);
-
-                    // // Fetch services
-                    // const servicesResponse = await axios.post(`${process.env.REACT_APP_THUNES_API}/Services`, {
-                    //     data: encrypted,
-                    // });
                     const servicesResponse = await axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country.alpha3}`)
                     setServices(decryptData(servicesResponse.data.data));
                 }

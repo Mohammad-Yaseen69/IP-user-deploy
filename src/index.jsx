@@ -3,9 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.scss';
 import App from './App';
 // import reportWebVitals from './reportWebVitals';
-import { Provider } from 'react-redux';
 import './i18n'
-import store from './store';
 // import { GoogleOAuthProvider } from '@react-oauth/google';
 // import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
@@ -21,13 +19,9 @@ import "./Components/AddFunds/styles/creditcard.css"
 import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
-    <Provider store={store}>
-        {/* <GoogleOAuthProvider clientId={`${process.env.REACT_APP_GOOGLE_AUTHENTICATOR_CLIENT_ID}`}> */}
         <BrowserRouter>
             <App />
         </BrowserRouter>
-        {/* </GoogleOAuthProvider> */}
-    </Provider>
     , document.getElementById("root"));
 
 

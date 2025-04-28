@@ -1,5 +1,5 @@
 import { useState } from "react";
-import FormModal from "../UiKits/Modals/VaryingContent/common/FormModal";
+// import FormModal from "../UiKits/Modals/VaryingContent/common/FormModal";
 
 const InviteFriend = () => {
     const [modal, setModal] = useState(false)
@@ -10,7 +10,7 @@ const InviteFriend = () => {
     return (
         <>
             <span style={{ cursor: "pointer", fontSize: ".7rem", color: "var(--theme-default)" }} onClick={toggle}>Not on InstaPay? Invite Them Now.</span>
-            <FormModal modal={modal} NewMessage={"Invite Friend"} toggle={toggle} email={email} setEmail={setEmail} number={number} setNumber={setNumber} />
+            {/* <FormModal modal={modal} NewMessage={"Invite Friend"} toggle={toggle} email={email} setEmail={setEmail} number={number} setNumber={setNumber} /> */}
         </>
     )
 }

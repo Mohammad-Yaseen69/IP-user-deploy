@@ -1,5 +1,4 @@
 import { useState } from "react";
-import GradientButton from "../User/UserSettings/GradientButton";
 import Amount from "./Amount";
 import styles from "./styles/Instant.module.scss";
 
@@ -32,9 +31,7 @@ const Instant = () => {
                         <span>In a few minutes</span>
                     </div>
                 </div>
-                <div className={styles.button}>
-                    <GradientButton value={"Continue"} size="m" />
-                </div>
+               
             </div>
         </div>
     )

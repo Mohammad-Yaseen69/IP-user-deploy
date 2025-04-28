@@ -3,7 +3,7 @@ import { Button } from 'reactstrap';
 import { FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa';
 import { SiWhatsapp, SiSnapchat, SiPinterest, SiTiktok, SiTelegram, SiReddit, SiLinkedin, SiQuora, SiDiscord } from 'react-icons/si';
 import { Share2 } from 'react-feather';
-import s from "../PaymentsNew/files/share.png"
+import s from "../PaymentsNewer/files/PaymentsNewFiles/share.png"
 import { useTranslation } from 'react-i18next';
 
 const ShareBtn = ({ link, bg, sm = false }) => {

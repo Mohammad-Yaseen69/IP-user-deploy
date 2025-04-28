@@ -1,7 +1,5 @@
 import { Circle, CheckCircle, Plus } from "react-feather";
 import { Button, CardBody, CardFooter, FormGroup, Input, Label } from "reactstrap";
-import GradientButton from "../User/UserSettings/GradientButton";
-import ReactFlagsSelect from "react-flags-select";
 import { countries } from "country-list-json";
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'

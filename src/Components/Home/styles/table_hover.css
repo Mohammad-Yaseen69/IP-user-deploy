@@ -1,9 +1,0 @@
-.hover-styles {
-    margin-bottom: 0;
-    box-shadow: 0 0 3px rgba(128, 128, 128, 0.2)
-}
-
-.hover-styles:hover {
-    box-shadow: 0 0 40px rgba(8, 21, 66, 0.05);
-    transition: all 0.3s ease;
-}
