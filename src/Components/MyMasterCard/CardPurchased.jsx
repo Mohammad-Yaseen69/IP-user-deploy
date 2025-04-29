@@ -518,7 +518,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                         <div style={{ backgroundColor: "white" }} className={styles.detailsContainer}>
                             <div style={{ display: "flex", justifyContent: "space-between", width: '100%', alignItems: window.innerWidth > 1000 && 'center', flexDirection: window.innerWidth < 1000 && "column", }}>
                                 <h4 className={styles.title}>Mobile Payments</h4>
-                                <span style={{ fontSize: '14px', color: '#9CA3AF', fontWeight: 600 }}>Manage devices and add your card to mobile wallets."</span>
+                                <span style={{ fontSize: '14px', color: '#9CA3AF', fontWeight: 600 }}>Manage devices and add your card to mobile wallets.</span>
                             </div>
 
                             <div className={styles.walletOptions}>

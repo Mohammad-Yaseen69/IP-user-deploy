@@ -238,7 +238,9 @@ const PendingNew = () => {
                 )
         }
 
-        lastShown()
+       
+            lastShown()
+        
     }, [filteredReceived, userDetails])
     return (
         <>

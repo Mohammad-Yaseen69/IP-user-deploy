@@ -156,7 +156,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                     setActiveItem(0)
                 }
             }}>
-                <div style={{ minWidth: "155px" }}>{new Date(item?.createdAt)?.toLocaleString()}</div>
+                <div style={{ minWidth: "155px", whiteSpace:'nowrap' }}>{new Date(item?.createdAt)?.toLocaleString()}</div>
                 {vvc && <div>{item?.transactionId}</div>}
                 {vvc && <div>••{cardNo?.slice(-4)}</div>}
                 {vvc && <div>{item?.type}</div>}

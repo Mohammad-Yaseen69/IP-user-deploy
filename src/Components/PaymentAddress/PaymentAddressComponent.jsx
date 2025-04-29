@@ -378,7 +378,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                             maxLength={80}
                                                         />
 
-                                                        <span style={{ position: 'absolute', right: '10px', top: '15px', fontSize: '12px', fontWeight: 600, color: 'gray' }}>{title.length}/80</span>
+                                                        <span style={{ position: 'absolute', right: '10px', top: '15px', fontSize: '12px', fontWeight: 600, color: 'gray' }}>{title?.length}/80</span>
                                                     </div>
                                                 </div>
 
@@ -395,7 +395,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                             onChange={e => setDescription(e.target.value)}
                                                         />
 
-                                                        <span style={{ position: 'absolute', right: '10px', bottom: '10px', fontSize: '12px', fontWeight: 600, color: 'gray' }}>{description.length}/200</span>
+                                                        <span style={{ position: 'absolute', right: '10px', bottom: '10px', fontSize: '12px', fontWeight: 600, color: 'gray' }}>{description?.length}/200</span>
                                                     </div>
                                                 </div>
 

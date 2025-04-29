@@ -281,20 +281,32 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
         })
     }
 
+    // Add this useEffect to validate bank details completion properly
     useEffect(() => {
-        if (bankMobCrypto.bank_iban &&
-            bankMobCrypto.bank_account_number &&
-            bankMobCrypto.bank_name &&
-            bankMobCrypto.bank_branch_name &&
-            bankMobCrypto.bank_branch_street &&
-            bankMobCrypto.bank_city &&
-            bankMobCrypto.bank_province &&
-            bankMobCrypto.bank_postal_code &&
-            bankMobCrypto.bank_account_holder_name &&
-            Object.keys(bankExtras).filter(item => serviceFieldInfoValidate(services?.find(item => item?.name?.toLowerCase()?.includes("bank")), "credit_party_identifiers_accepted", item)).every(item => bankExtras?.[item]?.length > 0)) {
-            setBankCompleted(true)
+        if (current?.value === "bank") {
+            const isAllBankFieldsFilled =
+                bankMobCrypto.bank_iban &&
+                bankMobCrypto.bank_account_number &&
+                bankMobCrypto.bank_name &&
+                bankMobCrypto.bank_branch_name &&
+                bankMobCrypto.bank_branch_street &&
+                bankMobCrypto.bank_city &&
+                bankMobCrypto.bank_province &&
+                bankMobCrypto.bank_postal_code &&
+                bankMobCrypto.bank_account_holder_name &&
+                bankMobCrypto.bank_payer &&
+                Object.keys(bankExtras)
+                    .filter(item => serviceFieldInfoValidate(
+                        services?.find(item => item?.name?.toLowerCase()?.includes("bank")),
+                        "credit_party_identifiers_accepted",
+                        item
+                    ))
+                    .every(item => bankExtras?.[item]?.length > 0);
+
+            setBankCompleted(isAllBankFieldsFilled);
         }
-    }, [bankMobCrypto, bankExtras, services])
+    }, [bankMobCrypto, bankExtras, services, current]);
+
 
     useEffect(() => {
         if (bankMobCrypto.mobile_money_provider &&
@@ -807,7 +819,12 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                                         <div className={styles.left}>
                                             {
                                                 channels.map(item => (
-                                                    <div className={`${styles.channel} ${current?.name === item?.name ? styles.active : ""}`} onClick={() => setCurrent(item)}>
+                                                    <div className={`${styles.channel} ${current?.name === item?.name ? styles.active : ""}`}
+                                                        onClick={() => {
+                                                            setCurrent(item)
+                                                            setIsEditMode(true)
+                                                        }}
+                                                    >
                                                         <img src={current?.name === item?.name ? item?.active_icon : item?.icon} alt="" />
                                                         <span>{t(item?.name)}</span>
                                                         {
@@ -966,7 +983,12 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                                                                             outline: "none",
                                                                             borderRadius: "5px",
                                                                         }} onClick={updateWithDrawal}
-                                                                            disabled={isSaving || (!bankCompleted && !mobileCompleted && !cryptoCompleted && !cashCompleted && !cardCompleted) || bankError}
+                                                                            disabled={isSaving ||
+                                                                                (current?.value === "bank" && !bankCompleted) ||
+                                                                                (current?.value === "mobile" && !mobileCompleted) ||
+                                                                                (current?.value === "cash" && !cashCompleted) ||
+                                                                                (current?.value === "card" && !cardCompleted) ||
+                                                                                bankError}
                                                                         >
                                                                             {isSaving ? t("Saving") : t("Save")}
                                                                         </Button>
