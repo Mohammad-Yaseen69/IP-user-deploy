@@ -379,7 +379,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
 
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                                     {editMode &&
-                                                        <span onClick={() => setEditMode(false)}>
+                                                        <span style={{cursor: "pointer", fontWeight: 600}} onClick={() => setEditMode(false)}>
                                                             Cancel
                                                         </span>
                                                     }
@@ -424,7 +424,17 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
 
                                                 <div className={styles.inputBox}>
                                                     <label>{t("Payment Address Title")}</label>
-                                                    <Input disabled={!editMode} style={{ background: !editMode && "#e9ecef" }} placeholder='Title' value={title} onChange={e => setTitle(e.target.value)} />
+                                                    <div style={{ position: "relative", width: "100%" }}>
+                                                        <Input
+                                                            disabled={!editMode}
+                                                            style={{ background: !editMode && "#e9ecef" }}
+                                                            placeholder='Title' value={title}
+                                                            onChange={e => setTitle(e.target.value)}
+                                                            maxLength={80}
+                                                        />
+
+                                                        <span style={{ position: 'absolute', right: '10px', top: '15px', fontSize: '12px', fontWeight: 600, color: 'gray' }}>{title.length}/80</span>
+                                                    </div>
                                                 </div>
 
                                                 <div className={styles.inputBox}>
@@ -436,34 +446,11 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                             type='textarea'
                                                             placeholder='Description'
                                                             value={description}
-                                                            onPaste={(e) => {
-                                                                e.preventDefault();
-                                                                const pastedText = e.clipboardData.getData('text');
-                                                                const remainingChars = 200 - description.length;
-                                                                const textToInsert = pastedText.slice(0, remainingChars);
-                                                                const cursorPos = e.target.selectionStart;
-                                                                const newText = description.slice(0, cursorPos) +
-                                                                    textToInsert +
-                                                                    description.slice(cursorPos);
-                                                                if (newText.length <= 200) {
-                                                                    setDescription(newText);
-                                                                }
-                                                            }}
-                                                            onChange={e => {
-                                                                if (e.target.value.length <= 200) {
-                                                                    setDescription(e.target.value);
-                                                                }
-                                                            }}
-                                                            onKeyDown={(e) => {
-                                                        
-                                                                const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-                                                                if (description.length >= 200 && !allowedKeys.includes(e.key) && !e.ctrlKey) {
-                                                                    e.preventDefault();
-                                                                }
-                                                            }}
+                                                            maxLength={200}
+                                                            onChange={e => setDescription(e.target.value)}
                                                         />
 
-                                                        <span style={{ position: 'absolute', right: '10px', bottom: '10px', fontSize: '12px', fontWeight: 600, color: 'black' }}>{description.length}/200</span>
+                                                        <span style={{ position: 'absolute', right: '10px', bottom: '10px', fontSize: '12px', fontWeight: 600, color: 'gray' }}>{description.length}/200</span>
                                                     </div>
                                                 </div>
 
