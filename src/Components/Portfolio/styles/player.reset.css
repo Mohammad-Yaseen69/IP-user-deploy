@@ -5,3 +5,12 @@
 .p-address-123456 .jwplayer .jw-wrapper{
     height: 263px !important;
 }
+
+.p-address-123456 .jwplayer.jw-flag-fullscreen .jw-aspect {
+    height: 100% !important;
+}
+
+.p-address-123456 .jwplayer .jw-aspect{
+    height: 263px !important;
+}
+
