@@ -228,9 +228,12 @@ const PendingNew = () => {
             if (filteredReceived.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).length < 1) {
                 return false
             }
+
+            const data = { telegram_last_shown_payment_request: filteredReceived.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]?._id, instagram_last_shown_payment_request: filteredReceived.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]?._id }
+            console.log(data)
             const res =
-                await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-individual/${userDetails?.id}`, {
-                    data: encryptData({ telegram_last_shown_payment_request: filteredReceived.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]?._id, instagram_last_shown_payment_request: filteredReceived.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]?._id })
+                await axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-individual/${userDetails?._id}`, {
+                    data: encryptData(data)
                 }, { headers: authHeader }
                 )
         }
