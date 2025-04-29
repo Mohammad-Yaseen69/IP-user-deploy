@@ -198,11 +198,11 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     const leftJSX = () => (
         <div style={{ flex: 2 }} className={styles.left}>
             {width > 1000 &&
-                <div style={{ paddingBottom: "2rem" }}>
+                <div style={{ marginBottom: "2rem" }}>
                     <img style={{ float: 'right' }} src={ip} alt="" />
                 </div>
             }
-            {userDetails.about_me &&
+            {(title || description) &&
                 <div className={styles.about}>
                     <h4 style={{ marginBottom: "0px" }}>{title}</h4>
                     <p style={{ fontSize: "14px", fontWeight: 600, color: "#7E7E7E" }}>{description}</p>

@@ -39,39 +39,39 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const [editMode, setEditMode] = useState(false)
     const [showModal, setShowModal] = useState(false)
 
+    const getPaymentAddress = () => {
+        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/get-payment-address/${userDetails?.username}`, {
+            headers: authHeader
+        })
+            .then(res => {
+                const decrypted = decryptData(res.data.data)
+                // console.log(decrypted)
+                if (decrypted?.message?.toLowerCase()?.includes("disabled")) {
+                    SetIsAllowed(false)
+                } else {
+                    setPaymentAddressDetails(decrypted?.paymentAddressDetails)
+                    setTitle(decrypted?.paymentAddressDetails?.title ?? "My Payment Address")
+                    setCurrency(decrypted?.paymentAddressDetails?.currency)
+                    setDescription(decrypted?.paymentAddressDetails?.description ?? "This is my payment address")
+                    setDp(decrypted?.paymentAddressDetails?.profileImage?.url)
+                    setCover(decrypted?.paymentAddressDetails?.coverImage?.url)
+                    setIsActive(decrypted?.paymentAddressDetails?.status)
+                    SetIsAllowed(true)
+                }
+            })
+            .catch(err => {
+                // console.log(err)
+                const decrypted = decryptData(err.response.data.data)
+                // console.log(decrypted)
+                SetIsAllowed(false)
+            })
+    }
     useEffect(() => {
         if (userDetails?.country_name) {
             const filteredCountry = countries.find(item => item.name.toLowerCase().includes(userDetails?.country_name.toLowerCase()));
             setUserCountry(filteredCountry);
         }
         if (userDetails?.username) {
-            const getPaymentAddress = () => {
-                axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/get-payment-address/${userDetails?.username}`, {
-                    headers: authHeader
-                })
-                    .then(res => {
-                        const decrypted = decryptData(res.data.data)
-                        // console.log(decrypted)
-                        if (decrypted?.message?.toLowerCase()?.includes("disabled")) {
-                            SetIsAllowed(false)
-                        } else {
-                            setPaymentAddressDetails(decrypted?.paymentAddressDetails)
-                            setTitle(decrypted?.paymentAddressDetails?.title ?? "My Payment Address")
-                            setCurrency(decrypted?.paymentAddressDetails?.currency)
-                            setDescription(decrypted?.paymentAddressDetails?.description ?? "This is my payment address")
-                            setDp(decrypted?.paymentAddressDetails?.profileImage?.url)
-                            setCover(decrypted?.paymentAddressDetails?.coverImage?.url)
-                            setIsActive(decrypted?.paymentAddressDetails?.status)
-                            SetIsAllowed(true)
-                        }
-                    })
-                    .catch(err => {
-                        // console.log(err)
-                        const decrypted = decryptData(err.response.data.data)
-                        // console.log(decrypted)
-                        SetIsAllowed(false)
-                    })
-            }
             getPaymentAddress()
         }
 
@@ -98,6 +98,9 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                 headers: authHeader
             })
 
+            if(!paymentAddressDetails.title){
+                getPaymentAddress()
+            }
             setIsSaving(false)
 
         } catch (err) {
@@ -139,6 +142,10 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
             const decrypted = decryptData(res.data.data)
             console.log(decrypted)
             setIsActive(prev => !prev);
+            if(!paymentAddressDetails.title){
+                addUpdatePaymentAddress()
+            }
+
             verifyToken()
         } catch (error) {
             console.log(decryptData(error.response.data.data))
