@@ -716,7 +716,6 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
         const cur = current?.value === "bank" ? "bank_details" : current?.value === "mobile" ? "mobile_wallet" : current?.value === "card" ? "card" : current?.value === "cash" ? "cash_pickup" : ""
 
         setCurrentDefault(userWithdrawals?.[cur]?.[0]?.default ? true : false)
-
     }, [current])
 
 

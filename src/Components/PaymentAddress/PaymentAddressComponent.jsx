@@ -56,9 +56,9 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                             SetIsAllowed(false)
                         } else {
                             setPaymentAddressDetails(decrypted?.paymentAddressDetails)
-                            setTitle(decrypted?.paymentAddressDetails?.title)
+                            setTitle(decrypted?.paymentAddressDetails?.title ?? "My Payment Address")
                             setCurrency(decrypted?.paymentAddressDetails?.currency)
-                            setDescription(decrypted?.paymentAddressDetails?.description)
+                            setDescription(decrypted?.paymentAddressDetails?.description ?? "This is my payment address")
                             setDp(decrypted?.paymentAddressDetails?.profileImage?.url)
                             setCover(decrypted?.paymentAddressDetails?.coverImage?.url)
                             setIsActive(decrypted?.paymentAddressDetails?.status)
@@ -77,19 +77,12 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
 
         if (userDetails._id) {
             getUserVideos()
-            console.log(userVideos)
         }
 
     }, [userDetails])
 
     const addUpdatePaymentAddress = async (argC) => {
         setIsSaving(true)
-
-        if (description.length > 200) {
-            toast.error("Description must be less then 200 characters.")
-            return
-        }
-        console.log(currency, argC)
         try {
             const payload = {
                 title,
@@ -99,22 +92,23 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
             }
             // const enc = payload
             const enc = encryptData(payload)
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/add-payment-address/${userDetails?.username}`, {
+            await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/add-payment-address/${userDetails?.username}`, {
                 data: enc
             }, {
                 headers: authHeader
             })
 
-            const data = await decryptData(response.data.data)
-            // console.log(data)
             setIsSaving(false)
 
         } catch (err) {
             const decrypted = await decryptData(err.response.data.data)
+            console.log(decrypted)
             // console.log(decrypted)
             setIsSaving(false)
         }
     }
+
+
 
 
     // vpa details
@@ -136,16 +130,18 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const handleChangeStatus = async () => {
         try {
             const encrypted = encryptData({ status: !isActive })
+            console.log(encrypted)
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/update-payment-address-status-user/${userDetails?.username}`, {
                 data: encrypted
             }, {
                 headers: authHeader
             })
             const decrypted = decryptData(res.data.data)
+            console.log(decrypted)
             setIsActive(prev => !prev);
             verifyToken()
         } catch (error) {
-            // console.log(decryptData(error.response.data.data))
+            console.log(decryptData(error.response.data.data))
             toast.error("Something went wrong!")
         }
     }

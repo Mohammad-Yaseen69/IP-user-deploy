@@ -87,7 +87,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
             axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/get-payment-address-public/${user_name}`)
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
-                    console.log(decrypted?.limits)
+                    console.log(decrypted)
                     setPaymentAddressDetails(decrypted?.paymentAddressDetails)
                     setTitle(decrypted?.paymentAddressDetails?.title)
                     setCurrency(decrypted?.paymentAddressDetails?.currency)
@@ -98,6 +98,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                     setLimits(decrypted?.limits)
                 })
                 .catch(err => {
+                    console.log(decryptData(err.response.data.data))
                 })
                 .finally(() => {
                     setLoading(false)
@@ -194,8 +195,6 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     //     }
     // }, [amount])
 
-
-    console.log(userDetails)
     const leftJSX = () => (
         <div style={{ flex: 2 }} className={styles.left}>
             {width > 1000 &&
