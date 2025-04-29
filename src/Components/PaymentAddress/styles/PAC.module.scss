@@ -376,7 +376,7 @@
                     align-items: flex-end;
                     gap: var(--SPACING-spacing-4, 32px);
                     flex-shrink: 0;
-                    width: 70%;
+                    width: 62%;
                     margin-bottom: 0;
 
                     .infoTop {
@@ -441,7 +441,7 @@
 
                 .videoCont {
                     display: flex;
-                    width: 30%;
+                    width: 38%;
                     padding: var(--SPACING-spacing-3, 24px);
                     flex-direction: column;
                     gap: 15px;
@@ -451,6 +451,7 @@
                     align-items: flex-start;
                     flex-shrink: 0;
                     align-self: stretch;
+                    margin-bottom: 2rem;
 
                     .head {
                         display: flex;
@@ -495,6 +496,7 @@
                         border-radius: var(--RADIUS-radius-3, 12px);
                         border: 0.5px solid rgba(0, 0, 0, 0.10);
                         background: var(--COLORS-Neutral-100, #FFF);
+                        overflow: auto;
 
 
 

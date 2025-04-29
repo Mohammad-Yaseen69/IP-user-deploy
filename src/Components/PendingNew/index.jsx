@@ -76,8 +76,6 @@ const PendingNew = () => {
     const [searchQuery, setSearchQuery] = useState("")
     const [apiDates, setApiDates] = useState(null)
     const [page, setPage] = useState(1);
-    const [currentTrxType, setCurrentTrxType] = useState("all")
-    const [maxLimit, setMaxLimit] = useState(false)
     const { userDetails, authHeader } = useContext(UserContext);
     const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
     const [debounceTimer, setDebounceTimer] = useState(null);
@@ -225,6 +223,20 @@ const PendingNew = () => {
         return sentRequests
     }, [sentRequests, searchQuery])
 
+    useEffect(() => {
+        const lastShown = async () => {
+            if (filteredReceived.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).length < 1) {
+                return false
+            }
+            const res =
+                await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-individual/${userDetails?.id}`, {
+                    data: encryptData({ telegram_last_shown_payment_request: filteredReceived.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]?._id, instagram_last_shown_payment_request: filteredReceived.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]?._id })
+                }, { headers: authHeader }
+                )
+        }
+
+        lastShown()
+    }, [filteredReceived, userDetails])
     return (
         <>
             <div className={styles.container}>

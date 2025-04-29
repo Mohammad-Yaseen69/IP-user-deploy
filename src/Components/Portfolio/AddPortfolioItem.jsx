@@ -171,7 +171,7 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
                     toggle()
                 }
             }}>
-                {t("Add New Portfolio Item")}
+                {pAddress ? t("Add New Video") : t("Add New Portfolio Item")}
             </ModalHeader>
             <ModalBody style={{
                 display: "flex",

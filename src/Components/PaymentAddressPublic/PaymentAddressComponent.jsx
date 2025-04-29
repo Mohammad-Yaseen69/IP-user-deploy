@@ -195,6 +195,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     // }, [amount])
 
 
+    console.log(userDetails)
     const leftJSX = () => (
         <div style={{ flex: 2 }} className={styles.left}>
             {width > 1000 &&
@@ -204,8 +205,8 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
             }
             {userDetails.about_me &&
                 <div className={styles.about}>
-                    <h4 style={{ marginBottom: "0px" }}>About Me:</h4>
-                    <p style={{ fontSize: "14px", fontWeight: 600, color: "#7E7E7E" }}>{userDetails.about_me}</p>
+                    <h4 style={{ marginBottom: "0px" }}>{title}</h4>
+                    <p style={{ fontSize: "14px", fontWeight: 600, color: "#7E7E7E" }}>{description}</p>
                 </div>
             }
 
@@ -231,6 +232,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                 user={userDetails}
                 amount={amount}
                 currency={currency}
+                username={user_name}
                 address={true}
                 currentWallet={currentWallet}
             />
@@ -374,7 +376,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                 </div>
 
                                                 <div style={{ marginBottom: "0px" }} className={vpa_styles.container}>
-                                                    <div style={{ padding: width < 400 && "20px" }} className={vpa_styles.right}>
+                                                    <div style={{ padding: width < 400 && "20px", height: "fit-content", padding: '24px' }} className={vpa_styles.right}>
                                                         <div className={vpa_styles.currency}>
                                                             <div>{currentWallet?.currency?.code} </div>
                                                             {/* <p>{currency}</p> */}
@@ -449,16 +451,14 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                                 </div>
                                                                 <span>Pay With InstaPay</span>
                                                             </Link>
-                                                            {
-                                                                window.innerWidth < 1000
-                                                                &&
-                                                                <div className={styles.go_back} onClick={() => window.history.back()}>
-                                                                    <ChevronLeft size={16} color='black' />
-                                                                    <span>
-                                                                        {t("Go back (Cancel Payment)")}
-                                                                    </span>
-                                                                </div>
-                                                            }
+
+                                                            <div style={{gap: '10px' , justifyContent: "flex-start"}} className={styles.go_back} onClick={() => window.history.back()}>
+                                                                <ChevronLeft size={16} color='#777777' />
+                                                                <span style={{ color: "#777777", fontSize: '12px'}}>
+                                                                    {t("Go back (Cancel Payment)")}
+                                                                </span>
+                                                            </div>
+
                                                         </div>
                                                     </div>
                                                 </div>

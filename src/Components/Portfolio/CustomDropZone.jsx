@@ -91,7 +91,7 @@ const Dropzone = ({ file, setFile, setFileType, pAddress }) => {
                 justifyContent: 'center',
                 padding: '20px',
                 textAlign: 'center',
-                height:  pAddress ? "250px" :"200px"
+                height: pAddress ? "250px" : "200px"
             }}
             onClick={() => {
                 if (inputRef.current) {
@@ -141,7 +141,10 @@ const Dropzone = ({ file, setFile, setFileType, pAddress }) => {
                                         <rect x="0.0625" width="53.3617" height="53.3617" rx="12.8746" fill="#787878" fill-opacity="0.1" />
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M36.3295 17.7593H39.6218C41.7141 17.7593 43.4101 19.4554 43.4101 21.5476V34.9201C43.4101 37.0123 41.7141 38.7084 39.6218 38.7084H15.5148C13.4226 38.7084 11.7266 37.0123 11.7266 34.9201V21.5476C11.7266 19.4554 13.4226 17.7593 15.5148 17.7593H18.8106L20.6462 15.0042C21.3505 13.9645 22.5243 13.3416 23.7801 13.3408H31.3566C32.6124 13.3416 33.7861 13.9646 34.4905 15.0042L36.3295 17.7593ZM19.0379 27.0785C19.0379 31.7897 22.8571 35.6089 27.5683 35.6089C32.2772 35.6032 36.0931 31.7873 36.0987 27.0785C36.0987 22.3672 32.2796 18.548 27.5683 18.548C22.8571 18.548 19.0379 22.3672 19.0379 27.0785ZM39.0191 23.0939C39.0605 23.0962 39.1019 23.0962 39.1433 23.0939C39.7605 23.0596 40.2331 22.5315 40.1987 21.9143C40.1644 21.2971 39.6363 20.8245 39.0191 20.8588H37.6416C37.0722 20.8904 36.6177 21.345 36.5861 21.9143C36.5518 22.5315 37.0243 23.0596 37.6416 23.0939H39.0191ZM22.8579 27.0778C22.8579 24.4549 24.9841 22.3287 27.607 22.3287C30.229 22.3306 32.3542 24.4558 32.3561 27.0778C32.3561 29.7006 30.2298 31.8269 27.607 31.8269C24.9841 31.8269 22.8579 29.7006 22.8579 27.0778Z" fill="black" />
                                     </svg>
-                                    <p style={{ margin: '14px 0', fontWeight: 'bold', fontSize: "14px" }}>Drag/Drop or Upload a file (Photo/Video/PDF)</p>
+                                    <p style={{ margin: '14px 0', fontWeight: 'bold', fontSize: "14px" }}>
+                                        {pAddress ? "Click to upload a video" : "Drag/Drop or Upload a file (Photo/Video/PDF)"}
+                                      
+                                    </p>
                                     <p style={{ margin: '0', color: '#888', display: "flex", alignItems: "center", gap: ".3rem", justifyContent: "center", fontSize: "9px" }}><AlertTriangle size={12} /> Max size 1GB</p>
                                     <input type="file" value={""} onChange={handleFileChange} hidden ref={inputRef} />
                                 </div>

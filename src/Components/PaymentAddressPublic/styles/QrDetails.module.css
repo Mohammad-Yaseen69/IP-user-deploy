@@ -9,6 +9,17 @@
     flex-wrap: wrap;
 }
 
+
+.qr_user{
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    font-weight: 700;
+    color: black;
+    font-size: 16px;
+}
+
+
 .qr {
     flex: 1;
     min-width: 210px;

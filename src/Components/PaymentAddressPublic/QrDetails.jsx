@@ -37,7 +37,7 @@ const qrCode = new QRCodeStyling({
     backgroundOptions: { color: "#ffffff" },
 });
 
-const QrDetails = ({ wallet, amount, currency, currentWallet, address }) => {
+const QrDetails = ({ wallet, amount, currency, currentWallet, address, user, username }) => {
     const { t } = useTranslation()
     const ref = useRef(null)
     const [qrLink, setQrLink] = useState("")
@@ -61,25 +61,25 @@ const QrDetails = ({ wallet, amount, currency, currentWallet, address }) => {
     }, [amount]);
     return (
         <div className={styles.container}>
-            <div style={{flex: address && '0 0 auto'}} className={styles.qr}>
+            <div style={{ flex: address && '0 0 auto' }} className={styles.qr}>
                 <div className={styles.qrCode} style={{ position: "relative" }}>
                     {/* <img src={wallet.qrCode?.url} /> */}
-                    <img src={qrLink} style={{height: address && "221px"}}/>
+                    <img src={qrLink} style={{ height: address && "221px" }} />
                     <img src={logo} style={{ position: "absolute", left: "50%", top: "40%", translate: "-50% -50%", width: window.innerWidth > 1000 ? "2rem" : "2.5rem", padding: ".6rem", background: "white", borderRadius: "10px" }} />
-                    {/* {
-                        user?.username 
-                        &&
-                        <div className={styles.qr_user}>{user?.username}</div>
-                    } */}
                     <div className={styles.qr_id}>{wallet?.wallet_id}</div>
+                    {
+                        (user?.username || username)
+                        &&
+                        <div className={styles.qr_user} >{user?.username ?? username}</div>
+                    }
                 </div>
             </div>
-            <div  className={styles.details}>
+            <div className={styles.details}>
                 <h5>{t("How to Pay Using QR Code")}:</h5>
 
                 <ul className={styles.list}>
                     <li>
-                        <span>Choose your preferred social media app or InstaPay App.</span>
+                        <span>1. Choose your preferred social media app or InstaPay App.</span>
                         <div className={styles.btns}>
                             <button className={styles.btn} onClick={() => window.open("https://www.instagram.com/instapay_swiss", "_blank")}>
                                 <div className={styles.icon}>
@@ -87,28 +87,28 @@ const QrDetails = ({ wallet, amount, currency, currentWallet, address }) => {
                                 </div>
                                 <span>{t("Open Instagram")}</span>
                             </button>
+                            <button onClick={() => window.open("https://t.me/Instapay_swiss_bot", "_blank")} className={`${styles.btn}`}>
+                                <div className={styles.icon}>
+                                    <img src={tl} />
+                                </div>
+                                <span>{t("Open Telegram")}</span>
+                            </button>
                             <button className={`${styles.btn} ${styles.btn_d}`}>
                                 <div className={styles.icon}>
                                     <img src={wa} />
                                 </div>
                                 <span>{t("Open Whatsapp")}</span>
                             </button>
-                            <button className={`${styles.btn} ${styles.btn_d}`}>
-                                <div className={styles.icon}>
-                                    <img src={tl} />
-                                </div>
-                                <span>{t("Open Telegram")}</span>
-                            </button>
                         </div>
                     </li>
                     <li>
-                        <span>Send <strong>“Hi”</strong> to <strong>@instapay_swiss</strong> and select <strong>QR QuickPay</strong></span>
+                        <span>2. Send <strong>“Hi”</strong> to <strong>@instapay_swiss</strong> and select <strong>QR QuickPay</strong></span>
                     </li>
                     <li>
-                        <span>Enter the <strong>Alphanumeric code ({wallet?.wallet_id})</strong> or <strong>Scan the QR Code</strong></span>
+                        <span>3. Enter the <strong>Alphanumeric code ({wallet?.wallet_id})</strong> or <strong>Scan the QR Code</strong></span>
                     </li>
                     <li>
-                        <span>Complete your payment.</span>
+                        <span>4. Complete your payment.</span>
                     </li>
                 </ul>
             </div>

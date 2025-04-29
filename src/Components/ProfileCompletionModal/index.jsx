@@ -67,7 +67,7 @@ const ProfileCompletionModal = ({ setShowModal, profileIncompleteReason, kyc = f
                             <path fillRule="evenodd" clipRule="evenodd" d="M41.25 4.58333C46.3054 4.58333 50.4167 8.69458 50.4167 13.75V41.25C50.4167 45.5927 47.3829 49.2387 43.323 50.1804C42.1221 42.527 35.4846 36.6667 27.4999 36.6667C19.5153 36.6667 12.8778 42.527 11.6769 50.1804C7.61701 49.2386 4.58333 45.5927 4.58333 41.25V13.75C4.58333 8.69458 8.69458 4.58333 13.75 4.58333H41.25ZM16.2708 50.4167H38.7291C37.6749 45.1917 33.0457 41.2501 27.4999 41.2501C21.9541 41.2501 17.325 45.1917 16.2708 50.4167ZM41.25 0H13.75C6.15542 0 0 6.15542 0 13.75V41.25C0 48.8446 6.15542 55 13.75 55H41.25C48.8446 55 55 48.8446 55 41.25V13.75C55 6.15542 48.8446 0 41.25 0ZM27.4998 34.3749C21.1817 34.3749 16.0415 29.2347 16.0415 22.9166C16.0415 16.5985 21.1817 11.4583 27.4998 11.4583C33.818 11.4583 38.9582 16.5985 38.9582 22.9166C38.9582 29.2347 33.818 34.3749 27.4998 34.3749ZM27.4998 16.0416C23.7094 16.0416 20.6248 19.1262 20.6248 22.9166C20.6248 26.707 23.7094 29.7916 27.4998 29.7916C31.2903 29.7916 34.3748 26.707 34.3748 22.9166C34.3748 19.1262 31.2903 16.0416 27.4998 16.0416Z" fill="white" />
                         </svg>
                         <h4>
-                            {!kyc ? t("Complete your profile to smooth your transaction process.") : t("Verify Your KYC Details to keep using Instapay!")}
+                            {!kyc ? t("Complete your profile to smooth your transaction process.") : t("Verify your identity to continue using InstaPay!")}
                         </h4>
                     </div>
                     <div className={styles.btn_con}>
@@ -81,7 +81,7 @@ const ProfileCompletionModal = ({ setShowModal, profileIncompleteReason, kyc = f
                                 flex: 1,
                                 width: "100%"
                             }}>
-                                {!kyc ? t("Complete your profile"):  t("Verify your kyc")}
+                                {!kyc ? t("Complete your profile"):  t("Verify Identity")}
                                 <ChevronRight size={16} /></button>
                         </Link>
                     </div>

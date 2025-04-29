@@ -31,7 +31,6 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
     const [showDelete, setShowDelete] = useState(false)
     const [tooltip, setTooltip] = useState(false);
     const [isDraggable, setIsDraggable] = useState(false)
-    const [showVideo, setShowVideo] = useState(false)
     const handleClickOutside = (event) => {
         if (menuRef.current && !menuRef.current.contains(event.target)) {
             setShowMenu(false);
@@ -67,16 +66,15 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
             onDragOver={e => e.preventDefault()}
             onClick={() => {
                 if (item?.jw_media?.status && item?.jw_media?.status !== "ready") return;
-                if(publicP){
-                    setShowVideo(true)
-                }else{
+                if (!publicP) {
                     setShowModal(true)
                 }
             }}
             onDragEnd={handleSort}
             style={{
-                height: (pAddress && !publicP) ? '150px' : publicP ? "220px" : '',
-                minWidth:  (pAddress && !publicP) ? '242px' : publicP ? "100%" : ''
+                height: (pAddress && !publicP) ? '150px' : publicP ? "263px" : '',
+                minWidth: (pAddress && !publicP) ? '242px' : publicP ? "100%" : '',
+                borderRadius: ((pAddress && !publicP) || publicP) ? '12px' : ''
             }}
         >
             <PortfolioItemModal
@@ -86,31 +84,15 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
             />
 
 
-            {showVideo &&
-            <div className="p-address-123456">
-                <div className={styles2.modal_content}>
-                    {
-                        item?.file_type?.includes("image")
-                            ?
-                            <img src={item?.document_details?.url} />
-                            :
-                            item?.file_type?.includes("video")
+            {publicP &&
+                <div className="p-address-123456">
+                    <div className={styles2.modal_content}>
+                        {
+                            item?.file_type?.includes("image")
                                 ?
-                                <div
-                                    className={`jw-video-container`}
-                                    data-mediaid={item?.jw_media?.mediaId}
-                                    style={{ aspectRatio: "16/9" }}
-                                >
-                                    <ReactJWPlayer
-                                       playerId={`${process.env.REACT_APP_JW_PLAYER_ID}_${item?.jw_media?.mediaId}`} 
-                                        playerScript={process.env.REACT_APP_JW_PLAYER_URL}
-                                        controls={true}
-                                        autoStart={true}
-                                        playlist={`https://cdn.jwplayer.com/v2/media/${item?.jw_media?.mediaId}`}
-                                    />
-                                </div>
+                                <img src={item?.document_details?.url} />
                                 :
-                                item?.file_type?.includes("audio")
+                                item?.file_type?.includes("video")
                                     ?
                                     <div
                                         className={`jw-video-container`}
@@ -118,33 +100,50 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
                                         style={{ aspectRatio: "16/9" }}
                                     >
                                         <ReactJWPlayer
-                                            playerId={`${process.env.REACT_APP_JW_PLAYER_ID}_${item?.jw_media?.mediaId}`} 
+                                            playerId={`${process.env.REACT_APP_JW_PLAYER_ID}_${item?.jw_media?.mediaId}`}
                                             playerScript={process.env.REACT_APP_JW_PLAYER_URL}
                                             controls={true}
                                             autoStart={true}
+                                            height={publicP && '263px'}
                                             playlist={`https://cdn.jwplayer.com/v2/media/${item?.jw_media?.mediaId}`}
                                         />
                                     </div>
                                     :
-                                    item?.file_type?.includes("pdf")
+                                    item?.file_type?.includes("audio")
                                         ?
-                                        <img src={pdfPl} alt="img" style={{ background: "black", objectFit: "contain" }} onClick={() => window.open(item?.document_details?.url, "_blank")} />
+                                        <div
+                                            className={`jw-video-container`}
+                                            data-mediaid={item?.jw_media?.mediaId}
+                                            style={{ aspectRatio: "16/9" }}
+                                        >
+                                            <ReactJWPlayer
+                                                playerId={`${process.env.REACT_APP_JW_PLAYER_ID}_${item?.jw_media?.mediaId}`}
+                                                playerScript={process.env.REACT_APP_JW_PLAYER_URL}
+                                                controls={true}
+                                                autoStart={true}
+                                                playlist={`https://cdn.jwplayer.com/v2/media/${item?.jw_media?.mediaId}`}
+                                            />
+                                        </div>
                                         :
-                                        item?.file_type?.includes("doc")
+                                        item?.file_type?.includes("pdf")
                                             ?
-                                            <img src={docPl} alt="img" style={{ background: "black", objectFit: "contain" }} onClick={() => window.open(item?.document_details?.url, "_blank")} />
+                                            <img src={pdfPl} alt="img" style={{ background: "black", objectFit: "contain" }} onClick={() => window.open(item?.document_details?.url, "_blank")} />
                                             :
-                                            <img src={file_img} alt="img" style={{ background: "black", objectFit: "contain" }} onClick={() => window.open(item?.document_details?.url, "_blank")} />
-                    }
-                    <div>
-                        <p>{item?.description}</p>
+                                            item?.file_type?.includes("doc")
+                                                ?
+                                                <img src={docPl} alt="img" style={{ background: "black", objectFit: "contain" }} onClick={() => window.open(item?.document_details?.url, "_blank")} />
+                                                :
+                                                <img src={file_img} alt="img" style={{ background: "black", objectFit: "contain" }} onClick={() => window.open(item?.document_details?.url, "_blank")} />
+                        }
+                        <div>
+                            <p>{item?.description}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
             }
-            {!showVideo &&
+            {!publicP &&
                 <>
-                    <div className={styles.item_card_header}>
+                    <div style={{ borderRadius: ((pAddress && !publicP) || publicP) ? '12px' : '' }} className={`${styles.item_card_header} ${publicP && styles.publicH} `}>
                         {
                             item?.jw_media?.status && item?.jw_media?.status !== "ready"
                                 ?

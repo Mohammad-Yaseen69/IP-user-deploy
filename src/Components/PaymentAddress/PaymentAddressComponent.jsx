@@ -36,6 +36,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const [saved, setSaved] = useState(false)
     const [isAllowed, SetIsAllowed] = useState(undefined)
     const [videoCheck, setVideoCheck] = useState(true)
+    const [editMode, setEditMode] = useState(false)
     const [showModal, setShowModal] = useState(false)
 
     useEffect(() => {
@@ -83,6 +84,11 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
 
     const addUpdatePaymentAddress = async () => {
         setIsSaving(true)
+
+        if (description.length > 200) {
+            toast.error("Description must be less then 200 characters.")
+            return
+        }
         try {
             const payload = {
                 title,
@@ -199,26 +205,26 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
 
     useEffect(() => {
         if (!leftRef.current || !topRef.current) return;
-    
+
         const resizeObserver = new ResizeObserver(entries => {
             for (let entry of entries) {
                 const leftRect = leftRef.current.getBoundingClientRect();
                 const topRect = topRef.current.getBoundingClientRect();
-                
+
                 // If the top of copyDiv is below the bottom of left div, they're wrapped
                 if (leftRef.current && topRef.current) {
                     setIsWrapped(leftRect.bottom < topRect.bottom);
                 }
             }
         });
-    
+
         resizeObserver.observe(topRef.current);
-    
+
         return () => {
             resizeObserver.disconnect();
         };
     }, []);
-    
+
 
 
     const [showAboutModal, setShowAboutModal] = useState(false)
@@ -281,7 +287,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                         {/* {
                                             window.innerWidth > 1000
                                             && */}
-                                        <div ref={topRef} style={{width: isWrapped && "100%", marginBottom: window.innerWidth < 1000 && "1.5rem", flexShrink: window.innerWidth < 400 && "none"}} className={styles.copyMain}>
+                                        <div ref={topRef} style={{ width: isWrapped && "100%", marginBottom: window.innerWidth < 1000 && "1.5rem", flexShrink: window.innerWidth < 400 && "none" }} className={styles.copyMain}>
                                             <div className={styles.topHead}>
                                                 <div>
                                                     <span>
@@ -331,7 +337,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                     my.insta-pay.ch/pay/
                                                 </p>
                                                 <span>
-                                                    shaheen
+                                                    {userDetails?.username}
                                                     {
                                                         urlCopied
                                                             ?
@@ -369,46 +375,96 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                     <div className={styles.wrapper}>
                                         <div className={styles.infoCont}>
                                             <div className={styles.infoTop}>
-                                                <p>Public Page</p>
+                                                <p>Customize My Public Page</p>
 
-                                                <Button
-                                                    style={{
-                                                        background: saved ? "#4bb543" : 'linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)',
-                                                        border: 'none',
-                                                        outline: 'none',
-                                                        borderRadius: "10px",
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        gap: "10px",
-                                                        transition: "250ms"
-                                                    }}
-                                                    disabled={!title || !currency || isSaving || !isActive}
-                                                    onClick={addUpdatePaymentAddress}
-                                                >
-                                                    {
-                                                        saved
-                                                            ?
-                                                            <>
-                                                                <CheckCircle size={17} />
-                                                                {t("Updated Successfully")}
-                                                            </>
-                                                            :
-                                                            <>
-                                                                {paymentAddressDetails?.title ? (isSaving ? t("Updating") : t('Update')) : (isSaving ? t("Adding") : t('Add'))}
-                                                            </>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                                    {editMode &&
+                                                        <span onClick={() => setEditMode(false)}>
+                                                            Cancel
+                                                        </span>
                                                     }
-                                                </Button>
+
+                                                    <Button
+                                                        style={{
+                                                            background: saved ? "#4bb543" : 'linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)',
+                                                            border: 'none',
+                                                            outline: 'none',
+                                                            borderRadius: "10px",
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            gap: "10px",
+                                                            transition: "250ms"
+                                                        }}
+                                                        disabled={!title || !currency || isSaving || !isActive}
+                                                        onClick={() => {
+                                                            if (!editMode && paymentAddressDetails?.title) {
+                                                                setEditMode(true)
+                                                            } else {
+                                                                addUpdatePaymentAddress()
+                                                                setEditMode(false)
+                                                            }
+                                                        }}
+                                                    >
+                                                        {
+                                                            saved
+                                                                ?
+                                                                <>
+                                                                    <CheckCircle size={17} />
+                                                                    {t("Updated Successfully")}
+                                                                </>
+                                                                :
+                                                                <>
+                                                                    {paymentAddressDetails?.title ? (isSaving ? t("Updating") : editMode ? t('Update') : t("Edit")) : (isSaving ? t("Adding") : t('Add'))}
+                                                                </>
+                                                        }
+                                                    </Button>
+                                                </div>
                                             </div>
                                             <div className={styles.main}>
 
                                                 <div className={styles.inputBox}>
                                                     <label>{t("Payment Address Title")}</label>
-                                                    <Input placeholder='Title' value={title} onChange={e => setTitle(e.target.value)} />
+                                                    <Input disabled={!editMode} style={{ background: !editMode && "#e9ecef" }} placeholder='Title' value={title} onChange={e => setTitle(e.target.value)} />
                                                 </div>
 
                                                 <div className={styles.inputBox}>
                                                     <label>{t("Payment Address Description")}</label>
-                                                    <Input type='textarea' placeholder='Description' value={description} onChange={e => setDescription(e.target.value)} />
+                                                    <div style={{ position: "relative", width: "100%" }}>
+                                                        <Input
+                                                            disabled={!editMode}
+                                                            style={{ minHeight: '140px' }}
+                                                            type='textarea'
+                                                            placeholder='Description'
+                                                            value={description}
+                                                            onPaste={(e) => {
+                                                                e.preventDefault();
+                                                                const pastedText = e.clipboardData.getData('text');
+                                                                const remainingChars = 200 - description.length;
+                                                                const textToInsert = pastedText.slice(0, remainingChars);
+                                                                const cursorPos = e.target.selectionStart;
+                                                                const newText = description.slice(0, cursorPos) +
+                                                                    textToInsert +
+                                                                    description.slice(cursorPos);
+                                                                if (newText.length <= 200) {
+                                                                    setDescription(newText);
+                                                                }
+                                                            }}
+                                                            onChange={e => {
+                                                                if (e.target.value.length <= 200) {
+                                                                    setDescription(e.target.value);
+                                                                }
+                                                            }}
+                                                            onKeyDown={(e) => {
+                                                        
+                                                                const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+                                                                if (description.length >= 200 && !allowedKeys.includes(e.key) && !e.ctrlKey) {
+                                                                    e.preventDefault();
+                                                                }
+                                                            }}
+                                                        />
+
+                                                        <span style={{ position: 'absolute', right: '10px', bottom: '10px', fontSize: '12px', fontWeight: 600, color: 'black' }}>{description.length}/200</span>
+                                                    </div>
                                                 </div>
 
                                             </div>
@@ -429,7 +485,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                             </div>
 
                                             <div className={styles.videoDiv}>
-                                                <div>
+                                                <div style={{ display: "flex", gap: '12px' }}>
                                                     {userVideos && userVideos.length > 0 ? (
                                                         userVideos.map((item, index) => (
                                                             <PortfolioCard

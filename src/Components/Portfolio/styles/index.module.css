@@ -119,6 +119,11 @@
     object-fit: cover;
 }
 
+.item_card_header.publicH img,
+.item_card_header.publicH video {
+    height: 263px;
+}
+
 .item_card_body {
     padding: 17px 20px 30px;
 }
