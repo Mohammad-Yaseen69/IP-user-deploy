@@ -82,17 +82,18 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
 
     }, [userDetails])
 
-    const addUpdatePaymentAddress = async () => {
+    const addUpdatePaymentAddress = async (argC) => {
         setIsSaving(true)
 
         if (description.length > 200) {
             toast.error("Description must be less then 200 characters.")
             return
         }
+        console.log(currency, argC)
         try {
             const payload = {
                 title,
-                currency,
+                currency: argC ?? currency,
                 description,
                 status: true
             }
@@ -130,45 +131,6 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
         }
     }, [currency])
 
-    // switch styles
-
-    const switchStyle = {
-        display: 'inline-block',
-        width: window.innerWidth > 1000 ? '80px' : "50px",
-        height: window.innerWidth > 1000 ? '36px' : "25px",
-        backgroundColor: isActive ? "#1fd531" : "#ededed",
-        borderRadius: '100px',
-        position: 'relative',
-        cursor: 'pointer',
-    };
-
-    const thumbStyle = {
-        width: window.innerWidth > 1000 ? '26px' : "21px",
-        height: window.innerWidth > 1000 ? '26px' : "21px",
-        backgroundColor: "#fff",
-        borderRadius: '50%',
-        position: 'absolute',
-        top: window.innerWidth > 1000 ? '4px' : "2px",
-        left: window.innerWidth > 1000 ? isActive ? '50px' : '5px' : isActive ? '27px' : '3px',
-        transition: 'left 0.2s'
-    };
-
-    // copy
-    const [copied, setCopied] = useState(false)
-    const handleCopy = () => {
-        const textField = document.createElement('textarea');
-        textField.innerText = currentWallet?.wallet_id;
-        document.body.appendChild(textField);
-        textField.select();
-        document.execCommand('copy');
-        textField.remove();
-
-        setCopied(true);
-
-        setTimeout(() => {
-            setCopied(false);
-        }, 3000);
-    };
 
 
     const handleChangeStatus = async () => {
@@ -202,28 +164,6 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const [isWrapped, setIsWrapped] = useState(false);
     const leftRef = useRef()
     const topRef = useRef()
-
-    useEffect(() => {
-        if (!leftRef.current || !topRef.current) return;
-
-        const resizeObserver = new ResizeObserver(entries => {
-            for (let entry of entries) {
-                const leftRect = leftRef.current.getBoundingClientRect();
-                const topRect = topRef.current.getBoundingClientRect();
-
-                // If the top of copyDiv is below the bottom of left div, they're wrapped
-                if (leftRef.current && topRef.current) {
-                    setIsWrapped(leftRect.bottom < topRect.bottom);
-                }
-            }
-        });
-
-        resizeObserver.observe(topRef.current);
-
-        return () => {
-            resizeObserver.disconnect();
-        };
-    }, []);
 
 
 
@@ -314,7 +254,12 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                             {
                                                                 userWallets?.length > 0 &&
                                                                 userWallets?.filter(item => item?.status?.toLowerCase() === "active" && item?.wallet_type === "insta" && item?.currency?.code !== currency && !item?.blocked && !item?.admin_blocked && !item?.blocked)?.map((item) => (
-                                                                    <li key={item?._id} onClick={() => setCurrency(item?.currency?.code)}>
+                                                                    <li key={item?._id} onClick={() => {
+                                                                        if(item.currency.code !== currency){
+                                                                            setCurrency(item?.currency?.code)
+                                                                            addUpdatePaymentAddress(item?.currency?.code)
+                                                                        }
+                                                                    }}>
                                                                         <p>{item?.currency?.code} </p>
                                                                     </li>
                                                                 ))
@@ -379,7 +324,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
 
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                                     {editMode &&
-                                                        <span style={{cursor: "pointer", fontWeight: 600}} onClick={() => setEditMode(false)}>
+                                                        <span style={{ cursor: "pointer", fontWeight: 600 }} onClick={() => setEditMode(false)}>
                                                             Cancel
                                                         </span>
                                                     }
