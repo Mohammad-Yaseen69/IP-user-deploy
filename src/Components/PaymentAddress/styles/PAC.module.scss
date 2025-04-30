@@ -127,12 +127,13 @@
                         display: flex;
                         flex-direction: column;
                         gap: 1rem;
+                        align-items: flex-start;
 
                         .badge {
-                            border-radius: 11.503px;
-                            background: radial-gradient(6787.48% 187.54% at -4.08% -52.83%, #E64067 0%, #5926F0 55.65%, #4828A0 100%);
-                            width: 139.66px;
-                            height: 26.74px;
+                            border-radius: var(--RADIUS-radius-1, 4px);
+                            background: var(--COLORS-Tertiary-300, #6039CD);
+                            backdrop-filter: blur(6.5px);
+                            padding: var(--SPACING-spacing-0, 6px);
                             font-size: 13px;
                             font-weight: 500;
                             color: white;

@@ -11,12 +11,13 @@ import { toast } from "react-toastify"
 const Profile = ({ dp, setDp }) => {
     const { authHeader, userDetails, verifyToken } = useContext(UserContext)
     const [isEditing, setIsEditing] = useState(false);
-    const [editor, setEditor] = useState(null);
     const [scale, setScale] = useState(1);
     const [position, setPosition] = useState({ x: 0.5, y: 0.5 });
     const [isSaving, setIsSaving] = useState(false)
     const mainContainerRef = useRef(null)
     const [file, setFile] = useState(null)
+    const [deleting, setDeleting] = useState(false)
+    
 
     const handleFileSelect = (e) => {
         const file = e.target.files[0];
@@ -67,6 +68,29 @@ const Profile = ({ dp, setDp }) => {
         // }, "image/png");
     };
 
+    const deletePfp = () => {
+        setIsSaving(true);
+        setDeleting(true)
+
+        axios.delete(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/delete-profile-picture/${userDetails?._id}`, {
+            headers: authHeader
+        })
+            .then(res => {
+                verifyToken()
+                setDp("")
+            })
+            .catch(err => {
+                console.log(decryptData(err.response.data.data))
+            })
+            .finally(() => {
+                setDeleting(false)
+                setIsSaving(false);
+                setIsEditing(false)
+                setScale(1)
+                setPosition({ x: 0.5, y: 0.5 })
+            });
+    }
+
 
     return (
         <div className={styles.dp_container} ref={mainContainerRef} style={{ overflow: "visible" }}>
@@ -91,7 +115,7 @@ const Profile = ({ dp, setDp }) => {
                     ?
                     <img src={dp} alt={userDetails?.account_type === "individual" ? userDetails?.user?.first_name : userDetails?.company?.company_name} style={{ background: "white", boxShadow: "0px 0px 3px #1111113e", borderRadius: "16px" }} className={styles.img} />
                     :
-                    <div className={styles.dp} style={{ borderRadius: "16px !important", overflow: "hidden" }}>{
+                    <div className={styles.dp} style={{ borderRadius: "16px", overflow: "hidden" }}>{
                         userDetails?.account_type?.toLowerCase() === "individual"
                             ?
                             userDetails?.user?.first_name?.[0]?.toUpperCase()
@@ -103,41 +127,10 @@ const Profile = ({ dp, setDp }) => {
             } */}
 
             {
-                isEditing
+                (isEditing || deleting)
                     ?
                     <div style={{ position: "absolute", bottom: window?.innerWidth > 1000 ? "20px" : "-30px", left: window?.innerWidth > 1000 ? "50%" : "0px", transform: window?.innerWidth > 1000 ? "translateX(-50%)" : "translateX(0)", display: "flex", gap: ".4rem" }}>
-                        {/* <div style={{
-                            background: "white",
-                            borderRadius: "5px",
-                            overflow: "hidden",
-                            display: "flex",
-                            width: "110px"
-                        }}>
-                            <button onClick={() => setScale(prev => prev > 1 ? prev - .25 : prev)} style={{
-                                border: "none",
-                                outline: "none",
-                                width: "30px",
-                                height: "30x",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                fontSize: ".75rem",
-                                fontWeight: "700"
-                            }}>-</button>
-                            <span style={{ flex: 1, textAlign: "center", fontSize: ".8rem", fontWeight: 600, alignSelf: "center" }}>{scale}x</span>
-                            <button onClick={() => setScale(prev => prev < 4 ? prev + .25 : prev)} style={{
-                                border: "none",
-                                outline: "none",
-                                width: "30px",
-                                height: "30x",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                fontSize: ".75rem",
-                                fontWeight: "700"
-                            }}>+</button>
-                        </div> */}
-                        <Button color='primary'
+                        {isEditing ?  <Button color='primary'
                             style={{
                                 background: "white",
                                 border: "none",
@@ -148,12 +141,29 @@ const Profile = ({ dp, setDp }) => {
                             }}
                             onClick={handleSave}
                             disabled={isSaving}
-                        >{isSaving ? "Saving" : "Save"}</Button>
+                        >
+                            {isSaving ? "Saving" : "Save"}
+                        </Button> : 
+                        <Button color='primary'
+                            style={{
+                                background: "white",
+                                border: "none",
+                                outline: "none",
+                                borderRadius: "5px",
+                                padding: "5px 10px",
+                                fontSize: ".65rem"
+                            }}
+                            disabled={true}
+                        >
+                            Deleting
+                        </Button> }
                     </div>
                     :
-                    <label htmlFor='dp' style={{ position: "absolute", top: "10px", right: "10px", height: "40px", width: "40px", display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "10px", background: "#1111116e", backdropFilter: "blur(10px)", cursor: "pointer" }}>
-                        <Camera color='white' />
-                    </label>
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: 'center', width: "100%", gap: "9px", marginTop: '7px' }}>
+                        <label htmlFor="dp" style={{ fontSize: "12px", color: "#5926F0", fontWeight: 600, marginBottom: "0px", cursor: "pointer" }}>Change</label>
+                        <span style={{ fontSize: "14px", color: "#5926F0", fontWeight: 600 }}>|</span>
+                        <span onClick={deletePfp} style={{ fontSize: "12px", color: "#5926F0", fontWeight: 600, cursor: "pointer" }}>Delete</span>
+                    </div>
             }
             <input type="file" name="dp" id="dp" hidden onChange={handleFileSelect} accept="image/*" />
         </div>

@@ -190,7 +190,7 @@ const ProfileComponent = () => {
                 })
 
             // portfolio
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-documents/${user_name}/0/0`)
+            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-documents/${user_name}/0/0/portfolio`)
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     setUserPortfolio(decrypted?.result)
