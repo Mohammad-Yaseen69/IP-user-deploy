@@ -232,7 +232,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                             && */}
                                         <div ref={topRef} style={{ width: isWrapped && "100%", marginBottom: window.innerWidth < 1000 && "1.5rem", flexShrink: window.innerWidth < 400 && "none" }} className={styles.copyMain}>
                                             <div className={styles.topHead}>
-                                                <div>
+                                                <div style={{marginRight: "10px"}}>
                                                     <span>
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 16 15" fill="none">
                                                             <path d="M6.16601 2.00769L4.33459 12.9962M11.0498 2.00769L9.21836 12.9962M12.8812 5.06006H2.50317M12.2708 9.94385H1.8927" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -253,7 +253,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                     {
                                                         showCurrencyDropdown
                                                         &&
-                                                        <ul className={styles.dropdown}>
+                                                        <ul style={{width: '100%'}} className={styles.dropdown}>
                                                             {
                                                                 userWallets?.length > 0 &&
                                                                 userWallets?.filter(item => item?.status?.toLowerCase() === "active" && item?.wallet_type === "insta" && item?.currency?.code !== currency && !item?.blocked && !item?.admin_blocked && !item?.blocked)?.map((item) => (
@@ -289,7 +289,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                     {
                                                         urlCopied
                                                             ?
-                                                            <CheckCircle size={15} color='white' />
+                                                            <CheckCircle size={14} color='white' />
                                                             :
                                                             <img src={copy} style={{ cursor: "pointer", height: "14px", width: "14px", objectFit: "contain" }} onClick={copyHandler} />
                                                     }

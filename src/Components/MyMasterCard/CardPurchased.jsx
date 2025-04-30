@@ -16,7 +16,6 @@ import { useLocation, useNavigate } from 'react-router';
 import useWindowWidth from '../../utils/useWindowWidth';
 import CardtoCard from './CardtoCardModal';
 import { Modal, ModalBody, ModalHeader, Input } from 'reactstrap';
-import FormCheckInput from 'react-bootstrap/esm/FormCheckInput';
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 import OTPConfirmation from "../UserSettingsNew/OTPConfirmation"
 import { getDecimalPointIndex } from '../../Helper/getDecimalIndex';
@@ -195,7 +194,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                 account_id: userDetails?._id
             }
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/verify-${type}-otp`, {
+            await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/verify-${type}-otp`, {
                 data: encryptData(data)
             }, {
                 headers: authHeader
