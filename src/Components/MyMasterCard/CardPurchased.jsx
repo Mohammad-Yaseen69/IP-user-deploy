@@ -24,14 +24,16 @@ import { getDecimalPointIndex } from '../../Helper/getDecimalIndex';
 
 export const Toggle = ({ checked, onChange, isCheckbox = false }) => (
     <label className={isCheckbox ? styles.checkbox : styles.toggle}>
-        <img src={checktoggle} alt="" />
+
         <input
             type={isCheckbox ? "checkbox" : "checkbox"}
             checked={checked}
             onChange={onChange}
         />
 
-        <span className={isCheckbox ? styles.checkmark : styles.slider}></span>
+        <span className={isCheckbox ? styles.checkmark : styles.slider}>
+            {checked && <img src={checktoggle} alt="" />}
+        </span>
     </label>
 );
 

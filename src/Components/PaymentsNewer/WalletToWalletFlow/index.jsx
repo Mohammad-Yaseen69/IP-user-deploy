@@ -478,6 +478,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
             const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`
             const res = await axios.get(url, { headers: authHeader });
             const dec = decryptData(res?.data?.data);
+            console.log(dec)
             dataHandler("new_amoount", dec?.exchangeRate?.exchanged_amount)
             return dec?.exchangeRate?.exchanged_amount ?? 0;
         } catch (err) {
@@ -631,15 +632,13 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
 
                 dataHandler("exchange_rate", exchange_rate_details)
 
-                console.log(+exchange_rate_details?.receiver?.amount >= 0.01)
                 if (fromOrTo === "from") {
+                    console.log(+exchange_rate_details?.receiver?.amount)
                     formatCurrency(
-                        (+exchange_rate_details?.receiver?.amount >= 0.01
-                            ? +exchange_rate_details?.receiver?.amount.toFixed(2)
-                            : +exchange_rate_details?.receiver?.amount
-                        ),
+                        +exchange_rate_details?.receiver?.amount,
                         false,
                         (e) => {
+                            console.log(e)
                             dataHandler("recipient_amount", addDecimals(e));
                         }
                     );

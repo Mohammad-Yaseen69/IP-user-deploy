@@ -538,7 +538,7 @@
                         letter-spacing: -0.14px;
                     }
 
-                 
+
                 }
 
                 .walletOptions {
@@ -1166,7 +1166,7 @@
             }
         }
 
-        .right{
+        .right {
             width: 100% !important;
         }
     }
@@ -1180,6 +1180,8 @@
     height: 20px;
     flex-shrink: 0;
     margin-bottom: 0 !important;
+    display: flex;
+    align-items: center;
 
     input {
         opacity: 0;
@@ -1187,6 +1189,11 @@
         height: 0;
     }
 
+    img{
+        position: relative;
+        z-index: 2;
+        left: 5px;
+    }
     .slider {
         position: absolute;
         cursor: pointer;
@@ -1238,7 +1245,7 @@
             }
         }
 
-        .walletOptions{
+        .walletOptions {
             flex-direction: column !important;
             gap: 12px !important;
         }

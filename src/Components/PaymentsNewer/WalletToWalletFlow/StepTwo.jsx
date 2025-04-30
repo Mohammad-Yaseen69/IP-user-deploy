@@ -57,7 +57,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
         return () => {
             clearTimeout(api_timeout)
         }
-    }, [data?.currency])
+    }, [data?.currency, data.amount])
 
     const wallets = useMemo(() => {
         return userWallets.filter(item => item?.wallet_type === "insta" && !item?.blocked && !item?.admin_blocked && item?.status === "active").map(item => {

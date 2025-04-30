@@ -934,7 +934,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                                     src={method.icon}
                                                                     alt=""
                                                                 />
-                                                                <spaspan style={{ marginBottom: "0" }}>
+                                                                <spaspan style={{ marginBottom: "0", textDecoration: "underline", textDecorationColor: "white", color: 'black', whiteSpace: 'nowrap' }}>
                                                                     {method.text}
                                                                 </spaspan>
                                                             </button>

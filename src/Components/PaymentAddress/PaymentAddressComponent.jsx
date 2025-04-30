@@ -184,8 +184,8 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                         ?
                         <>
                             <InstructionsModal isOpen={isOpen} toggle={() => setIsOpen(!isOpen)} />
-                            <Cover cover={cover} setCover={setCover} />
-                            <Card style={{ marginBottom: "0" }} className={styles.sub_container}>
+                            <Cover  cover={cover} setCover={setCover} />
+                            <Card style={{ marginBottom: "0", borderRadius: '0px' }} className={styles.sub_container}>
                                 <CardBody className={styles.sc_body}>
 
 

@@ -1,4 +1,8 @@
-const formatNumber = (num) => {
+const formatNumber = (num, isDecimalPart = false) => {
+    // Don't add commas if it's the decimal part
+    if (isDecimalPart) {
+        return num.replace(/\D/g, "");
+    }
     // Format number 1000000 to 1,234,567
     return num.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
@@ -15,7 +19,7 @@ const getDecimalPointIndex = (val) => {
             }
         }
     }
-    return 2; // Default to 2 decimal places if no significant digits found
+    return 2; 
 };
 
 export const formatCurrency = (inputValue, blur, setValue) => {
@@ -32,7 +36,7 @@ export const formatCurrency = (inputValue, blur, setValue) => {
         leftSide = formatNumber(leftSide);
 
         // Validate right side
-        rightSide = formatNumber(rightSide);
+        rightSide = formatNumber(rightSide.replace(".", ""), true);
 
         // Get number of decimal places based on value
         const numDecimals = Number(inputVal) >= 0.01 ? 2 : getDecimalPointIndex(inputVal);
