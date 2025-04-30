@@ -44,6 +44,7 @@ import Receipt from "./receipt.svg"
 import PremiumLabel from "./premium-label.png"
 import StandardLabel from "./standard-label.png"
 import ctc from "./ctc.svg"
+import checktoggle from "./check-toggle.svg"
 
 export  {
     Payment,
@@ -84,5 +85,6 @@ export  {
     Receipt,
     PremiumLabel,
     StandardLabel,
-    ctc
+    ctc,
+    checktoggle
 }

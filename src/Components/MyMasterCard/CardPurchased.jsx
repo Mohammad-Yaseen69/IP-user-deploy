@@ -4,7 +4,7 @@ import Giftpng from "./files/gift-png.png"
 import IpLogo from "./files/ip.svg"
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from 'swiper'
-import { Lock, Freeze, plus, CreditCardR, Wallet2, FileDown, CreditCardP, Notification, Speaker, Apay, Gpay, Samsung, Copy } from "./files"
+import { Lock, Freeze, plus, CreditCardR, Wallet2, FileDown, CreditCardP, Notification, Speaker, Apay, Gpay, Samsung, Copy, checktoggle } from "./files"
 import axios from 'axios';
 import { UserContext } from '../../Context/UserContext';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
@@ -24,11 +24,13 @@ import { getDecimalPointIndex } from '../../Helper/getDecimalIndex';
 
 export const Toggle = ({ checked, onChange, isCheckbox = false }) => (
     <label className={isCheckbox ? styles.checkbox : styles.toggle}>
+        <img src={checktoggle} alt="" />
         <input
             type={isCheckbox ? "checkbox" : "checkbox"}
             checked={checked}
             onChange={onChange}
         />
+
         <span className={isCheckbox ? styles.checkmark : styles.slider}></span>
     </label>
 );

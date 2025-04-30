@@ -321,7 +321,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                     </div> */}
 
                                     <div className={styles.wrapper}>
-                                        <div className={styles.infoCont}>
+                                        <div style={{marginBottom: window.innerWidth > 1000 && "2rem"}} className={styles.infoCont}>
                                             <div className={styles.infoTop}>
                                                 <p>Customize My Public Page</p>
 
@@ -412,7 +412,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                     <img src={info} alt="" />
                                                 </div>
 
-                                                <Toggle checked={videoCheck} onChange={(e) => { setVideoCheck(e.target.checked) }} />
+                                                {/* <Toggle checked={videoCheck} onChange={(e) => { setVideoCheck(e.target.checked) }} /> */}
                                             </div>
 
                                             <div className={styles.topV}>
