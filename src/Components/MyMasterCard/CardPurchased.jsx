@@ -467,7 +467,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     </div>
                                 </div>
 
-                                <div className={styles.giftDiv} style={{ alignSelf: "stretch", flex: 2, backgroundColor: "#421cb1", borderRadius: "6px", background: `url(${Giftpng})`, backgroundSize: "cover", backgroundPosition: "right", backgroundRepeat: "no-repeat" }}>
+                                <div onClick={() => setCardPurchased(false)} className={styles.giftDiv} style={{ alignSelf: "stretch", flex: 2, backgroundColor: "#421cb1", borderRadius: "6px", background: `url(${Giftpng})`, backgroundSize: "cover", backgroundPosition: "right", backgroundRepeat: "no-repeat" }}>
                                     {/* <img src={Giftpng} alt="" /> */}
                                     <div>
                                         <div>
