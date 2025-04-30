@@ -390,11 +390,12 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                     <div style={{ position: "relative", width: "100%" }}>
                                                         <Input
                                                             disabled={!editMode}
-                                                            style={{ minHeight: '140px' }}
+                                                            style={{ minHeight: '140px',resize: 'none' }}
                                                             type='textarea'
                                                             placeholder='Description'
                                                             value={description}
                                                             maxLength={200}
+                                                            draggable="false"
                                                             onChange={e => setDescription(e.target.value)}
                                                         />
 

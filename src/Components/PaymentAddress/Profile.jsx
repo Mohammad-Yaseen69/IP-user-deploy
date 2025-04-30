@@ -17,7 +17,7 @@ const Profile = ({ dp, setDp }) => {
     const mainContainerRef = useRef(null)
     const [file, setFile] = useState(null)
     const [deleting, setDeleting] = useState(false)
-    
+
 
     const handleFileSelect = (e) => {
         const file = e.target.files[0];
@@ -130,7 +130,7 @@ const Profile = ({ dp, setDp }) => {
                 (isEditing || deleting)
                     ?
                     <div style={{ position: "absolute", bottom: window?.innerWidth > 1000 ? "20px" : "-30px", left: window?.innerWidth > 1000 ? "50%" : "0px", transform: window?.innerWidth > 1000 ? "translateX(-50%)" : "translateX(0)", display: "flex", gap: ".4rem" }}>
-                        {isEditing ?  <Button color='primary'
+                        {isEditing ? <Button color='primary'
                             style={{
                                 background: "white",
                                 border: "none",
@@ -143,26 +143,30 @@ const Profile = ({ dp, setDp }) => {
                             disabled={isSaving}
                         >
                             {isSaving ? "Saving" : "Save"}
-                        </Button> : 
-                        <Button color='primary'
-                            style={{
-                                background: "white",
-                                border: "none",
-                                outline: "none",
-                                borderRadius: "5px",
-                                padding: "5px 10px",
-                                fontSize: ".65rem"
-                            }}
-                            disabled={true}
-                        >
-                            Deleting
-                        </Button> }
+                        </Button> :
+                            <Button color='primary'
+                                style={{
+                                    background: "white",
+                                    border: "none",
+                                    outline: "none",
+                                    borderRadius: "5px",
+                                    padding: "5px 10px",
+                                    fontSize: ".65rem"
+                                }}
+                                disabled={true}
+                            >
+                                Deleting
+                            </Button>}
                     </div>
                     :
                     <div style={{ display: "flex", justifyContent: "center", alignItems: 'center', width: "100%", gap: "9px", marginTop: '7px' }}>
                         <label htmlFor="dp" style={{ fontSize: "12px", color: "#5926F0", fontWeight: 600, marginBottom: "0px", cursor: "pointer" }}>Change</label>
-                        <span style={{ fontSize: "14px", color: "#5926F0", fontWeight: 600 }}>|</span>
-                        <span onClick={deletePfp} style={{ fontSize: "12px", color: "#5926F0", fontWeight: 600, cursor: "pointer" }}>Delete</span>
+                        {dp &&
+                            <>
+                                <span style={{ fontSize: "14px", color: "#5926F0", fontWeight: 600 }}>|</span>
+                                <span onClick={deletePfp} style={{ fontSize: "12px", color: "#5926F0", fontWeight: 600, cursor: "pointer" }}>Delete</span>
+                            </>}
+
                     </div>
             }
             <input type="file" name="dp" id="dp" hidden onChange={handleFileSelect} accept="image/*" />

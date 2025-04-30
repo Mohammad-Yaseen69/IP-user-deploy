@@ -16,7 +16,7 @@ const StepFour = ({ data, dataHandler, dataHandlerE }) => {
       <div className={styles.cont}>
         <h3>Enter the consumer’s mobile phone number and email address to send eSIM activation and usage information.</h3>
 
-        <div style={{ maxHeight: "fit-content" }} className={styles.plans}>
+        <div style={{ maxHeight: "fit-content", }} className={styles.plans}>
           <div className={styles.inputs}>
             <div className={styles.input}>
               <label htmlFor="">Mobile number</label>

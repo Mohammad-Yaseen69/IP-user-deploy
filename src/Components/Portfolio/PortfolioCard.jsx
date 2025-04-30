@@ -3,7 +3,7 @@ import six_dots from "./files/six_dots.svg"
 import heart from "./files/heart.svg"
 import comment from "./files/comment.svg"
 import share from "./files/share.svg"
-import { Eye, MoreHorizontal, Play } from "react-feather"
+import { Eye, MoreHorizontal, Play, Trash } from "react-feather"
 import { useContext, useEffect, useRef, useState } from "react"
 import EditModal from "./EditModal"
 import DeleteModal from "./DeleteModal"
@@ -175,42 +175,65 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
                         }}
                             ref={menuRef}
                         >
-                            <MoreHorizontal style={{
-                                cursor: "pointer",
-                            }} color="white" size={34} onClick={(e) => {
-                                e.stopPropagation()
-                                toggleShowMenu()
-                            }} />
-                            <div
-                                className={`${styles.card_menu} ${showMenu ? styles.card_menu_active : ""}`}
-                            >
-                                <div className={styles.card_menu_item} onClick={(e) => {
-                                    e.stopPropagation()
-                                    setShowEdit(true)
-                                    toggleShowMenu()
-                                }}>
-                                    {/* <Edit /> */}
-                                    <img src={edit} alt="edit" style={{
-                                        width: "20px",
-                                        height: "20px",
-                                        objectFit: "contain"
+                            {!pAddress
+                                &&
+                                <>
+                                    <MoreHorizontal style={{
+                                        cursor: "pointer",
+                                    }} color="white" size={34} onClick={(e) => {
+                                        e.stopPropagation()
+                                        toggleShowMenu()
                                     }} />
-                                    <span>{t("Edit")}</span>
+                                    <div
+                                        className={`${styles.card_menu} ${showMenu ? styles.card_menu_active : ""}`}
+                                    >
+
+                                        <div className={styles.card_menu_item} onClick={(e) => {
+                                            e.stopPropagation()
+                                            setShowEdit(true)
+                                            toggleShowMenu()
+                                        }}>
+                                            {/* <Edit /> */}
+                                            <img src={edit} alt="edit" style={{
+                                                width: "20px",
+                                                height: "20px",
+                                                objectFit: "contain"
+                                            }} />
+                                            <span>{t("Edit")}</span>
+                                        </div>
+
+                                        <div className={styles.card_menu_item} onClick={(e) => {
+                                            e.stopPropagation()
+                                            setShowDelete(true)
+                                            toggleShowMenu()
+                                        }}>
+                                            {/* <Trash2 /> */}
+                                            <img src={delete_icon} alt="delete" style={{
+                                                width: "20px",
+                                                height: "20px",
+                                                objectFit: "contain"
+                                            }} />
+                                            <span>{t("Delete")}</span>
+                                        </div>
+                                    </div>
+                                </>
+                            }
+
+                            {pAddress &&
+                                <div
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        setShowDelete(true)
+                                    }}
+                                    style={{
+                                        background: 'rgba(0, 0, 0, 0.4)',
+                                        backdropFilter: "blur(5px)",
+                                        padding: "4px", borderRadius: "7px",
+                                        cursor: "pointer",paddingBottom: "0"
+                                    }}>
+                                    <Trash color="white" />
                                 </div>
-                                <div className={styles.card_menu_item} onClick={(e) => {
-                                    e.stopPropagation()
-                                    setShowDelete(true)
-                                    toggleShowMenu()
-                                }}>
-                                    {/* <Trash2 /> */}
-                                    <img src={delete_icon} alt="delete" style={{
-                                        width: "20px",
-                                        height: "20px",
-                                        objectFit: "contain"
-                                    }} />
-                                    <span>{t("Delete")}</span>
-                                </div>
-                            </div>
+                            }
                         </div>
                         {
                             item?.file_type?.includes("image")

@@ -51,10 +51,7 @@ const StepTwo = ({ data, dataHandler, dataHandlerE }) => {
             <div className={styles.cont}>
                 <h3>Available Plans</h3>
 
-                <div className={styles.plans}>
-                    <div className={styles.inputs}>
-
-                    </div>
+                <div className={styles.plans} style={{gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))"}}>
                     {!loading ?
                         plansData.map((plan) => (
                             <PlanCard data={data} plan={plan} handlePlanSelect={handlePlanSelect} />

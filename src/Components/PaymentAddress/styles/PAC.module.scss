@@ -5,6 +5,7 @@
         border-radius: 16px;
         overflow: hidden;
         height: 222px;
+        z-index: 2 !important;
         position: relative;
 
         .cover {
@@ -15,6 +16,7 @@
     }
 
     .sub_container {
+        margin-top: -15px !important;
         .sc_body {
             padding: 0 80px;
 
@@ -23,6 +25,8 @@
                 justify-content: space-between;
                 gap: 1rem;
                 padding: 13px 0 40px 0;
+                z-index: 3 !important;
+                position: relative;
                 flex-wrap: wrap;
 
                 .left {
@@ -420,6 +424,10 @@
                             font-size: 14px;
                             font-style: normal;
                             font-weight: 600;
+                        }
+
+                        textarea{
+                            -webkit-user-drag: none;
                         }
 
                         input {
