@@ -181,7 +181,7 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
                     window.innerWidth > 1000
                     &&
                     <img src={pAddress ? bg : modal} alt="add item" style={{
-                        width: !pAddress ? "50%" : "40%",
+                        width: "40%",
                         borderRadius: "30px",
                         backgroundSize: "cover"
                     }} />

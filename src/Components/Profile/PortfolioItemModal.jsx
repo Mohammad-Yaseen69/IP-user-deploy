@@ -51,7 +51,7 @@ const PortfolioItemModal = ({ showModal, setShowModal, item }) => {
                                     :
                                     item?.file_type?.includes("pdf")
                                         ?
-                                        <img src={pdfPl} alt="img" style={{ background: "black", objectFit: "contain" }} onClick={() => window.open(item?.document_details?.url, "_blank")} />
+                                        <img src={pdfPl} alt="img" style={{ background: "black", objectFit: "contain", height: "350px", borderRadius: "12px" }} onClick={() => window.open(item?.document_details?.url, "_blank")} />
                                         :
                                         item?.file_type?.includes("doc")
                                             ?

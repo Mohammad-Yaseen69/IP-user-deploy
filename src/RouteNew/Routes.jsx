@@ -104,7 +104,6 @@ export const routes = [
  
     { path: "*", component: <NotFound type='Page' /> }
 ]
-
 export const publicRoutes = [
     { path: "/qr-test", component: <QrCode /> },
     { path: "/q/:wallet_id", component: <QRScan /> },
@@ -134,7 +133,6 @@ export const publicRoutes = [
     { path: "/verify-bot-pin/:accountId/:platformType", component: <VerifyPinChatBot />},
     { path: "*", component: <NotFound type='Page' /> }
 ]
-
 export const authRoutes = [
     { path: `/login`, component: <Auth /> },
     { path: `/forgot-password`, component: <AuthNew /> },

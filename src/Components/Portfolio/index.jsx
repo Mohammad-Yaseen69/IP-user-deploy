@@ -22,19 +22,36 @@ const Portfolio = () => {
             getUserDocuments()
         }
     }, [userDetails])
+    useEffect(() => {
+        if (userDetails && userPortfolio?.length > 0) {
+            const savedOrder = localStorage.getItem('portfolioOrder');
+            if (savedOrder) {
+                const orderMap = JSON.parse(savedOrder);
+                const orderedPortfolio = [...userPortfolio].sort((a, b) => {
+                    return orderMap[a._id] - orderMap[b._id];
+                });
+                setUserPortfolio(orderedPortfolio);
+            }
+        }
+    }, [userDetails, userPortfolio?.length]);
 
     const handleSort = () => {
         let _userPortfolio = [...userPortfolio];
-        const draggedContent = _userPortfolio.splice(dragRef?.current, 1)[0]
-
+        const draggedContent = _userPortfolio.splice(dragRef?.current, 1)[0];
         _userPortfolio.splice(dragOverRef?.current, 0, draggedContent);
 
+        // Create order map and save to localStorage
+        const orderMap = {};
+        _userPortfolio.forEach((item, index) => {
+            orderMap[item._id] = index;
+        });
+        localStorage.setItem('portfolioOrder', JSON.stringify(orderMap));
+
+        // Update state
+        setUserPortfolio(_userPortfolio);
         dragRef.current = null;
         dragOverRef.current = null;
-
-        setUserPortfolio(_userPortfolio)
     }
-
 
     const [isOpen, setIsOpen] = useState(!sessionStorage.getItem("show_port_modal"));
 
