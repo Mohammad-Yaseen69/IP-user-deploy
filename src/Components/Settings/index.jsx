@@ -25,11 +25,12 @@ import HowOthersFindYou from "./HowOthersFindYou"
 import { Button, Card, CardBody } from "reactstrap";
 import WithdrawalsNew from "./WithdrawalsNew";
 import { useNavigate } from "react-router";
+import Threshold from "./Threshold";
 
 const Settings = () => {
     const { t } = useTranslation()
     const [currentTab, setCurrentTab] = useState("Basic Info")
-    const { userDetails, verifyToken, profileCompletedPercentage } = useContext(UserContext)
+    const { userDetails, verifyToken, profileCompletedPercentage, authHeader } = useContext(UserContext)
     const navigate = useNavigate()
 
     return (
@@ -153,6 +154,7 @@ const Settings = () => {
                                     // <WithdrawalChannels />
                                     <WithdrawalsNew />
                                 }
+                                {currentTab === "Payment Threshold" && <Threshold userDetails={userDetails} authHeader={authHeader} />}
                                 {
                                     currentTab === "Download Your Data"
                                     &&

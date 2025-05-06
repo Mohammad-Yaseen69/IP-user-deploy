@@ -24,7 +24,7 @@ const GoogleAuthenticatorModal = ({
     sideText = "Google Authenticator",
     isBiometricChecks,
     bioMetricHandler,
-    wpActive
+    thresholdFunc
 }) => {
     const { t } = useTranslation()
     const { userDetails, authHeader } = useContext(UserContext)
@@ -85,17 +85,23 @@ const GoogleAuthenticatorModal = ({
             })
             const dec = decryptData(response.data.data)
 
-            if(!isBiometricChecks){
-                if (sideText == "Google Authenticator") {
-                    console.log("he")
-                    setStep(2)
-                } else {
-                    passwordNext(() => setStep(3))
+
+            if (thresholdFunc) {
+                thresholdFunc()
+            }else{
+                if (!isBiometricChecks) {
+                    if (sideText == "Google Authenticator") {
+                        console.log("he")
+                        setStep(2)
+                    } else {
+                        passwordNext(() => setStep(3))
+                    }
+                }
+                else {
+                    bioMetricHandler()
                 }
             }
-            else{
-                bioMetricHandler()
-            }
+
         } catch (error) {
             const dec = decryptData(error.response.data)
             console.log(dec)

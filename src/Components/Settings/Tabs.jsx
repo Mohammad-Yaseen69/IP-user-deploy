@@ -31,6 +31,7 @@ import notif_active from "./tabs_icons/notifications_a.svg"
 import notif from "./tabs_icons/notification.svg"
 import login_active from "./tabs_icons/login_a.svg"
 import login from "./tabs_icons/login.svg"
+import thres_a from "./tabs_icons/thres.svg"
 // icons
 
 
@@ -46,6 +47,11 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             name: "Change Password",
             icon: pass,
             active_icon: pass_active,
+        },
+        {
+            name: "Payment Threshold",
+            icon: pass,
+            active_icon: thres_a,
         },
         {
             name: "Security Questions",

@@ -68,6 +68,9 @@ const Auth = () => {
                     const res = await axios.get(`https://ipinfo.io?token=${process.env.REACT_APP_IP_INFO_TOKEN}`)
                     const location = res.data;
 
+
+                    console.log(res.data)
+
                     if (location) {
                         const findCOuntry = countries.find(item => item?.code === location?.country)
 

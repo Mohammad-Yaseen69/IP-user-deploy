@@ -434,7 +434,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     }
                                     sessionStorage.clear()
                                 })
-                        } else {
+                        } 
+                        else {
                             sessionStorage.setItem("country_status_error", "Service not available in your country!")
                         }
                     })
