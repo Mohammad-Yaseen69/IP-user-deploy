@@ -38,6 +38,8 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const [videoCheck, setVideoCheck] = useState(true)
     const [editMode, setEditMode] = useState(false)
     const [showModal, setShowModal] = useState(false)
+    const [apiTitle, setApiTitle] = useState("")
+    const [apiDescription, setApiDescription] = useState("")
 
     const getPaymentAddress = () => {
         axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/get-payment-address/${userDetails?.username}`, {
@@ -51,8 +53,10 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                 } else {
                     setPaymentAddressDetails(decrypted?.paymentAddressDetails)
                     setTitle(decrypted?.paymentAddressDetails?.title ?? "My Payment Address")
-                    setCurrency(decrypted?.paymentAddressDetails?.currency)
                     setDescription(decrypted?.paymentAddressDetails?.description ?? "This is my payment address")
+                    setApiTitle(decrypted?.paymentAddressDetails?.title ?? "My Payment Address")
+                    setApiDescription(decrypted?.paymentAddressDetails?.description ?? "This is my payment address")
+                    setCurrency(decrypted?.paymentAddressDetails?.currency)
                     setDp(decrypted?.paymentAddressDetails?.profileImage?.url)
                     setCover(decrypted?.paymentAddressDetails?.coverImage?.url)
                     setIsActive(decrypted?.paymentAddressDetails?.status)
@@ -98,7 +102,13 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                 headers: authHeader
             })
 
-            if(!paymentAddressDetails.title){
+            if(title !== apiTitle){
+                setApiTitle(title)
+            }
+            if(description !== apiDescription){
+                setApiDescription(description)
+            }
+            if (!paymentAddressDetails.title) {
                 getPaymentAddress()
             }
             setIsSaving(false)
@@ -142,7 +152,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
             const decrypted = decryptData(res.data.data)
             console.log(decrypted)
             setIsActive(prev => !prev);
-            if(!paymentAddressDetails.title){
+            if (!paymentAddressDetails.title) {
                 addUpdatePaymentAddress()
             }
 
@@ -184,7 +194,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                         ?
                         <>
                             <InstructionsModal isOpen={isOpen} toggle={() => setIsOpen(!isOpen)} />
-                            <Cover  cover={cover} setCover={setCover} />
+                            <Cover cover={cover} setCover={setCover} />
                             <Card style={{ marginBottom: "0", borderRadius: '0px' }} className={styles.sub_container}>
                                 <CardBody className={styles.sc_body}>
 
@@ -232,7 +242,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                             && */}
                                         <div ref={topRef} style={{ width: isWrapped && "100%", marginBottom: window.innerWidth < 1000 && "1.5rem", flexShrink: window.innerWidth < 400 && "none" }} className={styles.copyMain}>
                                             <div className={styles.topHead}>
-                                                <div style={{marginRight: "10px"}}>
+                                                <div style={{ marginRight: "10px" }}>
                                                     <span>
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 16 15" fill="none">
                                                             <path d="M6.16601 2.00769L4.33459 12.9962M11.0498 2.00769L9.21836 12.9962M12.8812 5.06006H2.50317M12.2708 9.94385H1.8927" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -253,12 +263,12 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                     {
                                                         showCurrencyDropdown
                                                         &&
-                                                        <ul style={{width: '100%'}} className={styles.dropdown}>
+                                                        <ul style={{ width: '100%' }} className={styles.dropdown}>
                                                             {
                                                                 userWallets?.length > 0 &&
                                                                 userWallets?.filter(item => item?.status?.toLowerCase() === "active" && item?.wallet_type === "insta" && item?.currency?.code !== currency && !item?.blocked && !item?.admin_blocked && !item?.blocked)?.map((item) => (
                                                                     <li key={item?._id} onClick={() => {
-                                                                        if(item.currency.code !== currency){
+                                                                        if (item.currency.code !== currency) {
                                                                             setCurrency(item?.currency?.code)
                                                                             addUpdatePaymentAddress(item?.currency?.code)
                                                                         }
@@ -321,13 +331,20 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                     </div> */}
 
                                     <div className={styles.wrapper}>
-                                        <div style={{marginBottom: window.innerWidth > 1000 && "2rem"}} className={styles.infoCont}>
+                                        <div style={{ marginBottom: window.innerWidth > 1000 && "2rem" }} className={styles.infoCont}>
                                             <div className={styles.infoTop}>
                                                 <p>Customize My Public Page</p>
 
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                                     {editMode &&
-                                                        <span style={{ cursor: "pointer", fontWeight: 600 }} onClick={() => setEditMode(false)}>
+                                                        <span
+                                                            style={{ cursor: "pointer", fontWeight: 600 }}
+                                                            onClick={() => {
+                                                                setEditMode(false)
+                                                                setTitle(apiTitle)
+                                                                setDescription(apiDescription)
+                                                            }}
+                                                        >
                                                             Cancel
                                                         </span>
                                                     }
@@ -390,7 +407,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                     <div style={{ position: "relative", width: "100%" }}>
                                                         <Input
                                                             disabled={!editMode}
-                                                            style={{ minHeight: '140px',resize: 'none' }}
+                                                            style={{ minHeight: '140px', resize: 'none' }}
                                                             type='textarea'
                                                             placeholder='Description'
                                                             value={description}
