@@ -842,13 +842,6 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                 <>
                                     <div className={styles.flow}>
                                         {
-                                            data.step === 4 && data.payment_type?.value === "wallet" && data.flow !== "e-sim"
-                                                ?
-                                                <WalletsComponent
-                                                    data={data}
-                                                    dataHandler={updateDataHandler}
-                                                />
-                                                :
                                                 <>
                                                     {
                                                         data.step === 1

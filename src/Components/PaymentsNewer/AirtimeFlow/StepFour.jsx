@@ -11,7 +11,7 @@ const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
     return (
         <>
             {
-                data.flow === "e-sim" && width < 1000 && data.payment_type?.value === "wallet" &&
+                width < 1000 && data.payment_type?.value === "wallet" &&
                 <>
                     <WalletsComponent
                         data={data}
@@ -21,7 +21,7 @@ const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
                 </>
             }
             <div className={styles.container}>
-                {((data.flow === "e-sim" && width < 1000 && (data.payment_type?.value !== "wallet" || !data.payment_type?.value)) || data.flow === "airtime" || width > 1000) &&
+                {((width < 1000 && (data.payment_type?.value !== "wallet" || !data.payment_type?.value)) || width > 1000) &&
                     <IntStepFour
                         data={data}
                         dataHandler={updateDataHandler}
@@ -30,7 +30,7 @@ const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
                 }
                 <div className={styles.buttons}>
                     <button disabled={data.loading} onClick={() => {
-                        if(data.flow === "airtime" && width < 1000 && data.payment_type?.value === "wallet"){
+                        if (data.flow === "airtime" && width < 1000 && data.payment_type?.value === "wallet") {
                             updateDataHandler("payment_type", {})
                         }
                         if (data.payment_type?.value === "card" && data.showCard) {

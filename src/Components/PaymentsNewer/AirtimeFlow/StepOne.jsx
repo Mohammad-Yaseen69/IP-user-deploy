@@ -11,7 +11,7 @@ import { ChevronRight } from 'react-feather'
 const StepOne = ({ data, dataHandler, setCurrentFlow, setAction, setStep }) => {
     const { t } = useTranslation()
     return (
-        <div className={styles.container}>
+        <div style={{height: "100%"}} className={styles.container}>
             <div className={styles.cards}>
                 <div className={`${styles.card} ${data.flow === "airtime" ? styles.active : ""}`} onClick={() => {
                     // if (window.innerWidth < 1000) {
