@@ -59,6 +59,7 @@ const UpdatePin = lazy(() => import("../Components/UpdatePin"))
 const CreatePinChatBot = lazy(() => import("../Components/Chatbot/Pin/CreatePin"))
 const VerifyPinChatBot = lazy(() => import("../Components/Chatbot/Pin/VerifyPin"))
 const QuickQrPay = lazy(() => import("../Components/QuickQrPay"))
+const QrQuickerPay = lazy(() => import("../Components/QrQuickerPay"))
 
 
 export const routes = [
@@ -131,6 +132,7 @@ export const publicRoutes = [
     { path: "/quick-qrpay", component: <QuickQrPay />},
     { path: "/set-account-pin/:accountId/:platformType", component: <CreatePinChatBot /> },
     { path: "/verify-bot-pin/:accountId/:platformType", component: <VerifyPinChatBot />},
+    { path: "/qr-quickerpay/:wallet_id", component:<QrQuickerPay />},
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const authRoutes = [

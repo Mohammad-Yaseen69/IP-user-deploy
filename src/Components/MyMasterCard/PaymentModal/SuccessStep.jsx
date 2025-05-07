@@ -5,7 +5,7 @@ import useWindowWidth from "../../../utils/useWindowWidth"
 import { useNavigate } from "react-router"
 
 
-const paymentConfirmOptions = [
+export const paymentConfirmOptions = [
     {
         text: "Need help?",
         icon: Help,

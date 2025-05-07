@@ -12,7 +12,7 @@ import Wallet_h from "./ip_h.svg"
 import Svg from "./div_svg.svg"
 
 
-import Help from "./help.png"
+import Help from "./help.svg"
 import Down from "./download.png"
 import Share from "./share.png"
 import Trans from "./trans.png"

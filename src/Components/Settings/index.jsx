@@ -243,6 +243,7 @@ const Settings = () => {
                                     &&
                                     <SecurityQuestions />
                                 }
+                                {currentTab === "Payment Threshold" && <Threshold userDetails={userDetails} authHeader={authHeader} />}
                                 {
                                     currentTab === "Verification Code Preferences"
                                     &&

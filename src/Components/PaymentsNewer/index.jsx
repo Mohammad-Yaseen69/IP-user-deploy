@@ -390,7 +390,7 @@ const PaymentsNewer = () => {
                                                         <img src={qr_ic} alt="" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
                                                         <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", maxWidth: "8ch" }}>{t("QR Code Payment")}</span>
                                                     </button>
-                                                }
+                                                       }
                                             </>
                                             :
                                             ""

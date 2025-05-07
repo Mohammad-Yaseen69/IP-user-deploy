@@ -15,13 +15,10 @@ import { countries } from "country-list-json";
 import LanguagePicker from "../LanguagePicker";
 import FaceAnimation from "./FaceAnimation"
 import { motion } from "framer-motion"
-import InstaSvg from "../../assets/icons/insta.svg"
-import SmsSvg from "../../assets/icons/sms.svg"
-import AuthSvg from "../../assets/icons/auth.svg"
 import BiometricSvg from "../../assets/icons/fingerprint.png" // Add this import
 import { startAuthentication } from "@simplewebauthn/browser"
 import * as rdd from "react-device-detect";
-import { authIcon, biometricIcon, instaIcon, smsIcon, whatsappIcon } from "./files"
+import { authIcon, instaIcon, smsIcon, whatsappIcon } from "./files"
 import "./styles/index.module.css";
 
 const Login = ({ country, setIsLoginForm, setIsForgot }) => {
@@ -37,7 +34,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [isPressed, setIsPressed] = useState(false)
     const [loginToken, setLoginToken] = useState("")
     const [step, setStep] = useState(1)
-    const { profileLockTIme, setProfileLockTime, setUserDetails, userDetails } = useContext(UserContext)
+    const { profileLockTIme, setProfileLockTime, setUserDetails } = useContext(UserContext)
     const [loginMethod, setLoginMethod] = useState("phone")
     const [currentActiveInput, setCurrentActiveInput] = useState(1)
     const [isOtpCorrect, setIsOtpCorrect] = useState(false)
@@ -530,7 +527,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 credentials,
             }
 
-            console.log(verificationData)
 
 
             const response2 = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/login-biometric-verify`, {
