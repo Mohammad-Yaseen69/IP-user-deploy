@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react"
 import styles from "./styles/Threshold.module.scss"
-import circle from "./tabs_icons/circle.png"
-import { UserContext } from "../../Context/UserContext"
-import { Styles } from "docx"
 import axios from "axios"
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import { toast } from "react-toastify"
 import countries from "../CitiesDropDown/CitiesData.json"
 import GoogleAuthenticatorModal from "../GoogleAuthenticatorModal"
+import { Toggle } from "../MyMasterCard/CardPurchased"
+import { Tooltip } from "reactstrap"
+import { Info } from "react-feather"
+import useWindowWidth from "../../utils/useWindowWidth"
 
 const Threshold = ({ userDetails, authHeader }) => {
     const [active, setActive] = useState(false)
@@ -19,6 +20,9 @@ const Threshold = ({ userDetails, authHeader }) => {
     const [defaultAmount, setDefaultAmount] = useState()
     const [localcur, setLocalCur] = useState()
     const [editMode, setEditMode] = useState(false)
+    const [showTooltip, setShowTooltip] = useState(false)
+    const [toggle, setToggle] = useState(false)
+    const width = useWindowWidth()
 
     useEffect(() => {
         setActive(userDetails?.otp_thresholds?.qr_pay?.enabled)
@@ -46,7 +50,7 @@ const Threshold = ({ userDetails, authHeader }) => {
             }
         }
 
-        getPlainExchangeRate("195", setMaxAmount)
+        getPlainExchangeRate("200", setMaxAmount)
         getPlainExchangeRate("20", setDefaultAmount)
     }, [userDetails])
 
@@ -106,22 +110,68 @@ const Threshold = ({ userDetails, authHeader }) => {
                     </button>
                 </div> :
                 <div className={styles.thresholdSetBox}>
-                    <div>
-                        <div className={styles.current}>
-                            <div>
-                                <span>Current Threshold</span>
-                                <div className={styles.amount}>
-                                    {localcur}{cAmount}
+                    <div style={{ flexDirection: !editMode && "column", gap: "0px" }}>
+                        {!editMode &&
+                            <div className={styles.h_toggle}>
+                                <p>Quick QR Payment Threshold</p>
+
+                                <div>
+                                    <div style={{display: "flex", alignItems: "center", gap: '4px'}}>
+                                        <Info color="#777" size={14} id="qr-tooltip-info" style={{ cursor: "poiter" }} />
+                                        <Tooltip
+                                            placement={"top"}
+                                            isOpen={showTooltip}
+                                            target={"qr-tooltip-info"}
+                                            toggle={() => setShowTooltip(!showTooltip)}
+                                            color="primary"
+
+                                        >
+                                            You can enable disable it
+                                        </Tooltip>
+                                        <p>Toggle the Quicker Pay</p>
+                                    </div>
+                                    <Toggle checked={toggle} onChange={() => setToggle(!toggle)} />
                                 </div>
                             </div>
+                        }
+                        <div style={{ display: "flex", width: "100%", gap: "20px", alignItems: width > 600 ? "flex-end" : "center", alignSelf: "stretch", flexDirection: width < 600 && "column" }}>
 
-                            <p className={styles.txt}>
-                                Transactions up to $50 can be auto-approved.
-                                Payments above $50 will always require OTP verification for security.
-                            </p>
+                            <div className={styles.current}>
+                                {editMode ?
+                                    <div>
+                                        <span>Quick QR Payment Threshold</span>
+                                        <div className={styles.amount}>
+                                            {localcur}{cAmount}
+                                        </div>
+                                    </div> :
+                                    <div>
+                                        <div className={styles.amount}>
+                                            {localcur}{cAmount}
+                                        </div>
+                                    </div>
+                                }
+
+
+                                {!editMode ?
+                                    <p className={styles.txt}>
+                                        Transactions up to    {localcur}{cAmount} can be auto-approved.
+                                        Payments above    {localcur}{cAmount} will always require OTP verification for security.
+                                    </p> :
+                                    <p className={styles.txt}>
+                                        You can set maximum threshold amount of {localcur}{maxAmount}.
+                                    </p>
+
+                                }
+                            </div>
+
+                            {!editMode &&
+                                <div className={styles.btns}>
+                                    <button className={styles.deactivate} onClick={() => updateThreshold(false)}>Deactivate</button>
+                                    <button className={styles.edit} onClick={() => setEditMode(true)}>Edit the amount</button>
+                                </div>}
                         </div>
 
-                        {editMode ?
+                        {editMode &&
                             <div className={styles.amountDiv}>
                                 <span>
                                     Set New Threshold
@@ -180,10 +230,6 @@ const Threshold = ({ userDetails, authHeader }) => {
                                 </div>
 
                                 <button onClick={() => setShowPassword(true)}>Save Changes</button>
-                            </div> :
-                            <div className={styles.btns}>
-                                <button className={styles.deactivate} onClick={() => updateThreshold(false)}>Deactivate</button>
-                                <button className={styles.edit} onClick={() => setEditMode(true)}>Edit the amount</button>
                             </div>
                         }
                     </div>

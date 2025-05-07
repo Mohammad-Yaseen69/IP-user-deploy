@@ -84,13 +84,33 @@
         align-self: stretch;
         border-radius: var(--Corner-Radius-Small-Roundness, 8px);
         background: #FAFAFA;
+        margin-top: 1rem;
 
         >div {
             display: flex;
             align-items: flex-end;
             gap: 42px;
             align-self: stretch;
-            margin-top: 1rem;
+
+            .h_toggle {
+                width: 100%;
+                justify-content: space-between;
+                display: flex;
+
+                p {
+                    color: var(--COLORS-Neutral-700, #777);
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 600;
+                    margin-bottom: 0;
+                }
+
+                div {
+                    display: flex;
+                    gap: 10px;
+                    align-items: center;
+                }
+            }
 
             .current {
                 display: flex;
@@ -106,6 +126,7 @@
                     font-size: 14px;
                     font-style: normal;
                     font-weight: 600;
+                    margin-bottom: 0;
                 }
 
                 .amount {
@@ -251,6 +272,70 @@
                     font-weight: 600;
                     align-self: stretch;
                 }
+            }
+        }
+    }
+}
+
+
+@media screen and (max-width: 600px) {
+    .cont {
+        padding: 0px;
+
+        .btns {
+            width: 100%;
+
+            button {
+                align-self: stretch;
+            }
+        }
+
+
+        .activeBox{
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+
+            .left{
+                width: 100%;
+            }
+
+            button{
+                align-self: stretch;
+            }
+        }
+        .h_toggle {
+            flex-direction: column-reverse;
+            gap: 30px;
+
+            >div {
+                justify-content: space-between;
+            }
+        }
+
+        .thresholdSetBox{
+            >div{
+                flex-direction: column;
+                gap: 20px !important;
+
+                .amountDiv{
+                    align-self: stretch;
+                }
+            }
+        }
+        .current {
+            gap: 15px !important;
+        }
+
+        .top {
+            gap: 5px;
+
+            h4 {
+                font-size: 21px;
+            }
+
+            p {
+                font-size: 12px;
             }
         }
     }
