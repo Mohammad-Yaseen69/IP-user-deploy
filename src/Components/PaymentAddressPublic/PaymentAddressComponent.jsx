@@ -331,6 +331,8 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                                 <img src={userCountry?.file_url} alt={userCountry?.alpha3} style={{ boxShadow: "0 0 5px #afafaf" }} />
                                                                 <span>{userCountry?.name}</span>
                                                             </div>
+
+                                                            <button onClick={() => navigate(`/profile/${user_name}`)} className={styles.viewProfileBtn}>View Profile</button>
                                                         </div>
                                                     </div>
                                                     {/* <div className={styles.link} style={{
