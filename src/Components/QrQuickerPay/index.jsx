@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import ip from "../PaymentAddressPublic/instapay_black.svg"
 import styles from "./styles/index.module.scss"
 import r from "./r.svg"
@@ -11,6 +11,11 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import { toast } from "react-toastify"
 import { startAuthentication } from "@simplewebauthn/browser"
+import { Input, Modal, ModalBody, ModalHeader } from "reactstrap"
+import PhoneInput from "../PhoneInput"
+import { countries } from "country-list-json"
+import { UserContext } from "../../Context/UserContext"
+import { formatCurrency } from "../../Helper/AmountFormat"
 
 const QrQuickerPay = () => {
   const [step, setStep] = useState(1)
@@ -20,6 +25,13 @@ const QrQuickerPay = () => {
   const [isPressed, setIsPressed] = useState(false)
   const [userDetails, setUserDetails] = useState({})
   const [token, setToken] = useState(null)
+  const [showDetsModal, setShowDetsModal] = useState(false)
+  const [phone, setPhone] = useState("")
+  const [password, setPassword] = useState("")
+  const [completed, setCompleted] = useState(false)
+  const [status, setStatus] = useState(false)
+  const [recipientDets, setRecipientDets] = useState({})
+  const [width, setWidth] = useState("50%")
 
   useEffect(() => {
     const getWalletDetails = async () => {
@@ -28,28 +40,164 @@ const QrQuickerPay = () => {
           wallet_id: wallet_id,
         }
 
-        const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-wallet-details-public`, { data: encryptData(data) })
+        const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-details-wallet-public`, { data: encryptData(data) })
         const dec = decryptData(res.data.data)
-
-
+        setRecipientDets(dec.walletDetails)
         console.log(dec)
       } catch (error) {
-        const dec = decryptData(error.response.data.data)
-        console.log(dec)
+
       }
     }
 
     getWalletDetails()
   }, [wallet_id])
 
+
+  const [feeData, setFeeData] = useState(null);
+
+  const getFeeDetails = async (sender_wallet_id, from, tokenApi, account_id, level) => {
+    const apiHeaders = {
+      "Authorization": `Bearer ${tokenApi}`,
+      "source": "user"
+    }
+
+    console.log(apiHeaders)
+    try {
+      const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${recipientDets?.currency?.code}&amount=${Number(amount?.toString()?.replace(",", ""))}&payment_method=request&account_id=${account_id}&type=qr_pay&receiver_wallet_id=${recipientDets._id}&sender_wallet_id=${sender_wallet_id}&payment_type=wallet&level_id=${level}`;
+      const res = await axios.get(url, { headers: apiHeaders });
+      const dec = decryptData(res.data.data);
+
+      const exchange_rate_details = {
+        exchange_rate: dec?.data?.exchanged_rate?.value,
+        receiver: { currency: dec?.data?.recipient?.currency, amount: dec?.data?.recipient?.value },
+        fee: { amount: dec?.data?.fee?.value ?? 0.00, currency: dec?.data?.fee?.currency },
+        sending: { amount: dec?.data?.sending?.value, currency: dec?.data?.sending?.currency },
+        total: dec?.data?.total?.value,
+        min_amount: dec?.data?.min_amount,
+        max_amount: dec?.data?.max_amount,
+        token: dec?.data?.token ?? ""
+      };
+
+      setFeeData(exchange_rate_details);
+      toast.success("Fee details fetched successfully");
+    } catch (error) {
+      const dec = decryptData(error?.response?.data?.data);
+      if (typeof dec?.message === "object") {
+        if (dec?.message?.[0]?.code === "1003007") {
+          toast.error("Payer unavailable");
+          return;
+        }
+        toast.error("Something went wrong");
+        return;
+      }
+      if (dec?.message?.toLowerCase()?.includes("insufficient")) {
+        toast.error("Insufficient balance");
+        return;
+      }
+      if (
+        dec?.message?.toLowerCase()?.includes("exceeds max") ||
+        dec?.message?.toLowerCase()?.includes("above the max")
+      ) {
+        toast.error("Amount exceeds maximum allowed");
+        return;
+      }
+      if (
+        dec?.message?.toLowerCase()?.includes("below the min") ||
+        dec?.message?.toLowerCase()?.includes("below the max")
+      ) {
+        toast.error("Amount below minimum allowed");
+        return;
+      }
+      toast.error(dec?.message || "Something went wrong");
+      setFeeData(null);
+      return;
+    }
+  };
+
+  const confirmTransaction = async (token, apiHeaders) => {
+    const data = {
+      token,
+      otp: "11212",
+      type: "authenticator",
+      auth_type: "biometric"
+    }
+
+    const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/insta-wallet-to-wallet`, { data: encryptData(data) }, {
+      headers: apiHeaders
+    })
+
+    const dec = decryptData(res.data.data)
+    setCompleted(true)
+    setStatus(dec?.status)
+    setStep(prev => prev + 1)
+    console.log(dec)
+  }
+
+  const sendOtpSkip = async () => {
+    setIsPressed(true)
+    const apiHeaders = {
+      "Authorization": `Bearer ${token}`,
+      "source": "user"
+    }
+    try {
+      console.log(userDetails)
+      const payload = {
+        "data": {
+          "receiver_wallet_id": recipientDets?.wallet_id,
+          "sender_wallet_id": userDetails?.walletDetails?._id,
+          "purpose": "OTHERS",
+          "amount": Number(amount?.toString()?.replace(",", "")),
+          "type": "instant",
+          "payment_type": "qr_pay",
+          "description": "",
+          "token": feeData.token
+        },
+        "type": "authenticator",
+        "auth_type": "biometric"
+      }
+
+      console.log(payload)
+      const encrypted = encryptData(payload)
+      const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+        data: encrypted
+      }, {
+        headers: apiHeaders
+      })
+
+      const dec = decryptData(res.data.data)
+      await confirmTransaction(dec.token, apiHeaders)
+      console.log(dec)
+    } catch (error) {
+      console.log(error)
+      const dec = decryptData(error.response.data.data)
+      console.log(dec)
+      toast.error(dec.message || "Something went wrong")
+    }
+    finally {
+      setIsPressed(false)
+    }
+  }
+
+
+  useEffect(() => {
+    if (amount.length === 3) {
+      setWidth("50%")
+    }
+  }, [amount])
   const handleBiometricVerification = async () => {
     try {
       setIsPressed(true)
+      const payload = {
+        qr_quicker_pay: true
+      }
 
-
+      if (phone) {
+        payload.phone = phone
+        payload.password = password
+      }
 
       const response1 = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/login-biometric-challenge`, {
-        data: encryptData({})
+        data: encryptData(payload)
       })
 
       const dec1 = await decryptData(response1.data.data)
@@ -57,42 +205,99 @@ const QrQuickerPay = () => {
       const credentials = await startAuthentication(dec1.options)
 
       console.log(dec1)
-      const verificationData = {
-        account_id: dec1.account_id,
-        credentials,
+
+      const getDetails = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-biometric-details`, { data: encryptData({ credentials }) })
+      const dec2 = decryptData(getDetails.data.data)
+
+      getFeeDetails(dec2?.user?.walletDetails?._id, dec2?.user?.walletDetails?.currency?.code, dec2?.token, dec2?.user?._id, dec2?.user?.level_id)
+      console.log(dec2)
+
+      setToken(dec2.token)
+      setUserDetails(dec2.user)
+      setShowDetsModal(false)
+      setStep(prev => prev + 1)
+    } catch (error) {
+      setIsPressed(false)
+      const dec = decryptData(error?.response?.data?.data)
+      if (dec?.message?.toLowerCase()?.includes("cookie")) {
+        return setShowDetsModal(true)
+      }
+      if (dec?.message?.toLowerCase()?.includes("user not found")) {
+        return toast.error("You have entered wrong phone number")
+      }
+      if (dec?.message?.toLowerCase()?.includes("password")) {
+        return toast.error("You have entered wrong password")
       }
 
-      console.log(verificationData)
-
-
-      const response2 = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/login-biometric-verify`, {
-        data: encryptData(verificationData)
-      })
-
-      const dec2 = await decryptData(response2.data.data)
-
-      const token = dec2?.token
-      axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/auth/${token}`)
-        .then(async res => {
-          const dec = decryptData(res.data.data)
-          localStorage.setItem("token", token)
-          setUserDetails(dec)
-        })
-        .catch(err => {
-          // console.log(decryptData(err.response.data.data))
-          setIsPressed(false)
-          toast.error("Something went wrong while getting account details")
-        })
-
-
-    } catch (error) {
-      const dec = decryptData(error?.response?.data?.data)
       console.log(dec)
       toast.error("Biometric verification failed");
     }
     finally {
       setIsPressed(false)
     }
+  };
+
+  const { allowedCountries } = useContext(UserContext)
+
+  const [country, setCountry] = useState({})
+
+  useEffect(() => {
+    const getCountryDetails = async () => {
+      const ipBasedStoredCountry = localStorage.getItem("ip_country")
+      if (ipBasedStoredCountry?.length === 3) {
+        setCountry(ipBasedStoredCountry)
+      } else {
+        try {
+          const res = await axios.get(`https://ipinfo.io?token=${process.env.REACT_APP_IP_INFO_TOKEN}`)
+          const location = res.data;
+
+
+          console.log(res.data)
+
+          if (location) {
+            const findCOuntry = countries.find(item => item?.code === location?.country)
+
+            if (findCOuntry) {
+              const foundCount = allowedCountries?.find(item => item?.country_name?.toLowerCase() === findCOuntry?.name?.toLowerCase() || item?.country_name?.toLowerCase()?.includes(findCOuntry?.name?.toLowerCase()))
+              if (foundCount?.country_iso_code) {
+                localStorage.setItem("ip_country", foundCount?.country_iso_code)
+              }
+              setCountry(foundCount?.country_iso_code ?? localStorage.getItem("ip_country"))
+            }
+          }
+        } catch (error) {
+          const res = await fetch("https://geolocation-db.com/json/")
+          const data = await res.json()
+          const filteredCountry = allowedCountries.filter(item => item.country_name.toLowerCase().includes(data?.country_name?.toLowerCase()))?.[0]?.country_iso_code
+          if (filteredCountry) {
+            localStorage.setItem("ip_country", filteredCountry)
+          }
+          setCountry(filteredCountry ?? localStorage.getItem("ip_country"))
+        }
+      }
+    }
+    if (allowedCountries?.length > 0) {
+      getCountryDetails()
+    }
+  }, [allowedCountries])
+
+  const handleKeyUp = (e) => {
+    formatCurrency(e.target.value, false, setAmount);
+  };
+
+  const handleBlur = (e) => {
+    formatCurrency(e.target.value, true, setAmount);
+  };
+
+  const handleAmountChange = (e) => {
+    const value = e.target.value;
+    setAmount(value);
+
+    // Calculate width: start at 50%, +4% for each char above 3, max 75%
+    let base = 50;
+    let extra = Math.max(0, value.length - 3) * 4;
+    let total = Math.min(base + extra, 75);
+    setWidth(`${total}%`);
   };
 
   return (
@@ -129,21 +334,28 @@ const QrQuickerPay = () => {
 
         {step !== 1 && <span className={styles.label}>Recipient Details:</span>}
         <div style={{ margin: step !== 1 && "0 0 20px 0" }} className={styles.infoBox}>
-          <img src="https://thispersondoesnotexist.com/" alt="" />
+          <img src={recipientDets?.profilePicture} alt="" />
           <div>
-            <h5>Mohammad Yaseen</h5>
-            <span>yaseen123</span>
-            <span>Pakistan</span>
+            <h5>{recipientDets?.name}</h5>
+            <span>{recipientDets?.username}</span>
+            <span>{recipientDets?.country}</span>
           </div>
         </div>
 
         {step === 1 &&
           <div className={styles.amountBox}>
             <span>Type Your Amount</span>
-
             <div>
-              <p>USD</p>
-              <input type="text" value={amount} onChange={e => setAmount(e.target.value)} />
+              <p>{recipientDets?.currency?.symbol}</p>
+
+              <input
+                type="text"
+                value={amount}
+                style={{ width: width }}
+                onChange={handleAmountChange}
+                onKeyUp={handleKeyUp}
+                onBlur={handleBlur}
+              />
             </div>
           </div>
         }
@@ -156,17 +368,35 @@ const QrQuickerPay = () => {
 
               <div>
 
-                <span className={styles.curr}>USD Wallet</span>
-                <span className={styles.id}>323fs</span>
+                <span className={styles.curr}>{userDetails?.walletDetails?.currency?.code} Wallet</span>
+                <span className={styles.id}>{userDetails?.walletDetails?.wallet_id}</span>
               </div>
             </div>
             <div className={styles.fee}>
               <span>Fees</span>
-              <span>USD 0.00</span>
+              <span>{feeData?.fee?.currency} {feeData?.fee?.amount}</span>
             </div>
+
             <div className={styles.fee}>
-              <span>Fees</span>
-              <span>USD 0.00</span>
+              <span>Sending Amount</span>
+              <span>{feeData?.sending?.currency} {feeData?.sending?.amount}</span>
+            </div>
+
+            <div className={styles.fee}>
+              <span>Receiving Amount</span>
+              <span>{feeData?.receiver?.currency} {feeData?.receiver?.amount}</span>
+            </div>
+
+            {(feeData?.exchange_rate && feeData?.exchange_rate !== 1) &&
+              <div className={styles.fee}>
+                <span>Exchange Rate</span>
+                <span>{feeData?.receiver?.currency} {feeData?.exchange_rate}</span>
+              </div>
+            }
+
+            <div className={styles.fee}>
+              <span>Total</span>
+              <span>{feeData?.sending?.currency} {feeData?.total}</span>
             </div>
           </div>
         }
@@ -185,20 +415,56 @@ const QrQuickerPay = () => {
         }
       </div>
 
+      <Modal isOpen={showDetsModal} toggle={() => setShowDetsModal()}>
+
+        <ModalHeader>
+          <h5 style={{ marginBottom: "4px", fontWeight: 700, fontSize: "18px" }}>Enter Your Details</h5>
+          <p style={{ fontWeight: 600, color: "darkgray", color: "#757272", lineHeight: '18px', marginBottom: '0' }}>Please enter your Instapay account credentials for security purpose. you only have to enter your credentials once to use Qr Quicker Pay</p>
+        </ModalHeader>
+        <ModalBody>
+
+
+          <div>
+            <label htmlFor="" style={{ fontWeight: 600 }}>Phone Number</label>
+            <PhoneInput
+              phone={phone}
+              setPhone={setPhone}
+              country={country}
+            />
+          </div>
+          <div style={{ marginTop: "1rem" }}>
+            <label htmlFor="" style={{ fontWeight: 600 }}>Password</label>
+            <Input value={password} onChange={(e) => setPassword(e.target.value)} style={{ padding: "1rem", boxShadow: '0px 4px 11px 0px rgba(0, 0, 0, 0.16), 0px 0px 4px 6px #FDFDFD inset', fontWeight: 800 }} />
+          </div>
+
+          <div style={{ marginTop: '1rem' }}>
+            <button
+              className={styles.modalbtn}
+              disabled={!password || !phone || isPressed}
+              style={{ opacity: (!password || !phone || isPressed) && ".5" }}
+              onClick={handleBiometricVerification}
+            >Continue</button>
+          </div>
+        </ModalBody>
+      </Modal>
+
       <div className={styles.btns}>
         {step !== 3 &&
-          <button onClick={() => {
-            if (step === 1) {
-              setStep(2)
-            }
-            else {
-
-            }
-          }}>
-            {step === 1 ? "Next" : "Authenticate & Confirm"}
+          <button
+            disabled={isPressed}
+            style={{ opacity: isPressed && ".5" }}
+            onClick={() => {
+              if (step === 1) {
+                handleBiometricVerification()
+              }
+              else {
+                sendOtpSkip()
+              }
+            }}>
+            {step !== 1 ? "Next" : "Authenticate & Proceed"}
           </button>
         }
-        {step === 2 && <button onClick={() => navigate(`/q/${wallet_id}?login_flow=true`)} style={{ marginTop: "10px" }}>Proceed via login</button>}
+        {step === 1 && <button onClick={() => navigate(`/q/${wallet_id}?login_flow=true`)} style={{ marginTop: "10px" }}>Proceed via login</button>}
       </div>
     </div>
   )

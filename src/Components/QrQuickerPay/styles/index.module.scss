@@ -40,6 +40,9 @@
         }
     }
 
+
+
+
     .detsText {
         p {
             color: #848484;
@@ -328,4 +331,23 @@
             }
         }
     }
+}
+
+.modalbtn {
+    display: flex;
+    align-self: stretch;
+    border-radius: var(--RADIUS-radius-2, 8px);
+    background: var(--COLORS-Primary-300, #5926F0);
+    padding: var(--RADIUS-radius-5, 16px) var(--RADIUS-radius-6, 24px);
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: var(--COLORS-Neutral-100, #FFF);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    border: none;
+    outline: none;
+    width: 100%;
 }

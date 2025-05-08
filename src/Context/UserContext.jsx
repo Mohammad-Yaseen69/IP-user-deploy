@@ -11,6 +11,8 @@ import Modal from "../Components/SessionExpireModal"
 
 axios.defaults.timeout = 10000;
 axios.defaults.timeoutErrorMessage = "Server Timeout."
+// axios.defaults.withCredentials = true
+
 
 // axios.interceptors.response.use(
 //     response => {
