@@ -16,6 +16,8 @@ import PhoneInput from "../PhoneInput"
 import { countries } from "country-list-json"
 import { UserContext } from "../../Context/UserContext"
 import { formatCurrency } from "../../Helper/AmountFormat"
+import { ArrowLeft, ArrowRight } from "react-feather"
+import InstaPayLoader from "../Loader"
 
 const QrQuickerPay = () => {
   const [step, setStep] = useState(1)
@@ -61,7 +63,6 @@ const QrQuickerPay = () => {
       "source": "user"
     }
 
-    console.log(apiHeaders)
     try {
       const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${recipientDets?.currency?.code}&amount=${Number(amount?.toString()?.replace(",", ""))}&payment_method=request&account_id=${account_id}&type=qr_pay&receiver_wallet_id=${recipientDets._id}&sender_wallet_id=${sender_wallet_id}&payment_type=wallet&level_id=${level}`;
       const res = await axios.get(url, { headers: apiHeaders });
@@ -140,7 +141,6 @@ const QrQuickerPay = () => {
       "source": "user"
     }
     try {
-      console.log(userDetails)
       const payload = {
         "data": {
           "receiver_wallet_id": recipientDets?.wallet_id,
@@ -209,13 +209,19 @@ const QrQuickerPay = () => {
       const getDetails = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-biometric-details`, { data: encryptData({ credentials }) })
       const dec2 = decryptData(getDetails.data.data)
 
-      getFeeDetails(dec2?.user?.walletDetails?._id, dec2?.user?.walletDetails?.currency?.code, dec2?.token, dec2?.user?._id, dec2?.user?.level_id)
       console.log(dec2)
 
-      setToken(dec2.token)
-      setUserDetails(dec2.user)
-      setShowDetsModal(false)
-      setStep(prev => prev + 1)
+      if(dec2.user?.walletDetails?.wallet_id === recipientDets?.wallet_id){
+        toast.error("You cannot send money to your own wallet")
+        setIsPressed(false)
+        return
+      }else{
+        setStep(prev => prev + 1)
+        getFeeDetails(dec2?.user?.walletDetails?._id, dec2?.user?.walletDetails?.currency?.code, dec2?.token, dec2?.user?._id, dec2?.user?.level_id)
+        setShowDetsModal(false)
+        setToken(dec2.token)
+        setUserDetails(dec2.user)
+      }
     } catch (error) {
       setIsPressed(false)
       const dec = decryptData(error?.response?.data?.data)
@@ -301,7 +307,12 @@ const QrQuickerPay = () => {
   };
 
   return (
-    <div className={styles.cont}>
+    <div style={{ position: 'relative' }} className={styles.cont}>
+      {step === 2 &&
+        <div style={{ position: "absolute", top: "20px", left: "20px", cursor: "pointer" }} onClick={() => setStep(1)}>
+          <ArrowLeft />
+        </div>
+      }
       <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
         <img src={ip} alt="" />
         <h1>Qr Quicker Pay</h1>
@@ -367,37 +378,44 @@ const QrQuickerPay = () => {
               <span>You used</span>
 
               <div>
-
                 <span className={styles.curr}>{userDetails?.walletDetails?.currency?.code} Wallet</span>
                 <span className={styles.id}>{userDetails?.walletDetails?.wallet_id}</span>
               </div>
             </div>
-            <div className={styles.fee}>
-              <span>Fees</span>
-              <span>{feeData?.fee?.currency} {feeData?.fee?.amount}</span>
-            </div>
 
-            <div className={styles.fee}>
-              <span>Sending Amount</span>
-              <span>{feeData?.sending?.currency} {feeData?.sending?.amount}</span>
-            </div>
+            {feeData?.token ?
+              <>
+                <div className={styles.fee}>
+                  <span>Fees</span>
+                  <span>{feeData?.fee?.currency} {feeData?.fee?.amount}</span>
+                </div>
 
-            <div className={styles.fee}>
-              <span>Receiving Amount</span>
-              <span>{feeData?.receiver?.currency} {feeData?.receiver?.amount}</span>
-            </div>
+                <div className={styles.fee}>
+                  <span>Sending Amount</span>
+                  <span>{feeData?.sending?.currency} {feeData?.sending?.amount}</span>
+                </div>
 
-            {(feeData?.exchange_rate && feeData?.exchange_rate !== 1) &&
-              <div className={styles.fee}>
-                <span>Exchange Rate</span>
-                <span>{feeData?.receiver?.currency} {feeData?.exchange_rate}</span>
+                <div className={styles.fee}>
+                  <span>Receiving Amount</span>
+                  <span>{feeData?.receiver?.currency} {feeData?.receiver?.amount}</span>
+                </div>
+
+                {(feeData?.exchange_rate && feeData?.exchange_rate !== 1) &&
+                  <div className={styles.fee}>
+                    <span>Exchange Rate</span>
+                    <span>{feeData?.receiver?.currency} {feeData?.exchange_rate}</span>
+                  </div>
+                }
+
+                <div className={styles.fee}>
+                  <span>Total</span>
+                  <span>{feeData?.sending?.currency} {feeData?.total}</span>
+                </div>
+              </> :
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "200px"}}>
+                <InstaPayLoader />
               </div>
             }
-
-            <div className={styles.fee}>
-              <span>Total</span>
-              <span>{feeData?.sending?.currency} {feeData?.total}</span>
-            </div>
           </div>
         }
 
@@ -455,7 +473,12 @@ const QrQuickerPay = () => {
             style={{ opacity: isPressed && ".5" }}
             onClick={() => {
               if (step === 1) {
-                handleBiometricVerification()
+                if (!userDetails._id) {
+                  handleBiometricVerification()
+                }
+                else {
+                  setStep(prev => prev + 1)
+                }
               }
               else {
                 sendOtpSkip()
