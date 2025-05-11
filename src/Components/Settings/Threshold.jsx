@@ -10,6 +10,7 @@ import { Toggle } from "../MyMasterCard/CardPurchased"
 import { Tooltip } from "reactstrap"
 import { Info } from "react-feather"
 import useWindowWidth from "../../utils/useWindowWidth"
+import { startAuthentication } from "@simplewebauthn/browser"
 
 const Threshold = ({ userDetails, authHeader }) => {
     const [active, setActive] = useState(false)
@@ -29,6 +30,7 @@ const Threshold = ({ userDetails, authHeader }) => {
         setCAmount(userDetails?.otp_thresholds?.qr_pay?.amount?.toFixed(2))
         setAmount(userDetails?.otp_thresholds?.qr_pay?.amount?.toFixed(2))
         setLocalCur(countries.find((c) => c?.iso3 === userDetails?.country_iso_code)?.currency)
+        setToggle(userDetails?.qr_quicker_pay_enabled)
 
         if (!userDetails?.otp_thresholds?.qr_pay?.amount) {
             setEditMode(true)
@@ -62,7 +64,7 @@ const Threshold = ({ userDetails, authHeader }) => {
                 accountId: userDetails?._id,
                 threshold_enabled: toggle,
                 threshold_amount: (+defaultA || +amount),
-                threshold_type: "qr_pay"
+                threshold_type: "qr_pay",
             }
 
             console.log(data)
@@ -88,6 +90,52 @@ const Threshold = ({ userDetails, authHeader }) => {
         }
     }
 
+
+    const updateQuickerToggle = async () => {
+        try {
+            const data1 = {
+                phone: userDetails?.phone,
+            }
+            const response1 = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/login-biometric-challenge`, {
+                data: encryptData(data1)
+            })
+
+            const dec1 = await decryptData(response1.data.data)
+
+            const credentials = await startAuthentication(dec1.options)
+
+            console.log(dec1)
+
+            const getDetails = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/login-biometric-verify`, { data: encryptData({ credentials, account_id: dec1.account_id, toggle_verification: true }) })
+            const dec2 = decryptData(getDetails.data.data)
+
+            let headers = {...authHeader}
+            
+            if(dec2?.token){
+                headers = {
+                    ...authHeader,
+                    Authorization: `Bearer ${dec2?.token}`
+                } 
+            }
+            
+            const res = await axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-individual/${userDetails._id}`, { data: encryptData({ qr_quicker_pay_enabled: !toggle }) }, {
+                headers: headers
+            })
+
+            if(dec2?.token){
+                localStorage.setItem("token", dec2?.token)
+                window.location.reload()
+            }
+
+            setToggle(!toggle)
+
+            const decrypted = decryptData(res.data.data)
+            console.log(decrypted)
+        } catch (error) {
+            const dec = decryptData(error.response.data.data)
+            console.log(dec)
+        }
+    }
     return (
         <div className={styles.cont}>
             <div className={styles.top}>
@@ -116,7 +164,7 @@ const Threshold = ({ userDetails, authHeader }) => {
                                 <p>Quick QR Payment Threshold</p>
 
                                 <div>
-                                    <div style={{display: "flex", alignItems: "center", gap: '4px'}}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: '4px' }}>
                                         <Info color="#777" size={14} id="qr-tooltip-info" style={{ cursor: "poiter" }} />
                                         <Tooltip
                                             placement={"top"}
@@ -130,7 +178,7 @@ const Threshold = ({ userDetails, authHeader }) => {
                                         </Tooltip>
                                         <p>Toggle the Quicker Pay</p>
                                     </div>
-                                    <Toggle checked={toggle} onChange={() => setToggle(!toggle)} />
+                                    <Toggle checked={toggle} onChange={updateQuickerToggle} />
                                 </div>
                             </div>
                         }

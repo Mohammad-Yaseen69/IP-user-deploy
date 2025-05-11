@@ -234,7 +234,11 @@ const QrQuickerPay = () => {
       if (dec?.message?.toLowerCase()?.includes("password")) {
         return toast.error("You have entered wrong password")
       }
+      if (dec?.message?.toLowerCase()?.includes("quickerqrpay is disabled")) {
+        return toast.error("Your Qr Quicker Pay is disabled from settings.")
+      }
 
+   
       console.log(dec)
       toast.error("Biometric verification failed");
     }

@@ -94,6 +94,7 @@ const UserState = ({ children }) => {
     const [profileIncompleteReason, setProfileIncompleteReason] = useState("")
     const [showModalState, setShowModalState] = useState(false)
     const navigate = useNavigate()
+    
 
     const authHeader = {
         "Authorization": `Bearer ${token}`,

@@ -31,8 +31,9 @@ import notif_active from "./tabs_icons/notifications_a.svg"
 import notif from "./tabs_icons/notification.svg"
 import login_active from "./tabs_icons/login_a.svg"
 import login from "./tabs_icons/login.svg"
-import thres_a from "./tabs_icons/thres.svg"
-// icons
+import thres_a from "./tabs_icons/thres_a.svg"
+import thres from "./tabs_icons/thres.svg"
+
 
 
 const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
@@ -50,8 +51,8 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
         },
         {
             name: "Payment Threshold",
-            icon: pass,
-            active_icon: thres_a,
+            icon: thres_a,
+            active_icon: thres,
         },
         {
             name: "Security Questions",
