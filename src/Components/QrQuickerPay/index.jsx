@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import ip from "../PaymentAddressPublic/instapay_black.svg"
 import styles from "./styles/index.module.scss"
 import r from "./r.svg"
-import fail from "./faile.svg"
+// import fail from "./faile.svg"
 import success from "./success.svg"
 import { paymentConfirmOptions } from "../MyMasterCard/PaymentModal/SuccessStep"
 import { useNavigate, useParams } from "react-router"
@@ -16,12 +16,13 @@ import PhoneInput from "../PhoneInput"
 import { countries } from "country-list-json"
 import { UserContext } from "../../Context/UserContext"
 import { formatCurrency } from "../../Helper/AmountFormat"
-import { ArrowLeft, ArrowRight } from "react-feather"
+import { ArrowLeft } from "react-feather"
+import countriesData from "../PaymentsNewer/CountriesData.json"
 import InstaPayLoader from "../Loader"
 
 const QrQuickerPay = () => {
   const [step, setStep] = useState(1)
-  const [amount, setAmount] = useState(1.00)
+  const [amount, setAmount] = useState(0.00)
   const { wallet_id } = useParams()
   const navigate = useNavigate()
   const [isPressed, setIsPressed] = useState(false)
@@ -34,6 +35,8 @@ const QrQuickerPay = () => {
   const [status, setStatus] = useState(false)
   const [recipientDets, setRecipientDets] = useState({})
   const [width, setWidth] = useState("16%")
+  const [showModal, setShowModal] = useState(false)
+  const [error, setError] = useState("")
 
   useEffect(() => {
     const getWalletDetails = async () => {
@@ -44,7 +47,8 @@ const QrQuickerPay = () => {
 
         const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-details-wallet-public`, { data: encryptData(data) })
         const dec = decryptData(res.data.data)
-        setRecipientDets(dec.walletDetails)
+        const file = countriesData.find(item => item.name.toLowerCase() === dec?.walletDetails?.country?.toLowerCase())?.file_url
+        setRecipientDets({ ...dec.walletDetails, file })
         console.log(dec)
       } catch (error) {
 
@@ -170,7 +174,10 @@ const QrQuickerPay = () => {
     } catch (error) {
       console.log(error)
       const dec = decryptData(error.response.data.data)
-      console.log(dec)
+      if (dec?.message?.toLowerCase()?.includes("exceeded")) {
+        setError("The transaction amount exceeds your QR payment threshold amount.")
+        return setShowModal(true)
+      }
       toast.error(dec.message || "Something went wrong")
     }
     finally {
@@ -206,11 +213,11 @@ const QrQuickerPay = () => {
 
       console.log(dec2)
 
-      if(dec2.user?.walletDetails?.wallet_id === recipientDets?.wallet_id){
+      if (dec2.user?.walletDetails?.wallet_id === recipientDets?.wallet_id) {
         toast.error("You cannot send money to your own wallet")
         setIsPressed(false)
         return
-      }else{
+      } else {
         setStep(prev => prev + 1)
         getFeeDetails(dec2?.user?.walletDetails?._id, dec2?.user?.walletDetails?.currency?.code, dec2?.token, dec2?.user?._id, dec2?.user?.level_id)
         setShowDetsModal(false)
@@ -230,10 +237,11 @@ const QrQuickerPay = () => {
         return toast.error("You have entered wrong password")
       }
       if (dec?.message?.toLowerCase()?.includes("quickerqrpay is disabled")) {
-        return toast.error("Your Qr Quicker Pay is disabled from settings.")
+        setError("Quicker QR pay is inactive in your account, please enable it from settings/payment threshold for quick payments.")
+        return setShowModal(true)
       }
 
-   
+
       console.log(dec)
       toast.error("Biometric verification failed");
     }
@@ -304,8 +312,31 @@ const QrQuickerPay = () => {
     setWidth(`${total}%`);
   };
 
+
+  const feeJSX = (label, curr, value, fx) => (
+    <div className={styles.fee}>
+      <span>{label}</span>
+      <span>{curr} {fx ? value : value.toFixed(2)}</span>
+    </div>
+  )
+
+
   return (
     <div style={{ position: 'relative' }} className={styles.cont}>
+
+      <Modal isOpen={showModal}>
+        <ModalBody>
+          <h2 style={{ color: "red" }}>
+            Oops!
+          </h2>
+          <p style={{ fontWeight: 600, fontSize: "15px", color: "#6f6f6f" }}>{error}</p>
+
+          <button onClick={() => navigate(`/q/${wallet_id}?login_flow=true`)} style={{ background: "#ff4b4b", color: "#fff", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600, marginTop: "2rem" }}>
+            Login and Continue
+          </button>
+        </ModalBody>
+      </Modal>
+
       {step === 2 &&
         <div style={{ position: "absolute", top: "20px", left: "20px", cursor: "pointer" }} onClick={() => setStep(1)}>
           <ArrowLeft />
@@ -313,7 +344,7 @@ const QrQuickerPay = () => {
       }
       <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
         <img src={ip} alt="" />
-        <h1>Qr Quicker Pay</h1>
+        <h1>Quicker QR Pay</h1>
         {step === 1 &&
           <div className={styles.detsText}>
             <h3>Merchant Details</h3>
@@ -341,21 +372,27 @@ const QrQuickerPay = () => {
           </div>
         }
 
+
         {step !== 1 && <span className={styles.label}>Recipient Details:</span>}
         <div style={{ margin: step !== 1 && "0 0 20px 0" }} className={styles.infoBox}>
-          <img src={recipientDets?.profilePicture} alt="" />
-          <div>
-            <h5>{recipientDets?.name}</h5>
-            <span>{recipientDets?.username}</span>
-            <span>{recipientDets?.country}</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <img style={{ height: "48px", borderRadius: "100%" }} src={recipientDets?.profilePicture} alt="" />
+            <div>
+              <h5>{recipientDets?.name}</h5>
+              <span>@{recipientDets?.username}</span>
+              <span><img style={{ width: "20px", height: "20px", borderRadius: "0" }} src={recipientDets.file} alt="" /> {recipientDets?.country}</span>
+            </div>
           </div>
+
+
+          <p onClick={() => navigate(`/profile/${recipientDets?.username}`)} style={{ marginBottom: "0", fontWeight: 600, color: "#5926f0", cursor: "pointer" }}>View Profile</p>
         </div>
 
         {step === 1 &&
           <div className={styles.amountBox}>
             <span>Type Your Amount</span>
             <div>
-              <p>{recipientDets?.currency?.symbol}</p>
+              <p>{recipientDets?.currency?.code}</p>
 
               <input
                 type="text"
@@ -373,7 +410,9 @@ const QrQuickerPay = () => {
           <div className={styles.feeW}>
 
             <div className={styles.walletDets}>
-              <span>You used</span>
+              <span>
+                {step === 2 ? "You are using" : " You used"}
+              </span>
 
               <div>
                 <span className={styles.curr}>{userDetails?.walletDetails?.currency?.code} Wallet</span>
@@ -383,34 +422,13 @@ const QrQuickerPay = () => {
 
             {feeData?.token ?
               <>
-                <div className={styles.fee}>
-                  <span>Fees</span>
-                  <span>{feeData?.fee?.currency} {feeData?.fee?.amount}</span>
-                </div>
-
-                <div className={styles.fee}>
-                  <span>Sending Amount</span>
-                  <span>{feeData?.sending?.currency} {feeData?.sending?.amount}</span>
-                </div>
-
-                <div className={styles.fee}>
-                  <span>Receiving Amount</span>
-                  <span>{feeData?.receiver?.currency} {feeData?.receiver?.amount}</span>
-                </div>
-
-                {(feeData?.exchange_rate && feeData?.exchange_rate !== 1) &&
-                  <div className={styles.fee}>
-                    <span>Exchange Rate</span>
-                    <span>{feeData?.receiver?.currency} {feeData?.exchange_rate}</span>
-                  </div>
-                }
-
-                <div className={styles.fee}>
-                  <span>Total</span>
-                  <span>{feeData?.sending?.currency} {feeData?.total}</span>
-                </div>
+                {feeJSX("Sending Amount", feeData?.sending?.currency, feeData?.sending?.amount)}
+                {feeJSX("Fees", feeData?.fee?.currency, feeData?.fee?.amount)}
+                {(feeData?.exchange_rate && feeData?.exchange_rate !== 1) && feeJSX("Exchange Rate", feeData?.receiver?.currency, feeData?.exchange_rate, true)}
+                {feeJSX("Receiving Amount", feeData?.receiver?.currency, feeData?.receiver?.amount)}
+                {feeJSX("Total", feeData?.sending?.currency, feeData?.total)}
               </> :
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "200px"}}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "200px" }}>
                 <InstaPayLoader />
               </div>
             }
@@ -467,8 +485,8 @@ const QrQuickerPay = () => {
       <div className={styles.btns}>
         {step !== 3 &&
           <button
-            disabled={isPressed}
-            style={{ opacity: isPressed && ".5" }}
+            disabled={isPressed || !amount || /^0+$/.test(amount.toString().replace(/\./g, ''))}
+            style={{ opacity: (isPressed || !amount || /^0+$/.test(amount.toString().replace(/\./g, ''))) && ".5" }}
             onClick={() => {
               if (step === 1) {
                 if (!userDetails._id) {
@@ -486,7 +504,11 @@ const QrQuickerPay = () => {
             {step !== 1 ? "Next" : "Authenticate & Proceed"}
           </button>
         }
-        {step === 1 && <button onClick={() => navigate(`/q/${wallet_id}?login_flow=true`)} style={{ marginTop: "10px" }}>Proceed via login</button>}
+        {step === 1 &&
+          <p onClick={() => navigate(`/q/${wallet_id}?login_flow=true`)} style={{ marginTop: "10px", fontWeight: 600, fontSize: "12px", cursor: "pointer", textAlign: "center", color: "#000" }}>
+            Quicker QR pay not active?<br /> login and continue.
+          </p>
+        }
       </div>
     </div>
   )

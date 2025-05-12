@@ -135,7 +135,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
             if (splitted[1][0].length >= 2) {
                 return value
             }
-            else if (splitted[1][0].length == 1) {
+            else if (splitted[1][0].length === 1) {
                 return `${value}0`
             }
             else {
