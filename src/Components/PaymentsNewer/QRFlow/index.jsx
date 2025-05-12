@@ -209,7 +209,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                     "receiver_wallet_id": data.beneficiary_wallet?.wallet_id,
                     "sender_wallet_id": data.payment_type?.value !== "wallet" ? data.currency?._id : data?.wallet?._id,
                     "purpose": data.reason,
-                    "amount": data.recipient_amount,
+                    "amount": Number(data.recipient_amount),
                     "type": "instant",
                     "payment_type": "qr_pay",
                     'description': data.comment,

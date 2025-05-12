@@ -1,16 +1,13 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
+import {  useEffect, useState } from 'react';
 import CryptoJS from 'crypto-js';
-import { UserContext } from '../../../Context/UserContext';
-import countriesIso from "./countries_iso2.json"
+
 
 const TrustpaymentPage = ({ amount, currency, card_number, card_expiry, card_cvc, transaction, type = "add_fund", url, paymentWithSavedCard = false, tokenUrl = undefined, guestUserName, guestWallet, guestUser, guestDetails, compareToken = true }) => {
   const [token, setToken] = useState(null);
-  const { userDetails, userWallets } = useContext(UserContext)
-  const wallet = useMemo(() => userWallets?.[0], [userWallets])
 
   const webhook_url = url ?? (paymentWithSavedCard ? `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-pan-transaction/${transaction?.transaction_id}` : `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/payment${type === "add_fund" ? "" : "-kyc"}-confirmation/${transaction?.transaction_id}`)
 
-  let iat = Math.floor(Date.now() / 1000);
+
   useEffect(() => {
     const createJWT = (header, payload, secret) => {
       const headerString = JSON.stringify(header);
@@ -44,52 +41,6 @@ const TrustpaymentPage = ({ amount, currency, card_number, card_expiry, card_cvc
       return jwtToken;
     };
 
-    // const payload = {
-    //   "payload": {
-    //     "accounttypedescription": "ECOM",
-    //     "baseamount": `${amount * 100}`,
-    //     "currencyiso3a": `${type === "add_fund" ? currency : "USD"}`,
-    //     "sitereference": `${process.env.REACT_APP_SITE_REF}`,
-    //     "requesttypedescriptions": ["THREEDQUERY", "AUTH"],
-    //     "pan": `${card_number?.replaceAll(" ", "")}`,
-    //     "expirydate": `${card_expiry?.replaceAll(" ", "")}`,
-    //     "securitycode": `${card_cvc}`,
-    //     "orderreference": `${guestUserName ?? userDetails?.username}_${type === "add_fund" ? (guestWallet?.wallet_id ?? wallet?.wallet_id) : "kyc"}_${transaction?.transaction_ref}`,
-    //     "billingfirstname": guestUser?.first_name ?? userDetails?.first_name,
-    //     "billinglastname": guestUser?.last_name ?? userDetails?.last_name,
-    //     "billingstreet": guestUser?.address ?? userDetails?.address,
-    //     "billingtown": guestUser?.city ?? userDetails?.city,
-    //     "billingcounty": guestUser?.country_name ?? userDetails?.country_name,
-    //     "billingpostcode": guestUser?.postal_code ?? userDetails?.postal_code,
-    //     "billingcountryiso2a": `${countriesIso[guestUser?.country_iso_code ?? userDetails?.country_iso_code] || "CH"}` || "",
-    //     "billingemail": guestUser?.email ?? userDetails?.email,
-    //     "billingtelephone": guestUser?.phone ?? userDetails?.phone,
-    //     "billingtelephonetype": "M",
-    //     "customerfirstname": guestUserName ?? userDetails?.username,
-    //     "customermiddlename": guestWallet?.wallet_id ?? wallet?.wallet_id,
-    //     "customerlastname": transaction?.transaction_ref,
-    //     // "customerstreet": guestUser?.address ?? userDetails?.address,
-    //     // "customertown": guestUser?.city ?? userDetails?.city,
-    //     "customercountryiso2a": `${countriesIso[guestUser?.country_iso_code ?? userDetails?.country_iso_code] || "CH"}` || "",
-    //     // "customerpostcode": guestUser?.postal_code ?? userDetails?.postal_code,
-    //     "customeremail": guestDetails?.email ?? "",
-    //     "customertelephone": guestDetails?.phone ?? "",
-    //     // "customertelephonetype": "M",,
-    //     "customerpremise": guestDetails?.name ?? ""
-    //   },
-    //   "iat": iat,
-    //   "iss": `${process.env.REACT_APP_ISS}`
-    // };
-    // console.log("payload = ", payload.payload)
-    // console.log("payload = ", payload)
-    // const secretKey = `${process.env.REACT_APP_SEC_KEY}`;
-    // const header = { alg: "HS256", typ: "JWT" };
-
-    // if (transaction?.token && compareToken) {
-    //   setToken(transaction?.token)
-    // } else {
-    //   createJWT(header, payload, secretKey);
-    // }
     setToken(transaction?.trustPaymentToken ?? transaction?.token)
   }, [])
 

@@ -9,6 +9,7 @@ import ListModal from "../InternationalFlow/ListModal"
 import { currencies } from "../InternationalFlow/StepOne"
 import { possibleErrors } from "../OTPConfirmation"
 import { formatCurrency } from "../../../Helper/AmountFormat"
+import { cleanString } from "../../../Helper/cleanString"
 
 let api_timeout;
 const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
@@ -359,7 +360,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                         &&
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
                             <strong>{t("Total to pay")}</strong>
-                            <strong>{Number(data.exchange_rate?.total.replace(",", ""))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data.currency?.currency?.code} </strong>
+                            <strong>{Number(cleanString(data.exchange_rate?.total))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data.currency?.currency?.code} </strong>
                             {/* <strong>{Number(data.exchange_rate?.total)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data.currency?.currency?.code} </strong> */}
                         </div>
                     }
