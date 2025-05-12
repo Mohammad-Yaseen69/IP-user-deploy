@@ -313,8 +313,8 @@ const QrQuickerPay = () => {
   };
 
 
-  const feeJSX = (label, curr, value, fx) => (
-    <div className={styles.fee}>
+  const feeJSX = (label, curr, value, fx, total) => (
+    <div style={{padding: total && "10px", border: total && "1px solid #00000026", borderRadius: total && "6px"}} className={styles.fee}>
       <span>{label}</span>
       <span>{curr} {fx ? value : value.toFixed(2)}</span>
     </div>
@@ -426,7 +426,7 @@ const QrQuickerPay = () => {
                 {feeJSX("Fees", feeData?.fee?.currency, feeData?.fee?.amount)}
                 {(feeData?.exchange_rate && feeData?.exchange_rate !== 1) && feeJSX("Exchange Rate", feeData?.receiver?.currency, feeData?.exchange_rate, true)}
                 {feeJSX("Receiving Amount", feeData?.receiver?.currency, feeData?.receiver?.amount)}
-                {feeJSX("Total", feeData?.sending?.currency, feeData?.total)}
+                {feeJSX("Total", feeData?.sending?.currency, feeData?.total, false, true)}
               </> :
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "200px" }}>
                 <InstaPayLoader />
