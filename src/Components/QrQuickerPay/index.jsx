@@ -189,14 +189,22 @@ const QrQuickerPay = () => {
   const handleBiometricVerification = async () => {
     try {
       setIsPressed(true)
+      
       const payload = {
         qr_quicker_pay: true
       }
-
-      if (phone) {
-        payload.phone = phone
-        payload.password = password
+      if (phone && password) {
+        payload.phone = phone;
+        payload.password = password;
+      } else {
+        const localPhone = localStorage.getItem("phoneNumber");
+        const localPassword = localStorage.getItem("password");
+        if (localPhone && localPassword) {
+          payload.phone = localPhone;
+          payload.password = localPassword;
+        }
       }
+
 
       const response1 = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/login-biometric-challenge`, {
         data: encryptData(payload)
@@ -219,6 +227,10 @@ const QrQuickerPay = () => {
         return
       } else {
         setStep(prev => prev + 1)
+        if (phone && password) {
+          localStorage.setItem("phoneNumber", phone)
+          localStorage.setItem("password", password)
+        }
         getFeeDetails(dec2?.user?.walletDetails?._id, dec2?.user?.walletDetails?.currency?.code, dec2?.token, dec2?.user?._id, dec2?.user?.level_id)
         setShowDetsModal(false)
         setToken(dec2.token)
@@ -314,7 +326,7 @@ const QrQuickerPay = () => {
 
 
   const feeJSX = (label, curr, value, fx, total) => (
-    <div style={{padding: total && "10px", border: total && "1px solid #00000026", borderRadius: total && "6px"}} className={styles.fee}>
+    <div style={{ padding: total && "10px", border: total && "1px solid #00000026", borderRadius: total && "6px" }} className={styles.fee}>
       <span>{label}</span>
       <span>{curr} {fx ? value : value.toFixed(2)}</span>
     </div>
