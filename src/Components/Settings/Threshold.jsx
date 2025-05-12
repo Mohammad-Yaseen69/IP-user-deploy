@@ -78,6 +78,14 @@ const Threshold = ({ userDetails, authHeader }) => {
             if (defaultA) {
                 setAmount(defaultA)
             }
+
+            if (toggle === false) {
+                await axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-individual/${userDetails._id}`, { data: encryptData({ qr_quicker_pay_enabled: !toggle }) }, {
+                    headers: authHeader
+                })
+
+                setToggle(!toggle)
+            }
             setActive(toggle)
             setCAmount(decrypted?.data?.threshold_amount)
             setShowPassword(false)
@@ -109,23 +117,18 @@ const Threshold = ({ userDetails, authHeader }) => {
             const getDetails = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/login-biometric-verify`, { data: encryptData({ credentials, account_id: dec1.account_id, toggle_verification: true }) })
             const dec2 = decryptData(getDetails.data.data)
 
-            let headers = {...authHeader}
-            
-            if(dec2?.token){
+            let headers = { ...authHeader }
+
+            if (dec2?.token) {
                 headers = {
                     ...authHeader,
                     Authorization: `Bearer ${dec2?.token}`
-                } 
+                }
             }
-            
+
             const res = await axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-individual/${userDetails._id}`, { data: encryptData({ qr_quicker_pay_enabled: !toggle }) }, {
                 headers: headers
             })
-
-            if(dec2?.token){
-                localStorage.setItem("token", dec2?.token)
-                window.location.reload()
-            }
 
             setToggle(!toggle)
 
@@ -202,8 +205,8 @@ const Threshold = ({ userDetails, authHeader }) => {
 
                                 {!editMode ?
                                     <p className={styles.txt}>
-                                        Transactions up to    {localcur}{cAmount} can be auto-approved.
-                                        Payments above    {localcur}{cAmount} will always require OTP verification for security.
+                                        Transactions up to  {localcur}{cAmount} can be auto-approved.
+                                        Payments above  {localcur}{cAmount} will always require OTP verification for security.
                                     </p> :
                                     <p className={styles.txt}>
                                         You can set maximum threshold amount of {localcur}{maxAmount}.

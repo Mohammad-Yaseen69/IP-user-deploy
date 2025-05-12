@@ -33,7 +33,7 @@ const QrQuickerPay = () => {
   const [completed, setCompleted] = useState(false)
   const [status, setStatus] = useState(false)
   const [recipientDets, setRecipientDets] = useState({})
-  const [width, setWidth] = useState("50%")
+  const [width, setWidth] = useState("16%")
 
   useEffect(() => {
     const getWalletDetails = async () => {
@@ -81,7 +81,6 @@ const QrQuickerPay = () => {
       };
 
       setFeeData(exchange_rate_details);
-      toast.success("Fee details fetched successfully");
     } catch (error) {
       const dec = decryptData(error?.response?.data?.data);
       if (typeof dec?.message === "object") {
@@ -180,11 +179,6 @@ const QrQuickerPay = () => {
   }
 
 
-  useEffect(() => {
-    if (amount.length === 3) {
-      setWidth("50%")
-    }
-  }, [amount])
   const handleBiometricVerification = async () => {
     try {
       setIsPressed(true)
@@ -304,8 +298,7 @@ const QrQuickerPay = () => {
     const value = e.target.value;
     setAmount(value);
 
-    // Calculate width: start at 50%, +4% for each char above 3, max 75%
-    let base = 50;
+    let base = 16;
     let extra = Math.max(0, value.length - 3) * 4;
     let total = Math.min(base + extra, 75);
     setWidth(`${total}%`);
@@ -367,7 +360,7 @@ const QrQuickerPay = () => {
               <input
                 type="text"
                 value={amount}
-                style={{ width: width }}
+                style={{ width }}
                 onChange={handleAmountChange}
                 onKeyUp={handleKeyUp}
                 onBlur={handleBlur}

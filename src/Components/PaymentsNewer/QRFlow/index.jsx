@@ -37,6 +37,7 @@ import QRRecipientMobile from "../Mobile/QRRecipient"
 import MobileWalletServices from "../InternationalFlow/MobileWalletServices";
 import { createShambeToken } from "../../../Helper/CreateToken";
 import NotFoundModal from "../../NotFound/NotFoundModal";
+import { cleanString } from "../../../Helper/cleanString";
 
 const leftSideContent = [
     "Choose the beneficiary!",
@@ -209,11 +210,11 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                     "receiver_wallet_id": data.beneficiary_wallet?.wallet_id,
                     "sender_wallet_id": data.payment_type?.value !== "wallet" ? data.currency?._id : data?.wallet?._id,
                     "purpose": data.reason,
-                    "amount": Number(data.recipient_amount),
+                    "amount": Number(cleanString(data.recipient_amount)),
                     "type": "instant",
                     "payment_type": "qr_pay",
                     'description': data.comment,
-                    "token": data.payment_type?.value === "paypal" ? data.exchange_rate?.token : ""
+                    "token": data.exchange_rate?.token
                 },
                 type: codeType || data.codeType
             }
@@ -225,7 +226,12 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             })
 
             const dec = decryptData(res.data.data)
-            dataHandler("showOtpModal", true)
+            if (!dec?.skipOtp) {
+                dataHandler("showOtpModal", true)
+            }
+            else {
+                data.payment_type?.value === "card" ? initiateCardPayment("1222", dec?.token) : data.payment_type?.value === "paypal" ? initiatePaypalPayment("1222", dec?.token) : verifyOtp("1222", dec?.token)
+            }
             dataHandler("otp_token", dec?.token)
         } catch (error) {
             const decrypted = decryptData(error.response.data.data)
@@ -236,7 +242,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
     }
 
 
-    const verifyOtp = async (otp) => {
+    const verifyOtp = async (otp, token) => {
         dataHandler("loading", true)
         try {
             const payload = new FormData()
@@ -245,7 +251,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             });
             payload.append("type", data.codeType)
             payload.append("otp", otp)
-            payload.append("token", data.otp_token)
+            payload.append("token", token || data.otp_token)
 
             console.log(data.new_amoount)
             const urlEnds = data.payment_duration?.value === "instant" ? "insta-wallet-to-wallet" : data.payment_duration?.value === "subscription" ? "subscribe-payment-w2w" : "schedule-payment-w2w"
@@ -279,7 +285,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
         }
     }
     const [showCardModal, setShowCardModal] = useState(false)
-    const initiateCardPayment = async (otp) => {
+    const initiateCardPayment = async (otp, token) => {
         dataHandler("loading", true)
         try {
             let payload;
@@ -294,7 +300,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                         type: "instant",
                         body: {
                             otp: otp,
-                            token: data.otp_token
+                            token: token || data.otp_token
                         }
                     }
                 }
@@ -313,7 +319,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                         type: "instant",
                         body: {
                             otp: otp,
-                            token: data.otp_token
+                            token: token || data.otp_token
                         },
                     }
                 }
@@ -356,11 +362,11 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
         }
     }
 
-    const initiatePaypalPayment = async (otp) => {
+    const initiatePaypalPayment = async (otp, token) => {
         dataHandler("loading", true)
         try {
             const payload = {
-                token: data.otp_token,
+                token: token || data.otp_token,
                 otp: otp,
                 type: data.codeType,
             }
@@ -490,7 +496,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                 }
             }
 
-            if(exchange_rate_details.receiver?.amount ){
+            if (exchange_rate_details.receiver?.amount) {
                 dataHandler("recipient_amount", exchange_rate_details.receiver?.amount)
             }
 
@@ -829,7 +835,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                                                     }}>{Number(data?.exchange_rate?.paypal?.paypal_converted?.value)} USD</strong>
                                                                                 </div>
                                                                             </div>
-                                                                        </> 
+                                                                        </>
                                                                         :
                                                                         ""
                                                                 }

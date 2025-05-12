@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next"
 import styles from "./styles/feescomp.module.css"
 import { Info } from "react-feather"
+import { cleanString } from "../../../Helper/cleanString"
 
 const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Exchange Rate", feesLabel = "Transfer Fees", totalLabel = "Total Amount", error = "", receiverLabel = "They Receive", bright = false, extraContent }) => {
     const { t } = useTranslation()
@@ -18,7 +19,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                     &&
                     <div className={styles.item}>
                         <span>{t(sendingLabel)}</span>
-                        <p>{Number(typeof data?.exchange_rate?.sending?.amount === "string" ? data?.exchange_rate?.sending?.amount : data?.exchange_rate?.sending?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} {data.exchange_rate?.sending?.currency}</p>
+                        <p>{Number(cleanString(data?.exchange_rate?.sending?.amount))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} {data.exchange_rate?.sending?.currency}</p>
                     </div>
                 }
                 {
@@ -26,7 +27,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                     &&
                     <div className={styles.item}>
                         <span>{t(receiverLabel)}</span>
-                        <p>{Number(data?.exchange_rate?.receiver?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} {data.exchange_rate?.receiver?.currency}</p>
+                        <p>{Number(cleanString(data?.exchange_rate?.receiver?.amount))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} {data.exchange_rate?.receiver?.currency}</p>
                     </div>
                 }
                 {
@@ -56,7 +57,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                     &&
                     <div className={styles.item}>
                         <span>{t(totalLabel)}</span>
-                        <p className={styles.lg}>{Number(data?.exchange_rate?.total ?? 0.00)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} {data.exchange_rate?.total_currency ?? data.exchange_rate?.sending?.currency}</p>
+                        <p className={styles.lg}>{Number(cleanString(data?.exchange_rate?.total) ?? 0.00)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} {data.exchange_rate?.total_currency ?? data.exchange_rate?.sending?.currency}</p>
                     </div>
                 }
                 {

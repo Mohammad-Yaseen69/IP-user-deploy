@@ -295,7 +295,7 @@
         border: 0.572px solid #d4dcf9;
         background: #F8F8F8;
 
-
+      
         span {
             color: #7D7D7D;
             font-size: 12px;
@@ -308,7 +308,8 @@
         div {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
+            justify-content: center;
+            width: fit-content;
 
             p {
                 color: #000;
