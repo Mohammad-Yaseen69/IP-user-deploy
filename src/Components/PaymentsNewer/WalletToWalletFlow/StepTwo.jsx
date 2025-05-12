@@ -265,13 +265,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                                         <img src={er_icon} alt="" />
 
                                         <span>1.00 {data?.currency?.currency?.code} =
-                                            {
-                                                data?.exchange_rate?.exchange_rate
-                                                    ? (data?.exchange_rate?.exchange_rate >= 0.01
-                                                        ? data?.exchange_rate?.exchange_rate.toFixed(2)
-                                                        : Number(data?.exchange_rate?.exchange_rate).toFixed(getDecimalPointIndex(data?.exchange_rate?.exchange_rate)).replace(/\.?0+$/, ''))
-                                                    : "?"
-                                            }
+                                            {data?.exchange_rate?.exchange_rate ?? "?"}
                                             {data?.exchange_rate?.receiver?.currency ?? ""}
                                         </span>
                                     </div>
@@ -349,21 +343,13 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
                                 <span>{t("Exchange rate")}</span>
                                 <span>1.00 {data?.currency?.currency?.code} =
-                                    {
-                                        data?.exchange_rate?.exchange_rate
-                                            ? (data?.exchange_rate?.exchange_rate >= 0.01
-                                                ? data?.exchange_rate?.exchange_rate.toFixed(2)
-                                                : Number(data?.exchange_rate?.exchange_rate).toFixed(getDecimalPointIndex(data?.exchange_rate?.exchange_rate)).replace(/\.?0+$/, ''))
-                                            : "?"
-                                    }
+                                    {data?.exchange_rate?.exchange_rate ?? "?"}
+                                    {" "}
                                     {data?.exchange_rate?.receiver?.currency ?? ""}
                                 </span>
                             </div>
                     }
-                    {/* <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
-                        <span>{t("Transfer fees")}</span>
-                        <span>{Number(data?.exchange_rate?.fee?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? "0.00"} {data?.currency?.currency?.code} </span>
-                    </div> */}
+                 
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
                         <span>{t("Estimated time")}</span>
                         <span>{t("Within minutes")}</span>
@@ -373,7 +359,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                         &&
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
                             <strong>{t("Total to pay")}</strong>
-                            <strong>{Number(data.exchange_rate?.total)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data.currency?.currency?.code} </strong>
+                            <strong>{Number(data.exchange_rate?.total.replace(",", ""))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data.currency?.currency?.code} </strong>
                             {/* <strong>{Number(data.exchange_rate?.total)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data.currency?.currency?.code} </strong> */}
                         </div>
                     }

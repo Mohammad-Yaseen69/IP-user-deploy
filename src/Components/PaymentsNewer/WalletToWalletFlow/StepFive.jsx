@@ -37,7 +37,7 @@ const StepFive = ({ data, sending_currency = "", showMid = true }) => {
         <div className={styles.container}>
             <h4>{data.beneficiary?.first_name ?? data.beneficiary?.firstName ?? data.beneficiary?.user?.first_name} {data?.beneficiary?.last_name ?? data.beneficiary?.lastName ?? data?.beneficiary?.user?.last_name}</h4>
             <div className={styles.receiver_amount}>
-                <h5>{Number(data.exchange_rate?.receiver?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
+                <h5>{Number(data.exchange_rate?.receiver?.amount?.replace(",", ""))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
                 <h5>{data.exchange_rate?.receiver?.currency}</h5>
             </div>
             <div className={styles.exchange_rate_details}>

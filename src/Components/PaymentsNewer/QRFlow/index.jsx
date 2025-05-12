@@ -692,6 +692,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                             showDesc={sendPaymentType === "qr_pay"}
                             active={sendPaymentType === "qr_pay"}
                             sendPaymentType={sendPaymentType}
+                            shrinkWidth={data.step === 4 && data.payment_type?.value === "wallet"}
                         />
                         {
                             sendPaymentType === "qr_pay" &&

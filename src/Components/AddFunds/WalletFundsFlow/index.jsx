@@ -476,6 +476,7 @@ const WalletFundsFlow = ({ setAction }) => {
                             style={{
                                 width: "100%",
                                 transition: "500ms",
+                                minHeight: "auto"
                             }}
                         >
                             <div className={styles.left}>

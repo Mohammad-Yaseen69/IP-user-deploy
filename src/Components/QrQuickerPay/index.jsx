@@ -59,12 +59,13 @@ const QrQuickerPay = () => {
 
   const getFeeDetails = async (sender_wallet_id, from, tokenApi, account_id, level) => {
     const apiHeaders = {
-      "Authorization": `Bearer ${tokenApi}`,
+      "Authorization": `Bearer ${tokenApi || token}`,
       "source": "user"
     }
+    setFeeData({})
 
     try {
-      const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${recipientDets?.currency?.code}&amount=${Number(amount?.toString()?.replace(",", ""))}&payment_method=request&account_id=${account_id}&type=qr_pay&receiver_wallet_id=${recipientDets._id}&sender_wallet_id=${sender_wallet_id}&payment_type=wallet&level_id=${level}`;
+      const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from || userDetails?.walletDetails?.currency?.code}&to=${recipientDets?.currency?.code}&amount=${Number(amount?.toString()?.replace(",", ""))}&payment_method=request&account_id=${account_id || userDetails?._id}&type=qr_pay&receiver_wallet_id=${recipientDets._id}&sender_wallet_id=${sender_wallet_id || userDetails?.walletDetails?._id}&payment_type=wallet&level_id=${level || userDetails?.level_id}`;
       const res = await axios.get(url, { headers: apiHeaders });
       const dec = decryptData(res.data.data);
 
@@ -150,7 +151,7 @@ const QrQuickerPay = () => {
           "type": "instant",
           "payment_type": "qr_pay",
           "description": "",
-          "token": feeData.token
+          "token": feeData?.token
         },
         "type": "authenticator",
         "auth_type": "biometric"
@@ -481,6 +482,7 @@ const QrQuickerPay = () => {
                   handleBiometricVerification()
                 }
                 else {
+                  getFeeDetails()
                   setStep(prev => prev + 1)
                 }
               }

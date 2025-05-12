@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import styles from "../styles/SendActionCard.module.scss"
 
-const SendActionCard = ({ bg, title, icon, desc, setter, setterValue, showDesc, active, sendPaymentType, right = "-20%" }) => {
+const SendActionCard = ({ bg, title, icon, desc, setter, setterValue, showDesc, active, sendPaymentType, right = "-20%", shrinkWidth }) => {
     const [winWidth, setWinWidth] = useState(window.innerWidth)
 
     const windowResizeHandler = () => {
@@ -21,11 +21,10 @@ const SendActionCard = ({ bg, title, icon, desc, setter, setterValue, showDesc, 
                 sendPaymentType
                     ?
                     {
-                        width: active ? winWidth > 1500 ? "fit-content" : "300px" : winWidth > 1500 ? "150px" : "120px",
+                        width: shrinkWidth ? "230px" : (active ? winWidth > 1500 ? "fit-content" : "300px" : winWidth > 1500 ? "150px" : "120px"),
                         aspectRatio: active ? "339/541" : "170/541",
                         height: "100%",
-                        minWidth: active ? "300px" : "unset"
-                    }
+                        minWidth: shrinkWidth ? "230px" : (active ? "300px" : "unset"),}
                     :
                     {
                         aspectRatio: "339/541",

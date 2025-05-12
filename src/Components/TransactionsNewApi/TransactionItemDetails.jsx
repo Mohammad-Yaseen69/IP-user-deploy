@@ -151,7 +151,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                                                                 ?
                                                                                 `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)?.[0]
                                                                                 :
-                                                                                `${internationalReceiver?.first_name} ${internationalReceiver?.last_name}`.slice(0, 20)?.[0]
+                                                                                `${internationalReceiver?.first_name ?? item?.account?.user?.first_name} ${internationalReceiver?.last_name?? item?.account?.user?.last_name}`.slice(0, 20)?.[0]
                                                             }
                                                         </>
                                                         :
@@ -195,7 +195,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                                                                     ?
                                                                                     `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`
                                                                                     :
-                                                                                    `${internationalReceiver?.first_name ?? item.receiverCard?.account?.first_name} ${internationalReceiver?.last_name ?? item.receiverCard?.account?.first_name}`
+                                                                                    `${internationalReceiver?.first_name ?? item.receiverCard?.account?.first_name?? item?.account?.user?.first_name} ${internationalReceiver?.last_name ?? item.receiverCard?.account?.first_name?? item?.account?.user?.last_name}`
                                                                     }
                                                                 </>
                                                                 :

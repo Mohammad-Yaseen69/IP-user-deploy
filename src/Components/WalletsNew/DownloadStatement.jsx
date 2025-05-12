@@ -212,7 +212,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
                                                     ?
                                                     `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)
                                                     :
-                                                    `${internationalReceiver?.first_name} ${internationalReceiver?.last_name}`.slice(0, 20)
+                                                    `${internationalReceiver?.first_name?? item?.account?.user?.first_name} ${internationalReceiver?.last_name?? item?.account?.user?.last_name}`.slice(0, 20)
 
                                     :
                                     item?.service_type === "topup"
