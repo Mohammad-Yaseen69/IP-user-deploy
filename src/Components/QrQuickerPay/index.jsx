@@ -20,6 +20,7 @@ import { ArrowLeft } from "react-feather"
 import countriesData from "../PaymentsNewer/CountriesData.json"
 import InstaPayLoader from "../Loader"
 import { getDecimalPointIndex } from "../../Helper/getDecimalIndex"
+import useWindowWidth from "../../utils/useWindowWidth"
 
 const QrQuickerPay = () => {
   const [step, setStep] = useState(1)
@@ -36,6 +37,7 @@ const QrQuickerPay = () => {
   const [width, setWidth] = useState("16%")
   const [showModal, setShowModal] = useState(false)
   const [error, setError] = useState("")
+  const windowWidth = useWindowWidth()
 
   useEffect(() => {
     const getWalletDetails = async () => {
@@ -67,8 +69,10 @@ const QrQuickerPay = () => {
     }
     setFeeData({})
 
+    console.log(Number(amount?.replace(",", "")))
+
     try {
-      const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from || userDetails?.walletDetails?.currency?.code}&to=${recipientDets?.currency?.code}&amount=${Number(amount?.toString()?.replace(",", ""))}&payment_method=request&account_id=${account_id || userDetails?._id}&type=qr_pay&receiver_wallet_id=${recipientDets._id}&sender_wallet_id=${sender_wallet_id || userDetails?.walletDetails?._id}&payment_type=wallet&level_id=${level || userDetails?.level_id}`;
+      const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from || userDetails?.walletDetails?.currency?.code}&to=${recipientDets?.currency?.code}&amount=${Number(amount?.toString()?.replaceAll(",", ""))}&payment_method=request&account_id=${account_id || userDetails?._id}&type=qr_pay&receiver_wallet_id=${recipientDets._id}&sender_wallet_id=${sender_wallet_id || userDetails?.walletDetails?._id}&payment_type=wallet&level_id=${level || userDetails?.level_id}`;
       const res = await axios.get(url, { headers: apiHeaders });
       const dec = decryptData(res.data.data);
 
@@ -153,7 +157,7 @@ const QrQuickerPay = () => {
           "receiver_wallet_id": recipientDets?.wallet_id,
           "sender_wallet_id": userDetails?.walletDetails?._id,
           "purpose": "OTHERS",
-          "amount": Number(amount?.toString()?.replace(",", "")),
+          "amount": Number(amount?.toString()?.replaceAll(",", "")),
           "type": "instant",
           "payment_type": "qr_pay",
           "description": "",
@@ -317,7 +321,7 @@ const QrQuickerPay = () => {
 
     let base = 16;
     let extra = Math.max(0, value.length - 3) * 4;
-    let total = Math.min(base + extra, 75);
+    let total = Math.min(base + extra, 90);
     setWidth(`${total}%`);
   };
 
@@ -345,16 +349,23 @@ const QrQuickerPay = () => {
   return (
     <div style={{ position: 'relative' }} className={styles.cont}>
 
-      <Modal isOpen={showModal}>
+      <Modal isOpen={true}>
         <ModalBody>
           <h2 style={{ color: "red" }}>
             Oops!
           </h2>
           <p style={{ fontWeight: 600, fontSize: "15px", color: "#6f6f6f" }}>{error}</p>
 
-          <button onClick={() => navigate(`/q/${wallet_id}?login_flow=true`)} style={{ background: "#ff4b4b", color: "#fff", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600, marginTop: "2rem" }}>
-            Login and Continue
-          </button>
+          <div style={{ display: "flex", gap: "10px", flexDirection: windowWidth < 400 && "column", marginTop: "2rem" }}>
+            {error.toLowerCase().includes("inactive") &&
+              <button onClick={() => setStep(1)} style={{ background: "#5926f0", color: "#fff", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600 }}>
+                Change Amount
+              </button>
+            }
+            <button onClick={() => navigate(`/q/${wallet_id}?login_flow=true`)} style={{ background: "#ff4b4b", color: "#fff", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600 }}>
+              Login and Continue
+            </button>
+          </div>
         </ModalBody>
       </Modal>
 
@@ -396,17 +407,17 @@ const QrQuickerPay = () => {
 
         {step !== 1 && <span className={styles.label}>Recipient Details:</span>}
         <div style={{ margin: step !== 1 && "0 0 20px 0" }} className={styles.infoBox}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", width: "100%" }}>
             <img style={{ height: "48px", borderRadius: "100%" }} src={recipientDets?.profilePicture} alt="" />
-            <div>
-              <h5>{recipientDets?.name}</h5>
+            <div style={{ width: "100%" }}>
+              <h5 style={{ textAlign: "left", fontSize: recipientDets?.name?.length > 20 && "smaller" }}>{recipientDets?.name}</h5>
               <span>@{recipientDets?.username}</span>
-              <span><img style={{ width: "20px", height: "20px", borderRadius: "0" }} src={recipientDets.file} alt="" /> {recipientDets?.country}</span>
+              <div style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span><img style={{ width: "20px", height: "20px", borderRadius: "0" }} src={recipientDets.file} alt="" /> {recipientDets?.country}</span>
+                <p onClick={() => navigate(`/profile/${recipientDets?.username}`)} style={{ marginBottom: "0", fontWeight: 600, color: "#5926f0", cursor: "pointer" }}>View Profile</p>
+              </div>
             </div>
           </div>
-
-
-          <p onClick={() => navigate(`/profile/${recipientDets?.username}`)} style={{ marginBottom: "0", fontWeight: 600, color: "#5926f0", cursor: "pointer" }}>View Profile</p>
         </div>
 
         {step === 1 &&
@@ -526,8 +537,8 @@ const QrQuickerPay = () => {
           </button>
         }
         {step === 1 &&
-          <p onClick={() => navigate(`/q/${wallet_id}?login_flow=true`)} style={{ marginTop: "10px", fontWeight: 600, fontSize: "12px", cursor: "pointer", textAlign: "center", color: "#000" }}>
-            Quicker QR pay not active?<br /> login and continue.
+          <p onClick={() => navigate(`/q/${wallet_id}?login_flow=true`)} style={{ marginTop: "10px", fontWeight: 600, fontSize: "12px", cursor: "pointer", textAlign: "center", color: "#5926f0" }}>
+            Quicker QR pay not active? login and continue.
           </p>
         }
       </div>
