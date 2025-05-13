@@ -88,7 +88,7 @@ const QrQuickerPay = () => {
       };
 
 
-      if (dec?.localStorage === false && phone && password) {
+      if (dec?.localStorage === false) {
         localStorage.setItem("phoneNumber", phone)
       }
       setFeeData(exchange_rate_details);

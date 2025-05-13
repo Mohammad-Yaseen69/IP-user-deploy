@@ -61,8 +61,8 @@ function reducer(state, action) {
         ...state,
         [action.field]: action.value
       };
-    case "RESET" : 
-      return initialState  
+    case "RESET":
+      return initialState
     default:
       return state;
   }
@@ -195,11 +195,11 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
     }
   }, [userDetails])
 
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
   const handleClose = () => {
     // navigate("/my-mastercard")
-    if((data.step === 5 || data.step === 6) && data.feeDetails?.total_amount){
+    if ((data.step === 5 || data.step === 6) && data.feeDetails?.total_amount) {
       setCurrentCardDetails(prev => ({
         ...prev,
         balance: (prev.balance - data.feeDetails?.total_amount?.replace(/,/g, "")).toFixed(2)
@@ -341,7 +341,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
         Back
       </button>
       <button style={{ opacity: data.disabled && .5 }} disabled={data.disabled} onClick={handleNext} className={styles.continue}>
-        Verify & Continue
+        {data.step === 4 ? "Proceed to Payment" : data.step === 5 ? "I Agree" : "Verify & Continue"}
       </button>
     </div>
   )
@@ -465,45 +465,57 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
           :
           <div style={{ width: "100%", display: "flex", flexDirection: width < 1000 ? "column" : "", minHeight: width > 1000 ? "700px" : "91vh" }}>
             <div style={{ display: width < 1000 && "none" }} className={styles.left}>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "20px" }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "7px " }}>
                 <h3 className={styles.label}>Send Money</h3>
                 <h2 className={styles.head}>{data.sideText}</h2>
               </div>
 
 
+              <div style={{ width: "100%" }}>
 
-              {data.step === 2 && (
-                <div className={styles.cardChange}>
-                  <div>
-                    <p>Pay from</p>
-                    <span>
-                      Change
-                    </span>
+                {data.step === 4 &&
+                  (<div className={styles.terms}>
+                    <p>
+                      By clicking "Confirm", you are agreeing to our <a rel='noreferrer' href="https://insta-pay.ch/terms-and-conditions" target='_blank'>terms and conditions.</a>
+                    </p>
                   </div>
-
-                  <div>
-                    <img src={card?.type === "premium_plus" ? PremiumLabel : StandardLabel} alt="" />
+                  )}
+                {data.step === 2 && (
+                  <div className={styles.cardChange}>
+                    <div>
+                      <p>Pay from</p>
+                      <span>
+                        Change
+                      </span>
+                    </div>
 
                     <div>
-                      <div>
-                        <p>{card?.type === "premium_plus" ? "Premium" : ""}</p>
-                        <span>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="19" height="12" viewBox="0 0 19 12" fill="none">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M7.00635 10.321H11.8271V1.67969H7.00635V10.321Z" fill="#FF5F00" />
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M7.31092 6.00006C7.31092 4.24694 8.13381 2.68556 9.4152 1.6794C8.47799 0.943437 7.29562 0.504395 6.0104 0.504395C2.96784 0.504395 0.501465 2.96493 0.501465 6.00006C0.501465 9.03519 2.96784 11.4957 6.0104 11.4957C7.29562 11.4957 8.47799 11.0567 9.4152 10.3207C8.13381 9.3144 7.31092 7.75318 7.31092 6.00006Z" fill="#EB001B" />
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M18.1572 9.40554V9.19228H18.1014L18.0373 9.33898L17.973 9.19228H17.9171V9.40554H17.9565V9.24464L18.0168 9.38341H18.0576L18.1179 9.24434V9.40554H18.1572ZM17.8036 9.40554V9.22861H17.8752V9.19258H17.6931V9.22861H17.7646V9.40554H17.8036ZM18.3293 6.00006C18.3293 9.03519 15.8627 11.4957 12.8203 11.4957C11.5351 11.4957 10.3526 11.0567 9.41553 10.3207C10.6969 9.31456 11.5198 7.75318 11.5198 6.00006C11.5198 4.2471 10.6969 2.68572 9.41553 1.6794C10.3526 0.943437 11.5351 0.504395 12.8203 0.504395C15.8627 0.504395 18.3293 2.96493 18.3293 6.00006Z" fill="#F79E1B" />
-                          </svg>
-                        </span>
-                      </div>
+                      <img src={card?.type === "premium_plus" ? PremiumLabel : StandardLabel} alt="" />
 
                       <div>
-                        <h4>{formatAmountWithSymbol(data.feeDetails?.total_amount?.replace(/,/g, "") ? (currentCardDetails?.balance - data.feeDetails?.total_amount?.replace(/,/g, "")).toFixed(2) : currentCardDetails?.balance, card?.currency)}</h4>
-                        <h4>{card?.last4?.slice(-8)}</h4>
+                        <div>
+                          <p>{card?.type === "premium_plus" ? "Premium" : ""}</p>
+                          <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="12" viewBox="0 0 19 12" fill="none">
+                              <path fill-rule="evenodd" clip-rule="evenodd" d="M7.00635 10.321H11.8271V1.67969H7.00635V10.321Z" fill="#FF5F00" />
+                              <path fill-rule="evenodd" clip-rule="evenodd" d="M7.31092 6.00006C7.31092 4.24694 8.13381 2.68556 9.4152 1.6794C8.47799 0.943437 7.29562 0.504395 6.0104 0.504395C2.96784 0.504395 0.501465 2.96493 0.501465 6.00006C0.501465 9.03519 2.96784 11.4957 6.0104 11.4957C7.29562 11.4957 8.47799 11.0567 9.4152 10.3207C8.13381 9.3144 7.31092 7.75318 7.31092 6.00006Z" fill="#EB001B" />
+                              <path fill-rule="evenodd" clip-rule="evenodd" d="M18.1572 9.40554V9.19228H18.1014L18.0373 9.33898L17.973 9.19228H17.9171V9.40554H17.9565V9.24464L18.0168 9.38341H18.0576L18.1179 9.24434V9.40554H18.1572ZM17.8036 9.40554V9.22861H17.8752V9.19258H17.6931V9.22861H17.7646V9.40554H17.8036ZM18.3293 6.00006C18.3293 9.03519 15.8627 11.4957 12.8203 11.4957C11.5351 11.4957 10.3526 11.0567 9.41553 10.3207C10.6969 9.31456 11.5198 7.75318 11.5198 6.00006C11.5198 4.2471 10.6969 2.68572 9.41553 1.6794C10.3526 0.943437 11.5351 0.504395 12.8203 0.504395C15.8627 0.504395 18.3293 2.96493 18.3293 6.00006Z" fill="#F79E1B" />
+                            </svg>
+                          </span>
+                        </div>
+
+                        <div>
+                          <h4>{formatAmountWithSymbol(data.feeDetails?.total_amount?.replace(/,/g, "") ? (currentCardDetails?.balance - data.feeDetails?.total_amount?.replace(/,/g, "")).toFixed(2) : currentCardDetails?.balance, card?.currency)}</h4>
+                          <h4>{card?.last4?.slice(-8)}</h4>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
+
+                <span onClick={handleClose} style={{ fontWeight: 600, cursor: "pointer", marginTop: "12px", display: "block" }}>Cancel</span>
+              </div>
+
             </div>
 
             <div className={styles.right} style={{ display: "flex", flexDirection: "column", padding: width < 1000 && "0px", gap: width < 1000 && "30px" }}>
@@ -609,7 +621,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                       <h3>Transaction Note</h3>
                       <div style={{ position: "relative" }}>
-                        <textarea value={data.note} onChange={(e) => updateHandler("note", e.target.value)} placeholder='type here..' name="" id=""></textarea>
+                        <textarea value={data.note} onChange={(e) => updateHandler("note", e.target.value)} placeholder='Type here..' name="" id=""></textarea>
                         <span>
                           0/200
                         </span>
@@ -678,7 +690,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
                 }
 
                 {data.step === 5 &&
-                  <div className={styles.noticeDiv}>
+                  <div style={{ gap: "25px" }} className={styles.noticeDiv}>
                     <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                       <svg xmlns="http://www.w3.org/2000/svg" width="49" height="48" viewBox="0 0 49 48" fill="none">
                         <path d="M24.1519 18V26M24.1519 34H24.1719M21.3825 7.78342L4.93272 36.1967C4.02031 37.7726 3.5641 38.5606 3.63153 39.2074C3.69034 39.7715 3.98588 40.2841 4.4446 40.6176C4.97051 41 5.88104 41 7.70209 41H40.6016C42.4227 41 43.3332 41 43.8591 40.6176C44.3178 40.2841 44.6134 39.7715 44.6722 39.2074C44.7396 38.5606 44.2834 37.7726 43.371 36.1967L26.9212 7.78341C26.0121 6.21309 25.5575 5.42793 24.9645 5.16422C24.4471 4.93419 23.8566 4.93419 23.3393 5.16422C22.7462 5.42793 22.2916 6.21309 21.3825 7.78342Z" stroke="#6039CD" stroke-width="4" stroke-linecap="round" />
@@ -688,7 +700,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
 
                     <div>
                       <p>{t("By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.")}</p>
-                      <p style={{ marginTop: "8px" }}>{t("I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.")}</p>
+                      <p style={{ marginTop: "8px", marginBottom: "0" }}>{t("I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.")}</p>
                     </div>
                   </div>
                 }

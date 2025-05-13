@@ -419,11 +419,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                                     <Toggle checked={checks.cardStatus} onChange={() => handleToggle("cardStatus")} isCheckbox={false} />
                                 </div>
-                                <div className={styles.iconBox}>
-                                    <img src={Lock} alt="" />
-                                    <span>Pin Management</span>
-                                </div>
-                                <div className={styles.iconBox}>
+                                <div style={{cursor: "pointer"}} className={styles.iconBox}>
                                     <img src={Freeze} alt="" />
                                     <span>Freeze Card</span>
                                 </div>
@@ -438,6 +434,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                                 navigate("/my-mastercard?addFundsMobile=true")
                                             }
                                         }}
+                                        style={{cursor: "pointer"}}
                                         className={styles.iconBox}
                                     >
                                         <img src={plus} alt="" />
@@ -450,6 +447,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                                 navigate("/my-mastercard?ctcMobile=true")
                                             }
                                         }}
+                                        style={{cursor: "pointer"}}
                                         className={styles.iconBox}
                                     >
                                         <img src={CreditCardR} alt="" />
@@ -457,11 +455,11 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     </div>
                                 </div>
                                 <div style={{ display: "flex", flexDirection: "column", gap: '12px', justifyContent: "center", flex: 1 }}>
-                                    <div className={styles.iconBox}>
+                                    <div style={{cursor: "pointer"}} className={styles.iconBox}>
                                         <img src={Wallet2} alt="" />
                                         <span>Card to Wallet Transfer</span>
                                     </div>
-                                    <div className={styles.iconBox}>
+                                    <div style={{cursor: "pointer"}} className={styles.iconBox}>
                                         <img src={FileDown} alt="" />
                                         <span>Download Statement</span>
                                     </div>
