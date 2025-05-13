@@ -19,6 +19,7 @@ import { formatCurrency } from "../../Helper/AmountFormat"
 import { ArrowLeft } from "react-feather"
 import countriesData from "../PaymentsNewer/CountriesData.json"
 import InstaPayLoader from "../Loader"
+import { getDecimalPointIndex } from "../../Helper/getDecimalIndex"
 
 const QrQuickerPay = () => {
   const [step, setStep] = useState(1)
@@ -31,8 +32,6 @@ const QrQuickerPay = () => {
   const [showDetsModal, setShowDetsModal] = useState(false)
   const [phone, setPhone] = useState("")
   const [password, setPassword] = useState("")
-  const [completed, setCompleted] = useState(false)
-  const [status, setStatus] = useState(false)
   const [recipientDets, setRecipientDets] = useState({})
   const [width, setWidth] = useState("16%")
   const [showModal, setShowModal] = useState(false)
@@ -84,6 +83,10 @@ const QrQuickerPay = () => {
         token: dec?.data?.token ?? ""
       };
 
+
+      if (dec?.localStorage && phone && password) {
+        localStorage.setItem("phoneNumber", phone)
+      }
       setFeeData(exchange_rate_details);
     } catch (error) {
       const dec = decryptData(error?.response?.data?.data);
@@ -132,8 +135,8 @@ const QrQuickerPay = () => {
     })
 
     const dec = decryptData(res.data.data)
-    setCompleted(true)
-    setStatus(dec?.status)
+    // setCompleted(true)
+    // setStatus(dec?.status)
     setStep(prev => prev + 1)
     console.log(dec)
   }
@@ -189,20 +192,18 @@ const QrQuickerPay = () => {
   const handleBiometricVerification = async () => {
     try {
       setIsPressed(true)
-      
+      const localPhone = localStorage.getItem("phoneNumber");
+
       const payload = {
         qr_quicker_pay: true
       }
       if (phone && password) {
         payload.phone = phone;
         payload.password = password;
-      } else {
-        const localPhone = localStorage.getItem("phoneNumber");
-        const localPassword = localStorage.getItem("password");
-        if (localPhone && localPassword) {
-          payload.phone = localPhone;
-          payload.password = localPassword;
-        }
+      }
+      else if (localPhone) {
+        payload.phone = localPhone;
+        payload.localStorage = true;
       }
 
 
@@ -227,10 +228,6 @@ const QrQuickerPay = () => {
         return
       } else {
         setStep(prev => prev + 1)
-        if (phone && password) {
-          localStorage.setItem("phoneNumber", phone)
-          localStorage.setItem("password", password)
-        }
         getFeeDetails(dec2?.user?.walletDetails?._id, dec2?.user?.walletDetails?.currency?.code, dec2?.token, dec2?.user?._id, dec2?.user?.level_id)
         setShowDetsModal(false)
         setToken(dec2.token)
@@ -325,12 +322,24 @@ const QrQuickerPay = () => {
   };
 
 
-  const feeJSX = (label, curr, value, fx, total) => (
-    <div style={{ padding: total && "10px", border: total && "1px solid #00000026", borderRadius: total && "6px" }} className={styles.fee}>
-      <span>{label}</span>
-      <span>{curr} {fx ? value : value.toFixed(2)}</span>
-    </div>
-  )
+  const feeJSX = (label, curr, value, fx, total) => {
+
+    return (
+      <div style={{ padding: total && "10px", border: total && "1px solid #00000026", borderRadius: total && "6px" }} className={styles.fee}>
+        <span>{label}</span>
+        <span>{curr}
+          {
+            fx
+              ?
+              value
+              :
+              value >= 0.01 ? value.toFixed(2) : value.toFixed(getDecimalPointIndex(value))
+          }
+
+        </span>
+      </div>
+    )
+  }
 
 
   return (
