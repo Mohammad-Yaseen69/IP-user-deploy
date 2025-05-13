@@ -349,7 +349,7 @@ const QrQuickerPay = () => {
   return (
     <div style={{ position: 'relative' }} className={styles.cont}>
 
-      <Modal isOpen={true}>
+      <Modal isOpen={showModal}>
         <ModalBody>
           <h2 style={{ color: "red" }}>
             Oops!
