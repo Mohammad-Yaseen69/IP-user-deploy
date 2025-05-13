@@ -207,7 +207,7 @@ const QrQuickerPay = () => {
       }
       else if (localPhone) {
         payload.phone = localPhone;
-        payload.localStorage = true;
+        payload.localstorage = true;
       }
 
 
