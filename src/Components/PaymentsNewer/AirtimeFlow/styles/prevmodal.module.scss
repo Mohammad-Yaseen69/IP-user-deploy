@@ -1,0 +1,142 @@
+.modal {
+    .search {
+        position: relative;
+        width: 100%;
+
+        .svg {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+        }
+
+        input {
+            display: flex;
+            padding: var(--RADIUS-radius-2, 8px) 14px 8px 34px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            align-self: stretch;
+            border-radius: var(--SPACING-spacing-0, 8px);
+            background: #FAFAFA;
+            font-size: 15px;
+            border: none;
+            width: 100%;
+            font-weight: 600;
+        }
+    }
+
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--RADIUS-radius-4, 16px);
+        align-self: stretch;
+        background: #FFF;
+
+        .card {
+            display: flex;
+            padding: 15px 17px;
+            align-items: flex-start;
+            gap: var(--Corner-Radius-XXLarge-Roundness, 24px);
+            align-self: stretch;
+            border-radius: var(--Corner-Radius-Small-Roundness, 8px);
+            background: #FAFAFA;
+            margin-top: 1rem;
+
+            .left {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                flex: 1 0 0;
+
+                h3 {
+                    color: #000;
+                    font-size: 20px;
+                    font-style: normal;
+                    font-weight: 700;
+                    margin-bottom: 20px;
+                }
+
+                h6 {
+                    color: var(--COLORS-Neutral-1000, #333);
+                    margin-bottom: 5px;
+                    font-size: 10px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: 150%;
+                    /* 15px */
+                    letter-spacing: -0.2px;
+                }
+
+                p {
+                    color: var(--COLORS-Neutral-700, #777);
+                    font-family: Manrope;
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: 18px;
+                    /* 150% */
+                }
+
+
+
+                button {
+                    display: flex;
+                    padding: var(--Gaps-Gap-Small, 8px) var(--Gaps-Gap-Medium, 12px);
+                    align-items: center;
+                    gap: var(--Gaps-Gap-Small, 8px);
+                    border-radius: var(--Corner-Radius-XSmall-Roundness, 4px);
+                    border: 0.5px solid #F4F4F4;
+                    background: #F2F2F2;
+                    color: var(--COLORS-Red-100, #FB3748);
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 600;
+                }
+
+            }
+
+            .right {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                width: 300px;
+
+
+                .card {
+                    display: flex;
+                    padding: 5px var(--Corner-Radius-Medium-Roundness, 12px);
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: flex-start;
+                    gap: 4px;
+                    align-self: stretch;
+                    margin-top: 0;
+                    border-radius: var(--Corner-Radius-XSmall-Roundness, 4px);
+                    background: #FFF;
+
+                    span {
+                        color: var(--COLORS-Neutral-1000, #333);
+                        font-size: 10px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: 150%;
+                    }
+
+                    p {
+                        color: var(--COLORS-Neutral-700, #777);
+
+                        /* Small Screen/BodySmall */
+                        font-family: Manrope;
+                        font-size: 12px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: 18px;
+                        margin-bottom: 0px;
+                    }
+                }
+            }
+        }
+    }
+}

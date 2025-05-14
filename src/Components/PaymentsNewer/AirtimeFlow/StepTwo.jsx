@@ -80,6 +80,7 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
 
     return (
         <div className={styles.container}>
+          {data.flow === "airtime" &&
             <div className={styles.banner}>
                 <div className={styles.b_left}>
                     <span>{t("Send Top-up").toUpperCase()}</span>
@@ -89,7 +90,7 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
                     </div>
                 </div>
                 <img src={data.flow === "airtime" ? air_dude : e_dude} alt="" />
-            </div>
+            </div>}
             {data.flow === "airtime" ?
                 loadingCountries
                     ?

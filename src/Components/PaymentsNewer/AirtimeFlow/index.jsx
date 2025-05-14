@@ -32,6 +32,7 @@ import errors from "../../AddFunds/TrustPaymentErrors.json"
 import StepTwoE from "../Esim/StepTwo"
 import StepFourE from "../Esim/StepFour"
 import ReceiptE from "../Esim/Receipt"
+import PrevModal from "./PrevModal";
 
 const initialState = {
     loading: false,
@@ -72,7 +73,8 @@ const initialState = {
         region: "",
         selectedPlan: {},
         phone: "",
-        email: ''
+        email: '',
+        simsModal: false
     }
 }
 
@@ -590,13 +592,17 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                     title="Airtime Failed"
                 />
             }
+            <PrevModal
+                toggle={() => updateEsimHandler("simsModal", false)}
+                isOpen={data.eSimData.simsModal}
+            />
             {
                 window.innerWidth > 1000
                     ?
-                    <div className={styles.main_container}>
+                     <div className={styles.main_container}>
                         {
                             data.error
-                            &&
+                             &&
                             <ErrorModal
                                 heading={data.step === 2 ? "Incorrect Phone Number" : "Transaction Failed"}
                                 isOpen={data.error}
@@ -639,52 +645,60 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                     />
                                 :
                                 <div className={styles.content}>
-                                    <div className={styles.left}>
-                                        {
-                                            data.flow
-                                            &&
-                                            <h1>{t("Send Top-up")}</h1>
-                                        }
-                                        <h2>
-
-                                            {data.flow === "e-sim" ? "eSim"
-                                                :
-                                                <>
-                                                    {
-                                                        data.step === 1
-                                                        &&
-                                                        t("SEND TOP-UP AND E-SIM")
-                                                    }
-                                                    {
-                                                        data.step === 2
-                                                        &&
-                                                        t("Send Top-up")
-                                                    }
-                                                    {
-                                                        data.step === 3
-                                                        &&
-                                                        t("available sunservices")
-                                                    }
-                                                    {
-                                                        data.step === 4
-                                                        &&
-                                                        t("Select Payment Type")
-                                                    }
-                                                    {
-                                                        data.step === 5
-                                                        &&
-                                                        (
-                                                            data.verified
-                                                                ?
-                                                                t("Top-Up Initiated")
-                                                                :
-                                                                t("Top-Up Summary")
-                                                        )
-                                                    }
-
-                                                </>
+                                    <div className={styles.left} style={{ justifyContent: "space-between", padding: "0 1.5rem" }}>
+                                        <div>
+                                            {
+                                                data.flow
+                                                &&
+                                                <h1 style={{ marginBottom: "20px" }}>{t("Send Top-up")}</h1>
                                             }
-                                        </h2>
+                                            <h2>
+
+                                                {data.flow === "e-sim" ? "eSim"
+                                                    :
+                                                    <>
+                                                        {
+                                                            data.step === 1
+                                                            &&
+                                                            t("SEND TOP-UP AND E-SIM")
+                                                        }
+                                                        {
+                                                            data.step === 2
+                                                            &&
+                                                            t("Send Top-up")
+                                                        }
+                                                        {
+                                                            data.step === 3
+                                                            &&
+                                                            t("available sunservices")
+                                                        }
+                                                        {
+                                                            data.step === 4
+                                                            &&
+                                                            t("Select Payment Type")
+                                                        }
+                                                        {
+                                                            data.step === 5
+                                                            &&
+                                                            (
+                                                                data.verified
+                                                                    ?
+                                                                    t("Top-Up Initiated")
+                                                                    :
+                                                                    t("Top-Up Summary")
+                                                            )
+                                                        }
+
+                                                    </>
+                                                }
+                                            </h2>
+                                        </div>
+
+                                        {data.flow === "e-sim" &&
+                                            <div>
+                                                <button onClick={() => updateEsimHandler("simsModal", true)} className={styles.manageBtn}>Manage purchased eSIM</button>
+                                            </div>
+                                        }
                                     </div>
                                     <div className={styles.right} style={data.step === 4 && data.payment_type?.value === "wallet" ? { display: "flex" } : {}}>
                                         {
@@ -842,109 +856,109 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                 <>
                                     <div className={styles.flow}>
                                         {
-                                                <>
-                                                    {
-                                                        data.step === 1
-                                                        &&
-                                                        <StepOne
-                                                            setCurrentFlow={setCurrentFlow} setAction={setAction} setStep={setStep}
+                                            <>
+                                                {
+                                                    data.step === 1
+                                                    &&
+                                                    <StepOne
+                                                        setCurrentFlow={setCurrentFlow} setAction={setAction} setStep={setStep}
+                                                        data={data}
+                                                        dataHandler={updateDataHandler}
+                                                    />
+                                                }
+                                                {
+                                                    data.step === 2
+                                                    &&
+                                                    <StepTwo
+                                                        data={data}
+                                                        dataHandler={updateDataHandler}
+                                                        eSimDataHandler={updateEsimHandler}
+                                                    />
+                                                }
+                                                {
+                                                    data.step === 3
+                                                    &&
+                                                    (data.flow === "airtime" ?
+                                                        <StepThree
+                                                            getPackageDetails={getPackageDetails}
                                                             data={data}
                                                             dataHandler={updateDataHandler}
-                                                        />
-                                                    }
-                                                    {
-                                                        data.step === 2
-                                                        &&
-                                                        <StepTwo
+                                                        /> :
+                                                        <StepTwoE
                                                             data={data}
                                                             dataHandler={updateDataHandler}
-                                                            eSimDataHandler={updateEsimHandler}
+                                                            dataHandlerE={updateEsimHandler}
                                                         />
-                                                    }
-                                                    {
-                                                        data.step === 3
-                                                        &&
-                                                        (data.flow === "airtime" ?
-                                                            <StepThree
-                                                                getPackageDetails={getPackageDetails}
-                                                                data={data}
-                                                                dataHandler={updateDataHandler}
-                                                            /> :
-                                                            <StepTwoE
-                                                                data={data}
-                                                                dataHandler={updateDataHandler}
-                                                                dataHandlerE={updateEsimHandler}
-                                                            />
-                                                        )
-                                                    }
-                                                    {
-                                                        data.step === 4
-                                                        &&
-                                                        (
-                                                            data.showCard
-                                                                ?
-                                                                <div className={styles.card}>
-                                                                    <CreditCard
-                                                                        data={data}
-                                                                        dataHandler={updateDataHandler}
-                                                                        url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-airtime${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}/${data.service_type?.id === 11 && !data.packages?.[0]?.baseAmount ? "fixed" : "hulululu"}`}
-                                                                        tokenUrl={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-airtime${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}/${data.service_type?.id === 11 && !data.packages?.[0]?.baseAmount ? "fixed" : "hulululu"}`}
-                                                                    />
-                                                                    {/* <div className={styles.buttons}>
+                                                    )
+                                                }
+                                                {
+                                                    data.step === 4
+                                                    &&
+                                                    (
+                                                        data.showCard
+                                                            ?
+                                                            <div className={styles.card}>
+                                                                <CreditCard
+                                                                    data={data}
+                                                                    dataHandler={updateDataHandler}
+                                                                    url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-airtime${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}/${data.service_type?.id === 11 && !data.packages?.[0]?.baseAmount ? "fixed" : "hulululu"}`}
+                                                                    tokenUrl={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-airtime${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}/${data.service_type?.id === 11 && !data.packages?.[0]?.baseAmount ? "fixed" : "hulululu"}`}
+                                                                />
+                                                                {/* <div className={styles.buttons}>
                                                             <button disabled={data.loading} onClick={() => updateDataHandler("step", 3)} className={styles.trs}>{t("Back")}</button>
                                                             <button disabled={data.loading || !data.payment_type?.name} onClick={() => updateDataHandler("step", 5)}>
                                                                 {t("Next")}
                                                                 <ChevronRight color="white" size={17} />
                                                             </button>
                                                         </div> */}
-                                                                </div>
-                                                                :
-                                                                <StepFour
-                                                                    getPackageDetails={getPackageDetails}
-                                                                    data={data}
-                                                                    updateDataHandler={updateDataHandler}
-                                                                />
-                                                        )
-                                                    }
-                                                    {
-                                                        data.step === 5
-                                                        &&
-                                                        <>
-                                                            {
-                                                                data.flow === "airtime" ?
-                                                                    <StepFive
-                                                                        data={data}
-                                                                        dataHandler={updateDataHandler}
-                                                                        createTransaction={createTransaction}
-                                                                    /> :
-                                                                    <StepFourE
-                                                                        data={data}
-                                                                        dataHandler={updateDataHandler}
-                                                                        dataHandlerE={updateEsimHandler}
-                                                                    />
-                                                            }
-                                                            {otpConfirmJSX()}
-                                                        </>
-                                                    }
-                                                    {data.step === 6 && (
-                                                        <>
-                                                            <ReceiptE
+                                                            </div>
+                                                            :
+                                                            <StepFour
+                                                                getPackageDetails={getPackageDetails}
                                                                 data={data}
-                                                                dataHandler={updateDataHandler}
-                                                                createTransaction={createTransaction}
+                                                                updateDataHandler={updateDataHandler}
                                                             />
+                                                    )
+                                                }
+                                                {
+                                                    data.step === 5
+                                                    &&
+                                                    <>
+                                                        {
+                                                            data.flow === "airtime" ?
+                                                                <StepFive
+                                                                    data={data}
+                                                                    dataHandler={updateDataHandler}
+                                                                    createTransaction={createTransaction}
+                                                                /> :
+                                                                <StepFourE
+                                                                    data={data}
+                                                                    dataHandler={updateDataHandler}
+                                                                    dataHandlerE={updateEsimHandler}
+                                                                />
+                                                        }
+                                                        {otpConfirmJSX()}
+                                                    </>
+                                                }
+                                                {data.step === 6 && (
+                                                    <>
+                                                        <ReceiptE
+                                                            data={data}
+                                                            dataHandler={updateDataHandler}
+                                                            createTransaction={createTransaction}
+                                                        />
 
 
-                                                            {otpConfirmJSX()}
-                                                        </>
-                                                    )}
-                                                </>
+                                                        {otpConfirmJSX()}
+                                                    </>
+                                                )}
+                                            </>
                                         }
                                     </div>
                                     {/* {
                             data.step > 1
                             && */}
-                                    { (data.flow !== "e-sim" || data.step === 1) &&
+                                    {(data.flow !== "e-sim" || data.step === 1) &&
                                         <div className={styles.bottom}>
                                             <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
                                                 <HelpCircle size={16} />

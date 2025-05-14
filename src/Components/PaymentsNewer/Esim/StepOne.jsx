@@ -27,7 +27,7 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
 
 
     return (
-        <div>
+        <div style={{ height: "1005" }}>
             {
                 data.flow === "e-sim" &&
                 (
@@ -36,51 +36,53 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                         <div style={{ height: "200px", width: "200px", margin: "1rem auto" }}>
                             <InstaPayLoader />
                         </div> :
-                        <div className={styles.eSim} style={{ padding: "12px"}}>
-                            <div style={{flexDirection: width < 1000 && 'column' }} className={styles.warningDiv}>
-                                <div>
-                                    <img src={warn} alt="" />
-                                    <p style={{width: width < 1000 && '100%' }}>
-                                        Not all devices support eSIM. Perform a compatibility check to ensure a seamless user experience.
-                                    </p>
-                                </div>
-
-                                <button>
-                                    Check device compatibility.
-                                </button>
-                            </div>
-
-                            <div className={styles.contentDiv} style={{flexDirection: width < 600 && "column",alignItems: width < 600 && "flex-start"  }}>
-                                <h4>Travel Distance</h4>
-
-                                <div style={{ flex: 0, width: width < 600 ? "100%" : "fit-content", minWidth: 'fit-content' }} className={`${country_styles.country} ${styles.country}`} onClick={() => setShowModal(true)}>
-                                    <div className={country_styles.main}>
-                                        <div className={data?.country?.file_url ? "" : country_styles.grad_icon}>
-                                            <img src={data?.country?.file_url ?? country} alt="" />
-                                        </div>
-                                        <span>{data?.country?.name ? t(data?.country?.name)?.slice(0, 30) : t("Select Destination Country")}</span>
+                        <div className={styles.eSim} style={{ height: "100%", justifyContent: "space-between", background: "transparent" }}>
+                            <div style={{display: "flex", flexDirection: "column", gap: "10px"}}>
+                                <div style={{ flexDirection: width < 1000 && 'column' }} className={styles.warningDiv}>
+                                    <div>
+                                        <img src={warn} alt="" />
+                                        <p style={{ width: width < 1000 && '100%' }}>
+                                            Not all devices support eSIM. Perform a compatibility check to ensure a seamless user experience.
+                                        </p>
                                     </div>
-                                    <img src={chev_down} alt="" />
+
+                                    <button>
+                                        Check device compatibility.
+                                    </button>
                                 </div>
 
-                            </div>
+                                <div className={styles.contentDiv} style={{ flexDirection: width < 600 && "column", alignItems: width < 600 && "flex-start" }}>
+                                    <h4>Travel Distance</h4>
 
-
-                            <div style={{ alignItems: "flex-start", flexDirection: width < 1000 && "column" }} className={styles.contentDiv}>
-                                <h4>Or Choose a Region</h4>
-                                <div style={{width: width < 1000 && "100%"}} className={styles.regions}>
-                                    {regions.map((region, index) => (
-                                        <div style={{ cursor: "pointer", background: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center", position: 'relative', overflow: "hidden" }}
-                                            onClick={() => {
-                                                dataEsimHandler("region", region)
-                                                dataHandler("country", {})
-                                            }}
-                                            key={index}
-                                            className={styles.region}>
-                                            {data.eSimData.region.value !== region.value && <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0, 0, 0, 0.4)', zIndex: 1 }}></div>}
-                                            <h2 style={{ zIndex: 5 }}>{region.name}</h2>
+                                    <div style={{ flex: 0, width: width < 600 ? "100%" : "fit-content", minWidth: 'fit-content' }} className={`${country_styles.country} ${styles.country}`} onClick={() => setShowModal(true)}>
+                                        <div className={country_styles.main}>
+                                            <div className={data?.country?.file_url ? "" : country_styles.grad_icon}>
+                                                <img src={data?.country?.file_url ?? country} alt="" />
+                                            </div>
+                                            <span>{data?.country?.name ? t(data?.country?.name)?.slice(0, 30) : t("Select Destination Country")}</span>
                                         </div>
-                                    ))}
+                                        <img src={chev_down} alt="" />
+                                    </div>
+
+                                </div>
+
+
+                                <div style={{ alignItems: "flex-start", flexDirection: width < 1000 && "column" }} className={styles.contentDiv}>
+                                    <h4>Or Choose a Region</h4>
+                                    <div style={{ width: width < 1000 && "100%" }} className={styles.regions}>
+                                        {regions.map((region, index) => (
+                                            <div style={{ cursor: "pointer", background: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center", position: 'relative', overflow: "hidden" }}
+                                                onClick={() => {
+                                                    dataEsimHandler("region", region)
+                                                    dataHandler("country", {})
+                                                }}
+                                                key={index}
+                                                className={styles.region}>
+                                                {data.eSimData.region.value !== region.value && <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0, 0, 0, 0.4)', zIndex: 1 }}></div>}
+                                                <h2 style={{ zIndex: 5 }}>{region.name}</h2>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
 

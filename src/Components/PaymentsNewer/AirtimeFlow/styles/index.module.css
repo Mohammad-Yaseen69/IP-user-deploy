@@ -47,6 +47,22 @@
     margin-bottom: 0;
 }
 
+.left .manageBtn {
+    display: flex;
+    padding: 12px;
+    white-space: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: var(--Corner-Radius-Small-Roundness, 8px);
+    border: 1.5px solid rgba(89, 38, 240, 0.50);
+    color: #000;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+}
+
 .right {
     height: 100%;
     flex: 1;

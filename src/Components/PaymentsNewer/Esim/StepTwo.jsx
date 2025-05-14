@@ -43,10 +43,8 @@ const StepTwo = ({ data, dataHandler, dataHandlerE }) => {
     }, [data.country, data.region])
 
     return (
-        <div>
-            <div style={{ width: "100%", overflow: "hidden" }}>
-                <img style={{ maxWidth: "100%" }} src={eSimBanner} alt="" />
-            </div>
+        <div style={{height:"100%"}}>
+            
 
             <div className={styles.cont}>
                 <h3>Available Plans</h3>
