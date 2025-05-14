@@ -87,7 +87,7 @@ const QrQuickerPay = () => {
       };
 
 
-      if (dec?.localStorage === false) {
+      if (dec?.localStorage === false && phone && password) {
         localStorage.setItem("phone", phone)
 
         const  localphone = localStorage.getItem("phone")
