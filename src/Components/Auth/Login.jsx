@@ -886,8 +886,10 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                 <motion.input
                                                     key={index}
                                                     maxLength={1}
+                                                    disabled={isOtpCorrect}
                                                     value={value}
                                                     onPaste={handlePaste}
+                                                    
                                                     // disabled={currentActiveInput !== index + 1}
                                                     onChange={(e) => {
                                                         setIsLoginError("")
