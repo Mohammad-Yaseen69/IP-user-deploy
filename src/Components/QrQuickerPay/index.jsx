@@ -88,9 +88,9 @@ const QrQuickerPay = () => {
 
 
       if (dec?.localStorage === false) {
-        localStorage.setItem("phoneNumber", phone)
+        localStorage.setItem("phone", phone)
 
-        const  localphone = localStorage.getItem("phoneNumber")
+        const  localphone = localStorage.getItem("phone")
         console.log(localphone, "local storage value")
       }
       setFeeData(exchange_rate_details);
@@ -198,7 +198,7 @@ const QrQuickerPay = () => {
   const handleBiometricVerification = async () => {
     try {
       setIsPressed(true)
-      const localPhone = localStorage.getItem("phoneNumber");
+      const localPhone = localStorage.getItem("phone");
 
       const payload = {
         qr_quicker_pay: true
