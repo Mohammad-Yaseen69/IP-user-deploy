@@ -34,7 +34,6 @@ const QrQuickerPay = () => {
   const [phone, setPhone] = useState("")
   const [password, setPassword] = useState("")
   const [recipientDets, setRecipientDets] = useState({})
-  const [width, setWidth] = useState("16%")
   const [showModal, setShowModal] = useState(false)
   const [error, setError] = useState("")
   const windowWidth = useWindowWidth()
@@ -58,6 +57,13 @@ const QrQuickerPay = () => {
 
     getWalletDetails()
   }, [wallet_id])
+
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return "";
+  }
 
 
   const [feeData, setFeeData] = useState(null);
@@ -89,7 +95,7 @@ const QrQuickerPay = () => {
 
 
       if (dec?.localStorage === false) {
-        localStorage.setItem("phoneNumber", phone)
+        document.cookie = "phoneNumber=" + encodeURIComponent(phone) + "; path=/;";
       }
       setFeeData(exchange_rate_details);
     } catch (error) {
@@ -196,7 +202,7 @@ const QrQuickerPay = () => {
   const handleBiometricVerification = async () => {
     try {
       setIsPressed(true)
-      const localPhone = localStorage.getItem("phoneNumber");
+      const localPhone = getCookie("phoneNumber");
 
       const payload = {
         qr_quicker_pay: true
@@ -309,20 +315,23 @@ const QrQuickerPay = () => {
 
   const handleKeyUp = (e) => {
     formatCurrency(e.target.value, false, setAmount);
+    e.target.size = Math.max(e.target.value.length, 1);
   };
 
   const handleBlur = (e) => {
     formatCurrency(e.target.value, true, setAmount);
+    e.target.size = Math.max(e.target.value.length + 2, 1);
   };
 
   const handleAmountChange = (e) => {
     const value = e.target.value;
     setAmount(value);
 
-    let base = 16;
-    let extra = Math.max(0, value.length - 3) * 4;
-    let total = Math.min(base + extra, 90);
-    setWidth(`${total}%`);
+    // let base = 16;
+    // let extra = Math.max(0, value.length - 3) * 4;
+    // let total = Math.min(base + extra, 90);
+    // setWidth(`${total}%`);
+    e.target.size = Math.max(e.target.value.length, 1);
   };
 
 
@@ -429,9 +438,10 @@ const QrQuickerPay = () => {
               <input
                 type="text"
                 value={amount}
-                style={{ width }}
+                // style={{ width }}
                 onChange={handleAmountChange}
                 onKeyUp={handleKeyUp}
+                size={"1"}
                 onBlur={handleBlur}
               />
             </div>
