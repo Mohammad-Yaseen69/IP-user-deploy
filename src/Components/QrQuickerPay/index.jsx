@@ -58,13 +58,6 @@ const QrQuickerPay = () => {
     getWalletDetails()
   }, [wallet_id])
 
-  function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return "";
-  }
-
 
   const [feeData, setFeeData] = useState(null);
 
@@ -95,7 +88,10 @@ const QrQuickerPay = () => {
 
 
       if (dec?.localStorage === false) {
-        document.cookie = "phoneNumber=" + encodeURIComponent(phone) + "; path=/;";
+        localStorage.setItem("phoneNumber", phone)
+
+        const  localphone = localStorage.getItem("phoneNumber")
+        console.log(localphone, "local storage value")
       }
       setFeeData(exchange_rate_details);
     } catch (error) {
@@ -202,7 +198,7 @@ const QrQuickerPay = () => {
   const handleBiometricVerification = async () => {
     try {
       setIsPressed(true)
-      const localPhone = getCookie("phoneNumber");
+      const localPhone = localStorage.getItem("phoneNumber");
 
       const payload = {
         qr_quicker_pay: true
@@ -217,6 +213,7 @@ const QrQuickerPay = () => {
       }
 
 
+       console.log(localPhone, "local storage value")
       const response1 = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/login-biometric-challenge`, {
         data: encryptData(payload)
       })
@@ -320,7 +317,7 @@ const QrQuickerPay = () => {
 
   const handleBlur = (e) => {
     formatCurrency(e.target.value, true, setAmount);
-    e.target.size = Math.max(e.target.value.length + 2, 1);
+    e.target.size = Math.max(e.target.value.length + 3, 1);
   };
 
   const handleAmountChange = (e) => {
