@@ -107,6 +107,12 @@ const QrQuickerPay = () => {
         toast.error("Something went wrong");
         return;
       }
+      const err = LimitsErrorMessage(dec.message)
+
+      if (err) {
+        setError(err)
+        return setShowModal(true)
+      }
       if (dec?.message?.toLowerCase()?.includes("insufficient")) {
         toast.error("Insufficient balance");
         return;
@@ -394,7 +400,7 @@ const QrQuickerPay = () => {
           onClick={() => {
             setStep(1)
             setFeeData(null)
-            
+
           }}
         >
           <ArrowLeft />

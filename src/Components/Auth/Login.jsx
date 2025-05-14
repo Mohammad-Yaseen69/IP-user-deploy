@@ -20,6 +20,7 @@ import { startAuthentication } from "@simplewebauthn/browser"
 import * as rdd from "react-device-detect";
 import { authIcon, instaIcon, smsIcon, whatsappIcon } from "./files"
 import "./styles/index.module.css";
+import useWindowWidth from "../../utils/useWindowWidth";
 
 const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const navigate = useNavigate()
@@ -45,6 +46,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [lastOtpSentTo, setLastOtpSentTo] = useState(null);
     const [consecutiveCount, setConsecutiveCount] = useState(0)
     const [firstTime, setFirstTime] = useState(true)
+    const width = useWindowWidth()
     // convert this object into an array of object it should just have a type property which should tell like whatsapp insta biometric instead of a object property
 
     const [methods, setMethods] = useState([
@@ -659,12 +661,12 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
     return (
         <>
-            <form onSubmit={emailVerified ? loginHandler : checkEmailHandler} className={styles.form_details} style={window.innerWidth > 1000 ? { opacity: step === 1 ? 1 : 0, pointerEvents: step === 1 ? "all" : "none" } : { display: step === 1 ? "inherit" : "none" }}>
+            <form onSubmit={emailVerified ? loginHandler : checkEmailHandler} className={styles.form_details} style={width > 1000 ? { opacity: step === 1 ? 1 : 0, pointerEvents: step === 1 ? "all" : "none" } : { display: step === 1 ? "inherit" : "none" }}>
                 <div className={styles.left}>
                     <h1>{t("Login")}</h1>
                     <p>{t("Start Your InstaPay Journey Today!")}</p>
                     {
-                        window.innerWidth < 1000
+                        width < 1000
                         &&
                         <LanguagePicker />
                     }
@@ -748,7 +750,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     }
                     <div className={styles.center_bottom}>
                         {
-                            (emailVerified && window.innerWidth < 1000)
+                            (emailVerified && width < 1000)
                             &&
                             <button type="button" className={styles.go_back_btn}
                                 onClick={() => {
@@ -764,7 +766,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         </div>
                         <div className={styles.btns}>
                             {
-                                (emailVerified && window.innerWidth > 1000)
+                                (emailVerified && width > 1000)
                                 &&
                                 <button type="button" className={styles.go_back_btn}
                                     onClick={() => {
@@ -819,7 +821,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         t("SMS Verification").replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")}</h1>
                             <p>{t("Start Your InstaPay Journey Today!")}</p>
                             {
-                                window.innerWidth < 1000
+                                width < 1000
                                 &&
                                 <LanguagePicker />
                             }
@@ -900,7 +902,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     </div>
                                 )}
 
-                                {window.innerWidth < 1000 && (
+                                {width < 1000 && (
                                     <div className={styles.btns}>
                                         <button type="submit"
                                             className={styles.form_btn}
@@ -1022,7 +1024,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                             </div>
                             <div className={styles.center_bottom}>
                                 {
-                                    window.innerWidth < 1000
+                                    width < 1000
                                     &&
                                     <button type="button" className={styles.go_back_btn} onClick={resetOtpStates}>
                                         {t("Back")}
@@ -1034,13 +1036,13 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 </div>
                                 <div className={styles.btns}>
                                     {
-                                        window.innerWidth > 1000
+                                        width > 1000
                                         &&
                                         <button type="button" className={styles.go_back_btn} onClick={resetOtpStates}>
                                             {t("Back")}
                                         </button>
                                     }
-                                    {window.innerWidth > 1000 &&
+                                    {width > 1000 &&
                                         <button type="submit"
                                             className={styles.form_btn}
                                             disabled={isAnyFieldEmpty || otpValues.some(item => !item) || isPressed || isLoginError}
