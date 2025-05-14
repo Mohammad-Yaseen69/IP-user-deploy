@@ -237,7 +237,7 @@ const QrQuickerPay = () => {
 
       console.log(dec2)
 
-      if (dec2.user?.walletDetails?.wallet_id === recipientDets?.wallet_id) {
+      if (dec2.user?.username === recipientDets?.username) {
         toast.error("You cannot send money to your own wallet")
         setIsPressed(false)
         return
@@ -255,10 +255,10 @@ const QrQuickerPay = () => {
         return setShowDetsModal(true)
       }
       if (dec?.message?.toLowerCase()?.includes("user not found")) {
-        return toast.error("You have entered wrong phone number")
+        return toast.error("You have entered wrong phone number/ password")
       }
       if (dec?.message?.toLowerCase()?.includes("password")) {
-        return toast.error("You have entered wrong password")
+        return toast.error("You have entered wrong phone number/ password")
       }
       if (dec?.message?.toLowerCase()?.includes("quickerqrpay is disabled")) {
         setError("Quicker QR pay is inactive in your account, please enable it from settings/payment threshold for quick payments.")
@@ -372,12 +372,12 @@ const QrQuickerPay = () => {
           <div style={{ display: "flex", gap: "10px", flexDirection: windowWidth < 400 && "column", marginTop: "2rem" }}>
             {(error.toLowerCase().includes("inactive") || limitErrors) &&
               <button
-               onClick={() => {
-                setStep(1)
-                setShowModal(false)
-                setLimitErrors(false)
-                setError("")
-              }} style={{ background: "#5926f0", color: "#fff", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600 }}>
+                onClick={() => {
+                  setStep(1)
+                  setShowModal(false)
+                  setLimitErrors(false)
+                  setError("")
+                }} style={{ background: "#5926f0", color: "#fff", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600 }}>
                 Change Amount
               </button>
             }
@@ -389,7 +389,14 @@ const QrQuickerPay = () => {
       </Modal>
 
       {step === 2 &&
-        <div style={{ position: "absolute", top: "20px", left: "20px", cursor: "pointer" }} onClick={() => setStep(1)}>
+        <div
+          style={{ position: "absolute", top: "20px", left: "20px", cursor: "pointer" }}
+          onClick={() => {
+            setStep(1)
+            setFeeData(null)
+            
+          }}
+        >
           <ArrowLeft />
         </div>
       }
@@ -521,22 +528,22 @@ const QrQuickerPay = () => {
           <div style={{ marginTop: "1rem" }}>
             <label htmlFor="" style={{ fontWeight: 600 }}>Password</label>
             <div style={{ position: 'relative' }}>
-              <Input 
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)} 
+              <Input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 type={showPassword ? "text" : "password"}
-                style={{ 
-                  padding: "1rem", 
-                  boxShadow: '0px 4px 11px 0px rgba(0, 0, 0, 0.16), 0px 0px 4px 6px #FDFDFD inset', 
-                  fontWeight: 800 
-                }} 
+                style={{
+                  padding: "1rem",
+                  boxShadow: '0px 4px 11px 0px rgba(0, 0, 0, 0.16), 0px 0px 4px 6px #FDFDFD inset',
+                  fontWeight: 800
+                }}
               />
-              <div 
+              <div
                 onClick={() => setShowPassword(!showPassword)}
-                style={{ 
+                style={{
                   position: 'absolute',
                   right: '10px',
-                  top: '50%',
+                  top: '55%',
                   transform: 'translateY(-50%)',
                   cursor: 'pointer'
                 }}
