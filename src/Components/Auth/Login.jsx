@@ -431,7 +431,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     }
                                     sessionStorage.clear()
                                 })
-                        } 
+                        }
                         else {
                             sessionStorage.setItem("country_status_error", "Service not available in your country!")
                         }
@@ -644,6 +644,18 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
     }, [resendTimer]);
 
+    const resetOtpStates = () => {
+        setOTPValues(Array(numberOfFields).fill('')) // Reset OTP input values
+        setCurrentActiveInput(1) // Reset active input field
+        setIsAnyFieldEmpty(true) // Reset field empty check
+        setOtpVerified(false) // Reset OTP verification status
+        setIsOtpCorrect(false) // Reset OTP correctness check
+        setConsecutiveCount(0) // Reset consecutive attempts counter
+        setLastOtpSentTo(null) // Reset last OTP method
+        setIsLoginError('') // Reset login error message
+        setResendTimer(0) // Reset resend timer
+        setStep(1) // Reset step to 1
+    }
 
     return (
         <>
@@ -738,7 +750,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         {
                             (emailVerified && window.innerWidth < 1000)
                             &&
-                            <button type="button" className={styles.go_back_btn} onClick={() => setEmailVerified(false)}>
+                            <button type="button" className={styles.go_back_btn}
+                                onClick={() => {
+                                    setPassword("")
+                                    setEmailVerified(false)
+                                }}>
                                 {t("Back")}
                             </button>
                         }
@@ -750,7 +766,12 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                             {
                                 (emailVerified && window.innerWidth > 1000)
                                 &&
-                                <button type="button" className={styles.go_back_btn} onClick={() => setEmailVerified(false)}>
+                                <button type="button" className={styles.go_back_btn}
+                                    onClick={() => {
+                                        setPassword("")
+                                        setEmailVerified(false)
+                                    }}
+                                >
                                     {t("Back")}
                                 </button>
                             }
@@ -1003,7 +1024,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 {
                                     window.innerWidth < 1000
                                     &&
-                                    <button type="button" className={styles.go_back_btn} onClick={() => setStep(1)}>
+                                    <button type="button" className={styles.go_back_btn} onClick={resetOtpStates}>
                                         {t("Back")}
                                     </button>
                                 }
@@ -1015,7 +1036,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     {
                                         window.innerWidth > 1000
                                         &&
-                                        <button type="button" className={styles.go_back_btn} onClick={() => setStep(1)}>
+                                        <button type="button" className={styles.go_back_btn} onClick={resetOtpStates}>
                                             {t("Back")}
                                         </button>
                                     }
