@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import ip from "../PaymentAddressPublic/instapay_black.svg"
 import styles from "./styles/index.module.scss"
 import r from "./r.svg"
-// import fail from "./faile.svg"
+import { Eye, EyeOff } from "react-feather";
 import success from "./success.svg"
 import { paymentConfirmOptions } from "../MyMasterCard/PaymentModal/SuccessStep"
 import { useNavigate, useParams } from "react-router"
@@ -21,6 +21,7 @@ import countriesData from "../PaymentsNewer/CountriesData.json"
 import InstaPayLoader from "../Loader"
 import { getDecimalPointIndex } from "../../Helper/getDecimalIndex"
 import useWindowWidth from "../../utils/useWindowWidth"
+import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation"
 
 const QrQuickerPay = () => {
   const [step, setStep] = useState(1)
@@ -36,7 +37,9 @@ const QrQuickerPay = () => {
   const [recipientDets, setRecipientDets] = useState({})
   const [showModal, setShowModal] = useState(false)
   const [error, setError] = useState("")
+  const [limitErrors, setLimitErrors] = useState(false)
   const windowWidth = useWindowWidth()
+  const [showPassword, setShowPassword] = useState(false)
 
   useEffect(() => {
     const getWalletDetails = async () => {
@@ -87,10 +90,10 @@ const QrQuickerPay = () => {
       };
 
 
-      if (dec?.localStorage === false && phone && password) {
+      if (dec?.localStorage === false && phone) {
         localStorage.setItem("phone", phone)
 
-        const  localphone = localStorage.getItem("phone")
+        const localphone = localStorage.getItem("phone")
         console.log(localphone, "local storage value")
       }
       setFeeData(exchange_rate_details);
@@ -183,6 +186,13 @@ const QrQuickerPay = () => {
     } catch (error) {
       console.log(error)
       const dec = decryptData(error.response.data.data)
+      const err = LimitsErrorMessage(dec.message)
+
+      if (err) {
+        setError(err)
+        setLimitErrors(true)
+        return setShowModal(true)
+      }
       if (dec?.message?.toLowerCase()?.includes("exceeded")) {
         setError("The transaction amount exceeds your QR payment threshold amount.")
         return setShowModal(true)
@@ -212,8 +222,6 @@ const QrQuickerPay = () => {
         payload.localstorage = true;
       }
 
-
-       console.log(localPhone, "local storage value")
       const response1 = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/login-biometric-challenge`, {
         data: encryptData(payload)
       })
@@ -316,8 +324,7 @@ const QrQuickerPay = () => {
   };
 
   const handleBlur = (e) => {
-    formatCurrency(e.target.value, true, setAmount);
-    e.target.size = Math.max(e.target.value.length + 3, 1);
+    formatCurrency(e.target.value, true, setAmount, true, e);
   };
 
   const handleAmountChange = (e) => {
@@ -363,8 +370,14 @@ const QrQuickerPay = () => {
           <p style={{ fontWeight: 600, fontSize: "15px", color: "#6f6f6f" }}>{error}</p>
 
           <div style={{ display: "flex", gap: "10px", flexDirection: windowWidth < 400 && "column", marginTop: "2rem" }}>
-            {error.toLowerCase().includes("inactive") &&
-              <button onClick={() => setStep(1)} style={{ background: "#5926f0", color: "#fff", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600 }}>
+            {(error.toLowerCase().includes("inactive") || limitErrors) &&
+              <button
+               onClick={() => {
+                setStep(1)
+                setShowModal(false)
+                setLimitErrors(false)
+                setError("")
+              }} style={{ background: "#5926f0", color: "#fff", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600 }}>
                 Change Amount
               </button>
             }
@@ -507,7 +520,30 @@ const QrQuickerPay = () => {
           </div>
           <div style={{ marginTop: "1rem" }}>
             <label htmlFor="" style={{ fontWeight: 600 }}>Password</label>
-            <Input value={password} onChange={(e) => setPassword(e.target.value)} style={{ padding: "1rem", boxShadow: '0px 4px 11px 0px rgba(0, 0, 0, 0.16), 0px 0px 4px 6px #FDFDFD inset', fontWeight: 800 }} />
+            <div style={{ position: 'relative' }}>
+              <Input 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+                type={showPassword ? "text" : "password"}
+                style={{ 
+                  padding: "1rem", 
+                  boxShadow: '0px 4px 11px 0px rgba(0, 0, 0, 0.16), 0px 0px 4px 6px #FDFDFD inset', 
+                  fontWeight: 800 
+                }} 
+              />
+              <div 
+                onClick={() => setShowPassword(!showPassword)}
+                style={{ 
+                  position: 'absolute',
+                  right: '10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  cursor: 'pointer'
+                }}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </div>
+            </div>
           </div>
 
           <div style={{ marginTop: '1rem' }}>
