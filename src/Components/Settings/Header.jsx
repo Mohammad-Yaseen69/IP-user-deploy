@@ -4,7 +4,7 @@ import countries from "../PaymentsNewer/CountriesData.json"
 import { UserContext } from '../../Context/UserContext'
 import { Button, Card, CardBody } from 'reactstrap'
 import { useTranslation } from 'react-i18next'
-import { Camera, MoreHorizontal, Trash2 } from 'react-feather'
+import { Camera, Trash2 } from 'react-feather'
 import axios from 'axios'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import DeleteImageModal from './DeleteImageModal'
@@ -12,6 +12,7 @@ import DeleteImageModal from './DeleteImageModal'
 import { toast } from 'react-toastify'
 import ReactApexChart from 'react-apexcharts'
 import change_dp from "./change_img.svg"
+import AdjustModal from './AdjustModal'
 
 const Header = () => {
     const { userDetails, authHeader, verifyToken, profileCompletedPercentage } = useContext(UserContext)
@@ -19,6 +20,7 @@ const Header = () => {
     const [dp, setDp] = useState()
     const { t } = useTranslation()
     const [showDelModal, setShowDelModal] = useState(false)
+    const [showModal, setShowModal] = useState(false)
 
     useEffect(() => {
         if (userDetails) {
@@ -26,15 +28,29 @@ const Header = () => {
         }
     }, [userDetails])
 
-    // dp states and methods
-    const [isAdjusting, setIsAdjusting] = useState(false)
+
     const [isEditing, setIsEditing] = useState(false);
-    const [editor, setEditor] = useState(null);
-    const [scale, setScale] = useState(1);
-    const [position, setPosition] = useState({ x: 0.5, y: 0.5 });
     const [isSaving, setIsSaving] = useState(false)
     const mainContainerRef = useRef(null)
     const [file, setFile] = useState(null)
+    const [modalImage, setModalImage] = useState(null);
+
+    const urlToBase64 = async (url) => {
+        console.log(userDetails?.profileImage)
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': '*/*'
+            }
+        });
+        const blob = await response.blob();
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    };
 
     useEffect(() => {
         if (userDetails) {
@@ -75,19 +91,13 @@ const Header = () => {
             headers: authHeader
         })
             .then(res => {
-                const decrypted = decryptData(res.data.data)
-                // console.log(decrypted)
                 verifyToken()
             })
             .catch(err => {
-                const decrypted = decryptData(err.response.data.data)
-                // console.log(decrypted)
             })
             .finally(() => {
                 setIsSaving(false);
                 setIsEditing(false)
-                setScale(1)
-                setPosition({ x: 0.5, y: 0.5 })
             });
         // }, "image/png");
     };
@@ -98,6 +108,7 @@ const Header = () => {
     const toggleMenu = () => setShowMenu(!showMenu);
 
     const menuRef = useRef(null)
+    const [adjustedFile, setAdjustedFile] = useState(null)
 
     const handleClickOutside = (event) => {
         if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -112,6 +123,20 @@ const Header = () => {
         };
     }, []);
 
+    useEffect(() => {
+        if (adjustedFile) {
+            console.log("adjusted file", adjustedFile);
+
+            // Convert Blob to object URL for preview
+            const imgUrl = URL.createObjectURL(adjustedFile);
+            console.log("imgUrl", imgUrl);
+            setDp(imgUrl);
+
+            // Clean up the object URL when component unmounts or adjustedFile changes
+            return () => URL.revokeObjectURL(imgUrl);
+        }
+    }, [adjustedFile])
+
 
     // profile completion chart
     const [series, setSeries] = useState([0]);
@@ -120,7 +145,7 @@ const Header = () => {
         setSeries([profileCompletedPercentage])
     }, [profileCompletedPercentage])
 
-    const [options, setOptions] = useState({
+    const [options,] = useState({
         chart: {
             height: 100,
             type: 'radialBar',
@@ -292,7 +317,7 @@ const Header = () => {
                                 filter: "drop-shadow(0 0 2px black)"
                             }} ref={menuRef}>
                                 {/* <MoreHorizontal onClick={toggleMenu} color='white' size={30} style={{ cursor: "pointer" }} /> */}
-                                <img src={change_dp} onClick={toggleMenu} style={{ height: window.innerWidth > 1000 ? "60px" : "40px", width: window.innerWidth > 1000 ? "60px" : "40px", objectFit: "contain", cursor: "pointer" }} />
+                                <img alt='niglet' src={change_dp} onClick={toggleMenu} style={{ height: window.innerWidth > 1000 ? "60px" : "40px", width: window.innerWidth > 1000 ? "60px" : "40px", objectFit: "contain", cursor: "pointer" }} />
                                 <div style={{
                                     display: "flex",
                                     flexDirection: "column",
@@ -313,14 +338,15 @@ const Header = () => {
                                         userDetails?.profileImage?.url
                                         &&
                                         <>
-                                            {/* <label style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", marginBottom: "0", cursor: "pointer" }} onClick={() => {
+                                            <label style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", marginBottom: "0", cursor: "pointer" }} onClick={async () => {
                                                 toggleMenu()
-                                                setIsEditing(true)
-                                                setIsAdjusting(true)
+                                                setShowModal(true)
+                                                const base64 = await urlToBase64(dp);
+                                                setModalImage(base64);
                                             }}>
                                                 <Camera size={18} />
                                                 <span style={{ whiteSpace: "nowrap" }}>Adjust</span>
-                                            </label> */}
+                                            </label>
                                             <label style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", marginBottom: "0", cursor: "pointer" }} onClick={() => {
                                                 setShowDelModal(true)
                                                 toggleMenu()
@@ -395,6 +421,14 @@ const Header = () => {
                     </div>
                 </div> */}
             </div>
+
+
+            <AdjustModal
+                isOpen={showModal}
+                toggle={() => setShowModal(!showModal)}
+                imageUrl={modalImage}
+                setFile={setAdjustedFile}
+            />
         </div >
     )
 }

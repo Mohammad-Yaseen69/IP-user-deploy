@@ -90,6 +90,7 @@
     "react-draggable": "^4.4.5",
     "react-dragula": "^1.1.17",
     "react-dropzone-uploader": "^2.11.0",
+    "react-easy-crop": "^5.4.1",
     "react-feather": "^2.0.9",
     "react-files": "^3.0.0-alpha.3",
     "react-flags-select": "^2.2.3",
