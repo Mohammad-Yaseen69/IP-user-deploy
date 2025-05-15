@@ -107,7 +107,7 @@ const QrQuickerPay = () => {
         toast.error("Something went wrong");
         return;
       }
-      const err = LimitsErrorMessage(dec.message)
+      const err = LimitsErrorMessage(dec.code)
 
       if (err) {
         setError(err)
