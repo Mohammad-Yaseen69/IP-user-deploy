@@ -217,7 +217,7 @@ const Header = () => {
                         userDetails?.profileImage?.url
                             || isEditing
                             ?
-                            <img src={croppedImages.profileDP ?? dp} alt={userDetails?.account_type === "individual" ? userDetails?.user?.first_name : userDetails?.company?.company_name} style={{ background: "white", boxShadow: "0px 0px 3px #1111113e" }} className={styles.img} />
+                            <img src={croppedImages.profileDP || dp} alt={userDetails?.account_type === "individual" ? userDetails?.user?.first_name : userDetails?.company?.company_name} style={{ background: "white", boxShadow: "0px 0px 3px #1111113e" }} className={styles.img} />
                             :
                             <div className={styles.dp} style={{ overflow: "hidden" }}>{
                                 userDetails?.account_type?.toLowerCase() === "individual"

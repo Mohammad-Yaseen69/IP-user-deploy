@@ -53,11 +53,11 @@ const AdjustModal = ({ isOpen, toggle, imageUrl, accountId, authHeader, type, na
     const isCover = name === "cover";
     const aspect = isCover ? 4 : 4 / 3;
     const containerHeight = isCover ? 320 : 250;
-    const containerWidth = isCover ? 1000 : 250;
+    const containerWidth = isCover ? "100%" : 250;
     const cropSize = isCover ? undefined : { width: 242, height: 242 };
 
     return (
-        <Modal style={{ minWidth: isCover ? "1000px" : undefined }} isOpen={isOpen} toggle={toggle} >
+        <Modal style={{ minWidth: isCover ? "90%" : undefined }} isOpen={isOpen} toggle={toggle} >
             <ModalBody>
                 <div style={{ position: 'relative', height: containerHeight, width: containerWidth, margin: "auto", background: "#222" }}>
                     <Cropper
