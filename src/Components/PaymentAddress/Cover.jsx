@@ -5,17 +5,16 @@ import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import coverPlaceHolder from "../UserProfilePublic/files/cover_1.png"
 import { Camera, Delete, Trash } from "react-feather";
-import AvatarEditor from "react-avatar-editor";
 import { Button } from "reactstrap";
 import { toast } from "react-toastify"
+import { IoCrop, IoCropOutline } from "react-icons/io5";
+import { FaCropAlt } from "react-icons/fa";
+import { BsCrop } from "react-icons/bs";
 
-const Cover = ({ cover, setCover }) => {
+const Cover = ({ cover, setCover, dets }) => {
     const { authHeader, userDetails, verifyToken } = useContext(UserContext)
 
     const [isEditing, setIsEditing] = useState(false);
-    const [editor, setEditor] = useState(null);
-    const [scale, setScale] = useState(1);
-    const [position, setPosition] = useState({ x: 0.5, y: 0.5 });
     const [isSaving, setIsSaving] = useState(false)
     const mainContainerRef = useRef(null)
     const [file, setFile] = useState(null)
@@ -65,8 +64,6 @@ const Cover = ({ cover, setCover }) => {
             .finally(() => {
                 setIsSaving(false);
                 setIsEditing(false)
-                setScale(1)
-                setPosition({ x: 0.5, y: 0.5 })
             });
         // }, "image/png");
     };
@@ -90,30 +87,12 @@ const Cover = ({ cover, setCover }) => {
                 setDeleting(false)
                 setIsSaving(false);
                 setIsEditing(false)
-                setScale(1)
-                setPosition({ x: 0.5, y: 0.5 })
             });
     }
 
     return (
         <div className={styles.cover_container} ref={mainContainerRef}>
-            {/* {
-                isEditing
-                    ?
-                    <div className={styles.editor_container}>
-                        <AvatarEditor
-                            ref={(editor) => setEditor(editor)}
-                            image={cover || ''}
-                            width={mainContainerRef?.current?.offsetWidth}
-                            height={mainContainerRef?.current?.offsetHeight}
-                            border={0}
-                            color={[255, 255, 255, 0.6]}
-                            scale={scale}
-                        />
-                    </div>
-                    : */}
             <img src={cover || coverPlaceHolder} alt="cover" className={styles.cover} />
-            {/* } */}
             {
                 (isEditing || deleting)
                     ?
@@ -147,13 +126,14 @@ const Cover = ({ cover, setCover }) => {
                             </Button>}
                     </div>
                     :
-                    <div style={{ position: "absolute", top: "20px", right: "20px", height: "40px", width: "40px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <div style={{ position: "absolute", top: "20px", right: "40px", height: "40px", width: "40px", display: "flex", justifyContent: "center", alignItems: "center" }}>
                         <label htmlFor='cover' style={{ background: "#1111116e", marginBottom: "0", backdropFilter: "blur(10px)", cursor: "pointer" }}>
-                            <Camera color='white' />
+                            <Camera color='white'  style={{ marginTop: "4px" }} />
                         </label>
                         {cover &&
-                            <div style={{ background: "#1111116e", backdropFilter: "blur(10px)", cursor: "pointer" }}>
+                            <div style={{ background: "#1111116e", backdropFilter: "blur(10px)", cursor: "pointer", display: "flex", alignItems: "center", gap: "12px" }}>
                                 <Trash onClick={deleteCover} style={{ marginLeft: "12px" }} color="white" />
+                                <BsCrop   size={20} color="white"/>
                             </div>
                         }
                     </div>

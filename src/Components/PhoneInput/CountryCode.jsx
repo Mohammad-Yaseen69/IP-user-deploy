@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { countriesInDiffLangs } from '../../Data/CountriesWithTranslations/countries'
 import Fuse from 'fuse.js'
 
-const CountryCode = ({ country, selectedCountry, setSelectedCountry, setCountry, disabledDropdown = false, setNumber, phone = "", number }) => {
+const CountryCode = ({ country, selectedCountry, setSelectedCountry, setCountry, disabledDropdown = false, setNumber, phone = "", number, hideIcon }) => {
     const { t, i18n } = useTranslation()
     const [searchTerm, setSearchTerm] = useState("")
 
@@ -96,7 +96,7 @@ const CountryCode = ({ country, selectedCountry, setSelectedCountry, setCountry,
                 <div className={styles.selected} onClick={disabledDropdown ? () => { } : toggleDropDown}>
                     <img src={selectedCountry?.file_url} alt={selectedCountry?.code} />
                     <span>{selectedCountry?.dial_code}</span>
-                    <ChevronDown size={10} />
+                    {!hideIcon && <ChevronDown size={10} />}
                 </div>
             </div>
             {

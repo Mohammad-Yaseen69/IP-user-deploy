@@ -7,15 +7,18 @@ import { Camera } from "react-feather";
 import AvatarEditor from "react-avatar-editor";
 import { Button } from "reactstrap";
 import { toast } from "react-toastify"
+import { BsCrop, BsPencil, BsPencilFill } from "react-icons/bs";
+import AdjustModal from "../Settings/AdjustModal";
+import { FaAdjust } from "react-icons/fa";
+import { IoCrop } from "react-icons/io5";
 
-const Profile = ({ dp, setDp }) => {
-    const { authHeader, userDetails, verifyToken } = useContext(UserContext)
+const Profile = ({ dp, setDp, dets }) => {
+    const { authHeader, userDetails, verifyToken,croppedImages } = useContext(UserContext)
     const [isEditing, setIsEditing] = useState(false);
-    const [scale, setScale] = useState(1);
-    const [position, setPosition] = useState({ x: 0.5, y: 0.5 });
     const [isSaving, setIsSaving] = useState(false)
     const mainContainerRef = useRef(null)
     const [file, setFile] = useState(null)
+    const [showModal, setShowModal] = useState(false)
     const [deleting, setDeleting] = useState(false)
 
 
@@ -51,8 +54,6 @@ const Profile = ({ dp, setDp }) => {
             headers: authHeader
         })
             .then(res => {
-                const decrypted = decryptData(res.data.data)
-                // console.log(decrypted)
                 verifyToken()
             })
             .catch(err => {
@@ -62,8 +63,6 @@ const Profile = ({ dp, setDp }) => {
             .finally(() => {
                 setIsSaving(false);
                 setIsEditing(false)
-                setScale(1)
-                setPosition({ x: 0.5, y: 0.5 })
             });
         // }, "image/png");
     };
@@ -86,34 +85,19 @@ const Profile = ({ dp, setDp }) => {
                 setDeleting(false)
                 setIsSaving(false);
                 setIsEditing(false)
-                setScale(1)
-                setPosition({ x: 0.5, y: 0.5 })
             });
     }
 
 
+    console.log(dets)
+
     return (
-        <div className={styles.dp_container} ref={mainContainerRef} style={{ overflow: "visible" }}>
+        <div className={styles.dp_container} ref={mainContainerRef} style={{ overflow: "visible", position: "relative" }}>
             {
-                // isEditing
-                //     ?
-                //     <div className={styles.editor_container}>
-                //         <AvatarEditor
-                //             ref={(editor) => setEditor(editor)}
-                //             image={dp || ''}
-                //             width={mainContainerRef?.current?.offsetWidth}
-                //             height={mainContainerRef?.current?.offsetHeight}
-                //             border={0}
-                //             color={[255, 255, 255, 0.6]}
-                //             scale={scale}
-                //         />
-                //     </div>
-                //     :
-                //     <>
-                //         {
+
                 dp || isEditing
                     ?
-                    <img src={dp} alt={userDetails?.account_type === "individual" ? userDetails?.user?.first_name : userDetails?.company?.company_name} style={{ background: "white", boxShadow: "0px 0px 3px #1111113e", borderRadius: "16px" }} className={styles.img} />
+                    <img src={croppedImages.paDP || dp} alt={userDetails?.account_type === "individual" ? userDetails?.user?.first_name : userDetails?.company?.company_name} style={{ background: "white", boxShadow: "0px 0px 3px #1111113e", borderRadius: "16px" }} className={styles.img} />
                     :
                     <div className={styles.dp} style={{ borderRadius: "16px", overflow: "hidden" }}>{
                         userDetails?.account_type?.toLowerCase() === "individual"
@@ -123,8 +107,12 @@ const Profile = ({ dp, setDp }) => {
                             userDetails?.company?.company_name?.[0]?.toUpperCase()
                     }</div>
             }
-            {/* </>
-            } */}
+
+            {dp &&
+                <span onClick={() => setShowModal(true)} style={{ background: "#5926f0", width: "24px", borderRadius: "100%", height: "24px", display: "flex", justifyContent: "center", alignItems: "center", position: 'absolute', bottom: "-12px", left: "10px" }}>
+                    <IoCrop color="white" size={13} />
+                </span>
+            }
 
             {
                 (isEditing || deleting)
@@ -169,6 +157,15 @@ const Profile = ({ dp, setDp }) => {
 
                     </div>
             }
+            <AdjustModal
+                isOpen={showModal}
+                toggle={() => setShowModal(false)}
+                type={"address"}
+                name={"dp"}
+                authHeader={authHeader}
+                imageUrl={dp}
+                pId={dets._id}
+            />
             <input type="file" name="dp" id="dp" hidden onChange={handleFileSelect} accept="image/*" />
         </div>
     )

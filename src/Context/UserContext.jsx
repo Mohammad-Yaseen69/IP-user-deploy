@@ -137,18 +137,14 @@ const UserState = ({ children }) => {
         paDP: "",
         paBanner: "",
     })
-    // const [coordinates, setCoordinates] = useState({
-    //     profileDP: {},
-    //     profileBanner: {},
-    //     paDP: {},
-    //     paBanner: {},
-    // })
-
+    const [pAddressData, setPAddressData] = useState({})
 
     const authHeader = {
         "Authorization": `Bearer ${token}`,
         "source": "user"
     }
+
+
 
     useEffect(() => {
         const interceptor = axios.interceptors.response.use(
@@ -208,7 +204,7 @@ const UserState = ({ children }) => {
         setProfileIncompleteReason("")
     }
 
-    const getImage = async (dp, c, type, name) => { 
+    const getImage = async (dp, c, type, name) => {
         const croppedImage = await getCroppedImg(dp, c)
         const imgUrl = URL.createObjectURL(croppedImage);
 
@@ -228,8 +224,7 @@ const UserState = ({ children }) => {
                 // setCoordinates(prev => ({ ...prev, paDp: c }))
             }
             else {
-                setCroppedImages(prev => ({ ...prev, paDP: imgUrl }))
-                // setCoordinates(prev => ({ ...prev, paBanner: c }))
+                setCroppedImages(prev => ({ ...prev, paBanner: imgUrl }))
             }
         }
     }
@@ -245,10 +240,10 @@ const UserState = ({ children }) => {
         }
         else {
             if (name === "dp") {
-                getImage(userDetails?.paImage?.url, coordinates, "pa", "dp")
+                getImage(pAddressData?.profileImage?.url, coordinates, "pa", "dp")
             }
             else {
-                getImage(userDetails?.paBanner?.url, coordinates, "pa", "cover")
+                getImage(pAddressData?.coverImage?.url, coordinates, "pa", "cover")
             }
         }
     }
@@ -279,7 +274,7 @@ const UserState = ({ children }) => {
                     if (decrypted.profileImage?.coordinates) {
                         getImage(decrypted.profileImage?.url, decrypted.profileImage?.coordinates, "profile", "dp")
                     }
-                    if(decrypted.coverImage?.coordinates) {
+                    if (decrypted.coverImage?.coordinates) {
                         getImage(decrypted.coverImage?.url, decrypted.coverImage?.coordinates, "profile", "cover")
                     }
                     // console.log(decryptData(res.data.data))
@@ -358,9 +353,30 @@ const UserState = ({ children }) => {
             })
             .catch(err => "a") // console.log(decryptData(err.response.data.data)))
     }
+
+    const getPAddressDets = async () => {
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/get-payment-address/${userDetails?.username}`, {
+                headers: authHeader
+            })
+            const decrypted = decryptData(res.data.data)
+            const p = decrypted?.paymentAddressDetails
+
+            if (p?.profileImage?.coordinates) {
+                getImage(p?.profileImage?.url, p?.profileImage?.coordinates, "pa", "dp")
+            }
+            if (p?.coverImage?.coordinates) {
+                getImage(p?.coverImage?.url, p?.coverImage?.coordinates, "pa", "cover")
+            }
+            setPAddressData(p)
+        } catch (error) {
+            console.log(decryptData(error.response.data.data))
+        }
+    }
     useEffect(() => {
         if (userDetails /*&& userWallets.length === 0*/) {
             getUserWallets()
+            getPAddressDets()
         }
     }, [userDetails])
 

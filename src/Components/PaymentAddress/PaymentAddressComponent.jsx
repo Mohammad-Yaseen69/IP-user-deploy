@@ -33,9 +33,8 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const [isSaving, setIsSaving] = useState(false)
     const [dp, setDp] = useState(null)
     const [cover, setCover] = useState(null)
-    const [saved, setSaved] = useState(false)
+    const [saved] = useState(false)
     const [isAllowed, SetIsAllowed] = useState(undefined)
-    const [videoCheck, setVideoCheck] = useState(true)
     const [editMode, setEditMode] = useState(false)
     const [showModal, setShowModal] = useState(false)
     const [apiTitle, setApiTitle] = useState("")
@@ -64,9 +63,6 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                 }
             })
             .catch(err => {
-                // console.log(err)
-                const decrypted = decryptData(err.response.data.data)
-                // console.log(decrypted)
                 SetIsAllowed(false)
             })
     }
@@ -194,7 +190,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                         ?
                         <>
                             <InstructionsModal isOpen={isOpen} toggle={() => setIsOpen(!isOpen)} />
-                            <Cover cover={cover} setCover={setCover} />
+                            <Cover dets={paymentAddressDetails} cover={cover} setCover={setCover} />
                             <Card style={{ marginBottom: "0", borderRadius: '0px' }} className={styles.sub_container}>
                                 <CardBody className={styles.sc_body}>
 
@@ -202,7 +198,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                     {/* basic info */}
                                     <div className={styles.top}>
                                         <div ref={leftRef} className={styles.left}>
-                                            <Profile dp={dp} setDp={setDp} />
+                                            <Profile dets={paymentAddressDetails} dp={dp} setDp={setDp} />
                                             <div className={styles.basic_dets}>
                                                 <div className={styles.badge}>{userDetails?.account_type === "individual" ? t("Personal") : t("Business")} {t("Account")}</div>
                                                 <h4>{userDetails?.user?.first_name} {userDetails?.user?.last_name}</h4>

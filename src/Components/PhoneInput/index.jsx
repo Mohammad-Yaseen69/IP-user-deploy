@@ -8,7 +8,7 @@ function extractNumber(value) {
     return digits;
 }
 
-const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabled = false, phone = "", customStyles = {}, error, setError, inputStyles }) => {
+const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabled = false, phone = "", customStyles = {}, error, setError, inputStyles, disableDropdown }) => {
     const [selectedCountry, setSelectedCountry] = useState({})
     const [number, setNumber] = useState("")
 
@@ -41,9 +41,10 @@ const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabled = fals
                     setCountry={setCountry}
                     selectedCountry={selectedCountry}
                     setSelectedCountry={setSelectedCountry}
-                    disabledDropdown={disabled}
+                    disabledDropdown={(disabled || disableDropdown)}
                     setNumber={setNumber}
                     phone={phone}
+                    hideIcon={disableDropdown}
                 />
                 <PhoneNumber
                     number={number}
@@ -54,7 +55,7 @@ const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabled = fals
                 />
             </div>
 
-            {error && <p style={{marginTop: "4px", fontWeight: 600, color: "red", fontSize: "12px", marginBottom: "0"}}>{error}</p>}
+            {error && <p style={{ marginTop: "4px", fontWeight: 600, color: "red", fontSize: "12px", marginBottom: "0" }}>{error}</p>}
         </>
     )
 }

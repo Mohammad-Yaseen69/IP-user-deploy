@@ -7,7 +7,6 @@ import { Progress } from "reactstrap"
 import axios from "axios"
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import CurConversion from "../../HomeNewUpdated/CurConversion"
-import { toast } from "react-toastify"
 import InstaPayLoader from "../../Loader"
 import FeesComponent from "./FeesComponent"
 import { getLimits } from "../../WalletsNew"
@@ -33,7 +32,7 @@ const WalletsComponent = ({ data, dataHandler, loading = false, inEsim }) => {
         return userWallets?.filter(item => item?.wallet_type === "insta" && (item?.blocked || item?.admin_blocked || item?.status !== "active"))?.map(item => ({ name: item?.currency?.code, ...item }))
     }, [userWallets])
 
-    const width = useWindowWidth()
+    // const width = useWindowWidth()
 
     return (
         <>

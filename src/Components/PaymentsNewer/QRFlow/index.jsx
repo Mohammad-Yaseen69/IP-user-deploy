@@ -38,6 +38,7 @@ import MobileWalletServices from "../InternationalFlow/MobileWalletServices";
 import { createShambeToken } from "../../../Helper/CreateToken";
 import NotFoundModal from "../../NotFound/NotFoundModal";
 import { cleanString } from "../../../Helper/cleanString";
+import { currencies } from "../InternationalFlow/StepOne";
 
 const leftSideContent = [
     "Choose the beneficiary!",
@@ -60,7 +61,12 @@ const initialState = {
     reason: "",
     comment: "",
     files: [],
-    payment_type: {},
+    payment_type: {
+        name: "InstaPay Wallet",
+        value: "wallet",
+        // icon: instapay,
+        status: "Active"
+    },
     payment_duration: {
         name: "Instant Payment",
         value: "instant",
@@ -107,8 +113,11 @@ function reducer(state, action) {
 const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
-    const { userDetails, authHeader, setProfileLockTime } = useContext(UserContext)
+    const { userDetails, authHeader, setProfileLockTime, userWallets, getUserWallets } = useContext(UserContext)
     const [data, dispatch] = useReducer(reducer, initialState)
+    useEffect(() => {
+        getUserWallets()
+    }, [])
     const dataHandler = (field, value) => {
         dispatch({ type: "UPDATE_FIELD", field, value });
     };
@@ -120,6 +129,15 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             dataHandler("codeType", "authenticator")
         }
     }, [userDetails])
+
+
+    useEffect(() => {
+        const def = userWallets?.find((item) => item?.default === true)
+        const wallet = { ...def, ...currencies.find(item => item.currency_code === def?.currency?.code) }
+        dataHandler("wallet", def)
+        dataHandler("currency", wallet)
+        dataHandler("currency_wallet", wallet)
+    }, [userWallets, currencies])
 
 
     useEffect(() => {
@@ -425,7 +443,8 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             const dec = decryptData(res?.data?.data);
             dataHandler("new_amoount", dec?.exchangeRate?.exchanged_amount)
             return dec?.exchangeRate?.exchanged_amount ?? 0;
-        } catch {
+        } catch (error) {
+            console.log(decryptData(error?.response?.data?.data))
             dataHandler("error", "Something went wrong while getting exchange rate.")
             return 0;
         }
@@ -542,6 +561,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
         if (data.payment_type?.value) {
             const getAmount = async () => {
                 let amount;
+                console.log(data.payment_type, data.wallet, data.currency_wallet,"shit")
                 if (data.payment_type?.value === "wallet" && data?.wallet?.currency && data?.wallet?.currency?.code !== data?.currency_wallet?.currency?.code) {
                     amount = await getPlainExchangeRate(data?.currency_wallet?.currency?.code, data?.wallet?.currency?.code, data.amount)
                 } else {
@@ -557,7 +577,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             }, 100)
         }
         return () => clearTimeout(timeout)
-    }, [data.payment_type?.value, data.wallet?._id])
+    }, [data.payment_type?.value, data.wallet?._id,userDetails, userWallets, currencies])
 
     const handleClick = () => {
         switch (data.step) {
@@ -568,7 +588,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                 dataHandler("step", 3)
                 break;
             case 3:
-                dataHandler("step", 4)
+                dataHandler("step", 5)
                 break;
             case 4:
                 if (data.payment_type?.value === "mobile") {
@@ -992,7 +1012,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                             // }
                                                             else if (data.step === 5) {
                                                                 dataHandler("showCard", false)
-                                                                dataHandler("step", data.step - 1)
+                                                                dataHandler("step", data.step - 2)
                                                             }
                                                             else {
                                                                 dataHandler("step", data.step - 1)
@@ -1230,7 +1250,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                         // }
                                                         else if (data.step === 5) {
                                                             dataHandler("showCard", false)
-                                                            dataHandler("step", data.step - 1)
+                                                            dataHandler("step", data.step - 2)
                                                         }
                                                         else {
                                                             dataHandler("step", data.step - 1)

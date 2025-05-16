@@ -27,7 +27,14 @@ const AdjustModal = ({ isOpen, toggle, imageUrl, accountId, authHeader, type, na
             const data = {
                 "coordinates": modalPixels,
                 imageType: name === "cover" ? "cover" : "profile",
-                accountId: accountId || pId
+            }
+
+            if(accountId){
+                data.accountId = accountId
+            }
+
+            if(pId){
+                data.paymentAddressId = pId
             }
             updateCoordinates(type, name, modalPixels)
 
@@ -38,7 +45,8 @@ const AdjustModal = ({ isOpen, toggle, imageUrl, accountId, authHeader, type, na
             console.log(dec)
             toggle()
         } catch (error) {
-            console.error('Error cropping image:', error)
+            const decrypted = decryptData(error.response.data.data)
+            console.log(decrypted)
         }
     }
 
