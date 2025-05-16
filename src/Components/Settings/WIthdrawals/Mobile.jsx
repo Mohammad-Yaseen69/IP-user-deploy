@@ -1,15 +1,17 @@
 import { countries } from 'country-list-json'
 import React, { useContext, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import PhoneInput from 'react-phone-input-2'
+import PhoneInput from '../../PhoneInput'
 import { FormGroup, Input, Label } from 'reactstrap'
 import InstaPayLoader from '../../Loader'
 import { UserContext } from '../../../Context/UserContext'
+import { cancelSubscriptionOrSchedulePayment } from '../../OtherTransactions/ReceivedTransactionItem'
 
 const Mobile = ({ values, changeHandler, isEditMode, payers, country, payerLoading, setBankError, bankError }) => {
     const { t } = useTranslation()
 
     const countryCode = useMemo(() => {
+        console.log(countries.find(item => item?.name?.toLowerCase() === country?.name?.toLowerCase() || country?.name?.toLowerCase()?.includes(item?.name?.toLowerCase())), country)
         return countries.find(item => item?.name?.toLowerCase() === country?.name?.toLowerCase() || country?.name?.toLowerCase()?.includes(item?.name?.toLowerCase()))?.code
     }, [country])
     useEffect(() => {
@@ -75,28 +77,17 @@ const Mobile = ({ values, changeHandler, isEditMode, payers, country, payerLoadi
                                         <Label className="col-form-label" htmlFor="mobile_wallet_account_number">{t("Wallet Number")} <span className="req_star">*</span></Label>
                                         <PhoneInput
                                             placeholder="Wallet Number"
-                                            value={values.mobile_wallet_account_number}
-                                            onChange={(e) => {
+                                            phone={values.mobile_wallet_account_number}
+                                            setPhone={(e) => {
+                                                console.log(e)
                                                 changeHandler({ target: { value: e, name: "mobile_wallet_account_number" } })
                                                 if (userWithdrawals?.some(item => item?.mobile_wallet?.[0]?.wallet_account_number === e) && userWithdrawals?.some(item => item?.mobile_wallet?.[0]?.money_provider === values.mobile_money_provider)) {
                                                     setBankError("You can't add same withdrawal twice.")
                                                 }
                                             }}
-                                            country={countryCode?.toLowerCase() ?? "us"}
-                                            countryCodeEditable={false}
+                                            customStyles={{ boxShadow: "none", border: "1px solid #eeeeee", padding: "12px 15px", gap: "8px" }}
+                                            country={country.alpha3}
                                             disableDropdown={true}
-                                            inputProps={{
-                                                id: "mobile_wallet_account_number",
-                                                name: "mobile_wallet_account_number"
-                                            }}
-                                            inputStyle={{
-                                                width: "100%",
-                                                flex: 1,
-                                                minWidth: "250px",
-                                                padding: "22px 15px 22px 48px",
-                                                lineHeight: "1.5",
-                                                border: "1px solid #ced4da"
-                                            }}
                                             disabled={!isEditMode}
                                         />
                                         {
