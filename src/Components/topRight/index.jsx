@@ -6,7 +6,7 @@ import LanguagePicker from "../LanguagePicker"
 import Notifications from "../Notifications"
 
 const TopRight = ({position = "absolute"}) => {
-    const { userDetails } = useContext(UserContext)
+    const { userDetails, croppedImages } = useContext(UserContext)
 
     return (
         <div className="d-flex justify-content-between mb-4" style={{
@@ -51,7 +51,7 @@ const TopRight = ({position = "absolute"}) => {
                 {
                     userDetails?.profileImage?.url
                         ?
-                        <img src={userDetails?.profileImage?.url} alt={userDetails?.user?.first_name} style={{
+                        <img src={croppedImages.profileDP ?? userDetails?.profileImage?.url} alt={userDetails?.user?.first_name} style={{
                             width: "43px",
                             borderRadius: "10px",
                             height: "43px",

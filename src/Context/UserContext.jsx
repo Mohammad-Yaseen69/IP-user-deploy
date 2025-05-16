@@ -31,6 +31,43 @@ axios.defaults.withCredentials = true
 //     }
 // );
 
+const createImage = (url) =>
+    new Promise((resolve, reject) => {
+        const image = new Image()
+        image.addEventListener('load', () => resolve(image))
+        image.crossOrigin = url
+        image.addEventListener('error', (error) => reject(error))
+        image.src = url
+    })
+
+
+export const getCroppedImg = async (imageSrc, pixelCrop) => {
+    const image = await createImage(imageSrc)
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+
+    canvas.width = pixelCrop.width
+    canvas.height = pixelCrop.height
+
+    ctx.drawImage(
+        image,
+        pixelCrop.x,
+        pixelCrop.y,
+        pixelCrop.width,
+        pixelCrop.height,
+        0,
+        0,
+        pixelCrop.width,
+        pixelCrop.height
+    )
+
+    return new Promise((resolve) => {
+        canvas.toBlob((blob) => {
+            resolve(blob)
+        }, 'image/jpeg')
+    })
+}
+
 export const UserContext = createContext(null)
 
 const UserState = ({ children }) => {
@@ -94,7 +131,19 @@ const UserState = ({ children }) => {
     const [profileIncompleteReason, setProfileIncompleteReason] = useState("")
     const [showModalState, setShowModalState] = useState(false)
     const navigate = useNavigate()
-    
+    const [croppedImages, setCroppedImages] = useState({
+        profileDP: "",
+        profileBanner: "",
+        paDP: "",
+        paBanner: "",
+    })
+    // const [coordinates, setCoordinates] = useState({
+    //     profileDP: {},
+    //     profileBanner: {},
+    //     paDP: {},
+    //     paBanner: {},
+    // })
+
 
     const authHeader = {
         "Authorization": `Bearer ${token}`,
@@ -120,6 +169,8 @@ const UserState = ({ children }) => {
             axios.interceptors.response.eject(interceptor);
         };
     }, []);
+
+
 
     const [profileLockTIme, setProfileLockTime] = useState(0)
     useEffect(() => {
@@ -157,12 +208,57 @@ const UserState = ({ children }) => {
         setProfileIncompleteReason("")
     }
 
+    const getImage = async (dp, c, type, name) => { 
+        const croppedImage = await getCroppedImg(dp, c)
+        const imgUrl = URL.createObjectURL(croppedImage);
+
+        if (type === "profile") {
+            if (name === "dp") {
+                setCroppedImages(prev => ({ ...prev, profileDP: imgUrl }))
+                // setCoordinates(prev => ({ ...prev, profileDP: c }))
+            }
+            else {
+                setCroppedImages(prev => ({ ...prev, profileBanner: imgUrl }))
+                // setCoordinates(prev => ({ ...prev, profileBanner: c }))
+            }
+        }
+        else {
+            if (name === "dp") {
+                setCroppedImages(prev => ({ ...prev, paDP: imgUrl }))
+                // setCoordinates(prev => ({ ...prev, paDp: c }))
+            }
+            else {
+                setCroppedImages(prev => ({ ...prev, paDP: imgUrl }))
+                // setCoordinates(prev => ({ ...prev, paBanner: c }))
+            }
+        }
+    }
+
+    const updateCoordinates = (type, name, coordinates) => {
+        if (type === "profile") {
+            if (name === "dp") {
+                getImage(userDetails?.profileImage?.url, coordinates, "profile", "dp")
+            }
+            else {
+                getImage(userDetails?.coverImage?.url, coordinates, "profile", "cover")
+            }
+        }
+        else {
+            if (name === "dp") {
+                getImage(userDetails?.paImage?.url, coordinates, "pa", "dp")
+            }
+            else {
+                getImage(userDetails?.paBanner?.url, coordinates, "pa", "cover")
+            }
+        }
+    }
+
+
     const verifyToken = () => {
         if (!window.location.pathname.includes("auth")) {
             axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/auth/${token}`)
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
-                    // console.log(decrypted)
                     setUserDetails(decrypted)
                     if (!decrypted?.country?.status) {
                         sessionStorage.setItem("country_status_error", "Service not available in your country!")
@@ -179,6 +275,12 @@ const UserState = ({ children }) => {
                         localStorage.setItem("ip_country", coun)
                         clearData()
                         navigate("/login")
+                    }
+                    if (decrypted.profileImage?.coordinates) {
+                        getImage(decrypted.profileImage?.url, decrypted.profileImage?.coordinates, "profile", "dp")
+                    }
+                    if(decrypted.coverImage?.coordinates) {
+                        getImage(decrypted.coverImage?.url, decrypted.coverImage?.coordinates, "profile", "cover")
                     }
                     // console.log(decryptData(res.data.data))
                 })
@@ -332,7 +434,6 @@ const UserState = ({ children }) => {
             })
             .catch(err => {
                 const decrypted = decryptData(err.response.data.data)
-                // console.log(decrypted)
             })
     }
 
@@ -421,7 +522,7 @@ const UserState = ({ children }) => {
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
-                console.log(decrypted) 
+                console.log(decrypted)
                 setUserVideos(decrypted.result)
             })
             .catch(err => {
@@ -529,7 +630,7 @@ const UserState = ({ children }) => {
     }, [userDetails])
 
     return (
-        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, setRefresh, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, setPage, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, setUserRefresh, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, setWalletRefresh, allowedCountries, userPortfolio, setPortfolioRef, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, clearData }}>
+        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, setRefresh, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, setPage, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, setUserRefresh, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, setWalletRefresh, allowedCountries, userPortfolio, setPortfolioRef, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, clearData, croppedImages, updateCoordinates, setCroppedImages }}>
             {showModalState && <Modal isOpen={showModalState} toggle={() => window.history.replaceState(null, null, "")} />}
             {children}
         </UserContext.Provider>

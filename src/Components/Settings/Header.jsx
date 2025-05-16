@@ -8,14 +8,13 @@ import { Camera, Trash2 } from 'react-feather'
 import axios from 'axios'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import DeleteImageModal from './DeleteImageModal'
-// import AvatarEditor from 'react-avatar-editor'
 import { toast } from 'react-toastify'
 import ReactApexChart from 'react-apexcharts'
 import change_dp from "./change_img.svg"
 import AdjustModal from './AdjustModal'
 
 const Header = () => {
-    const { userDetails, authHeader, verifyToken, profileCompletedPercentage } = useContext(UserContext)
+    const { userDetails, authHeader, verifyToken, profileCompletedPercentage, croppedImages, setCroppedImages } = useContext(UserContext)
     const country = countries.find(item => item.alpha3 === userDetails?.country_iso_code)
     const [dp, setDp] = useState()
     const { t } = useTranslation()
@@ -33,30 +32,15 @@ const Header = () => {
     const [isSaving, setIsSaving] = useState(false)
     const mainContainerRef = useRef(null)
     const [file, setFile] = useState(null)
-    const [modalImage, setModalImage] = useState(null);
-
-    const urlToBase64 = async (url) => {
-        console.log(userDetails?.profileImage)
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Accept': '*/*'
-            }
-        });
-        const blob = await response.blob();
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(blob);
-        });
-    };
 
     useEffect(() => {
         if (userDetails) {
             setDp(userDetails?.profileImage?.url)
+            console.log(userDetails.profileImage)
         }
     }, [userDetails])
+
+
 
 
     const handleFileSelect = (e) => {
@@ -68,6 +52,7 @@ const Header = () => {
         setFile(file)
         const reader = new FileReader();
         reader.onload = () => {
+            setCroppedImages(prev => ({ ...prev, profileDP: reader.result }))
             setDp(reader.result);
         };
         reader.readAsDataURL(file);
@@ -79,18 +64,16 @@ const Header = () => {
 
     const handleSave = () => {
         setIsSaving(true);
-
-        // const canvas = editor.getImageScaledToCanvas();
-        // const file = canvas.toBlob((blob) => {
-        // console.log(blob)
         const formData = new FormData();
-        // formData.append("file", blob, `profile_image_${Date.now()}.png`);
         formData.append("file", file);
         axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/upload-profile-image/${userDetails._id}`,
             formData, {
             headers: authHeader
         })
             .then(res => {
+                const dec = decryptData(res.data.data)
+                console.log(dec)
+
                 verifyToken()
             })
             .catch(err => {
@@ -108,7 +91,6 @@ const Header = () => {
     const toggleMenu = () => setShowMenu(!showMenu);
 
     const menuRef = useRef(null)
-    const [adjustedFile, setAdjustedFile] = useState(null)
 
     const handleClickOutside = (event) => {
         if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -116,26 +98,13 @@ const Header = () => {
         }
     }
 
+
     useEffect(() => {
         document.addEventListener("click", handleClickOutside);
         return () => {
             document.removeEventListener("click", handleClickOutside);
         };
     }, []);
-
-    useEffect(() => {
-        if (adjustedFile) {
-            console.log("adjusted file", adjustedFile);
-
-            // Convert Blob to object URL for preview
-            const imgUrl = URL.createObjectURL(adjustedFile);
-            console.log("imgUrl", imgUrl);
-            setDp(imgUrl);
-
-            // Clean up the object URL when component unmounts or adjustedFile changes
-            return () => URL.revokeObjectURL(imgUrl);
-        }
-    }, [adjustedFile])
 
 
     // profile completion chart
@@ -248,7 +217,7 @@ const Header = () => {
                         userDetails?.profileImage?.url
                             || isEditing
                             ?
-                            <img src={dp} alt={userDetails?.account_type === "individual" ? userDetails?.user?.first_name : userDetails?.company?.company_name} style={{ background: "white", boxShadow: "0px 0px 3px #1111113e" }} className={styles.img} />
+                            <img src={croppedImages.profileDP ?? dp} alt={userDetails?.account_type === "individual" ? userDetails?.user?.first_name : userDetails?.company?.company_name} style={{ background: "white", boxShadow: "0px 0px 3px #1111113e" }} className={styles.img} />
                             :
                             <div className={styles.dp} style={{ overflow: "hidden" }}>{
                                 userDetails?.account_type?.toLowerCase() === "individual"
@@ -341,8 +310,6 @@ const Header = () => {
                                             <label style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", marginBottom: "0", cursor: "pointer" }} onClick={async () => {
                                                 toggleMenu()
                                                 setShowModal(true)
-                                                const base64 = await urlToBase64(dp);
-                                                setModalImage(base64);
                                             }}>
                                                 <Camera size={18} />
                                                 <span style={{ whiteSpace: "nowrap" }}>Adjust</span>
@@ -426,8 +393,11 @@ const Header = () => {
             <AdjustModal
                 isOpen={showModal}
                 toggle={() => setShowModal(!showModal)}
-                imageUrl={modalImage}
-                setFile={setAdjustedFile}
+                imageUrl={dp}
+                accountId={userDetails?._id}
+                authHeader={authHeader}
+                type={"profile"}
+                name={"dp"}
             />
         </div >
     )
