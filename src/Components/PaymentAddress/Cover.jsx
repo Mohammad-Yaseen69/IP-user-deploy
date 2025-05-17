@@ -10,15 +10,17 @@ import { toast } from "react-toastify"
 import { IoCrop, IoCropOutline } from "react-icons/io5";
 import { FaCropAlt } from "react-icons/fa";
 import { BsCrop } from "react-icons/bs";
+import AdjustModal from "../Settings/AdjustModal";
 
 const Cover = ({ cover, setCover, dets }) => {
-    const { authHeader, userDetails, verifyToken } = useContext(UserContext)
+    const { authHeader, userDetails, verifyToken, croppedImages } = useContext(UserContext)
 
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false)
     const mainContainerRef = useRef(null)
     const [file, setFile] = useState(null)
     const [deleting, setDeleting] = useState(false)
+    const [showModal, setShowModal] = useState(false)
 
 
     const handleFileSelect = (e) => {
@@ -90,9 +92,11 @@ const Cover = ({ cover, setCover, dets }) => {
             });
     }
 
+    console.log(croppedImages)
+
     return (
         <div className={styles.cover_container} ref={mainContainerRef}>
-            <img src={cover || coverPlaceHolder} alt="cover" className={styles.cover} />
+            <img src={croppedImages.paBanner || cover || coverPlaceHolder} alt="cover" className={styles.cover} />
             {
                 (isEditing || deleting)
                     ?
@@ -128,16 +132,25 @@ const Cover = ({ cover, setCover, dets }) => {
                     :
                     <div style={{ position: "absolute", top: "20px", right: "40px", height: "40px", width: "40px", display: "flex", justifyContent: "center", alignItems: "center" }}>
                         <label htmlFor='cover' style={{ background: "#1111116e", marginBottom: "0", backdropFilter: "blur(10px)", cursor: "pointer" }}>
-                            <Camera color='white'  style={{ marginTop: "4px" }} />
+                            <Camera color='white' style={{ marginTop: "4px" }} />
                         </label>
                         {cover &&
                             <div style={{ background: "#1111116e", backdropFilter: "blur(10px)", cursor: "pointer", display: "flex", alignItems: "center", gap: "12px" }}>
                                 <Trash onClick={deleteCover} style={{ marginLeft: "12px" }} color="white" />
-                                <BsCrop   size={20} color="white"/>
+                                <BsCrop onClick={() => setShowModal(true)} size={20} color="white" />
                             </div>
                         }
                     </div>
             }
+            <AdjustModal
+                isOpen={showModal}
+                toggle={() => setShowModal(false)}
+                type={"address"}
+                name={"cover"}
+                authHeader={authHeader}
+                imageUrl={cover}
+                pId={dets._id}
+            />
             <input type="file" name="cover" id="cover" hidden onChange={handleFileSelect} accept="image/*" />
         </div>
     )

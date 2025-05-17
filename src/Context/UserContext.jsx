@@ -243,6 +243,7 @@ const UserState = ({ children }) => {
                 getImage(pAddressData?.profileImage?.url, coordinates, "pa", "dp")
             }
             else {
+                console.log(pAddressData?.coverImage?.url)
                 getImage(pAddressData?.coverImage?.url, coordinates, "pa", "cover")
             }
         }
