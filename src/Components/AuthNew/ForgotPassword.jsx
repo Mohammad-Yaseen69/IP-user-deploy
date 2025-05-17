@@ -15,6 +15,8 @@ import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import PhoneInput from "../PhoneInput"
 import { toast } from "react-toastify"
+import { smsIcon, whatsappIcon } from "../Auth/files"
+import { trimEnd } from "lodash"
 
 const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
     const { t } = useTranslation()
@@ -27,10 +29,11 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
     const [isPressed, setIsPressed] = useState(false)
     const [step, setStep] = useState(1)
     const [otpToken, setOtpToken] = useState("")
-    const [verified, setVerified] = useState(false)
+    const [verified,] = useState(false)
     const numberOfFields = 6;
     const [otpValues, setOTPValues] = useState(Array(numberOfFields).fill(''));
     const inputRefs = useRef(Array(numberOfFields).fill(null));
+    const [currentMethod, setCurrentMethod] = useState("sms")
     useEffect(() => {
         if (inputRefs?.current?.[0]) {
             inputRefs?.current?.[0]?.focus()
@@ -39,7 +42,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
     const [isAnyFieldEmpty, setIsAnyFieldEmpty] = useState(true);
     const [resendTimer, setResendTimer] = useState(90);
     const [isLoginError, setIsLoginError] = useState("")
-    const { allowedCountries, userDetails } = useContext(UserContext)
+    const [showToolTip, setShowTooltip] = useState("")
     const [passwords, setPasswords] = useState({
         password: {
             value: "",
@@ -50,6 +53,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
             show: false
         }
     })
+
 
     const changePassHandler = (e) => {
         const { name, value } = e.target;
@@ -104,8 +108,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
         }
     };
 
-    console.log(email)
-    const sendOTP = async (e) => {
+    const sendOTP = async (e, method) => {
         e.preventDefault()
         setError("")
         setIsPressed(true)
@@ -114,6 +117,10 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                 email
             } : {
                 phone: email
+            }
+
+            if ((method === "whatsapp") && data.phone) {
+                data.platform = "whatsapp"
             }
             const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/send-forgot-password-otp`, {
                 data: encryptData(data)
@@ -311,7 +318,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                                                 ?
                                                 t("Verification code has been verified, Please continue to the next step.")
                                                 :
-                                                t("A Verification code has been sent to your email and number.").replace("number", email?.slice(0, 3) === "971" ? "Whatsapp" : "number")
+                                                t("A Verification code has been sent to your email and number.").replace("number", currentMethod === "whatsapp" ? "Whatsapp" : "number")
                                         }
                                     </p>
                                 </div>
@@ -343,6 +350,40 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                                                     }}
                                                 />
                                             ))}
+                                        </div>
+                                        <div style={{ position: "relative" }}>
+                                            <span
+                                                onClick={() => {
+                                                    if (resendTimer === 0) {
+                                                        if (currentMethod === "sms") {
+                                                            setCurrentMethod("whatsapp")
+                                                            setResendTimer(90)
+                                                            sendOTP({ preventDefault: () => { } }, "whatsapp")
+                                                            setOTPValues(Array(numberOfFields).fill(''), "whatsapp")
+                                                        } else {
+                                                            setCurrentMethod("sms")
+                                                            setResendTimer(90)
+                                                            sendOTP({ preventDefault: () => { } }, "sms")
+                                                            setOTPValues(Array(numberOfFields).fill(''))
+                                                        }
+                                                    }
+                                                }}
+                                                onMouseEnter={() => {
+                                                    if (resendTimer !== 0) {
+                                                        setShowTooltip(true)
+                                                    }
+                                                }}
+                                                onMouseLeave={() => {
+                                                    setShowTooltip(false)
+                                                }}
+                                                style={{ display: 'flex', alignItems: "center", gap: "7px", padding: '10px 15px', boxShadow: "0px 0px 4px #0000002e", borderRadius: "6px", cursor: "pointer" }}>
+                                                <img style={{ width: '24px' }} src={currentMethod === "sms" ? whatsappIcon : smsIcon} alt="" />
+                                                <span style={{ fontWeight: 600, color: 'black' }}>
+                                                    Verify Using {currentMethod === "sms" ? "Whatsapp" : "SMS"}
+                                                </span>
+                                            </span>
+
+                                            {showToolTip && <span style={{ fontWeight: 600, fontSize: '10px', backgroundColor: "gray", padding: '1px 3px', borderRadius: "3px", color: 'white', position: "absolute", bottom: "-20px", right: '-40px' }}>Wait For the Timer</span>}
                                         </div>
                                         <span style={{ fontSize: "12px", color: "#aeaeae", fontWeight: 600 }}
                                             className={styles.resend_text}
