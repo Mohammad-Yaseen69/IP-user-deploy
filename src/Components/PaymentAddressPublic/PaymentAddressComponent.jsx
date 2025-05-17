@@ -1,27 +1,22 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import coverPlaceHolder from "../UserProfilePublic/files/cover_1.png"
 import styles from "./styles/PAC.module.scss"
-import { Button, Card, CardBody, CardText, Col, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
+import { Card, CardBody, CardText, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import countries from "../PaymentsNewer/CountriesData.json"
-import { CheckCircle, ChevronLeft, Heart, Share2 } from 'react-feather'
+import { ChevronLeft } from 'react-feather'
 import axios from 'axios'
-import { UserContext } from '../../Context/UserContext'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
-import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import copy from "../ChipsInNew/copy.png"
 import vpa_styles from "./styles/VPA.module.css"
 import addFunds from "../HomeNewUpdated/files/AddFunds.png"
 import logo from "../../assets/images/logo/logo.png"
 import { useTranslation } from 'react-i18next'
-import CreditCardInput from '../CreditInput'
 import verified from "../../assets/verified.png"
 import QrDetails from './QrDetails'
 import PayAsGuest from './PayAsGuest'
 import { formatCurrency } from '../../Helper/AmountFormat'
 import { toast } from 'react-toastify'
 import InstaPayLoader from '../Loader'
-import { BackgroundColor } from '../../Constant'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination } from 'swiper'
 import 'swiper/css'
@@ -78,9 +73,14 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     const { user_name } = useParams()
     const [limits, setLimits] = useState({ topup_min_amount: 0, topup_max_amount: 0 })
 
+    const normalizeText = (text) => {
+        return text.normalize('NFD') // break accented characters
+            .replace(/[\u0300-\u036f]/g, '') // remove accents
+    }
     useEffect(() => {
         if (userDetails?.country_name) {
-            const filteredCountry = countries.find(item => item.name.toLowerCase().includes(userDetails?.country_name.toLowerCase()));
+            const normalize = normalizeText(userDetails?.country_name)
+            const filteredCountry = countries.find(item => item.name.toLowerCase().includes(normalize.toLowerCase()));
             setUserCountry(filteredCountry);
         }
         if (user_name) {
@@ -144,10 +144,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     const [expiry] = useState('');
     const [cvc] = useState('');
 
-    const [isValid, setIsValid] = useState(false)
-
     useEffect(() => {
-        const isValidCardNumber = cardNumber.split(" ").join("").length >= 16;
         const [contentMonth, contentYear] = expiry.split("/").map(Number);
         const currentDate = new Date();
         const currentMonth = currentDate.getMonth() + 1; // getMonth() returns 0-11, so add 1
@@ -156,8 +153,6 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
         const isValidExpiry = contentYear > currentYear ||
             (contentYear === currentYear && contentMonth > currentMonth);
         const isValidCVC = cvc.length >= 3;
-
-        setIsValid(isValidCardNumber && isValidExpiry && isValidCVC);
 
     }, [cardNumber, expiry, cvc])
     const [showVerTT, setShowVerTT] = useState(false)
@@ -195,8 +190,10 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     //     }
     // }, [amount])
 
+
+
     const leftJSX = () => (
-        <div style={{ flex: 2 }} className={styles.left}>
+        <div style={{ flex: 1.7 }} className={styles.left}>
             {width > 1000 &&
                 <div style={{ marginBottom: "2rem" }}>
                     <img style={{ float: 'right' }} src={ip} alt="" />
@@ -272,8 +269,8 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
 
                                 <Card style={{ marginBottom: "0", boxShadow: "unset" }} className={styles.sub_container}>
                                     <CardBody className={styles.sc_body}>
-                                        {width > 1550 &&
-                                            <div className={styles.bigLogo}>
+                                        {width > 1200 &&
+                                            <div style={{margin: "auto"}} className={styles.bigLogo}>
                                                 <img src={ip_white} alt="" />
                                             </div>
                                         }
@@ -453,9 +450,9 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                                 <span>Pay With InstaPay</span>
                                                             </Link>
 
-                                                            <div style={{gap: '10px' , justifyContent: "flex-start"}} className={styles.go_back} onClick={() => window.history.back()}>
+                                                            <div style={{ gap: '10px', justifyContent: "flex-start" }} className={styles.go_back} onClick={() => window.history.back()}>
                                                                 <ChevronLeft size={16} color='#777777' />
-                                                                <span style={{ color: "#777777", fontSize: '12px'}}>
+                                                                <span style={{ color: "#777777", fontSize: '12px' }}>
                                                                     {t("Go back (Cancel Payment)")}
                                                                 </span>
                                                             </div>

@@ -83,6 +83,8 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
             verifyOTpHandler(newOTPValues.join(""), setOTPValues, numberOfFields)
         }
     };
+
+    // console.log(isAnyFieldEmpty , otpValues.some(item => !item) , data.loading , data.account_created)
     return (
         <>
             <form onSubmit={(e) => {

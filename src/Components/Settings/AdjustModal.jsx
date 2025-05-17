@@ -29,11 +29,11 @@ const AdjustModal = ({ isOpen, toggle, imageUrl, accountId, authHeader, type, na
                 imageType: name === "cover" ? "cover" : "profile",
             }
 
-            if(accountId){
+            if (accountId) {
                 data.accountId = accountId
             }
 
-            if(pId){
+            if (pId) {
                 data.paymentAddressId = pId
             }
             updateCoordinates(type, name, modalPixels)

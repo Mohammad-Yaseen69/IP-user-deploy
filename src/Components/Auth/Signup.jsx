@@ -218,14 +218,14 @@ const Signup = ({ country, setIsLoginForm }) => {
 
             const dec = decryptData(res.data.data)
             console.log(dec)
-            dataHandler("account_created", true)
+
 
             if (data.email.length < 1) {
                 if (data.dp) {
                     await uploadDp(dec?.token ?? dec?.im)
                 } else {
                     console.log("verified")
-                    // dataHandler("phone_otp_verfied", true)
+                    dataHandler("account_created", true)
                     dataHandler("verified", true)
                 }
             } else {
@@ -262,6 +262,7 @@ const Signup = ({ country, setIsLoginForm }) => {
                 dataHandler("verified", true)
             }
         } catch (error) {
+            console.log(error)
             setOtp(Array(numberOfFields).fill(""))
             const dec = decryptData(error.response.data.data)
             dataHandler("error", dec?.message ?? "Something went wrong while sending OTP.")
@@ -333,7 +334,7 @@ const Signup = ({ country, setIsLoginForm }) => {
                                     isOpen={data.error}
                                     toggle={() => {
                                         dataHandler("error", "")
-                                        if(data.account_created){
+                                        if (data.account_created) {
                                             dataHandler("verified", true)
                                         }
                                     }}
