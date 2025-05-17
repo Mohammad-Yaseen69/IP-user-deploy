@@ -12,7 +12,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 
 const SecurityQuestions = () => {
-    const { userSecurityQues, authHeader, userDetails, verifyToken, getSecurityQuestions, setProfileLockTime, profileCompletedPercentage } = useContext(UserContext)
+    const { userSecurityQues, authHeader, userDetails, verifyToken, getSecurityQuestions, setProfileLockTime, profileCompletedPercentage, setUserDetails } = useContext(UserContext)
     const navigate = useNavigate()
     useEffect(() => {
         if (userDetails) {
@@ -82,8 +82,12 @@ const SecurityQuestions = () => {
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     if (decrypted.status === true) {
-                        setIsEditable(false)
+                        setUserDetails(prev => ({
+                            ...prev,
+                            user: decrypted.account.user
+                        }))
                         setShowSuccess(true)
+                        setIsEditable(false)
                     }
                 })
                 .catch(err => {
@@ -94,13 +98,15 @@ const SecurityQuestions = () => {
     }
 
     useEffect(() => {
-        setSelectedQuesOne(userDetails?.user?.question1 ?? userDetails?.company?.question1)
-        setSelectedQuesTwo(userDetails?.user?.question2 ?? userDetails?.company?.question2)
-        setSelectedQuesThree(userDetails?.user?.question3 ?? userDetails?.company?.question3)
-        setAnswerOne((userDetails?.user?.answer1 ?? userDetails?.company?.answer1) ? "**************" : "")
-        setAnswerTwo((userDetails?.user?.answer2 ?? userDetails?.company?.answer2) ? "**************" : "")
-        setAnswerThree((userDetails?.user?.answer3 ?? userDetails?.company?.answer3) ? "**************" : "")
-    }, [userDetails, isEditable])
+        if (!isEditable && userDetails) {
+            setSelectedQuesOne(userDetails?.user?.question1 ?? userDetails?.company?.question1 ?? "");
+            setSelectedQuesTwo(userDetails?.user?.question2 ?? userDetails?.company?.question2 ?? "");
+            setSelectedQuesThree(userDetails?.user?.question3 ?? userDetails?.company?.question3 ?? "");
+            setAnswerOne(userDetails?.user?.answer1 ?? userDetails?.company?.answer1 ? "**************" : "");
+            setAnswerTwo(userDetails?.user?.answer2 ?? userDetails?.company?.answer2 ? "**************" : "");
+            setAnswerThree(userDetails?.user?.answer3 ?? userDetails?.company?.answer3 ? "**************" : "");
+        }
+    }, [userDetails, isEditable]);
 
     const UpdateQuestionHandler = (setter, type, otp, error) => {
         setSaving(true)
