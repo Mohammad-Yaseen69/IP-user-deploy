@@ -5,7 +5,7 @@ import axios from "axios"
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import { UserContext } from '../../../Context/UserContext'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { toast } from "react-toastify"
 
 const CreatePin = () => {
@@ -18,7 +18,6 @@ const CreatePin = () => {
         currentField: 0
     })
     const [loading, setLoading] = useState(false)
-    const navigate = useNavigate()
     const [disabled, setDisabled] = useState(true)
     const [success, setShowSuccess] = useState(false)
     const { accountId, platformType } = useParams()
@@ -49,7 +48,7 @@ const CreatePin = () => {
     };
 
     const [isPinMatch, setIsPinMatch] = useState(false);
-    const { userDetails, authHeader } = useContext(UserContext)
+    // const { userDetails, authHeader } = useContext(UserContext)
 
     const handleInputChange = (index, value, setter, data, refs) => {
         const numericValue = value.replace(/[^0-9]/g, '');

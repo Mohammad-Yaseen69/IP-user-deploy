@@ -282,7 +282,7 @@ const CreatePin = () => {
                                 ) : "Set Pin"}
                             </button>
 
-                            <button style={{ backgroundColor: "#FAFAFA",border: 'none', outline: "none", color: "black" }} onClick={() => navigate("/settings")}>
+                            <button style={{ backgroundColor: "#FAFAFA",border: 'none', outline: "none", color: "black" }} onClick={() => navigate("/settings?tab=social")}>
                                 Back
                             </button>
 
@@ -339,7 +339,7 @@ const CreatePin = () => {
                     </div>
 
                     <button
-                        onClick={() => navigate("/settings")}
+                        onClick={() => navigate("/settings?tab=social")}
                         style={{
                             width: "96%",
                             borderRadius: "8px",
