@@ -66,7 +66,7 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
     const [linkCode, setLinkCode] = useState("")
     const [timer, setTimer] = useState(120)
     const [showSuccess, setShowSuccess] = useState(false)
-    const modalRef  = useRef(null)
+    const modalRef = useRef(null)
 
     const getLinkCode = async () => {
         setLoading(true)
@@ -101,7 +101,6 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
 
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
-    const ft = queryParams.get("ft")
 
     useEffect(() => {
         if (isOpen && modalRef.current) {
@@ -128,18 +127,18 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
             {
                 !showSuccess
                     ?
-                    <Modal 
-                    isOpen={isOpen} 
-                    toggle={toggle} 
-                    style={{ maxWidth: "920px", width: "100vw" }} 
-                    contentClassName={styles.content} 
-                    onOpened={() => {
-                        const modalContent = document.querySelector(`.${styles.container}`);
-                        if (modalContent) {
-                          modalContent.scrollTop = 0; // Scroll to the top
-                        }
-                    }}
-                    scrollable={true}
+                    <Modal
+                        isOpen={isOpen}
+                        toggle={toggle}
+                        style={{ maxWidth: "920px", width: "100vw" }}
+                        contentClassName={styles.content}
+                        onOpened={() => {
+                            const modalContent = document.querySelector(`.${styles.container}`);
+                            if (modalContent) {
+                                modalContent.scrollTop = 0; // Scroll to the top
+                            }
+                        }}
+                        scrollable={true}
                     >
                         <ModalBody className={styles.container} ref={modalRef}>
                             <div className={styles.left}>
@@ -214,11 +213,7 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
                                     <div style={{ display: "flex", justifyContent: "space-between", gap: ".75rem" }}>
                                         <h1>{t("Link Your Instagram Account to InstaPay").replace("Instagram", "Telegram")}</h1>
                                         <img src={close} alt="close" style={{ height: "50px", width: "50px" }} onClick={() => {
-                                            if (ft) {
-                                                navigate("/settings?tab=withdrawal&ft=true")
-                                            } else {
-                                                toggle()
-                                            }
+                                            toggle()
                                         }} />
                                     </div>
                                 }
@@ -235,9 +230,6 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
                         toggle={() => {
                             toggle()
                             setShowSuccess(false)
-                            if (ft) {
-                                navigate("/settings?tab=withdrawal&ft=true")
-                            }
                         }}
                     />
             }

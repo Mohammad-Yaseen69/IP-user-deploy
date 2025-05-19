@@ -88,7 +88,7 @@ const Signup = ({ country, setIsLoginForm }) => {
             case 2:
                 return !data.first_name || !data.last_name
             case 3:
-                return !data.phone || data.phone.length < 9 || !/^\d{9,20}$/g.test(data.phone) || data.email.length > 0 ? !emailRegex.test(data.email) : false
+                return !data.phone || data.phone.length < 9 || !/^\d{9,20}$/g.test(data.phone) || (data.email.length > 0 ? !emailRegex.test(data.email) : false)
             case 4:
                 return !passwordRegex.every(item => item.test(data.password)) || data.password !== data.confirm_password
 

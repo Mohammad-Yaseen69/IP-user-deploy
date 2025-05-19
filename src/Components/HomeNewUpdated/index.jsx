@@ -139,7 +139,7 @@ const HomeNewUpdated = () => {
         getCryptoRates()
     }, [])
 
-    const { userDetails, profileCompletedPercentage, userWallets } = useContext(UserContext)
+    const { userDetails, profileCompletedPercentage, userWallets, croppedImages } = useContext(UserContext)
     const [showCompletionModal, setShowCompletionModal] = useState(false)
     const [selectedWallet, setSelectedWallet] = useState(null)
 
@@ -169,7 +169,7 @@ const HomeNewUpdated = () => {
                                                 {
                                                     userDetails?.profileImage?.url
                                                         ?
-                                                        <img src={userDetails?.profileImage?.url} alt={userDetails?.user?.first_name} style={{
+                                                        <img src={croppedImages.profileDP ||userDetails?.profileImage?.url} alt={userDetails?.user?.first_name} style={{
                                                             minWidth: window.innerWidth > 1650 ? "50px" : "40px",
                                                             minHeight: window.innerWidth > 1650 ? "50px" : "40px",
                                                             width: window.innerWidth > 1650 ? "50px" : "40px",

@@ -26,7 +26,7 @@ import ReportModal from "./ReportModal"
 // import PortfolioItem from "../UserProfile/PortfolioItem"
 import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
-import { UserContext } from "../../Context/UserContext"
+import { getCroppedImg, UserContext } from "../../Context/UserContext"
 import InstaPayLoader from "../Loader"
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem"
 import verified from "../../assets/verified.png"
@@ -94,6 +94,8 @@ const ProfileComponent = () => {
     const [totalReviewsAsSeller, setTotalReviewsAsSeller] = useState(0)
     const [totalReviewsAsBuyer, setTotalReviewsAsBuyer] = useState(0)
     const [loading, setLoading] = useState(true)
+    const [croppedDp, setCroppedDp] = useState("")
+    const [croppedCover, setCroppedCover] = useState("")
 
     useEffect(() => {
         const getFollowers = async () => {
@@ -120,23 +122,27 @@ const ProfileComponent = () => {
             getFollowers()
 
             axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-cover/${user_name}`)
-                .then(res => {
+                .then(async (res) => {
                     const decrypted = decryptData(res.data.data)
+                    
+                    const img = await getCroppedImg(decrypted?.coverPicture?.coverImage, decrypted?.coverPicture?.coordinates)
+                    const imageUrl = URL.createObjectURL(img)
+                    setCroppedCover(imageUrl)
                     setUserCover(decrypted?.coverPicture?.coverImage ?? covers[Math.trunc(Math.random() * 3)])
                 })
                 .catch(err => {
-                    const decrypted = decryptData(err.response.data.data)
-                    // console.log(decrypted)
                 })
 
             axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-profile/${user_name}`)
-                .then(res => {
+                .then(async (res) => {
                     const decrypted = decryptData(res.data.data)
+                    console.log(decrypted.profilePicture)
+                    const img = await getCroppedImg(decrypted?.profilePicture?.profileImage, decrypted?.profilePicture?.coordinates)
+                    const imageUrl = URL.createObjectURL(img)
+                    setCroppedDp(imageUrl)
                     setUserDp(decrypted?.profilePicture?.profileImage ?? "")
                 })
                 .catch(err => {
-                    const decrypted = decryptData(err.response.data.data)
-                    // console.log(decrypted)
                 })
 
             axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-details/${user_name}`)
@@ -147,8 +153,6 @@ const ProfileComponent = () => {
                     setUserCountry(filtered)
                 })
                 .catch(err => {
-                    const decrypted = decryptData(err.response.data.data)
-                    // console.log(decrypted)
                 })
                 .finally(() => setLoading(false))
 
@@ -158,8 +162,6 @@ const ProfileComponent = () => {
                     setUserWallet(decrypted.defaultWallet)
                 })
                 .catch(err => {
-                    const decrypted = decryptData(err.response.data.data)
-                    // console.log(decrypted)
                 })
 
             // reviews
@@ -172,8 +174,6 @@ const ProfileComponent = () => {
                     setTotalReviewsAsSeller(decrypted?.userReviews?.totalNumberOfReviews)
                 })
                 .catch(err => {
-                    const decrypted = decryptData(err.response.data.data)
-                    // console.log(decrypted)
                 })
 
             // buyer
@@ -185,8 +185,6 @@ const ProfileComponent = () => {
                     setTotalReviewsAsBuyer(decrypted?.userReviews?.totalNumberOfReviews)
                 })
                 .catch(err => {
-                    const decrypted = decryptData(err.response.data.data)
-                    // console.log(decrypted)
                 })
 
             // portfolio
@@ -196,8 +194,6 @@ const ProfileComponent = () => {
                     setUserPortfolio(decrypted?.result)
                 })
                 .catch(err => {
-                    const decrypted = decryptData(err.response.data.data)
-                    // console.log(decrypted)
                 })
 
         }
@@ -208,7 +204,7 @@ const ProfileComponent = () => {
     // report 
     const [showReportModal, setShowReportModal] = useState(false)
     const [reported, setReported] = useState(false)
-    const { userDetails: loggedInUser, authHeader, verifyToken } = useContext(UserContext)
+    const { userDetails: loggedInUser, authHeader } = useContext(UserContext)
 
     useEffect(() => {
         const getReportStatus = async () => {
@@ -243,7 +239,7 @@ const ProfileComponent = () => {
                     userDetails
                         ?
                         <div className={styles.container}>
-                            <img src={userCover || covers[Math.trunc(Math.random() * 3)]} alt="cover" className={styles.cover} style={{ height: "300px", width: "100%", objectFit: "cover", borderRadius: "30px 30px 0 0" }} />
+                            <img src={croppedCover || userCover || covers[Math.trunc(Math.random() * 3)]} alt="cover" className={styles.cover} style={{ height: "300px", width: "100%", objectFit: "cover", borderRadius: "30px 30px 0 0" }} />
                             <Card style={{ marginBottom: "0" }} className={styles.sub_container}>
                                 <CardBody className={styles.sc_body}>
 
@@ -254,7 +250,7 @@ const ProfileComponent = () => {
                                             {
                                                 userDp
                                                     ?
-                                                    <img src={userDp} className={styles.dp} alt="profile picture" style={{ background: "transparent" }} />
+                                                    <img src={croppedDp || userDp} className={styles.dp} alt="profile" style={{ background: "transparent" }} />
                                                     :
                                                     <div className={styles.dp} style={{ overflow: "hidden" }}>{userDetails?.first_name?.[0]}</div>
                                             }

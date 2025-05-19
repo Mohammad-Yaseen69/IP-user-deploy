@@ -50,7 +50,6 @@ const Settings = () => {
                         <div className={styles.bottom}>
                             <Tabs currentTab={currentTab} setCurrentTab={setCurrentTab} account_type={userDetails?.account_type} verifyToken={verifyToken} />
                             <div className={styles.right}>
-                                {/* <Suspense fallback={<InstaPayLoader opacity={.5} />}> */}
                                 {
                                     currentTab === "Basic Info"
                                     &&

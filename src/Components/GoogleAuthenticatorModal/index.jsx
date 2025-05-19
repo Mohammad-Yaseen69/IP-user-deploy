@@ -10,6 +10,7 @@ import axios from "axios"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import copy from "../ChipsInNew/copy.png"
+import useWindowWidth from "../../utils/useWindowWidth"
 
 const GoogleAuthenticatorModal = ({
     isOpen,
@@ -33,6 +34,7 @@ const GoogleAuthenticatorModal = ({
     const [showPassword, setShowPassword] = useState(false)
     const [showSecret, setShowSecret] = useState(false)
     const [enablingAuth, setEnablingAuth] = useState(false)
+    const width = useWindowWidth()
 
     // auth code
     const numberOfFields = 6;
@@ -88,7 +90,7 @@ const GoogleAuthenticatorModal = ({
 
             if (thresholdFunc) {
                 thresholdFunc()
-            }else{
+            } else {
                 if (!isBiometricChecks) {
                     if (sideText == "Google Authenticator") {
                         console.log("he")
@@ -278,7 +280,7 @@ const GoogleAuthenticatorModal = ({
                         </div>
                     }
                     {
-                        window.innerWidth > 800
+                        width > 800
                             ?
                             (
                                 step < 3

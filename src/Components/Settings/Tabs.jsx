@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import styles from "./styles/tabs.module.css"
 import { useTranslation } from 'react-i18next'
 import { UserContext } from '../../Context/UserContext'
@@ -148,6 +148,11 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
         }
     }, [tab])
 
+    const [navigatedTabs] = useState([
+        { param: "tfa", name: "Verification Code Preferences" },
+        { param: "social", name: "My Social Network Accounts" },
+    ])
+
     useEffect(() => {
         if (tab?.toLowerCase()?.includes("verification")) {
             setCurrentTab(account_type === "individual" ? "Identity Verification" : "Business Verification")
@@ -164,9 +169,15 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                             window.history.replaceState(null, null, "")
                             setCurrentTab(item.name)
                             verifyToken()
+
+                            const activeUrlTab = navigatedTabs.find(tab => window.location.href.includes(tab.param));
+
+                            if (activeUrlTab && window.location.href.includes("redirect") && item.name === activeUrlTab.name) {
+                                navigate(`/settings?tab=${activeUrlTab.param}`);
+                            }
                         }}
                     >
-                        <img src={item.name !== currentTab ? item.active_icon : item.icon} />
+                        <img alt='asdfaf' src={item.name !== currentTab ? item.active_icon : item.icon} />
                         {t(item.name)}
                         {
                             item.name.toLowerCase().includes("basic")

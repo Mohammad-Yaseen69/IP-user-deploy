@@ -12,13 +12,14 @@ import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
 import { useLocation, useNavigate } from 'react-router'
 import LinkToInstagramModal from '../LinkToInstagramModal'
 import LinktoTelegramModal from "../LinkToTelegramModal"
+import NextStepModal from './NextStepModal'
 
 const AccountItem = ({ data }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [checked, setChecked] = useState(false)
     const [showModal, setShowModal] = useState(false)
-    const { userDetails, authHeader, verifyToken } = useContext(UserContext)
+    const { userDetails, authHeader, verifyToken, userWithdrawals } = useContext(UserContext)
     const [showOtp, setShowOtp] = useState(false)
     const [showDelOtp, setShowDelOtp] = useState(false)
     const [noUser, setNoUser] = useState(false)
@@ -30,7 +31,7 @@ const AccountItem = ({ data }) => {
         setCodeType(userDetails?.tfa ? "authenticator" : "sms")
     }, [userDetails])
 
-   
+
     const onChange = () => {
         if ((data.name.toLowerCase().includes("insta") || data.name.toLowerCase().includes("telegram")) && !checked) {
             if (userDetails?.username) {
@@ -111,7 +112,7 @@ const AccountItem = ({ data }) => {
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const tab = queryParams.get("tab")
-    const ft = queryParams.get("ft")
+    const redirect = queryParams.get("redirect")
 
     useEffect(() => {
         if (tab?.toLowerCase() === "social") {
@@ -121,23 +122,36 @@ const AccountItem = ({ data }) => {
         }
     }, [tab])
 
+
+    const [showNextStepModal, setShowNextStepModal] = useState()
+    const [tabtoMove, setTabtoMove] = useState()
+
+    const handleNextTab = () => {
+        if (!userWithdrawals.length) {
+            setShowNextStepModal(true)
+            setShowModal(false)
+            const tabtomove = !userWithdrawals.length ? "withdrawal" : ""
+            setTabtoMove(tabtomove)
+        }
+    }
+
     useEffect(() => {
         if (userDetails) {
             // console.log(userDetails?.insta_username)
             if (data.name.toLowerCase().includes("insta")) {
-                console.log(ft)
-                if (ft && !userDetails?.insta_username) {
+                console.log(redirect)
+                if (redirect && !userDetails?.insta_username) {
                     console.log("Asdfasfd")
                     setShowModal(true)
                 }
             }
             else if (data.name.toLowerCase().includes("telegram")) {
-                if (ft && !userDetails?.telegram_bot && userDetails?.insta_username) {
+                if (redirect && !userDetails?.telegram_bot && userDetails?.insta_username) {
                     setShowModal(true)
                 }
             }
         }
-    }, [ft, userDetails])
+    }, [redirect, userDetails])
     return (
         <div className={styles.card} ref={data.name.toLowerCase().includes("insta") ? conRef : null}>
             <div className={styles.top}>
@@ -192,6 +206,7 @@ const AccountItem = ({ data }) => {
                         </ModalBody>
                     </Modal>
                 </div>
+
             </div>
             <div className={styles.middle}>
                 <P>{
@@ -226,8 +241,8 @@ const AccountItem = ({ data }) => {
                         isOpen={showModal}
                         toggle={() => {
                             setShowModal(!showModal)
-                            if (tab?.toLowerCase() === "social" && ft) {
-                                navigate("/settings?tab=withdrawal&ft=true")
+                            if (tab?.toLowerCase() === "social" && redirect) {
+                                handleNextTab()
                             }
                         }}
                     />
@@ -239,8 +254,8 @@ const AccountItem = ({ data }) => {
                         isOpen={showModal}
                         toggle={() => {
                             setShowModal(!showModal)
-                            if (tab?.toLowerCase() === "social" && ft) {
-                                navigate("/settings?tab=withdrawal&ft=true")
+                            if (tab?.toLowerCase() === "social" && redirect) {
+                                handleNextTab()
                             }
                         }}
                     /> : ""
@@ -254,6 +269,12 @@ const AccountItem = ({ data }) => {
                     <p style={{ marginBottom: "0", textAlign: "center" }}>Please refresh the page once your account is successfully connected to the chatbot.</p>
                 </ModalBody>
             </Modal> */}
+
+            <NextStepModal
+                isOpen={showNextStepModal}
+                toggle={() => setShowNextStepModal(false)}
+                tab={tabtoMove}
+            />
             <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
                 <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
                 <ModalBody>

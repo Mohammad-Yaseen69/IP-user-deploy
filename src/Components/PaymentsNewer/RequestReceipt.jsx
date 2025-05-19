@@ -60,7 +60,7 @@ const RequestReceipt = ({ beneficiary, amount, currency, paymentType, setShowSta
                                             {
                                                 item?.profileImage?.url || item?.profileImage
                                                     ?
-                                                    <img src={item?.profileImage?.url ?? item?.profileImage} style={{
+                                                    <img alt="" src={item?.profileImage?.url ?? item?.profileImage} style={{
                                                         width: "45px",
                                                         height: "45px",
                                                         borderRadius: "12px",

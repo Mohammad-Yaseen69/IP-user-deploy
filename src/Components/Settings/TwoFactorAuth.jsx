@@ -30,10 +30,11 @@ import FingerFailed from "./a_items/finger/finger_failed.svg"
 import "./styles/styles.css"
 import { browserName, deviceDetect } from "react-device-detect"
 import _ from 'lodash';
+import NextStepModal from './NextStepModal';
 
 const TwoFactorAuth = () => {
     const { t } = useTranslation()
-    const { userDetails, authHeader, verifyToken, setProfileLockTime } = useContext(UserContext)
+    const { userDetails, authHeader, verifyToken, setProfileLockTime, userWithdrawals } = useContext(UserContext)
     const [emailActive, setEmailActive] = useState(false)
     const [smsActive, setSmsActive] = useState(false)
     const [wpActive, setWpActive] = useState(false)
@@ -100,6 +101,18 @@ const TwoFactorAuth = () => {
             toast.error("Cannot disable both.")
         } finally {
             setIsSaving(false)
+        }
+    }
+
+    const [showNextStepModal, setShowNextStepModal] = useState()
+    const [tabtoMove, setTabtoMove] = useState()
+
+    const handleNextTab = () => {
+        if ((!userDetails.telegram_bot && !userDetails.insta_bot) || !userWithdrawals.length) {
+            setShowNextStepModal(true)
+            setGuideModal(false)
+            const tabtomove = (!userDetails.telegram_bot && !userDetails.insta_bot) ? "social" : !userWithdrawals.length ? "withdrawal" : ""
+            setTabtoMove(tabtomove)
         }
     }
 
@@ -250,15 +263,15 @@ const TwoFactorAuth = () => {
 
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
-    const ft = queryParams.get("ft")
+    const redirect = queryParams.get("redirect")
 
     useEffect(() => {
         if (userDetails) {
-            if (ft && !userDetails?.tfa) {
+            if (redirect && !userDetails?.tfa) {
                 setGuideModal(true)
             }
         }
-    }, [ft, userDetails])
+    }, [redirect, userDetails])
 
     const sendOtp = async (e, isDevice) => {
         setShowBioModal(false)
@@ -373,6 +386,12 @@ const TwoFactorAuth = () => {
                 <H4 attrH4={{ className: 'card-title mb-0' }}>{t("Two Factor Authentication")}</H4>
                 <p style={{ fontSize: "16px", fontWeight: 600, color: "#8E8E8E" }}>Here, you can set up and manage your Two Factor Authentication.</p>
             </CardHeader>
+
+            <NextStepModal
+                isOpen={showNextStepModal}
+                toggle={setShowNextStepModal}
+                tab={tabtoMove}
+            />
             {
                 guideModal
                 &&
@@ -381,7 +400,7 @@ const TwoFactorAuth = () => {
                         <AuthenticatorDetails />
                     </ModalBody>
                     <ModalFooter style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
-                        <button disabled={enablingAuth} onClick={() => navigate("/settings?tab=social&ft=true")} style={{ all: "unset", cursor: "pointer" }}>{t("Skip")}</button>
+                        <button disabled={enablingAuth} onClick={handleNextTab} style={{ all: "unset", cursor: "pointer" }}>{t("Skip")}</button>
                         <Button
                             style={{
                                 background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
@@ -633,7 +652,10 @@ const TwoFactorAuth = () => {
                     <GoogleAuthenticatorModal
                         authenticatorDetails={authenticatorDetails}
                         isOpen={showAuth}
-                        toggle={() => setShowAuth(false)}
+                        toggle={() => {
+                            setShowAuth(false)
+                            handleNextTab()
+                        }}
                         emailActive={emailActive}
                         setAuthenticatorActive={setAuthenticatorActive}
                         setEditMode={setEditMode}

@@ -51,7 +51,7 @@ const TopRight = ({position = "absolute"}) => {
                 {
                     userDetails?.profileImage?.url
                         ?
-                        <img src={croppedImages.profileDP ?? userDetails?.profileImage?.url} alt={userDetails?.user?.first_name} style={{
+                        <img src={croppedImages.profileDP || userDetails?.profileImage?.url} alt={userDetails?.user?.first_name} style={{
                             width: "43px",
                             borderRadius: "10px",
                             height: "43px",

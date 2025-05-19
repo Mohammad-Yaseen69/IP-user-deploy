@@ -4,9 +4,9 @@ import styles from "./styles/index.module.scss"
 import cover from "../UserProfilePublic/files/cover_1.png"
 
 const Cover = () => {
-    const { userDetails } = useContext(UserContext)
+    const { userDetails, croppedImages } = useContext(UserContext)
     return (
-        <img src={userDetails?.coverImage?.url || cover} alt="cover" className={styles.cover} />
+        <img src={croppedImages?.profileBanner || userDetails?.coverImage?.url || cover} alt="cover" className={styles.cover} />
     )
 }
 

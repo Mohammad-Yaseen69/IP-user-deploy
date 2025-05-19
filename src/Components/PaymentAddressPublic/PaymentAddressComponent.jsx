@@ -26,6 +26,7 @@ import PortfolioCard from '../Portfolio/PortfolioCard'
 import useWindowWidth from '../../utils/useWindowWidth'
 import ip from "./instapay_black.svg"
 import ip_white from "./ip-white.png"
+import { getCroppedImg } from '../../Context/UserContext'
 
 <style>
     {`
@@ -54,6 +55,8 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     const [amount, setAmount] = useState("1.00")
     const [formattedAmount, setFormattedAmount] = useState("1.00")
     const [loading, setLoading] = useState(true)
+    const [croppedDp, setCroppedDp] = useState("")
+    const [croppedCover, setCroppedCover] = useState("")
     const width = useWindowWidth()
 
 
@@ -77,6 +80,13 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
         return text.normalize('NFD') // break accented characters
             .replace(/[\u0300-\u036f]/g, '') // remove accents
     }
+
+
+    const getImage = async (img, c) => {
+        const imageUrl = await getCroppedImg(img, c)
+        const image = URL.createObjectURL(imageUrl)
+        return image
+    }
     useEffect(() => {
         if (userDetails?.country_name) {
             const normalize = normalizeText(userDetails?.country_name)
@@ -85,7 +95,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
         }
         if (user_name) {
             axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/get-payment-address-public/${user_name}`)
-                .then(res => {
+                .then(async res => {
                     const decrypted = decryptData(res.data.data)
                     console.log(decrypted)
                     setPaymentAddressDetails(decrypted?.paymentAddressDetails)
@@ -96,6 +106,22 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                     setCover(decrypted?.paymentAddressDetails?.coverImage?.url)
                     setCurrentWallet(decrypted?.wallet)
                     setLimits(decrypted?.limits)
+
+
+                    if (decrypted?.paymentAddressDetails?.coverImage?.url) {
+                        const cropped = await getImage(
+                            decrypted?.paymentAddressDetails?.coverImage?.url,
+                            decrypted?.paymentAddressDetails?.coverImage?.coordinates
+                        );
+                        setCroppedCover(cropped);
+                    }
+                    if (decrypted?.paymentAddressDetails?.profileImage?.url) {
+                        const cropped = await getImage(
+                            decrypted?.paymentAddressDetails?.profileImage?.url,
+                            decrypted?.paymentAddressDetails?.profileImage?.coordinates
+                        );
+                        setCroppedDp(cropped);
+                    }
                 })
                 .catch(err => {
                     console.log(decryptData(err.response.data.data))
@@ -270,7 +296,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                 <Card style={{ marginBottom: "0", boxShadow: "unset" }} className={styles.sub_container}>
                                     <CardBody className={styles.sc_body}>
                                         {width > 1200 &&
-                                            <div style={{margin: "auto"}} className={styles.bigLogo}>
+                                            <div style={{ margin: "auto" }} className={styles.bigLogo}>
                                                 <img src={ip_white} alt="" />
                                             </div>
                                         }
@@ -282,7 +308,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                 </div>
                                             }
                                             <div className={styles.cover_container}>
-                                                <img src={cover ?? coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: "210px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important" }} />
+                                                <img src={(croppedCover || cover) ?? coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: "210px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important" }} />
                                             </div>
                                             <div style={{ backgroundColor: 'white', borderRadius: "16px", padding: "14px" }}>
                                                 <div style={{ flexDirection: "column", alignItems: "center", gap: "0", padding: "0px", position: 'relative', top: "-50px" }} className={styles.top}>
@@ -291,38 +317,78 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                             {
                                                                 dp
                                                                     ?
-                                                                    <img src={dp} className={styles.dp} alt="profile" style={{ background: "transparent" }} />
+                                                                    <img src={croppedDp || dp} className={styles.dp} alt="profile" style={{ background: "transparent" }} />
                                                                     :
                                                                     <div className={styles.dp} style={{ overflow: "hidden" }}>{userDetails?.first_name?.[0]}</div>
                                                             }
                                                         </div>
                                                         <div style={{ alignItems: 'center' }} className={styles.basic_dets}>
                                                             <div className={styles.badge}>{userDetails?.account_type === "individual" ? "Personal" : "Business"} Account</div>
-                                                            <div style={{ position: "relative", /*display: "flex", alignItems: "flex-end", gap: ".3rem"*/ }}>
-                                                                <h4 style={{ cursor: "pointer", display: "inline" }} onClick={() => navigate(`/profile/${user_name}`)}>{userDetails?.first_name} {userDetails?.last_name}</h4>
-                                                                {
-                                                                    userDetails?.kyc_status === "approved"
-                                                                    &&
-                                                                    <>
-                                                                        <img onMouseEnter={() => setShowVerTT(true)} onMouseLeave={() => setShowVerTT(false)} src={verified} alt="" style={{ height: window.innerWidth > 780 ? "25px" : "17px", width: window.innerWidth > 780 ? "25px" : "17px", objectFit: "contain", transform: "translateY(-3px)", marginLeft: ".3rem" }} />
-                                                                        {
-                                                                            showVerTT
-                                                                            &&
-                                                                            <div style={{
-                                                                                position: "absolute",
-                                                                                top: "100%",
-                                                                                right: "0",
-                                                                                background: "#5926f0",
-                                                                                color: "white",
-                                                                                fontSize: window.innerWidth > 780 ? ".8rem" : ".65rem",
-                                                                                fontWeight: 500,
-                                                                                padding: window.innerWidth > 780 ? "6px 18px" : "3px 10px",
-                                                                                borderRadius: window.innerWidth > 780 ? "8px" : "4px",
-                                                                                whiteSpace: "nowrap"
-                                                                            }}>{t("User Identity Verified")}</div>
-                                                                        }
-                                                                    </>
-                                                                }
+                                                            <div
+                                                                style={{
+                                                                    display: "flex",
+                                                                    flexDirection: "column",
+                                                                    alignItems: "center",
+                                                                    gap: ".3rem"
+                                                                }}
+                                                            >
+                                                                <span
+                                                                    style={{
+                                                                        display: "flex",
+                                                                        alignItems: "flex-end",
+                                                                        justifyContent: "center",
+                                                                        flexWrap: "nowrap",
+                                                                        gap: ".3rem",
+                                                                    }}
+                                                                >
+                                                                    <h4
+                                                                        style={{
+                                                                            cursor: "pointer",
+                                                                            margin: 0,
+                                                                            wordBreak: "break-word",
+                                                                            fontWeight: 700,
+                                                                            textAlign:"center"
+                                                                        }}
+                                                                        onClick={() => navigate(`/profile/${user_name}`)}
+                                                                    >
+                                                                        {userDetails?.first_name} {userDetails?.last_name}
+                                                                    </h4>
+                                                                    {userDetails?.kyc_status === "approved" && (
+                                                                        <>
+                                                                            <img
+                                                                                onMouseEnter={() => setShowVerTT(true)}
+                                                                                onMouseLeave={() => setShowVerTT(false)}
+                                                                                src={verified}
+                                                                                alt=""
+                                                                                style={{
+                                                                                    height: window.innerWidth > 780 ? "25px" : "17px",
+                                                                                    width: window.innerWidth > 780 ? "25px" : "17px",
+                                                                                    objectFit: "contain",
+                                                                                    transform: "translateY(-3px)",
+                                                                                    marginLeft: ".3rem"
+                                                                                }}
+                                                                            />
+                                                                            {showVerTT && (
+                                                                                <div
+                                                                                    style={{
+                                                                                        position: "absolute",
+                                                                                        top: "100%",
+                                                                                        right: "0",
+                                                                                        background: "#5926f0",
+                                                                                        color: "white",
+                                                                                        fontSize: window.innerWidth > 780 ? ".8rem" : ".65rem",
+                                                                                        fontWeight: 500,
+                                                                                        padding: window.innerWidth > 780 ? "6px 18px" : "3px 10px",
+                                                                                        borderRadius: window.innerWidth > 780 ? "8px" : "4px",
+                                                                                        whiteSpace: "nowrap"
+                                                                                    }}
+                                                                                >
+                                                                                    {t("User Identity Verified")}
+                                                                                </div>
+                                                                            )}
+                                                                        </>
+                                                                    )}
+                                                                </span>
                                                             </div>
                                                             <div className={styles.country}>
                                                                 <img src={userCountry?.file_url} alt={userCountry?.alpha3} style={{ boxShadow: "0 0 5px #afafaf" }} />

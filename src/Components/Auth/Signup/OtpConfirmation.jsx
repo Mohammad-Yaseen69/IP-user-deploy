@@ -137,7 +137,7 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                                 ))}
                             </div>
                         </div>
-                        <div className={styles.toggle_sms}>
+                        <div style={{marginTop: '20px'}} className={styles.toggle_sms}>
                             <span>
                                 {
                                     resendTimer > 0

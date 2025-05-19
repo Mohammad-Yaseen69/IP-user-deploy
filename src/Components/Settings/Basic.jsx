@@ -13,6 +13,7 @@ import SuccessModal from '../AddBeneficiary/SuccessModal';
 import OTPConfirmation from '../UserSettingsNew/OTPConfirmation';
 import { useLocation, useNavigate } from 'react-router';
 import QrGenerate from './QrGenerate';
+import NextStepModal from './NextStepModal';
 
 // dates
 export const currentDate = new Date();
@@ -22,7 +23,7 @@ let timeout;
 const Basic = () => {
     const navigate = useNavigate()
     const { t } = useTranslation()
-    const { userDetails, authHeader, verifyToken, profileCompletedPercentage, userWallets } = useContext(UserContext);
+    const { userDetails, authHeader, verifyToken, profileCompletedPercentage, userWallets, userWithdrawals } = useContext(UserContext);
     const [company, setCompany] = useState('');
     const [username, setUsername] = useState(userDetails?.username ?? "");
     const [phone, setPhone] = useState(userDetails?.phone ?? "");
@@ -46,6 +47,8 @@ const Basic = () => {
     const [usernameError, setUserNameError] = useState("")
     const [codeType, setCodeType] = useState("")
     const [otpType, setOtpType] = useState("")
+    const [showNextStepModal, setShowNextStepModal] = useState(false)
+    const [tabtoMove, setTabtoMove] = useState()
 
     useEffect(() => {
         setCodeType("sms")
@@ -140,6 +143,14 @@ const Basic = () => {
     }
 
 
+    const handleNextTab = () => {
+        if (!userDetails.tfa || (!userDetails.telegram_bot && !userDetails.insta_bot) || !userWithdrawals.length) {
+            setShowNextStepModal(true)
+            const tabtomove = !userDetails.tfa ? "tfa" : (!userDetails.telegram_bot && !userDetails.insta_bot) ? "social" : !userWithdrawals.length ? "withdrawal" : ""
+            setTabtoMove(tabtomove)
+        }
+    }
+
     const [otpToken, setOtpToken] = useState("")
     const sendOtp = async (type = "") => {
         setIsSaving(true)
@@ -176,6 +187,8 @@ const Basic = () => {
         setIsSaving(false)
     }
 
+    console.log(userDetails)
+
     const editProfileHandler = () => {
         setIsSaving(true)
         if (!usernameError && usernameValid && !isVerified) {
@@ -203,17 +216,16 @@ const Basic = () => {
                 headers: authHeader
             })
                 .then(res => {
-                    const decrypted = decryptData(res.data.data)
-                    // console.log(decrypted)
-                    if (profileCompletedPercentage != 100) {
-                        navigate("/settings?tab=tfa&ft=true")
-                    }
                     setIsEditMode(false)
                     setIsSaving(false)
                     verifyToken()
+                    if (userDetails?.email === email && userDetails?.phone === phone) {
+                        setTimeout(() => {
+                            handleNextTab()
+                        }, 500)
+                    }
                 })
                 .catch(err => {
-                    // console.log(decryptData(err.response.data.data))
                     setIsSaving(false)
                 })
         }
@@ -238,17 +250,15 @@ const Basic = () => {
                 headers: authHeader
             })
                 .then(res => {
-                    const decrypted = decryptData(res.data.data)
-                    // console.log(decrypted)
-                    if (profileCompletedPercentage != 100) {
-                        navigate("/settings?tab=tfa&ft=true")
-                    }
                     setIsEditMode(false)
                     setIsSaving(false)
                     verifyToken()
+
+                    setTimeout(() => {
+                        handleNextTab()
+                    }, 500)
                 })
                 .catch(err => {
-                    // console.log(decryptData(err.response.data.data))
                     setIsSaving(false)
                 })
         }
@@ -335,7 +345,7 @@ const Basic = () => {
 
     const handleSaveClick = () => {
         if (userDetails?.account_type === "individual") {
-            if(!email) return editProfileHandler()
+            if (!email) return editProfileHandler()
             return userDetails?.email === email ? editProfileHandler() : sendOtp("email")
         }
         if (userDetails?.account_type === "business") {
@@ -359,10 +369,15 @@ const Basic = () => {
                 subMessage={"Profile has been updated successfully!"}
                 toggle={() => {
                     setShowSuccess(false)
-                    if (profileCompletedPercentage != 100) {
-                        navigate("/settings?tab=tfa&ft=true")
-                    }
+                    setTimeout(() => {
+                        handleNextTab()
+                    }, 500)
                 }}
+            />
+            <NextStepModal
+                isOpen={showNextStepModal}
+                toggle={() => setShowNextStepModal(false)}
+                tab={tabtoMove}
             />
             <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
                 <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
@@ -372,9 +387,6 @@ const Basic = () => {
             </Modal>
             <CardHeader style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "2rem" }}>
                 <h4 style={{ width: "50%" }}>{t("Basic Info")}</h4>
-                {/* <div style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
-                   
-                </div> */}
             </CardHeader>
             <CardBody>
                 {

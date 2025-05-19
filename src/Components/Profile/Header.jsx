@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import verified from "../../assets/verified.png"
 
 const Header = () => {
-    const { userDetails } = useContext(UserContext)
+    const { userDetails, croppedImages } = useContext(UserContext)
     const [userCountry, setUserCountry] = useState({})
     const [showAboutModal, setShowAboutModal] = useState(false)
     const { t } = useTranslation()
@@ -23,7 +23,7 @@ const Header = () => {
                 {
                     userDetails?.profileImage?.url
                         ?
-                        <img src={userDetails?.profileImage?.url} className={styles.dp} alt="profile picture" style={{ background: "transparent" }} />
+                        <img alt="asdfasf" src={croppedImages.profileDP || userDetails?.profileImage?.url} className={styles.dp} alt="profile picture" style={{ background: "transparent" }} />
                         :
                         <div className={styles.dp} style={{ overflow: "hidden" }}>{userDetails?.user?.first_name?.[0]}</div>
                 }
