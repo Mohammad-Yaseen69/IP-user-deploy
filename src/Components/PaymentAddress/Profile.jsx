@@ -13,7 +13,7 @@ import { FaAdjust } from "react-icons/fa";
 import { IoCrop } from "react-icons/io5";
 
 const Profile = ({ dp, setDp, dets }) => {
-    const { authHeader, userDetails, verifyToken,croppedImages } = useContext(UserContext)
+    const { authHeader, userDetails, verifyToken, croppedImages } = useContext(UserContext)
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false)
     const mainContainerRef = useRef(null)
@@ -99,13 +99,15 @@ const Profile = ({ dp, setDp, dets }) => {
                     ?
                     <img src={croppedImages.paDP || dp} alt={userDetails?.account_type === "individual" ? userDetails?.user?.first_name : userDetails?.company?.company_name} style={{ background: "white", boxShadow: "0px 0px 3px #1111113e", borderRadius: "16px" }} className={styles.img} />
                     :
-                    <div className={styles.dp} style={{ borderRadius: "16px", overflow: "hidden" }}>{
-                        userDetails?.account_type?.toLowerCase() === "individual"
-                            ?
-                            userDetails?.user?.first_name?.[0]?.toUpperCase()
-                            :
-                            userDetails?.company?.company_name?.[0]?.toUpperCase()
-                    }</div>
+                    <div className={styles.dp} style={{ borderRadius: "16px", overflow: "hidden" }}>
+                        {
+                            userDetails?.account_type?.toLowerCase() === "individual"
+                                ?
+                                userDetails?.user?.first_name?.[0]?.toUpperCase()
+                                :
+                                userDetails?.company?.company_name?.[0]?.toUpperCase()
+                        }
+                    </div>
             }
 
             {dp &&

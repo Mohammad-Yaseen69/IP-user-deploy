@@ -17,7 +17,7 @@ const NextStepModal = ({ isOpen, toggle, tab }) => {
 
                 <div style={{ display: "flex", gap: "20px", alignItems: "center", width: "100%", justifyContent: "flex-end" }}>
                     <span onClick={toggle} style={{ fontWeight: 600, cursor: "pointer" }}>Stay on this page</span>
-                    <button onClick={() => navigate(`/settings?tab=${tab}&redirect=true`)} style={{ border: "none", color: "white", backgroundColor: '#5526e0', borderRadius: "8px", padding: '6px 14px' }}>Navigate To Next Step</button>
+                    <button onClick={() => tab  === "social"? navigate(`/create-pin?redirect=true`) : navigate(`/settings?tab=${tab}&redirect=true`)} style={{ border: "none", color: "white", backgroundColor: '#5526e0', borderRadius: "8px", padding: '6px 14px' }}>Navigate To Next Step</button>
                 </div>
             </ModalFooter>
         </Modal>

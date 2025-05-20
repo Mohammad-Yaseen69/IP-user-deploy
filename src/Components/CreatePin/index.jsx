@@ -6,8 +6,8 @@ import { toast } from 'react-toastify'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import { UserContext } from '../../Context/UserContext'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
-import { useNavigate } from "react-router-dom"
-import {ChevronLeft} from "react-feather"
+import { useLocation, useNavigate } from "react-router-dom"
+import { ChevronLeft } from "react-feather"
 
 
 
@@ -27,6 +27,9 @@ const CreatePin = () => {
 
     const pinRefs = useRef(Array(4).fill(null));
     const confirmRefs = useRef(Array(4).fill(null));
+    const location = useLocation()
+    const query = new URLSearchParams(location.search)
+    const redirect = query.get("redirect")
 
     useEffect(() => {
         setDisabled(loading || confirmPinFields.data.join("").length < 4 || pinFields.data.join("").length < 4)
@@ -214,14 +217,14 @@ const CreatePin = () => {
                 <div style={{ margin: "auto", minHeight: "100vh" }} className={styles.container}>
                     <div style={{ padding: "27px" }} className={styles.right}>
                         <div>
-                            <div style={{display: "flex", alignItems:"center", gap:"12px", marginBottom: "25px"}}>
-                                <div style={{padding: "9px",background: "#f7f7f7", borderRadius: "4px" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "25px" }}>
+                                <div onClick={() => redirect ? navigate("/settings?tab=social&redirect=true") : navigate("/settings?tab=social")} style={{ padding: "9px", background: "#f7f7f7", borderRadius: "4px" }}>
                                     <ChevronLeft size={18} />
                                 </div>
 
-                                <h4 style={{ color: "#5926F0", fontSize: "24px",fontWeight: 700 }}>Settings</h4>
+                                <h4 style={{ color: "#5926F0", fontSize: "24px", fontWeight: 700 }}>Settings</h4>
                             </div>
-                            
+
                             <div style={{ marginBottom: "15px" }} className={styles.top}>
                                 <div style={{ width: "30px", height: "30px", padding: "0", justifyContent: "center" }} className={styles.logo}>
                                     <svg style={{ width: "19px", height: "19px" }} xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none">
@@ -272,7 +275,7 @@ const CreatePin = () => {
                                     <h4>Contact Us</h4>
                                 </div>
                             </div>
-                            <button disabled={disabled} style={{ opacity: disabled ? 0.5 : 1, marginBottom: "8px",border: 'none', outline: "none" }} onClick={setPin}>
+                            <button disabled={disabled} style={{ opacity: disabled ? 0.5 : 1, marginBottom: "8px", border: 'none', outline: "none" }} onClick={setPin}>
                                 {loading ? (
                                     <div class="d-flex justify-content-center">
                                         <div class="spinner-border" color='primary' role="status">
@@ -282,7 +285,7 @@ const CreatePin = () => {
                                 ) : "Set Pin"}
                             </button>
 
-                            <button style={{ backgroundColor: "#FAFAFA",border: 'none', outline: "none", color: "black" }} onClick={() => navigate("/settings?tab=social")}>
+                            <button style={{ backgroundColor: "#FAFAFA", border: 'none', outline: "none", color: "black" }} onClick={() => redirect ? navigate("/settings?tab=social&redirect=true") : navigate("/settings?tab=social")}>
                                 Back
                             </button>
 
@@ -339,7 +342,7 @@ const CreatePin = () => {
                     </div>
 
                     <button
-                        onClick={() => navigate("/settings?tab=social")}
+                        onClick={() => redirect ? navigate("/settings?tab=social&redirect=true") : navigate("/settings?tab=social")}
                         style={{
                             width: "96%",
                             borderRadius: "8px",

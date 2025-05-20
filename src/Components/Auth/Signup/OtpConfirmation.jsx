@@ -7,7 +7,7 @@ import { UserContext } from '../../../Context/UserContext'
 
 const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = "phone", data, dataHandler }) => {
     const { t } = useTranslation()
-    const {userDetails} = useContext(UserContext)
+    const { userDetails } = useContext(UserContext)
 
     const [resendTimer, setResendTimer] = useState(timer)
     const numberOfFields = 6;
@@ -84,6 +84,11 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
         }
     };
 
+    const formatTimer = (seconds) => {
+        const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const s = (seconds % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+    };
     // console.log(isAnyFieldEmpty , otpValues.some(item => !item) , data.loading , data.account_created)
     return (
         <>
@@ -92,7 +97,7 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                 verifyOTpHandler(otpValues.join(""), setOTPValues, numberOfFields)
             }} className={styles.otp} style={{ marginTop: 0 }}>
                 <div className={styles.left}>
-                    <h1>{t("SMS Verification").replace("SMS", type === "phone" ? "SMS" : "Email").replace("SMS", data?.phone?.slice(0, 3) === "971" ? "Whatsapp": "SMS")}</h1>
+                    <h1>{t("SMS Verification").replace("SMS", type === "phone" ? "SMS" : "Email").replace("SMS", data?.phone?.slice(0, 3) === "971" ? "Whatsapp" : "SMS")}</h1>
                     <p>{t("Start Your InstaPay Journey Today!")}</p>
                     {
                         window.innerWidth < 1000
@@ -103,7 +108,10 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                 <div className={styles.right}>
                     <div className={styles.top}>
                         <div className={styles.otp_inp}>
-                            <label>{t(`Enter the SMS code sent to +41********4053`).replace("+41********4053", `${data?.[type]?.slice(0, data?.[type]?.length - 4).split("").map(_ => "*").join("")}${data?.[type]?.slice(data?.[type]?.length - 4)}`).replace("SMS", type === "phone" ? "SMS" : "Email").replace("SMS", data?.phone?.slice(0, 3) === "971" ? "Whatsapp": "SMS")}</label>
+                            {type === 'phone' ?
+                                <label>{t(`Enter the SMS code sent to +41********4053`).replace("+41********4053", `${data?.[type]?.slice(0, data?.[type]?.length - 4).split("").map(_ => "*").join("")}${data?.[type]?.slice(data?.[type]?.length - 4)}`).replace("SMS", type === "phone" ? "SMS" : "Email").replace("SMS", data?.phone?.slice(0, 3) === "971" ? "Whatsapp" : "SMS")}</label> :
+                                <label>{t(`Enter the SMS code sent to +41********4053`).replace("+41********4053", "*******abc@gmail.com")}</label>
+                            }
                             <div
                                 style={{
                                     fontSize: ".8rem",
@@ -137,12 +145,13 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                                 ))}
                             </div>
                         </div>
-                        <div style={{marginTop: '20px'}} className={styles.toggle_sms}>
+                        <div style={{ marginTop: '20px' }} className={styles.toggle_sms}>
                             <span>
                                 {
                                     resendTimer > 0
-                                        ?
-                                        t("Resend Code In 100 Seconds").replace("100", resendTimer)
+                                        ? type === "email"
+                                            ? t("Resend Code In 100 Seconds").replace("100", formatTimer(resendTimer))
+                                            : t("Resend Code In 100 Seconds").replace("100", resendTimer)
                                         :
                                         <>{t("Didn't receive OTP?") + " "} <span style={{ color: "#5926f0", cursor: "pointer" }} onClick={() => {
                                             setOTPValues(Array(numberOfFields).fill(''))

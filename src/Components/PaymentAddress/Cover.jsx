@@ -13,7 +13,7 @@ import { BsCrop } from "react-icons/bs";
 import AdjustModal from "../Settings/AdjustModal";
 
 const Cover = ({ cover, setCover, dets }) => {
-    const { authHeader, userDetails, verifyToken, croppedImages } = useContext(UserContext)
+    const { authHeader, userDetails, verifyToken, croppedImages, setCroppedImages } = useContext(UserContext)
 
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false)
@@ -33,6 +33,7 @@ const Cover = ({ cover, setCover, dets }) => {
         const reader = new FileReader();
         reader.onload = () => {
             setCover(reader.result);
+            setCroppedImages({ ...croppedImages, paCover: reader.result })
         };
         reader.readAsDataURL(file);
         if (file) {
@@ -56,7 +57,6 @@ const Cover = ({ cover, setCover, dets }) => {
         })
             .then((res) => {
                 const decrypted = decryptData(res.data.data);
-                // console.log(decrypted);
                 verifyToken()
             })
             .catch((err) => {
@@ -80,6 +80,7 @@ const Cover = ({ cover, setCover, dets }) => {
         })
             .then(res => {
                 verifyToken()
+                setCroppedImages(prev => ({ ...prev, paCover: "" }))
                 setCover("")
             })
             .catch(err => {
