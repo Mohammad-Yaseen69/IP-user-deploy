@@ -65,7 +65,7 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
         dataHandler("loading", true)
         dataHandler("providers", [])
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number/+${data.recipient}`, { headers: authHeader })
+            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-airtime/+${data.recipient}`, { headers: authHeader })
             const dec = await decryptData(res.data.data)
             console.log("providers", dec)
             dataHandler("providers", dec)

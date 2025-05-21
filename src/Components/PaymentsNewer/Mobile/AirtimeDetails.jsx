@@ -31,7 +31,7 @@ const AirtimeDetails = ({ setSubStep, service, providers, serviceType, setServic
     const verifyPhone = async () => {
         setShowBelowPhone(false)
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number/+${phone}`)
+            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-airtime/+${phone}`)
             const data = await decryptData(res.data.data)
             setProviders(...data)
             setShowBelowPhone(true)
