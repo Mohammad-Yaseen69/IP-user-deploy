@@ -245,16 +245,25 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                     </div>
                 )}
             </>
+            <div>
+                <QrDetails
+                    wallet={currentWallet}
+                    user={userDetails}
+                    amount={amount}
+                    currency={currency}
+                    username={user_name}
+                    address={true}
+                    currentWallet={currentWallet}
+                />
 
-            <QrDetails
-                wallet={currentWallet}
-                user={userDetails}
-                amount={amount}
-                currency={currency}
-                username={user_name}
-                address={true}
-                currentWallet={currentWallet}
-            />
+                <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', paddingTop: '20px', alignItems:'center' }}>
+                    <span style={{ fontSize: '12px', fontWeight: 600, color: '#333333' }}>Learn More:</span>
+                    <span onClick={() => window.open("https://insta-pay.ch", "_blank", "noopener,noreferrer")} style={{ fontSize: '14px', fontWeight: 600, color: '#606060', cursor: 'pointer' }}>
+                        insta-pay.ch
+                    </span>
+                </div>
+            </div>
+
 
         </div>
 
@@ -298,7 +307,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                             </div>
                                         }
                                         {width > 1000 && leftJSX()}
-                                        <div style={{ flex: width > 1000 && .5, borderRadius: '16px', width: width < 1000 && "100%", overflow: width < 100 && 'hidden', alignSelf: width > 1000 && "stretch",display: width > 1000 && "grid" }} className={styles.right}>
+                                        <div style={{ flex: width > 1000 && .5, borderRadius: '16px', width: width < 1000 && "100%", overflow: width < 100 && 'hidden', alignSelf: width > 1000 && "stretch", display: width > 1000 && "grid" }} className={styles.right}>
                                             {width < 1000 &&
                                                 <div style={{ padding: '1rem 0', display: 'flex', justifyContent: 'center', background: "white" }}>
                                                     <img src={ip} alt="" />

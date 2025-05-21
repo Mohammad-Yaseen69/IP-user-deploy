@@ -60,11 +60,11 @@ const QrDetails = ({ wallet, amount, currency, currentWallet, address, user, use
             .catch(err => console.log(err))
     }, [amount]);
     return (
-        <div style={{flex: (address && window.innerWidth > 1400 && "none")}} className={styles.container}>
-            <div style={{ flex: address && '0 0 auto', width: (address && (window.innerWidth > 1000 && window.innerWidth < 1400)) && "200px",minWidth:  (address && (window.innerWidth > 1000 && window.innerWidth < 1400)) && "200px" }} className={styles.qr}>
+        <div style={{ flex: (address && window.innerWidth > 1400 && "none") }} className={styles.container}>
+            <div style={{ flex: address && '0 0 auto', width: (address && (window.innerWidth > 1000 && window.innerWidth < 1400)) && "200px", minWidth: (address && (window.innerWidth > 1000 && window.innerWidth < 1400)) && "200px" }} className={styles.qr}>
                 <div className={styles.qrCode} style={{ position: "relative" }}>
                     {/* <img src={wallet.qrCode?.url} /> */}
-                    <img alt="" src={qrLink} style={{ height: address && "221px" }} />
+                    <img alt="" src={qrLink} style={{ height: (address && (window.innerWidth > 1000 && window.innerWidth < 1400)) ? "200px" : "221px" }} />
                     <img alt="" src={logo} style={{ position: "absolute", left: "50%", top: "40%", translate: "-50% -50%", width: window.innerWidth > 1000 ? "2rem" : "2.5rem", padding: ".6rem", background: "white", borderRadius: "10px" }} />
                     <div className={styles.qr_id}>{wallet?.wallet_id}</div>
                     {
@@ -77,7 +77,7 @@ const QrDetails = ({ wallet, amount, currency, currentWallet, address, user, use
             <div className={styles.details}>
                 <h5>{t("How to Pay Using QR Code")}:</h5>
 
-                <ul style={{marginTop: '0.3rem'}} className={styles.list}>
+                <ul style={{ marginTop: '0.3rem' }} className={styles.list}>
                     <li>
                         <span>1. Choose your preferred social media app or InstaPay App.</span>
                         <div className={styles.btns}>
