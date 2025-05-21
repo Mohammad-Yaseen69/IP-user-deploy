@@ -219,35 +219,32 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
 
 
     const leftJSX = () => (
-        <div style={{ flex: 1.7 }} className={styles.left}>
-            {width > 1000 &&
-                <div style={{ marginBottom: "2rem" }}>
-                    <img style={{ float: 'right' }} src={ip} alt="" />
-                </div>
-            }
-            {(title || description) &&
-                <div className={styles.about}>
-                    <h4 style={{ marginBottom: "0px" }}>{title}</h4>
-                    <p style={{ fontSize: "14px", fontWeight: 600, color: "#7E7E7E" }}>{description}</p>
-                </div>
-            }
+        <div style={{ flex: 1.7, alignSelf: "stretch" }} className={styles.left}>
+            <>
+                {(title || description) &&
+                    <div className={styles.about}>
+                        <h4 style={{ marginBottom: "0px" }}>{title}</h4>
+                        <p style={{ fontSize: "14px", fontWeight: 600, color: "#7E7E7E" }}>{description}</p>
+                    </div>
+                }
 
-            {userVideos && userVideos.length > 0 && (
-                <div className='p-swiper-videos-123' style={{ marginTop: "20px", marginBottom: "40px" }}>
-                    <Swiper
-                        modules={[Pagination]}
-                        pagination={{ clickable: true }}
-                        spaceBetween={20}
-                        slidesPerView={1}
-                    >
-                        {userVideos.map((video, index) => (
-                            <SwiperSlide key={video._id || index}>
-                                <PortfolioCard item={video} pAddress={true} publicP={true} />
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-                </div>
-            )}
+                {userVideos && userVideos.length > 0 && (
+                    <div className='p-swiper-videos-123'>
+                        <Swiper
+                            modules={[Pagination]}
+                            pagination={{ clickable: true }}
+                            spaceBetween={10}
+                            slidesPerView={userVideos.length === 1 ? 1 : 1.5}
+                        >
+                            {userVideos.map((video, index) => (
+                                <SwiperSlide key={video._id || index}>
+                                    <PortfolioCard item={video} pAddress={true} publicP={true} />
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    </div>
+                )}
+            </>
 
             <QrDetails
                 wallet={currentWallet}
@@ -301,7 +298,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                             </div>
                                         }
                                         {width > 1000 && leftJSX()}
-                                        <div style={{ flex: width > 1000 && .5, borderRadius: '16px', width: width < 1000 && "100%", overflow: width < 100 && 'hidden' }} className={styles.right}>
+                                        <div style={{ flex: width > 1000 && .5, borderRadius: '16px', width: width < 1000 && "100%", overflow: width < 100 && 'hidden', alignSelf: width > 1000 && "stretch",display: width > 1000 && "grid" }} className={styles.right}>
                                             {width < 1000 &&
                                                 <div style={{ padding: '1rem 0', display: 'flex', justifyContent: 'center', background: "white" }}>
                                                     <img src={ip} alt="" />
@@ -347,7 +344,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                                             margin: 0,
                                                                             wordBreak: "break-word",
                                                                             fontWeight: 700,
-                                                                            textAlign:"center"
+                                                                            textAlign: "center"
                                                                         }}
                                                                         onClick={() => navigate(`/profile/${user_name}`)}
                                                                     >
@@ -442,12 +439,13 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                 <div style={{ marginBottom: "0px" }} className={vpa_styles.container}>
                                                     <div style={{ padding: width < 400 && "20px", height: "fit-content", padding: '24px' }} className={vpa_styles.right}>
                                                         <div className={vpa_styles.currency}>
-                                                            <div>{currentWallet?.currency?.code} </div>
+                                                            <div>{currentWallet?.currency?.symbol} </div>
+                                                            <p>{currentWallet?.currency?.code}</p>
                                                             {/* <p>{currency}</p> */}
                                                         </div>
-                                                        <div className={vpa_styles.amount}>
-                                                            <label >{t("Enter The Amount")}</label>
-                                                            <div>
+                                                        <div style={{ margin: '.5rem 0 1.5rem 0' }} className={vpa_styles.amount}>
+                                                            <label >{t("Amount")}</label>
+                                                            <div style={{ justifyContent: "center", gap: "5px" }}>
                                                                 <span>{currentWallet?.currency?.code} </span>
                                                                 {/* <Input value={amount} onChange={e => e.target.value < 0 ? console.log("") : setAmount(e.target.value)} placeholder='10.00' type='number' /> */}
                                                                 <input
@@ -458,8 +456,10 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                                     onKeyUp={handleKeyUp}
                                                                     onBlur={handleBlur}
                                                                     placeholder="10.00"
+                                                                    size={formattedAmount.length || 1}
                                                                     data-type="currency"
-                                                                    style={{ width: "100%", outlineColor: "white", border: "none", outline: "none" }}
+
+                                                                    style={{ outlineColor: "white", border: "none", outline: "none", maxWidth: "40%" }}
                                                                 />
                                                             </div>
                                                         </div>
@@ -516,12 +516,12 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                                 <span>Pay With InstaPay</span>
                                                             </Link>
 
-                                                            <div style={{ gap: '10px', justifyContent: "flex-start" }} className={styles.go_back} onClick={() => window.history.back()}>
+                                                            {/* <div style={{ gap: '10px', justifyContent: "flex-start" }} className={styles.go_back} onClick={() => window.history.back()}>
                                                                 <ChevronLeft size={16} color='#777777' />
                                                                 <span style={{ color: "#777777", fontSize: '12px' }}>
                                                                     {t("Go back (Cancel Payment)")}
                                                                 </span>
-                                                            </div>
+                                                            </div> */}
 
                                                         </div>
                                                     </div>

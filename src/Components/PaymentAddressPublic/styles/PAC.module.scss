@@ -10,7 +10,7 @@
         border-radius: 16px 16px 0px 0px;
         margin-bottom: -50px;
         overflow: hidden;
-        height: 248px;
+        height: 200px;
         position: relative;
 
         .cover {
@@ -34,6 +34,9 @@
                 background-color: white;
                 border-radius: 16px;
                 overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
             }
 
             .top {

@@ -72,7 +72,7 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
             }}
             onDragEnd={handleSort}
             style={{
-                height: (pAddress && !publicP) ? '150px' : publicP ? "263px" : '',
+                height: (pAddress && !publicP) ? '150px' : publicP ? "220px" : '',
                 minWidth: (pAddress && !publicP) ? '242px' : publicP ? "100%" : '',
                 borderRadius: ((pAddress && !publicP) || publicP) ? '12px' : ''
             }}
