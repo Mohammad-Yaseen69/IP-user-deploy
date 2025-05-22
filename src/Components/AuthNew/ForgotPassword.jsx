@@ -231,7 +231,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
     };
 
     return (
-        <form className={styles.form} onSubmit={step === 1 && !emailVerified ? sendOTP : step === 1 && emailVerified ? verifyOTP : updatePassword}>
+        <form style={{ minHeight: window.innerWidth < "auto" }} className={styles.form} onSubmit={step === 1 && !emailVerified ? sendOTP : step === 1 && emailVerified ? verifyOTP : updatePassword}>
             {
                 step === 1
                 &&
@@ -318,7 +318,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                                                 ?
                                                 t("Verification code has been verified, Please continue to the next step.")
                                                 :
-                                                t("A Verification code has been sent to your email and number.").replace("number", currentMethod === "whatsapp" ? "Whatsapp" : "number")
+                                                t("A Verification code has been sent to your number.").replace("number", loginMethod === "email" ? "email" : currentMethod === "whatsapp" ? "Whatsapp" : "number")
                                         }
                                     </p>
                                 </div>

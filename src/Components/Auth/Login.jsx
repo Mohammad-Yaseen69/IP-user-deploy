@@ -47,6 +47,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [consecutiveCount, setConsecutiveCount] = useState(0)
     const [firstTime, setFirstTime] = useState(true)
     const width = useWindowWidth()
+    const [methodLoading, setMethodLoading] = useState(false)
     // convert this object into an array of object it should just have a type property which should tell like whatsapp insta biometric instead of a object property
 
     const [methods, setMethods] = useState([
@@ -117,6 +118,9 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         setIsPressed(true)
         setConsecutiveCount(1)
         setIsLoginError("")
+        if (method) {
+            setMethodLoading(true)
+        }
         console.log(currentOtpMethod, method)
         const isAuth = method ? (method === "auth") : (currentOtpMethod === "auth");
         const isInsta = method ? (method === "insta") : (currentOtpMethod === "insta" || currentOtpMethod !== "sms");
@@ -164,7 +168,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         case 'auth':
                             return { ...method, avail: decrypted?.tfa || false };
                         case 'wp':
-                            return { ...method, avail: true };
+                            return { ...method, avail: decrypted.whatsapp };
                         case 'insta':
                             return { ...method, avail: !isInstagramBrowser && (decrypted?.instagram || false) };
                         case 'biometric':
@@ -208,9 +212,12 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 setLoginToken(decrypted?.token)
                 setStep(2)
                 setIsPressed(false)
+                setMethodLoading(false)
+
             })
             .catch(error => {
                 setIsPressed(false)
+                setMethodLoading(false)
                 const decrypted = decryptData(error.response.data?.data)
                 console.log(decrypted)
                 if (decrypted.message === "Account not found!" || decrypted.message === "Incorrect Password!" || decrypted.message?.toLowerCase()?.includes("incorrect") || decrypted.message === "User not found!") {
@@ -888,7 +895,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                     disabled={isOtpCorrect}
                                                     value={value}
                                                     onPaste={handlePaste}
-                                                    
+
                                                     // disabled={currentActiveInput !== index + 1}
                                                     onChange={(e) => {
                                                         setIsLoginError("")
@@ -910,7 +917,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             disabled={isAnyFieldEmpty || otpValues.some(item => !item) || isPressed || isLoginError}
                                         >
                                             <span>{
-                                                isPressed
+                                                (isPressed && !methodLoading)
                                                     ?
                                                     t("Verifying")
                                                     :
@@ -1049,7 +1056,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             disabled={isAnyFieldEmpty || otpValues.some(item => !item) || isPressed || isLoginError}
                                         >
                                             <span>{
-                                                isPressed
+                                                 (isPressed && !methodLoading)
                                                     ?
                                                     t("Verifying")
                                                     :

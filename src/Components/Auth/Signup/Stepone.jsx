@@ -12,7 +12,7 @@ const Stepone = ({ data, dataHandler }) => {
     return (
         <div className={styles.container}>
             <label>{t("Account Type")}</label>
-            <div className={styles.items}>
+            <div style={{flexWrap: "wrap"}} className={styles.items}>
                 <div className={`${styles.item} ${data.account_type === "individual" ? styles.active : ""}`} onClick={() => dataHandler("account_type", "individual")}>
                     <img src={data.account_type === "individual" ? ind_a : ind} alt="" />
                     <span>{t("Individual")}</span>

@@ -4,13 +4,19 @@ import { Link, useNavigate } from "react-router-dom";
 import logout from "../../Layout/SidebarNew/files/logout_a.svg"
 import LanguagePicker from "../LanguagePicker";
 import { useTranslation } from "react-i18next";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../../Context/UserContext";
 
 const ProfileCompletionModal = ({ setShowModal, profileIncompleteReason, kyc = false }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const { clearData } = useContext(UserContext)
+    useEffect(() => {
+        document.body.style.overflow = "hidden";
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [])
     return (
         <div className={styles.modal}>
             <div className={styles.modal_dialog} style={{ position: "relative" }}>
@@ -81,7 +87,7 @@ const ProfileCompletionModal = ({ setShowModal, profileIncompleteReason, kyc = f
                                 flex: 1,
                                 width: "100%"
                             }}>
-                                {!kyc ? t("Complete your profile"):  t("Verify Identity")}
+                                {!kyc ? t("Complete your profile") : t("Verify Identity")}
                                 <ChevronRight size={16} /></button>
                         </Link>
                     </div>

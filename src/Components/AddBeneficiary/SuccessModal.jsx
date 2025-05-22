@@ -3,10 +3,11 @@ import { CheckCircle } from 'react-feather';
 
 const SuccessModal = ({ isOpen, toggle, message, subMessage, showSpan = false, spanFunc = () => { } }) => {
     return (
-        <Modal isOpen={isOpen} toggle={toggle}>
+        <Modal style={{margin: '0, auto'}} isOpen={isOpen} toggle={toggle}>
             <ModalBody>
-                <h5 className='modal-title' style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '2rem' }}>
+                <h5 className='modal-title' style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '2rem', textAlign: 'center' }}>
                     <CheckCircle size={64} className="text-success" />
+                   
                     {subMessage}
                 </h5>
                 <div className="text-center">

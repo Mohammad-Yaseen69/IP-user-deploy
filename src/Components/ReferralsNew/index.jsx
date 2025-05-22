@@ -5,9 +5,6 @@ import EarnMoneyBanner from "../HomeNewUpdated/EarnMoneyBanner";
 import { Check, ChevronDown, ChevronRight, MoreHorizontal } from "react-feather";
 import copy_ic from "../ChipsInNew/copy.png"
 import ref_share from "./ref_share.png"
-import a from "./1.png"
-import b from "./2.png"
-import c from "./3.png"
 import { useContext, useEffect, useMemo, useState } from "react";
 import SocialModal from "../ShareBtn/SocialModal";
 import { UserContext } from "../../Context/UserContext";
@@ -83,8 +80,6 @@ const ReferralsNew = () => {
                     }
                 })
                 .catch(err => {
-                    const decrypted = decryptData(err.response.data.data)
-                    // console.log(decrypted)
                     setIsLoading(false)
                 })
         } else {
@@ -110,8 +105,6 @@ const ReferralsNew = () => {
                     }
                 })
                 .catch(err => {
-                    const decrypted = decryptData(err.response.data.data)
-                    // console.log(decrypted)
                     setIsLoading(false)
                 })
         }
@@ -433,7 +426,7 @@ const ReferralsNew = () => {
                                             ))
                                         } */}
                                     </div>
-                                    <div className={styles.ref_table_mobile}>
+                                    {/* <div className={styles.ref_table_mobile}>
                                         <h5>{t("My Referrals")}</h5>
                                         {
                                             currentTab === "My Referrals"
@@ -455,7 +448,7 @@ const ReferralsNew = () => {
                                                     />
                                                 ))
                                         }
-                                    </div>
+                                    </div> */}
                                 </>
                         }
                     </>
@@ -472,58 +465,58 @@ const ReferralsNew = () => {
 
 export default ReferralsNew
 
-const ReferralItemMobile = ({ referral }) => {
-    const [isOpen, setIsOpen] = useState("")
-    const navigate = useNavigate()
+// const ReferralItemMobile = ({ referral }) => {
+//     const [isOpen, setIsOpen] = useState("")
+//     const navigate = useNavigate()
 
-    console.log(referral)
-    return (
-        <>
-            <div className={styles.ref_card} onClick={() => setIsOpen(referral?._id)}>
-                <div className={styles.left}>
-                    <div className={styles.dp}>
-                        {referral?.name?.slice(0, 2)}
-                    </div>
-                    <div className={styles.name}>
-                        <h6>{referral?.name}</h6>
-                        <span>{referral?.joined}</span>
-                    </div>
-                </div>
-                <div className={styles.more}>
-                    <div className={styles.amount}>+${referral?.amount}</div>
-                    {
-                        isOpen === referral?._id
-                            ?
-                            <ChevronDown />
-                            :
-                            <ChevronRight />
-                    }
-                </div>
-            </div>
-            {
-                isOpen === referral?._id
-                &&
-                <div style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1rem",
-                    padding: "1rem"
-                }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", fontSize: ".9rem" }}>
-                        <span>Username:</span>
-                        <strong>{referral?.username ?? "No Username"}</strong>
-                    </div>
-                    {
-                        referral?.username
-                        &&
-                        <Button color="primary" style={{ width: "100%", borderRadius: "10px" }} onClick={() => {
-                            navigate(`/profile/${referral?.username}`)
-                        }}>
-                            Visit Profile
-                        </Button>
-                    }
-                </div>
-            }
-        </>
-    )
-}
+//     console.log(referral)
+//     return (
+//         <>
+//             <div className={styles.ref_card} onClick={() => setIsOpen(referral?._id)}>
+//                 <div className={styles.left}>
+//                     <div className={styles.dp}>
+//                         {referral?.name?.slice(0, 2)}
+//                     </div>
+//                     <div className={styles.name}>
+//                         <h6>{referral?.name}</h6>
+//                         <span>{referral?.joined}</span>
+//                     </div>
+//                 </div>
+//                 <div className={styles.more}>
+//                     <div className={styles.amount}>+${referral?.amount}</div>
+//                     {
+//                         isOpen === referral?._id
+//                             ?
+//                             <ChevronDown />
+//                             :
+//                             <ChevronRight />
+//                     }
+//                 </div>
+//             </div>
+//             {
+//                 isOpen === referral?._id
+//                 &&
+//                 <div style={{
+//                     display: "flex",
+//                     flexDirection: "column",
+//                     gap: "1rem",
+//                     padding: "1rem"
+//                 }}>
+//                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", fontSize: ".9rem" }}>
+//                         <span>Username:</span>
+//                         <strong>{referral?.username ?? "No Username"}</strong>
+//                     </div>
+//                     {
+//                         referral?.username
+//                         &&
+//                         <Button color="primary" style={{ width: "100%", borderRadius: "10px" }} onClick={() => {
+//                             navigate(`/profile/${referral?.username}`)
+//                         }}>
+//                             Visit Profile
+//                         </Button>
+//                     }
+//                 </div>
+//             }
+//         </>
+//     )
+// }

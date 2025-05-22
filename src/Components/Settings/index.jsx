@@ -176,6 +176,7 @@ const Settings = () => {
                                         profileCompletedPercentage === 100
                                             ?
                                             <KYB />
+
                                             :
                                             "Complete Your Profile First"
                                     )

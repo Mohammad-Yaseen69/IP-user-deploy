@@ -396,7 +396,7 @@ const TwoFactorAuth = () => {
             {
                 guideModal
                 &&
-                <Modal isOpen={guideModal} style={{ width: "96vw", maxWidth: "900px" }}>
+                <Modal  isOpen={guideModal} style={{ width: "96vw", maxWidth: "900px", margin: '0 auto' }}>
                     <ModalBody style={{ padding: 0 }}>
                         <AuthenticatorDetails />
                     </ModalBody>
@@ -690,7 +690,7 @@ const TwoFactorAuth = () => {
                         />
                     </ModalBody>
                 </Modal>
-                <Modal className={styles.modal} isOpen={showBioModal} style={{ maxWidth: "841px", padding: "0", overflow: "hidden" }}>
+                <Modal className={styles.modal} isOpen={showBioModal} style={{ maxWidth: "841px", padding: "0", overflow: "hidden", margin: window.innerWidth < 1000 && "0 auto" }}>
                     <ModalBody style={{ padding: "0", display: "flex" }}>
                         {window.innerWidth > 1000 &&
                             <div className={styles.modalLeftSide}>

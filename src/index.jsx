@@ -18,10 +18,21 @@ import "./Components/PaymentsNewer/styles/Timeline.css"
 import "./Components/AddFunds/styles/creditcard.css"
 import { BrowserRouter } from 'react-router-dom';
 
+
+window.addEventListener("error", (e) => {
+    if (
+        e?.message?.includes("Loading chunk") ||
+        e?.message?.includes("ChunkLoadError")
+    ) {
+        window.location.reload();
+    }
+});
+
+
 ReactDOM.render(
-        <BrowserRouter>
-            <App />
-        </BrowserRouter>
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>
     , document.getElementById("root"));
 
 

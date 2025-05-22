@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import styles from "./styles/index.module.scss"
 import TopRight from "../topRight";
-import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate } from "react-router";
+// import { useTranslation } from "react-i18next";
+// import { useLocation, useNavigate } from "react-router";
 import { UserContext } from "../../Context/UserContext";
-import { ChevronLeft, Search, ChevronRight, ChevronDown } from "react-feather";
+import { Search, ChevronRight, } from "react-feather";
 import citiesData from "../CitiesDropDown/CitiesData.json"
 import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 
 
 const Toggle = ({ checked, onChange, isCheckbox = false, style }) => (
-    <label style={{...style}} className={isCheckbox ? styles.checkbox : styles.toggle}>
+    <label style={{ ...style }} className={isCheckbox ? styles.checkbox : styles.toggle}>
         <input
             type={isCheckbox ? "checkbox" : "checkbox"}
             checked={checked}
@@ -24,7 +24,7 @@ const Toggle = ({ checked, onChange, isCheckbox = false, style }) => (
 );
 
 const GeoFencing = () => {
-    const { t } = useTranslation()
+    // const { t } = useTranslation()
     const [countriesWithRegion, setCountriesWithRegion] = useState({})
     const [expandedRegion, setExpandedRegion] = useState(null)
     const [searchTerm, setSearchTerm] = useState("")
@@ -67,7 +67,7 @@ const GeoFencing = () => {
                 const dec = decryptData(response.data.data);
                 const checksData = dec.data?.checks || [];
 
-                if (checksData.length == 0) return
+                if (checksData.length === 0) return
 
                 const updatedCountries = JSON.parse(JSON.stringify(countriesWithRegion));
 
@@ -100,7 +100,7 @@ const GeoFencing = () => {
     }, [userDetails?._id, authHeader]);
 
     useEffect(() => {
-        if (!Object.keys(countriesWithRegion).length) return; // Don't run if no data
+        if (!Object.keys(countriesWithRegion).length) return;
 
         if (searchTerm) {
             const filtered = Object.entries(countriesWithRegion).reduce((acc, [region, countries]) => {
@@ -132,7 +132,6 @@ const GeoFencing = () => {
         const isChecked = e.target.checked;
 
         const updatedCountries = { ...filteredCountries };
-        // setChanges([])
 
         if (isRegionToggle) {
             // Update all countries in the region
@@ -370,14 +369,14 @@ const GeoFencing = () => {
                                             checked={getRegionCheckStatus(region, "locationPaymentCheck")}
                                             onChange={(e) => handleCheckChange(e, "locationPaymentCheck", null, region, true)}
                                             isCheckbox={true}
-                                            style={{marginLeft:"-20px"}}
+                                            style={{ marginLeft: "-20px" }}
                                         />
                                     </div>
                                     <div className={styles.checkboxGroup}>
                                         <Toggle
                                             checked={getRegionCheckStatus(region, "accountQuotationCheck")}
                                             onChange={(e) => handleCheckChange(e, "accountQuotationCheck", null, region, true)}
-                                            style={{marginLeft: window.innerWidth >1000 && "25px"}}
+                                            style={{ marginLeft: window.innerWidth > 1000 ? "25px" : '10px' }}
                                             isCheckbox={true}
                                         />
                                         <Toggle
@@ -408,7 +407,7 @@ const GeoFencing = () => {
                                                 />
                                                 <Toggle
                                                     checked={country.locationPaymentCheck}
-                                                    style={{marginLeft: "-10px"}}
+                                                    style={{ marginLeft: "-10px" }}
                                                     onChange={(e) => handleCheckChange(e, "locationPaymentCheck", country.isoCode, region)}
                                                 />
 
@@ -418,12 +417,12 @@ const GeoFencing = () => {
 
                                                 <Toggle
                                                     checked={country.accountQuotationCheck}
-                                                    style={{marginLeft: "30px"}}
+                                                    style={{ marginLeft: "20px" }}
                                                     onChange={(e) => handleCheckChange(e, "accountQuotationCheck", country.isoCode, region)}
                                                 />
                                                 <Toggle
                                                     checked={country.locationQuotationCheck}
-                                                    style={{marginLeft: "-5px"}}
+                                                    style={{ marginLeft: "-5px" }}
                                                     onChange={(e) => handleCheckChange(e, "locationQuotationCheck", country.isoCode, region)}
                                                 />
 
@@ -444,7 +443,7 @@ const GeoFencing = () => {
                     onClick={submitChanges}
                     disabled={changes.length < 1 || isSaving}
                     className={styles.saveBtn}
-                    style={{cursor: "pointer"}}
+                    style={{ cursor: "pointer" }}
                 >
                     {!isSaving ? "Save Changes" : "Saving"}
                 </button>

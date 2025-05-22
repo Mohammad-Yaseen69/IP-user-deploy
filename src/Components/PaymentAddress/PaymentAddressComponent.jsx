@@ -21,6 +21,7 @@ import { Toggle } from "../MyMasterCard/CardPurchased"
 import info from "./files/info.svg"
 import AddPortfolioItem from '../Portfolio/AddPortfolioItem'
 import PortfolioCard from '../Portfolio/PortfolioCard'
+import useWindowWidth from '../../utils/useWindowWidth'
 
 const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const { t } = useTranslation()
@@ -39,6 +40,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const [showModal, setShowModal] = useState(false)
     const [apiTitle, setApiTitle] = useState("")
     const [apiDescription, setApiDescription] = useState("")
+    const width = useWindowWidth()
 
     const getPaymentAddress = () => {
         axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/get-payment-address/${userDetails?.username}`, {
@@ -98,10 +100,10 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                 headers: authHeader
             })
 
-            if(title !== apiTitle){
+            if (title !== apiTitle) {
                 setApiTitle(title)
             }
-            if(description !== apiDescription){
+            if (description !== apiDescription) {
                 setApiDescription(description)
             }
             if (!paymentAddressDetails.title) {
@@ -177,6 +179,58 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
 
 
     const [showAboutModal, setShowAboutModal] = useState(false)
+
+    const btns = () => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            {editMode &&
+                <span
+                    style={{ cursor: "pointer", fontWeight: 600 }}
+                    onClick={() => {
+                        setEditMode(false)
+                        setTitle(apiTitle)
+                        setDescription(apiDescription)
+                    }}
+                >
+                    Cancel
+                </span>
+            }
+
+            <Button
+                style={{
+                    background: saved ? "#4bb543" : 'linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)',
+                    border: 'none',
+                    outline: 'none',
+                    borderRadius: "10px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    transition: "250ms"
+                }}
+                disabled={!title || !currency || isSaving || !isActive}
+                onClick={() => {
+                    if (!editMode && paymentAddressDetails?.title) {
+                        setEditMode(true)
+                    } else {
+                        addUpdatePaymentAddress()
+                        setEditMode(false)
+                    }
+                }}
+            >
+                {
+                    saved
+                        ?
+                        <>
+                            <CheckCircle size={17} />
+                            {t("Updated Successfully")}
+                        </>
+                        :
+                        <>
+                            {paymentAddressDetails?.title ? (isSaving ? t("Updating") : editMode ? t('Update') : t("Edit")) : (isSaving ? t("Adding") : t('Add'))}
+                        </>
+                }
+            </Button>
+        </div>
+    )
     return (
         <div className={styles.container}>
             {
@@ -215,7 +269,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                 {
                                                     userDetails?.about_me
                                                     &&
-                                                    <div className={styles.about}>
+                                                    <div style={{marginTop: width < 1000 && "1rem"}} className={styles.about}>
                                                         <h5>{t("About Me")}:</h5>
                                                         <p>{userDetails?.about_me?.length > 150 ? userDetails?.about_me + ".." : userDetails?.about_me}</p>
                                                         {
@@ -302,22 +356,6 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                 </span>
                                             </div>
                                         </div>
-                                        {/* <div style={{
-                                            background: "#5926f0",
-                                            padding: "10px 16px",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "10px",
-                                            height: "fit-content",
-                                            color: "white",
-                                            borderRadius: "12px",
-                                            fontSize: "16px",
-                                            fontWeight: "600"
-                                        }}>
-                                            <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "90%" }}>{pa_link}</span>
-
-                                        </div> */}
-                                        {/* } */}
                                     </div>
 
                                     {/* <div className={vpa_styles.vpa_details}>
@@ -329,72 +367,27 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                     <div className={styles.wrapper}>
                                         <div style={{ marginBottom: window.innerWidth > 1000 && "2rem" }} className={styles.infoCont}>
                                             <div className={styles.infoTop}>
-                                                <p>Customize My Public Page</p>
-
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                                    {editMode &&
-                                                        <span
-                                                            style={{ cursor: "pointer", fontWeight: 600 }}
-                                                            onClick={() => {
-                                                                setEditMode(false)
-                                                                setTitle(apiTitle)
-                                                                setDescription(apiDescription)
-                                                            }}
-                                                        >
-                                                            Cancel
-                                                        </span>
-                                                    }
-
-                                                    <Button
-                                                        style={{
-                                                            background: saved ? "#4bb543" : 'linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)',
-                                                            border: 'none',
-                                                            outline: 'none',
-                                                            borderRadius: "10px",
-                                                            display: "flex",
-                                                            alignItems: "center",
-                                                            gap: "10px",
-                                                            transition: "250ms"
-                                                        }}
-                                                        disabled={!title || !currency || isSaving || !isActive}
-                                                        onClick={() => {
-                                                            if (!editMode && paymentAddressDetails?.title) {
-                                                                setEditMode(true)
-                                                            } else {
-                                                                addUpdatePaymentAddress()
-                                                                setEditMode(false)
-                                                            }
-                                                        }}
-                                                    >
-                                                        {
-                                                            saved
-                                                                ?
-                                                                <>
-                                                                    <CheckCircle size={17} />
-                                                                    {t("Updated Successfully")}
-                                                                </>
-                                                                :
-                                                                <>
-                                                                    {paymentAddressDetails?.title ? (isSaving ? t("Updating") : editMode ? t('Update') : t("Edit")) : (isSaving ? t("Adding") : t('Add'))}
-                                                                </>
-                                                        }
-                                                    </Button>
-                                                </div>
+                                                <p style={{ fontSize: width < 1000 && "14px" }}>Customize My Public Page</p>
+                                                {width > 1000 && btns()}
                                             </div>
                                             <div className={styles.main}>
 
                                                 <div className={styles.inputBox}>
                                                     <label>{t("Payment Address Title")}</label>
-                                                    <div style={{ position: "relative", width: "100%" }}>
+                                                    <div className={styles.title} style={{ position: "relative", width: "100%", background: !editMode && "#e9ecef" }}>
                                                         <Input
                                                             disabled={!editMode}
-                                                            style={{ background: !editMode && "#e9ecef" }}
+                                                            style={{ background: !editMode && "#e9ecef", width: "90%" }}
                                                             placeholder='Title' value={title}
                                                             onChange={e => setTitle(e.target.value)}
                                                             maxLength={80}
+
                                                         />
 
-                                                        <span style={{ position: 'absolute', right: '10px', top: '15px', fontSize: '12px', fontWeight: 600, color: 'gray' }}>{title?.length}/80</span>
+                                                        <span
+                                                            style={{ position: 'absolute', right: '10px', top: '15px', fontSize: '12px', fontWeight: 600, color: 'gray', }}>
+                                                            {title?.length}/80
+                                                        </span>
                                                     </div>
                                                 </div>
 
@@ -417,6 +410,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                 </div>
 
                                             </div>
+                                            {width < 1000 && btns()}
                                         </div>
 
                                         <div className={styles.videoCont}>
