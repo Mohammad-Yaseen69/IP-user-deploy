@@ -343,14 +343,16 @@ const UserState = ({ children }) => {
                 const decrypted = decryptData(res.data.data)
                 const sorted = decrypted.walletList.sort((a, b) => {
                     if (a.wallet_type === 'insta' && b.wallet_type === 'crypto') {
-                        return -1; // "insta" comes before "crypto"
+                        return -1;
                     } else if (a.wallet_type === 'crypto' && b.wallet_type === 'insta') {
-                        return 1; // "crypto" comes after "insta"
+                        return 1;
                     }
-                    return 0; // no change in order
+                    return 0;
                 });
-                // console.log(sorted)
-                setUserWallets(sorted)
+            
+                const defaultWallet = decrypted.walletList.find(w => w.default);
+                const otherWallets = sorted.filter(w => !w.default);
+                setUserWallets(defaultWallet ? [defaultWallet, ...otherWallets] : otherWallets);
             })
             .catch(err => "a") // console.log(decryptData(err.response.data.data)))
     }
@@ -564,7 +566,7 @@ const UserState = ({ children }) => {
 
 
     useEffect(() => {
-        if(userDetails){
+        if (userDetails) {
             getWithdrawals()
         }
     }, [userDetails])
