@@ -142,7 +142,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
         console.log(credentials)
 
-
         if (!isAuth && credentials.platform === "instagram") {
             setLastOtpSentTo("insta")
         }
@@ -165,7 +164,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         case 'auth':
                             return { ...method, avail: decrypted?.tfa || false };
                         case 'wp':
-                            return { ...method, avail: decrypted?.whatsapp || false };
+                            return { ...method, avail: true };
                         case 'insta':
                             return { ...method, avail: !isInstagramBrowser && (decrypted?.instagram || false) };
                         case 'biometric':

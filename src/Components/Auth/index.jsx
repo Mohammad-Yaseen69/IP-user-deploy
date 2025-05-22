@@ -50,8 +50,8 @@ const Auth = () => {
         setStep(1)
     }, [isLoginForm])
 
-    const [registrationCompleted, setRegistrationCompleted] = useState(false)
-    const [isForgot, setIsForgot] = useState(false)
+    const [registrationCompleted,] = useState(false)
+    const [hideLogo, setHideLogo] = useState(false)
 
 
     const { allowedCountries } = useContext(UserContext)
@@ -117,7 +117,7 @@ const Auth = () => {
                                 <img src={woman} alt="woman" className={styles.man} />
                         }
                         <div className={styles.form}>
-                            <div className={styles.f_top}>
+                            <div style={{ visibility: hideLogo && "hidden" }} className={styles.f_top}>
                                 <img src={logo} alt="Instapay" />
                                 {
                                     window.innerWidth > 1000
@@ -130,13 +130,13 @@ const Auth = () => {
                                     ?
                                     <Login
                                         country={country}
-                                        setIsForgot={setIsForgot}
                                         setIsLoginForm={setIsLoginForm}
                                     />
                                     :
                                     <Signup
                                         country={country}
                                         setIsLoginForm={setIsLoginForm}
+                                        setHideLogo={setHideLogo}
                                     />
                             }
                             <div className={styles.f_footer}>

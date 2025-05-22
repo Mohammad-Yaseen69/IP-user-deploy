@@ -562,6 +562,12 @@ const UserState = ({ children }) => {
         }
     }
 
+
+    useEffect(() => {
+        if(userDetails){
+            getWithdrawals()
+        }
+    }, [userDetails])
     const [totalReferralAmount, setTotalReferralAmount] = useState(0)
     const getReferralCommission = async () => {
         try {

@@ -4,6 +4,7 @@ import LanguagePicker from '../../LanguagePicker'
 import { useTranslation } from 'react-i18next'
 import styles from "../styles/index.module.css"
 import { UserContext } from '../../../Context/UserContext'
+import { smsIcon, whatsappIcon } from "../files"
 
 const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = "phone", data, dataHandler }) => {
     const { t } = useTranslation()
@@ -19,7 +20,8 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
         }
     }, [data])
     const [isAnyFieldEmpty, setIsAnyFieldEmpty] = useState(true);
-
+    const [currentMethod, setCurrentMethod] = useState("sms")
+    const [showToolTip, setShowTooltip] = useState()
 
     const handleInputChange = (index, value) => {
         let numericValue = value.replace(/[^0-9]/g, '');
@@ -89,6 +91,12 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
         const s = (seconds % 60).toString().padStart(2, '0');
         return `${m}:${s}`;
     };
+
+    const getMaskedEmail = () => {
+        const username = data.email.split("@")[0];
+        const domain = data.email.split("@")[1];
+        return `${"*".repeat(username.length - 3)}${username.slice(-3)}@${domain}`;
+    }
     // console.log(isAnyFieldEmpty , otpValues.some(item => !item) , data.loading , data.account_created)
     return (
         <>
@@ -109,8 +117,8 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                     <div className={styles.top}>
                         <div className={styles.otp_inp}>
                             {type === 'phone' ?
-                                <label>{t(`Enter the SMS code sent to +41********4053`).replace("+41********4053", `${data?.[type]?.slice(0, data?.[type]?.length - 4).split("").map(_ => "*").join("")}${data?.[type]?.slice(data?.[type]?.length - 4)}`).replace("SMS", type === "phone" ? "SMS" : "Email").replace("SMS", data?.phone?.slice(0, 3) === "971" ? "Whatsapp" : "SMS")}</label> :
-                                <label>{t(`Enter the SMS code sent to +41********4053`).replace("+41********4053", "*******abc@gmail.com")}</label>
+                                <label>{t(`Enter the SMS code sent to +41********4053`).replace("+41********4053", `${data?.[type]?.slice(0, data?.[type]?.length - 4).split("").map(_ => "*").join("")}${data?.[type]?.slice(data?.[type]?.length - 4)}`).replace("SMS", currentMethod === "whatsapp" ? "Whatsapp" : "SMS")}</label> :
+                                <label>{t(`Enter the Email code sent to +41********4053`).replace("+41********4053", getMaskedEmail())}</label>
                             }
                             <div
                                 style={{
@@ -145,6 +153,42 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                                 ))}
                             </div>
                         </div>
+                        {type === "phone" &&
+                            <div style={{ position: "relative" }}>
+                                <span
+                                    onClick={() => {
+                                        if (resendTimer === 0) {
+                                            if (currentMethod === "sms") {
+                                                setCurrentMethod("whatsapp")
+                                                setResendTimer(90)
+                                                resendHandler("whatsapp")
+                                                setOTPValues(Array(numberOfFields).fill(''), "whatsapp")
+                                            } else {
+                                                setCurrentMethod("sms")
+                                                setResendTimer(90)
+                                                resendHandler("sms")
+                                                setOTPValues(Array(numberOfFields).fill(''))
+                                            }
+                                        }
+                                    }}
+                                    onMouseEnter={() => {
+                                        if (resendTimer !== 0) {
+                                            setShowTooltip(true)
+                                        }
+                                    }}
+                                    onMouseLeave={() => {
+                                        setShowTooltip(false)
+                                    }}
+                                    style={{ display: 'flex', alignItems: "center", gap: "7px", padding: '10px 15px', boxShadow: "0px 0px 4px #0000002e", borderRadius: "6px", cursor: resendTimer !== 0 ? "not-allowed": "pointer" }}>
+                                    <img style={{ width: '24px' }} src={currentMethod === "sms" ? whatsappIcon : smsIcon} alt="" />
+                                    <span style={{ fontWeight: 600, color: 'black' }}>
+                                        Verify Using {currentMethod === "sms" ? "Whatsapp" : "SMS"}
+                                    </span>
+                                </span>
+
+                                {showToolTip && <span style={{ fontWeight: 600, fontSize: '10px', backgroundColor: "gray", padding: '1px 3px', borderRadius: "3px", color: 'white', position: "absolute", bottom: "-20px", right: '-40px' }}>Wait For the Timer</span>}
+                            </div>
+                        }
                         <div style={{ marginTop: '20px' }} className={styles.toggle_sms}>
                             <span>
                                 {
@@ -170,7 +214,7 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                             </div>
                         }
                     </div>
-                    <div className={styles.center_bottom} style={{ justifyContent: "flex-end" }}>
+                    <div className={styles.center_bottom} style={{ justifyContent: "flex-end", marginTop: "0" }}>
                         <div className={styles.btns}>
                             <button type="submit"
                                 className={styles.form_btn}

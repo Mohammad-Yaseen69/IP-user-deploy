@@ -59,7 +59,7 @@ function reducer(state, action) {
     }
 }
 
-const Signup = ({ country, setIsLoginForm }) => {
+const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
     const emailRegex = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/
     const { t } = useTranslation()
     const [data, dispatch] = useReducer(reducer, initialState);
@@ -145,7 +145,7 @@ const Signup = ({ country, setIsLoginForm }) => {
         }
     }
 
-    const signupHandler = async () => {
+    const signupHandler = async (platform,) => {
         dataHandler("loading", true)
         const coun = allowedCountries.find(item => item.country_iso_code === data.country)
         try {
@@ -156,7 +156,8 @@ const Signup = ({ country, setIsLoginForm }) => {
                 password: data.password,
                 country_iso_code: data.country,
                 country_name: coun?.country_name,
-                country: coun?._id
+                country: coun?._id,
+                platform: platform
             }
 
             if (data.email.length > 0) {
@@ -203,8 +204,10 @@ const Signup = ({ country, setIsLoginForm }) => {
         }
     }
 
-    const verifyPhoneOtp = async (otp, setOtp, numberOfFields = 6) => {
-        dataHandler("loading", true)
+    const verifyPhoneOtp = async (otp, setOtp, numberOfFields = 6, dontLoad) => {
+        if (!dontLoad) {
+            dataHandler("loading", true)
+        }
         try {
             dataHandler("phone_otp_values", otp)
             const paylaod = {
@@ -241,6 +244,14 @@ const Signup = ({ country, setIsLoginForm }) => {
             dataHandler("loading", false)
         }
     }
+
+    useEffect(() => {
+        if (data.phone_otp_verfied && !data.show_email_otp) {
+            setHideLogo(true)
+        } else {
+            setHideLogo(false)
+        }
+    }, [data.phone_otp_verfied, !data.show_email_otp])
 
     const verifyEmailOtp = async (otp, setOtp, numberOfFields = 6) => {
         dataHandler("loading", true)
@@ -347,7 +358,7 @@ const Signup = ({ country, setIsLoginForm }) => {
                                     ?
                                     <OtpConfirmation
                                         dataHandler={dataHandler}
-                                        resendHandler={() => verifyPhoneOtp(data.phone_otp_values?.split(""), () => { }, 6)}
+                                        resendHandler={() => verifyPhoneOtp(data.phone_otp_values?.split(""), () => { }, 6, true)}
                                         verifyOTpHandler={verifyEmailOtp}
                                         timer={900}
                                         type="email"
@@ -452,7 +463,7 @@ const Signup = ({ country, setIsLoginForm }) => {
                                         </form>
                             }
 
-                            <div style={{marginTop: window.innerWidth < 625 && "2rem"}} className={styles.auth_details}>
+                            <div style={{ marginTop: window.innerWidth < 625 && "3rem" }} className={styles.auth_details}>
                                 <div className={styles.left}>
                                     <h5>{t("Two-factor authentication (2FA) is the best way to protect yourself online.")}</h5>
                                     <p>{t("We recommend you download and install the Google Authenticator app to ensure you receive your verification codes instantly, avoiding any SMS delays or issues.")}</p>
