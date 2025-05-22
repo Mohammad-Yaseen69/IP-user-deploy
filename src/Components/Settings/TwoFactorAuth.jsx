@@ -109,6 +109,7 @@ const TwoFactorAuth = () => {
 
     const handleNextTab = () => {
         if ((!userDetails.telegram_bot && !userDetails.insta_bot) || !userWithdrawals.length) {
+            console.log(userWithdrawals)
             setShowNextStepModal(true)
             setGuideModal(false)
             const tabtomove = (!userDetails.telegram_bot && !userDetails.insta_bot) ? "social" : !userWithdrawals.length ? "withdrawal" : ""
@@ -389,7 +390,7 @@ const TwoFactorAuth = () => {
 
             <NextStepModal
                 isOpen={showNextStepModal}
-                toggle={setShowNextStepModal}
+                toggle={() => setShowNextStepModal(false)}
                 tab={tabtoMove}
             />
             {
