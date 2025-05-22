@@ -59,30 +59,12 @@ const tips = [
 ]
 
 const LinktoTelegramModal = ({ isOpen, toggle }) => {
-    const navigate = useNavigate()
     const { t } = useTranslation()
-    const { userDetails, authHeader, verifyToken } = useContext(UserContext)
-    const [loading, setLoading] = useState(false)
+    const { userDetails, verifyToken } = useContext(UserContext)
     const [linkCode, setLinkCode] = useState("")
     const [timer, setTimer] = useState(120)
     const [showSuccess, setShowSuccess] = useState(false)
     const modalRef = useRef(null)
-
-    const getLinkCode = async () => {
-        setLoading(true)
-        try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-telegram-link-code/${userDetails?._id}`, {
-                headers: authHeader
-            })
-            const decrypted = decryptData(res.data.data)
-            setLinkCode(decrypted.link_code?.split(":")?.[1])
-            setTimer(120)
-        } catch (error) {
-            toast.error("Something went wrong!")
-        } finally {
-            setLoading(false)
-        }
-    }
 
     useEffect(() => {
         let interval;
@@ -99,8 +81,8 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
         };
     }, [timer])
 
-    const location = useLocation()
-    const queryParams = new URLSearchParams(location.search)
+    // const location = useLocation()
+    // const queryParams = new URLSearchParams(location.search)
 
     useEffect(() => {
         if (isOpen && modalRef.current) {
@@ -177,18 +159,6 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
                                     linkCode
                                         ?
                                         <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
-                                            <div className={styles.code_details}>
-                                                <div className={styles.code}>
-                                                    {linkCode}
-                                                </div>
-                                                <div className={styles.expiry}>
-                                                    <span>{t("Expiry Time")}:</span>
-                                                    <div className={styles.timer}>
-                                                        <img src={time} alt="clock" />
-                                                        <span style={{ minWidth: "4ch" }}>{timer}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
                                             <button style={{ outline: "none", border: "none", display: "flex", alignItems: "center", color: "black", fontSize: "1rem", fontWeight: 500, background: "transparent", gap: "1rem", padding: ".6rem 1rem", justifyContent: "center" }} onClick={() => window.open("https://t.me/instapay_swiss_bot/", "_blank")}>
                                                 <div style={{ borderRadius: "10px", height: "35px", width: "35px", display: "flex", justifyContent: "center", alignItems: "center", background: "#5926f0" }}>
                                                     <Instagram color='white' size={20} />
@@ -198,10 +168,6 @@ const LinktoTelegramModal = ({ isOpen, toggle }) => {
                                         </div>
                                         :
                                         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1rem" }}>
-                                            <button className={styles.button} onClick={getLinkCode} disabled={loading}>
-                                                <img src={hash} alt="#" />
-                                                <span>{t("Get Connection Code")}</span>
-                                            </button>
                                             <button className={styles.button} style={{ color: "white" }} onClick={() => window.open("https://t.me/instapay_swiss_bot/", "_blank")}>{t("Go to InstaPay Instagram account").replace("Instagram", "Telegram")}</button>
                                         </div>
                                 }
