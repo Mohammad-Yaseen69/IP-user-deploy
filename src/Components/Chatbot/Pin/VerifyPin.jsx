@@ -5,7 +5,7 @@ import axios from "axios"
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import { UserContext } from '../../../Context/UserContext'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
-import { useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { Modal, ModalBody, ModalHeader } from "reactstrap"
 import { toast } from "react-toastify"
 
@@ -24,6 +24,10 @@ const CreatePin = () => {
     const pinRefs = useRef(Array(4).fill(null));
     const [shake, setShake] = useState(false)
     const [error, setError] = useState(null);
+    const location = useLocation()
+    const query = new URLSearchParams(location.search)
+    const flow = query.get("flow")
+    const chatId = query.get("chatId")
 
     useEffect(() => {
         setDisabled(loading || pinFields.data.join("").length < 4)
@@ -31,13 +35,13 @@ const CreatePin = () => {
 
 
     useEffect(() => {
-        if(error){
+        if (error) {
             setShake(true)
             setTimeout(() => {
                 setShake(false)
             }, 1000)
         }
-    },[error])
+    }, [error])
 
 
     const handlePaste = (event, setter, data) => {
@@ -58,28 +62,28 @@ const CreatePin = () => {
         }));
     };
 
-    
 
-   
+
+
     const handleInputChange = (index, value, setter, data, refs) => {
         setError(null);
         const numericValue = value.replace(/[^0-9]/g, '');
-    
+
         if (numericValue.length <= 1) {
             const newValues = [...data.data];
             const newAsteriskValues = [...data.asteriskFields];
-    
+
             newValues[index] = numericValue;
             // Immediately set asterisk
             newAsteriskValues[index] = numericValue ? '*' : '';
-    
+
             setter(prev => ({
                 ...prev,
                 data: newValues,
                 currentField: index,
                 asteriskFields: newAsteriskValues
             }));
-    
+
             if (numericValue && index < 3) {
                 refs.current[index + 1]?.focus();
             }
@@ -125,10 +129,15 @@ const CreatePin = () => {
                 account_id: accountId,
                 platform: platformType
             }
+
+            if (flow === "connect") {
+                data.chatId = chatId
+            }
+
             console.log(data)
             const enc = encryptData(data)
 
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/verify-pin`, { data: enc })
+            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/${flow === "connect" ? "connect-account" :"verify-pin"}`, { data: enc })
 
             const dec = decryptData(response.data.data)
 
@@ -175,7 +184,7 @@ const CreatePin = () => {
                         </radialGradient>
                     </defs>
                 </svg>
-                <div style={{ display: "flex", flexDirection: "column", gap: "15px", alignItems: "center", justifyContent: "center", justifySelf: "center", width: "65%", textAlign:"center" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "15px", alignItems: "center", justifyContent: "center", justifySelf: "center", width: "65%", textAlign: "center" }}>
                     <div style={{
                         display: "flex",
                         padding: "10px",
@@ -219,19 +228,19 @@ const CreatePin = () => {
                 </div>
 
 
-              {!success ?
-                <div  style={{ alignSelf: "flex-end" }}>
-                    <button disabled={disabled} style={{ opacity: disabled ? 0.5 : 1, border: 'none', outline: "none" }} onClick={setPin}>
+                {!success ?
+                    <div style={{ alignSelf: "flex-end" }}>
+                        <button disabled={disabled} style={{ opacity: disabled ? 0.5 : 1, border: 'none', outline: "none" }} onClick={setPin}>
 
-                        {loading ? (
-                            <div class="d-flex justify-content-center">
-                                <div class="spinner-border" color='primary' role="status">
-                                    <span class="sr-only">Loading...</span>
+                            {loading ? (
+                                <div class="d-flex justify-content-center">
+                                    <div class="spinner-border" color='primary' role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
                                 </div>
-                            </div>
-                        ) : "Verify"}
-                    </button>
-                </div> : <h1>‎ </h1> }
+                            ) : "Verify"}
+                        </button>
+                    </div> : <h1>‎ </h1>}
             </div>
         </div>
     )
