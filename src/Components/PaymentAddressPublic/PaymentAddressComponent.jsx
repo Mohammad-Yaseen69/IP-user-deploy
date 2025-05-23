@@ -219,7 +219,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
 
 
     const leftJSX = () => (
-        <div style={{ flex: 1.7, alignSelf: "stretch" }} className={styles.left}>
+        <div style={{ flex: 1.7, alignSelf: (userVideos.length >= 1 && "stretch") }} className={styles.left}>
             <>
                 {(title || description) &&
                     <div className={styles.about}>
@@ -234,7 +234,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                             modules={[Pagination]}
                             pagination={{ clickable: true }}
                             spaceBetween={10}
-                            slidesPerView={userVideos.length === 1 ? 1 : 1.5}
+                            slidesPerView={(userVideos.length === 1 || width < 700) ? 1 : 1.5}
                         >
                             {userVideos.map((video, index) => (
                                 <SwiperSlide key={video._id || index}>
@@ -256,7 +256,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                     currentWallet={currentWallet}
                 />
 
-                <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', paddingTop: '20px', alignItems:'center' }}>
+                <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', paddingTop: '20px', alignItems: 'center' }}>
                     <span style={{ fontSize: '12px', fontWeight: 600, color: '#333333' }}>Learn More:</span>
                     <span onClick={() => window.open("https://insta-pay.ch", "_blank", "noopener,noreferrer")} style={{ fontSize: '14px', fontWeight: 600, color: '#606060', cursor: 'pointer' }}>
                         insta-pay.ch
@@ -314,7 +314,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                 </div>
                                             }
                                             <div className={styles.cover_container}>
-                                                <img src={(croppedCover || cover) ?? coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: "210px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important" }} />
+                                                <img src={(croppedCover || cover) || coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: "210px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important" }} />
                                             </div>
                                             <div style={{ backgroundColor: 'white', borderRadius: "16px", padding: "14px" }}>
                                                 <div style={{ flexDirection: "column", alignItems: "center", gap: "0", padding: "0px", position: 'relative', top: "-50px" }} className={styles.top}>

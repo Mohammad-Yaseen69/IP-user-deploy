@@ -32,8 +32,8 @@ const Cover = ({ cover, setCover, dets }) => {
         setFile(file)
         const reader = new FileReader();
         reader.onload = () => {
+            setCroppedImages({ ...croppedImages, paBanner: "" })
             setCover(reader.result);
-            setCroppedImages({ ...croppedImages, paCover: reader.result })
         };
         reader.readAsDataURL(file);
         if (file) {
@@ -80,7 +80,7 @@ const Cover = ({ cover, setCover, dets }) => {
         })
             .then(res => {
                 verifyToken()
-                setCroppedImages(prev => ({ ...prev, paCover: "" }))
+                setCroppedImages(prev => ({ ...prev, paBanner: "" }))
                 setCover("")
             })
             .catch(err => {
@@ -97,7 +97,7 @@ const Cover = ({ cover, setCover, dets }) => {
 
     return (
         <div className={styles.cover_container} ref={mainContainerRef}>
-            <img src={croppedImages.paBanner || cover || coverPlaceHolder} alt="cover" className={styles.cover} />
+            <img src={(croppedImages.paBanner || cover) || coverPlaceHolder} alt="cover" className={styles.cover} />
             {
                 (isEditing || deleting)
                     ?
