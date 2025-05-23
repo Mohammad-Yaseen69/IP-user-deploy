@@ -1,12 +1,8 @@
 import { Fragment, createContext, useContext, useEffect, useMemo, useState } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import Footer from "./Footer/index";
 import TapTop from "./TapTop/index";
-import Header from "./Header";
-import SideBar from "./Sidebar/Sidebar";
 import CheckContext from "../Helper/Customizer";
-import ProductContext from "../Helper/product";
 import AnimationThemeContext from "../Helper/AnimationTheme";
 import ConfigDB from "../Config/ThemeConfig";
 import Loader from "./Loader";
@@ -15,7 +11,6 @@ import ProfileCompletionModal from "../Components/ProfileCompletionModal";
 import { UserContext } from "../Context/UserContext";
 import styles from "./Layout.module.css"
 import BottomNav from "./BottomNav";
-import TopBar from "./TopBar";
 import MobileSidebar from "./MobileSidebar";
 import InactivityLogoutModal from "../Components/InactivityLogoutModal";
 import ThreeDaysModal from "../Components/SecurityQuestionsModals/ThreeDaysModal";
@@ -40,18 +35,17 @@ const MobileSbContextProvider = ({ children }) => {
 }
 
 const Layout = ({ children, classNames, ...rest }) => {
-  const navigate = useNavigate();
-  const { setDefaultClass, setTogglSidebar, sidebar_types } =
+  const { setTogglSidebar, sidebar_types } =
     useContext(CheckContext);
-  const { setIsVertical } = useContext(ProductContext);
+  // const { setIsVertical } = useContext(ProductContext);
   const location = useLocation();
+  const isPaAddress = new URLSearchParams(location.search).get("payment_type")
   const queryData = location?.search?.split("=")[1]?.toString();
   const { animation } = useContext(AnimationThemeContext);
   const animationTheme =
     localStorage.getItem("animation") ||
     animation ||
     ConfigDB.data.router_animation;
-  const sidebarType = localStorage.getItem("sidebar_types");
   let sidebar_types1 = (queryData === "compact-wrapper" || queryData === "horizontal-wrapper") ? queryData : localStorage.getItem('sidebar_types') || ConfigDB.data.settings.sidebar.type || sidebar_types;
 
   // const sideBarReload = () => {
@@ -91,7 +85,6 @@ const Layout = ({ children, classNames, ...rest }) => {
     profileCompleted,
     profileIncompleteReason,
     userDetails,
-    checkAuth,
     showInactivityModal,
     setShowInactivityModal,
     is30Days,
@@ -104,7 +97,7 @@ const Layout = ({ children, classNames, ...rest }) => {
   } = useContext(UserContext)
 
   const beneficiaryWithoutAddresses = useMemo(() => {
-    if (location.pathname.startsWith("/payments") || location.pathname.startsWith("/beneficiaries")) {
+    if ((location.pathname.startsWith("/payments") || location.pathname.startsWith("/beneficiaries")) && isPaAddress !== "payment_address") {
       return beneficiaries.filter(item => !item.address || item?.address === "")
     } else {
       return []
@@ -176,7 +169,7 @@ const Layout = ({ children, classNames, ...rest }) => {
   return (
     <Fragment>
       {
-        beneficiaryWithoutAddresses.length > 0
+        (beneficiaryWithoutAddresses.length > 0)
         &&
         <AddBeneficiaryAddressModal
           isOpen={beneficiaryWithoutAddresses.length > 0}
