@@ -234,7 +234,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                             modules={[Pagination]}
                             pagination={{ clickable: true }}
                             spaceBetween={10}
-                            slidesPerView={(userVideos.length === 1 || width < 700) ? 1 : 1.5}
+                            slidesPerView={(userVideos.length === 1 || window.innerWidth < 700) ? 1 : 1.5}
                         >
                             {userVideos.map((video, index) => (
                                 <SwiperSlide key={video._id || index}>

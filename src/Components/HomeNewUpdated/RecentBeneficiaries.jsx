@@ -15,6 +15,8 @@ const RecentBeneficiaries = () => {
         }
     }, [userDetails])
 
+    console.log(beneficiaries)
+
     return (
         <>
             <Card className={styles.pc} style={{ marginBottom: 0, borderRadius: "1rem", minHeight: "142px", flex: 1 }}>

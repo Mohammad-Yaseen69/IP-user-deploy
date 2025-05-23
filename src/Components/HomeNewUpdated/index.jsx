@@ -1,4 +1,3 @@
-import { Card, Container, Row } from "reactstrap";
 import BalanceComponent from "./BalanceCard";
 import EarnMoneyBanner from "./EarnMoneyBanner";
 import TransDetails from "./TransDetails";

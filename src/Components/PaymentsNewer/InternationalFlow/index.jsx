@@ -273,6 +273,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 }
                 updateInternationalData("exchange_rate", exchange_rate_details)
                 updateInternationalData("quotation_details", decrypted?.data)
+                // console.log(decrypted)
                 if (fromOrTo === "from") {
                     updateInternationalData("receiving_amount", exchange_rate_details?.receiver?.amount)
                     updateInternationalData("conversion_in", destinationCurrency)
@@ -1010,7 +1011,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
         }
     }, [transaction_status, code])
 
-    console.log(internationalData.currency)
+    // console.log(internationalData.currency)
     return (
         <>
             {
