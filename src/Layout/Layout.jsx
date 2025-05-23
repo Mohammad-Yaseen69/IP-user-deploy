@@ -39,7 +39,9 @@ const Layout = ({ children, classNames, ...rest }) => {
     useContext(CheckContext);
   // const { setIsVertical } = useContext(ProductContext);
   const location = useLocation();
-  const isPaAddress = new URLSearchParams(location.search).get("payment_type")
+  const query = new URLSearchParams(location.search)
+  const isPaAddress = query.get("payment_type")
+  const isw2w = query.get("send_type")
   const queryData = location?.search?.split("=")[1]?.toString();
   const { animation } = useContext(AnimationThemeContext);
   const animationTheme =
@@ -97,7 +99,7 @@ const Layout = ({ children, classNames, ...rest }) => {
   } = useContext(UserContext)
 
   const beneficiaryWithoutAddresses = useMemo(() => {
-    if ((location.pathname.startsWith("/payments") || location.pathname.startsWith("/beneficiaries")) && isPaAddress !== "payment_address") {
+    if ((location.pathname.startsWith("/payments") || location.pathname.startsWith("/beneficiaries")) && isPaAddress !== "payment_address" && isw2w !== "wallet") {
       return beneficiaries.filter(item => !item.address || item?.address === "")
     } else {
       return []
