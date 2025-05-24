@@ -330,35 +330,16 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                         </div>
                                                         <div style={{ alignItems: 'center' }} className={styles.basic_dets}>
                                                             <div className={styles.badge}>{userDetails?.account_type === "individual" ? "Personal" : "Business"} Account</div>
-                                                            <div
-                                                                style={{
-                                                                    display: "flex",
-                                                                    flexDirection: "column",
-                                                                    alignItems: "center",
-                                                                    gap: ".3rem"
-                                                                }}
-                                                            >
-                                                                <span
+                                                            <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: ".3rem" }}>
+                                                                <h4
                                                                     style={{
-                                                                        display: "flex",
-                                                                        alignItems: "flex-end",
-                                                                        justifyContent: "center",
-                                                                        flexWrap: "nowrap",
-                                                                        gap: ".3rem",
+                                                                        margin: "0 6px 0 0",
+                                                                        fontWeight: 700,
+                                                                        whiteSpace: "wrap",
+                                                                        textAlign: 'center ',
                                                                     }}
                                                                 >
-                                                                    <h4
-                                                                        style={{
-                                                                            cursor: "pointer",
-                                                                            margin: 0,
-                                                                            wordBreak: "break-word",
-                                                                            fontWeight: 700,
-                                                                            textAlign: "center"
-                                                                        }}
-                                                                        onClick={() => navigate(`/profile/${user_name}`)}
-                                                                    >
-                                                                        {userDetails?.first_name} {userDetails?.last_name}
-                                                                    </h4>
+                                                                    {userDetails?.first_name} {userDetails?.last_name}
                                                                     {userDetails?.kyc_status === "approved" && (
                                                                         <>
                                                                             <img
@@ -371,7 +352,6 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                                                     width: window.innerWidth > 780 ? "25px" : "17px",
                                                                                     objectFit: "contain",
                                                                                     transform: "translateY(-3px)",
-                                                                                    marginLeft: ".3rem"
                                                                                 }}
                                                                             />
                                                                             {showVerTT && (
@@ -394,7 +374,8 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                                             )}
                                                                         </>
                                                                     )}
-                                                                </span>
+                                                                </h4>
+
                                                             </div>
                                                             <div className={styles.country}>
                                                                 <img src={userCountry?.file_url} alt={userCountry?.alpha3} style={{ boxShadow: "0 0 5px #afafaf" }} />
