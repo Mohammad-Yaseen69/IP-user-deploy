@@ -29,7 +29,7 @@ import InstaPayLoader from "../../Loader"
 import TrustpaymentPage from "../../AddFunds/WalletFund/CreditTransaction"
 import FeesComponent from "./FeesComponent"
 import MobileWalletServices from "./MobileWalletServices"
-import {  createShambeToken } from "../../../Helper/CreateToken"
+import { createShambeToken } from "../../../Helper/CreateToken"
 import NotFoundModal from "../../NotFound/NotFoundModal"
 import errors from "../../AddFunds/TrustPaymentErrors.json"
 import AddBeneficiaryRequiredFields from "../../AddBeneficiaryRequiredFields"
@@ -966,6 +966,14 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
     const transaction_token = queryParams.get("transaction_token")
     const error_in_funds = queryParams.get("error_in_funds")
     const code = queryParams.get("code")
+    const amount = queryParams.get("amount")
+
+
+    useEffect(() => {
+        if(amount){
+            updateInternationalData("amount", amount)
+        }
+    },[amount])
 
     useEffect(() => {
         const confirmMobileWalletTransaction = async () => {
@@ -1046,7 +1054,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                             Thank you for your understanding.
                         </h3>
                     </ModalBody>
-                </Modal> 
+                </Modal>
             }
             {
                 showDetailsModal

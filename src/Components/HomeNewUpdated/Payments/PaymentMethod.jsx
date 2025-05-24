@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Card, CardBody } from 'reactstrap'
 import { payoutChannelData } from '../../PaymentsNewer/PayoutChannel'
 import iw from "../../../assets/images/logo/logo_white.png"
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
+import axios from 'axios'
+import { UserContext } from '../../../Context/UserContext'
+import CitiesData from "../../CitiesDropDown/CitiesData.json"
+import { currencies } from '../../PaymentsNewer/InternationalFlow/StepOne'
 
 const payoutChannels = [
     ...payoutChannelData,
@@ -17,6 +22,8 @@ const payoutChannels = [
 
 const PaymentMethod = ({ setPaymentMethod, item, setStep }) => {
     const { t } = useTranslation()
+    const { authHeader, userDetails, userWallets } = useContext(UserContext)
+    const [minimumAmount, setminimumAmount] = useState("")
 
     const channels = payoutChannels?.filter(i => {
         return item?.account_type?.some(j => {
@@ -24,11 +31,57 @@ const PaymentMethod = ({ setPaymentMethod, item, setStep }) => {
         })
     })
 
+    const getCurrency = async (channelId) => {
+        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/thunes/get-payer-details?payerId=${item?.mobile_wallet?.[0]?.money_provider}`, {
+            headers: authHeader
+        })
+        const dec = await decryptData(res.data.data)
+
+        return dec?.data?.destination_currency
+    }
+
+    const localCurrency = () => {
+        const cont = CitiesData.find(item => item.iso3?.toUpperCase() === userDetails?.country_iso_code?.toUpperCase())
+        return cont.currency
+    }
+    const getWallet = () => {
+        const wallet = userWallets?.find(item => item?.currency?.code === localCurrency())
+        if (wallet?.currency?.code) {
+            return { ...currencies.find(item => item.currency_code === wallet?.currency?.code), ...wallet }
+        }
+        return currencies[0]
+    }
+
+
+    const getConversionRate = async (channel) => {
+        const destinationCurrency = await getCurrency()
+        try {
+            const url = `${process.env.REACT_APP_IP_DEV_API}/api/thunes/get-markup-conversion-rates?from=${getWallet()?.currency?.code}&to=${destinationCurrency}&amount=${"1.00"}&fromOrTo=${"from"}&service_name=${"international_mobile_wallet"}&account_id=${userDetails?._id}&payer_id=${item?.mobile_wallet?.[0]?.money_provider}&service_id=${channel?.id}`
+            const res = await axios.get(url, {
+                headers: authHeader
+            })
+            const dec = await decryptData(res.data.data)
+            console.log(dec)
+        }
+        catch (err) {
+            const dec = decryptData(err.response.data.data)
+            console.log(dec)
+            if(dec.message.toLowerCase().includes("minimum")){
+                console.log("adf")
+                setminimumAmount(dec.value)
+            }
+        }
+    }
+
+    useEffect(() => {
+       getConversionRate()
+    },[item, userDetails])
     const generateLink = (channel) => {
         if (channel?.value == "wallet") {
             return `/payments?payment_action=send_money&send_type=wallet&wallet_id=${item?.wallet?.[0]?.wallet_id ?? ""}`
         } else {
-            return `/payments?payment_action=send_money&send_type=international&service_id=${channel?.id}&recipient=${item?._id}&country=${item?.country_iso_code}&payer_id=${item?.mobile_wallet?.[0]?.money_provider}`
+            return `/payments?payment_action=send_money&send_type=international&service_id=${channel?.id}&recipient=${item?._id}&country=${item?.country_iso_code}&payer_id=${item?.mobile_wallet?.[0]?.money_provider}&amount=${Number(minimumAmount).toFixed(2) || "1.00"}`
+            
         }
     }
     console.log(item)
