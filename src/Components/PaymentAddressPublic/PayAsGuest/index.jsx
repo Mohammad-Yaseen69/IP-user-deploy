@@ -23,6 +23,7 @@ import { createShambeToken } from "../../../Helper/CreateToken";
 import NotFoundModal from "../../NotFound/NotFoundModal";
 import { minDate } from "../../Settings/Basic";
 import { toast } from "react-toastify";
+import logo from "../instapay_black.svg"
 
 
 const initialState = {
@@ -459,127 +460,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                                     <InstaPayLoader />
                                                 </div>
                                                 :
-                                                <>
-                                                    <FeesComponent
-                                                        data={data}
-                                                        receiverLabel={`They will get  ${data?.exchange_rate?.fee?.paymentAddressFee ? `(after a ${Number(data?.exchange_rate?.fee?.amount)?.toFixed(2)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 }) ?? "0.00"} ${data.exchange_rate?.sending?.currency} receiver fee deduction)` : ""}`}
-                                                        error={data.exchange_rate_error}
-                                                        feesLabel="Fees"
-                                                        sendingLabel="Sending"
-                                                        totalLabel="Amount To Pay"
-                                                        bright={true}
-                                                        extraContent={
-                                                            data.payment_type?.value === "card" && data.step > 3
-                                                                ?
-                                                                <div className={styles.card_dets}>
-                                                                    <div className={styles.cd_top}>
-                                                                        <span>{t("You are using")}</span>
-                                                                        <button onClick={() => dataHandler("step", 3)}>{t("Change")}</button>
-                                                                    </div>
-                                                                    <div className={styles.cd_bot}>
-                                                                        <h5>Card ending {data.cardNumber?.slice(data?.cardNumber?.length - 5, data?.cardNumber?.length)}</h5>
-                                                                        <span>Exp date: {data.expiry}</span>
-                                                                    </div>
-                                                                </div>
-                                                                :
-                                                                ""
-                                                        }
-                                                    />
-                                                    {
-                                                        data.payment_type?.value === "paypal" && !PaypalCurrencies.some(item => item === wallet?.currency?.code)
-                                                            ?
-                                                            <>
-                                                                <div
-                                                                    style={{
-                                                                        display: "flex",
-                                                                        alignItems: "flex-start",
-                                                                        gap: ".7rem",
-                                                                        padding: "12px",
-                                                                        borderRadius: "6px",
-                                                                        background: "rgba(255, 218, 68, 0.24)"
-                                                                    }}
-                                                                >
-                                                                    <Info
-                                                                        color="#BE9A08"
-                                                                        size={20}
-                                                                    />
-                                                                    <span style={{
-                                                                        color: '#BE9A08',
-                                                                        fontFamily: 'Manrope',
-                                                                        fontSize: ".7rem",
-                                                                        fontStyle: 'normal',
-                                                                        fontWeight: 700,
-                                                                        lineHeight: 1.3,
-                                                                        letterSpacing: '-0.28px'
-                                                                    }}>
-                                                                        <strong>{wallet?.currency?.code} </strong> is not supported by Paypal, <strong>USD</strong> will be used as the default currency.
-                                                                    </span>
-                                                                </div>
-                                                                <div style={{
-                                                                    display: "flex",
-                                                                    flexDirection: "column",
-                                                                    gap: ".9rem",
-                                                                    padding: ".8rem",
-                                                                    background: "#fff",
-                                                                    borderRadius: "6px",
-                                                                    boxShadow: "0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11)"
-                                                                }}>
-                                                                    <div style={{
-                                                                        display: "flex",
-                                                                        alignItems: "center",
-                                                                        gap: "1rem",
-                                                                        justifyContent: "space-between"
-                                                                    }}>
-                                                                        <span style={{
-                                                                            color: '#8A8A8A',
-                                                                            fontFamily: 'Manrope',
-                                                                            fontSize: ".7rem",
-                                                                            fontStyle: 'normal',
-                                                                            fontWeight: 600,
-                                                                            lineHeight: 1.5,
-                                                                            letterSpacing: '-0.14px'
-                                                                        }}>{t("Exchange Rate")}</span>
-                                                                        <strong
-                                                                            style={{
-                                                                                color: '#000',
-                                                                                fontFamily: 'Manrope',
-                                                                                fontSize: ".7rem",
-                                                                                fontStyle: 'normal',
-                                                                                lineHeight: 1.5,
-                                                                                letterSpacing: '-0.14px'
-                                                                            }}>1.00 {wallet?.currency?.code}  = {Number(data.paypal_fx?.exchange_rate)} USD</strong>
-                                                                    </div>
-                                                                    <div style={{
-                                                                        display: "flex",
-                                                                        alignItems: "center",
-                                                                        gap: "1rem",
-                                                                        justifyContent: "space-between"
-                                                                    }}>
-                                                                        <span style={{
-                                                                            color: '#8A8A8A',
-                                                                            fontFamily: 'Manrope',
-                                                                            fontSize: ".7rem",
-                                                                            fontStyle: 'normal',
-                                                                            fontWeight: 600,
-                                                                            lineHeight: 1.5,
-                                                                            letterSpacing: '-0.14px'
-                                                                        }}>{t("Amount in USD")}</span>
-                                                                        <strong style={{
-                                                                            color: '#000',
-                                                                            fontFamily: 'Manrope',
-                                                                            fontSize: "1.2rem",
-                                                                            fontStyle: 'normal',
-                                                                            fontWeight: 700,
-                                                                            lineHeight: 1.7,
-                                                                            letterSpacing: '-0.8px'
-                                                                        }}>{Number(data.paypal_fx?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</strong>
-                                                                    </div>
-                                                                </div>
-                                                            </>
-                                                            :
-                                                            ""
-                                                    }
-                                                </>
+                                                null
                                         }
                                     </div>
                                 }
@@ -600,6 +481,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                         data={data}
                                         dataHandler={dataHandler}
                                         allowed={allowed}
+                                        wallet={wallet}
                                     />
                                 }
                                 {
@@ -692,7 +574,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                         </ModalBody>
                     </Modal>
                     :
-                    <div className={styles.payment_flow_mobile}>
+                    <div style={{ background: "#f1eef9" }} className={styles.payment_flow_mobile}>
                         <div className={int_styles.container}>
                             <button style={{
                                 all: "unset",
@@ -713,9 +595,10 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                     <img src={recent} alt="" style={{ width: "30px", height: "30px", objectFit: "contain" }} />
                                 </div>
                             </div> */}
-                            <div className={paym_styles.mobile} style={{ marginTop: 0 }}>
+                            <div className={paym_styles.mobile} style={{ marginTop: 0, }}>
                                 <div className={paym_styles.m_top}>
-                                    <h1>{t("Pay As Guest")}</h1>
+                                    <img src={logo} style={{ width: '130px', margin: '0px auto 20px auto' }} alt="" />
+                                    <h1 style={{ color: '#906EF5', letterSpacing: '1.5px' }}>{t("Pay As A Guest")}</h1>
                                     <h2>
                                         {
                                             data.step === 1
@@ -764,7 +647,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                 </div>
                             </div>
                             <div className={paym_styles.flow}>
-                                {
+                                {/* {
                                     data.step === 2 && data?.payment_type?.value
                                         ?
                                         data.loading
@@ -773,130 +656,10 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                                 <InstaPayLoader />
                                             </div>
                                             :
-                                            <>
-                                                <FeesComponent
-                                                    data={data}
-                                                    receiverLabel={"They will get"}
-                                                    error={data.exchange_rate_error}
-                                                    feesLabel="Fees"
-                                                    sendingLabel="Sending"
-                                                    totalLabel="Amount To Pay"
-                                                    bright={true}
-                                                    extraContent={
-                                                        data.payment_type?.value === "card" && data.step > 3
-                                                            ?
-                                                            <div className={styles.card_dets}>
-                                                                <div className={styles.cd_top}>
-                                                                    <span>{t("You are using")}</span>
-                                                                    <button onClick={() => dataHandler("step", 3)}>{t("Change")}</button>
-                                                                </div>
-                                                                <div className={styles.cd_bot}>
-                                                                    <h5>Card ending {data.cardNumber?.slice(data?.cardNumber?.length - 5, data?.cardNumber?.length)}</h5>
-                                                                    <span>Exp date: {data.expiry}</span>
-                                                                </div>
-                                                            </div>
-                                                            :
-                                                            ""
-                                                    }
-                                                />
-                                                {
-                                                    data.payment_type?.value === "paypal" && !PaypalCurrencies.some(item => item === wallet?.currency?.code)
-                                                        ?
-                                                        <>
-                                                            <div
-                                                                style={{
-                                                                    display: "flex",
-                                                                    alignItems: "flex-start",
-                                                                    gap: ".7rem",
-                                                                    padding: "12px",
-                                                                    borderRadius: "6px",
-                                                                    background: "rgba(255, 218, 68, 0.24)"
-                                                                }}
-                                                            >
-                                                                <Info
-                                                                    color="#BE9A08"
-                                                                    size={20}
-                                                                />
-                                                                <span style={{
-                                                                    color: '#BE9A08',
-                                                                    fontFamily: 'Manrope',
-                                                                    fontSize: ".7rem",
-                                                                    fontStyle: 'normal',
-                                                                    fontWeight: 700,
-                                                                    lineHeight: 1.3,
-                                                                    letterSpacing: '-0.28px'
-                                                                }}>
-                                                                    <strong>{wallet?.currency?.code} </strong> is not supported by Paypal, <strong>USD</strong> will be used as the default currency.
-                                                                </span>
-                                                            </div>
-                                                            <div style={{
-                                                                display: "flex",
-                                                                flexDirection: "column",
-                                                                gap: ".9rem",
-                                                                padding: ".8rem",
-                                                                background: "#fff",
-                                                                borderRadius: "6px",
-                                                                boxShadow: "0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11)"
-                                                            }}>
-                                                                <div style={{
-                                                                    display: "flex",
-                                                                    alignItems: "center",
-                                                                    gap: "1rem",
-                                                                    justifyContent: "space-between"
-                                                                }}>
-                                                                    <span style={{
-                                                                        color: '#8A8A8A',
-                                                                        fontFamily: 'Manrope',
-                                                                        fontSize: ".7rem",
-                                                                        fontStyle: 'normal',
-                                                                        fontWeight: 600,
-                                                                        lineHeight: 1.5,
-                                                                        letterSpacing: '-0.14px'
-                                                                    }}>{t("Exchange Rate")}</span>
-                                                                    <strong
-                                                                        style={{
-                                                                            color: '#000',
-                                                                            fontFamily: 'Manrope',
-                                                                            fontSize: ".7rem",
-                                                                            fontStyle: 'normal',
-                                                                            lineHeight: 1.5,
-                                                                            letterSpacing: '-0.14px'
-                                                                        }}>1.00 {wallet?.currency?.code}  = {Number(data.paypal_fx?.exchange_rate)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 })} USD</strong>
-                                                                </div>
-                                                                <div style={{
-                                                                    display: "flex",
-                                                                    alignItems: "center",
-                                                                    gap: "1rem",
-                                                                    justifyContent: "space-between"
-                                                                }}>
-                                                                    <span style={{
-                                                                        color: '#8A8A8A',
-                                                                        fontFamily: 'Manrope',
-                                                                        fontSize: ".7rem",
-                                                                        fontStyle: 'normal',
-                                                                        fontWeight: 600,
-                                                                        lineHeight: 1.5,
-                                                                        letterSpacing: '-0.14px'
-                                                                    }}>{t("Amount in USD")}</span>
-                                                                    <strong style={{
-                                                                        color: '#000',
-                                                                        fontFamily: 'Manrope',
-                                                                        fontSize: "1.2rem",
-                                                                        fontStyle: 'normal',
-                                                                        fontWeight: 700,
-                                                                        lineHeight: 1.7,
-                                                                        letterSpacing: '-0.8px'
-                                                                    }}>{Number(data.paypal_fx?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</strong>
-                                                                </div>
-                                                            </div>
-                                                        </>
-                                                        :
-                                                        ""
-                                                }
-                                            </>
+                                            null
                                         :
                                         ""
-                                }
+                                } */}
                                 <div className={paym_styles.flow_com} style={{ minHeight: "50vh" }}>
                                     {
                                         data.step === 1
@@ -913,6 +676,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                             data={data}
                                             dataHandler={dataHandler}
                                             allowed={allowed}
+                                            wallet={wallet}
                                         />
                                     }
                                     {
@@ -921,7 +685,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                         (
                                             data.payment_type?.value === "card"
                                                 ?
-                                                <div style={{ height: "100%" }}>
+                                                <div style={{ height: "100%", background: 'linear-gradient(180deg, #FFF 0%, rgba(255, 255, 255, 0.00) 100%)', borderRadius: "8px", padding: "15px" }}>
                                                     <div className={styles.bot_top}>
                                                         <h5>{t("Payment Details")}</h5>
                                                         <span>{t("Complete your payment by providing your payment details")}</span>
@@ -933,6 +697,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                                         tokenUrl={e => ""}
                                                         url={""}
                                                         showCards={false}
+                                                        guest={true}
                                                     />
                                                 </div>
                                                 :
@@ -1084,17 +849,17 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                     }
                                 </div>
 
-                                <div className={paym_styles.bottom} style={{ flexDirection: "column-reverse", margin: "2rem 0", gap: "1.5rem" }}>
+                                <div className={paym_styles.bottom} style={{ flexDirection: "column", margin: "2rem 0", gap: "1.5rem" }}>
                                     <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
                                         <HelpCircle size={16} />
                                         {t("Trouble Sending Money")}
                                     </Link>
-                                    <div className={paym_styles?.buttons}>
-                                        <button className={styles.transparent} disabled={data.loading} onClick={onBackClickHandler}>
-                                            <ChevronLeft />
-                                        </button>
-                                        <button disabled={data.loading || disabled} onClick={onClickHandler} style={{ width: "100%" }}>
+                                    <div className={paym_styles?.buttons} style={{ flexDirection: 'column' }}>
+                                        <button disabled={data.loading || disabled} onClick={onClickHandler} style={{ width: "100%", background: '#5926F0' }}>
                                             {t("Next")}
+                                        </button>
+                                        <button className={styles.transparent} disabled={data.loading} style={{ width: '100%', background: '#EEEEEE', boxShadow: '0px 3.643px 30.052px 0px rgba(0, 0, 0, 0.09)', color: "black" }} onClick={onBackClickHandler}>
+                                            {t("Go Back")}
                                         </button>
                                     </div>
                                 </div>

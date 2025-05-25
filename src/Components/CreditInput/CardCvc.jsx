@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import styles from "./styles/card_cvc.module.css"
 
-const CardCVC = ({ content, setContent, maxLength = 3, isinVVC = false }) => {
+const CardCVC = ({ content, setContent, maxLength = 3, isinVVC = false, guest }) => {
     const divRef = useRef(null);
     const caretPositionRef = useRef(0);
 
@@ -90,6 +90,8 @@ const CardCVC = ({ content, setContent, maxLength = 3, isinVVC = false }) => {
     }, []);
 
     return (
+        <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+        {guest && <label style={{fontWeight: 600, marginBottom: '10px'}}>CVC:</label>}     
         <div className={styles.main}>
             <div
                 ref={divRef}
@@ -106,6 +108,7 @@ const CardCVC = ({ content, setContent, maxLength = 3, isinVVC = false }) => {
                 content.length < 1 &&
                 <span style={{display: isinVVC && "none"}} className={styles.placeholder}>CVC</span>
             }
+        </div>
         </div>
     );
 };

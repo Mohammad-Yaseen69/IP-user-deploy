@@ -15,7 +15,7 @@ import { toast } from 'react-toastify'
 // import purple from "../../AddFunds/files/pb_card.png"
 // import red from "../../AddFunds/files/rb_card.png"
 
-const CreditCard = ({ data, dataHandler, url, tokenUrl, showCards = true, showSave = true }) => {
+const CreditCard = ({ data, dataHandler, url, tokenUrl, showCards = true, showSave = true, guest }) => {
     const { t } = useTranslation()
     const { userDetails, authHeader } = useContext(UserContext)
     const [cards, setCards] = useState([])
@@ -47,7 +47,7 @@ const CreditCard = ({ data, dataHandler, url, tokenUrl, showCards = true, showSa
             })
 
             const dec = decryptData(response.data.data)
-            if(dec.isExpired){
+            if (dec.isExpired) {
                 dataHandler("selectedSavedCard", {})
                 dataHandler("cards", data.cards.filter(card => card._id !== item._id))
                 toast.error(dec.message)
@@ -100,8 +100,8 @@ const CreditCard = ({ data, dataHandler, url, tokenUrl, showCards = true, showSa
                     }
                 </>
             }
-            <div className={styles.card_details}>
-                <h5>{t("add card payment")}</h5>
+            <div style={{ padding: guest && "0", border: guest && "none" }} className={styles.card_details}>
+                {!guest && <h5>{t("add card payment")}</h5>}
                 <CreditCardInput
                     cardCvc={data.cvc}
                     setCardCvc={(e) => {
@@ -127,6 +127,7 @@ const CreditCard = ({ data, dataHandler, url, tokenUrl, showCards = true, showSa
                         dataHandler("cardError", e)
                         dataHandler("selectedSavedCard", {})
                     }}
+                    guest={guest}
                 />
                 {
                     showSave

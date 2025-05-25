@@ -12,6 +12,11 @@
     pointer-events: none;
 }
 
+.icon {
+    position: absolute;
+    right: 14px;
+}
+
 .input_container {
     border: 1px solid #cccccc70;
     padding: 14px;

@@ -23,7 +23,8 @@ const CreditCardInput = ({
     cardExpiry = "",
     setCardExpiry,
     cardNumberError = "",
-    setCardNumberError = () => { }
+    setCardNumberError = () => { },
+    guest
 }) => {
     // card type
     const [cardType, setCardType] = useState(PLACEHOLDER_CARD_TYPE);
@@ -52,21 +53,25 @@ const CreditCardInput = ({
             <CardHolderName
                 content={cardHolderName}
                 setContent={setCardHolderName}
+                guest={guest}
             />
             <CardNumberInput
                 content={cardNumber}
                 setContent={setCardNumber}
                 cardType={cardType}
                 cardError={cardNumberError}
+                guest={guest}
             />
             <div style={{ display: "flex", gap: ".6rem" }}>
                 <CardCVC
                     content={cardCvc}
                     setContent={setCardCvc}
                     maxLength={cardType?.cvcLength}
+                    guest={guest}
                 />
                 <CardExpiry
                     content={cardExpiry}
+                    guest={guest}   
                     setContent={setCardExpiry}
                 />
             </div>

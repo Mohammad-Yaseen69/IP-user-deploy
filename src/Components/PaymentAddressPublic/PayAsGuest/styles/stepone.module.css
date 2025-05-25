@@ -1,20 +1,22 @@
 .container {
     border-radius: var(--8, 8px);
-    background: rgba(0, 0, 0, 0.03);
-    padding: 1rem;
     display: flex;
     flex-direction: column;
     height: 100%;
     gap: 1.3rem;
+    margin-top: 2rem;
+
 }
 
 .item {
-    padding: 1rem;
+    padding: var(--RADIUS-radius-3, 12px) var(--SPACING-spacing-2, 18px) var(--RADIUS-radius-3, 12px) var(--SPACING-spacing-1, 12px);
     display: flex;
     align-items: center;
     gap: 1.2rem;
     border-radius: 6px;
     cursor: pointer;
+    background: #FFF;
+    border-radius: var(--Corner-Radius-Medium-Roundness, 12px);
     background: #FFF;
 }
 
@@ -33,20 +35,19 @@
     font-size: 22px;
     font-style: normal;
     font-weight: 600;
+    margin-bottom: 6px;
     line-height: 150%;
 }
 
 .item.active {
-    background-color: #5926f0;
+    border: 1px solid #1D62EC;
+
 }
 
-.item.active span {
-    color: white;
-}
 
 .badge {
     margin-left: auto;
-    background-color: #5926f0;
+    background-color: #5926F0;
     color: white;
     border-radius: .5rem;
     padding: .2rem .5rem;

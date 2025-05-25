@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next';
 
 
 
-const CardNumberInput = ({ content, setContent, cardType, cardError, isinVVC = false ,widthFull }) => {
+const CardNumberInput = ({ content, setContent, cardType, cardError, isinVVC = false, widthFull, guest }) => {
     const divRef = useRef(null);
     const caretPositionRef = useRef(0);
-    const {t} = useTranslation()
+    const { t } = useTranslation()
 
     const sanitizeInput = (input) => {
         return input.replace(/\D/g, '');
@@ -91,32 +91,35 @@ const CardNumberInput = ({ content, setContent, cardType, cardError, isinVVC = f
     }, []);
 
     return (
-        <div className={styles.main}>
-            <img style={{top: isinVVC && "10px"}} src={creditCardImages?.[cardType?.type]} alt="" className={styles.card_img} />
-            <div
-                ref={divRef}
-                className={styles.input_container}
-                contentEditable="true"
-                style={{padding:  isinVVC && "8px 14px 8px 60px", borderRadius: isinVVC && "6px", width: widthFull && "100%"}}
-                role="textbox"
-                aria-label="Secure Input Field"
-                suppressContentEditableWarning={true} 
-            >
-                {content}
-            </div>
-            {
-                content.length < 1 
-                &&
-                <span style={{display: isinVVC && "none"}} className={styles.placeholder}>{t("Card Number")}</span>
-            }
-            {
-                cardError && content.length > 3
-                &&
-                <div className={styles.error}>
-                    {cardError}
+        <>
+           {guest && <label htmlFor=""style={{fontWeight: 600, marginBottom: '0'}}>Card Number:</label>}
+            <div className={styles.main}>
+                <img style={{ top: isinVVC && "10px" }} src={creditCardImages?.[cardType?.type]} alt="" className={styles.card_img} />
+                <div
+                    ref={divRef}
+                    className={styles.input_container}
+                    contentEditable="true"
+                    style={{ padding: isinVVC && "8px 14px 8px 60px", borderRadius: isinVVC && "6px", width: widthFull && "100%" }}
+                    role="textbox"
+                    aria-label="Secure Input Field"
+                    suppressContentEditableWarning={true}
+                >
+                    {content}
                 </div>
-            }
-        </div>
+                {
+                    content.length < 1
+                    &&
+                    <span style={{ display: isinVVC && "none" }} className={styles.placeholder}>{t("Card Number")}</span>
+                }
+                {
+                    cardError && content.length > 3
+                    &&
+                    <div className={styles.error}>
+                        {cardError}
+                    </div>
+                }
+            </div>
+        </>
     );
 };
 

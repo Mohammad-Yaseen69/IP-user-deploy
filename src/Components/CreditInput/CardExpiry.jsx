@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import styles from "./styles/card_cvc.module.css";
 
-const CardExpiry = ({ content, setContent, isinVVC = false, widthFull }) => {
+const CardExpiry = ({ content, setContent, isinVVC = false, guest }) => {
     const divRef = useRef(null);
     const caretPositionRef = useRef(0);
 
@@ -129,29 +129,32 @@ const CardExpiry = ({ content, setContent, isinVVC = false, widthFull }) => {
         setError(isValidExpiry && contentMonth <= 12 ? "" : "Invalid Date");
     }, [content]);
     return (
-        <div className={styles.main}>
-            <div
-                ref={divRef}
-                className={styles.input_container}
-                contentEditable="true"
-                style={{ padding: isinVVC && "8px 14px", borderRadius: isinVVC && "6px" }}
-                role="textbox"
-                aria-label="Secure Input Field"
-                suppressContentEditableWarning={true}
-            >
-                {content}
-            </div>
-            {
-                content.length < 1 &&
-                <span style={{display: isinVVC && "none"}} className={styles.placeholder}>MM / YY</span>
-            }
-            {
-                error && content.length > 3
-                &&
-                <div className={styles.error}>
-                    {error}
+        <div style={{display: 'flex', width: '100%', flexDirection: 'column'}}>
+            <label htmlFor="" style={{fontWeight: 600}}>Expiry Date:</label>
+            <div className={styles.main}>
+                <div
+                    ref={divRef}
+                    className={styles.input_container}
+                    contentEditable="true"
+                    style={{ padding: isinVVC && "8px 14px", borderRadius: isinVVC && "6px" }}
+                    role="textbox"
+                    aria-label="Secure Input Field"
+                    suppressContentEditableWarning={true}
+                >
+                    {content}
                 </div>
-            }
+                {
+                    content.length < 1 &&
+                    <span style={{ display: isinVVC && "none" }} className={styles.placeholder}>MM / YY</span>
+                }
+                {
+                    error && content.length > 3
+                    &&
+                    <div className={styles.error}>
+                        {error}
+                    </div>
+                }
+            </div>
         </div>
     );
 };
