@@ -5,7 +5,7 @@ import useWindowWidth from '../../../utils/useWindowWidth'
 import "../styles/modal.reset.css"
 import RecipientSelect from './RecipientSelect'
 import { formatCurrency } from '../../../Helper/AmountFormat'
-import { Svg, PremiumLabel, StandardLabel, Help, Share, Trans, Down, ctc } from '../files'
+import { Svg, PremiumLabel, StandardLabel, Help, Trans, ctc } from '../files'
 import { useTranslation } from 'react-i18next'
 import logo from "../../PaymentsNewer/InternationalFlow/files/ins_logo.svg"
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
@@ -15,9 +15,7 @@ import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import { toast } from 'react-toastify'
 import OtpConfirmation from "../../PaymentsNewer/InternationalFlow/OtpConfirmation"
-import { useNavigate } from 'react-router'
 import InstaPayLoader from '../../Loader'
-import { update } from 'lodash'
 import { Link } from 'react-router-dom'
 
 
@@ -80,11 +78,27 @@ function getCurrencySymbol(currencyCode) {
     maximumFractionDigits: 0
   }).format(1);
 
-  return formatted.replace(/[0-9.,\s]/g, ''); // removes numbers, dots, commas, and spaces
+  return formatted.replace(/[0-9.,\s]/g, '');
 }
 
 
 
+export const feeCol = (label, fee, isBold = false) => (
+  <div className={styles.feeCol} style={{ marginTop: isBold && "1rem" }}>
+    {isBold &&
+      <>
+        <h5>{label}</h5>
+        <h5>{fee}</h5>
+      </>
+    }
+    {!isBold &&
+      <>
+        <p>{label}</p>
+        <p> {fee} </p>
+      </>
+    }
+  </div>
+)
 const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardDetails }) => {
   const width = useWindowWidth()
   const [data, dispatch] = useReducer(reducer, initialState)
@@ -346,22 +360,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
     </div>
   )
 
-  const feeCol = (label, fee, isBold = false) => (
-    <div className={styles.feeCol} style={{ marginTop: isBold && "1rem" }}>
-      {isBold &&
-        <>
-          <h5>{label}</h5>
-          <h5>{fee}</h5>
-        </>
-      }
-      {!isBold &&
-        <>
-          <p>{label}</p>
-          <p> {fee} </p>
-        </>
-      }
-    </div>
-  )
+
 
   const feeContent = () => (
     <>

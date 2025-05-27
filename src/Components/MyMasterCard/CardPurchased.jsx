@@ -19,6 +19,7 @@ import { Modal, ModalBody, ModalHeader, Input } from 'reactstrap';
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 import OTPConfirmation from "../UserSettingsNew/OTPConfirmation"
 import { getDecimalPointIndex } from '../../Helper/getDecimalIndex';
+import CardtoWallet from './CardtoWallet';
 
 
 export const Toggle = ({ checked, onChange, isCheckbox = false }) => (
@@ -46,7 +47,8 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
     const swiperRef = useRef()
     const [showModals, setShowModals] = useState({
         addFunds: false,
-        ctc: false
+        ctc: false,
+        ctw: false
     })
 
     const { authHeader, userDetails, setUserDetails } = useContext(UserContext)
@@ -115,6 +117,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
     const queryParams = new URLSearchParams(location.search)
     const addFundsMobile = queryParams.get("addFundsMobile")
     const ctcMobile = queryParams.get("ctcMobile")
+    const ctwMobile = queryParams.get("ctwMobile")
 
 
     const openModal = (modalName) => {
@@ -133,6 +136,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
     const [codeType, setCodeType] = useState("sms")
 
 
+    console.log(showModals)
     const sendOtp = async (type = "") => {
         setIsSaving(true)
         setOtpType(type === "email" ? "email" : "phone")
@@ -215,7 +219,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
     return (
         <>
-            {(((!showModals.addFunds && !addFundsMobile) && (!showModals.ctc && !ctcMobile)) || width > 1000) &&
+            {(((!showModals.addFunds && !addFundsMobile) && (!showModals.ctc && !ctcMobile) && (!showModals.ctw && !ctwMobile)) || width > 1000) &&
                 <div className={styles.cardContainer} style={{ padding: width < 600 && "0", boxShadow: width < 600 && "none" }}>
                     <div className={styles.left}>
                         <div className={styles.topInfo}>
@@ -419,7 +423,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                                     <Toggle checked={checks.cardStatus} onChange={() => handleToggle("cardStatus")} isCheckbox={false} />
                                 </div>
-                                <div style={{cursor: "pointer"}} className={styles.iconBox}>
+                                <div style={{ cursor: "pointer" }} className={styles.iconBox}>
                                     <img src={Freeze} alt="" />
                                     <span>Freeze Card</span>
                                 </div>
@@ -434,7 +438,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                                 navigate("/my-mastercard?addFundsMobile=true")
                                             }
                                         }}
-                                        style={{cursor: "pointer"}}
+                                        style={{ cursor: "pointer" }}
                                         className={styles.iconBox}
                                     >
                                         <img src={plus} alt="" />
@@ -447,7 +451,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                                 navigate("/my-mastercard?ctcMobile=true")
                                             }
                                         }}
-                                        style={{cursor: "pointer"}}
+                                        style={{ cursor: "pointer" }}
                                         className={styles.iconBox}
                                     >
                                         <img src={CreditCardR} alt="" />
@@ -455,11 +459,16 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     </div>
                                 </div>
                                 <div style={{ display: "flex", flexDirection: "column", gap: '12px', justifyContent: "center", flex: 1 }}>
-                                    <div style={{cursor: "pointer"}} className={styles.iconBox}>
+                                    <div onClick={() => {
+                                        openModal("ctw")
+                                        if (width < 1000) {
+                                            navigate("/my-mastercard?ctwMobile=true")
+                                        }
+                                    }} style={{ cursor: "pointer" }} className={styles.iconBox}>
                                         <img src={Wallet2} alt="" />
                                         <span>Card to Wallet Transfer</span>
                                     </div>
-                                    <div style={{cursor: "pointer"}} className={styles.iconBox}>
+                                    <div style={{ cursor: "pointer" }} className={styles.iconBox}>
                                         <img src={FileDown} alt="" />
                                         <span>Download Statement</span>
                                     </div>
@@ -650,8 +659,32 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                     </form>
                 </ModalBody>
             </Modal>
-            {(showModals.addFunds || addFundsMobile) && <AddFundsModal setCurrentCardDetails={setCurrentCardDetails} card={cards[current]} isOpen={showModals.addFunds || addFundsMobile} setOpen={setShowModals} />}
-            {(showModals.ctc || ctcMobile) && <CardtoCard currentCardDetails={currentCardDetails} card={cards[current]} setCurrentCardDetails={setCurrentCardDetails} isOpen={showModals.ctc || ctcMobile} setOpen={setShowModals} />}
+            {(showModals.addFunds || addFundsMobile) &&
+                <AddFundsModal
+                    setCurrentCardDetails={setCurrentCardDetails}
+                    card={cards[current]}
+                    isOpen={showModals.addFunds || addFundsMobile}
+                    setOpen={setShowModals} />
+            }
+
+            {(showModals.ctc || ctcMobile) &&
+                <CardtoCard
+                    currentCardDetails={currentCardDetails}
+                    card={cards[current]}
+                    setCurrentCardDetails={setCurrentCardDetails}
+                    isOpen={showModals.ctc || ctcMobile}
+                    setOpen={setShowModals}
+                />
+            }
+            {(showModals.ctw || ctwMobile) &&
+                <CardtoWallet
+                    currentCardDetails={currentCardDetails}
+                    card={cards[current]}
+                    setCurrentCardDetails={setCurrentCardDetails}
+                    isOpen={showModals.ctw || ctwMobile}
+                    setOpen={setShowModals}
+                />
+            }
         </>
     );
 };

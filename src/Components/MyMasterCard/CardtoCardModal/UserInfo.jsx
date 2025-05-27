@@ -1,11 +1,13 @@
 import { Check } from "react-feather";
 import styles from "../styles/CardToCard.module.scss";
 
-const UserInfo = ({ name, pfp, country, card, currency, onClick, data }) => {
+const UserInfo = ({ name, pfp, country, card, currency, onClick, data, isWalletSearch }) => {
+
+    // console.log(card, name, pfp, country, currency)
     return (
         <div className={styles.user} onClick={onClick} style={{ cursor: 'pointer' }}>
             <div className={styles.info}>
-               {data?.recipient?.card?.last4 === card && <Check /> }
+                {(isWalletSearch ? data?.recipient?.card?.wallet_id === card : data?.recipient?.card?.last4 === card) && <Check />}
                 <img src={pfp || "https://via.placeholder.com/48"} alt={name} />
                 <div>
                     <h4>{name || "No Name"}</h4>
@@ -13,8 +15,12 @@ const UserInfo = ({ name, pfp, country, card, currency, onClick, data }) => {
                 </div>
             </div>
 
-            <div style={{textAlign: "right"}}>
-                <h4>{card?.slice(-8) || "****"}</h4>
+            <div style={{ textAlign: "right" }}>
+                <h4>
+                    {isWalletSearch
+                        ? card
+                        : card?.slice(-8) || "****"}
+                </h4>
                 <span>{currency || "N/A"}</span>
             </div>
         </div>

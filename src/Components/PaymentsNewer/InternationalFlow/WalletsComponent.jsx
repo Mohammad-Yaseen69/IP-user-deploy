@@ -118,14 +118,12 @@ export const WalletCard = ({
     blocked = false,
     cardType,
     isInVCard = false,
-    selectedWallet,
-    setFeeDetail,
-    feeDetails,
     card,
     amount,
     addFunds,
     paymentType,
-    filteredWallets
+    filteredWallets,
+    cardToWallet
 }) => {
     const { t } = useTranslation()
     const { authHeader } = useContext(UserContext)
@@ -231,7 +229,7 @@ export const WalletCard = ({
 
 
     const handleClick = () => {
-        if (isSufficient && !loading && !blocked) {
+        if ((!loading && !blocked) && (isSufficient || cardToWallet)) {
             dataHandler("wallet", wallet)
         }
     }
@@ -242,7 +240,7 @@ export const WalletCard = ({
             data-content={t("Insufficient Balance")}
             style={{ backgroundSize: isInVCard && "cover" }}
             data-block-content={t("Blocked Wallet")}
-            className={`${styles.card} ${isSufficient ? "" : styles.disabled_card} ${blocked ? styles.blocked_card : ""} ${data?.wallet?._id === wallet?._id ? styles.active : ""}`}
+            className={`${styles.card} ${(isSufficient || cardToWallet) ? "" : styles.disabled_card} ${blocked ? styles.blocked_card : ""} ${data?.wallet?._id === wallet?._id ? styles.active : ""}`}
             onClick={handleClick}
         >
             <div className={styles.top}>

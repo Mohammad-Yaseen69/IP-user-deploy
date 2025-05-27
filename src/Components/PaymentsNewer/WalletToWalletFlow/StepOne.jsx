@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import styles from "./styles/stepone.module.css"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import InviteFriendModal from "../InviteFriendModal"
 import InstaPayLoader from "../../Loader"
 import { ChevronDown, ChevronRight } from "react-feather"
@@ -8,8 +8,9 @@ import { UserContext } from "../../../Context/UserContext"
 import axios from "axios"
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import { useLocation } from "react-router"
+import { ConsoleView } from "react-device-detect"
 
-const StepOne = ({ data, dataHandler }) => {
+const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
     const { t } = useTranslation()
     const [search, setSearch] = useState("")
     const [showInviteModal, setShowInviteModal] = useState(false)
@@ -17,35 +18,41 @@ const StepOne = ({ data, dataHandler }) => {
     const { authHeader, userDetails } = useContext(UserContext)
     const [error, setError] = useState("")
 
+
+
+
+
     const handleSearch = async (e) => {
-        e.preventDefault()
-        dataHandler("loading", true)
-        dataHandler("beneficiary_wallet", {})
-        dataHandler("beneficiary", {})
-        setError("")
+        e.preventDefault();
+        dataHandler("loading", true);
+        dataHandler("beneficiary_wallet", {});
+        dataHandler("beneficiary", {});
+        setError("");
         try {
             const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-user-wallets/${search.startsWith("@") ? search.slice(1).toLowerCase() : search.toLowerCase()}`, {
                 headers: authHeader
-            })
-            const dec = decryptData(res.data.data)
-            const users = dec?.users?.filter(item => item?._id !== userDetails?._id)
-            setSearchedUsers(users)
-            dataHandler("beneficiary", users?.[0] ?? {})
+            });
+            const dec = decryptData(res.data.data);
+            const users = dec?.users?.filter(item => item?._id !== userDetails?._id);
+            console.log(users);
+
+            setSearchedUsers(users);
+            dataHandler("beneficiary", users?.[0] ?? {});
             if (users?.length > 0) {
-                const defaultWal = users?.[0]?.wallets?.find(it => it?.default) ?? users?.[0]?.wallets?.[0]
-                dataHandler("beneficiary_wallet", defaultWal ?? {})
+                const defaultWal = users?.[0]?.wallets?.find(it => it?.default) ?? users?.[0]?.wallets?.[0];
+                dataHandler("beneficiary_wallet", defaultWal ?? {});
+            } else {
+                setError("No Results");
             }
-            else {
-                setError("No Results")
-            }
+
         } catch (err) {
-            const decrypted = decryptData(err?.response?.data?.data)
-            setError(decrypted?.message ?? "No Results")
+            const decrypted = decryptData(err?.response?.data?.data);
+            setError(decrypted?.message ?? "No Results");
+        } finally {
+            dataHandler("loading", false);
         }
-        finally {
-            dataHandler("loading", false)
-        }
-    }
+    };
+
 
 
     const location = useLocation()
@@ -74,8 +81,9 @@ const StepOne = ({ data, dataHandler }) => {
         }
     }, [wallet_id, search, data.first_time])
 
+    console.log(searchedUsers)
     return (
-        <div className={styles.container}>
+        <div style={{ padding: cardToWallet && "0px", margin: cardToWallet && "15px 0", ...style }} className={styles.container}>
             <label>{t("Enter the Wallet ID, Username, Email, or Phone Number of the recipient.")}</label>
             <form onSubmit={handleSearch} className={styles.search}>
                 <input type="search" placeholder={t("Search")} value={search} onChange={e => setSearch(e.target.value)} />
@@ -85,20 +93,21 @@ const StepOne = ({ data, dataHandler }) => {
                     </div>
                 </button>
             </form>
-            <div className={styles.recipient_not}>
-                <p>{t("Recipient Not on InstaPay?")}</p>
-                <button onClick={() => setShowInviteModal(true)}>
-                    <span>{t("Invite Them")}</span>
-                </button>
-                {
-                    showInviteModal
-                    &&
-                    <InviteFriendModal
-                        isOpen={showInviteModal}
-                        toggle={() => setShowInviteModal(false)}
-                    />
-                }
-            </div>
+            {!cardToWallet &&
+                <div className={styles.recipient_not}>
+                    <p>{t("Recipient Not on InstaPay?")}</p>
+                    <button onClick={() => setShowInviteModal(true)}>
+                        <span>{t("Invite Them")}</span>
+                    </button>
+                    {
+                        showInviteModal
+                        &&
+                        <InviteFriendModal
+                            isOpen={showInviteModal}
+                            toggle={() => setShowInviteModal(false)}
+                        />
+                    }
+                </div>}
 
             {
                 (searchedUsers.length === 0 && !error && !data.loading)

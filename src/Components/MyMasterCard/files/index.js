@@ -45,6 +45,7 @@ import PremiumLabel from "./premium-label.png"
 import StandardLabel from "./standard-label.png"
 import ctc from "./ctc.svg"
 import checktoggle from "./check-toggle.svg"
+import ctw_white from "./ctw_white.svg"
 
 export  {
     Payment,
@@ -86,5 +87,6 @@ export  {
     PremiumLabel,
     StandardLabel,
     ctc,
-    checktoggle
+    checktoggle,
+    ctw_white
 }

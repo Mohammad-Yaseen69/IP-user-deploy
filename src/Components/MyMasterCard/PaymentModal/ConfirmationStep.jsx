@@ -16,6 +16,18 @@ function getCurrencySymbol(currencyCode) {
     return formatted.replace(/[0-9.,\s]/g, '');
 }
 
+export const paymentInfoJSX = (feeDetails, addFunds, title) => (
+    <div className={styles.paymentInfo}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
+            <p>{title || "You Have to Pay"}</p>
+            <h1>{!addFunds ? feeDetails.currency : getCurrencySymbol(feeDetails?.feeDetails?.currency)}{!addFunds ? feeDetails?.fee : feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}</h1>
+        </div>
+
+
+        <img src={Svg} style={{ position: "absolute", right: "10px", top: "0px" }} alt="" />
+    </div>
+)
+
 
 const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds, cardDets }) => {
     return (
@@ -26,29 +38,21 @@ const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds,
                     <p>Please take a few moments to carefully review and verify the information to your payment details.</p>
                 </div>
 
-                <div className={styles.paymentInfo}>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
-                        <p>You Have to Pay</p>
-                        <h1>{!addFunds ? feeDetails.currency : getCurrencySymbol(feeDetails?.feeDetails?.currency)}{!addFunds ? feeDetails.fee : feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}</h1>
-                    </div>
-
-
-                    <img src={Svg} style={{ position: "absolute", right: "10px", top: "0px" }} alt="" />
-                </div>
+                {paymentInfoJSX()}
 
                 <div style={{ padding: window.innerWidth < 1000 && "0px", background: window.innerWidth < 1000 && "white" }} className={styles.transactionInfo}>
 
                     <div>
                         <div>
                             <p>You are using</p>
-                            <div style={{gap: "0"}}>
+                            <div style={{ gap: "0" }}>
                                 <span>{walletState?.name} Wallet</span>
                                 <p>{walletState?.wallet_id}</p>
                             </div>
                         </div>
                         {(addFunds && feeDetails?.feeDetails?.exchangeRate) &&
-                            <div style={{justifyContent: "center"}}>
-                                <div style={{flexDirection: "row"}} className={styles.er_details}>
+                            <div style={{ justifyContent: "center" }}>
+                                <div style={{ flexDirection: "row" }} className={styles.er_details}>
                                     <img src={er_icon} alt="" />
                                     <span>1.00 {cardDets?.currency}  = {getCurrencySymbol(feeDetails?.feeDetails?.currency)} {Number(feeDetails?.feeDetails?.exchangeRate?.replace(/[,]/g, ""))?.toFixed(2)} </span>
                                 </div>

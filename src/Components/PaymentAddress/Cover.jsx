@@ -4,13 +4,15 @@ import { useContext, useRef, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import coverPlaceHolder from "../UserProfilePublic/files/cover_1.png"
-import { Camera, Delete, Trash } from "react-feather";
+import { Camera, Trash } from "react-feather";
 import { Button } from "reactstrap";
 import { toast } from "react-toastify"
-import { IoCrop, IoCropOutline } from "react-icons/io5";
-import { FaCropAlt } from "react-icons/fa";
 import { BsCrop } from "react-icons/bs";
 import AdjustModal from "../Settings/AdjustModal";
+import crop from "./files/icons/crop.svg"
+import upload from "./files/icons/upload.svg"
+import del from "./files/icons/delete.svg"
+
 
 const Cover = ({ cover, setCover, dets }) => {
     const { authHeader, userDetails, verifyToken, croppedImages, setCroppedImages } = useContext(UserContext)
@@ -131,14 +133,25 @@ const Cover = ({ cover, setCover, dets }) => {
                             </Button>}
                     </div>
                     :
-                    <div style={{ position: "absolute", top: "20px", right: "40px", height: "40px", width: "40px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                        <label htmlFor='cover' style={{ background: "#1111116e", marginBottom: "0", backdropFilter: "blur(10px)", cursor: "pointer" }}>
-                            <Camera color='white' style={{ marginTop: "4px" }} />
+                    <div style={{ position: "absolute", top: "20px", right: "90px", height: "40px", width: "40px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                        <label htmlFor='cover' style={{ marginBottom: "0", cursor: "pointer" }}>
+                            <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0 8C0 3.58172 3.58172 0 8 0H36C40.4183 0 44 3.58172 44 8V36C44 40.4183 40.4183 44 36 44H8C3.58172 44 0 40.4183 0 36V8Z" fill="black" fill-opacity="0.31" />
+                                <path d="M26 22L22 18M22 18L18 22M22 18V27.2C22 28.5907 22 29.2861 22.5505 30.0646C22.9163 30.5819 23.9694 31.2203 24.5972 31.3054C25.5421 31.4334 25.9009 31.2462 26.6186 30.8719C29.8167 29.2036 32 25.8568 32 22C32 16.4772 27.5228 12 22 12C16.4772 12 12 16.4772 12 22C12 25.7014 14.011 28.9331 17 30.6622" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
                         </label>
                         {cover &&
-                            <div style={{ background: "#1111116e", backdropFilter: "blur(10px)", cursor: "pointer", display: "flex", alignItems: "center", gap: "12px" }}>
-                                <Trash onClick={deleteCover} style={{ marginLeft: "12px" }} color="white" />
-                                <BsCrop onClick={() => setShowModal(true)} size={20} color="white" />
+                            <div style={{ backdropFilter: "blur(10px)", cursor: "pointer", display: "flex", alignItems: "center", gap: "12px" }}>
+                                <svg onClick={deleteCover} style={{ marginLeft: "12px" }} width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 8C0 3.58172 3.58172 0 8 0H36C40.4183 0 44 3.58172 44 8V36C44 40.4183 40.4183 44 36 44H8C3.58172 44 0 40.4183 0 36V8Z" fill="black" fill-opacity="0.31" />
+                                    <path d="M19 13H25M13 16H31M29 16L28.2987 26.5193C28.1935 28.0975 28.1409 28.8867 27.8 29.485C27.4999 30.0118 27.0472 30.4353 26.5017 30.6997C25.882 31 25.0911 31 23.5093 31H20.4907C18.9089 31 18.118 31 17.4983 30.6997C16.9528 30.4353 16.5001 30.0118 16.2 29.485C15.8591 28.8867 15.8065 28.0975 15.7013 26.5193L15 16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+
+                                <svg onClick={() => setShowModal(true)} width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="44" height="44" rx="8" fill="black" fill-opacity="0.31" />
+                                    <path d="M12 16H24.8C25.9201 16 26.4802 16 26.908 16.218C27.2843 16.4097 27.5903 16.7157 27.782 17.092C28 17.5198 28 18.0799 28 19.2V32M32 28L19.2 28C18.0799 28 17.5198 28 17.092 27.782C16.7157 27.5903 16.4097 27.2843 16.218 26.908C16 26.4802 16 25.9201 16 24.8V12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+
                             </div>
                         }
                     </div>

@@ -42,7 +42,8 @@ const PaymentStep = (
         addFunds,
         amount,
         setCards,
-        marginTop 
+        marginTop,
+        cardToWallet
     }) => {
     const { t } = useTranslation()
     const { authHeader } = useContext(UserContext)
@@ -96,15 +97,46 @@ const PaymentStep = (
         </div>
     )
     return (
-        <div className={styles.step2} style={{marginTop: marginTop ?? ""}}>
+        <div className={styles.step2} style={{ marginTop: marginTop ?? "" }}>
             {paymentType === "wallet"
                 &&
                 <div className={styles.walletsDiv}>
                     {filteredWallets?.map(wallet_l => (
-                        <div style={{ boxShadow: window.innerWidth < 1000 && "none" }} key={wallet_l.name}>
+                        <div
+                            style={{
+                                boxShadow: window.innerWidth < 1000 ? "none" : undefined,
+                                ...(cardToWallet && {
+                                    display: "flex",
+                                    gap: "4rem",
+                                    background: "#FAFAFA",
+                                    padding: "12px",
+                                    borderRadius: "8px",
+                                    marginTop: "15px",
+                                }),
+                            }}
+                            key={wallet_l.name}
+                        >
                             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                                <h3 className={styles.walletNameHead}>{wallet_l.name}</h3>
-                                <span className={styles.walletId}>
+                                <h3 style={{ fontSize: cardToWallet && "20px" }} className={styles.walletNameHead}>{wallet_l.name} Wallet</h3>
+                                <span
+                                    className={styles.walletId}
+                                    style={
+                                        cardToWallet
+                                            ? {
+                                                color: "#5926F0",
+                                                fontFamily: "Manrope",
+                                                fontSize: "12px",
+                                                fontStyle: "normal",
+                                                fontWeight: 700,
+                                                lineHeight: "normal",
+                                                borderRadius: "4px",
+                                                background: "rgba(89, 38, 240, 0.12)",
+                                                padding: "4px 8px",
+                                                alignSelf: "baseline"
+                                            }
+                                            : {}
+                                    }
+                                >
                                     {wallet_l.wallet_id}
                                 </span>
                             </div>
@@ -119,11 +151,13 @@ const PaymentStep = (
                                 setFeeDetail={setFeeDetails}
                                 card={card}
                                 amount={amount}
+                                cardToWallet={cardToWallet}
                                 addFunds={addFunds}
                                 paymentType={paymentType}
                                 filteredWallets={filteredWallets}
                             />
                         </div>
+
                     ))}
                 </div>
             }

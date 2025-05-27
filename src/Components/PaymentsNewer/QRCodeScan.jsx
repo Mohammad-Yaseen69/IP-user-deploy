@@ -33,7 +33,6 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
             })
                 .then(res => {
                     const dec = decryptData(res.data.data)
-                    // console.log(decrypted)
                     const users = dec?.users?.filter(item => item?._id !== userDetails?._id)
                     dataHandler("beneficiary", users?.[0] ?? {})
                     if (users?.length > 0) {

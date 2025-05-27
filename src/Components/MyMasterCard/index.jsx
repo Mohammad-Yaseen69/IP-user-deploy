@@ -32,6 +32,7 @@ const MyMasterCard = () => {
   const queryParams = new URLSearchParams(location.search)
   const addFundsMobile = queryParams.get("addFundsMobile")
   const ctcMobile = queryParams.get("ctcMobile")
+  const ctwMobile = queryParams.get("ctwMobile")
   const showT = queryParams.get("showT")
   const ref = useRef(null)
 
@@ -102,7 +103,7 @@ const MyMasterCard = () => {
   return (
     <div style={{ minHeight: "100vh" }} className={styles.container}>
       <div className={styles.top}>
-        <h4 style={{ display: (width < 1000 && (addFundsMobile || ctcMobile) ) && "none" }}>My Mastercard</h4>
+        <h4 style={{ display: (width < 1000 && (addFundsMobile || ctcMobile || ctwMobile) ) && "none" }}>My Mastercard</h4>
         {width > 1000 && <TopRight />}
       </div>
 
@@ -121,7 +122,7 @@ const MyMasterCard = () => {
                   cards={cards}
                   setCardPurchased={setCardPurchased}
                 />
-                {((!addFundsMobile && !ctcMobile) || width > 1000)  && <TransactionsTable ref={ref} cardNo={currentCardDetails?.card_number} transactions={transactions} isLoading={loading} />}
+                {((!addFundsMobile && !ctcMobile && !ctwMobile) || width > 1000)  && <TransactionsTable ref={ref} cardNo={currentCardDetails?.card_number} transactions={transactions} isLoading={loading} />}
               </>
               : <OnBoarding alreadyHaveCard={cards.length !== 0} setReRender={setReRender} setCardPurchased={setCardPurchased} />
 
