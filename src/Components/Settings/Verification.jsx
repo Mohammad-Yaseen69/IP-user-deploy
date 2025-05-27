@@ -14,6 +14,7 @@ import { CheckCircle, XCircle } from 'react-feather';
 import { toast } from 'react-toastify';
 import VerificationGuide from './VerificationGuide';
 import errors from "../AddFunds/TrustPaymentErrors.json"
+import { AiOutlineClockCircle } from 'react-icons/ai';
 
 const industries = [
     "Arts & Entertainment",
@@ -111,8 +112,37 @@ const Verification = () => {
     const code = queryParams.get("code")
     const ft = queryParams.get("ft")
     const [statusModal, setStatusModal] = useState(false)
+    const [processing, setProcessing] = useState("")
 
     useEffect(() => {
+        const updateProcessingCheck = async () => {
+            const data = {
+                paypal_transaction: "processing"
+            }
+
+            const res = await axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-individual/${userDetails?._id}`, { data: encryptData(data) }, {
+                headers: authHeader
+            })
+
+
+            console.log(decryptData(res.data.data))
+        }
+
+
+        if (status?.toLowerCase() === "success" && (!userDetails?.kyc_verification_paid && (userDetails?.user?.kyc_status !== "approved" || userDetails?.user?.kyc_status !== "verified"))) {
+            if (userDetails?.paypal_transaction !== "processing") {
+                updateProcessingCheck()
+                setProcessing("processing")
+            }
+        }
+    }, [status, userDetails])
+
+    console.log(userDetails?.paypal_transaction)
+
+
+    useEffect(() => {
+        setProcessing(userDetails?.paypal_transaction)
+
         if (status) {
             if (userDetails?.user?.kyc_status !== "approved" || userDetails?.user?.kyc_status !== "verified") {
                 setStatusModal(status?.toLowerCase())
@@ -125,16 +155,13 @@ const Verification = () => {
     const [showGuide, setShowGuide] = useState(true)
 
     useLayoutEffect(() => {
-        if (userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "needs-review") {
+        if (userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "needs-review" || userDetails?.user?.kyc_status === "processing" || userDetails?.paypal_transaction === "processing") {
             setShowGuide(false)
         } else {
-            // const isPlayed = sessionStorage.getItem("vg_play")
-            // setShowGuide(isPlayed ? false : true)
             setShowGuide(true)
         }
     }, [userDetails])
 
-    const navigate = useNavigate()
     const error_message = () => {
         return errors.find(item => item?.code == code)?.message ?? "Something went wrong."
     }
@@ -160,28 +187,38 @@ const Verification = () => {
                 <Modal isOpen={statusModal}>
                     <ModalBody>
                         {
-                            statusModal === "success"
-                                ?
+                            processing === "processing" ?
                                 <h5 className='modal-title' style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '2rem' }}>
-                                    <CheckCircle size={64} className="text-success" />
-                                    Payment Successful!
+                                    <AiOutlineClockCircle  size={64} className="text-warning" />
+                                    Payment is in Processing!
                                 </h5>
                                 :
-                                <h5 className='modal-title' style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '2rem' }}>
-                                    <XCircle size={64} className="text-danger" />
-                                    Payment Failed!
-                                </h5>
+                                statusModal === "success"
+                                    ?
+                                    <h5 className='modal-title' style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '2rem' }}>
+                                        <CheckCircle size={64} className="text-success" />
+                                        Payment Successful!
+                                    </h5>
+                                    :
+                                    <h5 className='modal-title' style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '2rem' }}>
+                                        <XCircle size={64} className="text-danger" />
+                                        Payment Failed!
+                                    </h5>
                         }
                         <div className="text-center">
                             {
-                                statusModal === "success"
-                                    ?
-                                    <p className="mb-0">KYC Fee has been paid successfully! <span style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }} onClick={() => userDetails?.kyc_verification_paid ? handleVerify() : setStatusModal("")}>Continue</span></p>
+                                processing === "processing" ?
+                                    <p className="mb-0">Your payment is being processed. Please wait or refresh the page for updates</p>
                                     :
-                                    <p className="mb-0">{error_message()} <br /> <span style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }} onClick={() => {
-                                        setShowVerificationModal(true)
-                                        setStatusModal("")
-                                    }}> Start again!</span></p>
+                                    statusModal === "success"
+                                        ?
+                                        <p className="mb-0">KYC Fee has been paid successfully!
+                                            <span style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }} onClick={() => userDetails?.kyc_verification_paid ? handleVerify() : setStatusModal("")}>Continue</span></p>
+                                        :
+                                        <p className="mb-0">{error_message()} <br /> <span style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }} onClick={() => {
+                                            setShowVerificationModal(true)
+                                            setStatusModal("")
+                                        }}> Start again!</span></p>
                             }
                         </div>
                     </ModalBody>

@@ -278,7 +278,8 @@ const UserState = ({ children }) => {
                     if (decrypted.coverImage?.coordinates) {
                         getImage(decrypted.coverImage?.url, decrypted.coverImage?.coordinates, "profile", "cover")
                     }
-                    // console.log(decryptData(res.data.data))
+
+                    return decrypted
                 })
                 .catch(err => {
                     if (err?.response?.data?.data) {
