@@ -1,6 +1,8 @@
+import { useTranslation } from "react-i18next";
 import styles from "../styles/onboard.module.scss"
 
 const ContactBox = ({style}) => {
+    const { t } = useTranslation();
     return (
         <div style={style} className={styles.contact}>
             <div className={styles.circle}>
@@ -9,8 +11,8 @@ const ContactBox = ({style}) => {
                 </svg>
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
-                <span style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}>Having Troubles?</span>
-                <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>Contact Us</span>
+                <span style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}>{t("Having Troubles?")}</span>
+                <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>{t("Contact Us")}</span>
             </div>
         </div>
     )

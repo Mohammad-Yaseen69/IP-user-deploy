@@ -1,7 +1,9 @@
 import { Check } from "react-feather";
 import styles from "../styles/CardToCard.module.scss";
+import { useTranslation } from 'react-i18next';
 
 const UserInfo = ({ name, pfp, country, card, currency, onClick, data, isWalletSearch }) => {
+    const { t } = useTranslation();
 
     // console.log(card, name, pfp, country, currency)
     return (
@@ -10,8 +12,8 @@ const UserInfo = ({ name, pfp, country, card, currency, onClick, data, isWalletS
                 {(isWalletSearch ? data?.recipient?.card?.wallet_id === card : data?.recipient?.card?.last4 === card) && <Check />}
                 <img src={pfp || "https://via.placeholder.com/48"} alt={name} />
                 <div>
-                    <h4>{name || "No Name"}</h4>
-                    <span>{country || "Unknown Location"}</span>
+                    <h4>{name || t("No Name")}</h4>
+                    <span>{country || t("Unknown Location")}</span>
                 </div>
             </div>
 
@@ -21,7 +23,7 @@ const UserInfo = ({ name, pfp, country, card, currency, onClick, data, isWalletS
                         ? card
                         : card?.slice(-8) || "****"}
                 </h4>
-                <span>{currency || "N/A"}</span>
+                <span>{currency || t("N/A")}</span>
             </div>
         </div>
     )

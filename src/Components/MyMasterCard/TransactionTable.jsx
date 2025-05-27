@@ -100,7 +100,7 @@ const TransactionsTable = ({ transactions = [], isLoading = false, cardNo, ref }
                             boxShadow: active === item.name ? "0px 11.90068244934082px 8.655041694641113px rgba(89, 38, 240, 0.17)" : "none",
                             color: active === item.name ? "white" : "#848484"
                         }} className={styles.menu_item} onClick={() => setActive(item.name)}>
-                            <img src={active === item.name ? item.icon_white : item.icon_grey} style={{ width: "18px" }} alt={item.name} />
+                            <img src={active === item.name ? item.icon_white : item.icon_grey} style={{ width: "18px" }} alt={t(item.name)} />
                             <span>{t(item.name)}</span>
                             {active === item.name && <div className={styles.dot}></div>}
                         </div>
@@ -111,7 +111,7 @@ const TransactionsTable = ({ transactions = [], isLoading = false, cardNo, ref }
                         <Search size={16} color="#848484" />
                         <Input placeholder={t("Search Transactions")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
                     </div>
-                    <img src={calendar} alt="calendar" onClick={handleDatePickerClick} />
+                    <img src={calendar} alt={t("calendar")} onClick={handleDatePickerClick} />
                     {showDatePicker && (
                         <div ref={datePickerRef} style={{ position: "absolute", top: "100%", right: 0, boxShadow: "0px 0px 3px rgba(0,0,0,0.1)", borderRadius: "10px", overflow: "hidden", zIndex: 10000000 }}>
                             <DateRangePicker

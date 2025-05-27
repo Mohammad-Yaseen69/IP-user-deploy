@@ -21,6 +21,7 @@ import SideProgress from './SideProgress'
 import useWindowWidth from '../../../utils/useWindowWidth'
 import { createShambeToken } from '../../../Helper/CreateToken'
 import TrustpaymentPage from '../../AddFunds/WalletFund/CreditTransaction'
+import { useTranslation } from 'react-i18next'
 
 const PLACEHOLDER_CARD_TYPE = {
     type: 'placeholder',
@@ -45,6 +46,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
     const [amount, setAmount] = useState("")
     const width = useWindowWidth()
     const [cardType, setCardType] = useState(PLACEHOLDER_CARD_TYPE)
+    const { t } = useTranslation()
     const [feeDetails, setFeeDetails] = useState({})
     const [cardDetail, setCardDetails] = useState({
         cardNumber: "",
@@ -99,7 +101,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             cardHolderName: "",
         });
 
-        if(feeDetails?.feeDetails?.amountToTopup){
+        if (feeDetails?.feeDetails?.amountToTopup) {
             setCurrentCardDetails(prev => ({
                 ...prev,
                 balance: (+prev.balance + +feeDetails?.feeDetails?.amountToTopup).toFixed(2),
@@ -152,7 +154,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
     const [token, setToken] = useState(null)
     const [loading, setLoading] = useState(false)
     const [showOtpModal, setshowOtpModal] = useState(false)
-    const [sideText, setSideText] = useState("Set the Value")
+    const [sideText, setSideText] = useState(t("Set the Value"))
     const navigate = useNavigate()
     const [disabled, setDisabled] = useState(false)
     const [cardTransactionDetails, setCardTransactionDetails] = useState({})
@@ -367,34 +369,28 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
     useEffect(() => {
         switch (step) {
             case 1:
-                setSideText(width > 1000 ? "Set The Value" : "")
+                setSideText(width > 1000 ? t("Set The Value") : "")
                 setDisabled(!amount)
                 break;
-
             case 2:
-                setSideText(width > 1000 ? "Choose the method" : "Select Payment Type")
+                setSideText(width > 1000 ? t("Choose the method") : t("Select Payment Type"))
                 setDisabled(!paymentType || (paymentType === "paypal" && !feeDetails.token))
                 break;
             case 3:
                 setDisabled(!feeDetails.token && !walletState._id)
-                setSideText(width > 1000 ? "Choose the method" : paymentType === 'wallet' ? "Choose the wallet" : "Payment Details")
+                setSideText(width > 1000 ? t("Choose the method") : paymentType === 'wallet' ? t("Choose the wallet") : t("Payment Details"))
                 break;
-
             case 4:
                 setDisabled(false)
-                setSideText("Review Your Payment Details")
+                setSideText(t("Review Your Payment Details"))
                 break;
-
             case 5:
-                setSideText(width < 1000 ? "Your Payment is now Completed" : "")
+                setSideText(width < 1000 ? t("Your Payment is now Completed") : "")
                 break;
-
             default:
                 setDisabled(false)
                 break;
         }
-
-
     }, [step, amount, feeDetails, walletState, paymentType, width])
 
 
@@ -419,13 +415,13 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
                 <div>
                     <div className={styles.top}>
                         <img src={AddFunds} alt="" />
-                        <h2>Add Funds</h2>
+                        <h2>{t("Add Funds")}</h2>
                     </div>
 
                     <div className={styles.progressEffect} style={{ marginTop: "2rem" }}>
-                        <SideProgress isActive={step === 1} isCompleted={step > 1} Icon={Currency} Text={"Enter the amount"} step={1} />
-                        <SideProgress isActive={step === 2 || step === 3} isCompleted={step > 3} Icon={Receipt} Text={"Select the method"} step={2} />
-                        <SideProgress isActive={step === 4} isCompleted={step > 4} Icon={CircleCheck} Text={"Review and Confirm"} step={3} />
+                        <SideProgress isActive={step === 1} isCompleted={step > 1} Icon={Currency} Text={t("Enter the amount")} step={1} />
+                        <SideProgress isActive={step === 2 || step === 3} isCompleted={step > 3} Icon={Receipt} Text={t("Select the method")} step={2} />
+                        <SideProgress isActive={step === 4} isCompleted={step > 4} Icon={CircleCheck} Text={t("Review and Confirm")} step={3} />
 
                     </div>
                 </div>
@@ -441,7 +437,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             {width < 1000 &&
                 <div className={styles.top}>
                     <img src={AddFunds} alt="" />
-                    <h2>Add Funds</h2>
+                    <h2>{t("Add Funds")}</h2>
                 </div>
             }
             <div style={{ minHeight: width < 1000 && "76vh", width: width < 1000 && "100%", padding: width < 1000 && "0", border: width < 1000 && "none" }} className={styles.right}>
@@ -450,7 +446,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
                     {(step !== 5) &&
                         <div className={styles.top}>
                             <h4>{sideText}</h4>
-                            {width > 1000 && <p>STEP 0{step <= 2 ? step : step - 1}</p>}
+                            {width > 1000 && <p>{t("STEP")} 0{step <= 2 ? step : step - 1}</p>}
                         </div>
                     }
 
@@ -512,7 +508,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
 
                 {step === 1 &&
                     <div className={styles.amount}>
-                        <p>Amount</p>
+                        <p>{t("Amount")}</p>
                         <input
                             value={amount}
                             onChange={(e) => {
@@ -525,7 +521,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
                             onKeyUp={(e) => formatCurrency(e.target.value, false, setAmount)}
                             onBlur={(e) => formatCurrency(e.target.value, true, setAmount)}
                             type="text"
-                            placeholder='30.00'
+                            placeholder={t('30.00')}
                             data-type="currency"
                         />
                     </div>
@@ -534,11 +530,11 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
 
 
                 <div style={{ display: width < 1000 && "flex", flexDirection: width < 1000 && "column" }} className={styles.btns}>
-                    {((step !== 1 && step !== 5) && (width > 1000)) && <button onClick={handleBack} className={styles.cancel}>Cancel</button>}
+                    {((step !== 1 && step !== 5) && (width > 1000)) && <button onClick={handleBack} className={styles.cancel}>{t("Cancel")}</button>}
                     {width < 1000 && <ContactBox />}
 
                     <button disabled={disabled} style={{ padding: width < 1000 && "18px", marginTop: width < 1000 && "12px", width: width < 1000 && "100%", opacity: disabled && 0.6 }} onClick={handleNext} className={styles.continue}>
-                        {step !== 5 ? "Continue" : "Close"}
+                        {step !== 5 ? t("Continue") : t("Close")}
                     </button>
 
                     {step !== 5 &&
@@ -551,7 +547,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
                                 setStep(prev => prev - 1)
                             }
                         }} className={styles.cancel} style={{ backgroundColor: "white", display: (width > 1000 && step !== 5) || step === 5 ? "none" : "flex", width: "100%" }} >
-                            Back
+                            {t("Back")}
                         </button>
                     }
                 </div>

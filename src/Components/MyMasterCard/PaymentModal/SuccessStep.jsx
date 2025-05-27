@@ -1,9 +1,9 @@
 import styles from "../styles/onboard.module.scss"
 // import "./files/modal.reset.css""
-import { Down, Help, Share, Svg, Trans } from "../files"
+import { Help, Svg, Trans } from "../files"
 import useWindowWidth from "../../../utils/useWindowWidth"
 import { useNavigate } from "react-router"
-
+import { useTranslation } from "react-i18next"
 
 export const paymentConfirmOptions = [
     {
@@ -30,15 +30,14 @@ const SuccessStep = ({
     cardDets
 }) => {
     const width = useWindowWidth()
-
-
+    const { t } = useTranslation();
     const navigate = useNavigate()
     return (
         <div className={styles.step4}>
             <div style={{ gap: "12px" }} className={styles.infoDiv}>
                 <div className={styles.paymentInfo}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
-                        <p>You Have to Pay</p>
+                        <p>{t("You Have to Pay")}</p>
                         <h1>{!addFunds ? feeDetails.currency : feeDetails?.feeDetails?.currency}{!addFunds ? feeDetails.fee : feeDetails?.feeDetails?.totalAmount}</h1>
                     </div>
 
@@ -50,46 +49,46 @@ const SuccessStep = ({
 
                     <div>
                         <div>
-                            <p>You are using</p>
+                            <p>{t("You are using")}</p>
 
                             {paymentType === "wallet"
                                 &&
                                 <div>
-                                    <span>{walletState?.name} Wallet</span>
+                                    <span>{walletState?.name} {t("Wallet")}</span>
                                     <p>{walletState?.wallet_id}</p>
                                 </div>
                             }
 
-                            <button>Change</button>
+                            <button>{t("Change")}</button>
                         </div>
                     </div>
 
                     {!addFunds &&
                         <div className={styles.feeInfo}>
-                            <h3>Card activation fee</h3>
+                            <h3>{t("Card activation fee")}</h3>
                             <h3>{feeDetails.currency}{feeDetails.fee}</h3>
                         </div>}
 
                     {addFunds && (
                         <>
                             <div className={styles.feeInfo}>
-                                <h3>Entered Amount</h3>
+                                <h3>{t("Entered Amount")}</h3>
                                 <h3>{cardDets?.currency}{feeDetails?.feeDetails?.amount}</h3>
                             </div>
                             <div className={styles.feeInfo}>
-                                <h3>Fee</h3>
+                                <h3>{t("Fee")}</h3>
                                 <h3>{cardDets?.currency}{feeDetails?.feeDetails?.fee}</h3>
                             </div>
                             <div className={styles.feeInfo}>
-                                <h3>Total Funds to be Added</h3>
+                                <h3>{t("Total Funds to be Added")}</h3>
                                 <h3>{cardDets?.currency}{feeDetails?.feeDetails?.amountToTopup}</h3>
                             </div>
                             <div className={styles.feeInfo}>
-                                <h3>Total Amount</h3>
+                                <h3>{t("Total Amount")}</h3>
                                 <h3>{feeDetails?.feeDetails?.currency} {feeDetails?.feeDetails?.totalAmount}</h3>
                             </div>
                             <div className={styles.feeInfo}>
-                                <h3>Exchage Rate</h3>
+                                <h3>{t("Exchage Rate")}</h3>
                                 <h3>{feeDetails?.feeDetails?.currency} {Number(feeDetails?.feeDetails?.exchangeRate?.replace(/[,]/g, ""))?.toFixed(2)}</h3>
                             </div>
                         </>
@@ -111,7 +110,7 @@ const SuccessStep = ({
                         <div onClick={() => !option.link && navigate(option.navigate)} style={{ width: width < 660 && "100%" }} key={option.text}>
                             <img src={option.icon} alt="" />
                             <p>
-                                {option.link ? <a style={{color: "black"}} href={option.navigate}>{option.text}</a> : option.text}
+                                {option.link ? <a style={{color: "black"}} href={option.navigate}>{t(option.text)}</a> : t(option.text)}
                             </p>
                         </div>
                     ))}
@@ -127,7 +126,7 @@ const SuccessStep = ({
                             setIsOpen(false)
                         }}
                     >
-                        Close
+                        {t("Close")}
                     </button>
                 </div>}
         </div>

@@ -19,6 +19,7 @@ import InstaPayLoader from '../../Loader'
 import { Link } from 'react-router-dom'
 
 
+
 const initialState = {
   step: 1,
   sideText: "Choose The Recipient",
@@ -36,20 +37,6 @@ const initialState = {
   getFee: true,
   feeToken: null
 }
-
-
-const paymentConfirmOptions = [
-  {
-    text: "Need help?",
-    icon: Help,
-    navigate: `mailto:support@insta-pay.ch`
-  },
-  {
-    text: "Transation Details",
-    icon: Trans,
-    navigate: "/my-mastercard?showT=true"
-  },
-]
 
 
 function reducer(state, action) {
@@ -104,6 +91,19 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
   const [data, dispatch] = useReducer(reducer, initialState)
   const { userDetails, authHeader } = useContext(UserContext)
   const { t } = useTranslation()
+
+  const paymentConfirmOptions = [
+    {
+      text: t("Need help?"),
+      icon: Help,
+      navigate: `mailto:support@insta-pay.ch`
+    },
+    {
+      text: t("Transation Details"),
+      icon: Trans,
+      navigate: "/my-mastercard?showT=true"
+    },
+  ]
 
   const formatAmountWithSymbol = (amount, currency, addCheck = false) => {
     if (!amount || !currency) {
@@ -290,32 +290,32 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
   useEffect(() => {
     switch (data.step) {
       case 1:
-        updateHandler("sideText", "Choose The Recipient")
+        updateHandler("sideText", t("Choose The Recipient"))
         updateHandler("disabled", false)
         break;
 
       case 2:
-        updateHandler("sideText", "Specify Amount")
+        updateHandler("sideText", t("Specify Amount"))
         updateHandler("disabled", data.amount === "" || data.amount === "0" || +data.feeDetails?.total_amount?.replace(/,/g, "") > +currentCardDetails.balance || !data.feeDetails?.total_amount)
         break;
 
       case 3:
-        updateHandler("sideText", "Add a Note (Optional)")
+        updateHandler("sideText", t("Add a Note (Optional)"))
         break;
 
       case 4:
-        updateHandler("sideText", "Review Payment")
+        updateHandler("sideText", t("Review Payment"))
         break;
 
       case 5:
-        updateHandler("sideText", "User Consent")
+        updateHandler("sideText", t("User Consent"))
         break;
 
 
       default:
         updateHandler("disabled", false)
     }
-  }, [data.amount, data.step, data.feeDetails])
+  }, [data.amount, data.step, data.feeDetails, t])
 
 
 
@@ -352,10 +352,10 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
   const buttons = () => (
     <div className={styles.btns}>
       <button onClick={handleBack} className={styles.back}>
-        Back
+        {t("Back")}
       </button>
       <button style={{ opacity: data.disabled && .5 }} disabled={data.disabled} onClick={handleNext} className={styles.continue}>
-        {data.step === 4 ? "Proceed to Payment" : data.step === 5 ? "I Agree" : "Verify & Continue"}
+        {data.step === 4 ? t("Proceed to Payment") : data.step === 5 ? t("I Agree") : t("Verify & Continue")}
       </button>
     </div>
   )
@@ -382,7 +382,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
       </div>
 
       <div className={`${styles.feeDiv}`}>
-        <p style={{ color: "black" }}>Fees & Charges</p>
+        <p style={{ color: "black" }}>{t("Fees & Charges")}</p>
         {(!data.loading || data.feeDetails?.fee) ? (
           <p>{formatAmountWithSymbol(data.feeDetails?.fee, data.feeDetails?.sending_currency, true)}</p>
         ) : (
@@ -393,7 +393,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
       </div>
 
       <div className={`${styles.feeDiv}`}>
-        <p style={{ color: "black" }}>Total amount to be deducted</p>
+        <p style={{ color: "black" }}>{t("Total amount to be deducted")}</p>
         {(!data.loading || data.feeDetails?.total_amount) ? (
           <p>{formatAmountWithSymbol(data.feeDetails?.total_amount, data.feeDetails?.sending_currency, true)}</p>
         ) : (
@@ -415,36 +415,30 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
           <div className={styles.successDiv}>
             <div className={styles.purpleDiv}>
               <img src={logo} alt="" />
-              {width > 1000 && <p onClick={handleClose}>Close</p>}
+              {width > 1000 && <p onClick={handleClose}>{t("Close")}</p>}
             </div>
 
             <div style={{ padding: width < 1000 && "0px" }} className={styles.whiteDiv}>
               <div className={styles.content}>
                 <div className={styles.textDiv}>
-                  <h2>Your payment is being processed</h2>
-                  <p>Thanks for using Instapay!</p>
+                  <h2>{t("Your payment is being processed")}</h2>
+                  <p>{t("Thanks for using Instapay!")}</p>
                 </div>
 
 
                 <div className={styles.paymentOptions}>
                   {paymentConfirmOptions.map(option => (
-                    <Link to={option.navigate}>
-                      <div
-
-                        className={styles.option}
-                        key={option.text}
-                      >
+                    <Link to={option.navigate} key={option.text}>
+                      <div className={styles.option}>
                         <img src={option.icon} alt="" />
                         <p>{option.text}</p>
                       </div>
                     </Link>
-
-
                   ))}
 
                   {width < 1000 && (
                     <div className={styles.btns}>
-                      <button onClick={handleClose} className={styles.continue}>Back to Dashboard</button>
+                      <button onClick={handleClose} className={styles.continue}>{t("Back to Dashboard")}</button>
                     </div>
                   )}
                 </div>
@@ -465,7 +459,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
           <div style={{ width: "100%", display: "flex", flexDirection: width < 1000 ? "column" : "", minHeight: width > 1000 ? "700px" : "91vh" }}>
             <div style={{ display: width < 1000 && "none" }} className={styles.left}>
               <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "7px " }}>
-                <h3 className={styles.label}>Send Money</h3>
+                <h3 className={styles.label}>{t("Send Money")}</h3>
                 <h2 className={styles.head}>{data.sideText}</h2>
               </div>
 
@@ -475,16 +469,17 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
                 {data.step === 4 &&
                   (<div className={styles.terms}>
                     <p>
-                      By clicking "Confirm", you are agreeing to our <a rel='noreferrer' href="https://insta-pay.ch/terms-and-conditions" target='_blank'>terms and conditions.</a>
+                      {t('By clicking "Confirm", you are agreeing to our')}
+                      <a rel='noreferrer' href="https://insta-pay.ch/terms-and-conditions" target='_blank'>{t('terms and conditions.')}</a>
                     </p>
                   </div>
                   )}
                 {data.step === 2 && (
                   <div className={styles.cardChange}>
                     <div>
-                      <p>Pay from</p>
+                      <p>{t("Pay from")}</p>
                       <span>
-                        Change
+                        {t("Change")}
                       </span>
                     </div>
 
@@ -493,7 +488,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
 
                       <div>
                         <div>
-                          <p>{card?.type === "premium_plus" ? "Premium" : ""}</p>
+                          <p>{card?.type === "premium_plus" ? t("Premium") : ""}</p>
                           <span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="19" height="12" viewBox="0 0 19 12" fill="none">
                               <path fill-rule="evenodd" clip-rule="evenodd" d="M7.00635 10.321H11.8271V1.67969H7.00635V10.321Z" fill="#FF5F00" />
@@ -512,7 +507,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
                   </div>
                 )}
 
-                <span onClick={handleClose} style={{ fontWeight: 600, cursor: "pointer", marginTop: "12px", display: "block" }}>Cancel</span>
+                <span onClick={handleClose} style={{ fontWeight: 600, cursor: "pointer", marginTop: "12px", display: "block" }}>{t("Cancel")}</span>
               </div>
 
             </div>
@@ -545,9 +540,9 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
                   <>
                     <div className={styles.amountDiv}>
                       <div>
-                        <h2 style={{ marginBottom: "2rem" }}>Enter the amount</h2>
+                        <h2 style={{ marginBottom: "2rem" }}>{t("Enter the amount")}</h2>
                         <div className={styles.amount}>
-                          <p>Amount</p>
+                          <p>{t("Amount")}</p>
                           <input
                             value={data.amount}
                             onChange={(e) => {
@@ -567,7 +562,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
                         </div>
 
                         {((+data.feeDetails?.total_amount?.replace(/,/g, "") > +currentCardDetails.balance) && data.feeDetails?.total_amount) &&
-                          <p style={{ marginTop: "2rem", color: "red", fontWeight: 600, fontSize: "12px" }}>Insufficient Balance</p>
+                          <p style={{ marginTop: "2rem", color: "red", fontWeight: 600, fontSize: "12px" }}>{t("Insufficient Balance")}</p>
                         }
                       </div>
 
@@ -581,9 +576,9 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
                     {width < 1000 && (
                       <div className={styles.cardChange}>
                         <div>
-                          <p>Pay from</p>
+                          <p>{t("Pay from")}</p>
                           <span>
-                            Change
+                            {t("Change")}
                           </span>
                         </div>
 
@@ -592,7 +587,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
 
                           <div>
                             <div>
-                              <p>{card.type === "premium_plus" ? "Premium" : ""}</p>
+                              <p>{card.type === "premium_plus" ? t("Premium") : ""}</p>
                               <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="19" height="12" viewBox="0 0 19 12" fill="none">
                                   <path fill-rule="evenodd" clip-rule="evenodd" d="M7.00635 10.321H11.8271V1.67969H7.00635V10.321Z" fill="#FF5F00" />
@@ -618,9 +613,9 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
                 {data.step === 3 &&
                   <div className={styles.noteDiv}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                      <h3>Transaction Note</h3>
+                      <h3>{t("Transaction Note")}</h3>
                       <div style={{ position: "relative" }}>
-                        <textarea value={data.note} onChange={(e) => updateHandler("note", e.target.value)} placeholder='Type here..' name="" id=""></textarea>
+                        <textarea value={data.note} onChange={(e) => updateHandler("note", e.target.value)} placeholder={t('Type here..')} name="" id=""></textarea>
                         <span>
                           0/200
                         </span>
@@ -632,7 +627,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
                         <path d="M7.99992 14.6667C4.31802 14.6667 1.33325 11.6819 1.33325 8.00004C1.33325 4.31814 4.31802 1.33337 7.99992 1.33337C11.6818 1.33337 14.6666 4.31814 14.6666 8.00004C14.6666 11.6819 11.6818 14.6667 7.99992 14.6667ZM7.33325 7.33337V11.3334H8.66659V7.33337H7.33325ZM7.33325 4.66671V6.00004H8.66659V4.66671H7.33325Z" fill="#B6B9C8" />
                       </svg>
 
-                      <p>Shown in your Transactions page and shared with your recipient</p>
+                      <p>{t("Shown in your Transactions page and shared with your recipient")}</p>
                     </div>
                   </div>
                 }
@@ -641,12 +636,12 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
                   <div style={{ width: "100%" }}>
 
                     <div className={styles.reviewTexts}>
-                      <h4>Review your payment details</h4>
-                      <p>Please take a few moments to carefully review and verify the information to your payment details.  </p>
+                      <h4>{t("Review your payment details")}</h4>
+                      <p>{t("Please take a few moments to carefully review and verify the information to your payment details.")}</p>
                     </div>
                     <div className={styles.paymentInfo}>
                       <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
-                        <p>You Have to Pay</p>
+                        <p>{t("You Have to Pay")}</p>
                         <h1>{formatAmountWithSymbol(data.feeDetails?.total_amount, data.feeDetails?.sending_currency)}</h1>
                       </div>
 
@@ -658,7 +653,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
                     <div className={styles.confirmFeeDiv}>
                       <div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignSelf: "stretch", alignItems: "center" }}>
-                          <p>You are using</p>
+                          <p>{t("You are using")}</p>
 
                           <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
                             <div className={styles.cardFlag}>
@@ -674,15 +669,15 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
                               <p>{card?.last4?.slice(-6)}</p>
 
                             </div>
-                            <button>Change</button>
+                            <button>{t("Change")}</button>
                           </div>
                         </div>
                       </div>
 
-                      {feeCol("Sending", formatAmountWithSymbol(data.feeDetails?.recipient_amount, data.feeDetails?.sending_currency))}
-                      {feeCol("Transfer fees", formatAmountWithSymbol(data.feeDetails?.fee, data.feeDetails?.sending_currency))}
-                      {feeCol("Available Balance after transfer", formatAmountWithSymbol((currentCardDetails?.balance - data.feeDetails?.total_amount).toFixed(2), data.feeDetails?.sending_currency))}
-                      {feeCol("Total to Pay", formatAmountWithSymbol(data.feeDetails?.total_amount, data.feeDetails?.sending_currency), true)}
+                      {feeCol(t("Sending"), formatAmountWithSymbol(data.feeDetails?.recipient_amount, data.feeDetails?.sending_currency))}
+                      {feeCol(t("Transfer fees"), formatAmountWithSymbol(data.feeDetails?.fee, data.feeDetails?.sending_currency))}
+                      {feeCol(t("Available Balance after transfer"), formatAmountWithSymbol((currentCardDetails?.balance - data.feeDetails?.total_amount).toFixed(2), data.feeDetails?.sending_currency))}
+                      {feeCol(t("Total to Pay"), formatAmountWithSymbol(data.feeDetails?.total_amount, data.feeDetails?.sending_currency), true)}
                     </div>
 
                   </div>

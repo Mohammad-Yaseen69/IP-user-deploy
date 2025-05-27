@@ -1,5 +1,6 @@
 import styles from "../styles/onboard.module.scss"
 import { Bank, Bank_h,  Mobile, Mobile_h, Payment, Payment_h, Paypal, Paypal_h, Wallet, Wallet_h, } from "../files"
+import { useTranslation } from "react-i18next"
 
 const options = [
     {
@@ -19,7 +20,6 @@ const options = [
         text: "Paypal",
         icon: Paypal,
         hoverIcon: Paypal_h
-
     },
     {
         type: "mobile",
@@ -36,6 +36,7 @@ const options = [
 ]
 
 const PaymentSelect = ({ setPaymentType, setStep, paymentType, marginTop, styling }) => {
+    const {t} = useTranslation()
     return (
         <div className={styles.step1} style={{...styling}}>
             <div>
@@ -57,7 +58,7 @@ const PaymentSelect = ({ setPaymentType, setStep, paymentType, marginTop, stylin
                                 <img src={option.hoverIcon} alt="" className={styles.hover} />
                             </span>
 
-                            <h5>{option.text}</h5>
+                            <h5>{t(option.text)}</h5>
                         </div>
                     </div>
                 ))}

@@ -1,4 +1,5 @@
 import React, { useContext, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from "../styles/CardToCard.module.scss";
 import { ChevronDown } from 'react-feather';
 import UserInfo from './UserInfo';
@@ -15,6 +16,7 @@ const RecipientSelect = ({ dataHandler, data }) => {
     const [inputValues, setInputValues] = useState(["", "", "", ""]);
     const [userName, setUserName] = useState("");
     const { authHeader } = useContext(UserContext);
+    const { t } = useTranslation();
 
     const [searchState, setSearchState] = useState({
         last4: {
@@ -99,8 +101,8 @@ const RecipientSelect = ({ dataHandler, data }) => {
 
         } catch (error) {
             const errorMessage = error.response?.status === 404
-                ? "No results found"
-                : "An error occurred while searching";
+                ? t("No results found")
+                : t("An error occurred while searching");
 
             setSearchState(prev => ({
                 ...prev,
@@ -128,7 +130,7 @@ const RecipientSelect = ({ dataHandler, data }) => {
                             </svg>
                         </span>
 
-                        <h3>Search by Last 4 Digits of Card Number</h3>
+                        <h3>{t('Search by Last 4 Digits of Card Number')}</h3>
                     </div>
                     <span className={styles.arrow}><ChevronDown /></span>
                 </div>
@@ -156,7 +158,7 @@ const RecipientSelect = ({ dataHandler, data }) => {
                                     ))}
                                 </div>
 
-                                <button type="submit">Lookup</button>
+                                <button type="submit">{t('Lookup')}</button>
                             </form>
 
                             <div style={{ marginTop: "2rem", display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -203,7 +205,7 @@ const RecipientSelect = ({ dataHandler, data }) => {
                             </svg>
                         </span>
 
-                        <h3>Search by Username</h3>
+                        <h3>{t('Search by Username')}</h3>
                     </div>
                     <span className={styles.arrow}><ChevronDown /></span>
                 </div>
@@ -217,10 +219,11 @@ const RecipientSelect = ({ dataHandler, data }) => {
                                         value={userName}
                                         onChange={(e) => setUserName(e.target.value)}
                                         style={{ width: "100%", padding: "12px 14px", textAlign: "start" }}
+                                        placeholder={t('Enter username')}
                                     />
                                 </div>
 
-                                <button type='submit'>Lookup</button>
+                                <button type='submit'>{t('Lookup')}</button>
                             </form>
 
                             <div style={{ marginTop: "2rem", display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -273,7 +276,7 @@ const RecipientSelect = ({ dataHandler, data }) => {
                             </svg>
                         </span>
 
-                        <h3>Select from Saved Contacts</h3>
+                        <h3>{t('Select from Saved Contacts')}</h3>
                     </div>
                     <span className={styles.arrow}><ChevronDown /></span>
                 </div>

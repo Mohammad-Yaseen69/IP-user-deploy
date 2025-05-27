@@ -1,6 +1,8 @@
 import styles from "../styles/addFunds.module.scss"
+import { useTranslation } from 'react-i18next';
 
 const SideProgress = ({ isActive, isCompleted, Text, Icon, step }) => {
+    const { t } = useTranslation();
     return (
         <>
             <div className={styles.progress}>
@@ -8,15 +10,15 @@ const SideProgress = ({ isActive, isCompleted, Text, Icon, step }) => {
                     {
                         isCompleted ? (
                             <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19" fill="none">
-                                <path d="M15.6865 5L7.43652 13.25L3.68652 9.5" stroke="white" stroke-width="1.46484" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M15.6865 5L7.43652 13.25L3.68652 9.5" stroke="white" strokeWidth="1.46484" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>) :
                             <img src={Icon} alt="" />
                     }
                 </div>
 
                 <div className={styles.textCont}>
-                    <span>Step 0{step}</span>
-                    <p>{Text}</p>
+                    <span>{t('Step')} 0{step}</span>
+                    <p>{t(Text)}</p>
                 </div>
             </div>
 

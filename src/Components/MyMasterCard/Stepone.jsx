@@ -1,20 +1,9 @@
-import styles from "./styles/onboard.module.scss"
+import { useTranslation } from 'react-i18next';
+import styles from "./styles/onboard.module.scss";
 import CardIcon from "./files/card.svg"
 import { standardFeatures, premiumFeatures } from "./files/data.js"
 import IpLogo from "./files/ip.svg"
 import { Gb, Euro, USD, Apay } from "./files"
-import { useState } from "react"
-
-const cardTypes = [
-    {
-        type: "premium",
-        text: "Instapay Premium Card"
-    },
-    {
-        type: "standard",
-        text: "Instapay Standard Card"
-    },
-]
 
 const Toggle = ({ checked, onChange, isCheckbox = false }) => (
     <label style={{ borderRadius: "999px" }} className={isCheckbox ? styles.checkbox : styles.toggle}>
@@ -28,11 +17,23 @@ const Toggle = ({ checked, onChange, isCheckbox = false }) => (
 );
 
 const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApplePay }) => {
+    const { t } = useTranslation();
+    const cardTypes = [
+        {
+            type: "premium",
+            text: t("Instapay Premium Card")
+        },
+        {
+            type: "standard",
+            text: t("Instapay Standard Card")
+        },
+    ];
+
     return (
         <div style={{ display: "flex", gap: "8px", marginBottom: "7px", flexDirection: "column", maxWidth: "100%" }}>
             <div className={styles.top}>
-                <h2>Let’s Get Your InstaPay MasterCard!</h2>
-                <p>Choose the type of card that best suits your needs. Whether you want an instant Virtual Card for online payments or a Physical Card for everyday transactions, we’ve got you covered!  </p>
+                <h2>{t("Let’s Get Your InstaPay MasterCard!")}</h2>
+                <p>{t("Choose the type of card that best suits your needs. Whether you want an instant Virtual Card for online payments or a Physical Card for everyday transactions, we’ve got you covered!")}</p>
             </div>
 
 
@@ -44,7 +45,7 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApp
                             <rect x="0.5" y="1.3208" width="19" height="19" rx="9.5" stroke="#7F56D9" />
                             <circle cx="10" cy="10.8208" r="4" fill="#7F56D9" />
                         </svg>
-                        <span style={{ fontSize: "14px", color: "#333333", fontWeight: 600 }}>Virtual Card</span>
+                        <span style={{ fontSize: "14px", color: "#333333", fontWeight: 600 }}>{t("Virtual Card")}</span>
                     </div>
 
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -53,7 +54,7 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApp
                             <rect x="0.5" y="1.3208" width="15" height="15" rx="7.5" stroke="#E9EAEB" />
                         </svg>
 
-                        <span style={{ fontSize: "14px", color: "#A8A8A8", fontWeight: 500 }}>Physical Card (Coming Soon)</span>
+                        <span style={{ fontSize: "14px", color: "#A8A8A8", fontWeight: 500 }}>{t("Physical Card (Coming Soon)")}</span>
                     </div>
                 </div>
 
@@ -87,9 +88,9 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApp
                         <div className={styles.applePay} style={{ display: "flex", alignItems: "center", gap: "8px", width: "55%" }}>
                             <span style={{ width: "100%", padding: "15px" }}>
                                 <div>
-                                    <p>Enable</p>
+                                    <p>{t("Enable")}</p>
                                     <img src={Apay} alt="" />
-                                    <p>Support</p>
+                                    <p>{t("Support")}</p>
                                     <div>+$2.00</div>
                                 </div>
 
@@ -108,7 +109,7 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApp
                         <span style={{ borderColor: "#EC9100", padding: "8px 12px" }}>
                             <div>
                                 <img src={USD} alt="" />
-                                <p style={{ color: "#282B35" }}>US Dollars </p>
+                                <p style={{ color: "#282B35" }}>{t("US Dollars")}</p>
                                 <p>USD</p>
                             </div>
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
@@ -118,21 +119,21 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApp
                         <span style={{ padding: "8px 12px" }}>
                             <div>
                                 <img src={Euro} alt="" />
-                                <p style={{ color: "#282B35" }}>Euro </p>
+                                <p style={{ color: "#282B35" }}>{t("Euro")}</p>
                                 <p>EUR</p>
                             </div>
 
-                            <p>Coming Soon</p>
+                            <p>{t("Coming Soon")}</p>
 
                         </span>
                         <span>
                             <div>
                                 <img src={Gb} alt="" />
-                                <p style={{ color: "#282B35" }}>British pound </p>
+                                <p style={{ color: "#282B35" }}>{t("British pound")}</p>
                                 <p>Gb</p>
                             </div>
 
-                            <p>Coming Soon</p>
+                            <p>{t("Coming Soon")}</p>
                         </span>
                     </div>
                 </div>
@@ -143,8 +144,8 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApp
                     <div className={styles.top}>
                         <img src={CardIcon} alt="" />
                         <div>
-                            <h4>{cardType === "standard" ? "Standard" : "Premium"} Card</h4>
-                            <span color="#5926F0">FEATURES</span>
+                            <h4>{cardType === "standard" ? t("Standard") : t("Premium")} {t("Card")}</h4>
+                            <span color="#5926F0">{t("FEATURES")}</span>
                         </div>
                     </div>
                     <div className={styles.features}>
@@ -199,7 +200,7 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApp
                         <div>
                             <h2>{userDetails.first_name} {userDetails.last_name}</h2>
 
-                            <h3>Virtual <br /> Card</h3>
+                            <h3>{t("Virtual")} <br /> {t("Card")}</h3>
                         </div>
                     </div>
                 </div>

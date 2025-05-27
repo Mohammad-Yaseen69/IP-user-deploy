@@ -68,8 +68,7 @@ const PaymentStep = (
 
     const saveCardJSX = () => (
         <div className={styles.field} >
-
-            <h3 className={styles.label} style={{ fontSize: "14px" }}>Select a saved payment card</h3>
+            <h3 className={styles.label} style={{ fontSize: "14px" }}>{t("Select a saved payment card")}</h3>
             <div style={{ maxWidth: '100%', display: 'flex', overflow: "auto", gap: "10px", padding: "10px 0" }}>
 
                 {cards.map(item => (
@@ -165,7 +164,7 @@ const PaymentStep = (
             {paymentType === "card" &&
                 <div className={styles.cardDiv}>
                     <div className={styles.texts}>
-                        <p>Complete your payment by providing your payment details</p>
+                        <p>{t("Complete your payment by providing your payment details")}</p>
                     </div>
 
                     <div className={styles.cardFormDiv}>
@@ -173,7 +172,7 @@ const PaymentStep = (
                             saveCardJSX()
                         }
                         <div className={styles.field}>
-                            <h3 className={styles.label}>Card Number {!cardDetail.cardNumber && "*"}:</h3>
+                            <h3 className={styles.label}>{t("Card Number")} {!cardDetail.cardNumber && "*"}</h3>
                             <CardNumberInput
                                 content={cardDetail.cardNumber}
                                 setContent={(e) => {
@@ -189,7 +188,7 @@ const PaymentStep = (
 
                         <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
                             <div className={styles.field}>
-                                <h3 className={styles.label}>CVC {!cardDetail.cardCVC && "*"}:</h3>
+                                <h3 className={styles.label}>{t("CVC")} {!cardDetail.cardCVC && "*"}</h3>
                                 <CardCVC
                                     content={cardDetail.cardCVC}
                                     setContent={(e) => {
@@ -203,7 +202,7 @@ const PaymentStep = (
                             </div>
 
                             <div className={styles.field}>
-                                <h3 className={styles.label}>Expiry date {!cardDetail.cardExpiry && "*"}:</h3>
+                                <h3 className={styles.label}>{t("Expiry date")} {!cardDetail.cardExpiry && "*"}</h3>
                                 <CardExpiry
                                     content={cardDetail.cardExpiry}
                                     setContent={(e) => {
@@ -216,7 +215,7 @@ const PaymentStep = (
                             </div>
                         </div>
                         <div className={styles.field}>
-                            <h3 className={styles.label}>Expiry Holder Name {!cardDetail.cardHolderName && "*"}:</h3>
+                            <h3 className={styles.label}>{t("Expiry Holder Name")} {!cardDetail.cardHolderName && "*"}</h3>
                             <CardHolderName
                                 content={cardDetail.cardHolderName}
                                 setContent={(e) => {
@@ -248,7 +247,7 @@ const PaymentStep = (
                             setWalletState({})
                             setSelectedSaveCard({})
                         }}
-                    >Back</button>
+                    >{t("Back")}</button>
                     <button
                         style={{ color: "white", backgroundColor: "#5926F0", opacity: disabledBtnS && 0.4 }}
                         disabled={disabledBtnS}
@@ -256,7 +255,7 @@ const PaymentStep = (
                             setStep(3)
                         }}
                     >
-                        Continue
+                        {t("Continue")}
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
                             <path d="M5.25 11L8.75 7.5L5.25 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>

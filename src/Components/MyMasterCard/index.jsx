@@ -12,6 +12,7 @@ import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 import useWindowWidth from '../../utils/useWindowWidth';
 import { useLocation } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -35,6 +36,7 @@ const MyMasterCard = () => {
   const ctwMobile = queryParams.get("ctwMobile")
   const showT = queryParams.get("showT")
   const ref = useRef(null)
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (cardPurchased) {
@@ -103,7 +105,7 @@ const MyMasterCard = () => {
   return (
     <div style={{ minHeight: "100vh" }} className={styles.container}>
       <div className={styles.top}>
-        <h4 style={{ display: (width < 1000 && (addFundsMobile || ctcMobile || ctwMobile) ) && "none" }}>My Mastercard</h4>
+        <h4 style={{ display: (width < 1000 && (addFundsMobile || ctcMobile || ctwMobile) ) && "none" }}>{t("My Mastercard")}</h4>
         {width > 1000 && <TopRight />}
       </div>
 

@@ -4,7 +4,7 @@ import Giftpng from "./files/gift-png.png"
 import IpLogo from "./files/ip.svg"
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from 'swiper'
-import { Lock, Freeze, plus, CreditCardR, Wallet2, FileDown, CreditCardP, Notification, Speaker, Apay, Gpay, Samsung, Copy, checktoggle } from "./files"
+import {  Freeze, plus, CreditCardR, Wallet2, FileDown, CreditCardP, Notification, Speaker, Apay, Gpay, Samsung, Copy, checktoggle } from "./files"
 import axios from 'axios';
 import { UserContext } from '../../Context/UserContext';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
@@ -20,6 +20,7 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 import OTPConfirmation from "../UserSettingsNew/OTPConfirmation"
 import { getDecimalPointIndex } from '../../Helper/getDecimalIndex';
 import CardtoWallet from './CardtoWallet';
+import { useTranslation } from 'react-i18next';
 
 
 export const Toggle = ({ checked, onChange, isCheckbox = false }) => (
@@ -56,6 +57,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
     const width = useWindowWidth()
     const [showEmailModal, setShowEmailModal] = useState(false)
     const [flippedCards, setFlippedCards] = useState({});
+    const { t } = useTranslation()
     const handleCardFlip = (cardId) => {
         setFlippedCards(prev => ({
             ...prev,
@@ -224,7 +226,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                     <div className={styles.left}>
                         <div className={styles.topInfo}>
                             <div>
-                                <p>My Cards</p>
+                                <p>{t("My Cards")}</p>
                                 <span>{cards.length}</span>
                             </div>
 
@@ -232,11 +234,11 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                 <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
                                     <path d="M8.67521 4.24182V13.5752M4.00854 8.90849H13.3419" stroke="white" stroke-width="1.56777" stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
-                                Add Card
+                                {t("Add Card")}
                             </button>
                         </div>
 
-                        <h2>My Primary MasterCard</h2>
+                        <h2>{t('My Primary MasterCard')}</h2>
 
                         <div style={{ width: '100%', position: 'relative' }}>
                             <Swiper
@@ -301,7 +303,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                                     <h2>{userDetails?.first_name} {userDetails?.last_name}</h2>
 
                                                     <h3>
-                                                        Virtual <br /> Card
+                                                        {t('Virtual')} <br /> {t('Card')}
                                                     </h3>
                                                 </div>
                                             </div>
@@ -337,11 +339,11 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                                                     <div className={styles.row}>
                                                         <div className={styles.dets}>
-                                                            <span className={styles.lab}>valid thru</span>
+                                                            <span className={styles.lab}>{t('valid thru')}</span>
                                                             <h3 className={styles.vals}>{currentCardDetails?.exp_date}</h3>
                                                         </div>
                                                         <div className={styles.dets}>
-                                                            <span className={styles.lab}>CVV</span>
+                                                            <span className={styles.lab}>{t('CVV')}</span>
                                                             <h3 className={styles.vals}>{currentCardDetails?.cvv}</h3>
                                                         </div>
                                                     </div>
@@ -362,7 +364,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                 }
                             }}
                             className={styles.tap}
-                        >Tap to see Details</span>
+                        >{t('Tap to see Details')}</span>
 
                         <div className={styles.balance}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="222" height="160" viewBox="0 0 222 160" fill="none">
@@ -378,7 +380,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                 </defs>
                             </svg>
                             <div className={styles.top}>
-                                <p>Card Balance</p>
+                                <p>{t('Card Balance')}</p>
                                 <span>•• {currentCardDetails?.card_number?.slice(-4)}</span>
                             </div>
 
@@ -405,13 +407,12 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                     <div className={styles.right}>
                         <div className={styles.detailsContainer}>
-                            <h4 className={styles.title}>Manage My MasterCard</h4>
-
+                            <h4 className={styles.title}>{t('Manage My MasterCard')}</h4>
                             <div className={styles.column} style={{ display: "flex", flexWrap: "wrap", width: "100%", gap: "8px" }}>
                                 <div className={styles.iconBox} style={{ flex: 2, justifyContent: "space-between", padding: "8px 16px" }}>
-                                    <span>Card Label</span>
+                                    <span>{t('Card Label')}</span>
                                     <div className={styles.cardLabel}>
-                                        <h3>My Primary MasterCard</h3>
+                                        <h3>{t('My Primary MasterCard')}</h3>
 
                                         <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
                                             <path d="M8.67479 13.7417H14.6748M2.6748 13.7417H3.79117C4.11729 13.7417 4.28035 13.7417 4.4338 13.7049C4.56985 13.6722 4.69991 13.6183 4.8192 13.5452C4.95376 13.4628 5.06906 13.3475 5.29966 13.1169L13.6748 4.74171C14.2271 4.18943 14.2271 3.294 13.6748 2.74171C13.1225 2.18943 12.2271 2.18943 11.6748 2.74171L3.29964 11.1169C3.06904 11.3475 2.95374 11.4628 2.87128 11.5973C2.79818 11.7166 2.74431 11.8467 2.71164 11.9827C2.6748 12.1362 2.6748 12.2992 2.6748 12.6254V13.7417Z" stroke="#71767A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -419,13 +420,13 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     </div>
                                 </div>
                                 <div style={{ justifyContent: "space-between" }} className={styles.iconBox}>
-                                    <span>Card Status</span>
+                                    <span>{t('Card Status')}</span>
 
-                                    <Toggle checked={checks.cardStatus} onChange={() => handleToggle("cardStatus")} isCheckbox={false} />
+                                    <Toggle checked={checks.cardStatus} onChange={() => handleToggle("cardStatus")}/>
                                 </div>
                                 <div style={{ cursor: "pointer" }} className={styles.iconBox}>
                                     <img src={Freeze} alt="" />
-                                    <span>Freeze Card</span>
+                                    <span>{t('Freeze Card')}</span>
                                 </div>
                             </div>
 
@@ -442,9 +443,9 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                         className={styles.iconBox}
                                     >
                                         <img src={plus} alt="" />
-                                        <span style={{ cursor: "pointer" }}>Add Funds</span>
+                                        <span>{t('Add Funds')}</span>
                                     </div>
-                                    <div
+                                    `     <div
                                         onClick={() => {
                                             openModal("ctc")
                                             if (width < 1000) {
@@ -455,7 +456,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                         className={styles.iconBox}
                                     >
                                         <img src={CreditCardR} alt="" />
-                                        <span>Card to Card Transfer</span>
+                                        <span>{t('Card to Card Transfer')}</span>
                                     </div>
                                 </div>
                                 <div style={{ display: "flex", flexDirection: "column", gap: '12px', justifyContent: "center", flex: 1 }}>
@@ -466,11 +467,11 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                         }
                                     }} style={{ cursor: "pointer" }} className={styles.iconBox}>
                                         <img src={Wallet2} alt="" />
-                                        <span>Card to Wallet Transfer</span>
+                                        <span>{t('Card to Wallet Transfer')}</span>
                                     </div>
                                     <div style={{ cursor: "pointer" }} className={styles.iconBox}>
                                         <img src={FileDown} alt="" />
-                                        <span>Download Statement</span>
+                                        <span>{t('Download Statement')}</span>
                                     </div>
                                 </div>
 
@@ -479,150 +480,75 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     <div>
                                         <div>
                                             <img style={{ width: "24px" }} src={CreditCardP} alt="" />
-                                            <h3>Create an Add-On Card</h3>
+                                            <h3>{t('Create an Add-On Card')}</h3>
                                         </div>
-                                        <p>Send joy in just a few clicks!
-                                            Create your <span>InstaPay Mastercard Gift </span> Card now.</p>
+                                        <p>{t('Send joy in just a few clicks!')}<br />{t('Create your')} <span>{t('InstaPay Mastercard Gift')}</span> {t('Card now.')}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div className={styles.detailsContainer}>
-                            <h4 className={styles.title}>Card Settings</h4>
+                            <h4 className={styles.title}>{t('Card Settings')}</h4>
 
                             <div style={{ display: "grid", gridTemplateColumns: window.innerWidth > 1000 ? "1fr 1fr 1fr" : "1fr", gap: "10px", width: "100%" }}>
                                 <div style={{ justifyContent: "space-between" }} className={styles.iconBox}>
-                                    <span>Online Purchases</span>
+                                    <span>{t('Online Purchases')}</span>
 
-                                    <Toggle checked={checks.onlinePurchases} onChange={() => handleToggle("onlinePurchases")} isCheckbox={false} />
+                                    <Toggle checked={checks.onlinePurchases} onChange={() => handleToggle("onlinePurchases")}/>
                                 </div>
                                 <div style={{ justifyContent: "space-between" }} className={styles.iconBox}>
-                                    <span>Online Betting and Gambling</span>
+                                    <span>{t('Online Betting and Gambling')}</span>
 
-                                    <Toggle checked={checks.bAndG} onChange={() => handleToggle("bAndG")} isCheckbox={false} />
+                                    <Toggle checked={checks.bAndG} onChange={() => handleToggle("bAndG")}/>
                                 </div>
                                 <div style={{ justifyContent: "space-between" }} className={styles.iconBox}>
-                                    <span>Contactless Payment</span>
+                                    <span>{t('Contactless Payment')}</span>
 
-                                    <Toggle checked={checks.contactlessPay} onChange={() => handleToggle("contactlessPay")} isCheckbox={false} />
+                                    <Toggle checked={checks.contactlessPay} onChange={() => handleToggle("contactlessPay")}/>
                                 </div>
                             </div>
 
                             <div style={{ display: "grid", gridTemplateColumns: window.innerWidth > 1000 ? "1fr 1fr 1fr" : "1fr", gap: "10px", width: "100%" }}>
                                 <div className={styles.iconBox}>
                                     <img src={CreditCardR} alt="" />
-                                    <span>Blocked Countries & Regions</span>
+                                    <span>{t('Blocked Countries & Regions')}</span>
                                 </div>
 
                                 <div className={styles.iconBox}>
                                     <img src={Notification} alt="" />
-                                    <span>Notification Settings</span>
+                                    <span>{t('Notification Settings')}</span>
                                 </div>
                                 <div className={styles.iconBox}>
                                     <img src={Speaker} alt="" />
-                                    <span>Report Lost/Stolen Card</span>
+                                    <span>{t('Report Lost/Stolen Card')}</span>
                                 </div>
                             </div>
                         </div>
                         <div style={{ backgroundColor: "white" }} className={styles.detailsContainer}>
                             <div style={{ display: "flex", justifyContent: "space-between", width: '100%', alignItems: window.innerWidth > 1000 && 'center', flexDirection: window.innerWidth < 1000 && "column", }}>
-                                <h4 className={styles.title}>Mobile Payments</h4>
-                                <span style={{ fontSize: '14px', color: '#9CA3AF', fontWeight: 600 }}>Manage devices and add your card to mobile wallets.</span>
+                                <h4 className={styles.title}>{t('Mobile Payments')}</h4>
+                                <span style={{ fontSize: '14px', color: '#9CA3AF', fontWeight: 600 }}>{t('Manage devices and add your card to mobile wallets.')}</span>
                             </div>
 
                             <div className={styles.walletOptions}>
-                                <h4>Wallet Options:</h4>
+                                <h4>{t('Wallet Options:')}</h4>
 
                                 <div className={styles.column} style={{ width: window.innerWidth < 1000 && "100%" }} >
                                     <div onClick={() => window.open("https://support.apple.com/en-us/108398", "_blank", "noopener,noreferrer")} className={styles.option}>
                                         <img src={Apay} alt="" />
-                                        <h3>Add to Apple Pay</h3>
+                                        <h3>{t('Add to Apple Pay')}</h3>
                                     </div>
                                     <div onClick={() => window.open("https://support.google.com/wallet/answer/12058983?hl=en", "_blank", "noopener,noreferrer")} className={styles.option}>
                                         <img src={Gpay} alt="" />
-                                        <h3>Add to Google Pay</h3>
+                                        <h3>{t('Add to Google Pay')}</h3>
                                     </div>
                                     <div onClick={() => window.open("https://www.samsung.com/us/support/answer/ANS10002609", "_blank", "noopener,noreferrer")} className={styles.option}>
                                         <img src={Samsung} alt="" />
-                                        <h3>Add to Samsung Wallet</h3>
+                                        <h3>{t('Add to Samsung Wallet')}</h3>
                                     </div>
                                 </div>
                             </div>
-
-                            {/* <div className={styles.linkDevices}>
-                        <h4>Linked Devices:</h4>
-
-                        <div style={{ display: "flex", alignItems: "center", gap: "20px", overflowX: "auto" }}>
-                            <div ref={ref} style={{ display: "flex", gap: "20px" }}>
-                                <div className={styles.device}>
-                                    <div className={styles.row}>
-                                        <img src={Apple} alt="" />
-                                        <span className={styles.pill}>Active</span>
-                                    </div>
-
-                                    <div style={{ display: "flex", flexDirection: "column", gap: '8px', alignItems: "flexStart", width: "100%" }}>
-                                        <div className={styles.row}>
-                                            <p>Device</p>
-                                            <h4>Iphone 14</h4>
-                                        </div>
-                                        <div style={{ alignItems: "flex-end" }} className={styles.row}>
-                                            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "6px" }}>
-                                                <p>Date Added</p>
-                                                <h4>Jan 2025</h4>
-                                            </div>
-                                            <p>Remove</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={styles.device}>
-                                    <div className={styles.row}>
-                                        <img src={Apple} alt="" />
-                                        <span className={styles.pill}>Active</span>
-                                    </div>
-
-                                    <div style={{ display: "flex", flexDirection: "column", gap: '8px', alignItems: "flexStart", width: "100%" }}>
-                                        <div className={styles.row}>
-                                            <p>Device</p>
-                                            <h4>Iphone 14</h4>
-                                        </div>
-                                        <div style={{ alignItems: "flex-end" }} className={styles.row}>
-                                            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "6px" }}>
-                                                <p>Date Added</p>
-                                                <h4>Jan 2025</p>
-                                            </div>
-                                            <p>Remove</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={styles.device}>
-                                    <div className={styles.row}>
-                                        <img src={Apple} alt="" />
-                                        <span className={styles.pill}>Active</span>
-                                    </div>
-
-                                    <div style={{ display: "flex", flexDirection: "column", gap: '8px', alignItems: "flexStart", width: "100%" }}>
-                                        <div className={styles.row}>
-                                            <p>Device</p>
-                                            <h4>Iphone 14</h4>
-                                        </div>
-                                        <div style={{ alignItems: "flex-end" }} className={styles.row}>
-                                            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "6px" }}>
-                                                <p>Date Added</p>
-                                                <h4>Jan 2025</h4>
-                                            </div>
-                                            <p>Remove</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <span onClick={scrollToNext} className={styles.arrow}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
-                                    <path d="M6.68335 12.3181L10.7722 8.22919L6.68335 4.14032" stroke="black" stroke-width="1.36296" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </span>
-                        </div>
-                    </div> */}
                         </div>
                     </div>
 
@@ -637,10 +563,10 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
             </Modal>
             <Modal isOpen={showEmailModal}>
                 <ModalHeader toggle={() => setShowEmailModal(false)}    >
-                    <h5 style={{ fontWeight: 600, fontSize: "16px", marginBottom: "0px" }}>Email is Required</h5>
+                    <h5 style={{ fontWeight: 600, fontSize: "16px", marginBottom: "0px" }}>{t('Email is Required')}</h5>
                 </ModalHeader>
                 <ModalBody>
-                    <p style={{ fontSize: "14px", color: "#71767A", marginBottom: "0px" }}>Please add your email to see Sensitive Information.</p>
+                    <p style={{ fontSize: "14px", color: "#71767A", marginBottom: "0px" }}>{t('Please add your email to see Sensitive Information.')}</p>
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();
@@ -648,14 +574,14 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                         }}
                         className={styles.emailModal}>
                         <Input
-                            label="Email"
+                            label={t('Email')}
                             type="email"
-                            placeholder="Enter your email"
+                            placeholder={t('Enter your email')}
                             value={missingEmail}
                             onChange={(e) => setMissingEmail(e.target.value)}
                             style={{ margin: "1rem 0" }}
                         />
-                        <button type="submit" style={{ border: 'none', outline: 'none', padding: "10px 18px", fontWeight: 600, fontSize: "15px", borderRadius: "8px", background: "#5926F0", color: "white", float: "inline-end" }} >Submit</button>
+                        <button type="submit" style={{ border: 'none', outline: 'none', padding: "10px 18px", fontWeight: 600, fontSize: "15px", borderRadius: "8px", background: "#5926F0", color: "white", float: "inline-end" }} >{t('Submit')}</button>
                     </form>
                 </ModalBody>
             </Modal>

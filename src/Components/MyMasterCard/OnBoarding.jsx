@@ -7,6 +7,7 @@ import Stepthree from "./Stepthree.jsx"
 import PaymentModal from "./PaymentModal/PaymentModal.jsx"
 import Stepfour from "./Stepfour.jsx"
 import { useNavigate } from "react-router"
+import { useTranslation } from "react-i18next"
 
 
 
@@ -18,6 +19,7 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
     const [showPaymentModal, setShowPaymentModal] = useState(false)
     const navigate = useNavigate()
     const paymentModalRef = useRef(null)
+    const {t} = useTranslation()
 
 
     useEffect(() => {
@@ -85,14 +87,14 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
                             </svg>
                         </div>
                         <div style={{ display: "flex", flexDirection: "column" }}>
-                            <span style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}>Having Troubles?</span>
-                            <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>Contact Us</span>
+                            <span style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}>{t("Having Troubles?")}</span>
+                            <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>{t("Contact Us")}</span>
                         </div>
                     </div>
 
 
                     <div className={styles.btns}>
-                        {step !== 4 && <button onClick={() => setStep(prev => prev !== 1 ? --prev : alreadyHaveCard ? setCardPurchased(true) : 1)}>Back</button>}
+                        {step !== 4 && <button onClick={() => setStep(prev => prev !== 1 ? --prev : alreadyHaveCard ? setCardPurchased(true) : 1)}>{t("Back")}</button>}
                         <button
                             onClick={() => {
                                 if (step === 4) {
@@ -115,9 +117,9 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
                             }}
                             style={{ color: "white", backgroundColor: "#5926F0" }}
                         >
-                            {step !== 4 ? "Verify & Continue" : "View My Card & Details - Go to InstaPay Dashboard"}
+                            {step !== 4 ? t("Verify & Continue") : t("View My Card & Details - Go to InstaPay Dashboard")}
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
-                                <path d="M5.25 11L8.75 7.5L5.25 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M5.25 11L8.75 7.5L5.25 4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </button>
                     </div>

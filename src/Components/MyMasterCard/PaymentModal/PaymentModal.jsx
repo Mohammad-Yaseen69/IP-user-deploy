@@ -15,6 +15,7 @@ import PaymentSelect from './PaymentSelectStep'
 import PaymentStep from './PaymentStep'
 import ConfirmationStep from './ConfirmationStep'
 import SuccessStep from './SuccessStep'
+import { useTranslation } from 'react-i18next'
 
 
 const PLACEHOLDER_CARD_TYPE = {
@@ -54,6 +55,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
   const [disabledBtnS, setDisabledBtn] = useState(false)
   const [cardType, setCardType] = useState(PLACEHOLDER_CARD_TYPE)
   const [sideText, setSideText] = useState("Select the payment Type")
+  const { t } = useTranslation()
 
   const handleClose = () => {
     setIsOpen(false);
@@ -416,8 +418,8 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
     <div className={styles.paymentContent} style={{ display: 'flex', alignItems: 'center' }}>
       <div style={{ flex: (step === 4 && 0.8) || (step === 2 && 1.2), padding: window.innerWidth < 1000 && "1rem 1rem 0 1rem" }} className={styles.left}>
         <div>
-          <h1>{sideText}</h1>
-          {step === 4 && <p style={{ marginBottom: window.innerWidth < 1000 && "2rem " }}>Thanks for using InstaPay!</p>}
+          <h1>{t(sideText)}</h1>
+          {step === 4 && <p style={{ marginBottom: window.innerWidth < 1000 && "2rem " }}>{t("Thanks for using InstaPay!")}</p>}
         </div>
 
         {(step !== 1 && window.innerWidth > 1000) &&
@@ -428,8 +430,8 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
               </svg>
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <span style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}>Having Troubles?</span>
-              <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>Contact Us</span>
+              <span style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}>{t("Having Troubles?")}</span>
+              <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>{t("Contact Us")}</span>
             </div>
           </div>
         }
@@ -511,8 +513,8 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
               </svg>
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <span style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}>Having Troubles?</span>
-              <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>Contact Us</span>
+              <span style={{ fontSize: "10px", fontWeight: 600, color: "#6F6F6F" }}>{t("Having Troubles?")}</span>
+              <span style={{ fontSize: "12px", fontWeight: 600, color: "black" }}>{t("Contact Us")}</span>
             </div>
           </div>
 
@@ -561,10 +563,10 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
               }}
             >
               {step === 4
-                ? "Continue"
+                ? t("Continue")
                 : step === 3
-                  ? "Proceed to Payment"
-                  : "Verify & Continue"
+                  ? t("Proceed to Payment")
+                  : t("Verify & Continue")
               }
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
                 <path d="M5.25 11L8.75 7.5L5.25 4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

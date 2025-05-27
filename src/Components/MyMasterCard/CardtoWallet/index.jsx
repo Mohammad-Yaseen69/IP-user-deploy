@@ -10,7 +10,6 @@ import { UserContext } from '../../../Context/UserContext.jsx'
 import { formatCurrency } from '../../../Helper/AmountFormat.js'
 import { paymentInfoJSX } from '../PaymentModal/ConfirmationStep.jsx'
 import gif from "../../QuickQrPay/files/success.gif"
-import RecipientSelect from '../CardtoCardModal/RecipientSelect.jsx'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption.jsx'
 import { toast } from 'react-toastify'
 import axios from 'axios'
@@ -18,9 +17,9 @@ import { encryptData } from '../../../Helper/EssentilaMethods/Encryption.jsx'
 import { feeCol } from '../CardtoCardModal/index.jsx'
 import OtpConfirmation from '../../PaymentsNewer/InternationalFlow/OtpConfirmation.jsx'
 import StepOne from '../../PaymentsNewer/WalletToWalletFlow/StepOne.jsx'
-import OtherBalance from '../../HomeNewUpdated/OtherBalance.jsx'
 import useWindowWidth from '../../../utils/useWindowWidth.jsx'
 import { useLocation, useNavigate } from 'react-router'
+import { useTranslation } from 'react-i18next'
 
 const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCardDetails }) => {
     // const [sideText, setSideText] = useState("")
@@ -42,7 +41,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const ctwMobile = queryParams.get("ctwMobile")
-
+    const {t} = useTranslation()
 
     const handleClose = () => {
         setOpen(prev => ({ ...prev, ctw: false }));
@@ -264,9 +263,9 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
 
                 {step === 3 &&
                     <div className={styles.amountDiv}>
-                        <h3>Enter the Amount</h3>
+                        <h3>{t("Enter the amount")}</h3>
                         <div className={styles.amount}>
-                            <p>Amount</p>
+                            <p>{t("Amount")}</p>
                             <input
                                 value={amount}
                                 onChange={(e) => {
@@ -384,7 +383,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
                         }}
                         className={styles.continue}
                     >
-                        {step === 5 ? "Close" : "Continue"}
+                        {step === 5 ? t("Close") : t("Continue")}
                     </button>
                     {
                         width < 1000 && <ContactBox style={{ width: "100%", justifyContent: 'center' }} />
