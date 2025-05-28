@@ -19,6 +19,7 @@ import { InactivityContext } from "../InactivityWrapper";
 import InactivityCountDownTimer from "../Components/InactivityCounter";
 import SourceOfFunds from "../Components/SourceOfFundsModal";
 import AddBeneficiaryAddressModal from "../Components/AddBeneficiaryAddressModal";
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
 
 export const MobileSbContext = createContext(null);
@@ -40,8 +41,8 @@ const Layout = ({ children, classNames, ...rest }) => {
   // const { setIsVertical } = useContext(ProductContext);
   const location = useLocation();
   const query = new URLSearchParams(location.search)
-  const isPaAddress = query.get("payment_type")
-  const isw2w = query.get("send_type")
+  const [isOnline, setIsOnline] = useState(navigator.onLine)
+  const [showOfflineModal, setShowOfflineModal] = useState()
   const queryData = location?.search?.split("=")[1]?.toString();
   const { animation } = useContext(AnimationThemeContext);
   const animationTheme =
@@ -115,6 +116,35 @@ const Layout = ({ children, classNames, ...rest }) => {
 
 
   useEffect(() => {
+    const handleOnline = () => {
+      setIsOnline(true);
+      console.log("internet connect")
+    };
+
+    const handleOffline = () => {
+      setIsOnline(false);
+      console.log("internet disconnect")
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [])
+
+  useEffect(() => {
+    if (isOnline === false) {
+      setShowOfflineModal(true)
+    }else{
+      setShowOfflineModal(false)
+    } 
+  }, [isOnline])
+
+  console.log(isOnline)
+  useEffect(() => {
     if (showModal && location.pathname.toLowerCase().includes("settings")) {
       setShowModal(false)
     }
@@ -180,6 +210,26 @@ const Layout = ({ children, classNames, ...rest }) => {
           beneficiaries={beneficiaryWithoutAddresses}
         />
       }
+      <Modal
+        isOpen={showOfflineModal}
+        toggle={() => setShowOfflineModal(false)}
+      >
+        <ModalHeader toggle={() => setShowOfflineModal(false)}>
+          <span style={{ fontSize: "22px", fontWeight: 600, color: "red" }}>
+            No Internet Connection
+          </span>
+        </ModalHeader>
+        <ModalBody>
+          <div>
+            <h4>Looks like your internet is disconnect, please connect to the Internet to keep using Instapay.</h4>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <button onClick={() => setShowOfflineModal(false)} style={{ fontWeight: 600, color: "white", borderRadius: '6px', padding: "11px 25px", backgroundColor: "rgb(255 10 0 / 70%)", border: "none" }}>
+            Close
+          </button>
+        </ModalFooter>
+      </Modal>
       {
         showSourceModal
         &&
