@@ -143,7 +143,6 @@ const Layout = ({ children, classNames, ...rest }) => {
     } 
   }, [isOnline])
 
-  console.log(isOnline)
   useEffect(() => {
     if (showModal && location.pathname.toLowerCase().includes("settings")) {
       setShowModal(false)
