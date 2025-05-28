@@ -135,9 +135,9 @@ const RightItem = ({ item, setCurrent }) => {
             }
             <div className={styles.r_limits}>
                 {
-                    Object.keys(item.limits)?.map((it, ind) => (
+                    Object.keys(item?.limits)?.map((it, ind) => (
                         <LimitItem
-                            item={item.limits?.[it]}
+                            item={item?.limits?.[it]}
                             key={ind}
                             title={`${service_name_formatter(it)} limit`}
                             parent={item}

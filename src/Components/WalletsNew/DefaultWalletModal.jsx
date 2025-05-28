@@ -17,8 +17,7 @@ const DefaultWalletModal = ({ showConfirmationModal, setShowConfirmationModal, w
             headers: authHeader
         })
             .then(res => {
-                const decrypted = decryptData(res.data.data)
-                getUserWallets()
+                getUserWallets(true)
                 setShowConfirmationModal(false)
             })
             .catch(err => {

@@ -338,7 +338,7 @@ const UserState = ({ children }) => {
 
 
     // user wallets
-    const getUserWallets = () => {
+    const getUserWallets = (dontSort) => {
         axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-user-wallet/${userDetails?._id}`, { headers: authHeader })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
@@ -351,9 +351,13 @@ const UserState = ({ children }) => {
                     return 0;
                 });
             
-                const defaultWallet = decrypted.walletList.find(w => w.default);
-                const otherWallets = sorted.filter(w => !w.default);
-                setUserWallets(defaultWallet ? [defaultWallet, ...otherWallets] : otherWallets);
+                if(dontSort){
+                    setUserWallets(sorted)
+                }else{
+                    const defaultWallet = decrypted.walletList.find(w => w.default);
+                    const otherWallets = sorted.filter(w => !w.default);
+                    setUserWallets(defaultWallet ? [defaultWallet, ...otherWallets] : otherWallets);
+                }
             })
             .catch(err => "a") // console.log(decryptData(err.response.data.data)))
     }

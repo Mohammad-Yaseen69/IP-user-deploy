@@ -61,6 +61,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
         }
     }, [action, wallet_address, userWallets])
 
+
     useEffect(() => {
         if (userWallets?.length > 0) {
             setCurrentWallet(userWallets?.[activeDot])
@@ -86,7 +87,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                 headers: authHeader
             })
                 .then(res => {
-                    getUserWallets()
+                    getUserWallets(true)
                     setCurrentActive(false)
                 })
                 .catch(err => {
@@ -113,7 +114,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
             })
                 .then(res => {
                     setBlocked(false)
-                    getUserWallets()
+                    getUserWallets(true)
                 })
                 .catch(err => {
                     toast.error("Something went wrong!")
@@ -126,7 +127,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
             })
                 .then(res => {
                     setBlocked(true)
-                    getUserWallets()
+                    getUserWallets(true)
                 })
                 .catch(err => {
                     toast.error("Something went wrong!")
@@ -449,6 +450,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                 setShowConfirmationModal={setShowConfirmationModal}
                 showConfirmationModal={showConfirmationModal}
                 wallet={currentWallet}
+                setActiveDot={setActiveDot}
             />
             <AddCurrencyModal
                 isOpen={showAddCurrencyModal}
