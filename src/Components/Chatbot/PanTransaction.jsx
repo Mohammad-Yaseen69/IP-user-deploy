@@ -35,7 +35,7 @@ const PanTransaction = () => {
             </div>
             <h5>Loading...</h5>
         </div>
-        <form style="opacity: 0;" id="stform" action="${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/${slug}/${transaction_id}${slug !== "confirm-chatbot-pan-topup" ? `/${w2w_token ?? intl_token}` : ""}" method="POST">
+        <form style="opacity: 0;" id="stform" action="${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/${slug}/${transaction_id}${(slug !== "confirm-chatbot-pan-topup" && !slug.includes("airtime")) ? `/${w2w_token ?? intl_token}` : ""}" method="POST">
           <div id="st-card-number" class="st-card-number"></div>
           <div id="st-expiration-date" class="st-expiration-date"></div>
           <div id="st-security-code" class="st-security-code"></div>
