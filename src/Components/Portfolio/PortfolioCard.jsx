@@ -22,7 +22,7 @@ import docPl from "./files/doc.jpeg"
 import styles2 from "../Profile/styles/PortfolioItem.module.css"
 import "./styles/player.reset.css"
 
-const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress, publicP }) => {
+const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress, publicP, setPlayingMediaId, playingMediaId, playerRefs }) => {
     const { t } = useTranslation()
     const [showMenu, setShowMenu] = useState(false)
     const menuRef = useRef(null)
@@ -31,6 +31,7 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
     const [showDelete, setShowDelete] = useState(false)
     const [tooltip, setTooltip] = useState(false);
     const [isDraggable, setIsDraggable] = useState(false)
+    const playerRef = useRef(null)
     const handleClickOutside = (event) => {
         if (menuRef.current && !menuRef.current.contains(event.target)) {
             setShowMenu(false);
@@ -44,6 +45,7 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
         };
     }, []);
 
+    console.log(playingMediaId)
 
     const handleContextMenu = (e) => {
         e.preventDefault();
@@ -100,10 +102,32 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
                                         style={{ aspectRatio: "16/9" }}
                                     >
                                         <ReactJWPlayer
+                                            key={item?.jw_media?.mediaId}
                                             playerId={`${process.env.REACT_APP_JW_PLAYER_ID}_${item?.jw_media?.mediaId}`}
                                             playerScript={process.env.REACT_APP_JW_PLAYER_URL}
                                             controls={true}
-                                            autoStart={true}
+                                            autoStart={playingMediaId === item?.jw_media?.mediaId}
+                                            onReady={() => {
+                                                playerRefs.current[item?.jw_media?.mediaId] = window.jwplayer(`${process.env.REACT_APP_JW_PLAYER_ID}_${item?.jw_media?.mediaId}`);
+                                            }}
+                                            onPlay={() => {
+                                                Object.entries(playerRefs.current).forEach(([id, player]) => {
+                                                    if (id !== item?.jw_media?.mediaId && player && player.getState() === 'playing') {
+                                                        player.pause();
+                                                    }
+                                                });
+
+                                                setPlayingMediaId(item?.jw_media?.mediaId);
+                                            }}
+                                            onResume={() => {
+                                                Object.entries(playerRefs.current).forEach(([id, player]) => {
+                                                    if (id !== item?.jw_media?.mediaId && player && player.getState() === 'playing') {
+                                                        player.pause();
+                                                    }
+                                                });
+
+                                                setPlayingMediaId(item?.jw_media?.mediaId);
+                                            }}
                                             height={publicP && '263px'}
                                             playlist={`https://cdn.jwplayer.com/v2/media/${item?.jw_media?.mediaId}`}
                                         />
@@ -229,7 +253,7 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
                                         background: 'rgba(0, 0, 0, 0.4)',
                                         backdropFilter: "blur(5px)",
                                         padding: "4px", borderRadius: "7px",
-                                        cursor: "pointer",paddingBottom: "0"
+                                        cursor: "pointer", paddingBottom: "0"
                                     }}>
                                     <Trash color="white" />
                                 </div>

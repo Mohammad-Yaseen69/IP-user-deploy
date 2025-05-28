@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import coverPlaceHolder from "../UserProfilePublic/files/cover_1.png"
 import styles from "./styles/PAC.module.scss"
 import { Card, CardBody, CardText, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import countries from "../PaymentsNewer/CountriesData.json"
-import { ChevronLeft } from 'react-feather'
 import axios from 'axios'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { useParams, Link, useNavigate } from 'react-router-dom'
@@ -58,6 +57,10 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     const [croppedDp, setCroppedDp] = useState("")
     const [croppedCover, setCroppedCover] = useState("")
     const width = useWindowWidth()
+    const [playingMediaId, setPlayingMediaId] = useState(null); // <-- Add this
+    const playerRefs = useRef({});
+
+
 
 
 
@@ -166,21 +169,8 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
         }
     }
 
-    const [cardNumber] = useState('');
-    const [expiry] = useState('');
-    const [cvc] = useState('');
+   
 
-    useEffect(() => {
-        const [contentMonth, contentYear] = expiry.split("/").map(Number);
-        const currentDate = new Date();
-        const currentMonth = currentDate.getMonth() + 1; // getMonth() returns 0-11, so add 1
-        const currentYear = currentDate.getFullYear() % 100; // Get last two digits of the year
-
-        const isValidExpiry = contentYear > currentYear ||
-            (contentYear === currentYear && contentMonth > currentMonth);
-        const isValidCVC = cvc.length >= 3;
-
-    }, [cardNumber, expiry, cvc])
     const [showVerTT, setShowVerTT] = useState(false)
     const navigate = useNavigate()
 
@@ -238,7 +228,14 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                         >
                             {userVideos.map((video, index) => (
                                 <SwiperSlide key={video._id || index}>
-                                    <PortfolioCard item={video} pAddress={true} publicP={true} />
+                                    <PortfolioCard
+                                        item={video}
+                                        pAddress={true}
+                                        publicP={true}
+                                        playingMediaId={playingMediaId}
+                                        setPlayingMediaId={setPlayingMediaId}
+                                        playerRefs={playerRefs}
+                                    />
                                 </SwiperSlide>
                             ))}
                         </Swiper>
