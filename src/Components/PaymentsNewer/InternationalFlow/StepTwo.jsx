@@ -53,7 +53,7 @@ const StepTwo = ({ data, dataHandler }) => {
 
     const bens = useMemo(() => {
         let fil = beneficiaries.filter(item => item.account_type.some(item => item.toLowerCase().includes(data.payoutChannel?.value?.toLowerCase())))
- 
+
         if (data.country?.alpha3) {
             fil = fil.filter(item => {
                 const bankIsoCode = item?.bank_details?.[0]?.extras?.country_iso_code
@@ -251,7 +251,11 @@ const StepTwo = ({ data, dataHandler }) => {
                             <span style={{ marginTop: "1rem" }}>{t("Other Beneficiaries:")} </span>
                             {
                                 bankBens.map(item => (
-                                    <div key={item?._id} style={{ marginTop: "8px" }} className={`${styles.ben_card} ${data?.beneficiary?._id === item?._id ? styles.active : ""}`} onClick={() => dataHandler("beneficiary", item)}>
+                                    <div key={item?._id} style={{ marginTop: "8px" }} className={`${styles.ben_card} ${data?.beneficiary?._id === item?._id ? styles.active : ""}`}
+                                        onClick={() => {
+                                            dataHandler("beneficiary", item)
+                                            console.log(item)
+                                        }}>
                                         <div className={styles.dp}>
                                             {item?.first_name?.[0]}
                                         </div>

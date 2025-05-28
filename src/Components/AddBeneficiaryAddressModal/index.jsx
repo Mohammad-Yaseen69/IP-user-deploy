@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import styles from "./index.module.css"
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-const AddBeneficiaryAddressModal = ({ isOpen, toggle, beneficiaries = [], close }) => {
+const AddBeneficiaryAddressModal = ({ isOpen, toggle, beneficiaries = [], close, dataHandler }) => {
     const { t } = useTranslation()
     const [loading, setIsLoading] = useState(false)
     const { authHeader } = useContext(UserContext)
@@ -45,6 +45,10 @@ const AddBeneficiaryAddressModal = ({ isOpen, toggle, beneficiaries = [], close 
             const dec = decryptData(res.data.data)
             if (beneficiaries[beneficiaries.length - 1]?._id === beneficiary?._id) {
                 toggle()
+                dataHandler("beneficiary", {
+                    ...beneficiary,
+                    address: addresses?.[beneficiary?._id]
+                })
             } else {
                 swiperRef?.current?.swiper?.slideNext()
             }

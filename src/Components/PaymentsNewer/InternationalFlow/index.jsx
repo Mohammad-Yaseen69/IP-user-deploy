@@ -34,6 +34,7 @@ import NotFoundModal from "../../NotFound/NotFoundModal"
 import errors from "../../AddFunds/TrustPaymentErrors.json"
 import AddBeneficiaryRequiredFields from "../../AddBeneficiaryRequiredFields"
 import { Modal, ModalBody, ModalHeader } from "reactstrap"
+import AddBeneficiaryAddressModal from "../../AddBeneficiaryAddressModal"
 
 const leftSideContent = [
     "Enter The Amount",
@@ -154,10 +155,11 @@ function reducer(state, action) {
 const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsInternational }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
-    const { userDetails, authHeader, setProfileLockTime } = useContext(UserContext)
+    const { userDetails, authHeader, setProfileLockTime, getUserBeneficiaries } = useContext(UserContext)
     const [subStep, setSubStep] = useState(0)
     const [internationalData, dispatch] = useReducer(reducer, initialState);
     const [showDetailsModal, setShowDetailsModal] = useState(false)
+    const [showAddressModal, setShowAddressModal] = useState(false)
     const [requiredMissingFields, setRequiredMissingFields] = useState({
         beneficiary: {
             basic: [],
@@ -806,6 +808,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 break;
             case 2:
                 console.log(internationalData.payerRequiredFields, internationalData?.payoutChannel.value, internationalData?.beneficiary)
+
+                if (!internationalData.beneficiary?.address) {
+                    return setShowAddressModal(true)
+                }
                 setRequiredMissingFields({
                     beneficiary: { basic: [], extras: [] },
                     vendors: { fields: [], vendorType: internationalData?.payoutChannel.value }
@@ -853,6 +859,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                             }
                         }))
                     }
+
                 })
                 break;
             case 3:
@@ -970,10 +977,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
 
 
     useEffect(() => {
-        if(amount){
+        if (amount) {
             updateInternationalData("amount", amount)
         }
-    },[amount])
+    }, [amount])
 
     useEffect(() => {
         const confirmMobileWalletTransaction = async () => {
@@ -1008,7 +1015,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
 
     useEffect(() => {
         const error_message = () => {
-            return errors.find(item => item?.code == code)?.message
+            return errors.find(item => item?.code === code)?.message
         }
 
         if (transaction_status === "error") {
@@ -1065,6 +1072,19 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                     close={() => setShowDetailsModal(false)}
                     requiredFields={requiredMissingFields}
                     dataHandler={updateInternationalData}
+                />
+            }
+            {
+                showAddressModal &&
+                <AddBeneficiaryAddressModal
+                    close={() => setShowAddressModal(false)}
+                    dataHandler={updateInternationalData}
+                    isOpen={showAddressModal}
+                    toggle={() => {
+                        setShowAddressModal(false)
+                        getUserBeneficiaries()
+                    }}
+                    beneficiaries={[internationalData.beneficiary]}
                 />
             }
             {

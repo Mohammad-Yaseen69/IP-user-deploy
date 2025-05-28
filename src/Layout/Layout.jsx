@@ -99,7 +99,7 @@ const Layout = ({ children, classNames, ...rest }) => {
   } = useContext(UserContext)
 
   const beneficiaryWithoutAddresses = useMemo(() => {
-    if ((location.pathname.startsWith("/payments") || location.pathname.startsWith("/beneficiaries")) && isPaAddress !== "payment_address" && isw2w !== "wallet") {
+    if ((location.pathname.startsWith("/beneficiaries"))) {
       return beneficiaries.filter(item => !item.address || item?.address === "")
     } else {
       return []
