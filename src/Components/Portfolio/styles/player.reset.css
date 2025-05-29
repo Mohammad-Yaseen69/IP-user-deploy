@@ -2,7 +2,7 @@
     height: 100% !important;
 }
 
-.p-address-123456 .jwplayer .jw-wrapper{
+.p-address-123456 .jwplayer .jw-wrapper {
     height: 220px !important;
 }
 
@@ -10,7 +10,28 @@
     height: 100% !important;
 }
 
-.p-address-123456 .jwplayer .jw-aspect{
+.p-address-123456 .jwplayer .jw-aspect {
     height: 220px !important;
 }
 
+
+
+
+
+@media (min-width: 1000px) and (max-width: 1450px) {
+    .p-address-123456 .jwplayer.jw-flag-fullscreen .jw-wrapper {
+        height: 100% !important;
+    }
+
+    .p-address-123456 .jwplayer .jw-wrapper {
+        height: 170px !important;
+    }
+
+    .p-address-123456 .jwplayer.jw-flag-fullscreen .jw-aspect {
+        height: 100% !important;
+    }
+
+    .p-address-123456 .jwplayer .jw-aspect {
+        height: 170px !important;
+    }
+}

@@ -202,6 +202,28 @@
     object-fit: contain;
 }
 
+
+@media (min-width: 1000px) and (max-width: 1450px) {
+    .button div {
+        width: 20px;
+        height: 20px;
+    }
+
+    .button img {
+        width: 15px;
+        height: 15px;
+    }
+
+    .amount input,
+    .amount span {
+        font-size: 25px !important;
+    }
+
+    .amount { 
+        margin: 1rem 0 !important;
+    }
+}
+
 @media screen and (max-width: 1000px) {
     .container {
         margin-top: 2rem;

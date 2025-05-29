@@ -21,6 +21,7 @@ import ReactJWPlayer from "react-jw-player"
 import docPl from "./files/doc.jpeg"
 import styles2 from "../Profile/styles/PortfolioItem.module.css"
 import "./styles/player.reset.css"
+import useWindowWidth from "../../utils/useWindowWidth"
 
 const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress, publicP, setPlayingMediaId, playingMediaId, playerRefs }) => {
     const { t } = useTranslation()
@@ -31,7 +32,7 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
     const [showDelete, setShowDelete] = useState(false)
     const [tooltip, setTooltip] = useState(false);
     const [isDraggable, setIsDraggable] = useState(false)
-    const playerRef = useRef(null)
+    const width = useWindowWidth()
     const handleClickOutside = (event) => {
         if (menuRef.current && !menuRef.current.contains(event.target)) {
             setShowMenu(false);
@@ -74,9 +75,26 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
             }}
             onDragEnd={handleSort}
             style={{
-                height: (pAddress && !publicP) ? '150px' : publicP ? "220px" : '',
-                minWidth: (pAddress && !publicP) ? '242px' : publicP ? "100%" : '',
-                borderRadius: ((pAddress && !publicP) || publicP) ? '12px' : ''
+                height:
+                    publicP && width > 1000 && width < 1450
+                        ? '170px'
+                        : publicP
+                            ? '220px'
+                            : pAddress && !publicP
+                                ? '150px'
+                                : '',
+
+                minWidth:
+                    publicP
+                        ? '100%'
+                        : pAddress && !publicP
+                            ? '242px'
+                            : '',
+
+                borderRadius:
+                    publicP || (pAddress && !publicP)
+                        ? '12px'
+                        : ''
             }}
         >
             <PortfolioItemModal
@@ -86,7 +104,8 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
             />
 
 
-            {publicP &&
+            {
+                publicP &&
                 <div className="p-address-123456">
                     <div className={styles2.modal_content}>
                         {
@@ -165,7 +184,8 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
                     </div>
                 </div>
             }
-            {!publicP &&
+            {
+                !publicP &&
                 <>
                     <div style={{ borderRadius: ((pAddress && !publicP) || publicP) ? '12px' : '' }} className={`${styles.item_card_header} ${publicP && styles.publicH} `}>
                         {
@@ -406,7 +426,7 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
                 &&
                 <DeleteModal isOpen={showDelete} toggle={() => setShowDelete(!showDelete)} pAddress={pAddress} item={item} />
             }
-        </div>
+        </div >
     )
 }
 
