@@ -337,7 +337,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                                             margin: "0 6px 0 0",
                                                                             fontWeight: 700,
                                                                             whiteSpace: "wrap",
-                                                                            textAlign: 'center',
+                                                                            textAlign: width < 1000 && 'center',
                                                                         }}
                                                                     >
                                                                         {userDetails?.first_name} {userDetails?.last_name}
