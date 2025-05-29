@@ -205,7 +205,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                 const encrypted = encryptData(dataa)
                 const res = await axios.post(`${process.env.REACT_APP_THUNES_API}/payerInfo`, {
                     data: encrypted
-                })
+                }, {headers: authHeader})
                 const dec = decryptData(res.data.data)
                 dataHandler("payers", dec?.map(item => ({ ...item, icon: data?.payoutChannel?.icon })));
                 if (dec.length === 1) {
