@@ -229,7 +229,7 @@ const WithdrawOldFlow = ({
             const encrypted = encryptData(data)
             axios.post(`${process.env.REACT_APP_THUNES_API}/payerInfo`, {
                 data: encrypted
-            })
+            }, { headers: authHeader })
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     console.log(decrypted, userWithdrawals?.[payoutChannel?.sub_value]?.[0]?.payer_id)

@@ -16,7 +16,7 @@ import { useLocation } from 'react-router'
 
 const PayoutChannel = ({ payoutChannel, setPayoutChannel, setStep, services = [], country = "", setSubServices }) => {
     const { t } = useTranslation()
-    const { userDetails } = useContext(UserContext)
+    const { userDetails, authHeader } = useContext(UserContext)
     const [isLoading, setIsLoading] = useState(true)
     const payoutChannelData = [
         userDetails?.level?.international_transfer?.bank ? {
@@ -66,7 +66,7 @@ const PayoutChannel = ({ payoutChannel, setPayoutChannel, setStep, services = []
             const encrypted = encryptData(data)
             axios.post(`${process.env.REACT_APP_THUNES_API}/payerInfo`, {
                 data: encrypted
-            })
+            }, { headers: authHeader })
                 .then(res => {
                     setSubServices(decryptData(res.data.data))
                     setIsLoading(false)

@@ -995,7 +995,7 @@ const EditBeneficiary = () => {
             const getChannels = async () => {
                 setFieldsInfo(null)
                 // setIsAddressRequired(false)
-                axios.get(`${process.env.REACT_APP_THUNES_API}/services/${countryIsoCode}`)
+                axios.get(`${process.env.REACT_APP_THUNES_API}/services/${countryIsoCode}`, { headers: authHeader })
                     .then(res => {
                         // console.log(decryptData(res.data.data))
                         const decrypted = decryptData(res.data.data)
@@ -1012,7 +1012,7 @@ const EditBeneficiary = () => {
                             const encrypted = encryptData(data)
                             axios.post(`${process.env.REACT_APP_THUNES_API}/payerInfo`, {
                                 data: encrypted
-                            })
+                            }, { headers: authHeader })
                                 .then(res => {
                                     const dec = decryptData(res.data.data)
                                     setMobileProviders(dec)

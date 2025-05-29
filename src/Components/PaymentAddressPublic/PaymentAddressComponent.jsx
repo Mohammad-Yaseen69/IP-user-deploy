@@ -24,7 +24,6 @@ import './styles/swiper.reset.css'
 import PortfolioCard from '../Portfolio/PortfolioCard'
 import useWindowWidth from '../../utils/useWindowWidth'
 import ip from "./instapay_black.svg"
-import ip_white from "./ip-white.png"
 import { getCroppedImg } from '../../Context/UserContext'
 
 <style>
@@ -169,7 +168,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
         }
     }
 
-   
+
 
     const [showVerTT, setShowVerTT] = useState(false)
     const navigate = useNavigate()
@@ -210,7 +209,16 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
 
     const leftJSX = () => (
         <div style={{ flex: 1.7, alignSelf: (userVideos.length >= 1 && "stretch") }} className={styles.left}>
-            <>
+            {width > 1000 &&
+                <div className={styles.left_top}>
+                    <div>
+                        <span>Send money to 150+ countries,</span>
+                        <p>Instantly</p>
+                    </div>
+                    <img src={ip} alt="" />
+                </div>
+            }
+            <div className={styles.left_bottom}>
                 {(title || description) &&
                     <div className={styles.about}>
                         <h4 style={{ marginBottom: "0px" }}>{title}</h4>
@@ -224,7 +232,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                             modules={[Pagination]}
                             pagination={{ clickable: true }}
                             spaceBetween={10}
-                            slidesPerView={(userVideos.length === 1 || window.innerWidth < 700) ? 1 : 1.5}
+                            slidesPerView={(userVideos.length === 1 || window.innerWidth < 700) ? 1 : userVideos.length === 2 ? 2 : 2.3}
                         >
                             {userVideos.map((video, index) => (
                                 <SwiperSlide key={video._id || index}>
@@ -241,23 +249,24 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                         </Swiper>
                     </div>
                 )}
-            </>
-            <div>
-                <QrDetails
-                    wallet={currentWallet}
-                    user={userDetails}
-                    amount={amount}
-                    currency={currency}
-                    username={user_name}
-                    address={true}
-                    currentWallet={currentWallet}
-                />
 
+                <div>
+                    <QrDetails
+                        wallet={currentWallet}
+                        user={userDetails}
+                        amount={amount}
+                        currency={currency}
+                        username={user_name}
+                        address={true}
+                        currentWallet={currentWallet}
+                    />
+                    {/* 
                 <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', paddingTop: '20px', alignItems: 'center' }}>
                     <span style={{ fontSize: '12px', fontWeight: 600, color: '#333333' }}>Learn More:</span>
                     <span onClick={() => window.open("https://insta-pay.ch", "_blank", "noopener,noreferrer")} style={{ fontSize: '14px', fontWeight: 600, color: '#606060', cursor: 'pointer' }}>
                         insta-pay.ch
                     </span>
+                </div> */}
                 </div>
             </div>
 
@@ -298,91 +307,85 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
 
                                 <Card style={{ marginBottom: "0", boxShadow: "unset" }} className={styles.sub_container}>
                                     <CardBody className={styles.sc_body}>
-                                        {width > 1200 &&
-                                            <div style={{ margin: "auto" }} className={styles.bigLogo}>
-                                                <img src={ip_white} alt="" />
-                                            </div>
-                                        }
-                                        {width > 1000 && leftJSX()}
-                                        <div style={{ flex: width > 1000 && .5, borderRadius: '16px', width: width < 1000 && "100%", overflow: width < 100 && 'hidden', alignSelf: width > 1000 && "stretch", display: width > 1000 && "grid" }} className={styles.right}>
-                                            {width < 1000 &&
-                                                <div style={{ padding: '1rem 0', display: 'flex', justifyContent: 'center', background: "white" }}>
-                                                    <img src={ip} alt="" />
+
+                                        <div style={{ flex: width > 1000 && .5, borderRadius: '16px', width: width < 1000 && "100%", overflow: width < 100 && 'hidden', alignSelf: width > 1000 && "stretch", display: width > 1000 && "grid", gap: '10px', background: width < 1000 && "white" }} className={styles.right}>
+                                            <div className={styles.userDets} >
+
+                                                <div className={styles.cover_container}>
+                                                    <img src={(croppedCover || cover) || coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: "171px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important" }} />
                                                 </div>
-                                            }
-                                            <div className={styles.cover_container}>
-                                                <img src={(croppedCover || cover) || coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: "210px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important" }} />
-                                            </div>
-                                            <div style={{ backgroundColor: 'white', borderRadius: "16px", padding: "14px" }}>
-                                                <div style={{ flexDirection: "column", alignItems: "center", gap: "0", padding: "0px", position: 'relative', top: "-50px" }} className={styles.top}>
-                                                    <div style={{ flexDirection: "column", alignItems: "center", }} className={styles.left}>
-                                                        <div className={styles.dp_container}>
-                                                            {
-                                                                dp
-                                                                    ?
-                                                                    <img src={croppedDp || dp} className={styles.dp} alt="profile" style={{ background: "transparent" }} />
-                                                                    :
-                                                                    <div className={styles.dp} style={{ overflow: "hidden" }}>{userDetails?.first_name?.[0]}</div>
-                                                            }
-                                                        </div>
-                                                        <div style={{ alignItems: 'center' }} className={styles.basic_dets}>
-                                                            <div className={styles.badge}>{userDetails?.account_type === "individual" ? "Personal" : "Business"} Account</div>
-                                                            <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: ".3rem" }}>
-                                                                <h4
-                                                                    style={{
-                                                                        margin: "0 6px 0 0",
-                                                                        fontWeight: 700,
-                                                                        whiteSpace: "wrap",
-                                                                        textAlign: 'center ',
-                                                                    }}
-                                                                >
-                                                                    {userDetails?.first_name} {userDetails?.last_name}
-                                                                    {userDetails?.kyc_status === "approved" && (
-                                                                        <>
-                                                                            <img
-                                                                                onMouseEnter={() => setShowVerTT(true)}
-                                                                                onMouseLeave={() => setShowVerTT(false)}
-                                                                                src={verified}
-                                                                                alt=""
-                                                                                style={{
-                                                                                    height: window.innerWidth > 780 ? "25px" : "17px",
-                                                                                    width: window.innerWidth > 780 ? "25px" : "17px",
-                                                                                    objectFit: "contain",
-                                                                                    transform: "translateY(-3px)",
-                                                                                }}
-                                                                            />
-                                                                            {showVerTT && (
-                                                                                <div
+                                                <div style={{ backgroundColor: 'white', borderRadius: "16px", padding: "14px", maxHeight: "fit-content" }}>
+                                                    <div style={{ flexDirection: "column", gap: "0", padding: "0px", position: 'relative', }} className={styles.top}>
+                                                        <div style={{ flexDirection: "column", width: "100%", }} className={styles.left}>
+                                                            <div style={{ display: "flex", width: "100%", alignItems: "center", justifyContent: width < 1000 ? "center" : "space-between" }}>
+                                                                <div className={styles.dp_container}>
+                                                                    {
+                                                                        dp
+                                                                            ?
+                                                                            <img src={croppedDp || dp} className={styles.dp} alt="profile" style={{ background: "transparent" }} />
+                                                                            :
+                                                                            <div className={styles.dp} style={{ overflow: "hidden" }}>{userDetails?.first_name?.[0]}</div>
+                                                                    }
+                                                                </div>
+                                                                {width > 1000 && <button onClick={() => navigate(`/profile/${user_name}`)} className={styles.viewProfileBtn}>View Profile</button>}
+                                                            </div>
+                                                            <div style={{ alignItems: 'flex-start' }} className={styles.basic_dets}>
+                                                                <div className={styles.badge}>{userDetails?.account_type === "individual" ? "Personal" : "Business"} Account</div>
+                                                                <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: ".3rem" }}>
+                                                                    <h4
+                                                                        style={{
+                                                                            margin: "0 6px 0 0",
+                                                                            fontWeight: 700,
+                                                                            whiteSpace: "wrap",
+                                                                            textAlign: 'center',
+                                                                        }}
+                                                                    >
+                                                                        {userDetails?.first_name} {userDetails?.last_name}
+                                                                        {userDetails?.kyc_status === "approved" && (
+                                                                            <>
+                                                                                <img
+                                                                                    onMouseEnter={() => setShowVerTT(true)}
+                                                                                    onMouseLeave={() => setShowVerTT(false)}
+                                                                                    src={verified}
+                                                                                    alt=""
                                                                                     style={{
-                                                                                        position: "absolute",
-                                                                                        top: "100%",
-                                                                                        right: "0",
-                                                                                        background: "#5926f0",
-                                                                                        color: "white",
-                                                                                        fontSize: window.innerWidth > 780 ? ".8rem" : ".65rem",
-                                                                                        fontWeight: 500,
-                                                                                        padding: window.innerWidth > 780 ? "6px 18px" : "3px 10px",
-                                                                                        borderRadius: window.innerWidth > 780 ? "8px" : "4px",
-                                                                                        whiteSpace: "nowrap"
+                                                                                        height: window.innerWidth > 780 ? "25px" : "17px",
+                                                                                        width: window.innerWidth > 780 ? "25px" : "17px",
+                                                                                        objectFit: "contain",
+                                                                                        transform: "translateY(-3px)",
                                                                                     }}
-                                                                                >
-                                                                                    {t("User Identity Verified")}
-                                                                                </div>
-                                                                            )}
-                                                                        </>
-                                                                    )}
-                                                                </h4>
+                                                                                />
+                                                                                {showVerTT && (
+                                                                                    <div
+                                                                                        style={{
+                                                                                            position: "absolute",
+                                                                                            top: "100%",
+                                                                                            right: "0",
+                                                                                            background: "#5926f0",
+                                                                                            color: "white",
+                                                                                            fontSize: window.innerWidth > 780 ? ".8rem" : ".65rem",
+                                                                                            fontWeight: 500,
+                                                                                            padding: window.innerWidth > 780 ? "6px 18px" : "3px 10px",
+                                                                                            borderRadius: window.innerWidth > 780 ? "8px" : "4px",
+                                                                                            whiteSpace: "nowrap"
+                                                                                        }}
+                                                                                    >
+                                                                                        {t("User Identity Verified")}
+                                                                                    </div>
+                                                                                )}
+                                                                            </>
+                                                                        )}
+                                                                    </h4>
 
+                                                                </div>
+                                                                <div className={styles.country}>
+                                                                    <img src={userCountry?.file_url} alt={userCountry?.alpha3} style={{ boxShadow: "0 0 5px #afafaf" }} />
+                                                                    <span>{userCountry?.name}</span>
+                                                                </div>
+                                                                {width < 1000 && <button onClick={() => navigate(`/profile/${user_name}`)} style={{ backdropFilter: "blur(0px)", background: '#5926f0' }} className={styles.viewProfileBtn}>View Profile</button>}
                                                             </div>
-                                                            <div className={styles.country}>
-                                                                <img src={userCountry?.file_url} alt={userCountry?.alpha3} style={{ boxShadow: "0 0 5px #afafaf" }} />
-                                                                <span>{userCountry?.name}</span>
-                                                            </div>
-
-                                                            <button onClick={() => navigate(`/profile/${user_name}`)} className={styles.viewProfileBtn}>View Profile</button>
                                                         </div>
-                                                    </div>
-                                                    {/* <div className={styles.link} style={{
+                                                        {/* <div className={styles.link} style={{
                                             background: "#5926f0",
                                             padding: "10px 16px",
                                             display: "flex",
@@ -405,35 +408,41 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                             }
                                         </div> */}
 
-                                                    <div className={vpa_styles.left} style={{ display: "none" }}>
-                                                        <h4 style={{ textAlign: window.innerWidth > 1000 ? "right" : "left" }}>{title}</h4>
-                                                        <p style={{ textAlign: window.innerWidth > 1000 ? "right" : "left" }}>{description?.length > 200 ? description.slice(0, 200) + ".." : description}
-                                                            {
-                                                                description?.length > 200
-                                                                &&
-                                                                <span style={{ fontSize: "12px", color: "black", cursor: "pointer" }} onClick={() => setShowAboutModal(!showAboutModal)}>Read more {">"}</span>
-                                                            }
-                                                        </p>
-                                                        <Modal isOpen={showAboutModal} toggle={() => setShowAboutModal(!showAboutModal)}>
-                                                            <ModalHeader toggle={() => setShowAboutModal(!showAboutModal)}>
-                                                                Description
-                                                            </ModalHeader>
-                                                            <ModalBody>{description}</ModalBody>
-                                                        </Modal>
+                                                        <div className={vpa_styles.left} style={{ display: "none" }}>
+                                                            <h4 style={{ textAlign: window.innerWidth > 1000 ? "right" : "left" }}>{title}</h4>
+                                                            <p style={{ textAlign: window.innerWidth > 1000 ? "right" : "left" }}>{description?.length > 200 ? description.slice(0, 200) + ".." : description}
+                                                                {
+                                                                    description?.length > 200
+                                                                    &&
+                                                                    <span style={{ fontSize: "12px", color: "black", cursor: "pointer" }} onClick={() => setShowAboutModal(!showAboutModal)}>Read more {">"}</span>
+                                                                }
+                                                            </p>
+                                                            <Modal isOpen={showAboutModal} toggle={() => setShowAboutModal(!showAboutModal)}>
+                                                                <ModalHeader toggle={() => setShowAboutModal(!showAboutModal)}>
+                                                                    Description
+                                                                </ModalHeader>
+                                                                <ModalBody>{description}</ModalBody>
+                                                            </Modal>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                            </div>
 
-                                                <div style={{ marginBottom: "0px" }} className={vpa_styles.container}>
-                                                    <div style={{ padding: width < 400 && "20px", height: "fit-content", padding: '24px' }} className={vpa_styles.right}>
-                                                        <div className={vpa_styles.currency}>
-                                                            <div>{currentWallet?.currency?.symbol} </div>
-                                                            <p>{currentWallet?.currency?.code}</p>
-                                                            {/* <p>{currency}</p> */}
+                                            <div style={{ backgroundColor: 'white', borderRadius: "16px", maxHeight: "100%" }}>
+                                                <div style={{ marginBottom: "0px", gap: "0px", height: "100%" }} className={vpa_styles.container}>
+                                                    <div style={{ padding: width < 400 && "20px", height: "100%", padding: '24px', background: 'white', width: '100%', justifyContent: width > 1000 && "space-between", gap: width < 1000 && "0px" }} className={vpa_styles.right}>
+                                                        <div style={{ flexDirection: width < 1000 && 'column', gap: width < 1000 && '15px' }} className={vpa_styles.top}>
+                                                            <div style={{ margin: 'inherit' }} className={vpa_styles.currency}>
+                                                                <div>{currentWallet?.currency?.symbol} </div>
+                                                                <p>{currentWallet?.currency?.code}</p>
+                                                                {/* <p>{currency}</p> */}
+                                                            </div>
+
+                                                            <label >{t("Enter Amount")}</label>
                                                         </div>
-                                                        <div style={{ margin: '.5rem 0 1.5rem 0' }} className={vpa_styles.amount}>
-                                                            <label >{t("Amount")}</label>
+                                                        <div style={{ margin: width < 1000 ? "0 0 2rem" : '2rem 0 2rem 0' }} className={vpa_styles.amount}>
                                                             <div style={{ justifyContent: "center", gap: "5px" }}>
-                                                                <span>{currentWallet?.currency?.code} </span>
+                                                                {width > 1000 && <span>{currentWallet?.currency?.code} </span>}
                                                                 {/* <Input value={amount} onChange={e => e.target.value < 0 ? console.log("") : setAmount(e.target.value)} placeholder='10.00' type='number' /> */}
                                                                 <input
                                                                     type="text"
@@ -443,14 +452,12 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                                     onKeyUp={handleKeyUp}
                                                                     onBlur={handleBlur}
                                                                     placeholder="10.00"
-                                                                    size={formattedAmount.length || 1}
                                                                     data-type="currency"
-
-                                                                    style={{ outlineColor: "white", border: "none", outline: "none", maxWidth: "40%" }}
+                                                                    style={{ outlineColor: "white", border: "none", outline: "none", width: "100%", textAlign: width < 1000 && "center" }}
                                                                 />
                                                             </div>
                                                         </div>
-                                                        <div className={vpa_styles.buttons}>
+                                                        <div style={{ margin: '0' }} className={vpa_styles.buttons}>
                                                             <Link to={"#"} onClick={toggleCreditModal} className={vpa_styles.button}
                                                                 style={{
                                                                     opacity: amount <= 0 ? .7 : 1,
@@ -513,14 +520,17 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                                {width < 1000 &&
-                                                    <div style={{ marginTop: '2rem' }}>
-                                                        {leftJSX()}
-                                                    </div>
-                                                }
                                             </div>
+
+
+                                            {width < 1000 &&
+                                                <div>
+                                                    {leftJSX()}
+                                                </div>
+                                            }
+
                                         </div>
+                                        {width > 1000 && leftJSX()}
                                         {/* basic info */}
 
                                     </CardBody>

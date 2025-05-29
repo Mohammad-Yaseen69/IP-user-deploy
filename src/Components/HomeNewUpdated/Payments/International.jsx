@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption"
 import axios from "axios"
 import AmountAndCurrency from "./AmountAndCurrency"
 import ConfirmSend from "./ConfirmSend"
 import { useTranslation } from "react-i18next"
+import { UserContext } from "../../../Context/UserContext"
 
 
 const International = ({
@@ -31,6 +32,7 @@ const International = ({
     const [countryError, setCountryError] = useState("")
     const [payoutError, setPayoutError] = useState("")
     const [serviceError, setServiceError] = useState("")
+    const {authHeader} = useContext(UserContext)
 
 
 
@@ -50,7 +52,7 @@ const International = ({
 
     useEffect(() => {
         const getDetails = () => {
-            axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country.alpha3}`)
+            axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country.alpha3}`, { headers: authHeader })
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     console.log(decrypted)
@@ -66,7 +68,7 @@ const International = ({
                             const encrypted = encryptData(data)
                             axios.post(`${process.env.REACT_APP_THUNES_API}/payerInfo`, {
                                 data: encrypted
-                            })
+                            }, { headers: authHeader })
                                 .then(res => {
                                     // setSubServices(decryptData(res.data.data))
                                     const decrypted = decryptData(res.data.data)

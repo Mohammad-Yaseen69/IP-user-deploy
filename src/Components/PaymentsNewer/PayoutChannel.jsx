@@ -52,6 +52,7 @@ const PayoutChannel = ({ payoutChannel, setPayoutChannel, setSubStep, services =
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
     const [isLoading, setIsLoading] = useState(true)
+    const {authHeader} = useContext(UserContext)
 
     const payoutChannelData = [
         userDetails?.level?.international_transfer?.bank ? {
@@ -101,7 +102,7 @@ const PayoutChannel = ({ payoutChannel, setPayoutChannel, setSubStep, services =
             const encrypted = encryptData(data)
             axios.post(`${process.env.REACT_APP_THUNES_API}/payerInfo`, {
                 data: encrypted
-            })
+            }, { headers: authHeader })
                 .then(res => {
                     setSubServices(decryptData(res.data.data))
                     setIsLoading(false)

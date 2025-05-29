@@ -17,6 +17,7 @@ const PaymentCountry = ({ country, setCountry, setSubStep, setServices, type = "
     const { allowedCountries } = useContext(UserContext)
     const [isLoading, setIsLoading] = useState(true)
     const [servicesLoad, setServicesLoad] = useState(false)
+    const {authHeader} = useContext(UserContext)
 
     const searchCountry = (e) => {
         const filt = searchCountries.filter(item => item?.name.toLowerCase().includes(e.target.value.toLowerCase()))
@@ -56,7 +57,7 @@ const PaymentCountry = ({ country, setCountry, setSubStep, setServices, type = "
     useEffect(() => {
         if (country) {
             if (type === "thunes") {
-                axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country.alpha3}`)
+                axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country.alpha3}`, { headers: authHeader })
                     .then(res => {
                         // console.log(decryptData(res.data.data))
                         setServices(decryptData(res.data.data))
@@ -66,7 +67,7 @@ const PaymentCountry = ({ country, setCountry, setSubStep, setServices, type = "
                         // console.log(err)
                     })
             } else {
-                axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/services-in-country/${country?.alpha3}`)
+                axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/services-in-country/${country?.alpha3}`, { headers: authHeader })
                     .then(res => {
                         // console.log(decryptData(res.data.data))
                         setServices(decryptData(res.data.data))

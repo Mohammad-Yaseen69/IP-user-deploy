@@ -118,13 +118,10 @@ const Layout = ({ children, classNames, ...rest }) => {
   useEffect(() => {
     const handleOnline = () => {
       setIsOnline(true);
-      console.log("internet connect")
     };
 
     const handleOffline = () => {
-      setIsOnline(false);
-      console.log("internet disconnect")
-    };
+      setIsOnline(false);    };
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);

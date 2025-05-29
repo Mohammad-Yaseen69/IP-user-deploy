@@ -1,8 +1,6 @@
 .container {
     border-radius: 1rem;
     background: #FFF;
-    box-shadow: 0px 0px 12.2px 0px rgba(0, 0, 0, 0.12);
-    padding: 1.2rem;
     gap: 1.3rem;
     display: flex;
     flex: 1;
@@ -10,19 +8,19 @@
 }
 
 
-.qr_user{
+.qr_user {
     display: flex;
     justify-content: center;
-    padding: 10px;
-    font-weight: 700;
+    padding: 8px;
+    font-weight: 900;
     color: black;
-    font-size: 16px;
+    font-size: 10px;
 }
 
 
 .qr {
     flex: 1;
-    min-width: 210px;
+    min-width: 150px;
     border-radius: 8px;
     border: 1px solid #5926F0;
     overflow: hidden;
@@ -35,9 +33,9 @@
 }
 
 .qr_id {
-    padding: 1rem;
+    padding: 8px;
     text-align: center;
-    font-size: 1rem;
+    font-size: 10px;
     font-weight: 900;
     background-color: #5926F0;
     color: white;
@@ -104,11 +102,12 @@
 }
 
 .btn {
-    padding: .65rem;
+    display: flex;
+    padding: 4px var(--Gaps-Gap-Small, 8px) 4px 4px;
+    gap: 10px;
     border-radius: 6px;
     background: #5926F0;
     box-shadow: 0px 3.978px 32.819px 0px rgba(0, 0, 0, 0.09);
-    display: flex;
     align-items: center;
     border: none;
     outline: none;
@@ -124,10 +123,11 @@
     width: 18px;
     height: 18px;
     border-radius: 3px;
+    border-radius: 4px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    background-color: white;
+    justify-content: center;
+    background: radial-gradient(124.63% 259.09% at 48.48% 152.15%, rgba(230, 64, 103, 0.10) 0%, rgba(89, 38, 240, 0.10) 55.65%, rgba(72, 40, 160, 0.10) 100%), rgba(0, 0, 0, 0.10);
 }
 
 .icon img {
@@ -153,7 +153,7 @@
         align-self: center !important;
     }
 
-    .container{
+    .container {
         flex-direction: column;
     }
 

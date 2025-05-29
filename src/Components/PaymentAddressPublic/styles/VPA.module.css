@@ -11,6 +11,13 @@
     max-width: 350px;
 }
 
+.top {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .left h4 {
     color: #000;
     font-size: 24px;
@@ -85,6 +92,21 @@
     margin-bottom: 0;
 }
 
+.top label {
+    color: #7D7D7D;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    /* 21px */
+    text-transform: capitalize;
+    text-align: center;
+    margin-bottom: 0;
+}
+
 .amount label {
     color: #7D7D7D;
     leading-trim: both;
@@ -100,7 +122,7 @@
     margin-bottom: 0;
 }
 
-.amount{
+.amount {
     display: grid;
     justify-content: center;
 }

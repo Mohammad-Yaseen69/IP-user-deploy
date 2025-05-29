@@ -61,11 +61,11 @@ const QrDetails = ({ wallet, amount, currency, currentWallet, address, user, use
     }, [amount]);
     return (
         <div style={{ flex: (address && window.innerWidth > 1400 && "none") }} className={styles.container}>
-            <div style={{ flex: address && '0 0 auto', width: (address && (window.innerWidth > 1000 && window.innerWidth < 1400)) && "200px", minWidth: (address && (window.innerWidth > 1000 && window.innerWidth < 1400)) && "200px" }} className={styles.qr}>
+            <div style={{ flex: address && '0 0 auto', width: (address && (window.innerWidth > 1000)) && "150px", minWidth: (address && (window.innerWidth > 1000 && window.innerWidth < 1400)) && "150px" }} className={styles.qr}>
                 <div className={styles.qrCode} style={{ position: "relative" }}>
                     {/* <img src={wallet.qrCode?.url} /> */}
-                    <img alt="" src={qrLink} style={{ height: (address && (window.innerWidth > 1000 && window.innerWidth < 1400)) ? "200px" : "221px" }} />
-                    <img alt="" src={logo} style={{ position: "absolute", left: "50%", top: "40%", translate: "-50% -50%", width: window.innerWidth > 1000 ? "2rem" : "2.5rem", padding: ".6rem", background: "white", borderRadius: "10px" }} />
+                    <img alt="" src={qrLink} style={{ height: (address && (window.innerWidth > 1000)) ? "150px" : "221px" }} />
+                    <img alt="" src={logo} style={{ position: "absolute", left: "50%", top: "36%", translate: "-50% -50%", width: window.innerWidth > 1000 ? "1.4rem" : "2.5rem", padding: ".3rem", background: "white", borderRadius: "10px" }} />
                     <div className={styles.qr_id}>{wallet?.wallet_id}</div>
                     {
                         (user?.username || username)
@@ -83,7 +83,7 @@ const QrDetails = ({ wallet, amount, currency, currentWallet, address, user, use
                         <div className={styles.btns}>
                             <button className={styles.btn} onClick={() => window.open("https://www.instagram.com/instapay_swiss", "_blank")}>
                                 <div className={styles.icon}>
-                                    <img src={ins} />
+                                    <img src={ins} alt="" />
                                 </div>
                                 <span>{t("Open Instagram")}</span>
                             </button>

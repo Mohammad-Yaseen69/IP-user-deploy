@@ -17,7 +17,7 @@ const Country = ({ country, setCountry, setStep, setServices, type = "thunes" })
     const { t } = useTranslation()
     const [searchCountries, setSearchCountries] = useState([])
     const [filtered, setFiltered] = useState([])
-    const { allowedCountries } = useContext(UserContext)
+    const { allowedCountries, authHeader } = useContext(UserContext)
     const [isLoading, setIsLoading] = useState(true)
     // console.log(allowedCountries)
     const [servicesLoad, setServicesLoad] = useState(false)
@@ -60,7 +60,7 @@ const Country = ({ country, setCountry, setStep, setServices, type = "thunes" })
     useEffect(() => {
         if (country) { 
             if (type === "thunes") {
-                axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country.alpha3}`)
+                axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country.alpha3}`, { headers: authHeader })
                     .then(res => {
                         setServices(decryptData(res.data.data))
                         setServicesLoad(true)

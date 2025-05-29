@@ -353,7 +353,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
 
                 const res = await axios.post(`${process.env.REACT_APP_THUNES_API}/payerInfo`, {
                     data: encrypted
-                })
+                }, { headers: authHeader })
                 const decrypted = decryptData(res.data.data)
                 setPayers(decrypted)
             } catch (err) {

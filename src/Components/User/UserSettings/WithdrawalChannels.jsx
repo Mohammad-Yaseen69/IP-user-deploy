@@ -55,7 +55,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
                     // const servicesResponse = await axios.post(`${process.env.REACT_APP_THUNES_API}/Services`, {
                     //     data: encrypted,
                     // });
-                    const servicesResponse = await axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country.alpha3}`)
+                    const servicesResponse = await axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country.alpha3}`, { headers: authHeader })
                     setServices(decryptData(servicesResponse.data.data));
                 }
             } catch (error) {

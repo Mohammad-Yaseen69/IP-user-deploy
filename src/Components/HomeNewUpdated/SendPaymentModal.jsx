@@ -174,7 +174,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
 
     useEffect(() => {
         if (payoutChannel) {
-            axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country.alpha3}`)
+            axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country.alpha3}`, { headers: authHeader })
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     // console.log(decrypted)
@@ -189,7 +189,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                             const encrypted = encryptData(data)
                             axios.post(`${process.env.REACT_APP_THUNES_API}/payerInfo`, {
                                 data: encrypted
-                            })
+                            }, { headers: authHeader })
                                 .then(res => {
                                     // setSubServices(decryptData(res.data.data))
                                     const decrypted = decryptData(res.data.data)

@@ -902,7 +902,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
 
             const getChannels = async () => {
                 setFieldsInfo(null)
-                axios.get(`${process.env.REACT_APP_THUNES_API}/services/${countryIsoCode}`)
+                axios.get(`${process.env.REACT_APP_THUNES_API}/services/${countryIsoCode}`, { headers: authHeader })
                     .then(res => {
                         const decrypted = decryptData(res.data.data)
                         setServices(decrypted)
@@ -919,7 +919,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                             const encrypted = encryptData(data)
                             axios.post(`${process.env.REACT_APP_THUNES_API}/payerInfo`, {
                                 data: encrypted
-                            })
+                            }, { headers: authHeader })
                                 .then(res => {
                                     const dec = decryptData(res.data.data)
                                     setMobileProviders(dec)
