@@ -30,7 +30,7 @@ import { useLocation, useNavigate } from "react-router"
 
 const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdrawal }) => {
     const { t } = useTranslation()
-    const { userDetails, authHeader, getWithdrawals } = useContext(UserContext)
+    const { userDetails, authHeader, getWithdrawals, setMissingTabsData } = useContext(UserContext)
     const [country, setCountry] = useState(null)
     const [services, setServices] = useState([])
     const [current, setCurrent] = useState(null)
@@ -534,6 +534,8 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                 const decrypted = decryptData(res.data.data)
                 getWithdrawals()
                 setShowSuccess(true)
+                setMissingTabsData(prev => prev.filter(item => item !== "withdrawls"))
+
                 setIsEditMode(false)
                 setIsSaving(false)
                 setNewWithdrawal(false)

@@ -7,7 +7,6 @@ import bd from "../PaymentsNewer/files/bd.png"
 import cp from "../PaymentsNewer/files/cp.png"
 import mw from "../PaymentsNewer/files/mw.png"
 import pc from "../PaymentsNewer/files/pc.png"
-import cw from "../PaymentsNewer/files/cw.png"
 import Bank from './WIthdrawals/Bank';
 import Mobile from './WIthdrawals/Mobile';
 import CardP from './WIthdrawals/Card';
@@ -19,12 +18,10 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 import countries from "../PaymentsNewer/CountriesData.json"
 import InstaPayLoader from '../Loader';
 import AddWithdrawalsModal from '../AddWithdrawa;sModal';
-import { useNavigate } from 'react-router';
 
 const WithdrawalChannels = () => {
-    const navigate = useNavigate()
     const { t } = useTranslation()
-    const { userDetails, authHeader, userWithdrawals, setUserWithdrawals, verifyToken, allowedWithdrawals, getWithdrawals } = useContext(UserContext)
+    const { userDetails, authHeader, userWithdrawals, setUserWithdrawals, getWithdrawals, setMissingTabsData } = useContext(UserContext)
 
     // conditionals
     const [allowedCountry, setAllowedCountry] = useState(false)
@@ -295,6 +292,7 @@ const WithdrawalChannels = () => {
     }, [payoutChannelData])
 
     const addWithDrawal = () => {
+        console.log("shaka shaka")
         setIsSaving(true)
         const account_types = [
             bankCompleted ? "bank" : null,
@@ -386,7 +384,6 @@ const WithdrawalChannels = () => {
             ]
                 : []
         }
-        // console.log(data)
         const encrypted = encryptData(data)
         axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/create-withdrawal`, {
             data: encrypted
@@ -395,13 +392,12 @@ const WithdrawalChannels = () => {
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
+                setMissingTabsData(prev => prev.filter(item => item !== "withdrawls"))
                 setUserWithdrawals(decrypted?.withdrawalData)
                 setIsEditMode(false)
                 setIsSaving(false)
             })
             .catch(err => {
-                const decrypted = decryptData(err.response.data.data)
-                // console.log(decrypted)
                 setIsSaving(false)
             })
     }

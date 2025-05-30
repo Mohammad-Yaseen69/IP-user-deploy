@@ -53,8 +53,7 @@ const Settings = () => {
                                 {
                                     currentTab === "Basic Info"
                                     &&
-                                    <Basic />
-                                }
+                                    <Basic setCurrentTab={setCurrentTab} />}
                                 {
                                     currentTab === "Change Password"
                                     &&
@@ -66,7 +65,7 @@ const Settings = () => {
                                     <SecurityQuestions />
                                 }
                                 {
-                                    currentTab === "Verification Code Preferences"
+                                    currentTab === "Two Factor Authentication"
                                     &&
                                     <TwoFactorAuth />
                                 }
@@ -231,7 +230,7 @@ const Settings = () => {
                                 {
                                     currentTab === "Basic Info"
                                     &&
-                                    <Basic />
+                                    <Basic setCurrentTab={setCurrentTab} />
                                 }
                                 {
                                     currentTab === "Change Password"
@@ -245,7 +244,7 @@ const Settings = () => {
                                 }
                                 {currentTab === "Payment Threshold" && <Threshold userDetails={userDetails} authHeader={authHeader} />}
                                 {
-                                    currentTab === "Verification Code Preferences"
+                                    currentTab === "Two Factor Authentication"
                                     &&
                                     <TwoFactorAuth />
                                 }

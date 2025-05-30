@@ -107,25 +107,20 @@ const UserState = ({ children }) => {
     const token = localStorage.getItem("token")
     const [userDetails, setUserDetails] = useState(null)
     const [userWallets, setUserWallets] = useState([])
-    const [refresh, setRefresh] = useState(0)
-    const [walletRefresh, setWalletRefresh] = useState(0)
-    const [userRefresh, setUserRefresh] = useState(0)
     const [beneficiaries, setBeneficiaries] = useState([])
     const [registeredBeneficiaries, setRegisteredBeneficiaries] = useState([])
     const [userTransactions, setUserTransactions] = useState([])
     const [userSecurityQues, setUserSecurityQues] = useState([])
-    const [page, setPage] = useState(1)
     const [searchQuery, setSearchQuery] = useState("")
     const [apiDates, setApiDates] = useState(null)
     const [referralLink, setReferralLink] = useState("")
     const [userSessions, setUserSessions] = useState([])
     const [allowedFeatures, setAllowedFeatures] = useState(null)
-    const [userWithdrawals, setUserWithdrawals] = useState([])
+    const [userWithdrawals, setUserWithdrawals] = useState(undefined)
     const [allowedWithdrawals, setAllowedWithdrawals] = useState(null)
     const [allowedCountries, setAllowedCountries] = useState([])
     const [userPortfolio, setUserPortfolio] = useState([])
     const [userVideos, setUserVideos] = useState([])
-    const [portfolioRef, setPortfolioRef] = useState(0)
     const [profileCompleted, setProfileCompleted] = useState(null)
     const [profileCompletedPercentage, setProfileCompletedPercentage] = useState(0)
     const [profileIncompleteReason, setProfileIncompleteReason] = useState("")
@@ -138,6 +133,7 @@ const UserState = ({ children }) => {
         paBanner: "",
     })
     const [pAddressData, setPAddressData] = useState({})
+    const [missingTabsData, setMissingTabsData] = useState([])
 
     const authHeader = {
         "Authorization": `Bearer ${token}`,
@@ -182,14 +178,10 @@ const UserState = ({ children }) => {
     const clearData = () => {
         setUserDetails(null)
         setUserWallets([])
-        setRefresh(0)
-        setWalletRefresh(0)
-        setUserRefresh(0)
         setBeneficiaries([])
         setRegisteredBeneficiaries([])
         setUserTransactions([])
         setUserSecurityQues([])
-        setPage(1)
         setSearchQuery("")
         setApiDates(null)
         setReferralLink("")
@@ -198,7 +190,6 @@ const UserState = ({ children }) => {
         setUserWithdrawals([])
         setAllowedWithdrawals(null)
         setUserPortfolio([])
-        setPortfolioRef(0)
         setProfileCompleted(null)
         setProfileCompletedPercentage(0)
         setProfileIncompleteReason("")
@@ -279,6 +270,16 @@ const UserState = ({ children }) => {
                         getImage(decrypted.coverImage?.url, decrypted.coverImage?.coordinates, "profile", "cover")
                     }
 
+                    if (!decrypted?.tfa) {
+                        setMissingTabsData(prev => prev.includes("tfa") ? prev : [...prev, "tfa"]);
+                    }
+                    if ((decrypted?.user?.kyc_status === "declined" || !decrypted.user?.kyc_status)) {
+                        setMissingTabsData(prev => prev.includes("kyc") ? prev : [...prev, "kyc"]);
+                    }
+                    if (!decrypted?.insta_username && !decrypted?.telegram_bot) {
+                        setMissingTabsData(prev => prev.includes("social") ? prev : [...prev, "social"]);
+                    }
+
                     return decrypted
                 })
                 .catch(err => {
@@ -350,10 +351,10 @@ const UserState = ({ children }) => {
                     }
                     return 0;
                 });
-            
-                if(dontSort){
+
+                if (dontSort) {
                     setUserWallets(sorted)
-                }else{
+                } else {
                     const defaultWallet = decrypted.walletList.find(w => w.default);
                     const otherWallets = sorted.filter(w => !w.default);
                     setUserWallets(defaultWallet ? [defaultWallet, ...otherWallets] : otherWallets);
@@ -398,7 +399,6 @@ const UserState = ({ children }) => {
             setBeneficiaries(decrypted.beneficiaryList)
 
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
         }
     }
 
@@ -457,7 +457,6 @@ const UserState = ({ children }) => {
                 setReferralLink(formattedUrl)
             })
             .catch(err => {
-                const decrypted = decryptData(err.response.data.data)
             })
     }
 
@@ -490,13 +489,12 @@ const UserState = ({ children }) => {
             .then(res => {
                 const decrypted = decryptData(res.data.data)
                 console.log(decrypted)
-                const { completedBasicFields, totalBasicFields, securityQuestionsCount, completedProfilePercent } = decrypted?.fieldsInformation
+                const { completedBasicFields, totalBasicFields, completedProfilePercent } = decrypted?.fieldsInformation
                 setProfileIncompleteReason(completedBasicFields !== totalBasicFields ? "basic" : "")
                 setProfileCompleted(completedProfilePercent === 100)
                 setProfileCompletedPercentage(completedProfilePercent)
             })
             .catch(err => {
-                const decrypted = decryptData(err.response.data.data)
                 // console.log(decrypted)
             })
 
@@ -518,9 +516,7 @@ const UserState = ({ children }) => {
                 setAllowedCountries(decrypted?.Countries)
             })
             .catch(err => {
-                // console.log(err)
-                const decrypted = decryptData(err.response.data.data)
-                // console.log(decrypted)
+
             })
     }
     useEffect(() => {
@@ -561,10 +557,17 @@ const UserState = ({ children }) => {
                 headers: authHeader
             })
             const decrypted = await decryptData(res.data.data)
-            // console.log(decrypted)
+            if (decrypted?.withdrawalList?.length === 0) {
+                setMissingTabsData(prev => prev.includes("withdrawls") ? prev : [...prev, "withdrawls"]);
+            }
+            console.log(decrypted)
             setUserWithdrawals(decrypted?.withdrawalList ?? [])
         } catch (error) {
-            // const dec = decryptData(error.response.data.data);
+            const dec = decryptData(error.response.data.data);
+
+            if (dec?.message?.includes("found")) {
+                setMissingTabsData(prev => prev.includes("withdrawls") ? prev : [...prev, "withdrawls"]);
+            }
             setUserWithdrawals([])
         }
     }
@@ -660,7 +663,7 @@ const UserState = ({ children }) => {
     }, [userDetails])
 
     return (
-        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, setRefresh, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, setPage, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, setUserRefresh, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, setWalletRefresh, allowedCountries, userPortfolio, setPortfolioRef, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, clearData, croppedImages, updateCoordinates, setCroppedImages }}>
+        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData }}>
             {showModalState && <Modal isOpen={showModalState} toggle={() => window.history.replaceState(null, null, "")} />}
             {children}
         </UserContext.Provider>

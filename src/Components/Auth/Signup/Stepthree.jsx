@@ -26,10 +26,6 @@ const Stepthree = ({ data, dataHandler }) => {
                     {t("Incorrect phone number, please enter a valid number.")}
                 </div>
             }
-            <div className={styles.inp}>
-                <label>{t("Email (Optional)")}</label>
-                <input type="email" value={data.email} onChange={e => dataHandler("email", e.target.value)} placeholder={t("Enter Your Email")} />
-            </div>
         </div>
     )
 }

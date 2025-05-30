@@ -1,28 +1,91 @@
-import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router'
-import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
+import { Modal, ModalBody, } from 'reactstrap'
+import styles from "./styles/MissingStepsModal.module.scss"
+import { auth, bank, passport, social } from "./Modal_Icons"
+import { useContext, useEffect, useState } from 'react'
+import { UserContext } from '../../Context/UserContext'
 
-const NextStepModal = ({ isOpen, toggle, tab }) => {
+const steps = [
+    {
+        text: "Google Authenticator",
+        link: "Two Factor Authentication",
+        icon: auth,
+        type: "tfa"
+    },
+    {
+        text: "Add receiving/withdrawal account",
+        link: "Receiving Accounts",
+        icon: bank,
+        type: "withdrawls"
+    },
+    {
+        text: "Connect chatbot (Instagram/Telegram)",
+        link: "My Social Network Accounts",
+        icon: social,
+        type: "social"
+    },
+    {
+        text: "Verify identity",
+        link: "Identity Verification",
+        icon: passport,
+        type: "kyc"
+    }
+]
+
+const NextStepModal = ({ isOpen, toggle, setCurrentTab }) => {
     const navigate = useNavigate()
+    const { missingTabsData } = useContext(UserContext)
+    const [data, setData] = useState([])
 
-    
+
+
+    useEffect(() => {
+        const getData = () => {
+            const arr = []
+            missingTabsData.forEach(item => {
+                const m = steps.find(step => step.type === item)
+                arr.push(m)
+            });
+            setData(arr)
+        }
+
+        getData()
+    }, [missingTabsData])
     return (
-        <Modal  style={{ margin: '0 auto' }} className="next-step-modal" centered={true} isOpen={isOpen} toggle={toggle}>
-            <ModalHeader>
-                <span style={{ fontWeight: 600 }}>Add Missing Data</span>
-            </ModalHeader>
+        <Modal style={{ margin: '0 auto' }} className="next-step-modal" centered={true} isOpen={isOpen} toggle={toggle}>
             <ModalBody>
-                <h5 style={{ fontSize: '18px', lineHeight: "24px" }}>To get the best experience with InstaPay and unlock all features, please complete your profile by adding the missing information.</h5>
-            </ModalBody>
+                <div style={{ alignItems: window.innerWidth < 1000 && "center" }} className={styles.container}>
+                    <h1>
+                        Please complete these important steps for a seamless experience.
+                    </h1>
 
-            <ModalFooter>
+                    <p>
+                        Click on an option to get started
+                    </p>
 
-                <div style={{ display: "flex", gap: "20px", alignItems: "center", width: "100%", justifyContent: "flex-end" }}>
-                    <span onClick={toggle} style={{ fontWeight: 600, cursor: "pointer" }}>Stay on this page</span>
-                    <button onClick={() => tab === "social" ? navigate(`/create-pin?redirect=true`) : navigate(`/settings?tab=${tab}&redirect=true`)} style={{ border: "none", color: "white", backgroundColor: '#5526e0', borderRadius: "8px", padding: '6px 14px' }}>Navigate To Next Step</button>
+
+                    <div className={styles.steps}>
+                        {
+                            data.map((step, index) => (
+                                <div
+                                    key={index}
+                                    className={styles.step}
+                                    onClick={() => {
+                                        toggle()
+                                        setCurrentTab(step.link)
+                                    }}
+                                >
+                                    <img src={step.icon} alt="" />
+                                    <span>{step.text}</span>
+                                </div>
+                            ))
+                        }
+                    </div>
+
+                    <button onClick={toggle}>Close</button>
                 </div>
-            </ModalFooter>
-        </Modal>
+            </ModalBody>
+        </Modal >
     )
 }
 

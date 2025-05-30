@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Button, Card, CardBody, CardHeader, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
-import { H4, H5 } from '../../AbstractElements'
-import { CheckCircle, Copy } from 'react-feather';
+import { Button, Card, CardBody, CardHeader, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
+import { H4 } from '../../AbstractElements'
 import { useTranslation } from 'react-i18next';
 import { UserContext } from '../../Context/UserContext';
 import axios from 'axios';
@@ -14,9 +13,7 @@ import GoogleAuthenticatorModal from '../GoogleAuthenticatorModal';
 import { useLocation, useNavigate } from 'react-router';
 import { AuthenticatorDetails } from '../Auth/Login';
 import { startRegistration } from "@simplewebauthn/browser"
-import OtpConfirmation from '../PaymentsNewer/InternationalFlow/OtpConfirmation';
 import OTPConfirmation from '../UserSettingsNew/OTPConfirmation';
-import SuccessModal from '../AddBeneficiary/SuccessModal';
 import AuthIcon from "./a_items/auth.svg"
 import EmailIcon from "./a_items/email.svg"
 import PhoneIcon from "./a_items/phone.svg"
@@ -28,23 +25,18 @@ import Finger from "./a_items/finger/finger.svg"
 import FingerSuccess from "./a_items/finger/finger_success.svg"
 import FingerFailed from "./a_items/finger/finger_failed.svg"
 import "./styles/styles.css"
-import { browserName, deviceDetect } from "react-device-detect"
-import _ from 'lodash';
-import NextStepModal from './NextStepModal';
 
 const TwoFactorAuth = () => {
     const { t } = useTranslation()
-    const { userDetails, authHeader, verifyToken, setProfileLockTime, userWithdrawals } = useContext(UserContext)
+    const { userDetails, authHeader, verifyToken, setProfileLockTime, setMissingTabsData } = useContext(UserContext)
     const [emailActive, setEmailActive] = useState(false)
     const [smsActive, setSmsActive] = useState(false)
     const [wpActive, setWpActive] = useState(false)
     const [authenticatorActive, setAuthenticatorActive] = useState(false)
     const [fingerBioActive, setFingerBioActive] = useState(false)
 
-    const [editMode, setEditMode] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
     const [enablingAuth, setEnablingAuth] = useState(false)
-    const [saved, setSaved] = useState(false)
     const [showAuth, setShowAuth] = useState(false)
     const [current, setCurrent] = useState("")
     const [showFinger, setShowFinger] = useState(false)
@@ -56,7 +48,6 @@ const TwoFactorAuth = () => {
     const [showDevices, setShowDevices] = useState(false)
     const [remainingChar, setRemainingChar] = useState(24)
     const [deviceName, setDeviceName] = useState("")
-    const [showDeviceOtp, setShowDeviceOtp] = useState(false)
     const [devices, setDevices] = useState([])
     const [deviceAddError, setDeviceAddError] = useState(false)
     const [deleteState, setDelete] = useState({
@@ -94,7 +85,6 @@ const TwoFactorAuth = () => {
             const decrypted = await decryptData(response.data.data)
 
             console.log(decrypted)
-            setSaved(true)
             verifyToken()
             callback()
         } catch (error) {
@@ -104,18 +94,6 @@ const TwoFactorAuth = () => {
         }
     }
 
-    const [showNextStepModal, setShowNextStepModal] = useState()
-    const [tabtoMove, setTabtoMove] = useState()
-
-    const handleNextTab = () => {
-        if ((!userDetails.telegram_bot && !userDetails.insta_bot) || !userWithdrawals.length) {
-            console.log(userWithdrawals)
-            setShowNextStepModal(true)
-            setGuideModal(false)
-            const tabtomove = (!userDetails.telegram_bot && !userDetails.insta_bot) ? "social" : !userWithdrawals.length ? "withdrawal" : ""
-            setTabtoMove(tabtomove)
-        }
-    }
 
     const [guideModal, setGuideModal] = useState(false)
     const [authenticatorDetails, setAuthenticatorDetails] = useState(null)
@@ -133,11 +111,11 @@ const TwoFactorAuth = () => {
                     headers: authHeader
                 })
 
+                setMissingTabsData(prev => ([...prev, "tfa"]))
                 const dec = decryptData(res.data.data)
                 setAuthenticatorActive(false)
                 console.log(dec)
             } catch (error) {
-                const dec = decryptData(error.response.data.data)
                 toast.error("Something went wrong while disabling Google Authenticator.")
             }
             finally {
@@ -174,7 +152,7 @@ const TwoFactorAuth = () => {
                 const dec = decryptData(res.data.data)
 
                 setDevices(dec.devices ?? [])
-                setFingerBioActive(dec.devices?.length > 0 && dec.devices?.every(device => device.enabled) || false)
+                setFingerBioActive(dec.devices?.length > 0 && (dec.devices?.every(device => device.enabled) || false))
                 console.log(dec)
             }
             catch (error) {
@@ -260,7 +238,6 @@ const TwoFactorAuth = () => {
     }
 
 
-    const [authCode, setAuthCode] = useState("")
 
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
@@ -293,7 +270,6 @@ const TwoFactorAuth = () => {
             })
 
             const dec = decryptData(res.data.data)
-            setShowDeviceOtp(true)
             setShowFinger(true)
 
             setToken(dec?.token)
@@ -320,7 +296,7 @@ const TwoFactorAuth = () => {
             })
 
             console.log(res)
-            setDevices(prev => prev.map(d => d.credentialId == device.credentialId ? { ...d, enabled: !d.enabled } : d))
+            setDevices(prev => prev.map(d => d.credentialId === device.credentialId ? { ...d, enabled: !d.enabled } : d))
         }
         catch (error) {
 
@@ -334,13 +310,13 @@ const TwoFactorAuth = () => {
                 credentialId: deleteState.deviceToDelete.credentialId
             }
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/delete-biometric-device`, { data: encryptData(data) }, {
+            await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/delete-biometric-device`, { data: encryptData(data) }, {
                 headers: authHeader
             })
 
-            const dec = decryptData(res.data.data)
+            // const dec = decryptData(res.data.data)
 
-            setDevices(prev => prev.filter(d => d.credentialId != deleteState.deviceToDelete.credentialId))
+            setDevices(prev => prev.filter(d => d.credentialId !== deleteState.deviceToDelete.credentialId))
             setFingerBioActive(prev => !devices.length ? false : prev)
             setDelete({ deviceToDelete: {}, showModal: false })
 
@@ -351,9 +327,8 @@ const TwoFactorAuth = () => {
     }
     useEffect(() => {
         if (devices.length > 0) {
-            const allEnabled = devices.every(device => device.enabled);
             const anyEnabled = devices.some(device => device.enabled);
-            setFingerBioActive(anyEnabled); // Change this to anyEnabled instead of allEnabled
+            setFingerBioActive(anyEnabled);
         } else {
             setFingerBioActive(false);
         }
@@ -388,20 +363,15 @@ const TwoFactorAuth = () => {
                 <p style={{ fontSize: "16px", fontWeight: 600, color: "#8E8E8E" }}>Here, you can set up and manage your Two Factor Authentication.</p>
             </CardHeader>
 
-            <NextStepModal
-                isOpen={showNextStepModal}
-                toggle={() => setShowNextStepModal(false)}
-                tab={tabtoMove}
-            />
             {
                 guideModal
                 &&
-                <Modal  isOpen={guideModal} style={{ width: "96vw", maxWidth: "900px", margin: '0 auto' }}>
+                <Modal isOpen={guideModal} style={{ width: "96vw", maxWidth: "900px", margin: '0 auto' }}>
                     <ModalBody style={{ padding: 0 }}>
                         <AuthenticatorDetails />
                     </ModalBody>
                     <ModalFooter style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
-                        <button disabled={enablingAuth} onClick={handleNextTab} style={{ all: "unset", cursor: "pointer" }}>{t("Skip")}</button>
+                        <button disabled={enablingAuth} style={{ all: "unset", cursor: "pointer" }}>{t("Skip")}</button>
                         <Button
                             style={{
                                 background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
@@ -655,11 +625,9 @@ const TwoFactorAuth = () => {
                         isOpen={showAuth}
                         toggle={() => {
                             setShowAuth(false)
-                            handleNextTab()
                         }}
                         emailActive={emailActive}
                         setAuthenticatorActive={setAuthenticatorActive}
-                        setEditMode={setEditMode}
                         smsActive={smsActive}
                         wpActive={wpActive}
                         passwordNext={(c) => {
@@ -713,7 +681,7 @@ const TwoFactorAuth = () => {
                                 <h2 style={{ marginBottom: "0", fontSize: "24px", fontWeight: 700 }}>{showSuccess ? "Fingerprint Registered Successfully" : deviceAddError ? "Fingerprint Not Recognized" : "Add a new device"}.</h2>
                                 <p style={{ marginBottom: "0", fontSize: "16px", fontWeight: 600, color: "#777777" }}>
                                     {showSuccess ?
-                                        `You can now use your fingerprint to log in on this device. You  ${devices.length < 1 ? "can" : "can't"} add ${devices.length == 0 ? "two" : devices.length === 1 ? "one" : ""} more devices as biometric authentication` :
+                                        `You can now use your fingerprint to log in on this device. You  ${devices.length < 1 ? "can" : "can't"} add ${devices.length === 0 ? "two" : devices.length === 1 ? "one" : ""} more devices as biometric authentication` :
                                         deviceAddError ?
                                             "We couldn't capture a valid fingerprint. Please try again."
                                             :

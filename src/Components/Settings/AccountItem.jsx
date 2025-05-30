@@ -12,14 +12,13 @@ import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
 import { useLocation, useNavigate } from 'react-router'
 import LinkToInstagramModal from '../LinkToInstagramModal'
 import LinktoTelegramModal from "../LinkToTelegramModal"
-import NextStepModal from './NextStepModal'
 
 const AccountItem = ({ data }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [checked, setChecked] = useState(false)
     const [showModal, setShowModal] = useState(false)
-    const { userDetails, authHeader, verifyToken, userWithdrawals } = useContext(UserContext)
+    const { userDetails, authHeader, verifyToken } = useContext(UserContext)
     const [showOtp, setShowOtp] = useState(false)
     const [showDelOtp, setShowDelOtp] = useState(false)
     const [noUser, setNoUser] = useState(false)
@@ -123,17 +122,6 @@ const AccountItem = ({ data }) => {
     }, [tab])
 
 
-    const [showNextStepModal, setShowNextStepModal] = useState()
-    const [tabtoMove, setTabtoMove] = useState()
-
-    const handleNextTab = () => {
-        if (!userWithdrawals.length) {
-            setShowNextStepModal(true)
-            setShowModal(false)
-            const tabtomove = !userWithdrawals.length ? "withdrawal" : ""
-            setTabtoMove(tabtomove)
-        }
-    }
 
     useEffect(() => {
         if (userDetails) {
@@ -241,9 +229,6 @@ const AccountItem = ({ data }) => {
                         isOpen={showModal}
                         toggle={() => {
                             setShowModal(!showModal)
-                            if (tab?.toLowerCase() === "social" && redirect) {
-                                handleNextTab()
-                            }
                         }}
                     />
                     : ""
@@ -254,9 +239,6 @@ const AccountItem = ({ data }) => {
                         isOpen={showModal}
                         toggle={() => {
                             setShowModal(!showModal)
-                            if (tab?.toLowerCase() === "social" && redirect) {
-                                handleNextTab()
-                            }
                         }}
                     /> : ""
             }
@@ -270,11 +252,6 @@ const AccountItem = ({ data }) => {
                 </ModalBody>
             </Modal> */}
 
-            <NextStepModal
-                isOpen={showNextStepModal}
-                toggle={() => setShowNextStepModal(false)}
-                tab={tabtoMove}
-            />
             <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
                 <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
                 <ModalBody>

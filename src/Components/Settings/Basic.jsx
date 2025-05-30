@@ -20,10 +20,9 @@ export const currentDate = new Date();
 export const minDate = new Date(currentDate.getFullYear() - 15, currentDate.getMonth(), currentDate.getDate());
 let timeout;
 
-const Basic = () => {
-    const navigate = useNavigate()
+const Basic = ({setCurrentTab}) => {
     const { t } = useTranslation()
-    const { userDetails, authHeader, verifyToken, profileCompletedPercentage, userWallets, userWithdrawals } = useContext(UserContext);
+    const { userDetails, authHeader, verifyToken, missingTabsData, userWallets } = useContext(UserContext);
     const [company, setCompany] = useState('');
     const [username, setUsername] = useState(userDetails?.username ?? "");
     const [phone, setPhone] = useState(userDetails?.phone ?? "");
@@ -48,7 +47,6 @@ const Basic = () => {
     const [codeType, setCodeType] = useState("")
     const [otpType, setOtpType] = useState("")
     const [showNextStepModal, setShowNextStepModal] = useState(false)
-    const [tabtoMove, setTabtoMove] = useState()
 
     useEffect(() => {
         setCodeType("sms")
@@ -143,13 +141,8 @@ const Basic = () => {
     }
 
 
-    const handleNextTab = () => {
-        if (!userDetails.tfa || (!userDetails.telegram_bot && !userDetails.insta_bot) || !userWithdrawals.length) {
-            setShowNextStepModal(true)
-            const tabtomove = !userDetails.tfa ? "tfa" : (!userDetails.telegram_bot && !userDetails.insta_bot) ? "social" : !userWithdrawals.length ? "withdrawal" : ""
-            setTabtoMove(tabtomove)
-        }
-    }
+
+
 
     const [otpToken, setOtpToken] = useState("")
     const sendOtp = async (type = "") => {
@@ -187,7 +180,6 @@ const Basic = () => {
         setIsSaving(false)
     }
 
-    console.log(userDetails)
 
     const editProfileHandler = () => {
         setIsSaving(true)
@@ -207,7 +199,7 @@ const Basic = () => {
                 dob: dateOfBirth !== userDetails?.dob ? dateOfBirth?.split("-")?.reverse()?.join("-") : dateOfBirth,
                 timezone: timezone
             }
-            // console.log(data)
+
             const encrypted = encryptData(data)
 
             axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-individual/${userDetails?._id}`, {
@@ -218,12 +210,10 @@ const Basic = () => {
                 .then(res => {
                     setIsEditMode(false)
                     setIsSaving(false)
-                    verifyToken()
-                    if (userDetails?.email === email && userDetails?.phone === phone) {
-                        setTimeout(() => {
-                            handleNextTab()
-                        }, 500)
+                    if (missingTabsData.length > 0) {
+                        setShowNextStepModal(true)
                     }
+                    verifyToken()
                 })
                 .catch(err => {
                     setIsSaving(false)
@@ -251,12 +241,11 @@ const Basic = () => {
             })
                 .then(res => {
                     setIsEditMode(false)
+                    if (missingTabsData.length > 0) {
+                        setShowNextStepModal(true)
+                    }
                     setIsSaving(false)
                     verifyToken()
-
-                    setTimeout(() => {
-                        handleNextTab()
-                    }, 500)
                 })
                 .catch(err => {
                     setIsSaving(false)
@@ -369,15 +358,15 @@ const Basic = () => {
                 subMessage={"Profile has been updated successfully!"}
                 toggle={() => {
                     setShowSuccess(false)
-                    setTimeout(() => {
-                        handleNextTab()
-                    }, 500)
+                    if (missingTabsData.length > 0) {
+                        setShowNextStepModal(true)
+                    }
                 }}
             />
             <NextStepModal
                 isOpen={showNextStepModal}
                 toggle={() => setShowNextStepModal(false)}
-                tab={tabtoMove}
+                setCurrentTab={setCurrentTab}
             />
             <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
                 <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>

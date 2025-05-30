@@ -33,11 +33,14 @@ import login_active from "./tabs_icons/login_a.svg"
 import login from "./tabs_icons/login.svg"
 import thres_a from "./tabs_icons/thres_a.svg"
 import thres from "./tabs_icons/thres.svg"
+import useWindowWidth from '../../utils/useWindowWidth'
+import { ChevronDown } from 'react-feather'
+import NextStepModal from './NextStepModal'
 
 
 
 const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
-    const { profileIncompleteReason, userDetails, verifyToken } = useContext(UserContext)
+    const { profileIncompleteReason, userDetails, verifyToken, missingTabsData, userWithdrawals, profileCompleted } = useContext(UserContext)
     const tabsData = [
         {
             name: "Basic Info",
@@ -65,9 +68,10 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             active_icon: nominee_active,
         },
         {
-            name: "Verification Code Preferences",
+            name: "Two Factor Authentication",
             icon: tfa,
             active_icon: tfa_active,
+            tabType: 'tfa'
         },
         {
             name: "How Others Can Find You",
@@ -78,6 +82,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             name: "My Social Network Accounts",
             icon: sa,
             active_icon: sa_active,
+            tabType: 'social'
         },
         {
             name: "Notifications",
@@ -88,6 +93,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             name: account_type === "individual" ? "Identity Verification" : "",
             icon: iv,
             active_icon: iv_active,
+            tabType: 'kyc'
         },
         {
             name: account_type === "business" ? "API Key" : "",
@@ -108,6 +114,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             name: "Receiving Accounts",
             icon: mwc,
             active_icon: mwc_active,
+            tabType: 'withdrawls'
         },
         {
             name: "Download Your Data",
@@ -121,12 +128,15 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
         },
     ]
     const { t } = useTranslation()
-
+    const [missingTabs, setMissingTabs] = useState([])
+    const [showDropdown, setShowDropdown] = useState(false);
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const tab = queryParams.get("tab")
     const ft = queryParams.get("ft")
     const navigate = useNavigate()
+    const width = useWindowWidth()
+    const [showMissingModal, setShowMissingModal] = useState(false)
 
     useEffect(() => {
         if (tab) {
@@ -143,15 +153,30 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                 setCurrentTab("My Social Network Accounts")
             }
             if (tab?.toLowerCase()?.includes("tfa")) {
-                setCurrentTab("Verification Code Preferences")
+                setCurrentTab("Two Factor Authentication")
             }
         }
     }, [tab])
 
     const [navigatedTabs] = useState([
-        { param: "tfa", name: "Verification Code Preferences" },
+        { param: "tfa", name: "Two Factor Authentication" },
         { param: "social", name: "My Social Network Accounts" },
+        { param: 'verification', name: "Identity Verification" }
     ])
+    useEffect(() => {
+        if (userDetails?._id && typeof userWithdrawals !== 'undefined' && profileCompleted) {
+            if (missingTabsData.length > 0) {
+                const newMissingTabs = missingTabsData
+                    .map(tabType => tabsData.find(tab => tab.tabType === tabType))
+                    .filter(Boolean);
+                setMissingTabs(newMissingTabs);
+            } else {
+                setMissingTabs([]);
+            }
+        }
+    }, [userDetails, userWithdrawals, missingTabsData]);
+
+    console.log(missingTabsData)
 
     useEffect(() => {
         if (tab?.toLowerCase()?.includes("verification")) {
@@ -159,9 +184,130 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
         }
     }, [tab, userDetails])
     return (
-        <div className={styles.container}>
+        <div style={{ overflowX: width < 1000 && "visible" }} className={styles.container}>
+            {(missingTabsData.length > 0 && width > 1000 && profileCompleted) &&
+                <div className={styles.missingTabs}>
+                    <span>
+                        Please complete the following important steps
+                    </span>
+                    {missingTabs?.map(item => (
+                        <div
+                            style={{ padding: '12px 5px', width: '100%' }}
+                            className={`${styles.tab} ${currentTab === item.name ? styles.active : ""} ${((item.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item.name !== "Verification" && !ft && userDetails?.user?.kyc_status !== "approved")) ? styles.disabled : ""} ${(userDetails?.country?.kyc_required && item.name !== "Verification") ? styles.kyc : ""}`}
+                            onClick={() => {
+                                window.history.replaceState(null, null, "")
+                                setCurrentTab(item.name)
+                                verifyToken()
+
+                                const activeUrlTab = navigatedTabs.find(tab => window.location.href.includes(tab.param));
+
+                                if (activeUrlTab && item.name === activeUrlTab.name) {
+                                    navigate(`/settings`);
+                                }
+
+
+                            }}
+
+                        >
+                            <img alt='asdfaf' src={item.name !== currentTab ? item.active_icon : item.icon} />
+                            {t(item.name)}
+                        </div>
+                    ))}
+                </div>
+            }
+
+            {missingTabsData.length > 0 && width < 1000
+                &&
+                <div className={styles.missingDiv}>
+                    <div>
+                        <span style={{ width: '14px', height: '14px', background: "#EB8C1D", borderRadius: '50%', flexShrink: "0", display: "flex", justifyContent: "center", alignItems: 'center', color: 'white', fontWeight: 600 }}>
+                            i
+                        </span>
+                        <h4>
+                            Please complete these important steps for a seamless experience.
+                        </h4>
+                    </div>
+                    <button onClick={() => setShowMissingModal(true)}>View the Steps</button>
+                </div>
+            }
+
+            <NextStepModal
+                isOpen={showMissingModal}
+                toggle={() => setShowMissingModal(false)}
+                setCurrentTab={setCurrentTab}
+            />
+
+            {width < 1000 && (
+                <div className={styles.customDropdownWrapper}>
+                    <div
+                        className={styles.customDropdownSelected}
+                        onClick={() => setShowDropdown(prev => !prev)}
+                        tabIndex={0}
+                        style={{ justifyContent: 'space-between' }}
+                        onBlur={e => {
+                            if (!e.currentTarget.contains(e.relatedTarget)) setShowDropdown(false);
+                        }}                    >
+                        {(() => {
+                            const selected = tabsData.find(tab => tab.name === currentTab);
+                            return selected ? (
+                                <>
+                                    <div>
+                                        <img alt="tab-icon" src={selected.active_icon} className={styles.tabIcon} />
+                                        <span style={{ fontWeight: 600 }}>{t(selected.name)}</span>
+                                    </div>
+                                    <ChevronDown />
+                                </>
+                            ) : null;
+                        })()}
+                    </div>
+                    {showDropdown && (
+                        <div className={styles.customDropdownList} tabIndex={-1}>
+                            {tabsData.filter(item => item.name.length > 0).map(item => {
+                                const isDisabled = (item.name !== "Basic Info" && profileIncompleteReason === "basic") ||
+                                    (userDetails?.country?.kyc_required && item.name !== "Verification" && !ft && userDetails?.user?.kyc_status !== "approved");
+                                return (
+                                    <div
+                                        key={item.name}
+                                        style={{ background: (currentTab !== item.name && missingTabs.some(i => i.name === item.name)) && "rgba(255, 136, 0, 0.08)", justifyContent: 'space-between' }}
+                                        className={
+                                            styles.customDropdownOption +
+                                            (isDisabled ? ' ' + styles.disabled : '') +
+                                            (currentTab === item.name ? ' ' + styles.active : '')
+                                        }
+                                        tabIndex={isDisabled ? -1 : 0}
+                                        onMouseDown={e => {
+                                            e.preventDefault();
+                                            if (isDisabled) return;
+                                            setCurrentTab(item.name);
+                                            setShowDropdown(false);
+                                            verifyToken();
+                                            const activeUrlTab = navigatedTabs.find(tab => window.location.href.includes(tab.param));
+
+                                            if (activeUrlTab && item.name === activeUrlTab.name) {
+                                                navigate(`/settings`);
+                                            }
+                                        }}
+                                    >
+                                        <div>
+                                            <img alt="tab-icon" src={item.active_icon} className={styles.tabIcon} />
+                                            <span style={{ fontWeight: 600 }}>{t(item.name)}</span>
+                                        </div>
+
+                                        {(currentTab !== item.name && missingTabs.some(i => i.name === item.name))
+                                            &&
+                                            <div style={{ width: '14px', height: '14px', background: "#EB8C1D", borderRadius: '50%', flexShrink: "0", display: "flex", justifyContent: "center", alignItems: 'center', color: 'white', fontWeight: 600 }}>
+                                                i
+                                            </div>
+                                        }
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+            )}
             {
-                tabsData.filter(item => item.name.length > 0).map(item => (
+                tabsData.filter(item => (item.name.length > 0 && (!missingTabs.some(i => i.name === item.name) && width > 1000))).map(item => (
                     <div
                         className={`${styles.tab} ${currentTab === item.name ? styles.active : ""} ${((item.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item.name !== "Verification" && !ft && userDetails?.user?.kyc_status !== "approved")) ? styles.disabled : ""} ${(userDetails?.country?.kyc_required && item.name !== "Verification") ? styles.kyc : ""}`}
                         onClick={() => {
@@ -172,8 +318,8 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
 
                             const activeUrlTab = navigatedTabs.find(tab => window.location.href.includes(tab.param));
 
-                            if (activeUrlTab && window.location.href.includes("redirect") && item.name === activeUrlTab.name) {
-                                navigate(`/settings?tab=${activeUrlTab.param}`);
+                            if (activeUrlTab) {
+                                navigate(`/settings`);
                             }
                         }}
                     >

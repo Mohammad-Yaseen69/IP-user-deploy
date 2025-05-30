@@ -154,7 +154,7 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                             </div>
                         </div>
                         {type === "phone" &&
-                            <div style={{ position: "relative" }}>
+                            <div style={{ position: "relative", marginTop: "1.5rem" }}>
                                 <span
                                     onClick={() => {
                                         if (resendTimer === 0) {
