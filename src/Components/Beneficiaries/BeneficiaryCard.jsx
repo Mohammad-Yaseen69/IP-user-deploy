@@ -248,10 +248,15 @@ const BeneficiaryCard = ({ user }) => {
                         {
                             showMore
                             &&
-                            <div className={styles.showMore}>
-                                <Link to={`/beneficiaries/edit?user_id=${user._id}`}>
+                            <div style={{top: window.innerWidth < 1000 && "inherit", bottom: window.innerWidth < 1000 &&"100%"}} className={styles.showMore}>
+                                <Link to={`/beneficiaries/edit?user_id=${user._id}&edit=true`}>
                                     <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }}>
                                         {t("Edit") + " " + t("Beneficiary")}
+                                    </Button>
+                                </Link>
+                                <Link to={`/beneficiaries/edit?user_id=${user._id}&view=true`}>
+                                    <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }}>
+                                        {t("View") + " " + t("Beneficiary")}
                                     </Button>
                                 </Link>
                                 <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }} onClick={toggleShowDelete}>

@@ -96,7 +96,7 @@ const Beneficiaries = () => {
                 </div>
                 <div className={styles.bottom}>
                     <div className={styles.table_header}>
-                        <div className={styles.search_field}>
+                        <div style={{ width: "100%" }} className={styles.search_field}>
                             <Search />
                             <Input type='search' placeholder={t('Search for Beneficiaries')} style={{ padding: ".5rem 1rem" }} onChange={filterBenef} />
                         </div>

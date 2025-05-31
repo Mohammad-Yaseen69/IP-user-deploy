@@ -4,9 +4,10 @@ import { FormGroup, Input, Label } from 'reactstrap'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { useTranslation } from 'react-i18next'
 
-const WalletDetails = ({ wallet, authHeader, setWalletError, setWalletIds, setDuplicateWallet, walletIds, activeTab = "", firstTime }) => {
+const WalletDetails = ({ wallet, authHeader, setWalletError, setWalletIds, setDuplicateWallet, walletIds, activeTab = "", firstTime, firstName, lastName, setFirstName, setLastName }) => {
     const { t } = useTranslation()
     const [details, setDetails] = useState(null)
+
     useEffect(() => {
         setDuplicateWallet(false)
         if (wallet?.wallet_id ? wallet?.wallet_id?.length : wallet.length === 8) {
@@ -16,10 +17,17 @@ const WalletDetails = ({ wallet, authHeader, setWalletError, setWalletIds, setDu
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     // console.log(decrypted.walletDetails)
+
+                    if(!firstName && !lastName){
+                        setFirstName(decrypted.walletDetails.first_name)
+                        setLastName(decrypted.walletDetails.last_name)
+                    }
+                    console.log(decrypted.walletDetails)
                     setDetails(decrypted.walletDetails)
                     const filtered = walletIds.filter(item => item === decrypted?.walletDetails?._id)
                     setWalletIds(filtered.length === 0 ? [...walletIds, decrypted?.walletDetails?._id] : walletIds)
-                    setDuplicateWallet(filtered.length === 0 || firstTime ? false : true)
+                    console.log(filtered.length === 0, firstTime ? false : true)
+                    // setDuplicateWallet(filtered.length === 0 || firstTime ? false : true)
                     setWalletError("")
                 })
                 .catch(err => {

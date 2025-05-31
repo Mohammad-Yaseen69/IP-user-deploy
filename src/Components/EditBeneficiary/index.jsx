@@ -33,6 +33,8 @@ const EditBeneficiary = () => {
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const user_id = queryParams.get("user_id")
+    const edit = queryParams.get("edit")
+    const view = queryParams.get("view")
     const [user, setUser] = useState(null)
     const [isValidIban, setIsValidIban] = useState(false)
     const [fieldsInfo, setFieldsInfo] = useState(null)
@@ -60,8 +62,8 @@ const EditBeneficiary = () => {
     const [accountType, setAccountType] = useState([])
 
     // instapay wallet
-    const [instapayWalletsLength, setInstapayWalletsLength] = useState(1)
     const [instapayWallets, setInstapayWallets] = useState([])
+    const [apiWallets, setApiWallets] = useState([])
     const [walletIds, setWalletIds] = useState([])
     const [cashPickupType, setCashPickupType] = useState("")
     const [cashPickupNumber, setCashPickupNumber] = useState("")
@@ -683,7 +685,9 @@ const EditBeneficiary = () => {
             })
             // const wallet_ids = user.wallet.map(item => item._id)
             // setInstapayWallets(user?.wallet.length > 0 ? wallet_ids : [""])
+
             setInstapayWallets(user?.wallet?.length > 0 ? user?.wallet : [""])
+            setApiWallets(user?.wallet?.length > 0 ? user?.wallet : [""])
             setIbanSwift((user?.bank_details?.[0]?.iban || user?.bank_details?.[0]?.swift_code) ?? "")
             setMobileNumber(user?.phone)
             setCountryId(user?.country?._id ?? "")
@@ -712,6 +716,13 @@ const EditBeneficiary = () => {
             setAccNumType(user?.bank_details?.[0]?.iban ? "IBAN" : "Swift")
         }
     }, [user, isEditMode])
+
+
+    useEffect(() => {
+        if (edit) {
+            setIsEditMode(true)
+        }
+    }, [edit])
 
     const [showSuccess, setShowSuccess] = useState(false)
 
@@ -835,17 +846,17 @@ const EditBeneficiary = () => {
 
 
 
-   const [saveloading, setsaveloading] = useState(false)
+    const [saveloading, setsaveloading] = useState(false)
     const editBeneficiaryHandler = async () => {
         setMobileNumberError("")
         setWalletNumberError("")
         setClicked(true)
-        
+
 
         let missing = []
 
-        
-        
+
+
         console.log(firstName, lastName, mobileNumber, city)
         requiredFields.basic.forEach(field => {
             if (!firstName?.trim() && field === "first_name") missing.push(field)
@@ -1057,28 +1068,30 @@ const EditBeneficiary = () => {
                                 display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem"
                             }}>
                                 <h4 className="card-title mb-0">{t("Details")}</h4>
-                                <button type="button" onClick={() => {
-                                    setIsEditMode(!isEditMode)
-                                }}
-                                    style={{
-                                        all: "unset",
-                                        padding: "1rem",
-                                        boxShadow: "0 0 3px rgba(128,128,128,0.4)",
-                                        textAlign: "center",
-                                        cursor: "pointer",
-                                        type: "button",
-                                        borderRadius: "10px",
-                                        background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                                        color: "white",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: "1rem",
-                                        justifyContent: "center",
-                                        transition: "250ms",
-                                        opacity: isEditMode ? 0 : 1,
-                                        pointerEvents: isEditMode ? "none" : "all",
+                                {!view &&
+                                    <button type="button" onClick={() => {
+                                        setIsEditMode(!isEditMode)
                                     }}
-                                >Edit</button>
+                                        style={{
+                                            all: "unset",
+                                            padding: "1rem",
+                                            boxShadow: "0 0 3px rgba(128,128,128,0.4)",
+                                            textAlign: "center",
+                                            cursor: "pointer",
+                                            type: "button",
+                                            borderRadius: "10px",
+                                            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                            color: "white",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: "1rem",
+                                            justifyContent: "center",
+                                            transition: "250ms",
+                                            opacity: isEditMode ? 0 : 1,
+                                            pointerEvents: isEditMode ? "none" : "all",
+                                        }}
+                                    >Edit</button>
+                                }
                             </CardHeader>
                         </div>
                         {
@@ -1903,11 +1916,12 @@ const EditBeneficiary = () => {
                                                                             minWidth: "250px",
                                                                             border: missingFields.includes("wallet_id") && clicked ? "1px solid red" : "1px solid #e9e9e9"
                                                                         }}
-                                                                        value={value.wallet_id}
+                                                                        value={value.wallet_id || value}
                                                                         onChange={(e) => {
                                                                             setFirstTime(false)
                                                                             handleInputChange(index, e.target.value)
                                                                         }}
+                                                                        minLength={8}
                                                                         maxLength={8}
                                                                     />
                                                                 </FormGroup>
@@ -1995,28 +2009,32 @@ const EditBeneficiary = () => {
                                     {
                                         isEditMode ? (
                                             <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", marginTop: "2rem", gap: "2rem", alignItems: "center" }}>
-                                                <button onClick={() => setIsEditMode(false)} style={{ all: "unset", cursor: "pointer" }}>
+                                                <button onClick={() => {
+                                                    setIsEditMode(false)
+                                                    console.log(apiWallets, instapayWallets)
+                                                    setInstapayWallets([...apiWallets])
+                                                }} style={{ all: "unset", cursor: "pointer" }}>
                                                     {t("Cancel")}
                                                 </button>
                                                 {!saveloading &&
-                                                 <button type="button" onClick={editBeneficiaryHandler}
-                                                    style={{
-                                                        all: "unset",
-                                                        padding: "1rem",
-                                                        boxShadow: "0 0 3px rgba(128,128,128,0.4)",
-                                                        textAlign: "center",
-                                                        cursor: "pointer",
-                                                        borderRadius: "10px",
-                                                        background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                                                        color: "white",
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        gap: "1rem",
-                                                        justifyContent: "center",
-                                                    }}
-                                                >
-                                                    {t("Save")}
-                                                </button>}
+                                                    <button type="button" onClick={editBeneficiaryHandler}
+                                                        style={{
+                                                            all: "unset",
+                                                            padding: "1rem",
+                                                            boxShadow: "0 0 3px rgba(128,128,128,0.4)",
+                                                            textAlign: "center",
+                                                            cursor: "pointer",
+                                                            borderRadius: "10px",
+                                                            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                                            color: "white",
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            gap: "1rem",
+                                                            justifyContent: "center",
+                                                        }}
+                                                    >
+                                                        {t("Save")}
+                                                    </button>}
 
                                                 {saveloading && <div class="d-flex justify-content-center">
                                                     <div class="spinner-border" color='primary' role="status">

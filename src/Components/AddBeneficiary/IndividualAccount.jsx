@@ -6,7 +6,7 @@ import { countries } from "country-list-json";
 // import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import "./req_star.css"
-import {  useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
@@ -394,7 +394,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
             instapayWallets.every(item => item.length !== 8) || walletError ? null : "wallet"
         ]
 
-        
+
         const data = {
             first_name: firstName,
             last_name: lastName,
@@ -480,7 +480,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         }
         const encrypted = encryptData(data)
         setBenLoading(true)
-        
+
         axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
             data: encryptData({ number: `+${mobileNumber}` })
         }).then(() => {
@@ -520,6 +520,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
 
         if (formData.mobile_wallet_account_number) {
             try {
+                setBenLoading(true)
                 await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
                     data: encryptData({ number: `+${formData.mobile_wallet_account_number}` })
                 });
@@ -1269,11 +1270,11 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                         onMouseDown={(e) => {
                                                             // Prevent blur event from firing before click
                                                             e.preventDefault();
-                                                            inputChangeHandler({ 
-                                                                target: { 
-                                                                    name: "address", 
-                                                                    value: item 
-                                                                } 
+                                                            inputChangeHandler({
+                                                                target: {
+                                                                    name: "address",
+                                                                    value: item
+                                                                }
                                                             });
                                                             setAddressInFocus(false);
                                                         }}
@@ -1733,7 +1734,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                         </FormGroup>
                                         <FormGroup style={{ flex: 1, margin: 0, position: "relative" }}>
                                             <Label className="col-form-label" htmlFor="bank_account_number">Bank Country <span className="req_star">*</span></Label>
-                                            <Input className="form-control" disabled={!bankCountry}  readOnly={true} style={{ flex: 1, width: "100%", minWidth: "250px" }} required name="bank_account_country" id="bank_account_country" value={bankCountry} />
+                                            <Input className="form-control" disabled={!bankCountry} readOnly={true} style={{ flex: 1, width: "100%", minWidth: "250px" }} required name="bank_account_country" id="bank_account_country" value={bankCountry} />
                                         </FormGroup>
                                         {
                                             Object.keys(bankExtras).map(item => {
@@ -1996,7 +1997,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                             <Label className="col-form-label" htmlFor="card-holder-name">{t("Wallet ID")} <span className="req_star">*</span></Label>
                                                             <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} value={value} onChange={(e) => handleInputChange(index, e.target.value)} maxLength={8} />
                                                         </FormGroup>
-                                                        <WalletDetails wallet={value} authHeader={authHeader} setWalletError={setWalletError} setWalletIds={setWalletIds} walletIds={walletIds} setDuplicateWallet={setDuplicateWallet} />
+                                                        <WalletDetails setFirstName={setFirstName} firstName={firstName} lastName={lastName} setLastName={setLastName} wallet={value} authHeader={authHeader} setWalletError={setWalletError} setWalletIds={setWalletIds} walletIds={walletIds} setDuplicateWallet={setDuplicateWallet} />
                                                     </div>
                                                 )
                                             })
@@ -2087,11 +2088,11 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                             }}
                                 className="i_t_button"
                                 disabled={
-                                   benLoading || duplicateWallet || walletError || !firstName || !lastName || !country || !city || mobileNumber.length < 9 || (!completedBank && !completedCard && !completedCrypto && !completedWallet && !cashPickupCompleted && instapayWallets.some(item => item.length < 8 || item.length > 8)) || !formData.relation || (isAddressRequired ? !formData.address : false)
+                                    benLoading || duplicateWallet || walletError || !firstName || !lastName || !country || !city || mobileNumber.length < 9 || (!completedBank && !completedCard && !completedCrypto && !completedWallet && !cashPickupCompleted && instapayWallets.some(item => item.length < 8 || item.length > 8)) || !formData.relation || (isAddressRequired ? !formData.address : false)
                                 }
                                 onClick={addBeneficiaryHandler}
                             >
-                                 {benLoading ? t("Adding...") : t("Add Beneficiary")} {/* Add loading state text */}
+                                {benLoading ? t("Adding...") : t("Add Beneficiary")} {/* Add loading state text */}
                             </Button>
                             {/* <ConfirmationModal isOpen={showConfirmation} toggle={() => setShowConfirmation(!showConfirmation)} onConfirm={changeUserDetailsAsPerBankDetails} onCancel={onCancelHandler} /> */}
                         </CardFooter>
