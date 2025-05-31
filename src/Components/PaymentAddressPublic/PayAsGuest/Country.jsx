@@ -28,11 +28,28 @@ const Country = ({ data, dataHandler }) => {
         return countries.filter(item => item?.name?.toLowerCase()?.includes(search?.toLowerCase()))
     }, [countries, search, ipCountry])
 
+
+    const getCountry = async () => {
+        const res = await fetch("https://geolocation-db.com/json/")
+        const data = await res.json()
+        const filteredCountry = allowedCountries.filter(item => item.country_name.toLowerCase().includes(data?.country_name?.toLowerCase()))?.[0]?.country_iso_code
+        if (filteredCountry) {
+            localStorage.setItem("ip_country", filteredCountry)
+            const coun = countries.find(item => item.alpha3 === filteredCountry)
+            dataHandler("country", coun)
+            setIpCountry(coun)
+        }
+    }
+
     useEffect(() => {
         const alpha3 = localStorage.getItem("ip_country")
-        const coun = countries.find(item => item.alpha3 === alpha3)
-        dataHandler("country", coun)
-        setIpCountry(coun)
+        if (alpha3) {
+            const coun = countries.find(item => item.alpha3 === alpha3)
+            dataHandler("country", coun)
+            setIpCountry(coun)
+        } else {
+            getCountry()
+        }
     }, [countries])
 
     return (

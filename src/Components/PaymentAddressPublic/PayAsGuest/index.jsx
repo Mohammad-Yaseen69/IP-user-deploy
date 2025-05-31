@@ -660,7 +660,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                         :
                                         ""
                                 } */}
-                                <div className={paym_styles.flow_com} style={{ minHeight: "50vh" }}>
+                                <div className={paym_styles.flow_com} style={{ minHeight: "41vh" }}>
                                     {
                                         data.step === 1
                                         &&

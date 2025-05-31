@@ -75,12 +75,14 @@
     background-color: white;
     animation: fadeDownOut 0.3s forwards;
     pointer-events: none;
+    height: 0px;
 }
 
 .container.show {
     opacity: 1;
     transform: translateY(0px);
     pointer-events: auto;
+    height: 100%;
     animation: fadeDownIn 0.3s forwards;
 }
 
