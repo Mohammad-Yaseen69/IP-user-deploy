@@ -1,7 +1,7 @@
 // import styles from "./styles/index.module.css"
 import { useTranslation } from "react-i18next"
 import TopRight from "../topRight"
-import { useContext, useEffect, useMemo, useState } from "react"
+import { useContext, useEffect, useMemo, useRef, useState } from "react"
 import Top from "./Top"
 import CenterContainer from "./Center"
 import styles from "../TransactionsNewApi/styles/index.module.scss"
@@ -15,11 +15,11 @@ import QrGenerate from "../Settings/QrGenerate"
 // import { useLocation } from "react-router"
 
 
-export const getLimits = async (currentWallet, setData, authHeader, setLoading, setError) => {
+export const getLimits = async (currentWallet, setData, authHeader, setLoading, setError, cancelToken) => {
     setLoading(true)
     setData({})
     try {
-        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-account-limits/${currentWallet?._id}`, { headers: authHeader })
+        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-account-limits/${currentWallet?._id}`, { headers: authHeader, cancelToken })
         const dec = decryptData(res.data.data)
         const { topup_values, limits, limits_used } = dec?.data;
 
@@ -104,6 +104,9 @@ export const getLimits = async (currentWallet, setData, authHeader, setLoading, 
     }
     catch (error) {
         const dec = decryptData(error?.response?.data?.data)
+        if (axios.isCancel(error)) {
+            return;
+        }
         setError(dec?.message ?? "Something went wrong while fetching account limits.")
     }
     finally {
@@ -114,7 +117,7 @@ export const getLimits = async (currentWallet, setData, authHeader, setLoading, 
 const WalletsNew = () => {
     const { t } = useTranslation()
     const [currentWallet, setCurrentWallet] = useState(null)
-
+    const cancelTokenRef = useRef()
     const [currentType, setCurrentType] = useState("")
     const [filtered, setFiltered] = useState([])
     const [categories, setCategories] = useState([
@@ -140,7 +143,7 @@ const WalletsNew = () => {
         });
 
         // Check for uncategorized transactions
-        const uncategorizedTransactions = filtered.filter(trx => trx?.status?.toLowerCase() == "completed" && (!trx.categories || trx.categories.length === 0) && trx?.transaction_type === currentType);
+        const uncategorizedTransactions = filtered.filter(trx => trx?.status?.toLowerCase() == "completed" && (!trx.categories || trx.categories?.length === 0) && trx?.transaction_type === currentType);
         const totalUncategorizedAmount = uncategorizedTransactions.reduce((acc, trx) => acc + trx.amount, 0);
 
         // Check if the "uncategorized" category already exists
@@ -182,8 +185,19 @@ const WalletsNew = () => {
 
     useEffect(() => {
         if (currentWallet?._id) {
-            getLimits(currentWallet, setData, authHeader, setLoading, setError)
+            if (cancelTokenRef.current) {
+                cancelTokenRef.current?.cancel()
+            }
+
+            cancelTokenRef.current = axios.CancelToken.source()
+            getLimits(currentWallet, setData, authHeader, setLoading, setError, cancelTokenRef.current.token)
         }
+
+        return () => {
+            if (cancelTokenRef?.current) {
+                cancelTokenRef.current?.cancel();
+            }
+        };
     }, [currentWallet])
 
     const nonQrWallets = useMemo(() => {

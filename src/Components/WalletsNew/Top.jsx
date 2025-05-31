@@ -209,7 +209,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                         ref={swiperRef}
                     >
                         {
-                            userWallets.length > 0
+                            userWallets?.length > 0
                                 ?
                                 userWallets.map((item, index) => (
                                     <SwiperSlide key={index} style={{
@@ -458,7 +458,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                 setSavedWalelt={setSavedWalelt}
             />
             {
-                userWithdrawals.length > 0
+                userWithdrawals?.length > 0
                     ?
                     <Withdraw
                         wallet={currentWallet}
