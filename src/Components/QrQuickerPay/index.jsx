@@ -440,7 +440,11 @@ const QrQuickerPay = () => {
         {step !== 1 && <span className={styles.label}>Recipient Details:</span>}
         <div style={{ margin: step !== 1 && "0 0 20px 0" }} className={styles.infoBox}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px", width: "100%" }}>
-            <img style={{ height: "48px", borderRadius: "100%" }} src={recipientDets?.profilePicture} alt="" />
+            {recipientDets?.profilePicture ?
+              <img style={{ height: "48px", borderRadius: "100%" }} src={recipientDets?.profilePicture} alt="" />
+              : <div style={{ height: '48px', width: '48px', borderRadius: '100%', background: 'linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%)', flexShrink: '0', display:"grid", placeContent: 'center', color:'white', fontWeight: 700, fontSize: '25px' }}>
+                {recipientDets?.name?.[0]}
+              </div>}
             <div style={{ width: "100%" }}>
               <h5 style={{ textAlign: "left", fontSize: recipientDets?.name?.length > 20 && "smaller" }}>{recipientDets?.name}</h5>
               <span>@{recipientDets?.username}</span>

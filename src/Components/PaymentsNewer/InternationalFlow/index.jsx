@@ -1026,7 +1026,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
         }
     }, [transaction_status, code])
 
-    // console.log(internationalData.currency)
     return (
         <>
             {
@@ -1117,8 +1116,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                         {
                             sendPaymentType === "international"
                                 ?
-                                internationalData.payer?.id
-                                &&
                                 <ServiceDetails
                                     data={internationalData}
                                 />
@@ -1749,8 +1746,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                         {
                                             sendPaymentType === "international"
                                                 ?
-                                                internationalData.payer?.id
-                                                &&
+                                                // internationalData.payer?.id
+                                                // &&
                                                 <ServiceDetails
                                                     data={internationalData}
                                                 />

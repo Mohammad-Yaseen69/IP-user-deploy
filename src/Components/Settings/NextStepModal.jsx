@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router'
 import { Modal, ModalBody, } from 'reactstrap'
 import styles from "./styles/MissingStepsModal.module.scss"
 import { auth, bank, passport, social } from "./Modal_Icons"
@@ -33,7 +32,6 @@ const steps = [
 ]
 
 const NextStepModal = ({ isOpen, toggle, setCurrentTab }) => {
-    const navigate = useNavigate()
     const { missingTabsData } = useContext(UserContext)
     const [data, setData] = useState([])
 
