@@ -5,8 +5,6 @@ import { ChevronDown, ChevronRight } from "react-feather"
 import axios from "axios"
 import { UserContext } from "../../../Context/UserContext"
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
-import InstaPayLoader from "../../Loader"
-import { Swiper, SwiperSlide } from "swiper/react"
 import { useTranslation } from "react-i18next"
 import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem"
 import SidePopup from "../../SidePopup"
@@ -128,7 +126,6 @@ const ServiceDetails = ({ data }) => {
     const [isOpen, setIsOpen] = useState(false)
     const [current, setCurrent] = useState({})
     const [notes, setNotes] = useState([])
-    const [loading, setLoading] = useState(false)
     const [isPopup, setIsPopup] = useState(false)
 
     const isEuropean = useMemo(() => {
@@ -136,11 +133,11 @@ const ServiceDetails = ({ data }) => {
         return isEuropean?.alpha3 ? true : false
     }, [data.country?.alpha3])
 
+
     useEffect(() => {
         const getNotes = async () => {
-            setLoading(true)
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction-notes/get-notes?from=${data?.currency_wallet?.country_iso}&to=${data?.country?.alpha3}&method=${current?.value}`, {
+                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction-notes/get-notes?from=${data?.currency_wallet?.country_iso}&to=${data?.country?.alpha3}&method=${data?.payoutChannel?.value}`, {
                     headers: authHeader
                 })
                 const dec = decryptData(res.data.data)
@@ -150,19 +147,17 @@ const ServiceDetails = ({ data }) => {
             } catch {
                 setNotes([])
                 setIsPopup(false)
-            } finally {
-                setLoading(false)
             }
         }
-        console.log(data?.country?.name, data?.currency_wallet?.country_iso, current?.value)
-        if (data?.country?.name && data?.currency_wallet?.country_iso && current?.value) {
+        if (data?.country?.name && data?.currency_wallet?.country_iso && data?.payoutChannel?.value&& data.payer.name) {
             getNotes()
         }
-    }, [data?.country, data?.currency_wallet, current])
+    }, [data?.country, data?.currency_wallet, data.payoutChannel, data.payer])
 
     useEffect(() => {
         setCurrent(data.services?.[0] ?? {})
     }, [data.services])
+
     return (
         <div className={styles.wrapper}>
             {
