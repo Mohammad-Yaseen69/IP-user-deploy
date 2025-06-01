@@ -3,9 +3,26 @@ import styles from "./styles/steptwo.module.scss"
 import styles2 from "../AirtimeFlow/styles/steptwo.module.css"
 import PlanCard from "./PlanCard"
 import info from "./files/info.svg"
+import axios from "axios"
+import { encryptData } from "../../../Helper/EssentilaMethods/Encryption"
+import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 
 const StepFour = ({ data, dataHandler, dataHandlerE }) => {
 
+
+  const verifyNumber = async () => {
+    try {
+      const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`,{
+        data: encryptData({number: `+${data.eSimData.phone}`})
+      })
+
+      const dec = decryptData(res.data.data)
+      console.log(dec)   
+    } catch (error) {
+      const dec = decryptData(error.response.data.data)   
+      console.log(dec)
+    }
+  }
   return (
     <div>
       <div style={{ width: "100%", overflow: "hidden" }}>
@@ -55,7 +72,7 @@ const StepFour = ({ data, dataHandler, dataHandlerE }) => {
             >
               Back
             </span>
-            <button onClick={() => dataHandler("step", data.step + 1)} disabled={!data?.eSimData?.selectedPlan?.productId} className={styles2.nxt}>
+            <button onClick={verifyNumber} disabled={!data?.eSimData?.selectedPlan?.productId} className={styles2.nxt}>
               Next
               <svg xmlns="http://www.w3.org/2000/svg" width="9" height="15" viewBox="0 0 9 15" fill="none">
                 <path d="M1.7876 1.5625L7.47528 6.97362C7.88959 7.36778 7.88959 8.02847 7.47528 8.42262L1.7876 13.8337" stroke="white" stroke-width="2" stroke-linecap="round" />

@@ -16,7 +16,6 @@ const WalletDetails = ({ wallet, authHeader, setWalletError, setWalletIds, setDu
             })
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
-                    // console.log(decrypted.walletDetails)
 
                     if(!firstName && !lastName){
                         setFirstName(decrypted.walletDetails.first_name)
