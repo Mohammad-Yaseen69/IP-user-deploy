@@ -31,6 +31,7 @@ class ErrorBoundary extends Component {
                         <h1>Oops! Something went wrong.</h1>
                         <p>We're working to fix it. Please try refreshing the page or clear your browsing data for smooth experience.</p>
                         <p>Error ID: {this.state.eventId}</p>
+                        <p>If the issue continues, please email us at  <a href="mailto:support@insta-pay.ch">support@insta_pay.ch</a> with the Error ID, your username, and phone number for further assistance.</p>
                         <button onClick={() => window.location.reload()} className="error-button">Reload Page</button>
                     </div>
                 </div>
