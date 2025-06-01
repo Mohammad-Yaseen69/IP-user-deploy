@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import './ErrorBoundary.css';
+import * as Sentry from "@sentry/react";
+import { getCurrentHub } from "@sentry/core";
+
 
 class ErrorBoundary extends Component {
     constructor(props) {
@@ -12,7 +15,12 @@ class ErrorBoundary extends Component {
     }
 
     componentDidCatch(error, errorInfo) {
-        console.error("Error caught by Error Boundary: ", error, errorInfo);
+        const eventId = Sentry.captureException(error, {
+            extra: { errorInfo },
+        });
+
+
+        this.setState({ hasError: true, eventId });
     }
 
     render() {
@@ -22,6 +30,7 @@ class ErrorBoundary extends Component {
                     <div className="error-box">
                         <h1>Oops! Something went wrong.</h1>
                         <p>We're working to fix it. Please try refreshing the page or clear your browsing data for smooth experience.</p>
+                        <p>Error ID: {this.state.eventId}</p>
                         <button onClick={() => window.location.reload()} className="error-button">Reload Page</button>
                     </div>
                 </div>
