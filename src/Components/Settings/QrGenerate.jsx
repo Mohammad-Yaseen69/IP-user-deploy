@@ -43,7 +43,7 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
 
     const uploadQR = async (item) => {
         setMessage("Generating Qr Code sticker.")
-        const url = `https://my.insta-pay.ch/q/${item.wallet_id}`
+        const url = `https://my.insta-pay.ch/q/${item?.wallet_id}`
         qrCode.update({ data: url });
         const fileName = `qrcode.png`;
         const mimeType = `image/png`;
@@ -57,9 +57,9 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
         const file = new File([blob], fileName, { type: mimeType });
         const formData = new FormData();
         formData.append('qrCode', file);
-        formData.append("wallet_id", item.wallet_id)
+        formData.append("wallet_id", item?.wallet_id)
         formData.append("chatbot", chatbot)
-        if(platform === "telegram"){
+        if (platform === "telegram") {
             formData.appent("platform", platform)
         }
         try {
@@ -81,9 +81,11 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
     useLayoutEffect(() => {
         if (generated < wallets.length) {
             const generateQR = async () => {
-                for (const item of wallets) {
-                    if (item?.wallet_type === "insta") {
-                        await uploadQR(item);
+                if (wallets.length > 0) {
+                    for (const item of wallets) {
+                        if (item?.wallet_type === "insta") {
+                            await uploadQR(item);
+                        }
                     }
                 }
             }
@@ -97,10 +99,10 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
         }
     }, [wallets, generated])
 
-    
+
     useEffect(() => {
         uploadQR()
-    },[])
+    }, [])
 
     return (
         <div style={{ position: "absolute", top: "-1000vh", left: "-100vw" }}>

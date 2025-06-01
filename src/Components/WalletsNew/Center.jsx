@@ -64,7 +64,7 @@ const CenterContainer = ({ categories, setCategories, currentType, setCurrentTyp
                     setCategories(formatted);
                     setIsLoading(false)
                 } catch (err) {
-                    const decrypted = decryptData(err.response.data.data);
+                    const decrypted = decryptData(err.response?.data?.data);
                     setIsLoading(false)
                     console.error(decrypted);
                 }

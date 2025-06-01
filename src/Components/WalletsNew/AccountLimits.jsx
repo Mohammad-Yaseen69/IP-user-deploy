@@ -134,7 +134,7 @@ const RightItem = ({ item, setCurrent }) => {
                     </div>
             }
             <div className={styles.r_limits}>
-                {
+                {item?.limits ?
                     Object.keys(item?.limits)?.map((it, ind) => (
                         <LimitItem
                             item={item?.limits?.[it]}
@@ -143,7 +143,7 @@ const RightItem = ({ item, setCurrent }) => {
                             parent={item}
                         />
                     ))
-                }
+                    : null}
             </div>
         </div>
     )

@@ -71,7 +71,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
         }
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-account-transactions-wallet-by-date/${wallet.wallet_id}/0/0`,
+        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-account-transactions-wallet-by-date/${wallet?.wallet_id}/0/0`,
             {
                 data: encrypted
             }, {
@@ -117,7 +117,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
 
         doc.setFont("montserrat", "normal");
         doc.setFontSize(8);
-        doc.text(`Wallet ID: INSTA-${wallet.wallet_id}`, 14, 32);
+        doc.text(`Wallet ID: INSTA-${wallet?.wallet_id}`, 14, 32);
         doc.text(`Name: ${userDetails?.user?.first_name} ${userDetails?.user?.last_name}`, 14, 38);
         doc.text(`Address: ${userDetails?.address ?? "N/A"}`, 14, 44);
         doc.text(`Statement Duration: ${apiDates?.from} to ${apiDates?.to}`, 14, 50);

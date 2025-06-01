@@ -92,7 +92,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                 setIsLoading(false)
             })
             .catch(err => {
-                const decrypted = decryptData(err.response.data.data)
+                const decrypted = decryptData(err?.response?.data?.data)
                 setIsLoading(false)
                 if (decrypted.status === false && page !== 1) {
                     setMaxLimit(true)
@@ -114,7 +114,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                 setIsLoading(false)
             })
             .catch(err => {
-                const decrypted = decryptData(err.response.data.data)
+                const decrypted = decryptData(err?.response?.data?.data)
                 setIsLoading(false)
                 setFiltered([])
                 setTransactions([])
