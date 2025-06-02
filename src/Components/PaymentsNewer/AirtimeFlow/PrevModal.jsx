@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Modal, ModalBody, ModalHeader } from 'reactstrap'
+import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import useWindowWidth from '../../../utils/useWindowWidth'
 import styles from "./styles/prevmodal.module.scss"
 import { Search } from 'react-feather'
 import { UserContext } from '../../../Context/UserContext'
 import axios from 'axios'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
+import { IoScan } from 'react-icons/io5'
+import { BsQrCode } from 'react-icons/bs'
 
 const PrevModal = ({ isOpen, toggle }) => {
     const [esims, setEsims] = useState([])
@@ -14,7 +16,10 @@ const PrevModal = ({ isOpen, toggle }) => {
     const [isLoading, setIsLoading] = useState(false)
     const width = useWindowWidth()
     const { authHeader, userDetails } = useContext(UserContext)
-
+    const [qrModalContent, setQrModalContent] = useState({
+        show: false,
+        url: ""
+    })
     const fetchEsims = async () => {
         setIsLoading(true)
         try {
@@ -26,8 +31,8 @@ const PrevModal = ({ isOpen, toggle }) => {
             setEsims(data?.data?.esims)
             setFilteredEsims(data?.data?.esims)
         } catch (error) {
-          console.log(decryptData(error.response.data.data))
-        } finally { 
+            console.log(decryptData(error.response.data.data))
+        } finally {
             setIsLoading(false)
         }
     }
@@ -74,19 +79,34 @@ const PrevModal = ({ isOpen, toggle }) => {
                             <p>Loading eSIMs...</p>
                         ) : filteredEsims?.length > 0 ? (
                             filteredEsims?.map((esim) => (
-                                <div key={esim._id} className={styles.card}>                            <div className={styles.left}>
-                                    <h3>{esim.productName}</h3>
-                                    <h6>Description:</h6>
-                                    <p>{esim.productDesc}</p>
-                                    <div>
-                                        <button>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
-                                                <path d="M5.62231 2.44922H9.18993M2.05469 4.23303H12.7576M11.5683 4.23303L11.1514 10.4878C11.0888 11.4263 11.0575 11.8955 10.8548 12.2513C10.6764 12.5645 10.4072 12.8163 10.0828 12.9735C9.71435 13.1521 9.2441 13.1521 8.30358 13.1521H6.50866C5.56814 13.1521 5.09789 13.1521 4.72941 12.9735C4.40501 12.8163 4.13585 12.5645 3.95741 12.2513C3.75472 11.8955 3.72344 11.4263 3.66088 10.4878L3.24389 4.23303M6.21691 6.90875V9.88176M8.59533 6.90875V9.88176" stroke="#FB3748" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                            Remove
-                                        </button>
+                                <div key={esim._id} className={styles.card}>
+                                    <div style={{ justifyContent: "space-between", alignSelf: "stretch" }} className={styles.left}>
+                                        <div>
+                                            <h3>{esim.productName}</h3>
+                                            <h6>Description:</h6>
+                                            <p>{esim.productDesc}</p>
+                                        </div>
+                                        <div style={{ display: "flex", alignItems: "center", gap: "7px" }}>
+                                            <button>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                                                    <path d="M5.62231 2.44922H9.18993M2.05469 4.23303H12.7576M11.5683 4.23303L11.1514 10.4878C11.0888 11.4263 11.0575 11.8955 10.8548 12.2513C10.6764 12.5645 10.4072 12.8163 10.0828 12.9735C9.71435 13.1521 9.2441 13.1521 8.30358 13.1521H6.50866C5.56814 13.1521 5.09789 13.1521 4.72941 12.9735C4.40501 12.8163 4.13585 12.5645 3.95741 12.2513C3.75472 11.8955 3.72344 11.4263 3.66088 10.4878L3.24389 4.23303M6.21691 6.90875V9.88176M8.59533 6.90875V9.88176" stroke="#FB3748" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                                Remove
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    setQrModalContent({
+                                                        show: true,
+                                                        url: esim.qrCode?.url
+                                                    })
+                                                }}
+                                                style={{ color: "#5926f0" }}
+                                            >
+                                                <BsQrCode />
+                                                Click to Preview Qr Code
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
                                     <div className={styles.right}>
                                         <div className={styles.card}>
                                             <span>Price</span>
@@ -104,6 +124,11 @@ const PrevModal = ({ isOpen, toggle }) => {
                                             <span>Availability</span>
                                             <p>{esim.availability}</p>
                                         </div>
+                                        <div style={{ gridColumn: "span 2" }} className={styles.card}>
+                                            <span>Lpa</span>
+                                            <p>{esim.lpa}</p>
+                                        </div>
+
                                     </div>
                                 </div>
                             ))
@@ -112,6 +137,24 @@ const PrevModal = ({ isOpen, toggle }) => {
                         )}
                     </div>
                 </div>
+
+
+                <Modal isOpen={qrModalContent.show}>
+                    <ModalHeader>
+                        Your Esim QR Code
+                    </ModalHeader>
+                    <ModalBody>
+                        {qrModalContent.show && (
+                            <div >
+                                <div style={{display: 'flex', justifyContent: "center"}}>
+                                    <img src={qrModalContent.url} alt="" />                                </div>
+                            </div>
+                        )}
+                    </ModalBody>
+                    <ModalFooter>
+                        <button onClick={() => setQrModalContent({ show: false, url: "" })} style={{border: 'none', fontWeight: 600, color: "white", borderRadius: "6px", padding: "7px 15px", background: "#FB3748"}}>Close</button>
+                    </ModalFooter>
+                </Modal>
             </ModalBody>
         </Modal>
     )

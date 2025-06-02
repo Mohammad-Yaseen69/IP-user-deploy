@@ -184,7 +184,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             dataHandler("mobile_wallet_channels", dec?.data?.services ?? [])
             dataHandler("mobile_wallet_merchant", dec?.data?.merchant_id ?? "")
         } catch {
-            dataHandler("error", "Something went wrong while getting mobile wallet channels.")
+            // dataHandler("error", "Something went wrong while getting mobile wallet channels.")
         }
         finally {
             dataHandler("loading", false)
@@ -524,7 +524,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             return exchange_rate_details
         }
         catch (err) {
-            const dec = decryptData(err?.response.data.data)
+            const dec = decryptData(err?.response?.data?.data)
             console.log(dec, err)
             if (typeof dec?.message == "object") {
                 if (dec?.message?.[0]?.code === "1003007") {

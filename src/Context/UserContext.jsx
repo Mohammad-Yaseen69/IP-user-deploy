@@ -379,7 +379,6 @@ const UserState = ({ children }) => {
             }
             setPAddressData(p)
         } catch (error) {
-            console.log(decryptData(error.response.data.data))
         }
     }
     useEffect(() => {
@@ -563,7 +562,7 @@ const UserState = ({ children }) => {
             console.log(decrypted)
             setUserWithdrawals(decrypted?.withdrawalList ?? [])
         } catch (error) {
-            const dec = decryptData(error.response.data.data);
+            const dec = decryptData(error.response?.data?.data);
 
             if (dec?.message?.includes("found")) {
                 setMissingTabsData(prev => prev.includes("withdrawls") ? prev : [...prev, "withdrawls"]);

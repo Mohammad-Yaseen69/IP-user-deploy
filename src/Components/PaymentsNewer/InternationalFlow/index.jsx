@@ -477,7 +477,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             updateInternationalData("mobile_wallet_channels", dec?.data?.services ?? [])
             updateInternationalData("mobile_wallet_merchant", dec?.data?.merchant_id ?? "")
         } catch {
-            updateInternationalData("error", "Something went wrong while getting mobile wallet channels.")
+            // updateInternationalData("error", "Something went wrong while getting mobile wallet channels.")
         }
         finally {
             setLoading(false)

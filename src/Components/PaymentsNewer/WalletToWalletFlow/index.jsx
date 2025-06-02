@@ -175,10 +175,10 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
-            dataHandler("mobile_wallet_channels", dec?.data?.services ?? [])
+            dataHandler("c", dec?.data?.services ?? [])
             dataHandler("mobile_wallet_merchant", dec?.data?.merchant_id ?? "")
         } catch {
-            dataHandler("error", "Something went wrong while getting mobile wallet channels.")
+            // dataHandler("error", "Something went wrong while getting mobile wallet channels.")
         }
         finally {
             dataHandler("loading", false)

@@ -216,7 +216,7 @@ const PaymentsFlow = ({ item }) => {
             updateData("mobile_wallet_channels", dec?.data?.services ?? [])
             updateData("mobile_wallet_merchant", dec?.data?.merchant_id ?? "")
         } catch {
-            updateData("error", "Something went wrong while getting mobile wallet channels.")
+            // updateData("error", "Something went wrong while getting mobile wallet channels.")
         }
         finally {
             updateData("loading", false)

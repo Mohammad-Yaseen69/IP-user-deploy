@@ -100,9 +100,9 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
     }, [wallets, generated])
 
 
-    useEffect(() => {
-        uploadQR()
-    }, [])
+    // useEffect(() => {
+    //     uploadQR()
+    // }, [])
 
     return (
         <div style={{ position: "absolute", top: "-1000vh", left: "-100vw" }}>

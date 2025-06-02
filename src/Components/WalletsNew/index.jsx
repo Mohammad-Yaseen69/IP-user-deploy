@@ -103,11 +103,13 @@ export const getLimits = async (currentWallet, setData, authHeader, setLoading, 
         })
     }
     catch (error) {
-        const dec = decryptData(error?.response?.data?.data)
-        if (axios.isCancel(error)) {
-            return;
+        if(error.response.data.data){
+            const dec = decryptData(error.response.data?.data)
+            if (axios.isCancel(error)) {
+                return;
+            }
+            setError(dec?.message ?? "Something went wrong while fetching account limits.")
         }
-        setError(dec?.message ?? "Something went wrong while fetching account limits.")
     }
     finally {
         setLoading(false)

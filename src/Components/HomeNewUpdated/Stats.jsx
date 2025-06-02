@@ -136,14 +136,12 @@ const Stats = ({ currentWallet }) => {
                     }
                 }
             } catch (err) {
-                const decrypted = decryptData(err.response.data.data);
             }
             finally {
                 setIsLoading(false)
             }
         });
 
-        // Wait for all requests to complete
         await Promise.all(requests);
     };
     useEffect(() => {

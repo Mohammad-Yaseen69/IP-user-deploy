@@ -865,7 +865,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             {
                                                 currentOtpMethod === "auth"
                                                     ?
-                                                    t("Two Factor Authentication Code")
+                                                    t("Google Authenticator Code")
                                                     :
                                                     currentOtpMethod === "insta"
                                                         ?
