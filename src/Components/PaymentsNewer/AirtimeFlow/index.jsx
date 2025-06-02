@@ -132,6 +132,18 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         updateDataHandler("default_wallet", def)
     }, [userWallets, data.airtime_currency])
 
+
+    useEffect(() => {
+        if (userDetails) {
+            if (userDetails.phone) {
+                updateEsimHandler("phone", userDetails.phone)
+            }
+            if (userDetails.email) {
+                updateEsimHandler("email", userDetails.email)
+            }
+        }
+    }, [userDetails])
+
     useEffect(() => {
         if (data.wallet?.currency?.code && data.wallet?.currency?.code !== data?.airtime_currency?.currency?.code) {
             const getExchangedAmounts = async () => {
@@ -599,10 +611,10 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             {
                 window.innerWidth > 1000
                     ?
-                     <div className={styles.main_container}>
+                    <div className={styles.main_container}>
                         {
                             data.error
-                             &&
+                            &&
                             <ErrorModal
                                 heading={data.step === 2 ? "Incorrect Phone Number" : "Transaction Failed"}
                                 isOpen={data.error}

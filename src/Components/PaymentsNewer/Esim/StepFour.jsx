@@ -6,20 +6,27 @@ import info from "./files/info.svg"
 import axios from "axios"
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption"
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
+import { useState } from "react"
 
 const StepFour = ({ data, dataHandler, dataHandlerE }) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const [showError, setShowError] = useState(null)
 
 
   const verifyNumber = async () => {
     try {
-      const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`,{
-        data: encryptData({number: `+${data.eSimData.phone}`})
+      const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
+        data: encryptData({ number: `+${data.eSimData.phone}` })
       })
 
       const dec = decryptData(res.data.data)
-      console.log(dec)   
+      dataHandler("step", data.step + 1)
+      console.log(dec)
     } catch (error) {
-      const dec = decryptData(error.response.data.data)   
+      const dec = decryptData(error.response.data.data)
+      if (dec.toLowerCase().includes("invalid")) {
+        setShowError("Invalid phone number")
+      }
       console.log(dec)
     }
   }
@@ -42,9 +49,13 @@ const StepFour = ({ data, dataHandler, dataHandlerE }) => {
                 type="text"
                 onChange={(e) => {
                   dataHandlerE("phone", e.target.value)
+                  setShowError(null)
                 }}
               />
             </div>
+
+
+            {showError && <p style={{ color: "red", fontSize: "12px", marginBottom: "0px" }}>{showError}</p>}
 
             <div className={styles.input}>
               <label htmlFor="">Email address</label>
@@ -72,7 +83,13 @@ const StepFour = ({ data, dataHandler, dataHandlerE }) => {
             >
               Back
             </span>
-            <button onClick={verifyNumber} disabled={!data?.eSimData?.selectedPlan?.productId} className={styles2.nxt}>
+            <button onClick={() => {
+              if (data.eSimData.phone) {
+                verifyNumber()
+              } else {
+                dataHandler("step", data.step + 1)
+              }
+            }} disabled={(!data?.eSimData?.selectedPlan?.productId || (data.eSimData.email?.length > 0 && !emailRegex.test(data.eSimData.email)))} className={styles2.nxt}>
               Next
               <svg xmlns="http://www.w3.org/2000/svg" width="9" height="15" viewBox="0 0 9 15" fill="none">
                 <path d="M1.7876 1.5625L7.47528 6.97362C7.88959 7.36778 7.88959 8.02847 7.47528 8.42262L1.7876 13.8337" stroke="white" stroke-width="2" stroke-linecap="round" />

@@ -24,9 +24,9 @@ const Receipt = ({ data, dataHandler, createTransaction }) => {
         <img style={{ maxWidth: "100%" }} src={eSimBanner} alt="" />
       </div>
 
-      <div style={{flexDirection: width < 700 && 'column'}} className={styles.cont}>
+      <div style={{ flexDirection: width < 700 && 'column' }} className={styles.cont}>
 
-        <div style={{width: width < 700 && '100%'}} className={styles.receipt}>
+        <div style={{ width: width < 700 && '100%' }} className={styles.receipt}>
           <div style={{ background: `url(${receiptBg})`, }} className={styles.top}>
             <img src={ipLogo} alt="" />
           </div>
@@ -44,8 +44,9 @@ const Receipt = ({ data, dataHandler, createTransaction }) => {
               </div>
             </div>
 
-
-            {detsJSX("Your eSIM Phone Number:", "04172997324", true)}
+            {data.eSimData.phone &&
+              detsJSX("Your eSIM Phone Number:", data.eSimData.phone, true)
+            }
             {detsJSX("Plan", data.eSimData.selectedPlan.name)}
             {detsJSX("Operator", data.eSimData.selectedPlan.operator)}
             {/* {detsJSX("Country", data.eSimData.selectedPlan.country)}
@@ -82,7 +83,7 @@ const Receipt = ({ data, dataHandler, createTransaction }) => {
       </div>
 
 
-      <div className={styles2.btns} style={{justifyContent: "flex-end", marginTop: "1rem"}}>
+      <div className={styles2.btns} style={{ justifyContent: "flex-end", marginTop: "1rem" }}>
         <span
           onClick={() => {
             dataHandler("step", data.step - 1)
