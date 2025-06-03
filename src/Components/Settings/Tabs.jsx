@@ -252,8 +252,8 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                             return selected ? (
                                 <>
                                     <div>
-                                        <img alt="tab-icon" src={selected.active_icon} className={styles.tabIcon} />
-                                        <span style={{ fontWeight: 600 }}>{t(selected.name)}</span>
+                                        <img alt="tab-icon" style={{height: '40px', width: '40px'}} src={selected.active_icon} className={styles.tabIcon} />
+                                        <span style={{ fontWeight: 600, fontSize: "15px" }}>{t(selected.name)}</span>
                                     </div>
                                     <ChevronDown />
                                 </>
@@ -289,8 +289,8 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                                         }}
                                     >
                                         <div>
-                                            <img alt="tab-icon" src={item.active_icon} className={styles.tabIcon} />
-                                            <span style={{ fontWeight: 600 }}>{t(item.name)}</span>
+                                            <img alt="tab-icon" style={{width: "40px", height: '40px'}} src={item.active_icon} className={styles.tabIcon} />
+                                            <span style={{ fontWeight: 600, fontSize: '15px' }}>{t(item.name)}</span>
                                         </div>
 
                                         {(currentTab !== item.name && missingTabs.some(i => i.name === item.name))

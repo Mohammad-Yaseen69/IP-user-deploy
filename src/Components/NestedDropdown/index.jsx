@@ -9,7 +9,9 @@ const NestedDropdown = ({
     parent = {},
     child = {},
     subKey = "",
-    disabled = false
+    disabled = false,
+    defaultValue = "",
+    style
 }) => {
     const { t } = useTranslation()
     const [current, setCurrent] = useState("")
@@ -24,9 +26,10 @@ const NestedDropdown = ({
         <div disabled={disabled} className={styles.dropdown} style={{
             pointerEvents: disabled ? "none" : "all",
             opacity: disabled ? .8 : 1,
-            background: disabled && "#e9ecef"
+            background: disabled && "#e9ecef",
+            ...style
         }}>
-            <div className={styles.value} onClick={() => setShowDropdown(!showDropdown)}>{t(parent?.[current] ?? child?.[current]) || t("Relationship With Beneficiary")}</div>
+            <div className={styles.value} onClick={() => setShowDropdown(!showDropdown)}>{t(parent?.[current] ?? child?.[current]) || t(defaultValue || "Relationship With Beneficiary")}</div>
             {
                 showDropdown
                 &&

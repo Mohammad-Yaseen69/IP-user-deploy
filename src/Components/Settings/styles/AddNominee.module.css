@@ -1,7 +1,7 @@
 .top {
     display: flex;
     gap: 1rem;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .img_container {
@@ -32,7 +32,7 @@
 .top_right {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
     flex: 1;
 }
 
@@ -45,7 +45,7 @@
 
 .mul_inp {
     display: flex;
-    gap: 1rem;
+    gap: 15px;
     flex-wrap: wrap;
 }
 

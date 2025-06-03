@@ -2,13 +2,15 @@ import React, { useContext, useState } from 'react'
 import { Button, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import styles from "./styles/AddNominee.module.css"
 import { Camera } from 'react-feather'
-import PhoneInput from 'react-phone-input-2'
+import PhoneInput from '../PhoneInput'
 import OTPConfirmation from '../User/UserSettings/OTPConfirmation'
 import SuccessModal from '../User/UserSettings/SuccessModal'
 import axios from 'axios'
 import { UserContext } from '../../Context/UserContext'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { useTranslation } from 'react-i18next'
+import NestedDropdown from '../NestedDropdown'
+import { BeneficiaryRelation, friendsAndFamily } from '../AddBeneficiary/IndividualAccount'
 
 const AddNominee = ({ setNominee, setAddNominee }) => {
     const { t } = useTranslation()
@@ -85,60 +87,74 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                 </div>
                 <div className={styles.top_right}>
                     <div className={styles.inp_con}>
-                        <Label>{t("Name")}</Label>
+                        <Label style={{display: "flex", alignItems: 'center'}}>{t("Name")} <span style={{color: "red", fontSize: '13px', display: fullName && "none"}}>*</span></Label> 
                         <Input placeholder={t(`Nominee's Full Name`)} value={fullName} onChange={e => setFullName(e.target.value)} />
                     </div>
                     <div className={styles.mul_inp}>
                         <div className={styles.inp_con}>
-                            <Label>{t("Date Of Birth")}</Label>
+                            <Label>{t("Date Of Birth")}  <span style={{color: "red", fontSize: '13px', display: dob && "none"}}>*</span></Label>
                             <Input type='date' placeholder={`Nominee's Date Of Birth`} value={dob} onChange={e => setDob(e.target.value)} />
                         </div>
                         <div className={styles.inp_con}>
-                            <Label>{t("Gender")}</Label>
+                            <Label>{t("Gender")}  <span style={{color: "red", fontSize: '13px', display: gender && "none"}}>*</span></Label>
                             <Input type='select' value={gender} onChange={e => setGender(e.target.value)}>
                                 <option value="" disabled>--{t("Select Gender")}--</option>
                                 <option value="male">{t("Male")}</option>
                                 <option value="female">{t("Female")}</option>
+                                <option value="other">{t("Other")}</option>
                             </Input>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className={styles.mul_inp}>
+            <div style={{ marginBottom: '15px' }} className={styles.mul_inp}>
                 <div className={styles.inp_con}>
-                    <Label>{t("Relationship with Nominee")}</Label>
-                    <Input type='select' value={relationship} onChange={e => setRelationship(e.target.value)}>
-                        <option value="" disabled>--{t("Select Relation")}--</option>
-                        <option value="brother">{t("Brother")}</option>
-                        <option value="sister">{t("Sister")}</option>
-                        <option value="son">{t("Son")}</option>
-                        <option value="daughter">{t("Daughter")}</option>
-                    </Input>
+                    <Label>{t("Relationship with Nominee")}  <span style={{color: "red", fontSize: '13px', display: relationship && "none"}}>*</span></Label>
+                    <NestedDropdown
+                        child={friendsAndFamily}
+                        parent={BeneficiaryRelation}
+                        value={relationship}
+                        setter={(val) => {
+                            setRelationship(val)
+                        }}
+                        defaultValue='Relationship with Nominee'
+                        subKey="Friends & Family"
+                        style={{borderColor: '#eeeeee'}}
+                    />
                 </div>
                 <div className={styles.inp_con}>
-                    <Label>{t("Nominee Contact Number")}</Label>
+                    <Label>{t("Nominee Contact Number")}  <span style={{color: "red", fontSize: '13px', display: contact && "none"}}>*</span></Label>
                     <PhoneInput
                         placeholder="Enter Phone number"
-                        value={contact}
-                        onChange={(e) => setContact(e)}
-                        country={"us"}
-                        inputProps={{
-                            id: "mobile_number",
-                            name: "mobile_number",
+                        phone={contact}
+                        setPhone={(e) => {
+                            console.log(e)
+                            setContact(e)
                         }}
-                        inputStyle={{
-                            width: "100%",
-                            flex: 1,
-                            minWidth: "250px",
-                            padding: "22px 15px 22px 48px",
-                            lineHeight: "1.5",
-                            border: "1px solid #ced4da",
+                        customStyles={{
+                            boxShadow: "none",
+                            border: '1px solid #eeeeee'
                         }}
+                        country={userDetails.country_iso_code}
+
+                    // inputProps={{
+                    //     id: "mobile_number",
+                    //     name: "mobile_number",
+                    // }}
+                    // inputStyle={{
+                    //     width: "100%",
+                    //     flex: 1,
+                    //     minWidth: "250px",
+                    //     padding: "22px 15px 22px 48px",
+                    //     lineHeight: "1.5",
+                    //     border: "1px solid #ced4da",
+                    // }}
                     />
+
                 </div>
             </div>
             <div className={styles.inp_con}>
-                <Label>{t("Nominee Address")}</Label>
+                <Label>{t("Nominee Address")}  <span style={{color: "red", fontSize: '13px', display: address && "none"}}>*</span></Label>
                 <Input type='textarea' placeholder={t('Nominee Permanent Address')} value={address} onChange={e => setAddress(e.target.value)} />
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "1.5rem" }}>
