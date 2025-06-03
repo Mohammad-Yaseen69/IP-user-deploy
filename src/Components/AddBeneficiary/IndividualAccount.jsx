@@ -1220,11 +1220,24 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                 }))}
                             >
                                 <Label className="col-form-label" htmlFor="address">{t("Address Line")} {isAddressRequired && <span className="req_star">*</span>}</Label>
-                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="address" id="address" type="textarea" placeholder={t('Address Line')} disabled={!country} readOnly={!country} value={formData.address} onChange={inputChangeHandler} onFocus={() => setAddressInFocus(true)} onBlur={() => {
-                                    setTimeout(() => {
-                                        setAddressInFocus(false)
-                                    }, 100)
-                                }} />
+                                <Input
+                                    className="form-control"
+                                    style={{ flex: 1, minWidth: "250px" }}
+                                    name="address"
+                                    id="address"
+                                    type="textarea"
+                                    placeholder={t('Address Line')}
+                                    disabled={!country}
+                                    readOnly={!country}
+                                    value={formData.address}
+                                    onChange={inputChangeHandler}
+                                    onFocus={() => setAddressInFocus(true)}
+                                    onBlur={() => {
+                                        setTimeout(() => {
+                                            setAddressInFocus(false)
+                                        }, 100)
+                                    }}
+                                />
                                 {
                                     hoverErrors.address
                                     &&

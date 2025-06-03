@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Button, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import styles from "./styles/AddNominee.module.css"
 import { Camera } from 'react-feather'
@@ -11,6 +11,8 @@ import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { useTranslation } from 'react-i18next'
 import NestedDropdown from '../NestedDropdown'
 import { BeneficiaryRelation, friendsAndFamily } from '../AddBeneficiary/IndividualAccount'
+import africanCountries from "../../Data/AfricanCountries.json"
+
 
 const AddNominee = ({ setNominee, setAddNominee }) => {
     const { t } = useTranslation()
@@ -24,9 +26,30 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
     const [contact, setContact] = useState("")
     const [showSuccess, setShowSuccess] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [countryIsoCode, setCountryIsoCode] = useState()
+    const [position, setPosition] = useState()
+    const [coordApiCountry, setCoordApiCountry] = useState()
+    const [addressInFocus, setAddressInFocus] = useState()
+    const [addresses, setAddresses] = useState()
+    const [debouncedAddress, setDebouncedAddress] = useState("")
 
     // context
     const { authHeader, userDetails } = useContext(UserContext)
+    const [timer, setTimer] = useState(null);
+
+    useEffect(() => {
+        if (timer) {
+            clearTimeout(timer);
+        }
+
+        const newTimer = setTimeout(() => {
+            setDebouncedAddress(address);
+        }, 500);
+
+        setTimer(newTimer);
+
+        return () => clearTimeout(newTimer);
+    }, [address]);
 
 
     const handleImageSelect = (e) => {
@@ -38,6 +61,54 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
         };
         reader.readAsDataURL(file)
     }
+
+    useEffect(() => {
+
+        const getPosition = async () => {
+            try {
+                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/get-coordinates/${countryIsoCode}`, { headers: authHeader })
+                const dec = decryptData(res.data.data)
+                setPosition(dec?.position)
+                setCoordApiCountry(dec?.country?.name)
+            } catch (error) {
+                const dec = decryptData(error.response.data.data)
+                console.log(dec)
+            }
+        }
+        if (countryIsoCode) {
+            if (countryIsoCode in africanCountries) return;
+            getPosition()
+        }
+    }, [countryIsoCode])
+
+    useEffect(() => {
+        if (userDetails.country_iso_code) {
+            setCountryIsoCode(userDetails.country_iso_code)
+        }
+    }, [userDetails])
+
+    useEffect(() => {
+        const getAddresses = async () => {
+            try {
+                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/get-autocomplete-address?lat=${position.lat}&long=${position.lng}&countryIso=${countryIsoCode}&query=${debouncedAddress}&countryName=${coordApiCountry}`, { headers: authHeader });
+                const dec = decryptData(res.data.data);
+                console.log(dec);
+                setAddresses(dec?.addresses ?? []);
+            } catch (error) {
+                const dec = decryptData(error.response.data.data);
+                console.log(dec);
+                setAddresses([]);
+            }
+        };
+
+        if (debouncedAddress.length >= 5 && position.lat && position.lng && addressInFocus) {
+            getAddresses();
+        }
+
+        if (debouncedAddress.length < 5) {
+            setAddresses([]);
+        }
+    }, [debouncedAddress, position, addressInFocus]);
 
     const addNomineeHandler = () => {
         setLoading(true)
@@ -87,16 +158,16 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                 </div>
                 <div className={styles.top_right}>
                     <div className={styles.inp_con}>
-                        <Label style={{display: "flex", alignItems: 'center'}}>{t("Name")} <span style={{color: "red", fontSize: '13px', display: fullName && "none"}}>*</span></Label> 
+                        <Label style={{ display: "flex", alignItems: 'center' }}>{t("Name")} <span style={{ color: "red", fontSize: '13px', display: fullName && "none" }}>*</span></Label>
                         <Input placeholder={t(`Nominee's Full Name`)} value={fullName} onChange={e => setFullName(e.target.value)} />
                     </div>
                     <div className={styles.mul_inp}>
                         <div className={styles.inp_con}>
-                            <Label>{t("Date Of Birth")}  <span style={{color: "red", fontSize: '13px', display: dob && "none"}}>*</span></Label>
+                            <Label>{t("Date Of Birth")}  <span style={{ color: "red", fontSize: '13px', display: dob && "none" }}>*</span></Label>
                             <Input type='date' placeholder={`Nominee's Date Of Birth`} value={dob} onChange={e => setDob(e.target.value)} />
                         </div>
                         <div className={styles.inp_con}>
-                            <Label>{t("Gender")}  <span style={{color: "red", fontSize: '13px', display: gender && "none"}}>*</span></Label>
+                            <Label>{t("Gender")}  <span style={{ color: "red", fontSize: '13px', display: gender && "none" }}>*</span></Label>
                             <Input type='select' value={gender} onChange={e => setGender(e.target.value)}>
                                 <option value="" disabled>--{t("Select Gender")}--</option>
                                 <option value="male">{t("Male")}</option>
@@ -109,7 +180,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
             </div>
             <div style={{ marginBottom: '15px' }} className={styles.mul_inp}>
                 <div className={styles.inp_con}>
-                    <Label>{t("Relationship with Nominee")}  <span style={{color: "red", fontSize: '13px', display: relationship && "none"}}>*</span></Label>
+                    <Label>{t("Relationship with Nominee")}  <span style={{ color: "red", fontSize: '13px', display: relationship && "none" }}>*</span></Label>
                     <NestedDropdown
                         child={friendsAndFamily}
                         parent={BeneficiaryRelation}
@@ -119,21 +190,23 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                         }}
                         defaultValue='Relationship with Nominee'
                         subKey="Friends & Family"
-                        style={{borderColor: '#eeeeee'}}
+                        style={{ borderColor: '#eeeeee' }}
                     />
                 </div>
                 <div className={styles.inp_con}>
-                    <Label>{t("Nominee Contact Number")}  <span style={{color: "red", fontSize: '13px', display: contact && "none"}}>*</span></Label>
+                    <Label>{t("Nominee Contact Number")}  <span style={{ color: "red", fontSize: '13px', display: contact && "none" }}>*</span></Label>
                     <PhoneInput
                         placeholder="Enter Phone number"
                         phone={contact}
                         setPhone={(e) => {
-                            console.log(e)
                             setContact(e)
                         }}
                         customStyles={{
                             boxShadow: "none",
                             border: '1px solid #eeeeee'
+                        }}
+                        setCountry={(e) => {
+                            setCountryIsoCode(e.alpha3)
                         }}
                         country={userDetails.country_iso_code}
 
@@ -153,9 +226,60 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
 
                 </div>
             </div>
-            <div className={styles.inp_con}>
-                <Label>{t("Nominee Address")}  <span style={{color: "red", fontSize: '13px', display: address && "none"}}>*</span></Label>
-                <Input type='textarea' placeholder={t('Nominee Permanent Address')} value={address} onChange={e => setAddress(e.target.value)} />
+            <div style={{position: "relative"}} className={styles.inp_con}>
+                <Label>{t("Nominee Address")}  <span style={{ color: "red", fontSize: '13px', display: address && "none" }}>*</span></Label>
+                <Input
+                    type='textarea'
+                    placeholder={t('Nominee Permanent Address')}
+                    value={address}
+                    onChange={e => setAddress(e.target.value)}
+                    onFocus={() => setAddressInFocus(true)}
+                        onBlur={() => {
+                            setTimeout(() => {
+                                setAddressInFocus(false)
+                            }, 100)
+                        }}
+                />
+                {
+                    addressInFocus && addresses.length > 0
+                        ?
+                        <div style={{
+                            top: "104%",
+                            left: 0,
+                            background: "white",
+                            display: "flex",
+                            flexDirection: "column",
+                            borderRadius: ".5rem",
+                            maxHeight: "40vh",
+                            overflowY: "auto",
+                            border: "1px solid #eee",
+                            width: "100%"
+                        }}>
+                            {
+                                addresses.map(item => (
+                                    <div
+                                        key={item}
+                                        onMouseDown={(e) => {
+                                            // Prevent blur event from firing before click
+                                            e.preventDefault();
+                                            setAddress(item)
+                                            setAddressInFocus(false);
+                                        }}
+                                        style={{
+                                            padding: "1rem",
+                                            cursor: "pointer",
+                                            fontSize: ".8rem",
+                                            fontWeight: 500
+                                        }}
+                                    >
+                                        {item}
+                                    </div>
+                                ))
+                            }
+                        </div>
+                        :
+                        ""
+                }
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "1.5rem" }}>
                 <Button
