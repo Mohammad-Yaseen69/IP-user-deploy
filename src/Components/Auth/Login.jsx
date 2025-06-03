@@ -1004,11 +1004,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             {
                                                 resendTimer > 0
                                                     ? (lastOtpSentTo && ['sms', 'insta', 'wp'].includes(currentOtpMethod) && lastOtpSentTo !== currentOtpMethod)
-                                                        ? `You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : lastOtpSentTo === "wp" ? "Whatsapp" : 'Instagram'}, wait ${resendTimer} seconds to get code on ${currentOtpMethod}`
+                                                        ? <span> {`You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : lastOtpSentTo === "wp" ? "Whatsapp" : 'Instagram'}, wait ${resendTimer} seconds to get code on ${currentOtpMethod}`} </span>
                                                         :
-                                                        t("Resend code in 30 seconds".replace("30", resendTimer))
+                                                        <span>{t("Resend code in 30 seconds".replace("30", resendTimer))}</span>
                                                     :
-                                                    <>{t("Didn't receive OTP?") + " "} <span style={{ color: "#5926f0", cursor: "pointer" }} onClick={() => {
+                                                    <> <span>{t("Didn't receive OTP?") + " "}</span> <span style={{ color: "#5926f0", cursor: "pointer" }} onClick={() => {
                                                         setLastOtpSentTo(currentOtpMethod);
                                                         setOTPValues(Array(numberOfFields).fill(''))
                                                         loginHandler({ preventDefault: () => { } }, currentOtpMethod)
