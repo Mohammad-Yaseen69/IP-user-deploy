@@ -886,7 +886,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         </label>
                                         <FaceAnimation currentInput={currentActiveInput} verification={otpVerified} isCorrect={isOtpCorrect} startTyping />
                                         <div
-                                            key={currentOtpMethod + '-' + step + '-' + lastOtpSentTo + '-' + resendTimer}
                                             style={{ animation: otpVerified && !isOtpCorrect ? "horizontal-shaking 0.5s ease-in-out" : "" }}
                                             className={styles.otp_inputs + " " + (otpVerified && (!isOtpCorrect ? "wrong" : "correct"))}
                                         >
