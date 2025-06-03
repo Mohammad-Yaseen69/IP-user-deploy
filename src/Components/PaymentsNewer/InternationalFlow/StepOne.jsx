@@ -166,17 +166,18 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
             value: "card",
         } : { id: 100 },
     ]
+    const getServices = async (country) => {
+        try {
+            const servicesResponse = await axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country || data?.country?.alpha3}`, { headers: authHeader })
+            const decrypted = decryptData(servicesResponse.data.data)
+            dataHandler("services", decrypted?.map(item => ({ ...item, ...payoutChannelData?.find(it => it.id === item?.id) })));
+        } catch (error) {
+            dataHandler("services", [])
+        }
+    }
 
     useEffect(() => {
-        const getServices = async () => {
-            try {
-                const servicesResponse = await axios.get(`${process.env.REACT_APP_THUNES_API}/services/${data?.country?.alpha3}`, { headers: authHeader })
-                const decrypted = decryptData(servicesResponse.data.data)
-                dataHandler("services", decrypted?.map(item => ({ ...item, ...payoutChannelData?.find(it => it.id === item?.id) })));
-            } catch (error) {
-                dataHandler("services", [])
-            }
-        }
+
         if (data?.country?.name) {
             getServices()
         }
@@ -646,6 +647,9 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                         isOpen={modals.country}
                         onSelectHandler={(item) => {
                             dataHandler("country", item)
+                            if(item?.alpha3 === data.country?.alpha3){
+                                getServices(item?.alpha3)
+                            }
                             dataHandler("payoutChannel", {})
                             dataHandler("payer", {})
                         }}
