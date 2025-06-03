@@ -14,7 +14,6 @@ import axios from "axios";
 import { countries } from "country-list-json";
 import LanguagePicker from "../LanguagePicker";
 import FaceAnimation from "./FaceAnimation"
-import { motion } from "framer-motion"
 import BiometricSvg from "../../assets/icons/fingerprint.png" // Add this import
 import { startAuthentication } from "@simplewebauthn/browser"
 import * as rdd from "react-device-detect";
@@ -506,7 +505,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
         if ((method !== "biometric") && (method === "auth" || resendTimer === 0)) {
             loginHandler({ preventDefault: () => { } }, method);
-            console.log("asdfasfd")
         }
 
         setCurrentOtpMethod(method);
@@ -887,21 +885,22 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             }
                                         </label>
                                         <FaceAnimation currentInput={currentActiveInput} verification={otpVerified} isCorrect={isOtpCorrect} startTyping />
-                                        <div style={{ animation: otpVerified && !isOtpCorrect ? "horizontal-shaking 0.5s ease-in-out" : "" }} className={styles.otp_inputs + " " + (otpVerified && (!isOtpCorrect ? "wrong" : "correct"))}>
+                                        <div
+                                            key={currentOtpMethod + '-' + step + '-' + lastOtpSentTo + '-' + resendTimer}
+                                            style={{ animation: otpVerified && !isOtpCorrect ? "horizontal-shaking 0.5s ease-in-out" : "" }}
+                                            className={styles.otp_inputs + " " + (otpVerified && (!isOtpCorrect ? "wrong" : "correct"))}
+                                        >
                                             {otpValues.map((value, index) => (
-                                                <motion.input
-                                                    key={index}
+                                                <input
+                                                    key={`otp-input-${index}`}
                                                     maxLength={1}
                                                     disabled={isOtpCorrect}
                                                     value={value}
                                                     onPaste={handlePaste}
-
-                                                    // disabled={currentActiveInput !== index + 1}
                                                     onChange={(e) => {
                                                         setIsLoginError("")
                                                         handleInputChange(index, e.target.value)
                                                     }}
-
                                                     onKeyDown={(e) => handleInputKeyDown(index, e)}
                                                     ref={(input) => (inputRefs.current[index] = input)}
                                                 />
@@ -946,7 +945,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     </p>
                                     <div className={styles.otp_methods}>
                                         {isMobile ? (
-                                            // Mobile priority flow
                                             <>
                                                 {methods.map((method, index) => {
                                                     if (method.avail && method.attr !== currentOtpMethod) {
@@ -955,7 +953,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                                 key={index}
                                                                 className={styles.otpMethodButton}
                                                                 type="button"
-                                                                disabled={isPressed}
+                                                                disabled={isPressed || methodLoading}
                                                                 onClick={() => handleOtpMethod(method.attr)}
                                                             >
                                                                 <img
@@ -981,7 +979,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                                 key={index}
                                                                 className={styles.otpMethodButton}
                                                                 type="button"
-                                                                disabled={isPressed}
+                                                                disabled={isPressed || methodLoading}
                                                                 onClick={() => handleOtpMethod(method.attr)}
                                                             >
                                                                 <img
@@ -1056,7 +1054,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             disabled={isAnyFieldEmpty || otpValues.some(item => !item) || isPressed || isLoginError}
                                         >
                                             <span>{
-                                                 (isPressed && !methodLoading)
+                                                (isPressed && !methodLoading)
                                                     ?
                                                     t("Verifying")
                                                     :

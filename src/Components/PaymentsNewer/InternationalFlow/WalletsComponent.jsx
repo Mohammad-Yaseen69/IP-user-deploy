@@ -34,6 +34,7 @@ const WalletsComponent = ({ data, dataHandler, loading = false, inEsim }) => {
 
     // const width = useWindowWidth()
 
+    console.log(data)
     return (
         <>
             {
@@ -45,7 +46,7 @@ const WalletsComponent = ({ data, dataHandler, loading = false, inEsim }) => {
                             <InstaPayLoader />
                         </div>
                         :
-                        (data.payment_type?.value === "wallet" && !inEsim  ? data.wallet?._id : true)
+                        (data.payment_type?.value === "wallet" && !inEsim ? data.wallet?._id : true)
                             ?
                             <FeesComponent
                                 data={data}
@@ -67,6 +68,7 @@ const WalletsComponent = ({ data, dataHandler, loading = false, inEsim }) => {
                                     wallet={item}
                                     data={data}
                                     dataHandler={dataHandler}
+                                    amount={data?.package?.prices?.amount}
                                 />
                             ))
                         }
@@ -97,7 +99,7 @@ const WalletsComponent = ({ data, dataHandler, loading = false, inEsim }) => {
                     }
                     {
                         filteredWallets?.length > 1 && (!inEsim)
-                         &&
+                        &&
                         <CurConversion
                             showHeading={false}
                         />
@@ -166,7 +168,7 @@ export const WalletCard = ({
                 console.log(dec)
             }
         } else {
-            if(walletfeeDetails.length && filteredWallets.length){
+            if (walletfeeDetails.length && filteredWallets.length) {
                 return false
             }
             const data = {
@@ -175,10 +177,10 @@ export const WalletCard = ({
                 amount: +String(amount)?.replaceAll(",", ""),
                 type: paymentType
             }
-         
+
             const enc = encryptData(data)
             try {
-                
+
                 const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-topup-fee`, { data: enc }, {
                     headers: authHeader
                 })
@@ -187,7 +189,7 @@ export const WalletCard = ({
 
 
                 // console.log(dec)
-              
+
                 setWalletFeeDetails(prev => [...prev, dec.data])
                 wallet.isSufficient = wallet?.balance?.available > +dec.data?.feeDetails?.totalAmount.replace(/[,]/g, "")
                 setIsSufficient(wallet?.balance?.available > +dec.data?.feeDetails?.totalAmount.replace(/[,]/g, ""))
@@ -215,7 +217,7 @@ export const WalletCard = ({
                     amount = data.package_details?.filteredData?.[0]?.total
                 }
 
-                const apidata = [data?.currency_wallet?.currency?.code ?? data?.airtime_currency?.currency?.code, wallet?.currency?.code, Number(amount)]
+                const apidata = [data?.currency_wallet?.currency?.code ?? data?.airtime_currency?.currency?.code, wallet?.currency?.code, Number(amount) || data?.package?.prices?.amount]
 
                 getExchangedAmounts(...apidata)
                     .then(res => {
