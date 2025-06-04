@@ -149,10 +149,10 @@ const ServiceDetails = ({ data }) => {
                 setIsPopup(false)
             }
         }
-        if (data?.country?.name && data?.currency_wallet?.country_iso && data?.payoutChannel?.value && data.payer.name) {
+        if (data?.country?.name && data?.currency_wallet?.country_iso && data?.payoutChannel?.value && data?.payer?.name) {
             getNotes()
         }
-    }, [data?.country, data?.currency_wallet, data.payoutChannel, data.payer])
+    }, [data?.country, data?.currency_wallet, data?.payoutChannel, data?.payer])
 
     useEffect(() => {
         setCurrent(data.services?.[0] ?? {})
