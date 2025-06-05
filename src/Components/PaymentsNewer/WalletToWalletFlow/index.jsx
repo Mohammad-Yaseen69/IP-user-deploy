@@ -86,7 +86,8 @@ const initialState = {
     mobile_wallet_channel: {},
     mobile_wallet_service: {},
     timezone: "",
-    first_time: true
+    first_time: true,
+    limitReached: false
 }
 
 function reducer(state, action) {
@@ -150,7 +151,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
             case 3:
                 return !data.reason
             case 4:
-                return !data.payment_type?.name || data.payment_type?.value === "wallet" ? !data.wallet?._id : false || data?.payment_duration?.value === "subscription" ? !data.payment_duration?.recStartDate || (!data.payment_duration?.cycles && !data.payment_duration?.unlimited) : data?.payment_duration?.value === "schedule" ? !data.payment_duration?.scheduleDate || !data.payment_duration?.scheduleTime : false
+                return !data.payment_type?.name || data.limitReached || data.payment_type?.value === "wallet" ? !data.wallet?._id : false || data?.payment_duration?.value === "subscription" ? !data.payment_duration?.recStartDate || (!data.payment_duration?.cycles && !data.payment_duration?.unlimited) : data?.payment_duration?.value === "schedule" ? !data.payment_duration?.scheduleDate || !data.payment_duration?.scheduleTime : false
             case 5:
                 if (data.payment_type?.value === "card") {
                     const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
@@ -499,6 +500,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
         setLoading(true)
         dataHandler("exchange_rate_error", "")
         dataHandler("exchange_rate", {})
+        dataHandler("limitReached", false)
         console.log(data)
         try {
             const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=${payment_type ?? "wallet_to_wallet"}&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${data.beneficiary_wallet?._id}&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}`
@@ -566,10 +568,16 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                 } else {
                     dataHandler("exchange_rate_error", "sww")
                 }
-            } else {
+            }
+            else {
                 const error = LimitsErrorMessage(dec?.code ?? dec?.message)
                 if (error) {
                     dataHandler("exchange_rate_error", error)
+
+                    if (data.step === 4) {
+                        dataHandler("error", error)
+                        dataHandler("limitReached", true)
+                    }
                 }
                 else if (dec?.message?.toLowerCase()?.includes("insufficient")) {
                     dataHandler("exchange_rate_error", "insufficient balance payer")
@@ -826,6 +834,8 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
     }, [transaction_status])
 
 
+    console.log(data.limitReached)
+
     return (
         <>
             {
@@ -927,7 +937,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                 <h2>{data.step === 5 && data.showCard ? t("Select Or Add Payment Card") : t(leftSideContent?.[data.step - 1])}</h2>
                                             </div>
                                             {
-                                                data.step === 4
+                                                (data.step === 4 && !data.limitReached)
                                                 &&
                                                 (
                                                     data.loading
