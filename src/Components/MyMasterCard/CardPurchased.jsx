@@ -4,7 +4,7 @@ import Giftpng from "./files/gift-png.png"
 import IpLogo from "./files/ip.svg"
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from 'swiper'
-import {  Freeze, plus, CreditCardR, Wallet2, FileDown, CreditCardP, Notification, Speaker, Apay, Gpay, Samsung, Copy, checktoggle } from "./files"
+import { Freeze, plus, CreditCardR, Wallet2, FileDown, CreditCardP, Notification, Speaker, Apay, Gpay, Samsung, Copy, checktoggle } from "./files"
 import axios from 'axios';
 import { UserContext } from '../../Context/UserContext';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
@@ -422,7 +422,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                 <div style={{ justifyContent: "space-between" }} className={styles.iconBox}>
                                     <span>{t('Card Status')}</span>
 
-                                    <Toggle checked={checks.cardStatus} onChange={() => handleToggle("cardStatus")}/>
+                                    <Toggle checked={checks.cardStatus} onChange={() => handleToggle("cardStatus")} />
                                 </div>
                                 <div style={{ cursor: "pointer" }} className={styles.iconBox}>
                                     <img src={Freeze} alt="" />
@@ -445,7 +445,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                         <img src={plus} alt="" />
                                         <span>{t('Add Funds')}</span>
                                     </div>
-                                    `     <div
+                                    <div
                                         onClick={() => {
                                             openModal("ctc")
                                             if (width < 1000) {
@@ -495,17 +495,17 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                 <div style={{ justifyContent: "space-between" }} className={styles.iconBox}>
                                     <span>{t('Online Purchases')}</span>
 
-                                    <Toggle checked={checks.onlinePurchases} onChange={() => handleToggle("onlinePurchases")}/>
+                                    <Toggle checked={checks.onlinePurchases} onChange={() => handleToggle("onlinePurchases")} />
                                 </div>
                                 <div style={{ justifyContent: "space-between" }} className={styles.iconBox}>
                                     <span>{t('Online Betting and Gambling')}</span>
 
-                                    <Toggle checked={checks.bAndG} onChange={() => handleToggle("bAndG")}/>
+                                    <Toggle checked={checks.bAndG} onChange={() => handleToggle("bAndG")} />
                                 </div>
                                 <div style={{ justifyContent: "space-between" }} className={styles.iconBox}>
                                     <span>{t('Contactless Payment')}</span>
 
-                                    <Toggle checked={checks.contactlessPay} onChange={() => handleToggle("contactlessPay")}/>
+                                    <Toggle checked={checks.contactlessPay} onChange={() => handleToggle("contactlessPay")} />
                                 </div>
                             </div>
 

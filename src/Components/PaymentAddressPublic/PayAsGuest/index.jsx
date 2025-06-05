@@ -4,13 +4,12 @@ import styles from "./styles/index.module.css"
 import { useEffect, useMemo, useReducer, useState } from "react";
 import StepOne from "./StepOne";
 import { Link } from "react-router-dom";
-import { ChevronLeft, ChevronRight, HelpCircle, Info, X } from "react-feather";
+import { ChevronRight, HelpCircle, Info, X } from "react-feather";
 import Country from "./Country";
 import CreditCard from "../../PaymentsNewer/InternationalFlow/CreditCard";
 import PhoneInput from "../../PhoneInput";
 import axios from "axios";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
-import FeesComponent from "../../PaymentsNewer/InternationalFlow/FeesComponent";
 import InstaPayLoader from "../../Loader";
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
 import PaypalCurrencies from "../../AddFunds/PaypalCurrencies.json"

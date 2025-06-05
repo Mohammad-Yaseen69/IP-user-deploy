@@ -12,7 +12,6 @@ import FeesComponent from "./FeesComponent"
 import { getLimits } from "../../WalletsNew"
 import { removeCommasAndCurrency } from "../../WalletsNew/AccountLimits"
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption"
-import useWindowWidth from "../../../utils/useWindowWidth"
 
 const WalletsComponent = ({ data, dataHandler, loading = false, inEsim }) => {
     const { t } = useTranslation()

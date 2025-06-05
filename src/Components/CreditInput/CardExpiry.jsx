@@ -129,8 +129,8 @@ const CardExpiry = ({ content, setContent, isinVVC = false, guest }) => {
         setError(isValidExpiry && contentMonth <= 12 ? "" : "Invalid Date");
     }, [content]);
     return (
-        <div style={{display: 'flex', width: '100%', flexDirection: 'column'}}>
-            <label htmlFor="" style={{fontWeight: 600}}>Expiry Date:</label>
+        <div style={{ display: 'flex', width: '100%', flexDirection: 'column' }}>
+            {guest && <label htmlFor="" style={{ fontWeight: 600 }}>Expiry Date:</label>}
             <div className={styles.main}>
                 <div
                     ref={divRef}

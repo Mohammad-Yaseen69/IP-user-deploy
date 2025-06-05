@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react"
 import styles from "./styles/stepone.module.css"
 import { pagSvgs } from "./Svgs"
-import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import { t } from "i18next"
 import { Info } from "react-feather"
 import PaypalCurrencies from "../../AddFunds/PaypalCurrencies.json"
