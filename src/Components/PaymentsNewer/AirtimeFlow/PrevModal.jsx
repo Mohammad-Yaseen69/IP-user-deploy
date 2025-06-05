@@ -139,21 +139,26 @@ const PrevModal = ({ isOpen, toggle }) => {
                 </div>
 
 
-                <Modal isOpen={qrModalContent.show}>
-                    <ModalHeader>
+                <Modal toggle={() => setQrModalContent({ show: false, url: "" })} isOpen={qrModalContent.show}>
+                    <ModalHeader toggle={() => setQrModalContent({ show: false, url: "" })}>
                         Your Esim QR Code
                     </ModalHeader>
                     <ModalBody>
                         {qrModalContent.show && (
                             <div >
-                                <div style={{display: 'flex', justifyContent: "center"}}>
+                                <div style={{ display: 'flex', justifyContent: "center" }}>
                                     <img src={qrModalContent.url} alt="" />                                </div>
                             </div>
                         )}
                     </ModalBody>
                     <ModalFooter>
-                        <button onClick={() => setQrModalContent({ show: false, url: "" })} style={{border: 'none', fontWeight: 600, color: "white", borderRadius: "6px", padding: "7px 15px", background: "#FB3748"}}>Close</button>
+                        <div style={{ display: 'flex', alignItems: "center", gap: '8px' }}>
+                            <a download={qrModalContent.url} href={qrModalContent.url} >
+                                <button style={{ border: 'none', fontWeight: 600, color: "white", borderRadius: "6px", padding: "7px 15px", background: "#5926f0" }}>Download</button>
+                            </a>
+                        </div>
                     </ModalFooter>
+
                 </Modal>
             </ModalBody>
         </Modal>

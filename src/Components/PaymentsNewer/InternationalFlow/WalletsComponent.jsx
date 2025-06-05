@@ -240,7 +240,7 @@ export const WalletCard = ({
     return (
         <div
             data-content={t("Insufficient Balance")}
-            style={{ backgroundSize: isInVCard && "cover" }}
+            style={{ backgroundSize: "cover" }}
             data-block-content={t("Blocked Wallet")}
             className={`${styles.card} ${(isSufficient || cardToWallet) ? "" : styles.disabled_card} ${blocked ? styles.blocked_card : ""} ${data?.wallet?._id === wallet?._id ? styles.active : ""}`}
             onClick={handleClick}
