@@ -77,6 +77,13 @@ const WithdrawalChannels = () => {
     const [cardCompleted, setCardCompleted] = useState(false)
     const [cryptoCompleted, setCryptoCompleted] = useState(false)
     const [bankError, setBankError] = useState("")
+    const [alpha3, setAlpha3] = useState()
+
+    useEffect(() => {
+        if(userDetails.country_iso_code){
+            setAlpha3(userDetails.country_iso_code)
+        }
+    },[userDetails])
 
     const [bankMobCrypto, setbankMobCrypto] = useState({
         bank_iban: "",
@@ -197,7 +204,8 @@ const WithdrawalChannels = () => {
     useEffect(() => {
         if (bankMobCrypto.mobile_money_provider &&
             bankMobCrypto.mobile_wallet_name &&
-            bankMobCrypto.mobile_wallet_account_number) {
+            bankMobCrypto.mobile_wallet_account_number.slice(alpha3 - 1)
+        ) {
             setMobileCompleted(true)
         }
     }, [bankMobCrypto])

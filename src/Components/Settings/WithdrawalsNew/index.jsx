@@ -75,7 +75,7 @@ const WithdrawalsNew = () => {
             {
                 userWithdrawals?.length > 0
                     ?
-                    userWithdrawals?.map(item => {
+                    userWithdrawals?.map((item, index) => {
                         console.log(item)
                         return (
                             <WithdrawalItem
@@ -83,6 +83,7 @@ const WithdrawalsNew = () => {
                                 userWithdrawals={item}
                                 count={userWithdrawals?.length}
                                 key={item?._id}
+                                index={index}
                                 setNewWithdrawal={setNewWithdrawal}
                             />
                         )

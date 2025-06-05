@@ -14,8 +14,12 @@ let debounceTimer;
 
 const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetails, setBankError, bankError, payers, bankExtras, serviceFieldInfoValidate, services, handleBankExtraChange, alpha3, payerLoading }) => {
     const { t } = useTranslation()
-    const { authHeader, userDetails } = useContext(UserContext)
+    const { authHeader } = useContext(UserContext)
 
+
+    useEffect(() => {
+        setBankError("")
+    }, [])
     const getBankDetails = (e) => {
         setBankError("")
         setBankDetails(prev => {

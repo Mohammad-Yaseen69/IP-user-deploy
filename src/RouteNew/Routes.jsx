@@ -124,7 +124,7 @@ export const publicRoutes = [
     { path: "/chatbot/subscription-end-date/:token/:date", component: <SubscriptionCalendarEndDate /> },
     { path: "/chatbot/subscription-request-end-date/:token/:date", component: <SubscriptionRequestEndDate /> },
     { path: "/qr-activate", component: <ChatbotQrCode /> },
-    { path: "/data-decrypt-karo", component: <DataDecrypt /> },
+    { path: "/data-decrypt", component: <DataDecrypt /> },
     { path: "/chatbot/paypal-transaction/:status/:id", component: <PaypalTransactions /> },
     { path: "/chatbot/get-location", component: <GetLocation /> },
     { path: "/chatbot/payment-request", component: <ShowLocation /> },

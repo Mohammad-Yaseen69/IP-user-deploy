@@ -1,25 +1,47 @@
 import { countries } from 'country-list-json'
-import React, { useContext, useEffect, useMemo } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import PhoneInput from '../../PhoneInput'
 import { FormGroup, Input, Label } from 'reactstrap'
 import InstaPayLoader from '../../Loader'
 import { UserContext } from '../../../Context/UserContext'
-import { cancelSubscriptionOrSchedulePayment } from '../../OtherTransactions/ReceivedTransactionItem'
+import CountryBasedPhone from "../../PhoneInput/PhoneNumberBasedOnCountry.json"
 
-const Mobile = ({ values, changeHandler, isEditMode, payers, country, payerLoading, setBankError, bankError }) => {
+
+const Mobile = ({ values, changeHandler, isEditMode, payers, country, payerLoading, setBankError, bankError, index }) => {
     const { t } = useTranslation()
 
-    const countryCode = useMemo(() => {
-        console.log(countries.find(item => item?.name?.toLowerCase() === country?.name?.toLowerCase() || country?.name?.toLowerCase()?.includes(item?.name?.toLowerCase())), country)
-        return countries.find(item => item?.name?.toLowerCase() === country?.name?.toLowerCase() || country?.name?.toLowerCase()?.includes(item?.name?.toLowerCase()))?.code
-    }, [country])
+
+    const styles = {
+        opacity: 1,
+        pointerEvents: 'all',
+        boxShadow: 'none',
+        border: '1px solid rgb(238, 238, 238)',
+        padding: '12px 15px',
+        gap: '8px',
+        display: "flex",
+        borderRadius: "8px"
+    };
+
     useEffect(() => {
         if (payers.length === 1) {
             changeHandler({ target: { name: "mobile_money_provider", value: payers?.[0]?.id } })
         }
     }, [payers])
     const { userWithdrawals } = useContext(UserContext)
+
+    const handleChange = (e) => {
+        let input = e.target.value;
+
+        input = input.replace(/\D/g, '');
+
+        console.log(CountryBasedPhone[country.alpha3]?.maxLength)
+        if (input.length > CountryBasedPhone[country.alpha3]?.maxLength) {
+            e.preventDefault()
+            return;
+        }
+        return input
+    };
     return (
         <>
             {
@@ -75,21 +97,29 @@ const Mobile = ({ values, changeHandler, isEditMode, payers, country, payerLoadi
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0, position: "relative" }}>
                                         <Label className="col-form-label" htmlFor="mobile_wallet_account_number">{t("Wallet Number")} <span className="req_star">*</span></Label>
-                                        <PhoneInput
-                                            placeholder="Wallet Number"
-                                            phone={values.mobile_wallet_account_number}
-                                            setPhone={(e) => {
-                                                console.log(e)
-                                                changeHandler({ target: { value: e, name: "mobile_wallet_account_number" } })
-                                                if (userWithdrawals?.some(item => item?.mobile_wallet?.[0]?.wallet_account_number === e) && userWithdrawals?.some(item => item?.mobile_wallet?.[0]?.money_provider === values.mobile_money_provider)) {
-                                                    setBankError("You can't add same withdrawal twice.")
-                                                }
-                                            }}
-                                            customStyles={{ boxShadow: "none", border: "1px solid #eeeeee", padding: "12px 15px", gap: "8px" }}
-                                            country={country.alpha3}
-                                            disableDropdown={true}
-                                            disabled={!isEditMode}
-                                        />
+                                        <div style={{ ...styles, backgroundColor: !isEditMode && "#e9ecef" }}>
+                                            <div style={{ display: "flex", gap: '5px' }}>
+                                                <img style={{ borderRadius: '2px', height: '18px' }} src={country.file_url} alt="" />
+                                                <span style={{ fontWeight: 700, color: 'black' }}>{CountryBasedPhone[country.alpha3].dial_code}</span>
+                                            </div>
+
+                                            <input
+                                                value={values.mobile_wallet_account_number}
+                                                type="tel"
+                                                disabled={!isEditMode}
+                                                placeholder="Wallet Number"
+                                                style={{ border: 'none', background: 'transparent', fontWeight: 600 }}
+                                                onChange={(e) => {
+                                                    const inp = handleChange(e)
+                                                    changeHandler({ target: { value: inp, name: "mobile_wallet_account_number" } })
+                                                    if (userWithdrawals?.some((item, idx) => item?.mobile_wallet?.[0]?.wallet_account_number === inp && idx !== index) && userWithdrawals?.some((item, idx) => item?.mobile_wallet?.[0]?.money_provider === values.mobile_money_provider && idx !== index)) {
+                                                        setBankError("You can't add same withdrawal twice.")
+                                                    } else {
+                                                        setBankError("")
+                                                    }
+                                                }}
+                                            />
+                                        </div>
                                         {
                                             bankError &&
                                             <div style={{

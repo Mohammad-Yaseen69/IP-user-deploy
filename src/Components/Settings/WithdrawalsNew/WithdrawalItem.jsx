@@ -27,8 +27,10 @@ import wd from "./files/wd.png"
 import Switch from "../Switch"
 import SuccessModal from "../../AddBeneficiary/SuccessModal"
 import { useLocation, useNavigate } from "react-router"
+import CountryBasedPhone from "../../PhoneInput/PhoneNumberBasedOnCountry.json"
 
-const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdrawal }) => {
+
+const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdrawal, index }) => {
     const { t } = useTranslation()
     const { userDetails, authHeader, getWithdrawals, setMissingTabsData } = useContext(UserContext)
     const [country, setCountry] = useState(null)
@@ -224,6 +226,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
     const [cardCompleted, setCardCompleted] = useState(false)
     const [cryptoCompleted, setCryptoCompleted] = useState(false)
     const [bankError, setBankError] = useState("")
+    const [alpha3, setAlpha3] = useState("")
 
     const [bankMobCrypto, setbankMobCrypto] = useState({
         bank_iban: "",
@@ -271,6 +274,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
         })
     }
 
+
     const cardHandler = (e) => {
         const { name, value } = e.target;
         setCard(prev => {
@@ -311,10 +315,14 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
     useEffect(() => {
         if (bankMobCrypto.mobile_money_provider &&
             bankMobCrypto.mobile_wallet_name &&
-            bankMobCrypto.mobile_wallet_account_number) {
+            bankMobCrypto.mobile_wallet_account_number?.slice(CountryBasedPhone[country?.alpha3]?.dial_code?.replace("+", "").length) !== "" ? true : false) {
+            console.log("shurhu")
             setMobileCompleted(true)
+        } else {
+            setMobileCompleted(false)
         }
-    }, [bankMobCrypto])
+        console.log(bankMobCrypto.mobile_wallet_account_number?.slice(CountryBasedPhone[country?.alpha3]?.dial_code?.replace("+", "").length) !== "" ? true : false, bankMobCrypto.mobile_wallet_account_number?.slice(CountryBasedPhone[country?.alpha3]?.dial_code?.replace("+", "").length))
+    }, [bankMobCrypto, country])
 
     useEffect(() => {
         if (bankMobCrypto.crypto_currency &&
@@ -370,7 +378,6 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
 
     useEffect(() => {
         if (userWithdrawals?._id) {
-
             setbankMobCrypto(prev => ({
                 ...prev,
                 bank_payer: userWithdrawals?.bank_details?.[0]?.payer_id,
@@ -552,7 +559,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             })
     }
 
-    const updateWithDrawal = () => {
+    const updateWithdrawalFunc = () => {
         setIsSaving(true)
         const account_types = [
             bankCompleted ? "bank" : null,
@@ -675,6 +682,39 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                 // console.log(decrypted)
             })
     }
+
+
+    const verifyNumber = async () => {
+        setIsSaving(true)
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
+                data: encryptData({ number: `+${bankMobCrypto.mobile_wallet_account_number}` })
+            })
+
+            const dec = decryptData(res.data.data)
+            updateWithdrawalFunc()
+            console.log(dec)
+        } catch (error) {
+            const dec = decryptData(error.response.data.data)
+            if (dec.toLowerCase().includes("invalid")) {
+                setBankError("Invalid phone number")
+            }
+            console.log(dec)
+        }
+        finally {
+            setIsSaving(false)
+        }
+    }
+
+    const updateWithDrawal = () => {
+        const mobile = current?.value === "mobile"
+
+        if (mobile) {
+            verifyNumber()
+        } else {
+            updateWithdrawalFunc()
+        }
+    }
     const handleCountrySelect = (selectedCountry) => {
         if (selectedCountry?.name?.toLowerCase()?.includes("bolivia")) {
             selectedCountry.name = "Bolivia, Plurinational State of bolivia"
@@ -700,12 +740,13 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             }, {
                 headers: authHeader
             })
-
+            toggleDelModal()
             toast.success("Withdrawal channel deleted successfully!")
             getWithdrawals()
             setCurrent({})
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
+            toggleDelModal()
             toast.error(dec?.message ?? "Something went wrong while deleting the channel.")
         }
         finally {
@@ -716,7 +757,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
     const [currentDefault, setCurrentDefault] = useState(false)
     useEffect(() => {
         const cur = current?.value === "bank" ? "bank_details" : current?.value === "mobile" ? "mobile_wallet" : current?.value === "card" ? "card" : current?.value === "cash" ? "cash_pickup" : ""
-
+        console.log(userWithdrawals)
         setCurrentDefault(userWithdrawals?.[cur]?.[0]?.default ? true : false)
     }, [current])
 
@@ -739,6 +780,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
 
             const dec = decryptData(res.data.data)
             toast.success("Withdrawal channel status updated successfully!")
+            getWithdrawals()
             setCurrentDefault(prev => !prev)
         } catch (error) {
             const dec = decryptData(error.response.data.data)
@@ -885,7 +927,9 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                                                 changeHandler={bmcHandler}
                                                 isEditMode={isEditMode}
                                                 payers={payers}
+                                                index={index}
                                                 country={country}
+                                                setAlpha3={setAlpha3}
                                                 bankError={bankError}
                                                 setBankError={setBankError}
                                                 userWithdrawals={userWithdrawals}
@@ -1066,12 +1110,13 @@ export const MoreMenu = ({ withdrawal_id }) => {
     const deleteWithdrawals = async () => {
         setIsDeleting(true)
         try {
-            const res = await axios.delete(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/delete-withdrawal/${withdrawal_id}`, {
+            await axios.delete(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/delete-withdrawal/${withdrawal_id}`, {
                 headers: authHeader
             })
             getWithdrawals()
             toggleDelModal()
         } catch (error) {
+            toggleDelModal()
             const dec = decryptData(error.response.data.data)
             toast.error(dec?.message ?? "Something went wrong!")
         }
