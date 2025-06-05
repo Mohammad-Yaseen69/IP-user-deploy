@@ -68,7 +68,7 @@ const ManageSaveCards = () => {
                 justifyItems: "flex-start",
                 flexWrap: "wrap"
             }}>
-                {[...cards, ...cards]?.map(item => (
+                {cards?.map(item => (
                     <div key={item?._id} style={{
                         width: "100%",
                         maxWidth: "300px", // Never bigger than 300px
