@@ -70,13 +70,18 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
 
     const initiatePaypalPayment = async () => {
         dataHandler("loading", true)
+        let formattedDob = data.dob;
+        if (formattedDob && formattedDob.includes('-')) {
+            const [yyyy, mm, dd] = formattedDob.split('-');
+            formattedDob = `${dd}-${mm}-${yyyy}`;
+        }
         try {
             const payload = encryptData({
                 token: data.exchange_rate?.paypal_token,
                 name: data.fullName,
                 email: data.email,
                 phone: data.phone,
-                dob: data.dob
+                dob: formattedDob
             })
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/guest-pay/initiate-paypal`, {
                 data: payload
@@ -96,6 +101,12 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
     const [showCardModal, setShowCardModal] = useState(false)
     const initiateCardPayment = async () => {
         dataHandler("loading", true)
+        let formattedDob = data.dob;
+        if (formattedDob && formattedDob.includes('-')) {
+            const [yyyy, mm, dd] = formattedDob.split('-');
+            formattedDob = `${dd}-${mm}-${yyyy}`;
+        }
+
         try {
             const payload = encryptData({
                 se_shambey: createShambeToken(data),
@@ -104,8 +115,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                 email: data.email,
                 phone: data.phone,
                 iso_code: data.country?.alpha3,
-                dob: data.dob
-
+                dob: formattedDob
             })
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/guest-pay/initiate-card-payment`, {
                 data: payload
