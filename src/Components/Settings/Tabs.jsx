@@ -117,6 +117,11 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             tabType: 'withdrawls'
         },
         {
+            name: "Manage Save Cards",
+            icon: dwd,
+            active_icon: dwd_active,
+        },
+        {
             name: "Download Your Data",
             icon: dwd,
             active_icon: dwd_active,
@@ -252,7 +257,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                             return selected ? (
                                 <>
                                     <div>
-                                        <img alt="tab-icon" style={{height: '40px', width: '40px'}} src={selected.active_icon} className={styles.tabIcon} />
+                                        <img alt="tab-icon" style={{ height: '40px', width: '40px' }} src={selected.active_icon} className={styles.tabIcon} />
                                         <span style={{ fontWeight: 600, fontSize: "15px" }}>{t(selected.name)}</span>
                                     </div>
                                     <ChevronDown />
@@ -289,7 +294,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                                         }}
                                     >
                                         <div>
-                                            <img alt="tab-icon" style={{width: "40px", height: '40px'}} src={item.active_icon} className={styles.tabIcon} />
+                                            <img alt="tab-icon" style={{ width: "40px", height: '40px' }} src={item.active_icon} className={styles.tabIcon} />
                                             <span style={{ fontWeight: 600, fontSize: '15px' }}>{t(item.name)}</span>
                                         </div>
 

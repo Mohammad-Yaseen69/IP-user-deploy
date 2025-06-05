@@ -26,6 +26,7 @@ import { Button, Card, CardBody } from "reactstrap";
 import WithdrawalsNew from "./WithdrawalsNew";
 import { useNavigate } from "react-router";
 import Threshold from "./Threshold";
+import ManageSaveCards from "./ManageSaveCards";
 
 const Settings = () => {
     const { t } = useTranslation()
@@ -167,6 +168,10 @@ const Settings = () => {
                                     currentTab === "API Key"
                                     &&
                                     <ApiKey />
+                                }
+                                {
+                                    currentTab === "Manage Save Cards" && 
+                                    <ManageSaveCards />
                                 }
                                 {
                                     currentTab === "Business Verification"
