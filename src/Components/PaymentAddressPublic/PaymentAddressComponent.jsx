@@ -305,7 +305,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                     />
                                 }
 
-                                <Card style={{ marginBottom: "0", boxShadow: "unset" }} className={styles.sub_container}>
+                                <Card style={{ marginBottom: "0", boxShadow: "unset", width: '100%' }} className={styles.sub_container}>
                                     <CardBody className={styles.sc_body}>
 
                                         <div style={{ flex: width > 1000 && .5, borderRadius: '16px', width: width < 1000 && "100%", overflow: width < 100 && 'hidden', alignSelf: width > 1000 && "stretch", display: width > 1000 && "grid", gap: '10px', background: width < 1000 && "white" }} className={styles.right}>
