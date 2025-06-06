@@ -41,6 +41,7 @@ const Layout = ({ children, classNames, ...rest }) => {
   // const { setIsVertical } = useContext(ProductContext);
   const location = useLocation();
   const query = new URLSearchParams(location.search)
+  const benId = query.get("user_id")
   const [isOnline, setIsOnline] = useState(navigator.onLine)
   const [showOfflineModal, setShowOfflineModal] = useState()
   const queryData = location?.search?.split("=")[1]?.toString();
@@ -99,9 +100,16 @@ const Layout = ({ children, classNames, ...rest }) => {
     getUserBeneficiaries
   } = useContext(UserContext)
 
+
   const beneficiaryWithoutAddresses = useMemo(() => {
-    if ((location.pathname.startsWith("/beneficiaries"))) {
-      return beneficiaries.filter(item => !item.address || item?.address === "")
+    if (location.pathname.startsWith("/beneficiaries/edit") && benId) {
+      const beneficiary = beneficiaries?.find(ben => ben?._id === benId)
+
+      if (beneficiary?.address) {
+        return []
+      } else {
+        return [beneficiary]
+      }
     } else {
       return []
     }
@@ -121,7 +129,8 @@ const Layout = ({ children, classNames, ...rest }) => {
     };
 
     const handleOffline = () => {
-      setIsOnline(false);    };
+      setIsOnline(false);
+    };
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
@@ -135,9 +144,9 @@ const Layout = ({ children, classNames, ...rest }) => {
   useEffect(() => {
     if (isOnline === false) {
       setShowOfflineModal(true)
-    }else{
+    } else {
       setShowOfflineModal(false)
-    } 
+    }
   }, [isOnline])
 
   useEffect(() => {
