@@ -25,6 +25,7 @@ import Finger from "./a_items/finger/finger.svg"
 import FingerSuccess from "./a_items/finger/finger_success.svg"
 import FingerFailed from "./a_items/finger/finger_failed.svg"
 import "./styles/styles.css"
+import { ChevronDown } from 'react-feather';
 
 const TwoFactorAuth = () => {
     const { t } = useTranslation()
@@ -456,47 +457,22 @@ const TwoFactorAuth = () => {
                             </td>
                             <td style={{ minWidth: window.innerWidth > 1000 && "400px" }} data-label={t("Finger Biometric")}>
 
-                                {(window.innerWidth > 1000 && fingerBioActive) &&
-                                    <div style={{ cursor: "pointer" }} onClick={() => setShowDevices(true)} className={styles.deviceDiv}>
-                                        <img src={SettingsIcon} alt="" />
-                                        <p style={{ marginBottom: "0" }}>Manage Devices/Biometrics</p>
-                                        <p style={{ marginBottom: "0" }}>-</p>
-                                        <p style={{ marginBottom: "0" }}>{devices.length}/3</p>
-                                    </div>
-                                }
-
-                                {isSaving ?
-                                    (<div class="d-flex justify-content-center">
-                                        <div class="spinner-border" color='primary' role="status">
-                                            <span class="sr-only">Loading...</span>
-                                        </div>
-                                    </div>)
+                                {devices.length > 0 ?
+                                    <ChevronDown onClick={() => setShowDevices(prev => !prev)} style={{ marginRight: '1rem', transition: "all .4s", transform: showDevices && "rotate(180deg)", cursor: "pointer" }} />
                                     :
-                                    (
-                                        <Switch
-                                            checked={fingerBioActive}
-                                            callback={() => {
-                                                if (!devices.length && !fingerBioActive) {
-                                                    setShowBioModal(true)
-                                                } else {
-                                                    mainToggle()
-                                                }
-                                            }} disabled={isSaving} />
-                                    )
+                                    <div className={styles.buttons} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                        <button onClick={() => setShowBioModal(true)} className={styles.plus}>
+                                            <img src={Plus} alt="" />
+                                            <p style={{ marginBottom: "0" }}>Register Biometric Passkey</p>
+                                        </button>
+                                    </div>
                                 }
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
-                {window.innerWidth < 1000 &&
-                    <div style={{ cursor: "pointer" }} onClick={() => setShowDevices(true)} className={styles.deviceDiv}>
-                        <img src={SettingsIcon} alt="" />
-                        <p style={{ marginBottom: "0" }}>Manage Devices/Biometrics</p>
-                        <p style={{ marginBottom: "0" }}>-</p>
-                        <p style={{ marginBottom: "0" }}>{devices.length}/3</p>
-                    </div>
-                }
+
 
                 {(showDevices && window.innerWidth > 1000 && fingerBioActive) &&
                     <div style={{ display: "flex", flexDirection: "column", gap: "18px", alignItems: "flex-end" }}>
@@ -517,25 +493,20 @@ const TwoFactorAuth = () => {
                                     </div>
 
                                     <div style={{ display: "flex", alignItems: "center" }}>
-                                        <Switch callback={() => deviceToggle(device)} checked={device?.enabled} />
-
                                         <svg
                                             style={{ cursor: "pointer" }}
                                             onClick={() => setDelete({ showModal: true, deviceToDelete: device })}
                                             xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
                                             <path d="M6 2.604H10M2 4.604H14M12.6667 4.604L12.1991 11.6169C12.129 12.669 12.0939 13.1951 11.8667 13.594C11.6666 13.9452 11.3648 14.2275 11.0011 14.4038C10.588 14.604 10.0607 14.604 9.00623 14.604H6.99377C5.93927 14.604 5.41202 14.604 4.99889 14.4038C4.63517 14.2275 4.33339 13.9452 4.13332 13.594C3.90607 13.1951 3.871 12.669 3.80086 11.6169L3.33333 4.604" stroke="#D00416" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                         </svg>
+
+                                        <Switch callback={() => deviceToggle(device)} checked={device?.enabled} />
                                     </div>
                                 </div>
                             ))}
                         </div>
 
-                        <div className={styles.buttons} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <button onClick={() => setShowDevices(false)} className={styles.close}>
-                                <img src={Cancel} alt="" />
-                                <p style={{ marginBottom: "0" }}>Close</p>
-                            </button>
-
+                        <div className={styles.buttons} style={{ display: "flex", alignItems: "center", gap: "8px", marginRight: "10px" }}>
                             <button onClick={() => setShowBioModal(true)} className={styles.plus}>
                                 <img src={Plus} alt="" />
                                 <p style={{ marginBottom: "0" }}>Register Biometric Passkey</p>

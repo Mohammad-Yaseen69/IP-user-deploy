@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import coverPlaceHolder from "../UserProfilePublic/files/cover_1.png"
+import coverPlaceHolder from "./banner.png"
 import styles from "./styles/PAC.module.scss"
 import { Card, CardBody, CardText, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import countries from "../PaymentsNewer/CountriesData.json"
@@ -311,8 +311,8 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                         <div style={{ flex: width > 1000 && .5, borderRadius: '16px', width: width < 1000 && "100%", overflow: width < 100 && 'hidden', alignSelf: width > 1000 && "stretch", display: width > 1000 && "grid", gap: '10px', background: width < 1000 && "white" }} className={styles.right}>
                                             <div className={styles.userDets} >
 
-                                                <div className={styles.cover_container}>
-                                                    <img src={(croppedCover || cover) || coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: "171px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important" }} />
+                                                <div  className={styles.cover_container}>
+                                                    <img src={(croppedCover || cover) || coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: "171px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important", objectPosition: (!croppedCover || !cover) && "right" }} />
                                                 </div>
                                                 <div style={{ backgroundColor: 'white', borderRadius: "16px", padding: "14px", maxHeight: "fit-content" }}>
                                                     <div style={{ flexDirection: "column", gap: "0", padding: "0px", position: 'relative', }} className={styles.top}>

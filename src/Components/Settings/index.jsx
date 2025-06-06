@@ -170,7 +170,7 @@ const Settings = () => {
                                     <ApiKey />
                                 }
                                 {
-                                    currentTab === "Manage Save Cards" && 
+                                    currentTab === "Manage Saved Cards" &&
                                     <ManageSaveCards />
                                 }
                                 {
@@ -298,6 +298,10 @@ const Settings = () => {
                                     currentTab === "API Key"
                                     &&
                                     <ApiKey />
+                                }
+                                {
+                                    currentTab === "Manage Saved Cards" &&
+                                    <ManageSaveCards />
                                 }
                                 {
                                     currentTab === "Business Verification"

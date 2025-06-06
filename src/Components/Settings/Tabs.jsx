@@ -36,6 +36,8 @@ import thres from "./tabs_icons/thres.svg"
 import useWindowWidth from '../../utils/useWindowWidth'
 import { ChevronDown } from 'react-feather'
 import NextStepModal from './NextStepModal'
+import { BsFillCreditCardFill } from "react-icons/bs";
+
 
 
 
@@ -117,7 +119,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             tabType: 'withdrawls'
         },
         {
-            name: "Manage Save Cards",
+            name: "Manage Saved Cards",
             icon: dwd,
             active_icon: dwd_active,
         },
