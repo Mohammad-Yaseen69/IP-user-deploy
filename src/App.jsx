@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, {  useLayoutEffect, useState } from 'react'
 import Routers from "./RouteNew"
 import CustomizerProvider from './Helper/Customizer/CustomizerProvider'
 import ProjectProvider from './Helper/Project/ProjectProvider'
@@ -19,19 +19,14 @@ import GoogleChartProvider from "./Helper/GoogleChart/GoogleChartProvider"
 import ChartistProvider from "./Helper/Chartist/ChartistProvider"
 import AnimationThemeProvider from './Helper/AnimationTheme/AnimationThemeProvider'
 import UserState from './Context/UserContext'
-import { useTranslation } from 'react-i18next'
 import InactivityWrapper from './InactivityWrapper'
-import { BrowserRouter, useLocation } from 'react-router-dom'
 import { Suspense } from 'react'
 import InstaPayLoader from './Components/Loader'
 import { TimezonesProvider } from './Context/TimezoneContext'
 import ErrorBoundary from './ErrorBoundary'
 import BroadcastPage from './BroadcastPage'
 import { ToastContainer } from "react-toastify";
-import SessionExpireModal from './Components/SessionExpireModal'
 
-import { decryptData } from "./Helper/EssentilaMethods/Decryption"
-import axios from 'axios'
 
 const App = () => {
   const [showOtherTabError, setShowOtherTabError] = useState(false)
@@ -90,8 +85,6 @@ const App = () => {
 
 
 
-  const location = useLocation()
-  const query = new URLSearchParams(location.search)
 
   return (
     <div className='App' id='main_app'>

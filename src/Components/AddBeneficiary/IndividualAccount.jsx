@@ -14,7 +14,6 @@ import { UserContext } from "../../Context/UserContext";
 import WalletDetails from "./WalletDetails";
 import CountryDropDown from "./CountryDropDown";
 import CitiesDropDown from "../CitiesDropDown";
-import ConfirmationModal from "./ConfirmationModal";
 import { useTranslation } from "react-i18next";
 import NestedDropdown from "../NestedDropdown";
 import InstaPayLoader from "../Loader";
@@ -24,6 +23,8 @@ import PhoneInput from "../PhoneInput";
 // import { MobileDatePicker } from "@mui/x-date-pickers";
 // import { minDate } from "../Settings/Basic";
 import africanCountries from "../../Data/AfricanCountries.json"
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export const BeneficiaryRelation = {
     SELF: "My own account",
@@ -98,7 +99,7 @@ export const idTypeData = {
     "RESIDENT_CARD": "Permanent Residency Identification Card",
     "ALIEN_REGISTRATION": "Alien Registration Certificate/Card",
     "PAN_CARD": "PAN Card",
-    "VOTERS_ID": "Voter’s Identification Card",
+    "VOTERS_ID": "Voters Identification Card",
     "HEALTH_CARD": "Health Insurance Card/Number",
     "EMPLOYER_ID": "Employer Identification Card",
     "OTHER": "Others not listed"
@@ -121,8 +122,8 @@ export const AccountTypeData = {
 }
 
 export const iso2Toiso3Convert = (iso2 = "") => {
-    const country = countries.find(item => item.code.toLowerCase() == iso2?.toLowerCase())
-    const alpha3 = countriesjson.find(item => item.name.toLowerCase() == country?.name?.toLowerCase() || item.name.toLowerCase().includes(country?.name?.toLowerCase()))?.alpha3
+    const country = countries.find(item => item.code.toLowerCase() === iso2?.toLowerCase())
+    const alpha3 = countriesjson.find(item => item.name.toLowerCase() === country?.name?.toLowerCase() || item.name.toLowerCase().includes(country?.name?.toLowerCase()))?.alpha3
     return alpha3
 }
 
@@ -148,11 +149,10 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
     const [countryId, setCountryId] = useState("")
     const [city, setCity] = useState("")
     const [mobileNumber, setMobileNumber] = useState("")
-    const [countryCode, setCountryCode] = useState("")
 
     const [walletError, setWalletError] = useState("")
     // instapay wallet
-    const [instapayWalletsLength, setInstapayWalletsLength] = useState(1)
+    const [instapayWalletsLength] = useState(1)
     const [instapayWallets, setInstapayWallets] = useState(Array(instapayWalletsLength).fill(''))
     const [walletIds, setWalletIds] = useState([])
     const [cashPickupType, setCashPickupType] = useState("")
@@ -164,18 +164,16 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
 
     // api bank details
     const [bankCountry, setBankCountry] = useState("")
-    const [bankCity, setBankCity] = useState("")
     const [bankCountryCode, setBankCountryCode] = useState("")
 
     // const show confirmation
-    const [showConfirmation, setShowConfirmation] = useState(false)
     const [countryChangedFromModal, setCountryChangedFromModal] = useState(false)
 
 
     const [services, setServices] = useState([])
     const [mobileProviders, setMobileProviders] = useState([])
     const [loading, setLoading] = useState(false)
-    const [isAddressRequired, setIsAddressRequired] = useState(true)
+    const [isAddressRequired,] = useState(true)
 
     const [mobileError, setMobileError] = useState("")
     const [walletMobileError, setWalletMobileError] = useState("")
@@ -191,7 +189,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         if (fieldsInfo === null) return false;
         let isInThere = false;
         for (const service in fieldsInfo) {
-            if (fieldsInfo[service]?.[field_name]?.some(item => item == sub_field_name)) {
+            if (fieldsInfo[service]?.[field_name]?.some(item => item === sub_field_name)) {
                 isInThere = true
                 break
             }
@@ -204,7 +202,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         if (fieldsInfo === null) return false;
         let isInThere = false;
 
-        if (fieldsInfo?.[service?.name]?.[field_name]?.some(item => item == sub_field_name)) {
+        if (fieldsInfo?.[service?.name]?.[field_name]?.some(item => item === sub_field_name)) {
             isInThere = true
         }
 
@@ -313,7 +311,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
 
 
     // mobile extra fields
-    const [mobileExtras, setMobileExtras] = useState({
+    const [mobileExtras,] = useState({
         msisdn: "",
         account_number: "",
         email: "",
@@ -322,15 +320,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         iban: ""
     })
 
-    const handleMobileExtraChange = (e) => {
-        const { value, name } = e.target;
-        setMobileExtras(prev => {
-            return {
-                ...prev,
-                [name]: value
-            }
-        })
-    }
+
     // mobile extra fields
 
 
@@ -635,7 +625,6 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                             }
                             setBankCountry(decrypted?.bicDetails?.structured_address?.country_name[0] + decrypted?.bicDetails?.structured_address?.country_name.slice(1).toLowerCase() ?? "")
                             setBankCountryCode(decrypted?.bicDetails?.structured_address?.country_code ?? "")
-                            setBankCity(decrypted?.bicDetails?.structured_address?.town_name[0] + decrypted?.bicDetails?.structured_address?.town_name.slice(1).toLowerCase() ?? "")
                             setBankDetailsError("")
                             setIsValidIban(true)
                         })
@@ -666,7 +655,6 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                             }
                             setBankCountry("")
                             setBankCountryCode("")
-                            setBankCity("")
                         })
                 } else {
                     setBankDetailsError("")
@@ -687,7 +675,6 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                     }
                     setBankCountry("")
                     setBankCountryCode("")
-                    setBankCity("")
                 }
             } else {
                 if (e.target.value.length >= 7) {
@@ -715,7 +702,6 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                             console.log(decrypted)
                             setBankCountry(decrypted?.structured_address?.country_name[0] + decrypted?.structured_address?.country_name.slice(1).toLowerCase() ?? "")
                             setBankCountryCode(decrypted?.structured_address?.country_code ?? "")
-                            setBankCity(decrypted?.bicDetails?.structured_address?.town_name[0] + decrypted?.bicDetails?.structured_address?.town_name.slice(1).toLowerCase() ?? "")
                             setBankDetailsError("")
                             setIsValidIban(true)
                         })
@@ -746,7 +732,6 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                             }
                             setBankCountry("")
                             setBankCountryCode("")
-                            setBankCity("")
                         })
                 } else {
                     setBankDetailsError("")
@@ -767,7 +752,6 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                     }
                     setBankCountry("")
                     setBankCountryCode("")
-                    setBankCity("")
                 }
             }
         }, 1500);
@@ -1105,11 +1089,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                 if (selectedCountry?.name?.toLowerCase()?.includes("bolivia")) {
                                                     selectedCountry.name = "Bolivia, Plurinational State of bolivia"
                                                 }
-                                                const filtered = countries.filter(item => {
-                                                    return selectedCountry?.name?.toLowerCase()?.includes(item?.name?.toLowerCase())
-                                                })?.[0]
                                                 setCountryChangedFromModal(false)
-                                                setCountryCode(filtered?.code)
                                                 setCountry(selectedCountry?.name)
                                                 setCountryIsoCode(selectedCountry?.alpha3)
                                                 const country_id = filteringCountries.find(item => item?.country_iso_code === selectedCountry.alpha3)?._id
@@ -1376,15 +1356,26 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                 ?
                                                 <FormGroup FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                     <Label className="col-form-label">{t(service_name_formatter(item))}</Label>
-                                                    <Input type="date" className="form-control" style={{ flex: 1, minWidth: "250px" }} value={additionFields[item]} name={item} onChange={handleAddtionalFieldChange} />
                                                     {/* <MobileDatePicker
                                                             minDate={minDate}
                                                             style={{ flex: 1, minWidth: "250px" }}
                                                             id="datepicker"
                                                             name={item}
                                                             value={additionFields[item]}
-                                                            onChange={(e) => handleAddtionalFieldChange({ target: { name: item, value: e } })}
                                                         /> */}
+                                                    <DatePicker
+                                                        onChange={(e) => handleAddtionalFieldChange({ target: { name: item, value: e } })}
+                                                        selected={additionFields[item]}
+                                                        name={item}
+                                                        style={{ flex: 1, minWidth: "250px" }}
+                                                        className="form-control"
+                                                        placeholder="dd/MM/yyyy"
+                                                        placeholderText={t("dd/MM/yyyy")}
+                                                        dateFormat="dd/MM/yyyy"
+                                                        showYearDropdown
+                                                        showMonthDropdown
+                                                        dropdownMode="select"
+                                                    />
                                                 </FormGroup>
                                                 :
                                                 item === "nationality"
@@ -1757,7 +1748,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                     <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                         <Label className="col-form-label">{t(service_name_formatter(item))}<span className="req_star">*</span></Label>
                                                         {
-                                                            item?.toString()?.toLowerCase() == "account_type"
+                                                            item?.toString()?.toLowerCase() === "account_type"
                                                                 ?
                                                                 <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} disabled={!isValidIban} type="select" value={bankExtras[item]} name={item} onChange={handleBankExtraChange}>
                                                                     <option value="">Select Account Type</option>
@@ -2079,7 +2070,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                             }
                                         </div>
                                         {
-                                            !mobileNumber || mobileNumber.length < 9
+                                            (!mobileNumber || mobileNumber.length < 9)
                                             &&
                                             <span>Must add phone number to enable these fields.</span>
                                         }

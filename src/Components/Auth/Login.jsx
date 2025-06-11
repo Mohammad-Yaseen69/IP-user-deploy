@@ -939,9 +939,12 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         <span>{t("Problem with the token?")}</span>
                                     }
 
-                                    <p style={{ alignSelf: "baseline" }}>
-                                        Choose your preferred method to verify your identity:
-                                    </p>
+                                    {methods.filter(m => m.attr !== "sms").some(m => m.avail === true)
+                                        &&
+                                        <p style={{ alignSelf: "baseline" }}>
+                                            Choose your preferred method to verify your identity:
+                                        </p>
+                                    }
                                     <div className={styles.otp_methods}>
                                         {isMobile ? (
                                             <>

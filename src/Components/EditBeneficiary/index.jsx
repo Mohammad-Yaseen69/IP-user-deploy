@@ -20,11 +20,12 @@ import NestedDropdown from "../NestedDropdown";
 import InstaPayLoader from "../Loader";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import PhoneInput from "../PhoneInput";
-import DataCountries from "../PaymentsNewer/CountriesData.json"
-import { LocalizationProvider, MobileDatePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { minDate } from "../Settings/Basic";
 import { requiredFields } from "../AddBeneficiary/requiredFields";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 let debounceTimer;
 
@@ -59,7 +60,6 @@ const EditBeneficiary = () => {
     const [mobileNumber, setMobileNumber] = useState("")
     const [countryCode, setCountryCode] = useState("")
     const [isEditMode, setIsEditMode] = useState(false)
-    const [accountType, setAccountType] = useState([])
 
     // instapay wallet
     const [instapayWallets, setInstapayWallets] = useState([])
@@ -82,20 +82,19 @@ const EditBeneficiary = () => {
 
     // const show confirmation
     const [showConfirmation, setShowConfirmation] = useState(false)
-    const [countryChangedFromModal, setCountryChangedFromModal] = useState(false)
 
 
     const [services, setServices] = useState([])
     const [mobileProviders, setMobileProviders] = useState([])
     const [loading, setLoading] = useState(false)
-    const [isAddressRequired, setIsAddressRequired] = useState(true)
+    const [isAddressRequired,] = useState(true)
     const [clicked, setClicked] = useState(false)
 
     const fieldInfoValidate = (field_name, sub_field_name) => {
         if (fieldsInfo === null) return false;
         let isInThere = false;
         for (const service in fieldsInfo) {
-            if (fieldsInfo[service]?.[field_name]?.some(item => item == sub_field_name)) {
+            if (fieldsInfo[service]?.[field_name]?.some(item => item === sub_field_name)) {
                 isInThere = true
                 break
             }
@@ -108,7 +107,7 @@ const EditBeneficiary = () => {
         if (fieldsInfo === null) return false;
         let isInThere = false;
 
-        if (fieldsInfo?.[service?.name]?.[field_name]?.some(item => item == sub_field_name)) {
+        if (fieldsInfo?.[service?.name]?.[field_name]?.some(item => item === sub_field_name)) {
             isInThere = true
         }
 
@@ -193,18 +192,6 @@ const EditBeneficiary = () => {
         iban: ""
     })
 
-    const handleMobileExtraChange = (e) => {
-        const { value, name } = e.target;
-        setMobileExtras(prev => {
-            return {
-                ...prev,
-                [name]: value
-            }
-        })
-        if (value.length >= 3) {
-            setMissingFields(prev => prev.filter(field => field !== name))
-        }
-    }
     // mobile extra fields
 
 
@@ -257,13 +244,6 @@ const EditBeneficiary = () => {
         return () => window.removeEventListener("resize", setWidth)
     }, [])
 
-
-    const handleChangeAlpha = (event) => {
-        const charCode = event.charCode;
-        if (!/[a-zA-Z]/.test(String.fromCharCode(charCode))) {
-            event.preventDefault();
-        }
-    }
 
     const handleChangeNumber = (event) => {
         const charCode = event.charCode;
@@ -337,7 +317,6 @@ const EditBeneficiary = () => {
     }
 
     const changeUserDetailsAsPerBankDetails = () => {
-        setCountryChangedFromModal(true)
         setFormData((prev) => {
             return {
                 ...prev,
@@ -455,8 +434,6 @@ const EditBeneficiary = () => {
                             setIsValidIban(true)
                         })
                         .catch(err => {
-                            const decrypted = decryptData(err.response.data.data)
-                            // console.log(decrypted)
                             setBankDetailsError("Invalid Details")
                             setFormData(prev => {
                                 return {
@@ -528,7 +505,6 @@ const EditBeneficiary = () => {
                             setIsValidIban(true)
                         })
                         .catch(err => {
-                            const decrypted = decryptData(err.response.data.data)
                             setBankDetailsError("Invalid Details")
                             // console.log(decrypted)
                             setFormData(prev => {
@@ -696,7 +672,6 @@ const EditBeneficiary = () => {
             setCountryIsoCode(user?.country_iso_code)
             setCountryId(user?.country)
             setCity(user?.city)
-            setAccountType([...user?.account_type])
             setCashPickupType(user?.cash_pickup?.[0]?.document_type)
             setCashPickupNumber(user?.cash_pickup?.[0]?.document_number)
 
@@ -733,7 +708,6 @@ const EditBeneficiary = () => {
     const [walletNumberError, setWalletNumberError] = useState("")
 
     const [missingFields, setMissingFields] = useState([])
-    const [firstMissingField, setFirstMissingField] = useState(null)
 
     const editBenFun = () => {
         const account_types = [
@@ -835,8 +809,7 @@ const EditBeneficiary = () => {
             headers: authHeader
         })
             .then(res => {
-                const decrypted = decryptData(res.data.data)
-                // console.log(decrypted)
+
                 toggleSuccess()
             })
             .catch(err => {
@@ -910,9 +883,6 @@ const EditBeneficiary = () => {
 
         setsaveloading(true)
         try {
-            const mobileCheck = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
-                data: encryptData({ number: `+${mobileNumber}` })
-            })
             if (formData.mobile_wallet_account_number) {
                 await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
                     data: encryptData({ number: `+${formData.mobile_wallet_account_number}` })
@@ -1184,7 +1154,6 @@ const EditBeneficiary = () => {
                                             <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                 <Label className="col-form-label" htmlFor="country">{t("Country")} <span className="req_star">*</span></Label>
                                                 <CountryDropDown onSelect={(selectedCountry) => {
-                                                    setCountryChangedFromModal(false)
                                                     if (selectedCountry?.name?.toLowerCase()?.includes("bolivia")) {
                                                         selectedCountry.name = "Bolivia, Plurinational State of bolivia"
                                                     }
@@ -1294,7 +1263,22 @@ const EditBeneficiary = () => {
                                                             ?
                                                             <FormGroup FormGroup style={{ flex: 1, margin: 0, minWidth: "250px", display: "flex", flexDirection: "column" }}>
                                                                 <Label className="col-form-label">{t(service_name_formatter(item))}</Label>
-                                                                <Input min={minDate} disabled={!isEditMode} type="date" className="form-control" style={{ flex: 1, minWidth: "250px" }} value={additionFields[item]} name={item} onChange={handleAddtionalFieldChange} />
+                                                                <DatePicker
+                                                                    onChange={(e) => handleAddtionalFieldChange({ target: { name: item, value: e } })}
+                                                                    selected={additionFields[item]}
+                                                                    name={item}
+                                                                    disabled={!isEditMode}
+                                                                    style={{ flex: 1, minWidth: "250px" }}
+                                                                    className="form-control"
+                                                                    placeholder="dd/MM/yyyy"
+                                                                    placeholderText={t("dd/MM/yyyy")}
+                                                                    dateFormat="dd/MM/yyyy"
+                                                                    showYearDropdown
+                                                                    min={minDate}
+                                                                    minDate={minDate}
+                                                                    showMonthDropdown
+                                                                    dropdownMode="select"
+                                                                />
                                                                 {/* <MobileDatePicker
                                                                         style={{ flex: 1, minWidth: "250px", padding: ".6rem 1rem", width: "100%" }}
                                                                         id="datepicker"
@@ -1998,8 +1982,8 @@ const EditBeneficiary = () => {
                                                     }
                                                 </div>
                                                 {
-                                                    !mobileNumber || mobileNumber.length < 9
-                                                    &&
+                                                    (!mobileNumber || mobileNumber.length < 9
+                                                    ) &&
                                                     <span>Must add phone number to enable these fields.</span>
                                                 }
                                             </>
