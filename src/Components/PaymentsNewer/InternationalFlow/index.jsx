@@ -1129,6 +1129,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                 isOpen={internationalData.error}
                                 toggle={() => {
                                     updateInternationalData("error", "")
+
+                                    if(transaction_status === "error"){
+                                        navigate("/payments")
+                                    }
                                     // setSendPaymentType("")
                                     // setStep(1)
                                 }}
@@ -1174,6 +1178,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                         :
                                         <Receipt
                                             data={internationalData}
+                                            transactionStatus={transaction_status}
                                         />
                                     :
                                     <div

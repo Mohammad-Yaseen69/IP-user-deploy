@@ -9,10 +9,10 @@ import help from "./files/help.svg"
 import { useState } from "react"
 import SocialModal from "../../ShareBtn/SocialModal"
 import { useLocation, useNavigate } from "react-router"
-import success from "./files/success.gif"
+import fail from "./files/fail.lottie"
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
-const Receipt = ({ data, showBack = false, backHandler = () => { }, showTrxBtn = true }) => {
+const Receipt = ({ data, showBack = false, backHandler = () => { }, showTrxBtn = true, transactionStatus }) => {
     const { t } = useTranslation()
     const [showShare, setShowShare] = useState(false)
     const navigate = useNavigate()
@@ -49,13 +49,14 @@ const Receipt = ({ data, showBack = false, backHandler = () => { }, showTrxBtn =
                         </div>
                         <div className={styles.confirmed}>
                             <div className={styles.c_left}>
-                                <h3 style={{ maxWidth: "15ch" }}>{t("Your payment is in process")}</h3>
+                                <h3 style={{ maxWidth: "15ch" }}
+                                >{transactionStatus !== "error" ? t("Your payment is in process") : t("Your payment is Failed")}</h3>
                                 <p>{t("Thanks for Using InstaPay")}</p>
                             </div>
                             {/* <video src={confirm_vid} muted autoPlay loop controls={false} /> */}
                             {/* <img src={success} alt="" /> */}
                             <DotLottieReact
-                                src="https://lottie.host/dc9844a3-b41b-4ddc-97c8-0039376f3ac8/DGe7bLZyug.json"
+                                src={transactionStatus !== "error" ? "https://lottie.host/dc9844a3-b41b-4ddc-97c8-0039376f3ac8/DGe7bLZyug.json" : fail}
                                 backgroundColor="transparent"
                                 speed="1"
                                 style={{ width: "225px", height: "225px" }}
@@ -103,25 +104,27 @@ const Receipt = ({ data, showBack = false, backHandler = () => { }, showTrxBtn =
                                     !
                                 </div>
                                 <div className={styles.status_item}>
-                                    <h5>{t("Transfer in progress")}</h5>
+                                    <h5>{transactionStatus !== "error" ? t("Transfer in progress") : t("Transaction Failed")}</h5>
                                 </div>
                             </div>
                         </div>
-                        <div className={styles.note}>
-                            <Info size={20} />
-                            <span>It may take a few hours for the funds to appear in <strong>
-                                {
-                                    title
-                                        ?
+                        {transactionStatus !== "error" &&
+                            <div className={styles.note}>
+                                <Info size={20} />
+                                <span>It may take a few hours for the funds to appear in <strong>
+                                    {
                                         title
-                                        :
-                                        <>
-                                            {data.beneficiary?.firstname ?? data.beneficiary?.first_name} {data.beneficiary?.lastname ?? data.beneficiary?.last_name}
-                                        </>
-                                }
-                                ’s
-                            </strong> account</span>
-                        </div>
+                                            ?
+                                            title
+                                            :
+                                            <>
+                                                {data.beneficiary?.firstname ?? data.beneficiary?.first_name} {data.beneficiary?.lastname ?? data.beneficiary?.last_name}
+                                            </>
+                                    }
+                                    ’s
+                                </strong> account</span>
+                            </div>
+                        }
                     </div>
             }
         </>
