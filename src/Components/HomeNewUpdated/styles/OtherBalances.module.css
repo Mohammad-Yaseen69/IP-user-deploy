@@ -47,8 +47,9 @@
     }
 
     .sub:nth-child(1) span {
-        color: #5BA412;
+        color: #FF0004;
         leading-trim: both;
+
         text-edge: cap;
         font-family: Manrope;
         font-size: .7rem;
@@ -60,7 +61,7 @@
     }
 
     .sub:nth-child(2) span {
-        color: #FF0004;
+        color: #5BA412;
         leading-trim: both;
         text-edge: cap;
         font-family: Manrope;

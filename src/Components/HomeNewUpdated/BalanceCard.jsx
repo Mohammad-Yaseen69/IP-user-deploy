@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Card, CardBody } from 'reactstrap';
 import styles from "./styles/balance.module.css"
 import { useTranslation } from 'react-i18next';
-import chev_up from "./files/chev_up.png"
 import { UserContext } from '../../Context/UserContext';
 import axios from 'axios';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
@@ -10,7 +9,6 @@ import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 const BalanceComponent = () => {
     const { t } = useTranslation()
     const { userWallets, authHeader } = useContext(UserContext)
-    const [defaultAmount, setDefaultAmount] = useState("$0.00")
 
 
     const [isLoading, setIsLoading] = useState(true)

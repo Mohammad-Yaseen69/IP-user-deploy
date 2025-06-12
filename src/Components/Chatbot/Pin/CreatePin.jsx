@@ -1,12 +1,12 @@
-import { useRef, useState, useContext, useEffect } from "react"
+import { useRef, useState, useEffect } from "react"
 import styles from "../../CreatePin/styles/index.module.scss"
 import PinFields from "../../CreatePin/PinFields"
 import axios from "axios"
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
-import { UserContext } from '../../../Context/UserContext'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
-import { useParams } from "react-router-dom"
+import { useLocation, useParams } from "react-router-dom"
 import { toast } from "react-toastify"
+import QrGenerate from "../../Settings/QrGenerate"
 
 const CreatePin = () => {
     const [pinFields, setPinFields] = useState({
@@ -21,6 +21,9 @@ const CreatePin = () => {
     const [disabled, setDisabled] = useState(true)
     const [success, setShowSuccess] = useState(false)
     const { accountId, platformType } = useParams()
+    const location = useLocation()
+    const query = new URLSearchParams(location.search)
+    const walletId = query.get("w")
 
     const pinRefs = useRef(Array(4).fill(null));
     const confirmRefs = useRef(Array(4).fill(null));
@@ -139,6 +142,10 @@ const CreatePin = () => {
         !success ? (
             window.innerWidth > 600 ?
                 (<div style={{ margin: "auto" }} className={styles.container}>
+
+                    {walletId &&
+                        <QrGenerate wallets={[{ wallet_id: walletId }]} />
+                    }
                     <div className={styles.left}>
                         <div className={styles.top}>
                             <div className={styles.logo}>
@@ -263,7 +270,7 @@ const CreatePin = () => {
                                     <h4>Contact Us</h4>
                                 </div>
                             </div>
-                            <button disabled={disabled} style={{ opacity: disabled ? 0.5 : 1,border: 'none', outline: "none" }} onClick={setPin}>
+                            <button disabled={disabled} style={{ opacity: disabled ? 0.5 : 1, border: 'none', outline: "none" }} onClick={setPin}>
                                 {loading ? (
                                     <div class="d-flex justify-content-center">
                                         <div class="spinner-border" color='primary' role="status">
@@ -278,7 +285,7 @@ const CreatePin = () => {
                     </div>
                 </div>)
         ) : (
-            <div style={{ 
+            <div style={{
                 margin: "auto",
                 minHeight: "100vh",
                 display: "flex",
@@ -286,7 +293,7 @@ const CreatePin = () => {
                 justifyContent: "center",
                 padding: "20px"
             }}>
-                <div style={{ 
+                <div style={{
                     maxWidth: "400px",
                     width: "100%",
                     display: "flex",
@@ -301,24 +308,24 @@ const CreatePin = () => {
                     background: "linear-gradient(180deg, #FAFAFA 0%, rgba(250, 250, 250, 0.00) 132.78%)",
                     boxShadow: "0px 16px 40px -8px rgba(88, 92, 95, 0.16)"
                 }}>
-                    <div style={{ 
-                        display: "flex", 
-                        flexDirection: "column", 
-                        alignItems: "center", 
-                        gap: "20px" 
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: "20px"
                     }}>
-                        <img 
-                            style={{ width: "180px" }} 
-                            src="https://s3-alpha-sig.figma.com/img/ef2e/1717/4db8e1b4fc049990a1ee8c948f4df881?Expires=1740355200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=cb2R4BZobzhArm9WvLe3VZma2wbVEPtDFdiwfV~CdsdXGyzulp4C7T2l56jSca2EFC8cPWHrQoB8IjHsD5SULBk6oufPqNhBOLbN1udUZyA6Oq6IpJJv0L9-9Lk0uUh69Oek-coREA9VBui~GheklMMs0WPOYhWQnke15LMXwIz5UKTO8kfQxRGHvejjJAggs2BA5VG6ZbMmmomGnu0LPMRtGnZo9kVpIl3JAH7CWJUBQ~aImTpg2m4R9V1XgajLk8JKwE810Y6L2tal-24CMABeYwKMd6L3KFYPiD4t3q5VkxkB5UBpa-cqIWOCbNkaKQqafhQxhdb0tQnbyPRBZQ__" 
-                            alt="" 
+                        <img
+                            style={{ width: "180px" }}
+                            src="https://s3-alpha-sig.figma.com/img/ef2e/1717/4db8e1b4fc049990a1ee8c948f4df881?Expires=1740355200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=cb2R4BZobzhArm9WvLe3VZma2wbVEPtDFdiwfV~CdsdXGyzulp4C7T2l56jSca2EFC8cPWHrQoB8IjHsD5SULBk6oufPqNhBOLbN1udUZyA6Oq6IpJJv0L9-9Lk0uUh69Oek-coREA9VBui~GheklMMs0WPOYhWQnke15LMXwIz5UKTO8kfQxRGHvejjJAggs2BA5VG6ZbMmmomGnu0LPMRtGnZo9kVpIl3JAH7CWJUBQ~aImTpg2m4R9V1XgajLk8JKwE810Y6L2tal-24CMABeYwKMd6L3KFYPiD4t3q5VkxkB5UBpa-cqIWOCbNkaKQqafhQxhdb0tQnbyPRBZQ__"
+                            alt=""
                         />
-                        <p style={{ 
-                            width: "100%", 
-                            textAlign: "center", 
-                            fontSize: "20px", 
-                            fontWeight: 700, 
-                            color: "black", 
-                            lineHeight: "26px" 
+                        <p style={{
+                            width: "100%",
+                            textAlign: "center",
+                            fontSize: "20px",
+                            fontWeight: 700,
+                            color: "black",
+                            lineHeight: "26px"
                         }}>
                             Your PIN has been successfully created!,  You can now close this window and go back to chatbot.
                         </p>

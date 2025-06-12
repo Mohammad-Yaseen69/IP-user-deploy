@@ -159,7 +159,7 @@ const ServiceDetails = ({ data }) => {
     }, [data.services])
 
     return (
-        <div className={styles.wrapper}>
+        <div style={{height: isOpen && "40vh", minHeight: isOpen &&"350px"}} className={styles.wrapper}>
             {
                 isPopup
                 &&

@@ -80,23 +80,23 @@ const ADCard = ({ data, isActive }) => {
                 data?.balance?.reserved
                     ?
                     <>
-                        <div className={`${r_styles.flex} ${r_styles.r_total}`}>
-                            <span>{t("Total Balance")}:</span>
+                        <div style={{ padding: '0px', background: "none" }} className={`${r_styles.flex} ${r_styles.r_total}`}>
+                            <span style={{ fontSize: '10px', fontWeight: 600 }}>{t("Total Balance")}:</span>
                             <h5>{data.currency?.code} {Number(data.balance.available + data.balance.reserved)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
                         </div>
-                        <div style={{ display: "flex", gap: ".75rem" }}>
-                            <div className={`${r_styles.flex} ${r_styles.r_blocked}`} style={{ flex: 1 }}>
-                                <span>{t("Available balance")}:</span>
+                        <div style={{ display: "flex", flexDirection: "column" }}>
+                            <div style={{ padding: "0px", background: "none", flex: 1 }} className={`${r_styles.flex} ${r_styles.r_blocked}`}>
+                                <span style={{ fontSize: '9px', fontWeight: 600 }}>{t("Available balance")}:</span>
                                 <h5>{data.currency?.code} {Number(data.balance.available)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
                             </div>
-                            <div className={`${r_styles.flex} ${r_styles.r_blocked}`} style={{ flex: 1 }}>
-                                <span>{t("Blocked balance")}:</span>
+                            <div style={{ padding: "0px", background: "none", flex: 1 }} className={`${r_styles.flex} ${r_styles.r_blocked}`} >
+                                <span style={{ fontSize: '9px', fontWeight: 600 }}>{t("Blocked balance")}:</span>
                                 <h5>{data.currency?.code} {Number(data.balance.reserved)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
                             </div>
                         </div>
                         <div className={`${r_styles.flex} ${r_styles.r_wallet}`}>
                             <span>{t("Wallet ID")}:</span>
-                            <h5>
+                            <h5 style={{fontSize: '10px'}}>
                                 {data?.wallet_id}
                                 {
                                     copied
@@ -109,7 +109,7 @@ const ADCard = ({ data, isActive }) => {
                                 }
                             </h5>
                         </div>
-                        <div className={`${r_styles.flex} ${r_styles.r_bal}`} style={{ marginTop: "1.5rem" }}>
+                        <div className={`${r_styles.flex} ${r_styles.r_bal}`} style={{ marginTop: ".5rem" }}>
                             <span>{t("Monthly limit")}:</span>
                             <h5>{walletData?.balance_limits?.total} / {walletData?.balance_limits?.remaining}</h5>
                         </div>

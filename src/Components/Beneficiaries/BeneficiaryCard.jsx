@@ -248,7 +248,7 @@ const BeneficiaryCard = ({ user }) => {
                         {
                             showMore
                             &&
-                            <div style={{top: window.innerWidth < 1000 && "inherit", bottom: window.innerWidth < 1000 &&"100%"}} className={styles.showMore}>
+                            <div style={{top: window.innerWidth < 1000 && "inherit", bottom: window.innerWidth < 1000 &&"100%", zIndex: 12}} className={styles.showMore}>
                                 <Link to={`/beneficiaries/edit?user_id=${user._id}&edit=true`}>
                                     <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }}>
                                         {t("Edit") + " " + t("Beneficiary")}

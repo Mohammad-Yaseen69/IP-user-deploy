@@ -46,7 +46,8 @@ const StepFour = ({ data, dataHandler, dataHandlerE }) => {
               <label htmlFor="">Mobile number</label>
               <input
                 value={data.eSimData.phone}
-                type="text"
+                type="number"
+                inputMode="numeric"
                 onChange={(e) => {
                   dataHandlerE("phone", e.target.value)
                   setShowError(null)

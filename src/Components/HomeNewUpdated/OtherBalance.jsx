@@ -10,6 +10,7 @@ const OtherBalance = () => {
     const [blocked, setBlocked] = useState(0)
     const [available, setAvailable] = useState(0)
     const { userWallets, authHeader } = useContext(UserContext)
+    const [loading, setLoading] = useState(true);
 
     const getExchangedAmounts = async (from, to, amount) => {
 
@@ -41,8 +42,13 @@ const OtherBalance = () => {
                 setBlocked(total ?? 0);
             };
 
-            calculateBlocked()
-            calculateTotal()
+            const calculate = async () => {
+                setLoading(true);
+                await calculateBlocked();
+                await calculateTotal();
+                setLoading(false);
+            }
+            calculate()
         }
     }, [userWallets]);
 
@@ -50,11 +56,29 @@ const OtherBalance = () => {
         <div className={styles.container}>
             <div className={styles.sub}>
                 <span>{t("Blocked balance")}</span>
-                <p>${blocked?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                {loading ?
+
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border" color='primary' role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    :
+                    <p>${blocked?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                }
             </div>
             <div className={styles.sub}>
                 <span>{t("Available balance")}</span>
-                <p>${available?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                {loading ?
+
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border" color='primary' role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    :
+                    <p>${available?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                }
             </div>
         </div>
     )

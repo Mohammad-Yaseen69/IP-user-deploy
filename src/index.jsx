@@ -51,10 +51,8 @@ Sentry.init({
     replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
     environment: process.env.NODE_ENV === "development" ? "development" : "production",
     beforeSend(event, hint) {
-        // Ignore console errors or warnings that don’t crash UI
         if (!event.exception) return null;
 
-        // Block sending if in local dev
         if (process.env.NODE_ENV === 'development') return null;
 
         return event;
