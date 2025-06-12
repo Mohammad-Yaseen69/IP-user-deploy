@@ -32,7 +32,7 @@ window.addEventListener("error", (e) => {
 
 
 Sentry.init({
-    dsn: "https://e0bd0ea4cbb6bd8c40703a864835449b@o4509423023161344.ingest.us.sentry.io/4509423024472064",
+    dsn: "https://448eafaae4776c67a2f5831cf64a23e5@o4509485673349120.ingest.us.sentry.io/4509485675118592",
     // Setting this option to true will send default PII data to Sentry.
     // For example, automatic IP address collection on events
     sendDefaultPii: true,

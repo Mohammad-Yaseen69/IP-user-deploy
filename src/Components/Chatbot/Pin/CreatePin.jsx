@@ -25,6 +25,8 @@ const CreatePin = () => {
     const query = new URLSearchParams(location.search)
     const walletId = query.get("w")
 
+    console.log(walletId)
+
     const pinRefs = useRef(Array(4).fill(null));
     const confirmRefs = useRef(Array(4).fill(null));
 

@@ -37,6 +37,7 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
     const ref = useRef(null);
     const [generated, setGenerated] = useState(0)
 
+    console.log(wallets)
     useEffect(() => {
         const img = new window.Image();
         img.src = logo;
