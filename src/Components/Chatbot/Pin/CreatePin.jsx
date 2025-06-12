@@ -25,7 +25,6 @@ const CreatePin = () => {
     const query = new URLSearchParams(location.search)
     const walletId = query.get("w")
 
-    console.log(walletId)
 
     const pinRefs = useRef(Array(4).fill(null));
     const confirmRefs = useRef(Array(4).fill(null));
@@ -146,7 +145,7 @@ const CreatePin = () => {
                 (<div style={{ margin: "auto" }} className={styles.container}>
 
                     {walletId &&
-                        <QrGenerate wallets={[{ wallet_id: walletId }]} />
+                        <QrGenerate wallets={[{ wallet_id: walletId, wallet_type: "insta" }]} />
                     }
                     <div className={styles.left}>
                         <div className={styles.top}>

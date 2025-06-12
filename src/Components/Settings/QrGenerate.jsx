@@ -37,7 +37,6 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
     const ref = useRef(null);
     const [generated, setGenerated] = useState(0)
 
-    console.log(wallets)
     useEffect(() => {
         const img = new window.Image();
         img.src = logo;
@@ -49,8 +48,10 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
 
 
     const uploadQR = async (item) => {
+        console.log(item)
         setMessage("Generating Qr Code sticker.")
         const url = `https://my.insta-pay.ch/q/${item?.wallet_id}`
+        console.log(url)
         qrCode.update({ data: url, image: logo });
         const fileName = `qrcode.png`;
         const mimeType = `image/png`;
