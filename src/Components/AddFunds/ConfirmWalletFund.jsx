@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import { createShambeToken } from "../../Helper/CreateToken";
 import NotFoundModal from "../NotFound/NotFoundModal";
+import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow";
 
 const isBig = window.innerWidth > 1000
 
@@ -96,7 +97,13 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                         setShowCardModal(true)
                     } else {
                         setShowCardModal(false)
-                        setError(dec?.message ?? "Something went wrong!")
+                        const error2 = apiErrorMessage(dec?.message)
+
+                        if (error2) {
+                            setError(t(error2))
+                        } else {
+                            setError(dec?.message ?? "Something went wrong!")
+                        }
                     }
                     // console.log(dec)
                 }
@@ -111,7 +118,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                     token,
                     rate
                 }
-             
+
                 console.log(data)
                 try {
                     const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/paypal/initiate-payment`, {

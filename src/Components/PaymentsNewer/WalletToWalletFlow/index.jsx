@@ -33,6 +33,7 @@ import NotFoundModal from "../../NotFound/NotFoundModal";
 import { currencies } from "../InternationalFlow/StepOne"
 import errors from "../../AddFunds/TrustPaymentErrors.json"
 import { formatCurrency } from "../../../Helper/AmountFormat";
+import { apiErrorMessage } from "../InternationalFlow";
 
 const leftSideContent = [
     "Choose the beneficiary!",
@@ -398,8 +399,12 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
             }
             else {
                 const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-                dataHandler("otpError", decrypted?.message ?? "You have entered wrong OTP.")
-                if (error) {
+                const error2 = apiErrorMessage(decrypted?.message)
+
+                if (error2) {
+                    dataHandler("otpError", t(error2))
+                }
+                else if (error) {
                     dataHandler("otpError", error)
                 } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                     const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
@@ -409,6 +414,8 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                     localStorage.clear()
                     localStorage.setItem("ip_country", coun)
                     navigate("/login")
+                } else {
+                    dataHandler("otpError", decrypted?.message ?? "You have entered wrong OTP.")
                 }
             }
         }

@@ -2973,5 +2973,12 @@ export const yo = {
   "mastercard_topup": "mastercard_topup",
   "credit": "gbese",
   "card_to_card": "kaadi_to_kaadi",
-  "VALID": "IWULO"
+  "VALID": "IWULO",
+  "Something went wrong on our end. Please try again later.": "Ohun kan ti ṣẹlẹ ni ẹgbẹ wa. Jọwọ gbiyanju lẹẹkansi nigbamii.",
+  "You waited too long to complete this transaction. Please try again": "O duro fun igba pipẹ ju lati pari ìdunadura. Jọwọ gbiyanju lẹẹkansi.",
+  "The card details you entered don’t match your selected country.": "Alaye kaadi ti o tẹ sii ko ba orilẹ-ede ti o yan mu.",
+  "This card does not belong to your account. Please use a valid card.": "Kaadi yii kii ṣe ti iroyin rẹ. Jọwọ lo kaadi to wulo.",
+  "The transaction couldn’t be completed. Please try again or use a different method.": "A ko le pari ìdunadura naa. Jọwọ gbiyanju lẹẹkansi tabi lo ọna miiran.",
+  "This feature is currently disabled for your account. Contact support for assistance.": "Ẹya yii ti wa ni pa fun iroyin rẹ. Kan si atilẹyin fun iranlọwọ."
+
 }

@@ -3013,5 +3013,12 @@ export const ha = {
   "mastercard_topup": "mastercard_toup",
   "credit": "bashi",
   "card_to_card": "katin_zuwa_kati",
-  "VALID": "INGANCI"
+  "VALID": "INGANCI",
+  "Something went wrong on our end. Please try again later.": "Wani abu ya faru daga bangarenmu. Da fatan za a gwada sake daga baya.",
+  "You waited too long to complete this transaction. Please try again": "Ka jira tsawon lokaci don kammala wannan ma'amala. Da fatan za a sake gwadawa.",
+  "The card details you entered don’t match your selected country.": "Bayanin katin da ka shigar bai dace da ƙasar da ka zaɓa ba.",
+  "This card does not belong to your account. Please use a valid card.": "Wannan kati ba na asusunka bane. Da fatan za a yi amfani da kati mai inganci.",
+  "The transaction couldn’t be completed. Please try again or use a different method.": "Ba a iya kammala ma'amala ba. Da fatan za a gwada sake ko amfani da wata hanya.",
+  "This feature is currently disabled for your account. Contact support for assistance.": "Wannan fasalin yana a dakatar dashi a halin yanzu don asusunka. Tuntuɓi tallafi don taimako."
+
 }

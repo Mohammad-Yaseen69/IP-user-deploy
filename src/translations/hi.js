@@ -2982,5 +2982,11 @@ export const hi = {
   "mastercard_topup": "मास्टरकार्ड_टॉपअप",
   "credit": "श्रेय",
   "card_to_card": "कार्ड_टू_कार्ड",
-  "VALID": "वैध"
+  "VALID": "वैध",
+  "Something went wrong on our end. Please try again later.": "हमारी ओर से कुछ गलत हो गया। कृपया बाद में प्रयास करें।",
+  "You waited too long to complete this transaction. Please try again": "आपने लेन-देन पूरा करने में बहुत समय ले लिया। कृपया पुनः प्रयास करें।",
+  "The card details you entered don’t match your selected country.": "आपके द्वारा डाले गए कार्ड विवरण आपके चयनित देश से मेल नहीं खाते।",
+  "This card does not belong to your account. Please use a valid card.": "यह कार्ड आपके खाते से संबंधित नहीं है। कृपया एक वैध कार्ड का उपयोग करें।",
+  "The transaction couldn’t be completed. Please try again or use a different method.": "लेन-देन पूरा नहीं हो सका। कृपया पुनः प्रयास करें या कोई अन्य तरीका अपनाएं।",
+  "This feature is currently disabled for your account. Contact support for assistance.": "यह सुविधा आपके खाते के लिए अक्षम है। सहायता के लिए समर्थन से संपर्क करें।"
 }

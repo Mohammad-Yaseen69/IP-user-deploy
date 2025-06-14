@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import { resendHandler } from '../../Helper/SendOTP';
 import { useNavigate } from 'react-router';
 import TrustpaymentPage from '../AddFunds/WalletFund/CreditTransaction';
+import { apiErrorMessage } from './InternationalFlow';
 
 export const possibleErrors = {
     sdl400: "Daily Sending Limit exceeded",
@@ -26,7 +27,7 @@ export const possibleErrors = {
     rml400: "Receiver's Monthly Receiving Limit exceeded",
     ryl400: "Receiver's Yearly Receiving Limit exceeded",
     rbl400: "Receiver's Balance Limit Reached.",
-    "Feature not available!": "Feature not available!"  
+    "Feature not available!": "Feature not available!"
 }
 
 export const LimitsErrorMessage = (message = "") => {
@@ -474,7 +475,12 @@ const OTPConfirmation = ({
                         const decrypted = decryptData(err.response.data.data)
                         console.log(decrypted)
                         const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-                        if (error) {
+                        const error2 = apiErrorMessage(decrypted?.message)
+
+                        if (error2) {
+                            setOtpError(t(error2))
+                        }
+                        else if (error) {
                             setOtpError(error)
                         } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                             const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
@@ -497,8 +503,8 @@ const OTPConfirmation = ({
                 });
                 data.append("type", authType)
                 data.append("description", intComment)
-            
-                    // console.log(token, createdTransaction.token, intComment)
+
+                // console.log(token, createdTransaction.token, intComment)
 
                 data.forEach(item => "a") // console.log(item))
                 axios.post(`${process.env.REACT_APP_THUNES_API}/confirmTransaction`, data, {
@@ -573,7 +579,12 @@ const OTPConfirmation = ({
                             const decrypted = decryptData(err.response.data.data)
                             console.log(decrypted)
                             const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-                            if (error) {
+                            const error2 = apiErrorMessage(decrypted?.message)
+
+                            if (error2) {
+                                setOtpError(t(error2))
+                            }
+                            else if (error) {
                                 setOtpError(error)
                             } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                                 const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
@@ -1010,7 +1021,7 @@ const OTPConfirmation = ({
                                     (
                                         authType === "sms"
                                             ?
-                                            t("A one-time verification code has been sent to your email address  and phone number.".replace("phone", userDetails?.phone?.slice(0, 3) === "971"? "whatsapp": "phone"))
+                                            t("A one-time verification code has been sent to your email address  and phone number.".replace("phone", userDetails?.phone?.slice(0, 3) === "971" ? "whatsapp" : "phone"))
                                             :
                                             t("Enter a code shown in the app to make sure everything works fine.")
                                     )

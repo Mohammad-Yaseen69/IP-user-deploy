@@ -24,6 +24,7 @@ import paym_styles from "../../PaymentsNewer/InternationalFlow/styles/index.modu
 import { toast } from "react-toastify";
 import { createShambeToken } from "../../../Helper/CreateToken";
 import NotFoundModal from "../../NotFound/NotFoundModal";
+import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow";
 
 const initialState = {
     step: 1,
@@ -396,8 +397,12 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
             }
             else {
                 const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-                dataHandler("otp_error", decrypted?.message ?? "You have entered wrong OTP.")
-                if (error) {
+                const error2 = apiErrorMessage(decrypted?.message)
+
+                if (error2) {
+                    dataHandler("otp_error", t(error2))
+                }
+                else if (error) {
                     dataHandler("otp_error", error)
                 } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                     const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
@@ -407,6 +412,9 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
                     localStorage.clear()
                     localStorage.setItem("ip_country", coun)
                     navigate("/login")
+                }
+                else {
+                    dataHandler("otp_error", decrypted?.message ?? "You have entered wrong OTP.")
                 }
             }
         }

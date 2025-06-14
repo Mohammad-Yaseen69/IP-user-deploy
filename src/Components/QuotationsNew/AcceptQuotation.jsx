@@ -26,6 +26,7 @@ import recent from "../PaymentsNewer/Mobile/files/recent.svg"
 import { createShambeToken } from "../../Helper/CreateToken";
 import NotFoundModal from "../NotFound/NotFoundModal";
 import TrustpaymentPage from "../AddFunds/WalletFund/CreditTransaction";
+import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow";
 
 const initialState = {
     step: 1,
@@ -398,8 +399,13 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
             console.log(err)
             const decrypted = decryptData(err.response.data.data)
             console.log(decrypted)
-            if (decrypted?.message === "Invalid card.") {
+            const error2 = apiErrorMessage(decrypted?.message)
+
+            if (decrypted?.message === "invalid_card_details") {
                 setShowCardModal(true)
+            }
+            else if (error2) {
+                dataHandler("otp_error", t(error2))
             }
             else {
                 const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)

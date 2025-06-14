@@ -30,6 +30,8 @@ const StepThree = ({ data, dataHandler }) => {
             dataHandler("files", files);
         }
     };
+    
+    console.log(reasons)
 
     return (
         <div className={styles.container}>

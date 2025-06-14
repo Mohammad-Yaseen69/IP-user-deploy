@@ -2982,5 +2982,12 @@ export const pt = {
   "mastercard_topup": "mastercard_topup",
   "credit": "crédito",
   "card_to_card": "cartão_para_cartão",
-  "VALID": "VÁLIDO"
+  "VALID": "VÁLIDO",
+  "Something went wrong on our end. Please try again later.": "Algo deu errado do nosso lado. Por favor, tente novamente mais tarde.",
+  "You waited too long to complete this transaction. Please try again": "Você demorou muito para concluir esta transação. Por favor, tente novamente.",
+  "The card details you entered don’t match your selected country.": "Os dados do cartão não correspondem ao país selecionado.",
+  "This card does not belong to your account. Please use a valid card.": "Este cartão não pertence à sua conta. Use um cartão válido.",
+  "The transaction couldn’t be completed. Please try again or use a different method.": "A transação não pôde ser concluída. Tente novamente ou use outro método.",
+  "This feature is currently disabled for your account. Contact support for assistance.": "Este recurso está desativado para sua conta. Entre em contato com o suporte."
+
 }

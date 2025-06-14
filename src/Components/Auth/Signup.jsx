@@ -306,7 +306,6 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
         }
     }
 
-    const navigate = useNavigate()
 
     return (
         <>

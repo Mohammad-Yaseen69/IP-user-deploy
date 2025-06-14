@@ -2981,5 +2981,12 @@ export const ar = {
   "mastercard_topup": "mastercard_topup",
   "credit": "ائتمان",
   "card_to_card": "Card_to_card",
-  "VALID": "صالح"
+  "VALID": "صالح",
+  "Something went wrong on our end. Please try again later.": "حدث خطأ ما من جانبنا. يرجى المحاولة مرة أخرى لاحقًا.",
+  "You waited too long to complete this transaction. Please try again": "لقد انتظرت طويلاً لإتمام هذه المعاملة. يرجى المحاولة مرة أخرى.",
+  "The card details you entered don’t match your selected country.": "تفاصيل البطاقة التي أدخلتها لا تتطابق مع البلد الذي حددته.",
+  "This card does not belong to your account. Please use a valid card.": "هذه البطاقة لا تتبع لحسابك. يرجى استخدام بطاقة صالحة.",
+  "The transaction couldn’t be completed. Please try again or use a different method.": "تعذر إكمال المعاملة. يرجى المحاولة مرة أخرى أو استخدام طريقة مختلفة.",
+  "This feature is currently disabled for your account. Contact support for assistance.": "هذه الميزة غير مفعلة حاليًا لحسابك. اتصل بالدعم للحصول على المساعدة."
+
 }

@@ -39,6 +39,7 @@ import { createShambeToken } from "../../../Helper/CreateToken";
 import NotFoundModal from "../../NotFound/NotFoundModal";
 import { cleanString } from "../../../Helper/cleanString";
 import { currencies } from "../InternationalFlow/StepOne";
+import { apiErrorMessage } from "../InternationalFlow";
 
 const leftSideContent = [
     "Choose the beneficiary!",
@@ -361,8 +362,12 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             }
             else {
                 const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-                dataHandler("otpError", decrypted?.message ?? "You have entered wrong OTP.")
-                if (error) {
+                const error2 = apiErrorMessage(decrypted?.message)
+
+                if (error2) {
+                    dataHandler("otpError", t(error2))
+                }
+                else if (error) {
                     dataHandler("otpError", error)
                 } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                     const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
@@ -372,6 +377,9 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                     localStorage.clear()
                     localStorage.setItem("ip_country", coun)
                     navigate("/login")
+                }
+                else {
+                    dataHandler("otpError", decrypted?.message ?? "You have entered wrong OTP.")
                 }
             }
         }
@@ -561,7 +569,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
         if (data.payment_type?.value) {
             const getAmount = async () => {
                 let amount;
-                console.log(data.payment_type, data.wallet, data.currency_wallet,"shit")
+                console.log(data.payment_type, data.wallet, data.currency_wallet, "shit")
                 if (data.payment_type?.value === "wallet" && data?.wallet?.currency && data?.wallet?.currency?.code !== data?.currency_wallet?.currency?.code) {
                     amount = await getPlainExchangeRate(data?.currency_wallet?.currency?.code, data?.wallet?.currency?.code, data.amount)
                 } else {
@@ -577,7 +585,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             }, 100)
         }
         return () => clearTimeout(timeout)
-    }, [data.payment_type?.value, data.wallet?._id,userDetails, userWallets, currencies])
+    }, [data.payment_type?.value, data.wallet?._id, userDetails, userWallets, currencies])
 
     const handleClick = () => {
         switch (data.step) {

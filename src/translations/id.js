@@ -2818,5 +2818,11 @@ export const id = {
   "mastercard_topup": "mastercard_topup",
   "credit": "kredit",
   "card_to_card": "kartu_ke_kartu",
-  "VALID": "SAH"
+  "VALID": "SAH",
+  "Something went wrong on our end. Please try again later.": "Terjadi kesalahan di sisi kami. Silakan coba lagi nanti.",
+  "You waited too long to complete this transaction. Please try again": "Anda terlalu lama menunggu. Silakan coba lagi.",
+  "The card details you entered don’t match your selected country.": "Detail kartu yang Anda masukkan tidak cocok dengan negara yang dipilih.",
+  "This card does not belong to your account. Please use a valid card.": "Kartu ini tidak terkait dengan akun Anda. Silakan gunakan kartu yang valid.",
+  "The transaction couldn’t be completed. Please try again or use a different method.": "Transaksi tidak dapat diselesaikan. Silakan coba lagi atau gunakan metode lain.",
+  "This feature is currently disabled for your account. Contact support for assistance.": "Fitur ini saat ini dinonaktifkan untuk akun Anda. Hubungi dukungan untuk bantuan."
 }

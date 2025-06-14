@@ -8,11 +8,14 @@ import warn from "../AirtimeFlow/files/warn.svg"
 import info from "./files/info.svg"
 import bg from "./files/bg.png"
 import useWindowWidth from "../../../utils/useWindowWidth"
+import { useState } from "react"
+import { Modal, ModalBody } from "reactstrap"
 
 
 const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShowModal }) => {
     const { t } = useTranslation()
     const width = useWindowWidth()
+    const [showCompatibleModal, setShowCompatibleModal] = useState(false)
 
     const regions = [
         {
@@ -37,7 +40,7 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                             <InstaPayLoader />
                         </div> :
                         <div className={styles.eSim} style={{ height: "100%", justifyContent: "space-between", background: "transparent" }}>
-                            <div style={{display: "flex", flexDirection: "column", gap: "10px"}}>
+                            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                                 <div style={{ flexDirection: width < 1000 && 'column' }} className={styles.warningDiv}>
                                     <div>
                                         <img src={warn} alt="" />
@@ -46,7 +49,7 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                                         </p>
                                     </div>
 
-                                    <button>
+                                    <button onClick={() => setShowCompatibleModal(true)}>
                                         Check device compatibility.
                                     </button>
                                 </div>
@@ -112,6 +115,123 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                         </div>
                 )
             }
+
+
+            {showCompatibleModal && (
+                <Modal
+                    isOpen={showCompatibleModal}
+                    toggle={() => setShowCompatibleModal(false)}
+                    centered
+                    style={{ maxWidth: 600 }}
+                >
+                    <ModalBody style={{
+                        padding: 32,
+                        background: "#fff",
+                        borderRadius: 16,
+                        fontFamily: "inherit",
+                        color: "#222"
+                    }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                <span style={{
+                                    fontSize: 32,
+                                    lineHeight: 1,
+                                    marginRight: 8
+                                }}>📱</span>
+                                <span style={{
+                                    fontWeight: 700,
+                                    fontSize: 22,
+                                    color: "#1a1a1a"
+                                }}>How to Check if Your Phone Supports eSIM</span>
+                            </div>
+                            <div style={{ fontSize: 16, color: "#444" }}>
+                                <span style={{ fontWeight: 600, color: "#3417db" }}>🔍 Option 1: Check in Your Phone Settings</span>
+                                <div style={{ margin: "10px 0 0 0" }}>
+                                    <div style={{ fontWeight: 600, marginBottom: 4 }}>For iPhone (iOS 12.1 or later):</div>
+                                    <ol style={{ marginLeft: 18, marginBottom: 6, display: "flex", flexDirection: "column", gap: 6 }}>
+                                        <li>Go to <b>Settings &gt; General &gt; About</b>.</li>
+                                        <li>Scroll down to <b>Available SIM</b> or <b>Digital SIM</b>.</li>
+                                    </ol>
+                                    <div style={{ marginBottom: 6 }}>
+                                        If you see an <b>EID number</b>, your iPhone supports eSIM.
+                                    </div>
+                                    <div style={{ marginBottom: 6 }}>
+                                        Alternatively, check under <b>Settings &gt; Cellular &gt; Add Cellular Plan</b>. If you see that option, eSIM is supported.
+                                    </div>
+                                </div>
+                                <div style={{ fontWeight: 600, marginTop: 10, marginBottom: 4 }}>For Android (Samsung, Google Pixel, etc.):</div>
+                                <ol style={{ marginLeft: 18, marginBottom: 6, display: "flex", flexDirection: "column", gap: 6 }}>
+                                    <li>
+                                        Go to <b>Settings &gt; Connections &gt; SIM card manager</b> (Samsung)
+                                        <br />
+                                        or<br />
+                                        <b>Settings &gt; Network &amp; Internet &gt; Mobile Network</b> (Pixel).
+                                    </li>
+                                    <li>Look for <b>eSIM</b> or <b>Add carrier / Add eSIM</b>.</li>
+                                </ol>
+                                <div style={{ marginBottom: 6 }}>
+                                    If available, your phone supports eSIM.
+                                </div>
+                            </div>
+                            <div style={{ fontSize: 16, color: "#444", marginTop: 12 }}>
+                                <span style={{ fontWeight: 600, color: "#3417db" }}>Option 2: Check the IMEI Information</span>
+                                <ol style={{ marginLeft: 18, marginBottom: 6, marginTop: 6, display: "flex", flexDirection: "column", gap: 6 }}>
+                                    <li>Open the Phone app and dial: <b>*#06#</b></li>
+                                    <li>Look at the IMEI information shown.</li>
+                                </ol>
+                                <div style={{ marginBottom: 6 }}>
+                                    If there is an <b>EID number</b> listed, your phone supports eSIM.
+                                </div>
+                            </div>
+                            <div style={{ fontSize: 16, color: "#444", marginTop: 12 }}>
+                                <span style={{ fontWeight: 600, color: "#3417db" }}>Option 3: Check Manufacturer or Carrier Website</span>
+                                <div style={{ marginTop: 6 }}>
+                                    If the above methods are unclear, search online:
+                                    <div style={{
+                                        background: "#f5f7fa",
+                                        borderRadius: 6,
+                                        padding: "8px 12px",
+                                        margin: "8px 0",
+                                        fontStyle: "italic",
+                                        color: "#333"
+                                    }}>
+                                        “[Your Phone Model] eSIM support”
+                                    </div>
+                                    For example:
+                                    <div style={{
+                                        background: "#f5f7fa",
+                                        borderRadius: 6,
+                                        padding: "8px 12px",
+                                        margin: "8px 0",
+                                        fontStyle: "italic",
+                                        color: "#333"
+                                    }}>
+                                        Samsung Galaxy S21 eSIM support
+                                    </div>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => setShowCompatibleModal(false)}
+                                style={{
+                                    marginTop: 18,
+                                    alignSelf: "flex-end",
+                                    background: "#3417db",
+                                    color: "#fff",
+                                    border: "none",
+                                    borderRadius: 6,
+                                    padding: "8px 22px",
+                                    fontWeight: 600,
+                                    fontSize: 16,
+                                    cursor: "pointer",
+                                    boxShadow: "0 2px 8px rgba(10,124,255,0.08)"
+                                }}
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </ModalBody>
+                </Modal>
+            )}
 
         </div>
     )

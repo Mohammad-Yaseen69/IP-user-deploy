@@ -2981,5 +2981,12 @@ export const tr = {
   "mastercard_topup": "mastercard_topup",
   "credit": "kredi",
   "card_to_card": "kart_to_card",
-  "VALID": "GEÇERLİ"
+  "VALID": "GEÇERLİ",
+  "Something went wrong on our end. Please try again later.": "Bizim tarafımızda bir şeyler ters gitti. Lütfen daha sonra tekrar deneyin.",
+  "You waited too long to complete this transaction. Please try again": "Bu işlemi tamamlamak için çok beklediniz. Lütfen tekrar deneyin.",
+  "The card details you entered don’t match your selected country.": "Girdiğiniz kart bilgileri seçtiğiniz ülkeyle eşleşmiyor.",
+  "This card does not belong to your account. Please use a valid card.": "Bu kart hesabınıza ait değil. Lütfen geçerli bir kart kullanın.",
+  "The transaction couldn’t be completed. Please try again or use a different method.": "İşlem tamamlanamadı. Lütfen tekrar deneyin veya farklı bir yöntem kullanın.",
+  "This feature is currently disabled for your account. Contact support for assistance.": "Bu özellik hesabınız için devre dışı. Yardım için destekle iletişime geçin."
+
 }

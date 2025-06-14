@@ -2981,5 +2981,12 @@ export const ur = {
   "mastercard_topup": "mastercard_topup",
   "credit": "کریڈٹ",
   "card_to_card": "کارڈ_سے_کارڈ",
-  "VALID": "درست"
+  "VALID": "درست",
+  "Something went wrong on our end. Please try again later.": "ہماری طرف کچھ غلط ہو گیا ہے، براہ کرم بعد میں دوبارہ کوشش کریں۔",
+  "You waited too long to complete this transaction. Please try again": "آپ نے بہت دیر کر دی، براہ کرم دوبارہ کوشش کریں۔",
+  "The card details you entered don’t match your selected country.": "آپ کی درج کردہ کارڈ تفصیلات منتخب ملک سے میل نہیں کھاتیں۔",
+  "This card does not belong to your account. Please use a valid card.": "یہ کارڈ آپ کے اکاؤنٹ سے منسلک نہیں ہے۔ براہ کرم درست کارڈ استعمال کریں۔",
+  "The transaction couldn’t be completed. Please try again or use a different method.": "ٹرانزیکشن مکمل نہیں ہو سکی، دوبارہ کوشش کریں یا دوسرا طریقہ آزمائیں۔",
+  "This feature is currently disabled for your account. Contact support for assistance.": "یہ فیچر اس وقت آپ کے اکاؤنٹ کے لیے بند ہے۔ مزید مدد کے لیے سپورٹ سے رابطہ کریں۔"
+
 }

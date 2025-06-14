@@ -2968,5 +2968,12 @@ export const nl = {
   "mastercard_topup": "mastercard_topup",
   "credit": "credit",
   "card_to_card": "kaart_naar_kaart",
-  "VALID": "GELDIG"
+  "VALID": "GELDIG",
+  "Something went wrong on our end. Please try again later.": "Er is iets misgegaan aan onze kant. Probeer het later opnieuw.",
+  "You waited too long to complete this transaction. Please try again": "Je hebt te lang gewacht om deze transactie te voltooien. Probeer het opnieuw.",
+  "The card details you entered don’t match your selected country.": "De kaartgegevens komen niet overeen met het geselecteerde land.",
+  "This card does not belong to your account. Please use a valid card.": "Deze kaart hoort niet bij je account. Gebruik een geldige kaart.",
+  "The transaction couldn’t be completed. Please try again or use a different method.": "De transactie kon niet worden voltooid. Probeer het opnieuw of gebruik een andere methode.",
+  "This feature is currently disabled for your account. Contact support for assistance.": "Deze functie is momenteel uitgeschakeld voor je account. Neem contact op met support voor hulp."
+
 }

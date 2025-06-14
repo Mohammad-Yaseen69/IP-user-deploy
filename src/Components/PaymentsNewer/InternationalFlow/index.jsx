@@ -44,6 +44,29 @@ const leftSideContent = [
     "Review transfer"
 ]
 
+export const apiErrors = {
+    "internal_server_error": "Something went wrong on our end. Please try again later.",
+    "invalid_token": "You waited too long to complete this transaction. Please try again",
+    "token_expired": "You waited too long to complete this transaction. Please try again",
+    "invalid_card_details": "The card details you entered don’t match your selected country.",
+    "incorrect_card": "This card does not belong to your account. Please use a valid card.",
+    "transaction_failed": "The transaction couldn’t be completed. Please try again or use a different method.",
+    "feature_not_allowed": "This feature is currently disabled for your account. Contact support for assistance."
+}
+
+
+export const apiErrorMessage = (code) => {
+    let error;
+    for (const key in apiErrors) {
+        if (code.includes(key)) {
+            error = apiErrors[key]
+            break;
+        }
+    }
+
+    return error ?? false
+}
+
 const initialState = {
     formatted_amount: 1.00,
     amount: 1.00,
@@ -532,7 +555,9 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 const currency_code = internationalData.payment_type?.value === "wallet" ? internationalData?.wallet?.currency?.code ?? internationalData?.currency : internationalData?.currency;
                 getAmount()
                     .then(res => {
-                        getExchangeRateNew(res, () => { }, wallet_id, currency_code, false, setLoading)
+                        if (wallet_id) {
+                            getExchangeRateNew(res, () => { }, wallet_id, currency_code, false, setLoading)
+                        }
                     })
             }, 100)
         }
@@ -720,14 +745,17 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             updateInternationalData("showOtpModal", false)
         } catch (err) {
             const decrypted = decryptData(err.response.data.data)
-            console.log(decrypted)
-            if (decrypted?.message === "Invalid card.") {
+            if (decrypted?.message === "invalid_card_details") {
                 setShowCardModal(true)
             }
             else {
                 const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-                updateInternationalData("otpError", decrypted?.message ?? "You have entered wrong OTP.")
-                if (error) {
+                const error2 = apiErrorMessage(decrypted?.message)
+
+                if (error2) {
+                    updateInternationalData("otpError", t(error2))
+                }
+                else if (error) {
                     updateInternationalData("otpError", error)
                 } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                     const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
@@ -884,12 +912,14 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 else {
                     getPlainExchangeRate(internationalData.currency_wallet?.currency?.code, internationalData.wallet?.currency?.code, internationalData.amount)
                         .then(res => {
-                            getExchangeRateNew(res, () => { }, internationalData.wallet?._id, internationalData?.wallet?.currency?.code, false, setLoading)
-                                .then(() => {
-                                    setTimeout(() => {
-                                        createQuotation(res)
-                                    }, 100)
-                                })
+                            if (internationalData?.wallet?._id) {
+                                getExchangeRateNew(res, () => { }, internationalData.wallet?._id, internationalData?.wallet?.currency?.code, false, setLoading)
+                                    .then(() => {
+                                        setTimeout(() => {
+                                            createQuotation(res)
+                                        }, 100)
+                                    })
+                            }
                         })
                 }
                 break;
@@ -1130,7 +1160,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                 toggle={() => {
                                     updateInternationalData("error", "")
 
-                                    if(transaction_status === "error"){
+                                    if (transaction_status === "error") {
                                         navigate("/payments")
                                     }
                                     // setSendPaymentType("")

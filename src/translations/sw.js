@@ -2981,5 +2981,12 @@ export const sw = {
   "mastercard_topup": "mastercard_topup",
   "credit": "mkopo",
   "card_to_card": "kadi_kwa_kadi",
-  "VALID": "HALALI"
+  "VALID": "HALALI",
+  "Something went wrong on our end. Please try again later.": "Kuna hitilafu upande wetu. Tafadhali jaribu tena baadaye.",
+  "You waited too long to complete this transaction. Please try again": "Ulisubiri kwa muda mrefu sana. Tafadhali jaribu tena.",
+  "The card details you entered don’t match your selected country.": "Maelezo ya kadi hayalingani na nchi uliyoweka.",
+  "This card does not belong to your account. Please use a valid card.": "Kadi hii si ya akaunti yako. Tafadhali tumia kadi halali.",
+  "The transaction couldn’t be completed. Please try again or use a different method.": "Muamala haukufanikiwa. Tafadhali jaribu tena au tumia njia nyingine.",
+  "This feature is currently disabled for your account. Contact support for assistance.": "Kipengele hiki kimezimwa kwa akaunti yako. Wasiliana na usaidizi kwa msaada."
+
 }

@@ -2877,5 +2877,12 @@ export const ru = {
   "mastercard_topup": "mastercard_topup",
   "credit": "кредит",
   "card_to_card": "card_to_card",
-  "VALID": "ДЕЙСТВИТЕЛЬНЫЙ"
+  "VALID": "ДЕЙСТВИТЕЛЬНЫЙ",
+  "Something went wrong on our end. Please try again later.": "Что-то пошло не так с нашей стороны. Попробуйте позже.",
+  "You waited too long to complete this transaction. Please try again": "Вы слишком долго ждали. Пожалуйста, повторите попытку.",
+  "The card details you entered don’t match your selected country.": "Введенные данные карты не соответствуют выбранной стране.",
+  "This card does not belong to your account. Please use a valid card.": "Эта карта не принадлежит вашему аккаунту. Используйте действующую карту.",
+  "The transaction couldn’t be completed. Please try again or use a different method.": "Транзакция не удалась. Попробуйте еще раз или используйте другой способ.",
+  "This feature is currently disabled for your account. Contact support for assistance.": "Эта функция отключена для вашего аккаунта. Обратитесь в поддержку."
+
 }

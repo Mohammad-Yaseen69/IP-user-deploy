@@ -2982,5 +2982,12 @@ export const uk = {
   "mastercard_topup": "mastercard_topup",
   "credit": "кредит",
   "card_to_card": "card_to_card",
-  "VALID": "ДІЙСНИЙ"
+  "VALID": "ДІЙСНИЙ",
+  "Something went wrong on our end. Please try again later.": "Щось пішло не так з нашого боку. Спробуйте пізніше.",
+  "You waited too long to complete this transaction. Please try again": "Ви занадто довго чекали. Будь ласка, спробуйте ще раз.",
+  "The card details you entered don’t match your selected country.": "Дані картки не відповідають вибраній країні.",
+  "This card does not belong to your account. Please use a valid card.": "Ця картка не належить вашому акаунту. Використайте дійсну картку.",
+  "The transaction couldn’t be completed. Please try again or use a different method.": "Транзакцію не вдалося завершити. Спробуйте ще раз або використайте інший метод.",
+  "This feature is currently disabled for your account. Contact support for assistance.": "Ця функція вимкнена для вашого акаунту. Зверніться до підтримки."
+
 }
