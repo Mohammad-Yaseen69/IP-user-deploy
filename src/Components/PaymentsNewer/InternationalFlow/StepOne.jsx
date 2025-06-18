@@ -64,22 +64,27 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     }
 
     useEffect(() => {
-        const localCurrency = () => {
-            const cont = CitiesData.find(item => item.iso3?.toUpperCase() === userDetails?.country_iso_code?.toUpperCase())
-            return cont.currency
-        }
-        const getWallet = () => {
-            const wallet = userWallets?.find(item => item?.currency?.code === localCurrency())
-            if (wallet?.currency?.code) {
-                return { ...currencies.find(item => item.currency_code === wallet?.currency?.code), ...wallet }
+        if (userWallets.length > 0) {
+            const localCurrency = () => {
+                const cont = CitiesData.find(item => item.iso3?.toUpperCase() === userDetails?.country_iso_code?.toUpperCase())
+                return cont.currency
             }
-            return currencies[0]
+
+            console.log(localCurrency())
+            const getWallet = () => {
+                const wallet = userWallets?.find(item => item?.currency?.code === localCurrency())
+                console.log(wallet)
+                if (wallet?.currency?.code) {
+                    return { ...currencies.find(item => item.currency_code === wallet?.currency?.code), ...wallet }
+                }
+                return currencies[0]
+            }
+            if (!data.currency && !data.currency_wallet?._id) {
+                dataHandler("currency", getWallet()?.currency?.code)
+                dataHandler("currency_wallet", getWallet())
+            }
         }
-        if (!data.currency && !data.currency_wallet?._id) {
-            dataHandler("currency", getWallet()?.currency?.code)
-            dataHandler("currency_wallet", getWallet())
-        }
-    }, [currencies, data.currency, data.currency_wallet])
+    }, [currencies, data.currency, data.currency_wallet, userWallets])
 
     // country
     const [countries, setCountries] = useState([])
@@ -647,7 +652,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                         isOpen={modals.country}
                         onSelectHandler={(item) => {
                             dataHandler("country", item)
-                            if(item?.alpha3 === data.country?.alpha3){
+                            if (item?.alpha3 === data.country?.alpha3) {
                                 getServices(item?.alpha3)
                             }
                             dataHandler("payoutChannel", {})

@@ -15,43 +15,42 @@ import CreditCardInput from "../CreditInput";
 import { LimitsErrorMessage, possibleErrors } from "./OTPConfirmation";
 import InstaPayLoader from "../Loader";
 import { formatCurrency } from "../../Helper/AmountFormat";
-import { t as T } from "i18next"
 
 export const reasons = {
-    COMPUTER_SERVICES: T("Computer Service"),
-    FAMILY_SUPPORT: T("Family support"),
-    EDUCATION: T("Education"),
-    GIFT_AND_DONATION: T("Gift and other donations"),
-    MEDICAL_TREATMENT: T("Medical treatment"),
-    MAINTENANCE_EXPENSES: T("Maintenance or other expenses"),
-    TRAVEL: T("Travel"),
-    SMALL_VALUE_REMITTANCE: T("Small value remittance"),
-    LIBERALIZED_REMITTANCE: T("Liberalized remittance"),
-    CONSTRUCTION_EXPENSES: T("Construction expenses"),
-    HOTEL_ACCOMMODATION: T("Hotel accommodation"),
-    ADVERTISING_EXPENSES: T("Advertising and/or public relations related expenses"),
-    ADVISORY_FEES: T("Fees for advisory or consulting service"),
-    BUSINESS_INSURANCE: T("Business related insurance payment"),
-    INSURANCE_CLAIMS: T("Insurance claims payment"),
-    DELIVERY_FEES: T("Delivery fees"),
-    EXPORTED_GOODS: T("Payments for exported goods"),
-    SERVICE_CHARGES: T("Payment for services"),
-    LOAN_PAYMENT: T("Payment of loans"),
-    OFFICE_EXPENSES: T("Office expenses"),
-    PROPERTY_PURCHASE: T("Residential property purchase"),
-    PROPERTY_RENTAL: T("Property rental payment"),
-    ROYALTY_FEES: T("Royalty, trademark, patent and copyright fees"),
-    SHARES_INVESTMENT: T("Investment in shares"),
-    FUND_INVESTMENT: T("Fund investment"),
-    TAX_PAYMENT: T("Tax payment"),
-    TRANSPORTATION_FEES: T("Transportation fees"),
-    UTILITY_BILLS: T("Utility bills"),
-    PERSONAL_TRANSFER: T("Personal transfer"),
-    SALARY_PAYMENT: T("Payment of salary"),
-    REWARD_PAYMENT: T("Payment of rewards"),
-    INFLUENCER_PAYMENT: T("Payment of Influencer"),
-    OTHER_FEES: T("Broker, commitment, guarantee and other fees"),
-    OTHER: T("Other purposes")
+    COMPUTER_SERVICES: "Computer Service",
+    FAMILY_SUPPORT: "Family support",
+    EDUCATION: "Education",
+    GIFT_AND_DONATION: "Gift and other donations",
+    MEDICAL_TREATMENT: "Medical treatment",
+    MAINTENANCE_EXPENSES: "Maintenance or other expenses",
+    TRAVEL: "Travel",
+    SMALL_VALUE_REMITTANCE: "Small value remittance",
+    LIBERALIZED_REMITTANCE: "Liberalized remittance",
+    CONSTRUCTION_EXPENSES: "Construction expenses",
+    HOTEL_ACCOMMODATION: "Hotel accommodation",
+    ADVERTISING_EXPENSES: "Advertising and/or public relations related expenses",
+    ADVISORY_FEES: "Fees for advisory or consulting service",
+    BUSINESS_INSURANCE: "Business related insurance payment",
+    INSURANCE_CLAIMS: "Insurance claims payment",
+    DELIVERY_FEES: "Delivery fees",
+    EXPORTED_GOODS: "Payments for exported goods",
+    SERVICE_CHARGES: "Payment for services",
+    LOAN_PAYMENT: "Payment of loans",
+    OFFICE_EXPENSES: "Office expenses",
+    PROPERTY_PURCHASE: "Residential property purchase",
+    PROPERTY_RENTAL: "Property rental payment",
+    ROYALTY_FEES: "Royalty, trademark, patent and copyright fees",
+    SHARES_INVESTMENT: "Investment in shares",
+    FUND_INVESTMENT: "Fund investment",
+    TAX_PAYMENT: "Tax payment",
+    TRANSPORTATION_FEES: "Transportation fees",
+    UTILITY_BILLS: "Utility bills",
+    PERSONAL_TRANSFER: "Personal transfer",
+    SALARY_PAYMENT: "Payment of salary",
+    REWARD_PAYMENT: "Payment of rewards",
+    INFLUENCER_PAYMENT: "Payment of Influencer",
+    OTHER_FEES: "Broker, commitment, guarantee and other fees",
+    OTHER: "Other purposes"
 };
 
 let timeout;
@@ -772,7 +771,7 @@ const AmountAndCurrency = ({ setSubStep, amount, setAmount, currency, setCurrenc
                                     <option value="">{t("Select Remarks / Reason")}</option>
                                     {
                                         Object.keys(reasons).map((item, ind) => (
-                                            <option value={item} key={ind}>{reasons[item]}</option>
+                                            <option value={item} key={ind}>{t(reasons[item])}</option>
                                         ))
                                     }
                                 </Input>

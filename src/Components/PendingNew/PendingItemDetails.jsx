@@ -158,6 +158,8 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
                                     <iframe
                                         src={`//maps.google.com/maps?q=${item?.lat},${item?.long}&z=15&output=embed`}
                                         className={styles.map_img}
+                                        title="Google Map"
+                                        loading="lazy"
                                     ></iframe>
                                 </div>
                             </div>

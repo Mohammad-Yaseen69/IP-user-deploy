@@ -39,7 +39,7 @@ const StepThree = ({ data, dataHandler }) => {
                 <option value="" disabled>{t("Select Remark Reason")}</option>
                 {
                     Object.keys(reasons).map(item => (
-                        <option value={item} key={item}>{reasons[item]}</option>
+                        <option value={item} key={item}>{t(reasons[item])}</option>
                     ))
                 }
             </select>

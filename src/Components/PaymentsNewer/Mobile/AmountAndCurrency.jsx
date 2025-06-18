@@ -631,7 +631,7 @@ const AmountAndCurrency = ({ setStep, amount, setAmount, currency, setCurrency, 
                                 <option value="">{t("Select Remarks / Reason")}</option>
                                 {
                                     Object.keys(reasons).map(item => (
-                                        <option value={item} key={item}>{reasons[item]}</option>
+                                        <option value={item} key={item}>{t(reasons[item])}</option>
                                     ))
                                 }
                             </Input>
