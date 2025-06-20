@@ -1,16 +1,14 @@
-import { useState, useEffect, useRef, useContext, useLayoutEffect, useMemo } from "react"
+import { useState, useEffect, useRef, useContext, useMemo } from "react"
 import countries from "../PaymentsNewer/CountriesData.json"
 import { Col, Modal, ModalBody, ModalHeader } from "reactstrap"
 import { useTranslation } from "react-i18next"
 import styles from "./index.module.css"
-import { toast } from "react-toastify"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import axios from "axios"
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import { UserContext } from "../../Context/UserContext"
-import { countries as countriesData } from "country-list-json"
 
-const LanguagePicker = ({size = "24"}) => {
+const LanguagePicker = ({ size = "24" }) => {
     const { i18n, t } = useTranslation()
     const [showDropDown, setShowDropDown] = useState()
     const [currentLang, setCurrentLang] = useState(localStorage.getItem("i18nextLng"))
@@ -168,27 +166,8 @@ const LanguagePicker = ({size = "24"}) => {
         };
     }, []);
 
-    const { authHeader, userDetails, verifyToken, profileCompletedPercentage } = useContext(UserContext)
-    const [lang, setLang] = useState(null)
+    const { authHeader, userDetails } = useContext(UserContext)
 
-    const getLnagByCountry = async () => {
-        try {
-            const res = await axios.get(`https://ipinfo.io?token=${process.env.REACT_APP_IP_INFO_TOKEN}`)
-            const location = res.data;
-
-            if (location) {
-                const findCOuntry = countriesData.find(item => item?.code === location?.country)
-                const lang = languageCountries.find(it => it.name === findCOuntry?.name || it.name.toLowerCase().includes(findCOuntry?.name?.toLowerCase()) || findCOuntry.name.toLowerCase().includes(it?.name?.toLowerCase()))
-                if (lang) {
-                    setLang(lang)
-                }
-            }
-        } catch (error) {
-            // i18n.changeLanguage("en")
-            // localStorage.setItem("i18nextLng", "en")
-            // setCurrentLang("en")
-        }
-    }
 
     // useEffect(() => {
     //     getLnagByCountry()
@@ -225,13 +204,12 @@ const LanguagePicker = ({size = "24"}) => {
             }
             // console.log(data)
             const enc = encryptData(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/set-language`, {
+            await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/set-language`, {
                 data: enc
             }, {
                 headers: authHeader
             })
-            const dec = decryptData(res.data.data)
-            // console.log(dec)
+
         } catch (error) {
             // console.log(error)
             // toast.error("Something went wrong while setting the language")
@@ -241,12 +219,12 @@ const LanguagePicker = ({size = "24"}) => {
 
 
     useEffect(() => {
-        const localStorageLang = localStorage.getItem("lang")
+        const localStorageLang = localStorage.getItem("i18nextLng")
         if (userDetails?.language) {
             const lng = languageCountries.find(item => item.lang.toLowerCase() === userDetails.language)
             i18n.changeLanguage(lng.lang)
             setCurrentLang(lng.lang)
-            localStorage.setItem("lang", lng.lang)
+            localStorage.setItem("i18nextLng", lng.lang)
         }
         else if (localStorageLang) {
             i18n.changeLanguage(localStorageLang)
@@ -255,10 +233,9 @@ const LanguagePicker = ({size = "24"}) => {
         else {
             i18n.changeLanguage(eng.lang)
             setCurrentLang(eng.lang)
+            localStorage.setItem("i18nextLng", eng.lang)
         }
     }, [userDetails])
-
-
     return (
         <div ref={dropdownRef}>
             {
@@ -274,7 +251,7 @@ const LanguagePicker = ({size = "24"}) => {
                         border: "1.11414px solid rgba(0, 0, 0, 0.08)",
                         cursor: "pointer"
                     }} onClick={() => setShowDropDown(!showDropDown)}>
-                        <GlobeSVG size={size}/>
+                        <GlobeSVG size={size} />
                     </Col>
                     :
                     <Col xs="auto" style={{
@@ -292,7 +269,7 @@ const LanguagePicker = ({size = "24"}) => {
                         containerType: "inline-size",
                         flex: 1
                     }} className={styles.active}>
-                        <GlobeSVG size={size}/>
+                        <GlobeSVG size={size} />
                         <span style={{
                             fontWeight: 500,
                             fontSize: "7cqi",
@@ -414,7 +391,7 @@ const LanguagePicker = ({size = "24"}) => {
 export default LanguagePicker
 
 
-export function GlobeSVG({size}) {
+export function GlobeSVG({ size }) {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M9.57059 0.870605C7.77952 1.27733 6.10872 2.09819 4.69223 3.26733C3.27574 4.43647 2.15299 5.92134 1.41406 7.6028H6.33092C6.92875 4.58166 8.09007 2.17318 9.57059 0.870605ZM17.9373 7.6028H22.8542C22.1154 5.92152 20.9929 4.43677 19.5767 3.26764C18.1605 2.09852 16.49 1.27755 14.6992 0.870605C16.1797 2.17318 17.3411 4.58166 17.9373 7.6028ZM16.3406 7.60289C15.5173 3.77866 13.7612 1.35925 12.1371 1.35925C10.513 1.35925 8.75697 3.77866 7.93359 7.60289H16.3406ZM7.45313 12.2855C7.45293 13.3296 7.52255 14.3725 7.66151 15.4073H16.6102C16.7492 14.3725 16.8188 13.3296 16.8186 12.2855C16.8188 11.2414 16.7492 10.1985 16.6102 9.1637H7.66151C7.52255 10.1985 7.45293 11.2414 7.45313 12.2855ZM12.1371 23.2119C10.513 23.2119 8.75697 20.7925 7.93359 16.9683H16.3406C15.5173 20.7925 13.7612 23.2119 12.1371 23.2119ZM18.1883 9.1637H23.4173C23.9865 11.206 23.9857 13.365 23.4165 15.4073H18.1875C18.3165 14.3717 18.3812 13.3291 18.3811 12.2855C18.3814 11.2419 18.317 10.1993 18.1883 9.1637ZM14.6992 23.7005C16.4903 23.2937 18.1611 22.4729 19.5776 21.3037C20.9941 20.1346 22.1168 18.6497 22.8557 16.9683H17.9389C17.3411 19.9894 16.1797 22.3979 14.6992 23.7005ZM1.41797 16.9683H6.33483C6.9311 19.9894 8.09241 22.3979 9.57449 23.7005C7.78343 23.2937 6.11263 22.4729 4.69614 21.3037C3.27964 20.1346 2.1569 18.6497 1.41797 16.9683ZM6.0856 9.16367C5.95659 10.1993 5.89195 11.2419 5.89205 12.2855C5.89195 13.3291 5.95659 14.3717 6.0856 15.4073H0.856558C0.287397 13.365 0.287397 11.206 0.856558 9.16367H6.0856Z" fill="black" />
