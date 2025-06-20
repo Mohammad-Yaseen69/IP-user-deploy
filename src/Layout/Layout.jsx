@@ -262,20 +262,21 @@ const Layout = ({ children, classNames, ...rest }) => {
         />
         {
           is30DaysInfo
-            ?
-            <FinancialInfoModal
-              isOpen={is30DaysInfo}
-              toggle={() => { }}
-              toggleOnSuccess={() => setIs30DaysInfo(!is30DaysInfo)}
-            />
-            :
-            <FinancialInfoModal
-              isOpen={threeDaysReminderInfo}
-              toggle={() => set3DaysReminderInfo(!threeDaysReminderInfo)}
-              toggleOnSuccess={() => set3DaysReminderInfo(!threeDaysReminderInfo)}
-            />
+          &&
+          <FinancialInfoModal
+            isOpen={is30DaysInfo}
+            toggle={() => { }}
+            toggleOnSuccess={() => setIs30DaysInfo(!is30DaysInfo)}
+          />
         }
 
+        {threeDaysReminderInfo &&
+          <FinancialInfoModal
+            isOpen={threeDaysReminderInfo}
+            toggle={() => set3DaysReminderInfo(!threeDaysReminderInfo)}
+            toggleOnSuccess={() => set3DaysReminderInfo(!threeDaysReminderInfo)}
+          />
+        }
         {
           is30Days
             ?

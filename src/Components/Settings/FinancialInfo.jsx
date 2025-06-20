@@ -1,71 +1,68 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import styles from "./styles/FinInfo.module.scss"
 import CitiesData from "../CitiesDropDown/CitiesData.json"
-import { ChevronDown, ChevronRight } from 'react-feather'
+import { ChevronRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
+import { UserContext } from '../../Context/UserContext'
 
 const FinancialInfo = () => {
-    const [questions,] = useState([
+    const [questions, setQuestions] = useState([
         {
             question: "What keeps you busy these days?",
             info: "Whether you're running a business, freelancing, creating, or simply managing your personal finances — we’d love to hear about you!",
-            answered: true,
             step: 1,
-            answer: "I'm a freelancer",
-            type: "textarea"
+            answer: "",
+            type: "keeps_busy"
         },
         {
             question: "What best describes your profession?",
             info: "Choose one or more from our full industry list!",
-            answered: true,
             step: 2,
-            answer: ["Accounting", "Naruto", "Asdfafsd", "asdfasfd"],
+            answer: [],
             type: "profession"
         },
         {
             question: "Expected Monthly Transaction Volume?",
             info: "Estimate how much money will come into your account each month.",
-            answered: true,
             step: 3,
-            answer: "Less than $10,000"
-
+            answer: "",
+            type: "volume"
         },
         {
             question: "Expected Number of Transactions per Month?",
             info: "Estimate how much money will come into your account each month.",
-            answered: true,
             step: 4,
-            answer: "Less than 5",
-
+            answer: "",
+            type: "transaction_limit"
         },
         {
             question: "In Which Countries Will You Send Funds?",
             info: "Select all that apply or search country.",
-            answered: true,
             step: 5,
-            answer: ["PAK", "USA", "IND", "JPN", "AUS", "KOR", "NGA", "KEN", "GBR", "ITA", "BRA", "CHL"],
+            answer: [],
             type: "country"
         },
         {
             question: "Source of Funds",
             info: "Where does your money come from?",
-            answered: true,
             step: 6,
-            answer: "Salary"
+            answer: "",
+            type: "source_of_funds"
         },
         {
             question: "Source of Wealth",
             info: "How was your wealth accumulated?",
-            answered: true,
             step: 7,
-            answer: "Salary"
+            answer: "",
+            type: "source_of_wealth"
         }
     ])
     const [countriesWithRegion, setCountriesWithRegion] = useState({})
     const [filteredCountriesWithRegion, setFilteredCountriesWithRegion] = useState({})
     const [activeDropdown, setActiveDropdown] = useState(0)
     const [search, setSearch] = useState()
-    const {t} = useTranslation()
+    const { userDetails } = useContext(UserContext)
+    const { t } = useTranslation()
 
 
 
@@ -88,7 +85,7 @@ const FinancialInfo = () => {
         }
 
         countryFilteration()
-    }, [CitiesData])
+    }, [CitiesData, questions])
 
     useEffect(() => {
         if (search?.trim()) {
@@ -109,6 +106,16 @@ const FinancialInfo = () => {
         }
     }, [search, countriesWithRegion])
 
+    useEffect(() => {
+        if (userDetails) {
+            setQuestions(questions.filter(q => userDetails?.user?.financial_answers?.some(a => a?.question_key === q?.type)).map((answer) => {
+                const userAnswer = userDetails?.user?.financial_answers?.find(a => a?.question_key === answer?.type)
+                return userAnswer ? { ...answer, answer: userAnswer?.answers } : answer
+            }))
+
+            console.log(userDetails.user)
+        }
+    }, [userDetails])
     return (
         <div style={{ backgroundColor: 'white' }} className={styles.container}>
 

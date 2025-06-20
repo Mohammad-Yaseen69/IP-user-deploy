@@ -89,49 +89,42 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess }) => {
         {
             question: "What keeps you busy these days?",
             info: "Whether you're running a business, freelancing, creating, or simply managing your personal finances — we’d love to hear about you!",
-            answered: false,
             step: 1,
             type: "keeps_busy"
         },
         {
             question: "What best describes your profession?",
             info: "Choose one or more from our full industry list!",
-            answered: false,
             step: 2,
             type: "profession"
         },
         {
             question: "Expected Monthly Transaction Volume?",
             info: "Estimate how much money will come into your account each month.",
-            answered: false,
             step: 3,
             type: "volume"
         },
         {
             question: "Expected Number of Transactions per Month?",
             info: "Estimate how much money will come into your account each month.",
-            answered: false,
             step: 4,
             type: "transaction_limit"
         },
         {
             question: "In Which Countries Will You Send Funds?",
             info: "Select all that apply or search country.",
-            answered: false,
             step: 5,
             type: "country"
         },
         {
             question: "Source of Funds",
             info: "Where does your money come from?",
-            answered: false,
             step: 6,
             type: "source_of_funds"
         },
         {
             question: "Source of Wealth",
             info: "How was your wealth accumulated?",
-            answered: false,
             step: 7,
             type: "source_of_wealth"
         }
@@ -162,24 +155,6 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess }) => {
         }
     };
 
-
-    useEffect(() => {
-        document.body.style.overflow = "hidden";
-        document.documentElement.style.overflow = "hidden";
-        document.body.style.position = "fixed";
-        document.body.style.width = "100%";
-
-        return () => {
-            document.body.style.overflow = "auto";
-            document.documentElement.style.overflow = "auto";
-            document.body.style.position = "static";
-            document.body.style.width = "auto";
-        }
-    }, [])
-
-    useEffect(() => {
-        setActiveStep(questions[0].type)
-    }, [])
 
     const answerHandler = async () => {
         setLoading(true)
@@ -277,7 +252,6 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess }) => {
 
     const checkForFirst = () => {
         const currentIndex = questions.findIndex(q => q.type === activeStep)
-
         return currentIndex === 0
     }
 
@@ -289,9 +263,9 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess }) => {
             Array.isArray(userDetails.user.financial_answers)
         ) {
             let filteringQuestions = [...questions]
-            filteringQuestions = filteringQuestions.filter(q => !userDetails?.user?.financial_answers?.some(a => a.question_key === q.type))
+            filteringQuestions = filteringQuestions.filter(q => !userDetails?.user?.financial_answers?.some(a => a.question_key === q?.type))
             setQuestions(filteringQuestions)
-            setActiveStep(filteringQuestions[0].type)
+            setActiveStep(filteringQuestions[0]?.type)
         }
     }, [userDetails])
     return (
@@ -306,7 +280,7 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess }) => {
                             </div>
                             <div style={{ minHeight: '550px' }} className={styles.questions}>
                                 {questions.map((question, index) => (
-                                    <div onClick={() => setActiveStep(question.type)} style={{ opacity: question.type !== activeStep && 0.3 }} key={index} className={styles.question}>
+                                    <div onClick={() => setActiveStep(question?.type)} style={{ opacity: question.type !== activeStep && 0.3 }} key={index} className={styles.question}>
                                         <div>
                                             <span>
                                                 {t("Step")} {index + 1}
