@@ -638,6 +638,8 @@ const UserState = ({ children }) => {
     // 30 days/3 days securtiy questions
     const [is30Days, setIs30Days] = useState(false)
     const [threeDaysReminder, set3DaysReminder] = useState(false)
+    const [is30DaysInfo, setIs30DaysInfo] = useState(false)
+    const [threeDaysReminderInfo, set3DaysReminderInfo] = useState(false)
 
     useEffect(() => {
         if (userDetails) {
@@ -657,12 +659,32 @@ const UserState = ({ children }) => {
                 }
                 getSecurityQuestionDetails()
             }
+            const getInfoQuestionDets = async () => {
+                try {
+                    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/check-financial-questions/${userDetails?._id}`, {
+                        headers: authHeader
+                    })
+                    const dec = decryptData(res.data.data)
+                    console.log('financialQuestions', dec)
+                    setIs30DaysInfo(dec?.thirtyDaysCheck)
+                    if (!dec?.thirtyDaysCheck) {
+                        set3DaysReminderInfo(dec?.currentCheck)
+                    }
+                } catch (error) {
+                    console.log("Chin Tapak dam dam: ", error)
+                }
+            }
+
+            getInfoQuestionDets()
+
         }
 
     }, [userDetails])
 
+
+
     return (
-        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData }}>
+        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData }}>
             {showModalState && <Modal isOpen={showModalState} toggle={() => window.history.replaceState(null, null, "")} />}
             {children}
         </UserContext.Provider>

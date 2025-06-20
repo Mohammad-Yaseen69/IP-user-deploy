@@ -20,6 +20,7 @@ import InactivityCountDownTimer from "../Components/InactivityCounter";
 import SourceOfFunds from "../Components/SourceOfFundsModal";
 import AddBeneficiaryAddressModal from "../Components/AddBeneficiaryAddressModal";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import FinancialInfoModal from "../Components/FinancialInfoModal";
 
 
 export const MobileSbContext = createContext(null);
@@ -95,6 +96,10 @@ const Layout = ({ children, classNames, ...rest }) => {
     setIs30Days,
     threeDaysReminder,
     set3DaysReminder,
+    is30DaysInfo,
+    threeDaysReminderInfo,
+    set3DaysReminderInfo,
+    setIs30DaysInfo,
     verifyToken,
     beneficiaries,
     getUserBeneficiaries
@@ -235,6 +240,8 @@ const Layout = ({ children, classNames, ...rest }) => {
           </button>
         </ModalFooter>
       </Modal>
+
+
       {
         showSourceModal
         &&
@@ -253,6 +260,22 @@ const Layout = ({ children, classNames, ...rest }) => {
           isOpen={showInactivityModal}
           toggle={() => setShowInactivityModal(!showInactivityModal)}
         />
+        {
+          is30DaysInfo
+            ?
+            <FinancialInfoModal
+              isOpen={is30DaysInfo}
+              toggle={() => { }}
+              toggleOnSuccess={() => setIs30DaysInfo(!is30DaysInfo)}
+            />
+            :
+            <FinancialInfoModal
+              isOpen={threeDaysReminderInfo}
+              toggle={() => set3DaysReminderInfo(!threeDaysReminderInfo)}
+              toggleOnSuccess={() => set3DaysReminderInfo(!threeDaysReminderInfo)}
+            />
+        }
+
         {
           is30Days
             ?
