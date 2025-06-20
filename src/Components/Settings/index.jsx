@@ -27,6 +27,7 @@ import WithdrawalsNew from "./WithdrawalsNew";
 import { useNavigate } from "react-router";
 import Threshold from "./Threshold";
 import ManageSaveCards from "./ManageSaveCards";
+import FinancialInfo from "./FinancialInfo";
 
 const Settings = () => {
     const { t } = useTranslation()
@@ -50,7 +51,7 @@ const Settings = () => {
                         </div>
                         <div className={styles.bottom}>
                             <Tabs currentTab={currentTab} setCurrentTab={setCurrentTab} account_type={userDetails?.account_type} verifyToken={verifyToken} />
-                            <div className={styles.right}>
+                            <div style={{marginLeft: "1rem"}} className={styles.right}>
                                 {
                                     currentTab === "Basic Info"
                                     &&
@@ -163,6 +164,9 @@ const Settings = () => {
                                     currentTab === "Delete Your Account"
                                     &&
                                     <DeleteAccount />
+                                }
+                                {currentTab === "Financial Info" &&
+                                    <FinancialInfo />
                                 }
                                 {
                                     currentTab === "API Key"
@@ -307,6 +311,9 @@ const Settings = () => {
                                     currentTab === "Business Verification"
                                     &&
                                     <KYB />
+                                }
+                                {currentTab === "Financial Info" &&
+                                    <FinancialInfo />
                                 }
                                 {
                                     currentTab === "How Others Can Find You"

@@ -153,12 +153,12 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApp
                             ?
                             premiumFeatures.map((feat) => (
                                 <div>
-                                    <span style={{ fontSize: "12px", fontWeight: 600, color: "#9E9E9E" }}>{feat.label}</span>
-                                    {feat.text && <p style={{ fontSize: "14px", fontWeight: '600', marginBottom: "0" }}>{feat.text}</p>}
+                                    <span style={{ fontSize: "12px", fontWeight: 600, color: "#9E9E9E" }}>{t(feat.label)}</span>
+                                    {feat.text && <p style={{ fontSize: "14px", fontWeight: '600', marginBottom: "0" }}>{t(feat.text)}</p>}
                                     {feat.bullet &&
                                         <ul>
                                             {feat.bullet.map((b) => (
-                                                <li style={{ fontSize: "14px", fontWeight: '600', marginBottom: "0" }}>{b}</li>
+                                                <li style={{ fontSize: "14px", fontWeight: '600', marginBottom: "0" }}>{t(b)}</li>
                                             ))}
                                         </ul>
                                     }
@@ -168,12 +168,12 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApp
                             :
                             standardFeatures.map((feat) => (
                                 <div>
-                                    <span style={{ fontSize: "12px", fontWeight: 600, color: "#9E9E9E" }}>{feat.label}</span>
-                                    {feat.text && <p style={{ fontSize: "14px", fontWeight: '600', marginBottom: "0" }}>{feat.text}</p>}
+                                    <span style={{ fontSize: "12px", fontWeight: 600, color: "#9E9E9E" }}>{t(feat.label)}</span>
+                                    {feat.text && <p style={{ fontSize: "14px", fontWeight: '600', marginBottom: "0" }}>{t(feat.text)}</p>}
                                     {feat.bullet &&
                                         <ul>
                                             {feat.bullet.map((b) => (
-                                                <li style={{ fontSize: "14px", fontWeight: '600', marginBottom: "0" }}>{b}</li>
+                                                <li style={{ fontSize: "14px", fontWeight: '600', marginBottom: "0" }}>{t(b)}</li>
                                             ))}
                                         </ul>
                                     }

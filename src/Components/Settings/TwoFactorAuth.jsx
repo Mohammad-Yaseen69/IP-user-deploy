@@ -358,7 +358,7 @@ const TwoFactorAuth = () => {
         setShowFinger(false)
     }
     return (
-        <Card style={{ marginLeft: "1rem", height: "100%" }} id='two_factor'>
+        <Card style={{ height: "100%" }} id='two_factor'>
             <CardHeader style={{ background: '#FAFAFA', padding: window.innerWidth < 1000 && "0" }} className={`pb-0`}  >
                 <H4 attrH4={{ className: 'card-title mb-0' }}>{t("Two Factor Authentication")}</H4>
                 <p style={{ fontSize: "16px", fontWeight: 600, color: "#8E8E8E" }}>Here, you can set up and manage your Two Factor Authentication.</p>

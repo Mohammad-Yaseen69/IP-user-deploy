@@ -33,6 +33,9 @@ import login_active from "./tabs_icons/login_a.svg"
 import login from "./tabs_icons/login.svg"
 import thres_a from "./tabs_icons/thres_a.svg"
 import thres from "./tabs_icons/thres.svg"
+import fin_info from "./tabs_icons/fin_info.svg"
+import fin_info_a from "./tabs_icons/fin_info_a.svg"
+
 import useWindowWidth from '../../utils/useWindowWidth'
 import { ChevronDown } from 'react-feather'
 import NextStepModal from './NextStepModal'
@@ -58,6 +61,11 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             name: "Payment Threshold",
             icon: thres_a,
             active_icon: thres,
+        },
+        {
+            name: "Financial Info",
+            icon: fin_info,
+            active_icon: fin_info_a,
         },
         {
             name: "Security Questions",
