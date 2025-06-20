@@ -11,6 +11,7 @@ import { Tooltip } from "reactstrap"
 import { Info } from "react-feather"
 import useWindowWidth from "../../utils/useWindowWidth"
 import { startAuthentication } from "@simplewebauthn/browser"
+import { useTranslation } from "react-i18next"
 
 const Threshold = ({ userDetails, authHeader }) => {
     const [active, setActive] = useState(false)
@@ -24,6 +25,7 @@ const Threshold = ({ userDetails, authHeader }) => {
     const [showTooltip, setShowTooltip] = useState(false)
     const [toggle, setToggle] = useState(false)
     const width = useWindowWidth()
+    const { t } = useTranslation()
 
     useEffect(() => {
         setActive(userDetails?.otp_thresholds?.qr_pay?.enabled)
@@ -142,8 +144,8 @@ const Threshold = ({ userDetails, authHeader }) => {
     return (
         <div className={styles.cont}>
             <div className={styles.top}>
-                <h4>Payment Threshold Settings</h4>
-                <p>For faster transactions, you can authorize payments below your selected amount without OTP verification.</p>
+                <h4>{t("Payment Threshold Settings")}</h4>
+                <p>{t("For faster transactions, you can authorize payments below your selected amount without OTP verification.")}</p>
             </div>
 
             {!active ?
@@ -152,19 +154,19 @@ const Threshold = ({ userDetails, authHeader }) => {
                         <span style={{ background: `#EB8C1D  `, width: "21px", height: "21px", flexShrink: 0, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 800, fontSize: '12px' }}>i</span>
 
                         <div>
-                            <h5>Enable feature-specific thresholds</h5>
-                            <p>You can set different payment thresholds for features like QR payments, invoices, and more.</p>
+                            <h5>{t("Enable feature-specific thresholds")}</h5>
+                            <p>{t("You can set different payment thresholds for features like QR payments, invoices, and more.")}</p>
                         </div>
                     </div>
                     <button onClick={() => updateThreshold(true, cAmount || defaultAmount)}>
-                        Activate
+                        {t("Activate")}
                     </button>
                 </div> :
                 <div className={styles.thresholdSetBox}>
                     <div style={{ flexDirection: !editMode && "column", gap: "0px" }}>
                         {!editMode &&
                             <div className={styles.h_toggle}>
-                                <p>Quick QR Payment Threshold</p>
+                                <p>{t("Quick QR Payment Threshold")}</p>
 
                                 <div>
                                     <div style={{ display: "flex", alignItems: "center", gap: '4px' }}>
@@ -177,9 +179,9 @@ const Threshold = ({ userDetails, authHeader }) => {
                                             color="primary"
 
                                         >
-                                            You can enable disable it
+                                            {t("You can enable disable it")}
                                         </Tooltip>
-                                        <p>Toggle the Quicker Pay</p>
+                                        <p>{t("Toggle the Quicker Pay")}</p>
                                     </div>
                                     <Toggle checked={toggle} onChange={updateQuickerToggle} />
                                 </div>
@@ -190,7 +192,7 @@ const Threshold = ({ userDetails, authHeader }) => {
                             <div className={styles.current}>
                                 {editMode ?
                                     <div>
-                                        <span>Quick QR Payment Threshold</span>
+                                        <span>{t("Quick QR Payment Threshold")}</span>
                                         <div className={styles.amount}>
                                             {localcur}{cAmount}
                                         </div>
@@ -205,11 +207,11 @@ const Threshold = ({ userDetails, authHeader }) => {
 
                                 {!editMode ?
                                     <p className={styles.txt}>
-                                        Transactions up to  {localcur}{cAmount} can be auto-approved.
-                                        Payments above  {localcur}{cAmount} will always require OTP verification for security.
+                                        {t("Transactions up to")}  {localcur}{cAmount} {t("can be auto-approved.")}
+                                        {t("Payments above")}  {localcur}{cAmount} {t("will always require OTP verification for security.")}
                                     </p> :
                                     <p className={styles.txt}>
-                                        You can set maximum threshold amount of {localcur}{maxAmount}.
+                                        {t("You can set maximum threshold amount of")} {localcur}{maxAmount}.
                                     </p>
 
                                 }
@@ -217,15 +219,15 @@ const Threshold = ({ userDetails, authHeader }) => {
 
                             {!editMode &&
                                 <div className={styles.btns}>
-                                    <button className={styles.deactivate} onClick={() => updateThreshold(false)}>Deactivate</button>
-                                    <button className={styles.edit} onClick={() => setEditMode(true)}>Edit the amount</button>
+                                    <button className={styles.deactivate} onClick={() => updateThreshold(false)}>{t("Deactivate")}</button>
+                                    <button className={styles.edit} onClick={() => setEditMode(true)}>{t("Edit the amount")}</button>
                                 </div>}
                         </div>
 
                         {editMode &&
                             <div className={styles.amountDiv}>
                                 <span>
-                                    Set New Threshold
+                                    {t("Set New Threshold")}
                                 </span>
 
                                 <div className={styles.amountBox}>
@@ -280,7 +282,7 @@ const Threshold = ({ userDetails, authHeader }) => {
                                     >+</span>
                                 </div>
 
-                                <button onClick={() => setShowPassword(true)}>Save Changes</button>
+                                <button onClick={() => setShowPassword(true)}>{t("Save Changes")}</button>
                             </div>
                         }
                     </div>
