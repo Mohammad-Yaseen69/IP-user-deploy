@@ -7,7 +7,7 @@ const Stepfour = () => {
     return (
         <div style={{ display: "flex", gap: "8px", marginBottom: "7px", flexDirection: "column", maxWidth: "100%" }}>
             <div className={styles.top}>
-                <h2>{t("Your InstaPay Card is Ready! 🎉")}</h2>
+                <h2>{t("Your InstaPay Card is Ready")}!🎉</h2>
                 <p>{t("Your payment was successful, and your card is now active.")}</p>
             </div>
             <img src={success} alt="" />

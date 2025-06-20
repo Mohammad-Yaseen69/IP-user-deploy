@@ -10,6 +10,7 @@ import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 
 const Toggle = ({ checked, onChange, isCheckbox = false, style }) => (
@@ -24,7 +25,7 @@ const Toggle = ({ checked, onChange, isCheckbox = false, style }) => (
 );
 
 const GeoFencing = () => {
-    // const { t } = useTranslation()
+    const { t } = useTranslation()
     const [countriesWithRegion, setCountriesWithRegion] = useState({})
     const [expandedRegion, setExpandedRegion] = useState(null)
     const [searchTerm, setSearchTerm] = useState("")
@@ -285,8 +286,8 @@ const GeoFencing = () => {
         <div className={styles.container}>
             <div className={styles.top}>
                 <div style={{ width: "70%" }}>
-                    <h4>Manage Payment & Quotation Access</h4>
-                    <p>Control countries from where you can receive Payment Requests and Quotations. Toggle on/off access for specific countries.</p>
+                    <h4>{t("Manage Payment & Quotation Access")}</h4>
+                    <p>{t("Control countries from where you can receive Payment Requests and Quotations. Toggle on/off access for specific countries.")}</p>
                 </div>
                 <div>
                     {window.innerWidth > 1000 && <TopRight />}
@@ -317,32 +318,32 @@ const GeoFencing = () => {
                 <div className={styles.headings}>
                     <div className={styles.headingsLabels}>
                         <span>
-                            <p>#No</p>
+                            <p>#{t("No")}</p>
                         </span>
                         <span>
-                            <p>Country</p>
+                            <p>{t("Country")}</p>
                         </span>
                     </div>
 
                     <div>
                         <div>
-                            <span style={{ color: "black" }}>Payment Requests</span>
+                            <span style={{ color: "black" }}>{t("Payment Requests")}</span>
                         </div>
 
                         <div>
-                            <span>Account’s Country</span>
-                            <span>Current Location</span>
+                            <span>{t("Account’s Country")}</span>
+                            <span>{t("Current Location")}</span>
                         </div>
                     </div>
 
                     <div>
                         <div>
-                            <span style={{ color: "black" }}>Quotation</span>
+                            <span style={{ color: "black" }}>{t("Quotation")}</span>
                         </div>
 
                         <div>
-                            <span>Account’s Country</span>
-                            <span>Current Location</span>
+                            <span>{t("Account’s Country")}</span>
+                            <span>{t("Current Location")}</span>
                         </div>
                     </div>
                 </div>
@@ -358,7 +359,7 @@ const GeoFencing = () => {
                                 }}
                             >
                                 <div className={styles.regionRow}>
-                                    <span>{region}</span>
+                                    <span>{t(region)}</span>
                                     <div className={styles.checkboxGroup}>
                                         <Toggle
                                             checked={getRegionCheckStatus(region, "accountPaymentCheck")}
@@ -397,7 +398,7 @@ const GeoFencing = () => {
                                         <div key={country.isoCode} className={styles.countryRow}>
                                             <div className={styles.countryInfo}>
                                                 <span>{idx + 1}</span>
-                                                <span>{country.name}</span>
+                                                <span>{t(country.name)}</span>
                                             </div>
                                             <div className={styles.checkboxGroup}>
 
@@ -445,7 +446,7 @@ const GeoFencing = () => {
                     className={styles.saveBtn}
                     style={{ cursor: "pointer" }}
                 >
-                    {!isSaving ? "Save Changes" : "Saving"}
+                    {!isSaving ? t("Save Changes") : t("Saving")}
                 </button>
             </div>
         </div>

@@ -121,22 +121,22 @@ const FinancialInfo = () => {
 
             {questions.map((question, idx) => (
                 <div key={idx} className={styles.contentBox}>
-                    <span className={styles.label}>{question.question}</span>
+                    <span className={styles.label}>{t(question.question)}</span>
 
-                    {(question.type !== "profession" && question.type !== "country" && question.type !== "textarea") &&
+                    {(question.type !== "profession" && question.type !== "country" && question.type !== "keeps_busy") &&
                         <div className={styles.option}>
                             <span>
-                                {question.answer}
+                                {t(question.answer)}
                             </span>
                         </div>
                     }
-                    {question.type === "textarea" && <textarea value={question.answer} />}
+                    {question.type === "keeps_busy" && <textarea value={question.answer} />}
                     {question.type === "profession" &&
                         <div className={styles.multiOptions}>
                             {question.answer.map((item, idx2) => (
                                 <div style={{ flex: 1, minWidth: "45%" }} className={styles.option}>
                                     <span>
-                                        {item}
+                                        {t(item)}
                                     </span>
                                 </div>
                             ))}
@@ -163,14 +163,14 @@ const FinancialInfo = () => {
                                 {Object.entries(filteredCountriesWithRegion).map(([region, countries], idx) =>
                                     <div className={`${styles.dropdown} ${activeDropdown !== idx && styles.hide}`}>
                                         <div onClick={() => setActiveDropdown(idx)} className={styles.head}>
-                                            <span>{region}</span>
+                                            <span>{t(region)}</span>
 
                                             <ChevronRight style={{ transition: '0.3s', transform: activeDropdown === idx && "rotate(90deg)" }} />
                                         </div>
                                         <div className={styles.countries}>
                                             {countries?.map((cont) => (
                                                 <div className={styles.option}>
-                                                    <span>{cont.name}</span>
+                                                    <span>{t(cont.name)}</span>
                                                 </div>
                                             ))}
                                         </div>

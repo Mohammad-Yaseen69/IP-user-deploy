@@ -160,7 +160,7 @@ const AccountItem = ({ data }) => {
                                         ?
                                         <div class="d-flex justify-content-center">
                                             <div class="spinner-border" color='primary' role="status">
-                                                <span class="sr-only">Loading...</span>
+                                                <span class="sr-only">{t("Loading...")}</span>
                                             </div>
                                         </div>
                                         :
@@ -216,9 +216,9 @@ const AccountItem = ({ data }) => {
                     }}>
                     {(data.name.toLowerCase().includes("insta") || (data.name.toLowerCase().includes("telegram")))
                         ?
-                        checked ? "Connected" : "Not Connected"
+                        checked ? t("Connected") : t("Not Connected")
                         :
-                        "Coming Soon"
+                        t("Coming Soon")
                     }
                 </span>
             </div>
@@ -253,7 +253,7 @@ const AccountItem = ({ data }) => {
             </Modal> */}
 
             <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-                <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
+                <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation
                         callback={otpCallback}
@@ -268,7 +268,7 @@ const AccountItem = ({ data }) => {
                 </ModalBody>
             </Modal>
             <Modal isOpen={noUser} toggle={() => setNoUser(!noUser)}>
-                <ModalHeader toggle={() => setNoUser(!noUser)}>No Username</ModalHeader>
+                <ModalHeader toggle={() => setNoUser(!noUser)}>{t("No Username")}</ModalHeader>
                 <ModalBody>
                     <h5>{t("You haven't set the username yet.")} <span style={{ color: "#5926f0", fontWeight: 700, cursor: "pointer" }} onClick={() => navigate("/settings?tab=basic&editmode=true")}>{t("Set Now")}</span></h5>
                 </ModalBody>

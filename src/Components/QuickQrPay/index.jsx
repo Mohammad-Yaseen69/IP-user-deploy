@@ -12,6 +12,7 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import countries from "../PaymentsNewer/CountriesData.json";
 import { toast } from "react-toastify";
 import cameraGif from "./files/camera.gif"
+import { useTranslation } from "react-i18next";
 
 const QuickQrPay = () => {
     const [step, setStep] = useState(1)
@@ -43,6 +44,8 @@ const QuickQrPay = () => {
     //         }
     //     }
     // }, []);
+
+    const { t } = useTranslation()
 
 
     useEffect(() => {
@@ -81,7 +84,7 @@ const QuickQrPay = () => {
         } catch (error) {
             const dec = decryptData(error.response.data.data)
             console.log(dec)
-            setError(dec.message || "Invalid QR Code")
+            setError(dec.message || t("Invalid QR Code"))
         }
     }
 
@@ -101,7 +104,7 @@ const QuickQrPay = () => {
     const setFileHandler = (e) => {
         const selectedFile = e.target.files[0];
         if (!selectedFile?.type?.toLowerCase()?.includes("image")) {
-            setError("Only images are allowed.")
+            setError(t("Only images are allowed."))
             return
         }
         const formData = new FormData()
@@ -115,7 +118,7 @@ const QuickQrPay = () => {
             })
             .catch(err => {
                 console.log(err)
-                setError("Invalid QR Code!")
+                setError(t("Invalid QR Code!"))
             })
     }
 
@@ -165,32 +168,31 @@ const QuickQrPay = () => {
             {showInstruction &&
                 <div className={styles.instructionsMain}>
                     <div>
-                        <h4>How to Scan a QR Code Perfectly</h4>
-
+                        <h4>{t("How to Scan a QR Code Perfectly")}</h4>
                         <div className={styles.instructions}>
                             <div>
-                                <h5>Keep the QR Code Flat and Visible</h5>
-                                <p>Make sure the QR code is not bent, wrinkled, or partially hidden.</p>
+                                <h5>{t("Keep the QR Code Flat and Visible")}</h5>
+                                <p>{t("Make sure the QR code is not bent, wrinkled, or partially hidden.")}</p>
                             </div>
                             <div>
-                                <h5>Good Lighting is Key</h5>
-                                <p>Scan in a well-lit environment. Avoid shadows or glare on the QR code.</p>
+                                <h5>{t("Good Lighting is Key")}</h5>
+                                <p>{t("Scan in a well-lit environment. Avoid shadows or glare on the QR code.")}</p>
                             </div>
                             <div>
-                                <h5>Center the QR Code in the Frame</h5>
-                                <p>Align the QR code inside the on-screen frame. Try to keep all edges visible.</p>
+                                <h5>{t("Center the QR Code in the Frame")}</h5>
+                                <p>{t("Align the QR code inside the on-screen frame. Try to keep all edges visible.")}</p>
                             </div>
                             <div>
-                                <h5>Avoid Zooming In or Out</h5>
-                                <p>Let the app handle the focus. Moving your phone closer or farther can affect clarity.</p>
+                                <h5>{t("Avoid Zooming In or Out")}</h5>
+                                <p>{t("Let the app handle the focus. Moving your phone closer or farther can affect clarity.")}</p>
                             </div>
                             <div>
-                                <h5>Clean Your Camera Lens</h5>
-                                <p>A dirty or smudged lens can blur the image. Wipe it gently if needed.</p>
+                                <h5>{t("Clean Your Camera Lens")}</h5>
+                                <p>{t("A dirty or smudged lens can blur the image. Wipe it gently if needed.")}</p>
                             </div>
                             <div>
-                                <h5>Check for Damage</h5>
-                                <p>Make sure the QR code isn't torn, faded, or distorted.</p>
+                                <h5>{t("Check for Damage")}</h5>
+                                <p>{t("Make sure the QR code isn't torn, faded, or distorted.")}</p>
                             </div>
                         </div>
                     </div>
@@ -205,7 +207,7 @@ const QuickQrPay = () => {
                                 setMethod("qr")
                             }}
                             className={styles.gradientBtn}
-                        >Proceed</button>
+                        >{t("Proceed")}</button>
                     </div>
 
 
@@ -213,16 +215,16 @@ const QuickQrPay = () => {
             }
 
             {!showInstruction && <div className={styles.container}>
-                <h1>QR Quick Pay</h1>
+                <h1>{t("QR Quick Pay")}</h1>
 
                 {step === 1 &&
                     <div className={styles.method_selection}>
                         <div style={{ background: method === "qr" && "#5926F0", width: "45%" }} onClick={() => setMethod("qr")} className={styles.tab}>
-                            <span style={{ color: method === "qr" && "#FFF" }}>Scan Qr</span>
+                            <span style={{ color: method === "qr" && "#FFF" }}>{t("Scan Qr")}</span>
                         </div>
 
                         <div style={{ background: method === "code" && "#5926F0", width: "55%" }} onClick={() => setMethod("code")} className={styles.tab}>
-                            <span style={{ color: method === "code" && "#FFF", }}>Enter Merchant Code</span>
+                            <span style={{ color: method === "code" && "#FFF", }}>{t("Enter Merchant Code")}</span>
                         </div>
                     </div>
                 }
@@ -259,7 +261,7 @@ const QuickQrPay = () => {
 
                                     {isLoading && <img style={{ position: 'absolute', top: '0px', left: '0px', width: "100%", height: "100%", objectFit: 'cover' }} src={cameraGif} alt="adfa" />}
                                 </div>
-                                {(error && step === 1) && <p className={styles.error} style={{ fontWeight: 600, color: "red", marginTop: ".5rem" }}>{error}</p>}
+                                {(error && step === 1) && <p className={styles.error} style={{ fontWeight: 600, color: "red", marginTop: ".5rem" }}>{t(error)}</p>}
                             </>
                         }
 
@@ -268,7 +270,7 @@ const QuickQrPay = () => {
                         {
                             method === "code" &&
                             <div className={styles.code_cont}>
-                                <h5>Enter the Merchant Code</h5>
+                                <h5>{t("Enter the Merchant Code")}</h5>
 
                                 <div style={{ position: "relative", width: "100%" }}>
                                     <input value={walletInput} onChange={(e) => setWalletInput(e.target.value)} type="text" />
@@ -284,12 +286,12 @@ const QuickQrPay = () => {
                                     <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
                                         <img src={addU} alt="" />
                                         <span>
-                                            Recipient Not on InstaPay?
+                                            {t("Recipient Not on InstaPay?")}
                                         </span>
                                     </div>
-                                    <button><p>Invite them</p></button>
+                                    <button><p>{t("Invite them")}</p></button>
                                 </div>
-                                {error && <p className={styles.error} style={{ fontWeight: 600, color: "red" }}>{error}</p>}
+                                {error && <p className={styles.error} style={{ fontWeight: 600, color: "red" }}>{t(error)}</p>}
                             </div>
                         }
                     </>
@@ -298,8 +300,8 @@ const QuickQrPay = () => {
                 {step === 2 &&
                     <div className={styles.merchantInfo}>
                         <div>
-                            <h4>Merchant Details</h4>
-                            <p>Please take a few moments to carefully verify the information to your payee details.</p>
+                            <h4>{t("Merchant Details")}</h4>
+                            <p>{t("Please take a few moments to carefully verify the information to your payee details.")}</p>
                         </div>
 
 
@@ -316,7 +318,7 @@ const QuickQrPay = () => {
                                     <h2>{walletDetails?.name}</h2>
                                     <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                                         <p>@{walletDetails?.username}</p>
-                                        <span>Personal Account</span>
+                                        <span>{t("Personal")} {t("Account")}</span>
                                     </div>
 
                                     <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
@@ -328,7 +330,7 @@ const QuickQrPay = () => {
                                 <div className={styles.w_info}>
                                     <div>
                                         <p>{walletDetails?.wallet_id}</p>
-                                        <span>{walletDetails?.currency?.code} Wallet</span>
+                                        <span>{walletDetails?.currency?.code} {t("Wallet")}</span>
                                     </div>
 
                                     <img onClick={copyToClipboard} style={{ cursor: 'pointer' }} src={copy} alt="" />
@@ -336,7 +338,7 @@ const QuickQrPay = () => {
 
 
                                 <button className={styles.gradientBtn} disabled={disable} onClick={() => navigate(`/profile/${walletDetails?.username}`)}>
-                                    View Profile
+                                    {t("View Profile")}
                                 </button>
                             </div>
                         </div>
@@ -381,7 +383,7 @@ const QuickQrPay = () => {
                                     color: "black",
                                     lineHeight: "26px"
                                 }}>
-                                    You can now close this window and go back to chatbot.
+                                    {t("You can now close this window and go back to chatbot.")}
                                 </p>
                             </div>
                         </div>
@@ -390,7 +392,7 @@ const QuickQrPay = () => {
 
                 {step === 1 &&
                     <div style={{ background: `url(${adBG})`, backgroundSize: "cover", backgroundPosition: "left" }} className={styles.ad}>
-                        <h2>Advertisement Placeholder</h2>
+                        <h2>{t("Advertisement Placeholder")}</h2>
                     </div>}
 
                 <div className={styles.btns}>
@@ -401,7 +403,7 @@ const QuickQrPay = () => {
                                 setWalletDetails({})
                                 setStep(prev => prev - 1)
                                 setError(null)
-                            }} style={{ background: "white" }}>Back</button>
+                            }} style={{ background: "white" }}>{t("Back")}</button>
                     }
                 </div>
 

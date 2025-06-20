@@ -8,11 +8,13 @@ import axios from "axios"
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import { UserContext } from "../../../Context/UserContext"
 import InstaPayLoader from "../../Loader"
+import { useTranslation } from "react-i18next"
 
 const StepTwo = ({ data, dataHandler, dataHandlerE }) => {
     const [plansData, setPlansData] = useState([])
     const { authHeader } = useContext(UserContext)
     const [loading, setLoading] = useState(false)
+    const { t } = useTranslation()
 
     const handlePlanSelect = (plan) => {
         dataHandlerE("selectedPlan", plan);
@@ -47,7 +49,7 @@ const StepTwo = ({ data, dataHandler, dataHandlerE }) => {
             
 
             <div className={styles.cont}>
-                <h3>Available Plans</h3>
+                <h3>{t("Available Plans")}</h3>
 
                 <div className={styles.plans} style={{gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))"}}>
                     {!loading ?
@@ -63,7 +65,7 @@ const StepTwo = ({ data, dataHandler, dataHandlerE }) => {
                 <div style={{ width: "100%", display: "flex", justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem' }}>
                     <div className={styles2.info}>
                         <img src={info} alt="" />
-                        <span>Trouble buying an E-SIM?</span>
+                        <span>{t("Trouble buying an E-SIM?")}</span>
                     </div>
 
                     <div className={styles2.btns}>
@@ -74,10 +76,10 @@ const StepTwo = ({ data, dataHandler, dataHandlerE }) => {
                             }}
                             className={styles2.back}
                         >
-                            Back
+                            {t("Back")}
                         </span>
                         <button onClick={() => dataHandler("step", data.step + 1)} disabled={!data?.eSimData?.selectedPlan?.productId} className={styles2.nxt}>
-                            Next
+                            {t("Next")}
                             <svg xmlns="http://www.w3.org/2000/svg" width="9" height="15" viewBox="0 0 9 15" fill="none">
                                 <path d="M1.7876 1.5625L7.47528 6.97362C7.88959 7.36778 7.88959 8.02847 7.47528 8.42262L1.7876 13.8337" stroke="white" stroke-width="2" stroke-linecap="round" />
                             </svg>

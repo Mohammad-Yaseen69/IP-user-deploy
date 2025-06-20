@@ -81,16 +81,16 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
   useEffect(() => {
     switch (step) {
       case 1:
-        setSideText("Select the payment Type")
+        setSideText(t("Select the payment Type"))
         break;
       case 2:
-        paymentType === "card" ? setSideText(window.innerWidth > 1000 ? "Enter card Details" : "Payment Details") : paymentType === "wallet" && setSideText("Choose the Wallet")
+        paymentType === "card" ? setSideText(window.innerWidth > 1000 ? t("Enter card Details") : t("Payment Details")) : paymentType === "wallet" && setSideText(t("Choose The Wallet"))
         break;
       case 3:
-        setSideText("Review the Payment")
+        setSideText(t("Review the Payment"))
         break;
       case 4:
-        setSideText("Your Payment is now Completed")
+        setSideText(t("Your Payment is now Completed"))
         break;
       default:
     }
@@ -108,7 +108,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
     };
     const type = getCardTypeByValue(cardDetail.cardNumber)
     if (!type || cardDetail.cardNumber.length < type?.maxCardNumberLength) {
-      setCardNumberError("Invalid Card Number")
+      setCardNumberError(t("Invalid Card Number"))
     } else {
       setCardNumberError("")
     }
@@ -419,7 +419,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
       <div style={{ flex: (step === 4 && 0.8) || (step === 2 && 1.2), padding: window.innerWidth < 1000 && "1rem 1rem 0 1rem" }} className={styles.left}>
         <div>
           <h1>{t(sideText)}</h1>
-          {step === 4 && <p style={{ marginBottom: window.innerWidth < 1000 && "2rem " }}>{t("Thanks for using InstaPay!")}</p>}
+          {step === 4 && <p style={{ marginBottom: window.innerWidth < 1000 && "2rem " }}>{t("Thanks for using InstaPay")}!</p>}
         </div>
 
         {(step !== 1 && window.innerWidth > 1000) &&
@@ -565,7 +565,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
               {step === 4
                 ? t("Continue")
                 : step === 3
-                  ? t("Proceed to Payment")
+                  ? t("Proceed To Payment")
                   : t("Verify & Continue")
               }
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">

@@ -24,6 +24,7 @@ import useWindowWidth from "../../utils/useWindowWidth"
 import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation"
 import NotFound from "../NotFound";
 import { faL } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from "react-i18next";
 
 const QrQuickerPay = () => {
   const [step, setStep] = useState(1)
@@ -362,7 +363,7 @@ const QrQuickerPay = () => {
 
     return (
       <div style={{ padding: total && "10px", border: total && "1px solid #00000026", borderRadius: total && "6px" }} className={styles.fee}>
-        <span>{label}</span>
+        <span>{t(label)}</span>
         <span>{curr}
           {
             fx
@@ -377,6 +378,7 @@ const QrQuickerPay = () => {
     )
   }
 
+  const {t} = useTranslation()
 
   return (
     <div style={{ position: 'relative' }} className={styles.cont}>
@@ -389,9 +391,9 @@ const QrQuickerPay = () => {
               <Modal isOpen={showModal}>
                 <ModalBody>
                   <h2 style={{ color: "red" }}>
-                    Oops!
+                    {t("Oops")}!
                   </h2>
-                  <p style={{ fontWeight: 600, fontSize: "15px", color: "#6f6f6f" }}>{error}</p>
+                  <p style={{ fontWeight: 600, fontSize: "15px", color: "#6f6f6f" }}>{t(error)}</p>
 
                   <div style={{ display: "flex", gap: "10px", flexDirection: windowWidth < 400 && "column", marginTop: "2rem" }}>
                     {(error.toLowerCase().includes("inactive") || limitErrors) &&
@@ -402,11 +404,11 @@ const QrQuickerPay = () => {
                           setLimitErrors(false)
                           setError("")
                         }} style={{ background: "#5926f0", color: "#fff", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600 }}>
-                        Change Amount
+                        {t("Change Amount")}
                       </button>
                     }
                     <button onClick={() => navigate(`/q/${wallet_id}?login_flow=true`)} style={{ background: "#ff4b4b", color: "#fff", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600 }}>
-                      Login and Continue
+                      {t("Login and Continue")}
                     </button>
                   </div>
                 </ModalBody>
@@ -426,11 +428,11 @@ const QrQuickerPay = () => {
               }
               <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
                 <img src={ip} alt="" />
-                <h1>Quicker QR Pay</h1>
+                <h1>{t("Quicker QR Pay")}</h1>
                 {step === 1 &&
                   <div className={styles.detsText}>
-                    <h3>Merchant Details</h3>
-                    <p>Please take a few moments to carefully verify the information to your payee details.</p>
+                    <h3>{t("Merchant Details")}</h3>
+                    <p>{t("Please take a few moments to carefully verify the information to your payee details.")}</p>
                   </div>
                 }
 
@@ -448,14 +450,14 @@ const QrQuickerPay = () => {
                     </div>
 
                     <div>
-                      <h5>Your payment is confirmed</h5>
-                      <p>Thanks for using InstaPay!</p>
+                      <h5>{t("Your payment is confirmed")}</h5>
+                      <p>{t("Thanks for using InstaPay!")}</p>
                     </div>
                   </div>
                 }
 
 
-                {step !== 1 && <span className={styles.label}>Recipient Details:</span>}
+                {step !== 1 && <span className={styles.label}>{t("Recipient Details")}:</span>}
                 <div style={{ margin: step !== 1 && "0 0 20px 0" }} className={styles.infoBox}>
                   <div style={{ display: "flex", alignItems: "center", gap: "10px", width: "100%" }}>
                     {recipientDets?.profilePicture ?
@@ -468,7 +470,7 @@ const QrQuickerPay = () => {
                       <span>@{recipientDets?.username}</span>
                       <div style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <span><img style={{ width: "20px", height: "20px", borderRadius: "0" }} src={recipientDets.file} alt="" /> {recipientDets?.country}</span>
-                        <p onClick={() => navigate(`/profile/${recipientDets?.username}`)} style={{ marginBottom: "0", fontWeight: 600, color: "#5926f0", cursor: "pointer" }}>View Profile</p>
+                        <p onClick={() => navigate(`/profile/${recipientDets?.username}`)} style={{ marginBottom: "0", fontWeight: 600, color: "#5926f0", cursor: "pointer" }}>{t("View Profile")}</p>
                       </div>
                     </div>
                   </div>
@@ -476,7 +478,7 @@ const QrQuickerPay = () => {
 
                 {step === 1 &&
                   <div className={styles.amountBox}>
-                    <span>Type Your Amount</span>
+                    <span>{t("Type Your Amount")}</span>
                     <div>
                       <p>{recipientDets?.currency?.code}</p>
 
@@ -502,7 +504,7 @@ const QrQuickerPay = () => {
                       </span>
 
                       <div>
-                        <span className={styles.curr}>{userDetails?.walletDetails?.currency?.code} Wallet</span>
+                        <span className={styles.curr}>{userDetails?.walletDetails?.currency?.code} {t("Wallet")}</span>
                         <span className={styles.id}>{userDetails?.walletDetails?.wallet_id}</span>
                       </div>
                     </div>
@@ -546,7 +548,7 @@ const QrQuickerPay = () => {
 
 
                   <div>
-                    <label htmlFor="" style={{ fontWeight: 600 }}>Phone Number</label>
+                    <label htmlFor="" style={{ fontWeight: 600 }}>{t("Phone Number")}</label>
                     <PhoneInput
                       phone={phone}
                       setPhone={setPhone}
@@ -554,7 +556,7 @@ const QrQuickerPay = () => {
                     />
                   </div>
                   <div style={{ marginTop: "1rem" }}>
-                    <label htmlFor="" style={{ fontWeight: 600 }}>Password</label>
+                    <label htmlFor="" style={{ fontWeight: 600 }}>{t("Password")}</label>
                     <div style={{ position: 'relative' }}>
                       <Input
                         value={password}
@@ -587,7 +589,7 @@ const QrQuickerPay = () => {
                       disabled={!password || !phone || isPressed}
                       style={{ opacity: (!password || !phone || isPressed) && ".5" }}
                       onClick={handleBiometricVerification}
-                    >Continue</button>
+                    >{t("Continue")}</button>
                   </div>
                 </ModalBody>
               </Modal>
@@ -611,12 +613,12 @@ const QrQuickerPay = () => {
                         sendOtpSkip()
                       }
                     }}>
-                    {step !== 1 ? "Next" : "Authenticate & Proceed"}
+                    {step !== 1 ? t("Next") : t("Authenticate & Proceed")}
                   </button>
                 }
                 {step === 1 &&
                   <p onClick={() => navigate(`/q/${wallet_id}?login_flow=true`)} style={{ marginTop: "10px", fontWeight: 600, fontSize: "12px", cursor: "pointer", textAlign: "center", color: "#5926f0" }}>
-                    Quicker QR pay not active? login and continue.
+                    {t("Quicker QR pay not active? login and continue.")}
                   </p>
                 }
               </div>

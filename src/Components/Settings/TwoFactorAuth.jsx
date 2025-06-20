@@ -361,7 +361,7 @@ const TwoFactorAuth = () => {
         <Card style={{ height: "100%" }} id='two_factor'>
             <CardHeader style={{ background: '#FAFAFA', padding: window.innerWidth < 1000 && "0" }} className={`pb-0`}  >
                 <H4 attrH4={{ className: 'card-title mb-0' }}>{t("Two Factor Authentication")}</H4>
-                <p style={{ fontSize: "16px", fontWeight: 600, color: "#8E8E8E" }}>Here, you can set up and manage your Two Factor Authentication.</p>
+                <p style={{ fontSize: "16px", fontWeight: 600, color: "#8E8E8E" }}>{t("Here, you can set up and manage your Two Factor Authentication.")}</p>
             </CardHeader>
 
             {
@@ -477,7 +477,7 @@ const TwoFactorAuth = () => {
                 {(showDevices && window.innerWidth > 1000 && fingerBioActive) &&
                     <div style={{ display: "flex", flexDirection: "column", gap: "18px", alignItems: "flex-end" }}>
                         <div className={styles.devices}>
-                            <h4>Manage Your Biometric Devices</h4>
+                            <h4>{t("Manage Your Biometric Devices")}</h4>
                             {devices?.map((device, idx) => (
                                 <div className={styles.device}>
                                     <div>
@@ -517,7 +517,7 @@ const TwoFactorAuth = () => {
                 {(showDevices && window.innerWidth < 1000 && fingerBioActive) &&
                     <div style={{ display: "flex", flexDirection: "column", gap: "18px", alignItems: "flex-end", }}>
                         <div className={styles.devices} style={{ backgroundColor: "white", padding: "12px" }}>
-                            <h4 style={{ fontSize: "12px" }}>Manage Your Biometric Devices</h4>
+                            <h4 style={{ fontSize: "12px" }}>{t("Manage Your Biometric Devices")}</h4>
 
                             {devices?.map((device, idx) => (
                                 <div className={styles.device}>
@@ -547,12 +547,12 @@ const TwoFactorAuth = () => {
                         <div className={styles.buttons} style={{ display: 'grid', gridTemplateColumns: "1fr 1fr", gap: "8px", margin: "0" }}>
                             <button onClick={() => setShowDevices(false)} className={styles.close}>
                                 <img src={Cancel} alt="" />
-                                <p style={{ marginBottom: "0" }}>Close</p>
+                                <p style={{ marginBottom: "0" }}>{t('Close')}</p>
                             </button>
 
                             <button onClick={() => setShowBioModal(true)} className={styles.plus}>
                                 <img src={Plus} alt="" />
-                                <p style={{ marginBottom: "0" }}>Register Biometric</p>
+                                <p style={{ marginBottom: "0" }}>{t("Register Biometric")}</p>
                             </button>
                         </div>
                     </div>
@@ -614,7 +614,7 @@ const TwoFactorAuth = () => {
 
 
                 <Modal isOpen={showFinger}>
-                    <ModalHeader toggle={resetModal}>Confirm</ModalHeader>
+                    <ModalHeader toggle={resetModal}>{t("Confirm")}</ModalHeader>
                     <ModalBody>
                         <OTPConfirmation
                             callback={createPasskey}
@@ -645,18 +645,18 @@ const TwoFactorAuth = () => {
                                     <span><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
                                         <path d="M5.32298 16.9862C5.33921 16.9588 5.35584 16.9316 5.37286 16.9046C6.61448 14.9308 7.33325 12.5966 7.33325 10.0833C7.33325 8.05829 8.97487 6.41667 10.9999 6.41667C13.025 6.41667 14.6666 8.05829 14.6666 10.0833C14.6666 11.0156 14.6031 11.9337 14.4802 12.8333M12.5393 19.1067C13.1 17.9874 13.5597 16.8088 13.9065 15.5833M17.4255 16.621C18.0168 14.5435 18.3333 12.3504 18.3333 10.0833C18.3333 6.03324 15.0501 2.75 11 2.75C9.66428 2.75 8.41197 3.10711 7.33333 3.73107M2.75 14.0838C3.33727 12.8749 3.66667 11.5176 3.66667 10.0833C3.66667 8.74761 4.02378 7.4953 4.64774 6.41667M10.9999 10.0833C10.9999 13.3074 10.0752 16.3156 8.47648 18.8569" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg></span>
-                                    <h5 style={{ fontSize: "16px", fontWeight: 600, color: "#333333", marginBottom: "0" }}>Fingerprint / Biometrics</h5>
+                                    <h5 style={{ fontSize: "16px", fontWeight: 600, color: "#333333", marginBottom: "0" }}>{t("Fingerprint / Biometrics")}</h5>
                                 </div>
 
 
-                                <h2 style={{ marginBottom: "0", fontSize: "24px", fontWeight: 700 }}>{showSuccess ? "Fingerprint Registered Successfully" : deviceAddError ? "Fingerprint Not Recognized" : "Add a new device"}.</h2>
+                                <h2 style={{ marginBottom: "0", fontSize: "24px", fontWeight: 700 }}>{showSuccess ? t("Fingerprint Registered Successfully") : deviceAddError ? t("Fingerprint Not Recognized") : t("Add a new device")}.</h2>
                                 <p style={{ marginBottom: "0", fontSize: "16px", fontWeight: 600, color: "#777777" }}>
                                     {showSuccess ?
-                                        `You can now use your fingerprint to log in on this device. You  ${devices.length < 1 ? "can" : "can't"} add ${devices.length === 0 ? "two" : devices.length === 1 ? "one" : ""} more devices as biometric authentication` :
+                                        t(`You can now use your fingerprint to log in on this device. You can add 1 more devices as biometric authentication`).replace("1", devices.length === 0 ? "2" : devices.length === 1 ? "1" : "").replace("can", devices.length < 1 ? "can" : "can't") :
                                         deviceAddError ?
                                             "We couldn't capture a valid fingerprint. Please try again."
                                             :
-                                            "Confirm with biometrics to register your new passkey."
+                                            t("Confirm with biometrics to register your new passkey.")
                                     }
                                 </p>
                             </div>
@@ -667,7 +667,7 @@ const TwoFactorAuth = () => {
                             <div style={{ display: "flex", flexDirection: "column", gap: "14px", alignItems: "flex-start", width: "100%" }}>
                                 {!deviceAddError &&
                                     <div style={{ width: '100%', display: showSuccess && "flex", alignItems: showSuccess && "center", gap: showSuccess && "10px" }}>
-                                        <span style={{ fontSize: "14px", fontWeight: 600, color: "#777", marginBottom: !showSuccess && "15px", whiteSpace: showSuccess && "nowrap" }}>Device Name:</span>
+                                        <span style={{ fontSize: "14px", fontWeight: 600, color: "#777", marginBottom: !showSuccess && "15px", whiteSpace: showSuccess && "nowrap" }}>{t("Device Name")}:</span>
                                         <div style={{ position: "relative", width: "100%" }}>
                                             <input
                                                 value={deviceName}
@@ -683,7 +683,7 @@ const TwoFactorAuth = () => {
 
 
                                             {!showSuccess &&
-                                                <p style={{ marginBottom: "0", position: 'absolute', top: "25%", right: "8px", fontSize: "10px", color: "#BBBBB", fontWeight: 600 }}>{remainingChar}/24 Characters Remaining
+                                                <p style={{ marginBottom: "0", position: 'absolute', top: "25%", right: "8px", fontSize: "10px", color: "#BBBBB", fontWeight: 600 }}>{remainingChar}/24 {t("Characters Remaining")}
                                                 </p>
                                             }
                                         </div>
@@ -699,7 +699,7 @@ const TwoFactorAuth = () => {
                                             setShowSuccess(false)
                                         }}
                                         className={styles.back}>
-                                        Back</button>
+                                        {t("Back")}</button>
                                     {!showSuccess &&
                                         <button
                                             onClick={() => {
@@ -707,7 +707,7 @@ const TwoFactorAuth = () => {
                                             }}
                                             style={{ opacity: !deviceName && 0.6, background: deviceAddError && "#D00416" }}
                                             disabled={!deviceName}
-                                            className={styles.next}>{deviceAddError ? "Retry" : "Next"}
+                                            className={styles.next}>{deviceAddError ? t("Retry") : t("Next")}
                                         </button>}
                                 </div>
                             </div>
@@ -726,18 +726,18 @@ const TwoFactorAuth = () => {
                                         </svg>
                                     </span>
 
-                                    <p style={{ fontSize: "16px" }}>Delete this Device</p>
+                                    <p style={{ fontSize: "16px" }}>{t("Delete this Device")}</p>
                                 </div>
 
                                 <div>
-                                    <h3 style={{ fontSize: "20px", fontWeight: 700, marginBottom: '12px' }}>Are you sure you want to delete this device?</h3>
-                                    <p style={{ fontSize: "14px", color: "#777777" }}>This device will no longer be able to use biometric authentication. You will need to re-register it if you want to use it again.</p>
+                                    <h3 style={{ fontSize: "20px", fontWeight: 700, marginBottom: '12px' }}>{t("Are you sure you want to delete this device")}?</h3>
+                                    <p style={{ fontSize: "14px", color: "#777777" }}>{t("This device will no longer be able to use biometric authentication. You will need to re-register it if you want to use it again.")}</p>
                                 </div>
                             </div>
 
                             <div style={{ display: 'flex', gap: '10px', alignItems: "center", width: "100%" }}>
-                                <button onClick={() => setDelete({ showModal: false, device: null })} className={styles.cancel}>Cancel</button>
-                                <button onClick={deleteDevice} className={styles.delete}>Yes, Remove Device</button>
+                                <button onClick={() => setDelete({ showModal: false, device: null })} className={styles.cancel}>{t("Cancel")}</button>
+                                <button onClick={deleteDevice} className={styles.delete}>{t("Yes, Remove Device")}</button>
                             </div>
                         </div>
                     </ModalBody>

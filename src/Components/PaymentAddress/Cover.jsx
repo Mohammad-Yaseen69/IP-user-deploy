@@ -12,6 +12,7 @@ import AdjustModal from "../Settings/AdjustModal";
 import crop from "./files/icons/crop.svg"
 import upload from "./files/icons/upload.svg"
 import del from "./files/icons/delete.svg"
+import { t } from "i18next";
 
 
 const Cover = ({ cover, setCover, dets }) => {
@@ -129,7 +130,7 @@ const Cover = ({ cover, setCover, dets }) => {
                                 }}
                                 disabled={true}
                             >
-                                Deleting
+                                {t("Deleting")}
                             </Button>}
                     </div>
                     :

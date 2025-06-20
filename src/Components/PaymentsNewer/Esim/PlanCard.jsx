@@ -5,8 +5,10 @@ import sim from "./files/sim.svg"
 import line from "./files/line.svg"
 import line2 from "./files/line2.svg"
 import info from "./files/info.svg"
+import { useTranslation } from "react-i18next"
 
 const PlanCard = ({plan, data, handlePlanSelect}) => {
+    const {t} = useTranslation()
     return (
         <div
             key={plan._id}
@@ -23,22 +25,22 @@ const PlanCard = ({plan, data, handlePlanSelect}) => {
                     <div className={styles.detsDiv}>
                         <div className={styles.dets}>
                             <div className={styles.det}>
-                                <span>Plan details</span>
+                                <span>{t("Plan details")}</span>
                                 <p>{plan.name}</p>
                             </div>
                             <div className={styles.det}>
-                                <span>Product Id</span>
+                                <span>{("Product Id")}</span>
                                 <p >{plan.productId}</p>
                             </div>
                         </div>
 
                         <div className={styles.dets}>
                             <div className={styles.det}>
-                                <span>Operator</span>
+                                <span>{t("Operator")}</span>
                                 <p>{plan.operator}</p>
                             </div>
                             <div className={styles.det}>
-                                <span>Operator Id</span>
+                                <span>{t("Operator Id")}</span>
                                 <p>{plan.operatorId}</p>
                             </div>
                         </div>
@@ -46,7 +48,7 @@ const PlanCard = ({plan, data, handlePlanSelect}) => {
 
                     <div className={styles.usageDiv}>
                         <div>
-                            <span>Usage info</span>
+                            <span>{t("Usage info")}</span>
                             <p>{plan.usageInfo}</p>
                         </div>
                         <img src={data?.eSimData?.selectedPlan?.productId === plan.productId ? line2 : line} alt="" />

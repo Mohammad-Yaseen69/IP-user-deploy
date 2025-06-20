@@ -191,7 +191,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                         setDescription(apiDescription)
                     }}
                 >
-                    Cancel
+                    {t("Cancel")}
                 </span>
             }
 
@@ -299,7 +299,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                         </svg>
                                                     </span>
                                                     <p>
-                                                        My Virtual Payment Address
+                                                        {t("My Virtual Payment Address")}
                                                     </p>
                                                 </div>
 
@@ -307,7 +307,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                             </div>
 
                                             <div onClick={() => setShowCurrencyDropdown(!showCurrencyDropdown)} className={styles.curr}>
-                                                <p>Set the currency</p>
+                                                <p>{t("Set the currency")}</p>
 
                                                 <div style={{ position: 'relative' }}>
                                                     {
@@ -367,7 +367,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                     <div className={styles.wrapper}>
                                         <div style={{ marginBottom: window.innerWidth > 1000 && "2rem" }} className={styles.infoCont}>
                                             <div className={styles.infoTop}>
-                                                <p style={{ fontSize: width < 1000 && "14px" }}>Customize My Public Page</p>
+                                                <p style={{ fontSize: width < 1000 && "14px" }}>{t("Customize My Public Page")}</p>
                                                 {width > 1000 && btns()}
                                             </div>
                                             <div className={styles.main}>
@@ -416,7 +416,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                         <div className={styles.videoCont}>
                                             <div className={styles.head}>
                                                 <div>
-                                                    <span>Add Video</span>
+                                                    <span>{t("Add Video")}</span>
                                                     <img src={info} alt="" />
                                                 </div>
 
@@ -424,7 +424,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                             </div>
 
                                             <div className={styles.topV}>
-                                                <p>You can add videos in your public payment address page. </p>
+                                                <p>{t("You can add videos in your public payment address page.")} </p>
                                             </div>
 
                                             <div className={styles.videoDiv}>
@@ -445,7 +445,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                 </div>
                                             </div>
                                             <div className={styles.bottomV}>
-                                                <button onClick={() => setShowModal(true)}>Add Video</button>
+                                                <button onClick={() => setShowModal(true)}>{t("Add Video")}</button>
                                             </div>
                                         </div>
                                     </div>

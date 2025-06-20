@@ -11,6 +11,7 @@ import { BsCrop, BsPencil, BsPencilFill } from "react-icons/bs";
 import AdjustModal from "../Settings/AdjustModal";
 import { FaAdjust } from "react-icons/fa";
 import { IoCrop } from "react-icons/io5";
+import { useTranslation } from "react-i18next";
 
 const Profile = ({ dp, setDp, dets }) => {
     const { authHeader, userDetails, verifyToken, croppedImages } = useContext(UserContext)
@@ -20,8 +21,7 @@ const Profile = ({ dp, setDp, dets }) => {
     const [file, setFile] = useState(null)
     const [showModal, setShowModal] = useState(false)
     const [deleting, setDeleting] = useState(false)
-
-
+    const { t } = useTranslation()
     const handleFileSelect = (e) => {
         const file = e.target.files[0];
         if (!file?.type?.toLowerCase()?.includes("image")) {
@@ -132,7 +132,7 @@ const Profile = ({ dp, setDp, dets }) => {
                             onClick={handleSave}
                             disabled={isSaving}
                         >
-                            {isSaving ? "Saving" : "Save"}
+                            {isSaving ? t("Saving") : t("Save")}
                         </Button> :
                             <Button color='primary'
                                 style={{
@@ -145,16 +145,16 @@ const Profile = ({ dp, setDp, dets }) => {
                                 }}
                                 disabled={true}
                             >
-                                Deleting
+                                {t("Deleting")}
                             </Button>}
                     </div>
                     :
                     <div style={{ display: "flex", justifyContent: "center", alignItems: 'center', width: "100%", gap: "9px", marginTop: '7px' }}>
-                        <label htmlFor="dp" style={{ fontSize: "12px", color: "#5926F0", fontWeight: 600, marginBottom: "0px", cursor: "pointer" }}>Change</label>
+                        <label htmlFor="dp" style={{ fontSize: "12px", color: "#5926F0", fontWeight: 600, marginBottom: "0px", cursor: "pointer" }}>{t("Change")}</label>
                         {dp &&
                             <>
                                 <span style={{ fontSize: "14px", color: "#5926F0", fontWeight: 600 }}>|</span>
-                                <span onClick={deletePfp} style={{ fontSize: "12px", color: "#5926F0", fontWeight: 600, cursor: "pointer" }}>Delete</span>
+                                <span onClick={deletePfp} style={{ fontSize: "12px", color: "#5926F0", fontWeight: 600, cursor: "pointer" }}>{t("Delete")}</span>
                             </>}
 
                     </div>

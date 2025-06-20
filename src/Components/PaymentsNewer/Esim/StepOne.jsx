@@ -45,17 +45,17 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                                     <div>
                                         <img src={warn} alt="" />
                                         <p style={{ width: width < 1000 && '100%' }}>
-                                            Not all devices support eSIM. Perform a compatibility check to ensure a seamless user experience.
+                                            {t("Not all devices support eSIM. Perform a compatibility check to ensure a seamless user experience.")}
                                         </p>
                                     </div>
 
                                     <button onClick={() => setShowCompatibleModal(true)}>
-                                        Check device compatibility.
+                                        {t("Check device compatibility.")}
                                     </button>
                                 </div>
 
                                 <div className={styles.contentDiv} style={{ flexDirection: width < 600 && "column", alignItems: width < 600 && "flex-start" }}>
-                                    <h4>Travel Distance</h4>
+                                    <h4>{t("Travel Distance")}</h4>
 
                                     <div style={{ flex: 0, width: width < 600 ? "100%" : "fit-content", minWidth: 'fit-content' }} className={`${country_styles.country} ${styles.country}`} onClick={() => setShowModal(true)}>
                                         <div className={country_styles.main}>
@@ -71,7 +71,7 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
 
 
                                 <div style={{ alignItems: "flex-start", flexDirection: width < 1000 && "column" }} className={styles.contentDiv}>
-                                    <h4>Or Choose a Region</h4>
+                                    <h4>{t("Or Choose a Region")}</h4>
                                     <div style={{ width: width < 1000 && "100%" }} className={styles.regions}>
                                         {regions.map((region, index) => (
                                             <div style={{ cursor: "pointer", background: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center", position: 'relative', overflow: "hidden" }}
@@ -82,7 +82,7 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                                                 key={index}
                                                 className={styles.region}>
                                                 {data.eSimData.region.value !== region.value && <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0, 0, 0, 0.4)', zIndex: 1 }}></div>}
-                                                <h2 style={{ zIndex: 5 }}>{region.name}</h2>
+                                                <h2 style={{ zIndex: 5 }}>{t(region.name)}</h2>
                                             </div>
                                         ))}
                                     </div>
@@ -92,7 +92,7 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                             <div style={{ justifyContent: 'space-between' }} className={styles.contentDiv}>
                                 <div className={styles.info}>
                                     <img src={info} alt="" />
-                                    <span>Trouble buying an E-SIM?</span>
+                                    <span>{t("Trouble buying an E-SIM?")}</span>
                                 </div>
 
                                 <div className={styles.btns}>
@@ -102,10 +102,10 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                                             dataEsimHandler("region", "")
                                         }}
                                         className={styles.back}
-                                    >Back
+                                    >{t("Back")}
                                     </span>
                                     <button onClick={() => dataHandler("step", 3)} className={styles.nxt}>
-                                        Next
+                                        {t("Next")}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="9" height="15" viewBox="0 0 9 15" fill="none">
                                             <path d="M1.7876 1.5625L7.47528 6.97362C7.88959 7.36778 7.88959 8.02847 7.47528 8.42262L1.7876 13.8337" stroke="white" stroke-width="2" stroke-linecap="round" />
                                         </svg>
@@ -142,51 +142,51 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                                     fontWeight: 700,
                                     fontSize: 22,
                                     color: "#1a1a1a"
-                                }}>How to Check if Your Phone Supports eSIM</span>
+                                }}>{t("How to Check if Your Phone Supports eSIM")}</span>
                             </div>
                             <div style={{ fontSize: 16, color: "#444" }}>
-                                <span style={{ fontWeight: 600, color: "#3417db" }}>🔍 Option 1: Check in Your Phone Settings</span>
+                                <span style={{ fontWeight: 600, color: "#3417db" }}>{t("🔍 Option 1: Check in Your Phone Settings")}</span>
                                 <div style={{ margin: "10px 0 0 0" }}>
-                                    <div style={{ fontWeight: 600, marginBottom: 4 }}>For iPhone (iOS 12.1 or later):</div>
+                                    <div style={{ fontWeight: 600, marginBottom: 4 }}>{t("For iPhone (iOS 12.1 or later):")}</div>
                                     <ol style={{ marginLeft: 18, marginBottom: 6, display: "flex", flexDirection: "column", gap: 6 }}>
-                                        <li>Go to <b>Settings &gt; General &gt; About</b>.</li>
-                                        <li>Scroll down to <b>Available SIM</b> or <b>Digital SIM</b>.</li>
+                                        <li>{t("Go to")} <b>{t("Settings > General > About")}</b>.</li>
+                                        <li>{t("Scroll down to")} <b>{t("Available SIM")}</b> {t("or")} <b>{t("Digital SIM")}</b>.</li>
                                     </ol>
                                     <div style={{ marginBottom: 6 }}>
-                                        If you see an <b>EID number</b>, your iPhone supports eSIM.
+                                        {t("If you see an")} <b>{t("EID number")}</b>, {t("your iPhone supports eSIM.")}
                                     </div>
                                     <div style={{ marginBottom: 6 }}>
-                                        Alternatively, check under <b>Settings &gt; Cellular &gt; Add Cellular Plan</b>. If you see that option, eSIM is supported.
+                                        {t("Alternatively, check under")} <b>{t("Settings > Cellular > Add Cellular Plan")}</b>. {t("If you see that option, eSIM is supported.")}
                                     </div>
                                 </div>
-                                <div style={{ fontWeight: 600, marginTop: 10, marginBottom: 4 }}>For Android (Samsung, Google Pixel, etc.):</div>
+                                <div style={{ fontWeight: 600, marginTop: 10, marginBottom: 4 }}>{t("For Android (Samsung, Google Pixel, etc.):")}</div>
                                 <ol style={{ marginLeft: 18, marginBottom: 6, display: "flex", flexDirection: "column", gap: 6 }}>
                                     <li>
-                                        Go to <b>Settings &gt; Connections &gt; SIM card manager</b> (Samsung)
+                                        {t("Go to")} <b>{t("Settings > Connections > SIM card manager")}</b> (Samsung)
                                         <br />
-                                        or<br />
-                                        <b>Settings &gt; Network &amp; Internet &gt; Mobile Network</b> (Pixel).
+                                        {t("or")}<br />
+                                        <b>{t("Settings > Network & Internet > Mobile Network")}</b> (Pixel).
                                     </li>
-                                    <li>Look for <b>eSIM</b> or <b>Add carrier / Add eSIM</b>.</li>
+                                    <li>{t("Look for")} <b>{t("eSIM")}</b> {t("or")} <b>{t("Add carrier / Add eSIM")}</b>.</li>
                                 </ol>
                                 <div style={{ marginBottom: 6 }}>
-                                    If available, your phone supports eSIM.
+                                    {t("If available, your phone supports eSIM.")}
                                 </div>
                             </div>
                             <div style={{ fontSize: 16, color: "#444", marginTop: 12 }}>
-                                <span style={{ fontWeight: 600, color: "#3417db" }}>Option 2: Check the IMEI Information</span>
+                                <span style={{ fontWeight: 600, color: "#3417db" }}>{t("Option 2: Check the IMEI Information")}</span>
                                 <ol style={{ marginLeft: 18, marginBottom: 6, marginTop: 6, display: "flex", flexDirection: "column", gap: 6 }}>
-                                    <li>Open the Phone app and dial: <b>*#06#</b></li>
-                                    <li>Look at the IMEI information shown.</li>
+                                    <li>{t("Open the Phone app and dial:")} <b>{t("*#06#")}</b></li>
+                                    <li>{t("Look at the IMEI information shown.")}</li>
                                 </ol>
                                 <div style={{ marginBottom: 6 }}>
-                                    If there is an <b>EID number</b> listed, your phone supports eSIM.
+                                    {t("If there is an")} <b>{t("EID number")}</b> {t("listed, your phone supports eSIM.")}
                                 </div>
                             </div>
                             <div style={{ fontSize: 16, color: "#444", marginTop: 12 }}>
-                                <span style={{ fontWeight: 600, color: "#3417db" }}>Option 3: Check Manufacturer or Carrier Website</span>
+                                <span style={{ fontWeight: 600, color: "#3417db" }}>{t("Option 3: Check Manufacturer or Carrier Website")}</span>
                                 <div style={{ marginTop: 6 }}>
-                                    If the above methods are unclear, search online:
+                                    {t("If the above methods are unclear, search online:")}
                                     <div style={{
                                         background: "#f5f7fa",
                                         borderRadius: 6,
@@ -195,9 +195,9 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                                         fontStyle: "italic",
                                         color: "#333"
                                     }}>
-                                        “[Your Phone Model] eSIM support”
+                                        {t("[Your Phone Model] eSIM support")}
                                     </div>
-                                    For example:
+                                    {t("For example:")}
                                     <div style={{
                                         background: "#f5f7fa",
                                         borderRadius: 6,
@@ -206,7 +206,7 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                                         fontStyle: "italic",
                                         color: "#333"
                                     }}>
-                                        Samsung Galaxy S21 eSIM support
+                                        {t("Samsung Galaxy S21 eSIM support")}
                                     </div>
                                 </div>
                             </div>
@@ -226,7 +226,7 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                                     boxShadow: "0 2px 8px rgba(10,124,255,0.08)"
                                 }}
                             >
-                                Close
+                                {t("Close")}
                             </button>
                         </div>
                     </ModalBody>

@@ -52,6 +52,7 @@ const OtherBalance = () => {
         }
     }, [userWallets]);
 
+    console.log(available - blocked)
     return (
         <div className={styles.container}>
             <div className={styles.sub}>
@@ -77,7 +78,7 @@ const OtherBalance = () => {
                         </div>
                     </div>
                     :
-                    <p>${available?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                    <p>${(available - blocked)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                 }
             </div>
         </div>

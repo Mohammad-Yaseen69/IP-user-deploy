@@ -708,7 +708,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
                                         {data.flow === "e-sim" &&
                                             <div>
-                                                <button onClick={() => updateEsimHandler("simsModal", true)} className={styles.manageBtn}>Manage purchased eSIM</button>
+                                                <button onClick={() => updateEsimHandler("simsModal", true)} className={styles.manageBtn}>{t("Manage purchased eSIM")}</button>
                                             </div>
                                         }
                                     </div>

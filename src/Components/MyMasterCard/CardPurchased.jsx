@@ -364,7 +364,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                 }
                             }}
                             className={styles.tap}
-                        >{t('Tap to see Details')}</span>
+                        >{t('Tap to see details')}</span>
 
                         <div className={styles.balance}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="222" height="160" viewBox="0 0 222 160" fill="none">
