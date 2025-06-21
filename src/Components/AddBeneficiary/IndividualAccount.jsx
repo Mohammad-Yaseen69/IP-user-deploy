@@ -297,7 +297,9 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         clabe: "",
         msisdn: "",
         sort_code: "",
-        country_iso_code: ""
+        country_iso_code: "",
+        iban: "",
+        swift_bic_code: ""
     })
 
     const handleBankExtraChange = (e) => {
@@ -878,6 +880,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
     }
 
 
+    console.log(fieldsInfo)
     useEffect(() => {
         if (countryIsoCode) {
             setActive(5)
@@ -1761,7 +1764,8 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                         serviceFieldInfoValidate(services?.find(item => item?.name?.toLowerCase()?.includes("bank")), "credit_party_identifiers_accepted", item)
                                                         &&
                                                         <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
-                                                            <Label className="col-form-label">{t(service_name_formatter(item))}<span className="req_star">*</span></Label>
+                                                            {((item !== 'iban' && item !== "swift_bic_code") || (item === "iban" && accNumType === "Swift") || (item === "swift_bic_code" && accNumType === "IBAN")) && <Label className="col-form-label">{t(service_name_formatter(item))}<span className="req_star">*</span></Label>}
+
                                                             {
                                                                 item?.toString()?.toLowerCase() === "account_type"
                                                                     ?
@@ -1774,7 +1778,9 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                                         }
                                                                     </Input>
                                                                     :
-                                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} disabled={!isValidIban} type="text" value={bankExtras[item]} name={item} onChange={handleBankExtraChange} />
+                                                                    <>
+                                                                        {((item !== 'iban' && item !== "swift_bic_code") || (item === "iban" && accNumType === "Swift") || (item === "swift_bic_code" && accNumType === "IBAN")) && <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} disabled={!isValidIban} type="text" value={bankExtras[item]} name={item} onChange={handleBankExtraChange} />}
+                                                                    </>
                                                             }
                                                         </FormGroup>
                                                     )

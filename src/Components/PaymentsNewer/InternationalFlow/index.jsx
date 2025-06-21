@@ -372,6 +372,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
         }
     }
 
+    
+
     const getExchangeRateNew = async (amount, setLimitType, wallet_id = "", currency_code = "", avoid_balance = true, setLoading = () => { }) => {
         setLoading(true)
         updateInternationalData("exchange_rate_error", "")
