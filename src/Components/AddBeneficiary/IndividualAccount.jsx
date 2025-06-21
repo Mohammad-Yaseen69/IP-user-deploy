@@ -260,6 +260,8 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         occupation: "",
     })
 
+
+
     const handleBasicExtraChange = (e) => {
         const { value, name } = e.target;
         setBasicExtras(prev => {
@@ -1361,9 +1363,9 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                         <DatePicker
                                                             format="DD/MM/YYYY"
                                                             className="form-control custom-datepicker"
-                                                            style={{ flex: 1, minWidth: "250px", background: "#fff", border: "1px solid #e9e9e9", borderRadius: "6px", boxShadow: "none", padding: "0px", display: 'flex', justifyContent: "center" }}
+                                                            style={{ flex: 1, minWidth: "250px", background: "#fff", border: "1px solid #e9e9e9", borderRadius: "6px", boxShadow: "none", padding: "0px", display: 'flex', justifyContent: "center", position: "static" }}
                                                             value={additionFields[item] || null}
-                                                            onChange={e => handleAddtionalFieldChange({ target: { name: item, value: e } })}
+                                                            onChange={e => handleAddtionalFieldChange({ target: { name: item, value: e ? e.format("YYYY-MM-DD") : "" } })}
                                                             placeholder="DD/MM/YYYY"
                                                             InputProps={{
                                                                 disableUnderline: true,
