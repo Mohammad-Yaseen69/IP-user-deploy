@@ -158,13 +158,14 @@ const EditBeneficiary = () => {
         bank_account_number: "",
         bsb_number: "",
         branch_number: "",
-        swift_bic_code: "",
         routing_code: "",
         entity_tt_id: "",
         ifs_code: "",
         clabe: "",
         msisdn: "",
-        sort_code: ""
+        sort_code: "",
+        iban: "",
+        swift_bic_code: ""
     })
 
     const handleBankExtraChange = (e) => {
@@ -1268,7 +1269,7 @@ const EditBeneficiary = () => {
                                                                         <DatePicker
                                                                             format="DD/MM/YYYY"
                                                                             className="form-control custom-datepicker"
-                                                                            style={{ flex: 1, minWidth: "250px", background: "#fff", border: "1px solid #e9e9e9", borderRadius: "6px", boxShadow: "none", padding: "0px", display: 'flex', justifyContent: "center",position: 'static' }}
+                                                                            style={{ flex: 1, minWidth: "250px", background: "#fff", border: "1px solid #e9e9e9", borderRadius: "6px", boxShadow: "none", padding: "0px", display: 'flex', justifyContent: "center", position: 'static' }}
                                                                             value={additionFields[item] || null}
                                                                             onChange={e => handleAddtionalFieldChange({ target: { name: item, value: e ? e.format("YYYY-MM-DD") : "" } })}
                                                                             placeholder="DD/MM/YYYY"
@@ -1659,7 +1660,7 @@ const EditBeneficiary = () => {
                                                                     serviceFieldInfoValidate(services?.find(item => item?.name?.toLowerCase()?.includes("bank")), "credit_party_identifiers_accepted", item)
                                                                     &&
                                                                     <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
-                                                                        <Label className="col-form-label">{t(service_name_formatter(item))}<span className="req_star">*</span></Label>
+                                                                        {((item !== 'iban' && item !== "swift_bic_code") || (item === "iban" && accNumType === "Swift") || (item === "swift_bic_code" && accNumType === "IBAN")) && <Label className="col-form-label">{t(service_name_formatter(item))}<span className="req_star">*</span></Label>}
                                                                         {
                                                                             item?.toString()?.toLowerCase() === "account_type"
                                                                                 ?
@@ -1672,7 +1673,8 @@ const EditBeneficiary = () => {
                                                                                     }
                                                                                 </Input>
                                                                                 :
-                                                                                <Input className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes(item) && clicked ? "1px solid red" : "1px solid #e9e9e9" }} disabled={!isValidIban || !isEditMode} type="text" value={bankExtras[item]} name={item} onChange={handleBankExtraChange} />
+                                                                                <>
+                                                                                    {((item !== 'iban' && item !== "swift_bic_code") || (item === "iban" && accNumType === "Swift") || (item === "swift_bic_code" && accNumType === "IBAN")) && <Input className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes(item) && clicked ? "1px solid red" : "1px solid #e9e9e9" }} disabled={!isValidIban || !isEditMode} type="text" value={bankExtras[item]} name={item} onChange={handleBankExtraChange} />}                                                                                </>
                                                                         }
                                                                     </FormGroup>
                                                                 )
