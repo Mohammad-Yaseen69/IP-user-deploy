@@ -296,6 +296,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                     max_amount: decrypted?.data?.maximumValue,
                     token: decrypted?.data?.token
                 }
+                console.log("root_token", exchange_rate_details)
+
                 updateInternationalData("exchange_rate", exchange_rate_details)
                 updateInternationalData("quotation_details", decrypted?.data)
                 // console.log(decrypted)
@@ -373,7 +375,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
     const getExchangeRateNew = async (amount, setLimitType, wallet_id = "", currency_code = "", avoid_balance = true, setLoading = () => { }) => {
         setLoading(true)
         updateInternationalData("exchange_rate_error", "")
-        updateInternationalData("exchange_rate", {})
+        // updateInternationalData("exchange_rate", {})
         try {
             const dataa = {
                 wallet_id: wallet_id,
@@ -390,7 +392,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 payment_method: internationalData.payment_type?.value,
                 token: internationalData?.exchange_rate?.token
             }
-            console.log(dataa)
+            console.log("check_token", dataa)
             const encrypted = encryptData(dataa)
 
             const res = await axios.post(`${process.env.REACT_APP_THUNES_API}/get-rates-new/${internationalData?.payer.id}`, {
@@ -407,11 +409,11 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 fee: { amount: decrypted?.data?.result?.fee?.value },
                 sending: { amount: decrypted?.data?.result?.sending?.value, currency: decrypted?.data?.result?.sending?.currency },
                 total: decrypted?.data?.result?.total?.value,
+                token: internationalData?.exchange_rate?.token
             }
 
             if (decrypted?.data?.result?.paypal) exchange_rate_details.paypal = decrypted?.data?.result?.paypal;
             console.log(decrypted)
-            console.log(exchange_rate_details)
             updateInternationalData("exchange_rate", exchange_rate_details)
             updateInternationalData("quotation_details", decrypted?.data)
             if (+amount > exchange_rate_details?.limits_used?.daily_sending_limit_used) {
