@@ -9,7 +9,7 @@ const FinancialInfo = () => {
     const [questions, setQuestions] = useState([
         {
             question: "What keeps you busy these days?",
-            info: "Whether you're running a business, freelancing, creating, or simply managing your personal finances — we’d love to hear about you!",
+            info: "Whether you're running a business, freelancing, creating, or simply managing your personal finances — we'd love to hear about you!",
             step: 1,
             answer: "",
             type: "keeps_busy"
@@ -68,10 +68,10 @@ const FinancialInfo = () => {
 
     useEffect(() => {
         const countryFilteration = () => {
-            const countryAnswers = questions.find(q => q.type === "country")
-            const filteredCountries = CitiesData.filter(cont => countryAnswers.answer.includes(cont.iso3))
-            const regionCountries = filteredCountries.reduce((acc, country) => {
-                const region = country.region
+            const countryAnswers = questions.find(q => q?.type === "country")
+            const filteredCountries = CitiesData.filter(cont => countryAnswers?.answer?.includes(cont?.iso3))
+            const regionCountries = filteredCountries?.reduce((acc, country) => {
+                const region = country?.region
                 if (!acc[region]) {
                     acc[region] = []
                 }
@@ -89,12 +89,12 @@ const FinancialInfo = () => {
 
     useEffect(() => {
         if (search?.trim()) {
-            const filteredRegions = Object.entries(countriesWithRegion).reduce((acc, [region, countries]) => {
-                const filteredCountries = countries.filter(country =>
-                    country.name.toLowerCase().includes(search.toLowerCase())
+            const filteredRegions = Object.entries(countriesWithRegion)?.reduce((acc, [region, countries]) => {
+                const filteredCountries = countries?.filter(country =>
+                    country?.name?.toLowerCase().includes(search?.toLowerCase())
                 )
 
-                if (filteredCountries.length > 0) {
+                if (filteredCountries?.length > 0) {
                     acc[region] = filteredCountries
                 }
                 return acc
@@ -108,33 +108,33 @@ const FinancialInfo = () => {
 
     useEffect(() => {
         if (userDetails) {
-            setQuestions(questions.filter(q => userDetails?.user?.financial_answers?.some(a => a?.question_key === q?.type)).map((answer) => {
+            setQuestions(questions.filter(q => userDetails?.user?.financial_answers?.some(a => a?.question_key === q?.type))?.map((answer) => {
                 const userAnswer = userDetails?.user?.financial_answers?.find(a => a?.question_key === answer?.type)
                 return userAnswer ? { ...answer, answer: userAnswer?.answers } : answer
             }))
 
-            console.log(userDetails.user)
+            console.log(userDetails?.user)
         }
     }, [userDetails])
     return (
         <div style={{ backgroundColor: 'white' }} className={styles.container}>
 
-            {questions.map((question, idx) => (
+            {questions?.map((question, idx) => (
                 <div key={idx} className={styles.contentBox}>
-                    <span className={styles.label}>{t(question.question)}</span>
+                    <span className={styles.label}>{t(question?.question)}</span>
 
-                    {(question.type !== "profession" && question.type !== "country" && question.type !== "keeps_busy") &&
+                    {(question?.type !== "profession" && question?.type !== "country" && question?.type !== "keeps_busy") &&
                         <div className={styles.option}>
                             <span>
-                                {t(question.answer)}
+                                {t(question?.answer)}
                             </span>
                         </div>
                     }
-                    {question.type === "keeps_busy" && <textarea value={question.answer} />}
-                    {question.type === "profession" &&
+                    {question?.type === "keeps_busy" && <textarea value={question?.answer} />}
+                    {question?.type === "profession" &&
                         <div className={styles.multiOptions}>
-                            {question.answer.map((item, idx2) => (
-                                <div style={{ flex: 1, minWidth: "45%" }} className={styles.option}>
+                            {question?.answer?.map((item, idx2) => (
+                                <div key={idx2} style={{ flex: 1, minWidth: "45%" }} className={styles.option}>
                                     <span>
                                         {t(item)}
                                     </span>
@@ -142,7 +142,7 @@ const FinancialInfo = () => {
                             ))}
                         </div>
                     }
-                    {question.type === "country" &&
+                    {question?.type === "country" &&
                         <div className={styles.countryOptions}>
                             <div className={`${styles.option} ${styles.inputBox}`}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -160,17 +160,17 @@ const FinancialInfo = () => {
                             </div>
 
                             <div className={styles.dropDownCont}>
-                                {Object.entries(filteredCountriesWithRegion).map(([region, countries], idx) =>
-                                    <div className={`${styles.dropdown} ${activeDropdown !== idx && styles.hide}`}>
+                                {Object.entries(filteredCountriesWithRegion)?.map(([region, countries], idx) =>
+                                    <div key={idx} className={`${styles.dropdown} ${activeDropdown !== idx && styles.hide}`}>
                                         <div onClick={() => setActiveDropdown(idx)} className={styles.head}>
                                             <span>{t(region)}</span>
 
                                             <ChevronRight style={{ transition: '0.3s', transform: activeDropdown === idx && "rotate(90deg)" }} />
                                         </div>
                                         <div className={styles.countries}>
-                                            {countries?.map((cont) => (
-                                                <div className={styles.option}>
-                                                    <span>{t(cont.name)}</span>
+                                            {countries?.map((cont, i) => (
+                                                <div key={i} className={styles.option}>
+                                                    <span>{t(cont?.name)}</span>
                                                 </div>
                                             ))}
                                         </div>
