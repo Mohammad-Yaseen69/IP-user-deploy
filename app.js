@@ -23,6 +23,7 @@ app.use(compression())
 app.use(express.static(__dirname + '/build'));
 // app.use(express.static(__dirname + '/build/sm-web-booking'));
 app.get('*', (req, res) => {
+  res.set("Document-Policy", "js-profiling");
   res.sendFile(path.join(__dirname + '/build/index.html'));
 });
 

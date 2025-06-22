@@ -24,7 +24,8 @@ import * as Sentry from "@sentry/react";
 window.addEventListener("error", (e) => {
     if (
         e?.message?.includes("Loading chunk") ||
-        e?.message?.includes("ChunkLoadError")
+        e?.message?.includes("ChunkLoadError") ||
+        e?.message?.includes("Loading CSS chunk")
     ) {
         window.location.reload();
     }
@@ -41,11 +42,12 @@ Sentry.init({
         Sentry.replayIntegration({
             maskAllText: false,
             blockAllMedia: false,
-        })
+        }),
+        Sentry.browserProfilingIntegration()
     ],
     // Tracing
     tracesSampleRate: 1.0,
-    tracePropagationTargets: ["localhost"],
+    tracePropagationTargets: ["localhost", "https://my.insta-pay.ch", "https://ip-user-deploy-e57p.vercel.app"],
     // Session Replay
     replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
     replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
@@ -53,12 +55,12 @@ Sentry.init({
     beforeSend(event, hint) {
         if (!event.exception) return null;
 
-        if (process.env.NODE_ENV === 'development') return null;
+        // if (process.env.NODE_ENV === 'development') return null;
 
         return event;
     },
-    defaultIntegrations: false
-
+    defaultIntegrations: false,
+    profilesSampleRate: 1.0
 });
 
 
