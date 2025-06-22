@@ -68,7 +68,7 @@ const Receipt = ({ data, dataHandler, createTransaction }) => {
             <span> {data.package_details?.data?.sending?.currency} {data.package_details?.data?.sending?.value}</span>
           </div>
           <div>
-            <span>{t("Transfer Fee")}</span>
+            <span>{t("Transfer Fees")}</span>
             <span> {data.package_details?.data?.fee?.currency} {data.package_details?.data?.fee?.value}</span>
           </div>
           <div>

@@ -203,7 +203,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             {(missingTabsData.length > 0 && width > 1000 && profileCompleted) &&
                 <div className={styles.missingTabs}>
                     <span>
-                        Please complete the following important steps
+                       {t("Please complete the following important steps")}
                     </span>
                     {missingTabs?.map(item => (
                         <div
@@ -239,10 +239,10 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                             i
                         </span>
                         <h4>
-                            Please complete these important steps for a seamless experience.
+                            {t("Please complete these important steps for a seamless experience.")}
                         </h4>
                     </div>
-                    <button onClick={() => setShowMissingModal(true)}>View the Steps</button>
+                    <button onClick={() => setShowMissingModal(true)}>{t("View the Steps")}</button>
                 </div>
             }
 

@@ -260,7 +260,7 @@ const Threshold = ({ userDetails, authHeader }) => {
                                                     toast.error(`Amount must be less than or equal to ${localcur} ${maxAmount}`);
                                                     setAmount(parseFloat(maxAmount).toFixed(2));
                                                 } else {
-                                                    setAmount(num.toFixed(2));
+                                                    setAmount(num.toFixed(2))
                                                 }
                                             }
                                         }}

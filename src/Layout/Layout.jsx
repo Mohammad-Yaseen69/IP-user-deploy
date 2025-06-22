@@ -222,9 +222,8 @@ const Layout = ({ children, classNames, ...rest }) => {
       }
       <Modal
         isOpen={showOfflineModal}
-        toggle={() => setShowOfflineModal(false)}
       >
-        <ModalHeader toggle={() => setShowOfflineModal(false)}>
+        <ModalHeader>
           <span style={{ fontSize: "22px", fontWeight: 600, color: "red" }}>
             No Internet Connection
           </span>
@@ -234,11 +233,6 @@ const Layout = ({ children, classNames, ...rest }) => {
             <h4>Looks like your internet is disconnect, please connect to the Internet to keep using Instapay.</h4>
           </div>
         </ModalBody>
-        <ModalFooter>
-          <button onClick={() => setShowOfflineModal(false)} style={{ fontWeight: 600, color: "white", borderRadius: '6px', padding: "11px 25px", backgroundColor: "rgb(255 10 0 / 70%)", border: "none" }}>
-            Close
-          </button>
-        </ModalFooter>
       </Modal>
 
 

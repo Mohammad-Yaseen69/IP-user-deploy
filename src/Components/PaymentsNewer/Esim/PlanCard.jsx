@@ -29,7 +29,7 @@ const PlanCard = ({plan, data, handlePlanSelect}) => {
                                 <p>{plan.name}</p>
                             </div>
                             <div className={styles.det}>
-                                <span>{("Product Id")}</span>
+                                <span>{t("Product Id")}</span>
                                 <p >{plan.productId}</p>
                             </div>
                         </div>

@@ -202,7 +202,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
                     <span>
                         <img src={ctw_white} alt="" />
                     </span>
-                    <h3>Card to Wallet</h3>
+                    <h3>{t("Card to Wallet")}</h3>
                 </div>
                 {width > 1000 && <ContactBox />}
             </div>
@@ -248,7 +248,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
 
                 {step === 2 &&
                     <div>
-                        <span style={{ fontSize: "24px", color: 'black', fontWeight: 600, marginBottom: "20px" }}>Choose the Wallet</span>
+                        <span style={{ fontSize: "24px", color: 'black', fontWeight: 600, marginBottom: "20px" }}>{t("Choose The Wallet")}</span>
                         <div style={{ maxHeight: width < 1000 ? '70vh' : "450px", overflow: "auto" }}>
                             <PaymentStep
                                 filteredWallets={filteredWallets}
@@ -291,28 +291,28 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
                     <div>
                         <div className={styles.head} style={{ marginBottom: "1.5rem" }}>
                             <h3>
-                                Transaction Summary
+                                {t("Transaction Summary")}
                             </h3>
                         </div>
-                        {paymentInfoJSX({ currency: `${feeDets?.currency} `, fee: feeDets?.recipientAmount }, false, "Funds added to Wallet")}
+                        {paymentInfoJSX({ currency: `${feeDets?.currency} `, fee: feeDets?.recipientAmount }, false, t("Funds added to Wallet"))}
                         <div style={{ marginTop: '1.5rem', display: "flex", alignSelf: 'stretch', justifyContent: "space-between", alignItems: "flex-start", padding: '18px', borderRadius: "6px", background: "rgba(109, 41, 220, 0.04)" }}>
                             <span style={{ fontWeight: 600, color: '#8A8A8A', fontSize: "12px" }}>
-                                You used
+                                {t("You used")}
                             </span>
 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                <span style={{ fontWeight: 600, color: "#000", fontSize: "12px" }}>{userWallet?.currency?.code || recipient?.wallet?.currency?.code} Wallet</span>
+                                <span style={{ fontWeight: 600, color: "#000", fontSize: "12px" }}>{userWallet?.currency?.code || recipient?.wallet?.currency?.code} {t("Wallet")}</span>
                                 <span style={{ fontWeight: 600, color: "#6C6C6C", fontSize: "10px" }}>{userWallet?.wallet_id || recipient?.wallet?.wallet_id}</span>
                             </div>
                         </div>
 
                         <div style={{ marginTop: '1rem', padding: '18px', borderRadius: "6px", background: "#fafafa", display: "grid", gap: '8px' }}>
-                            {feeCol("Sending", `${card?.currency} ${feeDets?.amount}`)}
-                            {feeCol("Fee", `${card?.currency} ${feeDets?.fee}`)}
+                            {feeCol(t("Sending"), `${card?.currency} ${feeDets?.amount}`)}
+                            {feeCol(t("Fee"), `${card?.currency} ${feeDets?.fee}`)}
                             {(feeDets?.exchangeRate || feeDets?.exchangeRate !== 1. || feeDets?.exchangeRate !== 1) &&
-                                feeCol("Exchange Rate", `${feeDets?.currency} ${feeDets?.exchangeRate}`)
+                                feeCol(t("Exchange Rate"), `${feeDets?.currency} ${feeDets?.exchangeRate}`)
                             }
-                            {feeCol("Total", `${card?.currency} ${feeDets?.totalAmount}`, true)}
+                            {feeCol(t("Total"), `${card?.currency} ${feeDets?.totalAmount}`, true)}
                         </div>
                     </div>
                 }
@@ -323,19 +323,19 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
 
                         <div className={styles.head} style={{ margin: "3rem 0" }}>
                             <h3>
-                                Transaction Summary
+                                {t("Transaction Summary")}
                             </h3>
                         </div>
 
 
-                        {paymentInfoJSX({ currency: feeDets?.currency, fee: feeDets?.recipientAmount }, false, "Funds added to Wallet")}
+                        {paymentInfoJSX({ currency: feeDets?.currency, fee: feeDets?.recipientAmount }, false, t("Funds added to Wallet"))}
                         <div style={{ marginTop: '1.5rem', display: "flex", alignSelf: 'stretch', justifyContent: "space-between", alignItems: "flex-start", padding: '18px', borderRadius: "6px", background: "rgba(109, 41, 220, 0.04)" }}>
                             <span style={{ fontWeight: 600, color: '#8A8A8A', fontSize: "12px" }}>
-                                You used
+                                {t("You used")}
                             </span>
 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                <span style={{ fontWeight: 600, color: "#000", fontSize: "12px" }}>{userWallet?.currency?.code || recipient?.wallet?.currency?.code} Wallet</span>
+                                <span style={{ fontWeight: 600, color: "#000", fontSize: "12px" }}>{userWallet?.currency?.code || recipient?.wallet?.currency?.code} {t("Wallet")}</span>
                                 <span style={{ fontWeight: 600, color: "#6C6C6C", fontSize: "10px" }}>{userWallet?.wallet_id || recipient?.wallet?.wallet_id}</span>
                             </div>
                         </div>
@@ -359,7 +359,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
                             else {
                                 setStep(step - 1)
                             }
-                        }} className={styles.back}>Back</button>}
+                        }} className={styles.back}>{t("Back")}</button>}
                     <button
                         style={{ opacity: (disabled || loading) && .5, flex: width < 1000 && "none" }}
                         disabled={(disabled || loading)}

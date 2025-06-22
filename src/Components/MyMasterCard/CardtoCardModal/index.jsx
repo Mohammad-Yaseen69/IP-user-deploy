@@ -355,7 +355,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
         {t("Back")}
       </button>
       <button style={{ opacity: data.disabled && .5 }} disabled={data.disabled} onClick={handleNext} className={styles.continue}>
-        {data.step === 4 ? t("Proceed to Payment") : data.step === 5 ? t("I Agree") : t("Verify & Continue")}
+        {data.step === 4 ? t("Proceed To Payment") : data.step === 5 ? t("I Agree") : t("Verify & Continue")}
       </button>
     </div>
   )
@@ -422,7 +422,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
               <div className={styles.content}>
                 <div className={styles.textDiv}>
                   <h2>{t("Your payment is being processed")}</h2>
-                  <p>{t("Thanks for using Instapay!")}</p>
+                  <p>{t("Thanks for using InstaPay")}</p>
                 </div>
 
 
@@ -469,8 +469,8 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
                 {data.step === 4 &&
                   (<div className={styles.terms}>
                     <p>
-                      {t('By clicking "Confirm", you are agreeing to our')}
-                      <a rel='noreferrer' href="https://insta-pay.ch/terms-and-conditions" target='_blank'>{t('terms and conditions.')}</a>
+                      {t('By clicking "Confirm", you are agreeing to our')} {" "}
+                      <a rel='noreferrer' href="https://insta-pay.ch/terms-and-conditions" target='_blank'> {t('terms and conditions.')}</a>
                     </p>
                   </div>
                   )}

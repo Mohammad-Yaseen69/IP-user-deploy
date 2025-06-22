@@ -13,6 +13,7 @@ import axios from 'axios'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import { toast } from 'react-toastify'
 import success from "../Auth/files/success.gif"
+import useWindowWidth from '../../utils/useWindowWidth'
 
 const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess }) => {
     const [activeStep, setActiveStep] = useState()
@@ -268,157 +269,203 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess }) => {
             setActiveStep(filteringQuestions[0]?.type)
         }
     }, [userDetails])
+    const width = useWindowWidth()
+
+
+    const rightContent = (isMobile) => (
+        <div className={styles.right}>
+            <div className={styles.contentContainer}>
+                <div style={{ padding: isMobile && "24px 24px 0 24px" }} className={styles.headerInfo}>
+                    {!isMobile && <span>{t("Step")} {questions.findIndex(q => q.type === activeStep) + 1}</span>}
+                    {!isMobile && <h2>{t(questions.find(q => q.type === activeStep)?.question)}</h2>}
+                    <p>{t(questions.find(q => q.type === activeStep)?.info)}</p>
+                </div>
+                <div style={{ padding: activeStep === "keeps_busy" && "20px", paddingTop: isMobile && "5px" }} className={styles.content}>
+                    {activeStep === "keeps_busy" && (
+                        <textarea
+                            placeholder='Type your answer'
+                            value={textAreaValue}
+                            onChange={(e) => setTextAreaValue(e.target.value)}
+                        />
+                    )}
+
+                    {activeStep !== "keeps_busy" &&
+                        <div className={styles.options}>
+                            {(activeStep === "profession" || activeStep === "country") &&
+                                <div style={{ justifyContent: "flex-start", gap: "12px" }} className={styles.option}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                        <g clipPath="url(#clip0_5690_3736)">
+                                            <path d="M10.5 10.5L8.75005 8.75M10 5.75C10 8.09721 8.09721 10 5.75 10C3.40279 10 1.5 8.09721 1.5 5.75C1.5 3.40279 3.40279 1.5 5.75 1.5C8.09721 1.5 10 3.40279 10 5.75Z" stroke="#A4A4A4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        </g>
+                                        <defs>
+                                            <clipPath id="clip0_5690_3736">
+                                                <rect width="12" height="12" fill="white" />
+                                            </clipPath>
+                                        </defs>
+                                    </svg>
+                                    <input
+                                        placeholder='Search'
+                                        type="text"
+                                        style={{ border: "none", background: "transparent" }}
+                                        value={searchQuery}
+                                        onChange={(e) => handleSearch(e.target.value)}
+                                    />
+                                </div>
+                            }
+                            {activeStep === "profession" && filteredProfessions.map((text, idx) => (
+                                <div
+                                    key={idx}
+                                    className={`${styles.option} ${selectedProfessions.includes(text) ? styles.selected : ''}`}
+                                    onClick={() => toggleSelection(text, 'profession')}
+                                >
+                                    <span>{t(text)}</span>
+                                </div>
+                            ))}
+                            {activeStep === "volume" && volume.map((text, idx) => (
+                                <div
+                                    key={idx}
+                                    className={`${styles.option} ${selectedVolume === text ? styles.selected : ''}`}
+                                    onClick={() => toggleSelection(text, 'volume')}
+                                >
+                                    <span>{t(text)}</span>
+                                </div>
+                            ))}
+                            {activeStep === "transaction_limit" && limitVolume.map((text, idx) => (
+                                <div
+                                    key={idx}
+                                    className={`${styles.option} ${selectedTransactionLimit === text ? styles.selected : ''}`}
+                                    onClick={() => toggleSelection(text, 'transaction_limit')}
+                                >
+                                    <span>{t(text)}</span>
+                                </div>
+                            ))}
+                            {activeStep === "country" && filteredCountries.map((text, idx) => (
+                                <div
+                                    key={idx}
+                                    style={{ justifyContent: "flex-start", gap: '8px' }}
+                                    className={`${styles.option} ${selectedCountries.includes(text.alpha3) ? styles.selected : ''}`}
+                                    onClick={() => toggleSelection(text.alpha3, 'country')}
+                                >
+                                    <img src={text.file_url} style={{ width: "30px", borderRadius: "3px" }} alt="" />
+                                    <span>{t(text.name)}</span>
+                                </div>
+                            ))}
+                            {activeStep === "source_of_funds" && sourceOfFunds.map((text, idx) => (
+                                <div
+                                    key={idx}
+                                    className={`${styles.option} ${selectedSourceOfFunds === text ? styles.selected : ''}`}
+                                    onClick={() => toggleSelection(text, 'source_of_funds')}
+                                >
+                                    <span>{t(text)}</span>
+                                </div>
+                            ))}
+                            {activeStep === "source_of_wealth" && sourceOfWealth.map((text, idx) => (
+                                <div
+                                    key={idx}
+                                    className={`${styles.option} ${selectedSourceOfWealth === text ? styles.selected : ''}`}
+                                    onClick={() => toggleSelection(text, 'source_of_wealth')}
+                                >
+                                    <span>{t(text)}</span>
+                                </div>
+                            ))}
+
+
+                        </div>
+                    }
+                </div>
+            </div>
+            <div className={styles.buttons}>
+                <ContactBox />
+
+                <div className={styles.btns}>
+                    {!checkForFirst() && (
+                        <button className={styles.back} onClick={handleBack}>
+                            {t("Back")}
+                        </button>
+                    )}
+                    <button
+                        disabled={isNextDisabled() || loading}
+                        className={styles.next}
+                        onClick={answerHandler}
+                        style={{ opacity: (isNextDisabled() || loading) && 0.4 }}
+                    >
+                        {t("Add")}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                            <path d="M5.25 10.5L8.75 7L5.25 3.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div >
+    )
     return (
         <>
-            <Modal style={{ minWidth: "1100px" }} isOpen={isOpen} toggle={toggle}>
+            <Modal style={{ minWidth: width > "1100px" && "1100px" }} isOpen={isOpen} toggle={toggle}>
                 <ModalBody style={{ padding: "12px", background: "#E5E5E5" }} >
-                    <div className={styles.container}>
-                        <div style={{ backgroundImage: `url(${back})` }} className={styles.left}>
-                            <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", gap: "15px" }}>
-                                <span className={styles.label}>{t("Individual")}</span>
-                                <h1>Tell us more about you..</h1>
-                            </div>
-                            <div style={{ minHeight: '550px' }} className={styles.questions}>
-                                {questions.map((question, index) => (
-                                    <div onClick={() => setActiveStep(question?.type)} style={{ opacity: question.type !== activeStep && 0.3 }} key={index} className={styles.question}>
-                                        <div>
-                                            <span>
-                                                {t("Step")} {index + 1}
-                                            </span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                <path d="M6 12L10 8L6 4" stroke="#5D5D5D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                        </div>
-                                        <h4>{t(question.question)}</h4>
+                    {width > 1100 ?
+                        (
+                            <div className={styles.container}>
+                                <div style={{ backgroundImage: `url(${back})` }} className={styles.left}>
+                                    <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", gap: "15px" }}>
+                                        <span className={styles.label}>{t("Individual")}</span>
+                                        <h1>Tell us more about you..</h1>
                                     </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div className={styles.right}>
-                            <div className={styles.contentContainer}>
-                                <div className={styles.headerInfo}>
-                                    <span>{t("Step")} {questions.findIndex(q => q.type === activeStep) + 1}</span>
-                                    <h2>{t(questions.find(q => q.type === activeStep)?.question)}</h2>
-                                    <p>{t(questions.find(q => q.type === activeStep)?.info)}</p>
-                                </div>
-                                <div style={{ padding: activeStep === "keeps_busy" && "20px" }} className={styles.content}>
-                                    {activeStep === "keeps_busy" && (
-                                        <textarea
-                                            placeholder='Type your answer'
-                                            value={textAreaValue}
-                                            onChange={(e) => setTextAreaValue(e.target.value)}
-                                        />
-                                    )}
-
-                                    {activeStep !== "keeps_busy" &&
-                                        <div className={styles.options}>
-                                            {(activeStep === "profession" || activeStep === "country") &&
-                                                <div style={{ justifyContent: "flex-start", gap: "12px" }} className={styles.option}>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                                        <g clipPath="url(#clip0_5690_3736)">
-                                                            <path d="M10.5 10.5L8.75005 8.75M10 5.75C10 8.09721 8.09721 10 5.75 10C3.40279 10 1.5 8.09721 1.5 5.75C1.5 3.40279 3.40279 1.5 5.75 1.5C8.09721 1.5 10 3.40279 10 5.75Z" stroke="#A4A4A4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                                        </g>
-                                                        <defs>
-                                                            <clipPath id="clip0_5690_3736">
-                                                                <rect width="12" height="12" fill="white" />
-                                                            </clipPath>
-                                                        </defs>
+                                    <div style={{ minHeight: '550px' }} className={styles.questions}>
+                                        {questions.map((question, index) => (
+                                            <div onClick={() => setActiveStep(question?.type)} style={{ opacity: question.type !== activeStep && 0.3, width: width < 1100 && "90%", flexShrink: "0" }} key={index} className={styles.question}>
+                                                <div>
+                                                    <span>
+                                                        {t("Step")} {index + 1}
+                                                    </span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                        <path d="M6 12L10 8L6 4" stroke="#5D5D5D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                                     </svg>
-                                                    <input
-                                                        placeholder='Search'
-                                                        type="text"
-                                                        style={{ border: "none", background: "transparent" }}
-                                                        value={searchQuery}
-                                                        onChange={(e) => handleSearch(e.target.value)}
-                                                    />
                                                 </div>
-                                            }
-                                            {activeStep === "profession" && filteredProfessions.map((text, idx) => (
+                                                <h4>{t(question.question)}</h4>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                {rightContent()}
+                            </div>
+                        ) :
+                        (
+                            <div style={{ gridTemplateColumns: "1fr" }} className={styles.container}>
+                                <div style={{ backgroundImage: `url(${back})` }} className={styles.left}>
+                                    <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", gap: "15px" }}>
+                                        <span className={styles.label}>{t("Individual")}</span>
+                                        <h1>Tell us more about you..</h1>
+                                    </div>
+                                    <div style={{ padding: "0px", background: "transparent" }} className={styles.questions}>
+                                        {questions.map((question, index) => (
+                                            <React.Fragment key={index}>
                                                 <div
-                                                    key={idx}
-                                                    className={`${styles.option} ${selectedProfessions.includes(text) ? styles.selected : ''}`}
-                                                    onClick={() => toggleSelection(text, 'profession')}
+                                                    onClick={() => setActiveStep(question?.type)}
+                                                    style={{ opacity: question.type !== activeStep && 0.3 }}
+                                                    className={styles.question}
                                                 >
-                                                    <span>{t(text)}</span>
+                                                    <div>
+                                                        <span>
+                                                            {t("Step")} {index + 1}
+                                                        </span>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                            <path d="M6 12L10 8L6 4" stroke="#5D5D5D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                                        </svg>
+                                                    </div>
+                                                    <h4>{t(question.question)}</h4>
                                                 </div>
-                                            ))}
-                                            {activeStep === "volume" && volume.map((text, idx) => (
-                                                <div
-                                                    key={idx}
-                                                    className={`${styles.option} ${selectedVolume === text ? styles.selected : ''}`}
-                                                    onClick={() => toggleSelection(text, 'volume')}
-                                                >
-                                                    <span>{t(text)}</span>
-                                                </div>
-                                            ))}
-                                            {activeStep === "transaction_limit" && limitVolume.map((text, idx) => (
-                                                <div
-                                                    key={idx}
-                                                    className={`${styles.option} ${selectedTransactionLimit === text ? styles.selected : ''}`}
-                                                    onClick={() => toggleSelection(text, 'transaction_limit')}
-                                                >
-                                                    <span>{t(text)}</span>
-                                                </div>
-                                            ))}
-                                            {activeStep === "country" && filteredCountries.map((text, idx) => (
-                                                <div
-                                                    key={idx}
-                                                    style={{ justifyContent: "flex-start", gap: '8px' }}
-                                                    className={`${styles.option} ${selectedCountries.includes(text.alpha3) ? styles.selected : ''}`}
-                                                    onClick={() => toggleSelection(text.alpha3, 'country')}
-                                                >
-                                                    <img src={text.file_url} style={{ width: "30px", borderRadius: "3px" }} alt="" />
-                                                    <span>{t(text.name)}</span>
-                                                </div>
-                                            ))}
-                                            {activeStep === "source_of_funds" && sourceOfFunds.map((text, idx) => (
-                                                <div
-                                                    key={idx}
-                                                    className={`${styles.option} ${selectedSourceOfFunds === text ? styles.selected : ''}`}
-                                                    onClick={() => toggleSelection(text, 'source_of_funds')}
-                                                >
-                                                    <span>{t(text)}</span>
-                                                </div>
-                                            ))}
-                                            {activeStep === "source_of_wealth" && sourceOfWealth.map((text, idx) => (
-                                                <div
-                                                    key={idx}
-                                                    className={`${styles.option} ${selectedSourceOfWealth === text ? styles.selected : ''}`}
-                                                    onClick={() => toggleSelection(text, 'source_of_wealth')}
-                                                >
-                                                    <span>{t(text)}</span>
-                                                </div>
-                                            ))}
-
-
-                                        </div>
-                                    }
+                                                {activeStep === question.type && (
+                                                    <div style={{ width: "100%" }}>
+                                                        {rightContent("mobile")}
+                                                    </div>
+                                                )}
+                                            </React.Fragment>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
-                            <div className={styles.buttons}>
-                                <ContactBox />
-
-                                <div className={styles.btns}>
-                                    {!checkForFirst() && (
-                                        <button className={styles.back} onClick={handleBack}>
-                                            {t("Back")}
-                                        </button>
-                                    )}
-                                    <button
-                                        disabled={isNextDisabled() || loading}
-                                        className={styles.next}
-                                        onClick={answerHandler}
-                                        style={{ opacity: (isNextDisabled() || loading) && 0.4 }}
-                                    >
-                                        {t("Add")}
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                            <path d="M5.25 10.5L8.75 7L5.25 3.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        )
+                    }
                 </ModalBody>
             </Modal>
 

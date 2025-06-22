@@ -30,7 +30,7 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApp
     ];
 
     return (
-        <div style={{ display: "flex", gap: "8px", marginBottom: "7px", flexDirection: "column", maxWidth: "100%" }}>
+        <div style={{ display: "flex", gap: "8px", marginBottom: "7px", flexDirection: "column", maxWidth: "100%", width: "100%" }}>
             <div className={styles.top}>
                 <h2>{t("Let’s Get Your InstaPay MasterCard!")}</h2>
                 <p>{t("Choose the type of card that best suits your needs. Whether you want an instant Virtual Card for online payments or a Physical Card for everyday transactions, we’ve got you covered!")}</p>

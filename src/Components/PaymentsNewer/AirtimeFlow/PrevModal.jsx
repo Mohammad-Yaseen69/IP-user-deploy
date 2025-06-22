@@ -156,7 +156,7 @@ const PrevModal = ({ isOpen, toggle }) => {
                     <ModalFooter>
                         <div style={{ display: 'flex', alignItems: "center", gap: '8px' }}>
                             <a download={qrModalContent.url} href={qrModalContent.url} >
-                                <button style={{ border: 'none', fontWeight: 600, color: "white", borderRadius: "6px", padding: "7px 15px", background: "#5926f0" }}>{t("Download")}</button>
+                                <button style={{ border: 'none', fontWeight: 600, color: "white", borderRadius: "6px", padding: "7px 15px", background: "#5926f0" }}>{t("Download QR Code")}</button>
                             </a>
                         </div>
                     </ModalFooter>
