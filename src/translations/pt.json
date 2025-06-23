@@ -2561,5 +2561,22 @@
   "Payments above": "Pagamentos acima",
   "will always require OTP verification for security.": "sempre exigirá verificação OTP por questões de segurança.",
   "You can set maximum threshold amount of": "Você pode definir o valor limite máximo de",
-  "Financial Info": "Informações financeiras"
+  "Financial Info": "Informações financeiras",
+  "Add to Apple Pay": "Adicionar ao Apple Pay",
+  "Add to Google Pay": "Adicionar ao Google Pay",
+  "Add to Samsung Wallet": "Adicionar à Samsung Wallet",
+  "Choose The Recipient": "Escolha o destinatário",
+  "By clicking \"Confirm\", you are agreeing to our": "Ao clicar em \"Confirmar\", você concorda com nossos",
+  "terms and conditions": "termos e Condições",
+  "I Agree": "Concordo",
+  "Your payment is being processed": "Seu pagamento está sendo processado",
+  "Card to Wallet": "Cartão para carteira",
+  "Choose an Option": "Escolha uma opção",
+  "Other Wallet": "Outra carteira",
+  "Transaction Summary": "Resumo da transação",
+  "Funds added to Wallet": "Fundos adicionados à carteira",
+  "Review your payment details": "Revise seus detalhes de pagamento",
+  "Let’s Get Your InstaPay MasterCard!": "Vamos obter seu InstaPay MasterCard!",
+  "Remove": "Remover",
+  "Available Plans": "Planos Disponíveis"
 }

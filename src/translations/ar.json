@@ -2554,5 +2554,22 @@
   "Payments above": "المدفوعات أعلاه",
   "will always require OTP verification for security.": "سوف يتطلب الأمر دائمًا التحقق من OTP لأسباب أمنية.",
   "You can set maximum threshold amount of": "يمكنك تعيين الحد الأقصى لمبلغ العتبة",
-  "Financial Info": "المعلومات المالية"
+  "Financial Info": "المعلومات المالية",
+  "Add to Apple Pay": "أضف إلى Apple Pay",
+  "Add to Google Pay": "أضف إلى Google Pay",
+  "Add to Samsung Wallet": "أضف إلى محفظة سامسونج",
+  "Choose The Recipient": "اختر المستلم",
+  "By clicking \"Confirm\", you are agreeing to our": "من خلال النقر على \"تأكيد\"، فإنك توافق على شروطنا",
+  "terms and conditions": "الشروط والأحكام",
+  "I Agree": "أنا موافق",
+  "Your payment is being processed": "جاري معالجة الدفع الخاص بك",
+  "Card to Wallet": "من البطاقة إلى المحفظة",
+  "Choose an Option": "اختر خيارًا",
+  "Other Wallet": "محفظة أخرى",
+  "Transaction Summary": "ملخص المعاملة",
+  "Funds added to Wallet": "الأموال المضافة إلى المحفظة",
+  "Review your payment details": "راجع تفاصيل الدفع الخاصة بك",
+  "Let’s Get Your InstaPay MasterCard!": "احصل على بطاقة InstaPay MasterCard الخاصة بك!",
+  "Remove": "يزيل",
+  "Available Plans": "الخطط المتاحة"
 }

@@ -2465,5 +2465,22 @@
   "Payments above": "Платежи выше",
   "will always require OTP verification for security.": "всегда будет требоваться проверка OTP в целях безопасности.",
   "You can set maximum threshold amount of": "Вы можете установить максимальный порог суммы",
-  "Financial Info": "Финансовая информация"
+  "Financial Info": "Финансовая информация",
+  "Add to Apple Pay": "Добавить в Apple Pay",
+  "Add to Google Pay": "Добавить в Google Pay",
+  "Add to Samsung Wallet": "Добавить в Samsung Wallet",
+  "Choose The Recipient": "Выберите Получателя",
+  "By clicking \"Confirm\", you are agreeing to our": "Нажимая «Подтвердить», вы соглашаетесь с нашими",
+  "terms and conditions": "условия и положения",
+  "I Agree": "Я согласен",
+  "Your payment is being processed": "Ваш платеж обрабатывается",
+  "Card to Wallet": "Карта в кошелек",
+  "Choose an Option": "Выберите вариант",
+  "Other Wallet": "Другой кошелек",
+  "Transaction Summary": "Краткое описание транзакции",
+  "Funds added to Wallet": "Средства добавлены в кошелек",
+  "Review your payment details": "Проверьте ваши платежные реквизиты",
+  "Let’s Get Your InstaPay MasterCard!": "Давайте получим вашу карту InstaPay MasterCard!",
+  "Remove": "Удалять",
+  "Available Plans": "Доступные планы"
 }

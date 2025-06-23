@@ -2556,5 +2556,22 @@
   "Payments above": "इससे अधिक भुगतान",
   "will always require OTP verification for security.": "सुरक्षा के लिए हमेशा ओटीपी सत्यापन की आवश्यकता होगी।",
   "You can set maximum threshold amount of": "आप अधिकतम सीमा राशि निर्धारित कर सकते हैं",
-  "Financial Info": "वित्तीय जानकारी"
+  "Financial Info": "वित्तीय जानकारी",
+  "Add to Apple Pay": "Apple Pay में जोड़ें",
+  "Add to Google Pay": "Google Pay में जोड़ें",
+  "Add to Samsung Wallet": "सैमसंग वॉलेट में जोड़ें",
+  "Choose The Recipient": "प्राप्तकर्ता चुनें",
+  "By clicking \"Confirm\", you are agreeing to our": "\"पुष्टि करें\" पर क्लिक करके, आप हमारी शर्तों से सहमत हो रहे हैं",
+  "terms and conditions": "नियम और शर्तें",
+  "I Agree": "मैं सहमत हूं",
+  "Your payment is being processed": "आपका भुगतान संसाधित किया जा रहा है",
+  "Card to Wallet": "कार्ड से वॉलेट",
+  "Choose an Option": "एक विकल्प चुनें",
+  "Other Wallet": "अन्य वॉलेट",
+  "Transaction Summary": "लेन-देन सारांश",
+  "Funds added to Wallet": "वॉलेट में धनराशि जोड़ी गई",
+  "Review your payment details": "अपने भुगतान विवरण की समीक्षा करें",
+  "Let’s Get Your InstaPay MasterCard!": "आइये अपना इंस्टापे मास्टरकार्ड प्राप्त करें!",
+  "Remove": "निकालना",
+  "Available Plans": "उपलब्ध योजनाएँ"
 }

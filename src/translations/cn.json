@@ -2555,5 +2555,22 @@
   "Payments above": "以上付款",
   "will always require OTP verification for security.": "为了安全起见，始终需要 OTP 验证。",
   "You can set maximum threshold amount of": "您可以设置最大阈值金额",
-  "Financial Info": "财务信息"
+  "Financial Info": "财务信息",
+  "Add to Apple Pay": "添加到 Apple Pay",
+  "Add to Google Pay": "添加到 Google Pay",
+  "Add to Samsung Wallet": "添加到三星钱包",
+  "Choose The Recipient": "选择收件人",
+  "By clicking \"Confirm\", you are agreeing to our": "点击“确认”即表示您同意我们的",
+  "terms and conditions": "条款和条件",
+  "I Agree": "我同意",
+  "Your payment is being processed": "您的付款正在处理中",
+  "Card to Wallet": "卡到钱包",
+  "Choose an Option": "选择一个选项",
+  "Other Wallet": "其他钱包",
+  "Transaction Summary": "交易摘要",
+  "Funds added to Wallet": "资金已添加到钱包",
+  "Review your payment details": "查看您的付款详情",
+  "Let’s Get Your InstaPay MasterCard!": "让我们获取您的 InstaPay MasterCard！",
+  "Remove": "消除",
+  "Available Plans": "可用计划"
 }

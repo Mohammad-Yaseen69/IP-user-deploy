@@ -2569,5 +2569,22 @@
   "Payments above": "Payments above",
   "will always require OTP verification for security.": "will always require OTP verification for security.",
   "You can set maximum threshold amount of": "You can set maximum threshold amount of",
-  "Financial Info": "Financial Info"
+  "Financial Info": "Financial Info",
+  "Add to Apple Pay": "Add to Apple Pay",
+  "Add to Google Pay": "Add to Google Pay",
+  "Add to Samsung Wallet": "Add to Samsung Wallet",
+  "Choose The Recipient": "Choose The Recipient",
+  "By clicking \"Confirm\", you are agreeing to our": "By clicking \"Confirm\", you are agreeing to our",
+  "terms and conditions": "terms and conditions",
+  "I Agree": "I Agree",
+  "Your payment is being processed": "Your payment is being processed",
+  "Card to Wallet": "Card to Wallet",
+  "Choose an Option": "Choose an Option",
+  "Other Wallet": "Other Wallet",
+  "Transaction Summary": "Transaction Summary",
+  "Funds added to Wallet": "Funds added to Wallet",
+  "Review your payment details": "Review your payment details",
+  "Let’s Get Your InstaPay MasterCard!": "Let’s Get Your InstaPay MasterCard!",
+  "Remove": "Remove",
+  "Available Plans": "Available Plans"
 }

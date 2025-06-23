@@ -2554,5 +2554,22 @@
   "Payments above": "Pembayaran di atas",
   "will always require OTP verification for security.": "akan selalu memerlukan verifikasi OTP demi keamanan.",
   "You can set maximum threshold amount of": "Anda dapat mengatur jumlah ambang batas maksimum",
-  "Financial Info": "Info Keuangan"
+  "Financial Info": "Info Keuangan",
+  "Add to Apple Pay": "Tambahkan ke Apple Pay",
+  "Add to Google Pay": "Tambahkan ke Google Pay",
+  "Add to Samsung Wallet": "Tambahkan ke Dompet Samsung",
+  "Choose The Recipient": "Pilih Penerima",
+  "By clicking \"Confirm\", you are agreeing to our": "Dengan mengklik \"Konfirmasi\", Anda menyetujui ketentuan kami",
+  "terms and conditions": "syarat dan Ketentuan",
+  "I Agree": "saya setuju",
+  "Your payment is being processed": "Pembayaran Anda sedang diproses",
+  "Card to Wallet": "Kartu ke Dompet",
+  "Choose an Option": "Pilih Opsi",
+  "Other Wallet": "Dompet Lainnya",
+  "Transaction Summary": "Ringkasan Transaksi",
+  "Funds added to Wallet": "Dana ditambahkan ke Dompet",
+  "Review your payment details": "Tinjau detail pembayaran Anda",
+  "Let’s Get Your InstaPay MasterCard!": "Ayo Dapatkan InstaPay MasterCard Anda!",
+  "Remove": "Menghapus",
+  "Available Plans": "Paket yang Tersedia"
 }

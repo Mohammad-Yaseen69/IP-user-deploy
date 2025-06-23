@@ -2556,5 +2556,22 @@
   "Payments above": "Malipo hapo juu",
   "will always require OTP verification for security.": "itahitaji uthibitishaji wa OTP kila wakati kwa usalama.",
   "You can set maximum threshold amount of": "Unaweza kuweka kiwango cha juu cha kizingiti cha",
-  "Financial Info": "Taarifa za Fedha"
+  "Financial Info": "Taarifa za Fedha",
+  "Add to Apple Pay": "Ongeza kwa Apple Pay",
+  "Add to Google Pay": "Ongeza kwenye Google Pay",
+  "Add to Samsung Wallet": "Ongeza kwenye Samsung Wallet",
+  "Choose The Recipient": "Chagua Mpokeaji",
+  "By clicking \"Confirm\", you are agreeing to our": "Kwa kubofya \"Thibitisha\", unakubali yetu",
+  "terms and conditions": "sheria na masharti",
+  "I Agree": "Nakubali",
+  "Your payment is being processed": "Malipo yako yanachakatwa",
+  "Card to Wallet": "Kadi kwa Wallet",
+  "Choose an Option": "Chagua Chaguo",
+  "Other Wallet": "Mkoba Nyingine",
+  "Transaction Summary": "Muhtasari wa Muamala",
+  "Funds added to Wallet": "Pesa zimeongezwa kwenye Wallet",
+  "Review your payment details": "Kagua maelezo yako ya malipo",
+  "Let’s Get Your InstaPay MasterCard!": "Tujipatie MasterCard yako ya InstaPay!",
+  "Remove": "Ondoa",
+  "Available Plans": "Mipango Inayopatikana"
 }

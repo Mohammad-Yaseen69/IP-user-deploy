@@ -2516,5 +2516,22 @@
   "Payments above": "Biyan kuɗi a sama",
   "will always require OTP verification for security.": "koyaushe zai buƙaci tabbacin OTP don tsaro.",
   "You can set maximum threshold amount of": "Kuna iya saita iyakar iyakar iyakar",
-  "Financial Info": "Bayanin Kuɗi"
+  "Financial Info": "Bayanin Kuɗi",
+  "Add to Apple Pay": "Ƙara zuwa Apple Pay",
+  "Add to Google Pay": "Ƙara zuwa Google Pay",
+  "Add to Samsung Wallet": "Ƙara zuwa Samsung Wallet",
+  "Choose The Recipient": "Zaɓi Mai karɓa",
+  "By clicking \"Confirm\", you are agreeing to our": "Ta danna \"Tabbatar\", kuna yarda da mu",
+  "terms and conditions": "sharuddan da yanayi",
+  "I Agree": "Na Amince",
+  "Your payment is being processed": "Ana aiwatar da biyan ku",
+  "Card to Wallet": "Katin zuwa Wallet",
+  "Choose an Option": "Zaɓi Zaɓi",
+  "Other Wallet": "Sauran Wallet",
+  "Transaction Summary": "Takaitacciyar Ma'amala",
+  "Funds added to Wallet": "An ƙara kuɗi zuwa Wallet",
+  "Review your payment details": "Bincika bayanan biyan kuɗin ku",
+  "Let’s Get Your InstaPay MasterCard!": "Bari Mu Samu InstaPay MasterCard!",
+  "Remove": "Cire",
+  "Available Plans": "Akwai Shirye-shiryen"
 }

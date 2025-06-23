@@ -2556,5 +2556,22 @@
   "Payments above": "Yukarıdaki ödemeler",
   "will always require OTP verification for security.": "Güvenlik için her zaman OTP doğrulaması gerekecektir.",
   "You can set maximum threshold amount of": "Maksimum eşik miktarını ayarlayabilirsiniz",
-  "Financial Info": "Finansal Bilgiler"
+  "Financial Info": "Finansal Bilgiler",
+  "Add to Apple Pay": "Apple Pay'e ekle",
+  "Add to Google Pay": "Google Pay'e ekle",
+  "Add to Samsung Wallet": "Samsung Cüzdanına Ekle",
+  "Choose The Recipient": "Alıcıyı Seçin",
+  "By clicking \"Confirm\", you are agreeing to our": "\"Onayla\"ya tıklayarak, bizim şartlarımızı kabul etmiş olursunuz.",
+  "terms and conditions": "Şartlar ve koşullar",
+  "I Agree": "Kabul ediyorum",
+  "Your payment is being processed": "Ödemeniz işleniyor",
+  "Card to Wallet": "Karttan Cüzdana",
+  "Choose an Option": "Bir Seçenek Seçin",
+  "Other Wallet": "Diğer Cüzdan",
+  "Transaction Summary": "İşlem Özeti",
+  "Funds added to Wallet": "Cüzdana eklenen fonlar",
+  "Review your payment details": "Ödeme bilgilerinizi inceleyin",
+  "Let’s Get Your InstaPay MasterCard!": "InstaPay MasterCard'ınızı Alın!",
+  "Remove": "Kaldırmak",
+  "Available Plans": "Mevcut Planlar"
 }

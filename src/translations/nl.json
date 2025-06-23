@@ -2543,5 +2543,22 @@
   "Payments above": "Betalingen boven",
   "will always require OTP verification for security.": "vereist altijd een OTP-verificatie voor de beveiliging.",
   "You can set maximum threshold amount of": "U kunt een maximaal drempelbedrag instellen",
-  "Financial Info": "Financiële informatie"
+  "Financial Info": "Financiële informatie",
+  "Add to Apple Pay": "Toevoegen aan Apple Pay",
+  "Add to Google Pay": "Toevoegen aan Google Pay",
+  "Add to Samsung Wallet": "Toevoegen aan Samsung Wallet",
+  "Choose The Recipient": "Kies de ontvanger",
+  "By clicking \"Confirm\", you are agreeing to our": "Door op \"Bevestigen\" te klikken, gaat u akkoord met onze",
+  "terms and conditions": "algemene voorwaarden",
+  "I Agree": "Ik ga akkoord",
+  "Your payment is being processed": "Uw betaling wordt verwerkt",
+  "Card to Wallet": "Kaart naar portemonnee",
+  "Choose an Option": "Kies een optie",
+  "Other Wallet": "Andere portemonnee",
+  "Transaction Summary": "Transactieoverzicht",
+  "Funds added to Wallet": "Fondsen toegevoegd aan Wallet",
+  "Review your payment details": "Controleer uw betalingsgegevens",
+  "Let’s Get Your InstaPay MasterCard!": "Vraag uw InstaPay MasterCard aan!",
+  "Remove": "Verwijderen",
+  "Available Plans": "Beschikbare plannen"
 }

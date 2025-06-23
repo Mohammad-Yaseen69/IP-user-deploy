@@ -377,7 +377,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
     const getExchangeRateNew = async (amount, setLimitType, wallet_id = "", currency_code = "", avoid_balance = true, setLoading = () => { }) => {
         setLoading(true)
         updateInternationalData("exchange_rate_error", "")
-        // updateInternationalData("exchange_rate", {})
         try {
             const dataa = {
                 wallet_id: wallet_id,
@@ -394,7 +393,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 payment_method: internationalData.payment_type?.value,
                 token: internationalData?.exchange_rate?.token
             }
-            console.log("check_token", dataa)
             const encrypted = encryptData(dataa)
 
             const res = await axios.post(`${process.env.REACT_APP_THUNES_API}/get-rates-new/${internationalData?.payer.id}`, {

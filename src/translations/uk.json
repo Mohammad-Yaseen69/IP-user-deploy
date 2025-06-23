@@ -2561,5 +2561,22 @@
   "Payments above": "Платежі вище",
   "will always require OTP verification for security.": "завжди вимагатиме підтвердження OTP для безпеки.",
   "You can set maximum threshold amount of": "Ви можете встановити максимальну порогову суму",
-  "Financial Info": "Фінансова інформація"
+  "Financial Info": "Фінансова інформація",
+  "Add to Apple Pay": "Додати в Apple Pay",
+  "Add to Google Pay": "Додати в Google Pay",
+  "Add to Samsung Wallet": "Додати в Samsung Wallet",
+  "Choose The Recipient": "Виберіть одержувача",
+  "By clicking \"Confirm\", you are agreeing to our": "Натискаючи «Підтвердити», ви погоджуєтеся з нашими",
+  "terms and conditions": "умови",
+  "I Agree": "Я згоден",
+  "Your payment is being processed": "Ваш платіж обробляється",
+  "Card to Wallet": "Картка в гаманець",
+  "Choose an Option": "Виберіть варіант",
+  "Other Wallet": "Інший гаманець",
+  "Transaction Summary": "Підсумок транзакції",
+  "Funds added to Wallet": "Кошти додано в гаманець",
+  "Review your payment details": "Перегляньте платіжні реквізити",
+  "Let’s Get Your InstaPay MasterCard!": "Отримаймо вашу картку InstaPay MasterCard!",
+  "Remove": "видалити",
+  "Available Plans": "Доступні плани"
 }

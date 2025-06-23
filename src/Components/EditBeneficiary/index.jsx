@@ -50,6 +50,8 @@ const EditBeneficiary = () => {
     const [completedCrypto, setCompletedCrypto] = useState(false)
     const [accNumType, setAccNumType] = useState("IBAN")
     const [ibanSwift, setIbanSwift] = useState("")
+    const [lastIban, setLastIban] = useState("")
+    const [lastSwift, setLastSwift] = useState("")
 
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
@@ -1596,8 +1598,20 @@ const EditBeneficiary = () => {
                                                         <FormGroup style={{ flex: 1, margin: 0, maxWidth: "180px" }}>
                                                             <Label className="col-form-label" htmlFor="bank_account_number">{t("IBAN / SWIFT Code")} <span className="req_star">*</span></Label>
                                                             <Input className="form-control" style={{ minWidth: "150px" }} type="select" value={accNumType} onChange={e => {
+                                                                if (accNumType === "IBAN") {
+                                                                    setLastIban(ibanSwift)
+                                                                } else {
+                                                                    setLastSwift(ibanSwift)
+                                                                }
                                                                 setAccNumType(e.target.value)
-                                                                // getBankDetails({ target: { value: "" } })
+                                                                setTimeout(() => {
+                                                                    if (e.target.value === "IBAN") {
+                                                                        setIbanSwift(lastIban)
+                                                                    } else {
+                                                                        setIbanSwift(lastSwift)
+                                                                    }
+                                                                }, 0)
+                                                                getBankDetails({ target: { value: "" } })
                                                             }} readOnly={!isEditMode} disabled={!isEditMode}>
                                                                 <option value="IBAN">IBAN</option>
                                                                 <option value="Swift">Swift/BIC Code</option>
@@ -1605,7 +1619,17 @@ const EditBeneficiary = () => {
                                                         </FormGroup>
                                                         <FormGroup style={{ flex: 1, margin: 0, position: "relative" }}>
                                                             <Label className="col-form-label" htmlFor="bank_account_number">{accNumType === "IBAN" ? t("IBAN Number") : t("Swift Code")}<span className="req_star">*</span></Label>
-                                                            <Input className="form-control" style={{ flex: 1, width: "100%", minWidth: "250px", border: missingFields.includes("bank_account_number") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} placeholder={accNumType === "IBAN" ? t("IBAN Number") : t("Swift Code")} required name="bank_account_number" id="bank_account_number" value={ibanSwift} onChange={getBankDetails} maxLength={34} min={8} readOnly={!isEditMode} disabled={!isEditMode} />
+                                                            <Input className="form-control" style={{ flex: 1, width: "100%", minWidth: "250px", border: missingFields.includes("bank_account_number") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} placeholder={accNumType === "IBAN" ? t("IBAN Number") : t("Swift Code")} required name="bank_account_number" id="bank_account_number" value={ibanSwift} onChange={e => {
+                                                                setIbanSwift(e.target.value)
+                                                                if (accNumType === "IBAN") {
+                                                                    if (e.target.value.length > 0) setLastSwift("")
+                                                                    setLastIban(e.target.value)
+                                                                } else {
+                                                                    if (e.target.value.length > 0) setLastIban("")
+                                                                    setLastSwift(e.target.value)
+                                                                }
+                                                                getBankDetails(e)
+                                                            }} maxLength={34} min={8} readOnly={!isEditMode} disabled={!isEditMode} />
                                                             {
                                                                 bankDetailsError && <span style={{ color: "red", position: "absolute", bottom: "-25px", left: "10px" }} > {bankDetailsError}</span>
                                                             }

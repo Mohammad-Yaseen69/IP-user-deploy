@@ -2554,5 +2554,22 @@
   "Payments above": "Awọn sisanwo loke",
   "will always require OTP verification for security.": "yoo nilo ijẹrisi OTP nigbagbogbo fun aabo.",
   "You can set maximum threshold amount of": "O le ṣeto iye ala ti o pọju ti",
-  "Financial Info": "Alaye owo"
+  "Financial Info": "Alaye owo",
+  "Add to Apple Pay": "Fi si Apple Pay",
+  "Add to Google Pay": "Fi si Google Pay",
+  "Add to Samsung Wallet": "Fi si Samsung apamọwọ",
+  "Choose The Recipient": "Yan Olugba naa",
+  "By clicking \"Confirm\", you are agreeing to our": "Nipa tite \"Jẹrisi\", o ti gba si wa",
+  "terms and conditions": "ofin ati ipo",
+  "I Agree": "Mo gba",
+  "Your payment is being processed": "Owo sisan rẹ ti wa ni ilọsiwaju",
+  "Card to Wallet": "Kaadi to apamọwọ",
+  "Choose an Option": "Yan Aṣayan kan",
+  "Other Wallet": "Miiran apamọwọ",
+  "Transaction Summary": "Idunadura Lakotan",
+  "Funds added to Wallet": "Awọn owo ti a fi kun si Apamọwọ",
+  "Review your payment details": "Ṣe ayẹwo awọn alaye isanwo rẹ",
+  "Let’s Get Your InstaPay MasterCard!": "Jẹ ki a Gba MasterCard InstaPay Rẹ!",
+  "Remove": "Yọ kuro",
+  "Available Plans": "Awọn Eto to wa"
 }
