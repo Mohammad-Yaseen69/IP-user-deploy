@@ -287,10 +287,11 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
     // bank extra fields
     const [bankExtras, setBankExtras] = useState({
         cbu: "",
+        iban: "",
+        swift_bic_code: "",
         account_type: "",
         bsb_number: "",
         branch_number: "",
-        swift_bic_code: "",
         routing_code: "",
         entity_tt_id: "",
         ifs_code: "",
@@ -298,8 +299,6 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         msisdn: "",
         sort_code: "",
         country_iso_code: "",
-        iban: "",
-        swift_bic_code: ""
     })
 
     const handleBankExtraChange = (e) => {

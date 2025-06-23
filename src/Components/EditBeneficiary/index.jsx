@@ -154,6 +154,8 @@ const EditBeneficiary = () => {
     // bank extra fields
     const [bankExtras, setBankExtras] = useState({
         cbu: "",
+        iban: "",
+        swift_bic_code: "",
         account_type: "",
         bank_account_number: "",
         bsb_number: "",
@@ -164,8 +166,6 @@ const EditBeneficiary = () => {
         clabe: "",
         msisdn: "",
         sort_code: "",
-        iban: "",
-        swift_bic_code: ""
     })
 
     const handleBankExtraChange = (e) => {
@@ -1597,7 +1597,7 @@ const EditBeneficiary = () => {
                                                             <Label className="col-form-label" htmlFor="bank_account_number">{t("IBAN / SWIFT Code")} <span className="req_star">*</span></Label>
                                                             <Input className="form-control" style={{ minWidth: "150px" }} type="select" value={accNumType} onChange={e => {
                                                                 setAccNumType(e.target.value)
-                                                                getBankDetails({ target: { value: "" } })
+                                                                // getBankDetails({ target: { value: "" } })
                                                             }} readOnly={!isEditMode} disabled={!isEditMode}>
                                                                 <option value="IBAN">IBAN</option>
                                                                 <option value="Swift">Swift/BIC Code</option>
@@ -1655,7 +1655,7 @@ const EditBeneficiary = () => {
                                                             <Input className="form-control" style={{ flex: 1, minWidth: "250px", border: missingFields.includes("bank_postal_code") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} type="text" required disabled={!isValidIban || !isEditMode} value={formData.bank_postal_code} name="bank_postal_code" onChange={inputChangeHandler} />
                                                         </FormGroup>
                                                         {
-                                                            Object.keys(bankExtras).map(item => {
+                                                            Object.keys(bankExtras || {}).map(item => {
                                                                 return (
                                                                     serviceFieldInfoValidate(services?.find(item => item?.name?.toLowerCase()?.includes("bank")), "credit_party_identifiers_accepted", item)
                                                                     &&
