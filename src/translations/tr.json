@@ -2573,5 +2573,22 @@
   "Review your payment details": "Ödeme bilgilerinizi inceleyin",
   "Let’s Get Your InstaPay MasterCard!": "InstaPay MasterCard'ınızı Alın!",
   "Remove": "Kaldırmak",
-  "Available Plans": "Mevcut Planlar"
+  "Available Plans": "Mevcut Planlar",
+  "Need to change your PIN? Enter a new 4-digit PIN below.": "PIN kodunuzu değiştirmeniz mi gerekiyor? Aşağıya yeni 4 haneli bir PIN kodu girin.",
+  "New 4-digit PIN": "Yeni 4 haneli PIN",
+  "Confirm New PIN": "Yeni PIN'i onayla",
+  "Update Your PIN": "PIN'inizi Güncelleyin",
+  "Update Pin": "Pin'i Güncelle",
+  "For added security, please create a 4-digit PIN to protect your session.": "Ek güvenlik için lütfen oturumunuzu korumak amacıyla 4 haneli bir PIN oluşturun.",
+  "4-digit PIN": "4 haneli PIN",
+  "Confirm PIN": "PIN'i onayla",
+  "Set Your PIN": "PIN'inizi Ayarlayın",
+  "Set Pin": "Pin Ayarla",
+  "Your PIN has been successfully created!": "PIN kodunuz başarıyla oluşturuldu!",
+  "Your PIN has been successfully created!, You can now close this window and go back to chatbot.": "PIN kodunuz başarıyla oluşturuldu!, Artık bu pencereyi kapatıp chatbot'a geri dönebilirsiniz.",
+  "PINs do not match. Please try again.": "PIN'ler eşleşmiyor. Lütfen tekrar deneyin.",
+  "You can now close this window and go back to chatbot": "Artık bu pencereyi kapatabilir ve chatbot'a geri dönebilirsiniz",
+  "Your PIN is verified!": "PIN kodunuz doğrulandı!",
+  "Two Factor Authentication Updated Succsessfully!": "İki Faktörlü Kimlik Doğrulama Başarıyla Güncellendi!",
+  "Whatsapp": "Whatsapp"
 }

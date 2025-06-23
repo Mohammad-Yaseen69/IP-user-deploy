@@ -21,6 +21,10 @@ app.use(compression())
 
 // Serve only the static files form the dist directory
 app.use(express.static(__dirname + '/build'));
+app.use((req, res, next) => {
+  res.setHeader("Cache-Control", "no-store");
+  next();
+});
 // app.use(express.static(__dirname + '/build/sm-web-booking'));
 app.get('*', (req, res) => {
   res.set("Document-Policy", "js-profiling");

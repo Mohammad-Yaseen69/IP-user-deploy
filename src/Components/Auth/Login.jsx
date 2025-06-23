@@ -14,7 +14,7 @@ import axios from "axios";
 import { countries } from "country-list-json";
 import LanguagePicker from "../LanguagePicker";
 import FaceAnimation from "./FaceAnimation"
-import BiometricSvg from "../../assets/icons/fingerprint.png" // Add this import
+import BiometricSvg from "../../assets/icons/fingerprint.png"
 import { startAuthentication } from "@simplewebauthn/browser"
 import * as rdd from "react-device-detect";
 import { authIcon, instaIcon, smsIcon, whatsappIcon } from "./files"
@@ -690,7 +690,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                 country={country}
                                             />
                                             :
-                                            <input type="email" placeholder="eg: john@doe.org" value={email} onChange={e => setEmail(e.target.value?.toLowerCase())} autoComplete="on" name="email" />
+                                            <input type="email" placeholder={t("eg: john@doe.org")} value={email} onChange={e => setEmail(e.target.value?.toLowerCase())} autoComplete="on" name="email" />
                                     }
                                     <div
                                         className={styles.loginWith}
@@ -705,7 +705,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                 ?
                                                 t("Login With Phone Number")
                                                 :
-                                                t("login with email")
+                                                t("Login with Email")
                                         }
                                         {/* {t("Login with")} {loginMethod === "email" ? t("Phone Number") : t("Email")} */}
                                     </div>
@@ -821,7 +821,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         <div className={styles.left}>
                             <h1>{currentOtpMethod === "biometric" ? t("Biometric Verification") :
                                 currentOtpMethod === "auth" ? t("Google Authenticator") :
-                                    currentOtpMethod === "insta" ? "Instagram" : currentOtpMethod === "wp" ? "Whatsapp" :
+                                    currentOtpMethod === "insta" ? t("Instagram") : currentOtpMethod === "wp" ? t("Whatsapp") :
                                         t("SMS Verification").replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")}</h1>
                             <p>{t("Start Your InstaPay Journey Today!")}</p>
                             {
@@ -835,7 +835,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 {currentOtpMethod === "biometric" ? (
                                     <div className={styles.biometric_section}>
                                         <h4 style={{ color: "#545454", fontSize: "1rem", fontWeight: 600 }}>
-                                            Verify identity using your created Passkey on this device
+                                            {t("Verify identity using your created Passkey on this device")}
                                         </h4>
                                         <button
                                             onClick={handleBiometricVerification}
@@ -852,7 +852,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         >
                                             <img width={30} src={BiometricSvg} alt="" />
                                             <span>
-                                                Click to Continue with Biometric
+                                                {t("Click to Continue with Biometric")}
                                             </span>
                                         </button>
                                     </div>
@@ -867,11 +867,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                     :
                                                     currentOtpMethod === "insta"
                                                         ?
-                                                        "Enter the code sent to your Instagram Account"
+                                                        t("Enter the code sent to your Instagram Account")
                                                         :
                                                         currentOtpMethod === "wp"
                                                             ?
-                                                            "Enter the code send on your Whatsapp"
+                                                            t("Enter the code sent on your Whatsapp")
                                                             :
                                                             t(`Enter the SMS code sent to +41********4053`)
                                                                 .replace(
@@ -929,7 +929,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     {
                                         (consecutiveCount >= 3 && !isLoginError.includes('account is locked')) &&
                                         <div className={styles.input_error}>
-                                            <span>Having trouble receiving/verifying your code? Choose another method below or <a style={{ color: '#3117b3' }} href="https://guide.insta-pay.ch/faq/troubleshooting-guide">contact support</a>.</span>
+                                            <span>{t("Having trouble receiving/verifying your code? Choose another method below or contact support.")}</span>
                                         </div>
                                     }
 
@@ -942,7 +942,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     {methods.filter(m => m.attr !== "sms").some(m => m.avail === true)
                                         &&
                                         <p style={{ alignSelf: "baseline" }}>
-                                            Choose your preferred method to verify your identity:
+                                            {t("Choose your preferred method to verify your identity:")}
                                         </p>
                                     }
                                     <div className={styles.otp_methods}>
@@ -962,9 +962,9 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                                     src={method.icon}
                                                                     alt=""
                                                                 />
-                                                                <spaspan style={{ marginBottom: "0", textDecoration: "underline", textDecorationColor: "white", color: 'black', whiteSpace: 'nowrap' }}>
-                                                                    {method.text}
-                                                                </spaspan>
+                                                                <span style={{ marginBottom: "0", textDecoration: "underline", textDecorationColor: "white", color: 'black', whiteSpace: 'nowrap' }}>
+                                                                    {t(method.text)}
+                                                                </span>
                                                             </button>
                                                         )
                                                     }
@@ -989,7 +989,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                                     alt=""
                                                                 />
                                                                 <span style={{ marginBottom: "0" }}>
-                                                                    {method.text}
+                                                                    {t(method.text)}
                                                                 </span>
                                                             </button>
                                                         )
@@ -1006,9 +1006,9 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             {
                                                 resendTimer > 0
                                                     ? (lastOtpSentTo && ['sms', 'insta', 'wp'].includes(currentOtpMethod) && lastOtpSentTo !== currentOtpMethod)
-                                                        ? <span> {`You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : lastOtpSentTo === "wp" ? "Whatsapp" : 'Instagram'}, wait ${resendTimer} seconds to get code on ${currentOtpMethod}`} </span>
+                                                        ? <span> {t(`You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : lastOtpSentTo === "wp" ? "Whatsapp" : 'Instagram'}, wait ${resendTimer} seconds to get code on ${currentOtpMethod}`)} </span>
                                                         :
-                                                        <span>{t("Resend code in 30 seconds".replace("30", resendTimer))}</span>
+                                                        <span>{t("Resend code in 30 seconds").replace("30", resendTimer)}</span>
                                                     :
                                                     <> <span>{t("Didn't receive OTP?") + " "}</span> <span style={{ color: "#5926f0", cursor: "pointer" }} onClick={() => {
                                                         setLastOtpSentTo(currentOtpMethod);

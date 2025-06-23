@@ -2573,5 +2573,22 @@
   "Review your payment details": "Kagua maelezo yako ya malipo",
   "Let’s Get Your InstaPay MasterCard!": "Tujipatie MasterCard yako ya InstaPay!",
   "Remove": "Ondoa",
-  "Available Plans": "Mipango Inayopatikana"
+  "Available Plans": "Mipango Inayopatikana",
+  "Need to change your PIN? Enter a new 4-digit PIN below.": "Je, unahitaji kubadilisha PIN yako? Weka PIN mpya yenye tarakimu 4 hapa chini.",
+  "New 4-digit PIN": "PIN mpya yenye tarakimu 4",
+  "Confirm New PIN": "Thibitisha PIN Mpya",
+  "Update Your PIN": "Sasisha PIN Yako",
+  "Update Pin": "Sasisha PIN",
+  "For added security, please create a 4-digit PIN to protect your session.": "Kwa usalama zaidi, tafadhali unda PIN yenye tarakimu 4 ili kulinda kipindi chako.",
+  "4-digit PIN": "PIN yenye tarakimu 4",
+  "Confirm PIN": "Thibitisha PIN",
+  "Set Your PIN": "Weka PIN yako",
+  "Set Pin": "Weka Pini",
+  "Your PIN has been successfully created!": "PIN yako imeundwa!",
+  "Your PIN has been successfully created!, You can now close this window and go back to chatbot.": "PIN yako imeundwa!, Sasa unaweza kufunga dirisha hili na urudi kwenye chatbot.",
+  "PINs do not match. Please try again.": "PIN hazilingani. Tafadhali jaribu tena.",
+  "You can now close this window and go back to chatbot": "Sasa unaweza kufunga dirisha hili na kurudi kwenye chatbot",
+  "Your PIN is verified!": "PIN yako imethibitishwa!",
+  "Two Factor Authentication Updated Succsessfully!": "Uthibitishaji wa Mambo Mbili Umesasishwa Kwa Mafanikio!",
+  "Whatsapp": "Whatsapp"
 }

@@ -2573,5 +2573,22 @@
   "Review your payment details": "अपने भुगतान विवरण की समीक्षा करें",
   "Let’s Get Your InstaPay MasterCard!": "आइये अपना इंस्टापे मास्टरकार्ड प्राप्त करें!",
   "Remove": "निकालना",
-  "Available Plans": "उपलब्ध योजनाएँ"
+  "Available Plans": "उपलब्ध योजनाएँ",
+  "Need to change your PIN? Enter a new 4-digit PIN below.": "क्या आपको अपना पिन बदलना है? नीचे नया 4-अंकीय पिन दर्ज करें।",
+  "New 4-digit PIN": "नया 4-अंकीय पिन",
+  "Confirm New PIN": "नया पिन पुष्टि करें",
+  "Update Your PIN": "अपना पिन अपडेट करें",
+  "Update Pin": "पिन अपडेट करें",
+  "For added security, please create a 4-digit PIN to protect your session.": "अतिरिक्त सुरक्षा के लिए, कृपया अपने सत्र की सुरक्षा हेतु 4 अंकों का पिन बनाएं।",
+  "4-digit PIN": "4-अंकीय पिन",
+  "Confirm PIN": "पिन की पुष्टि करें",
+  "Set Your PIN": "अपना पिन सेट करें",
+  "Set Pin": "पिन सेट करें",
+  "Your PIN has been successfully created!": "आपका पिन सफलतापूर्वक बना दिया गया है!",
+  "Your PIN has been successfully created!, You can now close this window and go back to chatbot.": "आपका पिन सफलतापूर्वक बना दिया गया है!, अब आप इस विंडो को बंद कर सकते हैं और चैटबॉट पर वापस जा सकते हैं।",
+  "PINs do not match. Please try again.": "पिन मेल नहीं खाते। कृपया पुनः प्रयास करें।",
+  "You can now close this window and go back to chatbot": "अब आप इस विंडो को बंद कर सकते हैं और चैटबॉट पर वापस जा सकते हैं",
+  "Your PIN is verified!": "आपका पिन सत्यापित हो गया है!",
+  "Two Factor Authentication Updated Succsessfully!": "दो कारक प्रमाणीकरण सफलतापूर्वक अद्यतन किया गया!",
+  "Whatsapp": "Whatsapp"
 }

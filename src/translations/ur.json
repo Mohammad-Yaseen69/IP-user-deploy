@@ -2571,5 +2571,22 @@
   "Review your payment details": "اپنی ادائیگی کی تفصیلات کا جائزہ لیں۔",
   "Let’s Get Your InstaPay MasterCard!": "آئیے آپ کا InstaPay ماسٹر کارڈ حاصل کریں!",
   "Remove": "ہٹا دیں۔",
-  "Available Plans": "دستیاب منصوبے"
+  "Available Plans": "دستیاب منصوبے",
+  "Need to change your PIN? Enter a new 4-digit PIN below.": "اپنا PIN تبدیل کرنے کی ضرورت ہے؟ ذیل میں ایک نیا 4 ہندسوں کا پن درج کریں۔",
+  "New 4-digit PIN": "نیا 4 ہندسوں والا پن",
+  "Confirm New PIN": "نئے پن کی تصدیق کریں۔",
+  "Update Your PIN": "اپنا PIN اپ ڈیٹ کریں۔",
+  "Update Pin": "پن اپ ڈیٹ کریں۔",
+  "For added security, please create a 4-digit PIN to protect your session.": "اضافی سیکیورٹی کے لیے، براہ کرم اپنے سیشن کی حفاظت کے لیے 4 ہندسوں کا پن بنائیں۔",
+  "4-digit PIN": "4 ہندسوں کا پن",
+  "Confirm PIN": "پن کی تصدیق کریں۔",
+  "Set Your PIN": "اپنا پن سیٹ کریں۔",
+  "Set Pin": "پن سیٹ کریں۔",
+  "Your PIN has been successfully created!": "آپ کا PIN کامیابی کے ساتھ بن گیا ہے!",
+  "Your PIN has been successfully created!, You can now close this window and go back to chatbot.": "آپ کا PIN کامیابی کے ساتھ بن گیا ہے!، اب آپ اس ونڈو کو بند کر کے چیٹ بوٹ پر واپس جا سکتے ہیں۔",
+  "PINs do not match. Please try again.": "PINs مماثل نہیں ہیں۔ براہ کرم دوبارہ کوشش کریں۔",
+  "You can now close this window and go back to chatbot": "اب آپ اس ونڈو کو بند کر کے چیٹ بوٹ پر واپس جا سکتے ہیں۔",
+  "Your PIN is verified!": "آپ کا PIN تصدیق شدہ ہے!",
+  "Two Factor Authentication Updated Succsessfully!": "دو عنصر کی توثیق کامیابی سے اپ ڈیٹ ہو گئی!",
+  "Whatsapp": "واٹس ایپ"
 }

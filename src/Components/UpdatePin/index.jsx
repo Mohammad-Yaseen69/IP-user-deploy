@@ -10,8 +10,7 @@ import { useNavigate } from "react-router-dom"
 import { Modal, ModalBody, ModalHeader } from "reactstrap"
 import OTPConfirmation from "../UserSettingsNew/OTPConfirmation"
 import { ChevronLeft } from "react-feather"
-
-
+import { useTranslation } from 'react-i18next'
 
 const CreatePin = () => {
     const [pinFields, setPinFields] = useState({
@@ -182,6 +181,8 @@ const CreatePin = () => {
         }
     }
 
+    const { t } = useTranslation()
+
     return (
         <>
             {!success ? (
@@ -196,7 +197,7 @@ const CreatePin = () => {
                                 </div>
 
                                 <h4>
-                                    Update Your PIN
+                                    {t("Update Your PIN")}
                                 </h4>
                             </div>
 
@@ -209,15 +210,15 @@ const CreatePin = () => {
                                 </div>
 
                                 <div className={styles.text}>
-                                    <p>Having Troubles?</p>
-                                    <h4>Contact Us</h4>
+                                    <p>{t("Having Troubles?")}</p>
+                                    <h4>{t("Contact Us")}</h4>
                                 </div>
                             </div>
                         </div>
 
 
                         <div className={styles.right}>
-                            <h4>Need to change your PIN? Enter a new 4-digit PIN below.</h4>
+                            <h4>{t("Need to change your PIN? Enter a new 4-digit PIN below.")}</h4>
 
                             <div className={styles.fields}>
                                 {/* <PinFields
@@ -230,7 +231,7 @@ const CreatePin = () => {
                                     handleInputKeyDown={handleInputKeyDown}
                                 /> */}
                                 <PinFields
-                                    label="New 4-digit PIN"
+                                    label={t("New 4-digit PIN")}
                                     data={pinFields}
                                     setter={setPinFields}
                                     handlePaste={handlePaste}
@@ -240,7 +241,7 @@ const CreatePin = () => {
                                 />
 
                                 <PinFields
-                                    label="Confirm New PIN"
+                                    label={t("Confirm New PIN")}
                                     data={confirmPinFields}
                                     setter={setConfirmFields}
                                     handlePaste={handlePaste}
@@ -248,17 +249,17 @@ const CreatePin = () => {
                                     changeHandler={handleInputChange}
                                     handleInputKeyDown={handleInputKeyDown}
                                 />
-                                {isPinMatch && <span>PINs do  not match. Please try again.</span>}
+                                {isPinMatch && <span>{t("PINs do  not match. Please try again.")}</span>}
                             </div>
 
                             <button disabled={disabled} style={{ opacity: disabled ? 0.5 : 1 }} onClick={sendOtp}>
                                 {loading ? (
                                     <div class="d-flex justify-content-center">
                                         <div class="spinner-border" color='primary' role="status">
-                                            <span class="sr-only">Loading...</span>
+                                            <span class="sr-only">{t("Loading...")}</span>
                                         </div>
                                     </div>
-                                ) : "Update Pin"}
+                                ) : t("Update Pin")}
                             </button>
                         </div>
 
@@ -290,7 +291,7 @@ const CreatePin = () => {
                                             <ChevronLeft size={18} />
                                         </div>
 
-                                        <h4 style={{ color: "#5926F0", fontSize: "24px", fontWeight: 700 }}>Settings</h4>
+                                        <h4 style={{ color: "#5926F0", fontSize: "24px", fontWeight: 700 }}>{t("Settings")}</h4>
                                     </div>
                                     <div style={{ marginBottom: "15px" }} className={styles.top}>
                                         <div style={{ width: "30px", height: "30px", padding: "0", justifyContent: "center" }} className={styles.logo}>
@@ -298,9 +299,9 @@ const CreatePin = () => {
                                                 <path d="M23.8334 11.9167V8.88334C23.8334 7.66989 23.8334 7.06316 23.5973 6.59969C23.3895 6.192 23.0581 5.86055 22.6504 5.65282C22.1869 5.41667 21.5802 5.41667 20.3667 5.41667H5.63341C4.41997 5.41667 3.81324 5.41667 3.34977 5.65282C2.94208 5.86055 2.61063 6.192 2.4029 6.59969C2.16675 7.06316 2.16675 7.66989 2.16675 8.88333V12.7833C2.16675 13.9968 2.16675 14.6035 2.4029 15.067C2.61063 15.4747 2.94208 15.8061 3.34977 16.0138C3.81324 16.25 4.41997 16.25 5.63341 16.25H11.9167M13.0001 10.8333H13.0055M18.4167 10.8333H18.4222M7.58341 10.8333H7.58883M20.8542 18.4167V16.5208C20.8542 15.4738 20.0055 14.625 18.9584 14.625C17.9114 14.625 17.0626 15.4738 17.0626 16.5208V18.4167M13.2709 10.8333C13.2709 10.9829 13.1497 11.1042 13.0001 11.1042C12.8505 11.1042 12.7292 10.9829 12.7292 10.8333C12.7292 10.6838 12.8505 10.5625 13.0001 10.5625C13.1497 10.5625 13.2709 10.6838 13.2709 10.8333ZM18.6876 10.8333C18.6876 10.9829 18.5663 11.1042 18.4167 11.1042C18.2672 11.1042 18.1459 10.9829 18.1459 10.8333C18.1459 10.6838 18.2672 10.5625 18.4167 10.5625C18.5663 10.5625 18.6876 10.6838 18.6876 10.8333ZM7.85425 10.8333C7.85425 10.9829 7.73299 11.1042 7.58341 11.1042C7.43384 11.1042 7.31258 10.9829 7.31258 10.8333C7.31258 10.6838 7.43384 10.5625 7.58341 10.5625C7.73299 10.5625 7.85425 10.6838 7.85425 10.8333ZM16.9001 22.75H21.0167C21.6235 22.75 21.9268 22.75 22.1586 22.6319C22.3624 22.5281 22.5281 22.3623 22.632 22.1585C22.7501 21.9268 22.7501 21.6234 22.7501 21.0167V20.15C22.7501 19.5433 22.7501 19.2399 22.632 19.0082C22.5281 18.8043 22.3624 18.6386 22.1586 18.5347C21.9268 18.4167 21.6235 18.4167 21.0167 18.4167H16.9001C16.2934 18.4167 15.99 18.4167 15.7583 18.5347C15.5544 18.6386 15.3887 18.8043 15.2848 19.0082C15.1667 19.2399 15.1667 19.5433 15.1667 20.15V21.0167C15.1667 21.6234 15.1667 21.9268 15.2848 22.1585C15.3887 22.3623 15.5544 22.5281 15.7583 22.6319C15.99 22.75 16.2934 22.75 16.9001 22.75Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                             </svg>
                                         </div>
-                                        <h4 style={{ color: "black" }}>Update Your PIN</h4>
+                                        <h4 style={{ color: "black" }}>{t("Update Your PIN")}</h4>
                                     </div>
-                                    <h4>Need to change your PIN? Enter a new 4-digit PIN below.</h4>
+                                    <h4>{t("Need to change your PIN? Enter a new 4-digit PIN below.")}</h4>
                                 </div>
 
                                 <div style={{ width: "70%", alignSelf: "center" }} className={styles.fields}>
@@ -314,7 +315,7 @@ const CreatePin = () => {
                                         handleInputKeyDown={handleInputKeyDown}
                                     /> */}
                                     <PinFields
-                                        label="New 4-digit PIN"
+                                        label={t("New 4-digit PIN")}
                                         data={pinFields}
                                         setter={setPinFields}
                                         handlePaste={handlePaste}
@@ -324,7 +325,7 @@ const CreatePin = () => {
                                     />
 
                                     <PinFields
-                                        label="Confirm New PIN"
+                                        label={t("Confirm New PIN")}
                                         data={confirmPinFields}
                                         setter={setConfirmFields}
                                         handlePaste={handlePaste}
@@ -332,7 +333,7 @@ const CreatePin = () => {
                                         changeHandler={handleInputChange}
                                         handleInputKeyDown={handleInputKeyDown}
                                     />
-                                    {isPinMatch && <span>PINs do  not match. Please try again.</span>}
+                                    {isPinMatch && <span>{t("PINs do  not match. Please try again.")}</span>}
                                 </div>
 
                                 <div>
@@ -344,22 +345,22 @@ const CreatePin = () => {
                                         </div>
 
                                         <div style={{ gap: "0px" }} className={styles.text}>
-                                            <p>Having Troubles?</p>
-                                            <h4>Contact Us</h4>
+                                            <p>{t("Having Troubles?")}</p>
+                                            <h4>{t("Contact Us")}</h4>
                                         </div>
                                     </div>
                                     <button disabled={disabled} style={{ opacity: disabled ? 0.5 : 1, marginBottom: "8px", border: 'none', outline: "none" }} onClick={sendOtp}>
                                         {loading ? (
                                             <div class="d-flex justify-content-center">
                                                 <div class="spinner-border" color='primary' role="status">
-                                                    <span class="sr-only">Loading...</span>
+                                                    <span class="sr-only">{t("Loading...")}</span>
                                                 </div>
                                             </div>
-                                        ) : "Update Pin"}
+                                        ) : t("Update Pin")}
                                     </button>
 
                                     <button style={{ backgroundColor: "#FAFAFA",  border: 'none', outline: "none", color: "black" }} onClick={() => navigate("/settings")}>
-                                        Back
+                                        {t("Back")}
                                     </button>
                                 </div>
                             </div>
@@ -408,7 +409,7 @@ const CreatePin = () => {
                                 color: "black",
                                 lineHeight: "26px"
                             }}>
-                                Your PIN has been successfully created!
+                                {t("Your PIN has been successfully created!")}
                             </p>
                         </div>
 
@@ -429,7 +430,7 @@ const CreatePin = () => {
                                 transform: "translateX(-50%)"
                             }}
                         >
-                            Close
+                            {t("Close")}
                         </button>
                     </div>
                 </div>

@@ -2571,5 +2571,22 @@
   "Review your payment details": "Ṣe ayẹwo awọn alaye isanwo rẹ",
   "Let’s Get Your InstaPay MasterCard!": "Jẹ ki a Gba MasterCard InstaPay Rẹ!",
   "Remove": "Yọ kuro",
-  "Available Plans": "Awọn Eto to wa"
+  "Available Plans": "Awọn Eto to wa",
+  "Need to change your PIN? Enter a new 4-digit PIN below.": "Ṣe o nilo lati yi PIN rẹ pada? Tẹ PIN titun oni-nọmba mẹrin sii ni isalẹ.",
+  "New 4-digit PIN": "PIN titun oni-nọmba mẹrin",
+  "Confirm New PIN": "Jẹrisi PIN Tuntun",
+  "Update Your PIN": "Ṣe imudojuiwọn PIN rẹ",
+  "Update Pin": "Pin imudojuiwọn",
+  "For added security, please create a 4-digit PIN to protect your session.": "Fun aabo ti a ṣafikun, jọwọ ṣẹda PIN oni-nọmba mẹrin lati daabobo igba rẹ.",
+  "4-digit PIN": "4-nọmba PIN",
+  "Confirm PIN": "Jẹrisi PIN",
+  "Set Your PIN": "Ṣeto PIN rẹ",
+  "Set Pin": "Ṣeto Pin",
+  "Your PIN has been successfully created!": "PIN rẹ ti ṣẹda ni aṣeyọri!",
+  "Your PIN has been successfully created!, You can now close this window and go back to chatbot.": "PIN rẹ ti ṣẹda ni aṣeyọri!, O le tii window yii ki o pada si chatbot.",
+  "PINs do not match. Please try again.": "Awọn PIN ko baramu. Jọwọ gbiyanju lẹẹkansi.",
+  "You can now close this window and go back to chatbot": "O le tii window yii ki o pada si chatbot",
+  "Your PIN is verified!": "PIN rẹ ti jẹri!",
+  "Two Factor Authentication Updated Succsessfully!": "Ijeri ifosiwewe Meji Ṣe imudojuiwọn Ni aṣeyọri!",
+  "Whatsapp": "Whatsapp"
 }

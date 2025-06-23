@@ -8,6 +8,7 @@ import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { Modal, ModalBody, ModalHeader } from "reactstrap"
 import { toast } from "react-toastify"
+import { useTranslation } from "react-i18next"
 
 
 
@@ -28,6 +29,7 @@ const CreatePin = () => {
     const query = new URLSearchParams(location.search)
     const flow = query.get("flow")
     const chatId = query.get("chatId")
+    const { t } = useTranslation()
 
     useEffect(() => {
         setDisabled(loading || pinFields.data.join("").length < 4)
@@ -204,9 +206,9 @@ const CreatePin = () => {
                     </div>
 
                     <h4 style={{ fontSize: "24px", marginBottom: "0px" }}>
-                        {!success ? 'Enter Your PIN' : 'Your PIN is verified!'}
+                        {!success ? t('Enter Your PIN') : t('Your PIN is verified!')}
                     </h4>
-                    <p style={{ fontSize: "14px", fontWeight: 600, color: "#777", textAlign: "center" }}>{!success ? "To continue, please enter your 4-digit security PIN." : "You can now close this window and go back to chatbot"}</p>
+                    <p style={{ fontSize: "14px", fontWeight: 600, color: "#777", textAlign: "center" }}>{!success ? t("To continue, please enter your 4-digit security PIN.") : t("You can now close this window and go back to chatbot")}</p>
                     {!success &&
                         <div className={styles.fields}>
                             <PinFields
@@ -222,7 +224,7 @@ const CreatePin = () => {
                             />
 
 
-                            {error && <span>{error}</span>}
+                            {error && <span>{t(error)}</span>}
                         </div>
                     }
                 </div>
@@ -235,10 +237,10 @@ const CreatePin = () => {
                             {loading ? (
                                 <div class="d-flex justify-content-center">
                                     <div class="spinner-border" color='primary' role="status">
-                                        <span class="sr-only">Loading...</span>
+                                        <span class="sr-only">{t("Loading...")}</span>
                                     </div>
                                 </div>
-                            ) : "Verify"}
+                            ) : t("Verify")}
                         </button>
                     </div> : <h1>‎ </h1>}
             </div>

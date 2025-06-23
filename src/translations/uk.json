@@ -2578,5 +2578,22 @@
   "Review your payment details": "Перегляньте платіжні реквізити",
   "Let’s Get Your InstaPay MasterCard!": "Отримаймо вашу картку InstaPay MasterCard!",
   "Remove": "видалити",
-  "Available Plans": "Доступні плани"
+  "Available Plans": "Доступні плани",
+  "Need to change your PIN? Enter a new 4-digit PIN below.": "Потрібно змінити PIN-код? Введіть новий 4-значний PIN-код нижче.",
+  "New 4-digit PIN": "Новий 4-значний PIN-код",
+  "Confirm New PIN": "Підтвердьте новий PIN-код",
+  "Update Your PIN": "Оновіть свій PIN-код",
+  "Update Pin": "Оновити PIN-код",
+  "For added security, please create a 4-digit PIN to protect your session.": "Для додаткової безпеки створіть 4-значний PIN-код, щоб захистити свій сеанс.",
+  "4-digit PIN": "4-значний PIN-код",
+  "Confirm PIN": "Підтвердьте PIN-код",
+  "Set Your PIN": "Встановіть PIN-код",
+  "Set Pin": "Встановити PIN-код",
+  "Your PIN has been successfully created!": "Ваш PIN-код успішно створено!",
+  "Your PIN has been successfully created!, You can now close this window and go back to chatbot.": "Ваш PIN-код успішно створено! Тепер ви можете закрити це вікно та повернутися до чат-бота.",
+  "PINs do not match. Please try again.": "PIN-коди не збігаються. Спробуйте ще раз.",
+  "You can now close this window and go back to chatbot": "Тепер ви можете закрити це вікно та повернутися до чат-бота",
+  "Your PIN is verified!": "Ваш PIN-код перевірено!",
+  "Two Factor Authentication Updated Succsessfully!": "Двофакторну автентифікацію успішно оновлено!",
+  "Whatsapp": "WhatsApp"
 }

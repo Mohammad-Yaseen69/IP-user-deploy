@@ -2571,5 +2571,22 @@
   "Review your payment details": "Tinjau detail pembayaran Anda",
   "Let’s Get Your InstaPay MasterCard!": "Ayo Dapatkan InstaPay MasterCard Anda!",
   "Remove": "Menghapus",
-  "Available Plans": "Paket yang Tersedia"
+  "Available Plans": "Paket yang Tersedia",
+  "Need to change your PIN? Enter a new 4-digit PIN below.": "Perlu mengubah PIN Anda? Masukkan PIN 4 digit baru di bawah ini.",
+  "New 4-digit PIN": "PIN 4 digit baru",
+  "Confirm New PIN": "Konfirmasi PIN Baru",
+  "Update Your PIN": "Perbarui PIN Anda",
+  "Update Pin": "Perbarui Pin",
+  "For added security, please create a 4-digit PIN to protect your session.": "Untuk keamanan tambahan, buat PIN 4 digit untuk melindungi sesi Anda.",
+  "4-digit PIN": "PIN 4 digit",
+  "Confirm PIN": "Konfirmasi PIN",
+  "Set Your PIN": "Atur PIN Anda",
+  "Set Pin": "Setel Pin",
+  "Your PIN has been successfully created!": "PIN Anda telah berhasil dibuat!",
+  "Your PIN has been successfully created!, You can now close this window and go back to chatbot.": "PIN Anda telah berhasil dibuat!, Anda sekarang dapat menutup jendela ini dan kembali ke chatbot.",
+  "PINs do not match. Please try again.": "PIN tidak cocok. Silakan coba lagi.",
+  "You can now close this window and go back to chatbot": "Anda sekarang dapat menutup jendela ini dan kembali ke chatbot",
+  "Your PIN is verified!": "PIN Anda telah diverifikasi!",
+  "Two Factor Authentication Updated Succsessfully!": "Autentikasi Dua Faktor Berhasil Diperbarui!",
+  "Whatsapp": "Ada apa"
 }

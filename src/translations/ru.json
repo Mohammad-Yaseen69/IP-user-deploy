@@ -2482,5 +2482,22 @@
   "Review your payment details": "Проверьте ваши платежные реквизиты",
   "Let’s Get Your InstaPay MasterCard!": "Давайте получим вашу карту InstaPay MasterCard!",
   "Remove": "Удалять",
-  "Available Plans": "Доступные планы"
+  "Available Plans": "Доступные планы",
+  "Need to change your PIN? Enter a new 4-digit PIN below.": "Нужно изменить свой PIN-код? Введите новый 4-значный PIN-код ниже.",
+  "New 4-digit PIN": "Новый 4-значный PIN-код",
+  "Confirm New PIN": "Подтвердите новый PIN-код",
+  "Update Your PIN": "Обновите свой PIN-код",
+  "Update Pin": "Обновить ПИН-код",
+  "For added security, please create a 4-digit PIN to protect your session.": "Для дополнительной безопасности создайте 4-значный PIN-код, чтобы защитить ваш сеанс.",
+  "4-digit PIN": "4-значный ПИН-код",
+  "Confirm PIN": "Подтвердите ПИН-код",
+  "Set Your PIN": "Установите свой PIN-код",
+  "Set Pin": "Установить штифт",
+  "Your PIN has been successfully created!": "Ваш PIN-код успешно создан!",
+  "Your PIN has been successfully created!, You can now close this window and go back to chatbot.": "Ваш PIN-код успешно создан! Теперь вы можете закрыть это окно и вернуться к чат-боту.",
+  "PINs do not match. Please try again.": "PIN-коды не совпадают. Попробуйте еще раз.",
+  "You can now close this window and go back to chatbot": "Теперь вы можете закрыть это окно и вернуться к чат-боту.",
+  "Your PIN is verified!": "Ваш PIN-код проверен!",
+  "Two Factor Authentication Updated Succsessfully!": "Двухфакторная аутентификация успешно обновлена!",
+  "Whatsapp": "Ватсап"
 }

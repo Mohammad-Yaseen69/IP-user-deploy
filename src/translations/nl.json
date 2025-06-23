@@ -2560,5 +2560,22 @@
   "Review your payment details": "Controleer uw betalingsgegevens",
   "Let’s Get Your InstaPay MasterCard!": "Vraag uw InstaPay MasterCard aan!",
   "Remove": "Verwijderen",
-  "Available Plans": "Beschikbare plannen"
+  "Available Plans": "Beschikbare plannen",
+  "Need to change your PIN? Enter a new 4-digit PIN below.": "Wilt u uw pincode wijzigen? Voer hieronder een nieuwe 4-cijferige pincode in.",
+  "New 4-digit PIN": "Nieuwe 4-cijferige pincode",
+  "Confirm New PIN": "Bevestig nieuwe pincode",
+  "Update Your PIN": "Werk uw pincode bij",
+  "Update Pin": "Pin bijwerken",
+  "For added security, please create a 4-digit PIN to protect your session.": "Voor extra veiligheid kunt u een 4-cijferige pincode aanmaken om uw sessie te beveiligen.",
+  "4-digit PIN": "4-cijferige pincode",
+  "Confirm PIN": "PIN bevestigen",
+  "Set Your PIN": "Stel uw pincode in",
+  "Set Pin": "Pin instellen",
+  "Your PIN has been successfully created!": "Uw pincode is succesvol aangemaakt!",
+  "Your PIN has been successfully created!, You can now close this window and go back to chatbot.": "Uw pincode is succesvol aangemaakt! U kunt nu dit venster sluiten en teruggaan naar de chatbot.",
+  "PINs do not match. Please try again.": "Pincodes komen niet overeen. Probeer het opnieuw.",
+  "You can now close this window and go back to chatbot": "U kunt dit venster nu sluiten en teruggaan naar de chatbot",
+  "Your PIN is verified!": "Uw pincode is geverifieerd!",
+  "Two Factor Authentication Updated Succsessfully!": "Twee-factor-authenticatie succesvol bijgewerkt!",
+  "Whatsapp": "WhatsApp"
 }

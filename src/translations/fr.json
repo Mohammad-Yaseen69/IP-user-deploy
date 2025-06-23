@@ -2578,5 +2578,22 @@
   "Review your payment details": "Vérifiez vos informations de paiement",
   "Let’s Get Your InstaPay MasterCard!": "Obtenons votre MasterCard InstaPay !",
   "Remove": "Retirer",
-  "Available Plans": "Plans disponibles"
+  "Available Plans": "Plans disponibles",
+  "Need to change your PIN? Enter a new 4-digit PIN below.": "Besoin de changer votre code PIN ? Saisissez un nouveau code PIN à 4 chiffres ci-dessous.",
+  "New 4-digit PIN": "Nouveau code PIN à 4 chiffres",
+  "Confirm New PIN": "Confirmer le nouveau code PIN",
+  "Update Your PIN": "Mettez à jour votre code PIN",
+  "Update Pin": "Mettre à jour le code PIN",
+  "For added security, please create a 4-digit PIN to protect your session.": "Pour plus de sécurité, veuillez créer un code PIN à 4 chiffres pour protéger votre session.",
+  "4-digit PIN": "code PIN à 4 chiffres",
+  "Confirm PIN": "Confirmer le code PIN",
+  "Set Your PIN": "Définissez votre code PIN",
+  "Set Pin": "Définir la broche",
+  "Your PIN has been successfully created!": "Votre code PIN a été créé avec succès !",
+  "Your PIN has been successfully created!, You can now close this window and go back to chatbot.": "Votre code PIN a été créé avec succès ! Vous pouvez maintenant fermer cette fenêtre et revenir au chatbot.",
+  "PINs do not match. Please try again.": "Les codes PIN ne correspondent pas. Veuillez réessayer.",
+  "You can now close this window and go back to chatbot": "Vous pouvez maintenant fermer cette fenêtre et revenir au chatbot",
+  "Your PIN is verified!": "Votre code PIN est vérifié !",
+  "Two Factor Authentication Updated Succsessfully!": "Authentification à deux facteurs mise à jour avec succès !",
+  "Whatsapp": "WhatsApp"
 }

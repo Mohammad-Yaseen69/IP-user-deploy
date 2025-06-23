@@ -2533,5 +2533,22 @@
   "Review your payment details": "Bincika bayanan biyan kuɗin ku",
   "Let’s Get Your InstaPay MasterCard!": "Bari Mu Samu InstaPay MasterCard!",
   "Remove": "Cire",
-  "Available Plans": "Akwai Shirye-shiryen"
+  "Available Plans": "Akwai Shirye-shiryen",
+  "Need to change your PIN? Enter a new 4-digit PIN below.": "Kuna buƙatar canza PIN ɗin ku? Shigar da sabon PIN mai lamba 4 a ƙasa.",
+  "New 4-digit PIN": "Sabon PIN mai lamba 4",
+  "Confirm New PIN": "Tabbatar da Sabon PIN",
+  "Update Your PIN": "Ɗaukaka PIN naka",
+  "Update Pin": "Sabunta Pin",
+  "For added security, please create a 4-digit PIN to protect your session.": "Don ƙarin tsaro, da fatan za a ƙirƙiri PIN mai lamba 4 don kare zaman ku.",
+  "4-digit PIN": "PIN mai lamba 4",
+  "Confirm PIN": "Tabbatar da PIN",
+  "Set Your PIN": "Saita PIN naka",
+  "Set Pin": "Saita Pin",
+  "Your PIN has been successfully created!": "An yi nasarar ƙirƙirar PIN ɗin ku!",
+  "Your PIN has been successfully created!, You can now close this window and go back to chatbot.": "An yi nasarar ƙirƙirar PIN ɗin ku!, Yanzu zaku iya rufe wannan taga kuma ku koma chatbot.",
+  "PINs do not match. Please try again.": "PINs basu daidaita ba. Da fatan za a sake gwadawa.",
+  "You can now close this window and go back to chatbot": "Yanzu zaku iya rufe wannan taga kuma ku koma chatbot",
+  "Your PIN is verified!": "An tabbatar da PIN naka!",
+  "Two Factor Authentication Updated Succsessfully!": "An sabunta Tabbacin Factor Biyu Cikin Nasara!",
+  "Whatsapp": "Whatsapp"
 }

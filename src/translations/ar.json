@@ -2571,5 +2571,22 @@
   "Review your payment details": "راجع تفاصيل الدفع الخاصة بك",
   "Let’s Get Your InstaPay MasterCard!": "احصل على بطاقة InstaPay MasterCard الخاصة بك!",
   "Remove": "يزيل",
-  "Available Plans": "الخطط المتاحة"
+  "Available Plans": "الخطط المتاحة",
+  "Need to change your PIN? Enter a new 4-digit PIN below.": "هل تحتاج إلى تغيير رقم التعريف الشخصي (PIN) الخاص بك؟ أدخل رقم تعريف شخصي جديد مكون من أربعة أرقام أدناه.",
+  "New 4-digit PIN": "رقم التعريف الشخصي الجديد المكون من 4 أرقام",
+  "Confirm New PIN": "تأكيد رقم التعريف الشخصي الجديد",
+  "Update Your PIN": "تحديث رقم التعريف الشخصي الخاص بك",
+  "Update Pin": "تحديث الدبوس",
+  "For added security, please create a 4-digit PIN to protect your session.": "لمزيد من الأمان، يرجى إنشاء رقم تعريف شخصي مكون من 4 أرقام لحماية جلستك.",
+  "4-digit PIN": "رقم التعريف الشخصي المكون من 4 أرقام",
+  "Confirm PIN": "تأكيد رقم التعريف الشخصي (PIN)",
+  "Set Your PIN": "تعيين رقم التعريف الشخصي الخاص بك",
+  "Set Pin": "تعيين دبوس",
+  "Your PIN has been successfully created!": "لقد تم إنشاء رقم التعريف الشخصي الخاص بك بنجاح!",
+  "Your PIN has been successfully created!, You can now close this window and go back to chatbot.": "لقد تم إنشاء رقم التعريف الشخصي الخاص بك بنجاح! يمكنك الآن إغلاق هذه النافذة والعودة إلى روبوت المحادثة.",
+  "PINs do not match. Please try again.": "أرقام التعريف الشخصية غير متطابقة. يُرجى المحاولة مرة أخرى.",
+  "You can now close this window and go back to chatbot": "يمكنك الآن إغلاق هذه النافذة والعودة إلى chatbot",
+  "Your PIN is verified!": "تم التحقق من رقم التعريف الشخصي الخاص بك!",
+  "Two Factor Authentication Updated Succsessfully!": "تم تحديث المصادقة الثنائية بنجاح!",
+  "Whatsapp": "واتساب"
 }

@@ -463,7 +463,7 @@ const TwoFactorAuth = () => {
                                     <div className={styles.buttons} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                                         <button onClick={() => setShowBioModal(true)} className={styles.plus}>
                                             <img src={Plus} alt="" />
-                                            <p style={{ marginBottom: "0" }}>Register Biometric Passkey</p>
+                                            <p style={{ marginBottom: "0" }}>{t("Register Biometric Passkey")}</p>
                                         </button>
                                     </div>
                                 }
@@ -509,7 +509,7 @@ const TwoFactorAuth = () => {
                         <div className={styles.buttons} style={{ display: "flex", alignItems: "center", gap: "8px", marginRight: "10px" }}>
                             <button onClick={() => setShowBioModal(true)} className={styles.plus}>
                                 <img src={Plus} alt="" />
-                                <p style={{ marginBottom: "0" }}>Register Biometric Passkey</p>
+                                <p style={{ marginBottom: "0" }}>{t("Register Biometric Passkey")}</p>
                             </button>
                         </div>
                     </div>

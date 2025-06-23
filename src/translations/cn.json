@@ -2572,5 +2572,22 @@
   "Review your payment details": "查看您的付款详情",
   "Let’s Get Your InstaPay MasterCard!": "让我们获取您的 InstaPay MasterCard！",
   "Remove": "消除",
-  "Available Plans": "可用计划"
+  "Available Plans": "可用计划",
+  "Need to change your PIN? Enter a new 4-digit PIN below.": "需要更改您的 PIN 码吗？请在下方输入新的 4 位数 PIN 码。",
+  "New 4-digit PIN": "新的 4 位 PIN 码",
+  "Confirm New PIN": "确认新 PIN",
+  "Update Your PIN": "更新您的PIN码",
+  "Update Pin": "更新 Pin",
+  "For added security, please create a 4-digit PIN to protect your session.": "为了增加安全性，请创建一个 4 位数的 PIN 来保护您的会话。",
+  "4-digit PIN": "4 位 PIN 码",
+  "Confirm PIN": "确认 PIN",
+  "Set Your PIN": "设置您的PIN码",
+  "Set Pin": "设置 Pin",
+  "Your PIN has been successfully created!": "您的 PIN 已成功创建！",
+  "Your PIN has been successfully created!, You can now close this window and go back to chatbot.": "您的 PIN 已成功创建！您现在可以关闭此窗口并返回聊天机器人。",
+  "PINs do not match. Please try again.": "PIN 码不匹配。请重试。",
+  "You can now close this window and go back to chatbot": "您现在可以关闭此窗口并返回聊天机器人",
+  "Your PIN is verified!": "您的 PIN 码已验证！",
+  "Two Factor Authentication Updated Succsessfully!": "双因素身份验证已成功更新！",
+  "Whatsapp": "Whatsapp"
 }

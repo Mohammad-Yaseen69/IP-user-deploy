@@ -7,6 +7,7 @@ import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { useLocation, useParams } from "react-router-dom"
 import { toast } from "react-toastify"
 import QrGenerate from "../../Settings/QrGenerate"
+import { useTranslation } from "react-i18next"
 
 const CreatePin = () => {
     const [pinFields, setPinFields] = useState({
@@ -24,7 +25,7 @@ const CreatePin = () => {
     const location = useLocation()
     const query = new URLSearchParams(location.search)
     const walletId = query.get("w")
-
+    const { t } = useTranslation()
 
     const pinRefs = useRef(Array(4).fill(null));
     const confirmRefs = useRef(Array(4).fill(null));
@@ -156,7 +157,7 @@ const CreatePin = () => {
                             </div>
 
                             <h4>
-                                Set Your PIN
+                                {t("Set Your PIN")}
                             </h4>
                         </div>
 
@@ -169,19 +170,19 @@ const CreatePin = () => {
                             </div>
 
                             <div className={styles.text}>
-                                <p>Having Troubles?</p>
-                                <h4>Contact Us</h4>
+                                <p>{t("Having Troubles?")}</p>
+                                <h4>{t("Contact Us")}</h4>
                             </div>
                         </div>
                     </div>
 
 
                     <div className={styles.right}>
-                        <h4>For added security, please create a 4-digit PIN to protect your session.</h4>
+                        <h4>{t("For added security, please create a 4-digit PIN to protect your session.")}</h4>
 
                         <div className={styles.fields}>
                             <PinFields
-                                label="New 4-digit PIN"
+                                label={t("New 4-digit PIN")}
                                 data={pinFields}
                                 setter={setPinFields}
                                 handlePaste={handlePaste}
@@ -191,7 +192,7 @@ const CreatePin = () => {
                             />
 
                             <PinFields
-                                label="Confirm New PIN"
+                                label={t("Confirm New PIN")}
                                 data={confirmPinFields}
                                 setter={setConfirmFields}
                                 handlePaste={handlePaste}
@@ -200,17 +201,17 @@ const CreatePin = () => {
                                 handleInputKeyDown={handleInputKeyDown}
                             />
 
-                            {isPinMatch && <span>PINs do  not match. Please try again.</span>}
+                            {isPinMatch && <span>{t("PINs do  not match. Please try again.")}</span>}
                         </div>
 
                         <button disabled={disabled} style={{ opacity: disabled ? 0.5 : 1 }} onClick={setPin}>
                             {loading ? (
                                 <div class="d-flex justify-content-center">
                                     <div class="spinner-border" color='primary' role="status">
-                                        <span class="sr-only">Loading...</span>
+                                        <span class="sr-only">{t("Loading...")}</span>
                                     </div>
                                 </div>
-                            ) : "Set Pin"}
+                            ) : t("Set Pin")}
                         </button>
                     </div>
                 </div>) :
@@ -225,16 +226,16 @@ const CreatePin = () => {
                                 </div>
 
                                 <h4 style={{ color: "black" }}>
-                                    Set Your PIN
+                                    {t("Set Your PIN")}
                                 </h4>
                             </div>
 
-                            <h4>For added security, please create a 4-digit PIN to protect your session.</h4>
+                            <h4>{t("For added security, please create a 4-digit PIN to protect your session.")}</h4>
                         </div>
 
                         <div style={{ width: "70%", alignSelf: "center" }} className={styles.fields}>
                             <PinFields
-                                label="New 4-digit PIN"
+                                label={t("New 4-digit PIN")}
                                 data={pinFields}
                                 setter={setPinFields}
                                 centerText={true}
@@ -245,7 +246,7 @@ const CreatePin = () => {
                             />
 
                             <PinFields
-                                label="Confirm New PIN"
+                                label={t("Confirm New PIN")}
                                 data={confirmPinFields}
                                 setter={setConfirmFields}
                                 handlePaste={handlePaste}
@@ -255,7 +256,7 @@ const CreatePin = () => {
                                 handleInputKeyDown={handleInputKeyDown}
                             />
 
-                            {isPinMatch && <span>PINs do  not match. Please try again.</span>}
+                            {isPinMatch && <span>{t("PINs do  not match. Please try again.")}</span>}
                         </div>
 
                         <div>
@@ -267,18 +268,18 @@ const CreatePin = () => {
                                 </div>
 
                                 <div style={{ gap: "0px" }} className={styles.text}>
-                                    <p>Having Troubles?</p>
-                                    <h4>Contact Us</h4>
+                                    <p>{t("Having Troubles?")}</p>
+                                    <h4>{t("Contact Us")}</h4>
                                 </div>
                             </div>
                             <button disabled={disabled} style={{ opacity: disabled ? 0.5 : 1, border: 'none', outline: "none" }} onClick={setPin}>
                                 {loading ? (
                                     <div class="d-flex justify-content-center">
                                         <div class="spinner-border" color='primary' role="status">
-                                            <span class="sr-only">Loading...</span>
+                                            <span class="sr-only">{t("Loading...")}</span>
                                         </div>
                                     </div>
-                                ) : "Set Pin"}
+                                ) : t("Set Pin")}
                             </button>
 
                         </div>
@@ -328,7 +329,7 @@ const CreatePin = () => {
                             color: "black",
                             lineHeight: "26px"
                         }}>
-                            Your PIN has been successfully created!,  You can now close this window and go back to chatbot.
+                            {t("Your PIN has been successfully created!,  You can now close this window and go back to chatbot.")}
                         </p>
                     </div>
                 </div>

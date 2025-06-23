@@ -312,16 +312,6 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
             {
                 data.verified
                     ?
-                    // <div style={{ width: "100%", height: "300px", display: "flex", alignItems: "center", flexDirection: "column", marginTop: "-100px" }}>
-                    //     <video src={success} style={{ height: "100%", aspectRatio: "1.2 / 1", objectFit: "cover", borderRadius: "100000px" }} autoPlay muted loop controls={false}></video>
-                    //     <h3 className="mb-4 mt-4">{t("Signup Successful")}</h3>
-                    //     <button onClick={() => {
-                    //         setIsLoginForm(true)
-                    //         navigate("/login")
-                    //     }} className={styles.form_btn}>
-                    //         <span>{t("Login Now")}</span>
-                    //     </button>
-                    // </div>
                     <Receipt
                         setLogin={setIsLoginForm}
                     />
@@ -348,7 +338,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                                             dataHandler("verified", true)
                                         }
                                     }}
-                                    heading="Signup Error"
+                                    heading={t("Signup Error")}
                                     message={data.error}
                                 />
                             }
