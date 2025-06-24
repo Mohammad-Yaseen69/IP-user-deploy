@@ -47,6 +47,8 @@ import ctc from "./ctc.svg"
 import checktoggle from "./check-toggle.svg"
 import ctw_white from "./ctw_white.svg"
 
+import ApayWhite from "./Apaywhite.svg"
+
 export  {
     Payment,
     Paypal,
@@ -88,5 +90,6 @@ export  {
     StandardLabel,
     ctc,
     checktoggle,
-    ctw_white
+    ctw_white,
+    ApayWhite
 }

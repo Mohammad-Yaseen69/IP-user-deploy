@@ -59,7 +59,7 @@ const FinancialInfo = () => {
     ])
     const [countriesWithRegion, setCountriesWithRegion] = useState({})
     const [filteredCountriesWithRegion, setFilteredCountriesWithRegion] = useState({})
-    const [activeDropdown, setActiveDropdown] = useState(0)
+    const [activeDropdown, setActiveDropdown] = useState(1)
     const [search, setSearch] = useState()
     const { userDetails } = useContext(UserContext)
     const { t } = useTranslation()
@@ -160,22 +160,32 @@ const FinancialInfo = () => {
                             </div>
 
                             <div className={styles.dropDownCont}>
-                                {Object.entries(filteredCountriesWithRegion)?.map(([region, countries], idx) =>
-                                    <div key={idx} className={`${styles.dropdown} ${activeDropdown !== idx && styles.hide}`}>
-                                        <div onClick={() => setActiveDropdown(idx)} className={styles.head}>
+                                {Object.entries(filteredCountriesWithRegion)?.map(([region, countries], idx) => (
+                                    <div key={`${idx}-${region}`} className={styles.dropdown}>
+                                        <div
+                                            className={styles.head}
+                                            onClick={() => setActiveDropdown(idx + 1)}
+                                            style={{ cursor: "pointer" }}
+                                        >
                                             <span>{t(region)}</span>
-
-                                            <ChevronRight style={{ transition: '0.3s', transform: activeDropdown === idx && "rotate(90deg)" }} />
+                                            <ChevronRight
+                                                style={{
+                                                    transition: '0.3s',
+                                                    transform: activeDropdown === idx + 1 ? "rotate(90deg)" : undefined
+                                                }}
+                                            />
                                         </div>
-                                        <div className={styles.countries}>
-                                            {countries?.map((cont, i) => (
-                                                <div key={i} className={styles.option}>
-                                                    <span>{t(cont?.name)}</span>
-                                                </div>
-                                            ))}
-                                        </div>
+                                        {activeDropdown === idx + 1 && (
+                                            <div className={styles.countries}>
+                                                {countries?.map((cont, i) => (
+                                                    <div key={i} className={styles.option}>
+                                                        <span>{t(cont?.name)}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
-                                )}
+                                ))}
                             </div>
                         </div>
                     }
