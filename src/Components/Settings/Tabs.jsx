@@ -46,7 +46,7 @@ import { BsFillCreditCardFill } from "react-icons/bs";
 
 const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
     const { profileIncompleteReason, userDetails, verifyToken, missingTabsData, userWithdrawals, profileCompleted } = useContext(UserContext)
-    const tabsData = [
+    const [tabsData, setTabsData] = useState([
         {
             name: "Basic Info",
             icon: basic,
@@ -141,7 +141,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             icon: dyd,
             active_icon: dyd_active,
         },
-    ]
+    ])
     const { t } = useTranslation()
     const [missingTabs, setMissingTabs] = useState([])
     const [showDropdown, setShowDropdown] = useState(false);
@@ -189,6 +189,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                 setMissingTabs([]);
             }
         }
+
     }, [userDetails, userWithdrawals, missingTabsData]);
 
     console.log(missingTabsData)
@@ -198,12 +199,20 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             setCurrentTab(account_type === "individual" ? "Identity Verification" : "Business Verification")
         }
     }, [tab, userDetails])
+
+    useEffect(() => {
+        if (userDetails?._id) {
+            if (!userDetails?.user?.financial_answers || userDetails?.user?.financial_answers.length === 0) {
+                setTabsData(tabsData?.filter(t => t.name !== "Financial Info"))
+            }
+        }
+    }, [userDetails])
     return (
         <div style={{ overflowX: width < 1000 && "visible" }} className={styles.container}>
             {(missingTabsData.length > 0 && width > 1000 && profileCompleted) &&
                 <div className={styles.missingTabs}>
                     <span>
-                       {t("Please complete the following important steps")}
+                        {t("Please complete the following important steps")}
                     </span>
                     {missingTabs?.map(item => (
                         <div

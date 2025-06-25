@@ -19,8 +19,10 @@ import { InactivityContext } from "../InactivityWrapper";
 import InactivityCountDownTimer from "../Components/InactivityCounter";
 import SourceOfFunds from "../Components/SourceOfFundsModal";
 import AddBeneficiaryAddressModal from "../Components/AddBeneficiaryAddressModal";
-import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import FinancialInfoModal from "../Components/FinancialInfoModal";
+import success from "../Components/Auth/files/success.gif"
+
 
 
 export const MobileSbContext = createContext(null);
@@ -104,6 +106,7 @@ const Layout = ({ children, classNames, ...rest }) => {
     beneficiaries,
     getUserBeneficiaries
   } = useContext(UserContext)
+  const [showSuccessModal, setShowSuccessModal] = useState()
 
 
   const beneficiaryWithoutAddresses = useMemo(() => {
@@ -259,8 +262,8 @@ const Layout = ({ children, classNames, ...rest }) => {
           &&
           <FinancialInfoModal
             isOpen={is30DaysInfo}
-            toggle={() => { }}
             toggleOnSuccess={() => setIs30DaysInfo(!is30DaysInfo)}
+            setShowSuccessModal={setShowSuccessModal}
           />
         }
 
@@ -269,6 +272,7 @@ const Layout = ({ children, classNames, ...rest }) => {
             isOpen={threeDaysReminderInfo}
             toggle={() => set3DaysReminderInfo(!threeDaysReminderInfo)}
             toggleOnSuccess={() => set3DaysReminderInfo(!threeDaysReminderInfo)}
+            setShowSuccessModal={setShowSuccessModal}
           />
         }
         {
@@ -284,6 +288,17 @@ const Layout = ({ children, classNames, ...rest }) => {
               toggle={() => set3DaysReminder(!threeDaysReminder)}
             />
         }
+        <Modal toggle={() => setShowSuccessModal(false)} isOpen={showSuccessModal}>
+          <ModalHeader toggle={() => setShowSuccessModal(false)}>
+            Questions Added
+          </ModalHeader>
+          <ModalBody>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: 'center', flexDirection: 'column' }}>
+              <img width={300} src={success} alt="" />
+              <h4 style={{ textAlign: "center" }}>Your Financial Questions are all added successfully.</h4>
+            </div>
+          </ModalBody>
+        </Modal>
         {
           window.innerWidth > 1000
             ?

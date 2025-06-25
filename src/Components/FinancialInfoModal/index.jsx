@@ -12,10 +12,9 @@ import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import axios from 'axios'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import { toast } from 'react-toastify'
-import success from "../Auth/files/success.gif"
 import useWindowWidth from '../../utils/useWindowWidth'
 
-const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess }) => {
+const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessModal }) => {
     const [activeStep, setActiveStep] = useState()
     const [textAreaValue, setTextAreaValue] = useState("")
     const [selectedProfessions, setSelectedProfessions] = useState([])
@@ -28,7 +27,6 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess }) => {
     const { t } = useTranslation()
     const [loading, setLoading] = useState()
     const { userDetails, authHeader } = useContext(UserContext)
-    const [showSuccessModal, setShowSuccessModal] = useState()
 
     const handleSearch = (query) => {
         setSearchQuery(query)
@@ -215,7 +213,6 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess }) => {
 
 
             setQuestions(prev => prev.filter(q => q.type !== activeStep))
-            toast.success(t("Answer Added Successfully"))
         } catch (error) {
             const dec = decryptData(error.response.data.data)
             toast.error(dec?.message || t("Something went wrong while adding your answer"))
@@ -400,13 +397,17 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess }) => {
     )
     return (
         <>
-            <Modal style={{ minWidth: width > "1100px" && "1100px" }} isOpen={isOpen} toggle={toggle}>
+            <Modal style={{ minWidth: width > 1100 && "1100px" }} isOpen={isOpen}>
                 <ModalBody style={{ padding: "12px", background: "#E5E5E5" }} >
                     {width > 1100 ?
                         (
                             <div className={styles.container}>
                                 <div style={{ backgroundImage: `url(${back})` }} className={styles.left}>
                                     <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", gap: "15px" }}>
+                                        {toggle
+                                            &&
+                                            <p onClick={toggle} style={{ fontSize: "10px", fontWeight: 600, color: 'white', marginBottom: '0px', cursor: "pointer" }}>Cancel</p>
+                                        }
                                         <span className={styles.label}>{t("Individual")}</span>
                                         <h1>Tell us more about you..</h1>
                                     </div>
@@ -433,7 +434,13 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess }) => {
                             <div style={{ gridTemplateColumns: "1fr" }} className={styles.container}>
                                 <div style={{ backgroundImage: `url(${back})` }} className={styles.left}>
                                     <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", gap: "15px" }}>
-                                        <span className={styles.label}>{t("Individual")}</span>
+                                        <div>
+                                            {toggle
+                                                &&
+                                                <p onClick={toggle} style={{ fontSize: "12px", fontWeight: 600, color: 'white', marginBottom: '10px', cursor: "pointer" }}>Cancel</p>
+                                            }
+                                            <span className={styles.label}>{t("Individual")}</span>
+                                        </div>
                                         <h1>Tell us more about you..</h1>
                                     </div>
                                     <div style={{ padding: "0px", background: "transparent" }} className={styles.questions}>
@@ -466,19 +473,6 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess }) => {
                             </div>
                         )
                     }
-                </ModalBody>
-            </Modal>
-
-
-            <Modal toggle={() => setShowSuccessModal(false)} isOpen={showSuccessModal}>
-                <ModalHeader toggle={() => setShowSuccessModal(false)}>
-                    Questions Added
-                </ModalHeader>
-                <ModalBody>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: 'center', flexDirection: 'column' }}>
-                        <img width={300} src={success} alt="" />
-                        <h4 style={{ textAlign: "center" }}>Your Financial Questions are all added successfully.</h4>
-                    </div>
                 </ModalBody>
             </Modal>
         </>
