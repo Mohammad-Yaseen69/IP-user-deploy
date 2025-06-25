@@ -7,8 +7,6 @@ import { Link } from 'react-router-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import ADCard from './ADCard'
 import { EffectCards } from 'swiper'
-import axios from 'axios'
-import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import OtherBalance from './OtherBalance'
 
 const WalletsMobile = ({ setCurrentWallet }) => {
