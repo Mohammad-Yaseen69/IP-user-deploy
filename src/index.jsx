@@ -55,7 +55,7 @@ Sentry.init({
     beforeSend(event, hint) {
         if (!event.exception) return null;
 
-        // if (process.env.NODE_ENV === 'development') return null;
+        if (process.env.NODE_ENV === 'development') return null;
 
         return event;
     },

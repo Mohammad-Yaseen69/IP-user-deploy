@@ -1,5 +1,4 @@
 import { useContext, useEffect, useMemo, useReducer } from "react";
-import { useLocation } from "react-router";
 import { UserContext } from "../../../Context/UserContext";
 import axios from "axios";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
@@ -23,7 +22,6 @@ import Providers from "./Providers";
 import CreditCard from "../../PaymentsNewer/InternationalFlow/CreditCard";
 import PaypalCurrencies from "../PaypalCurrencies.json"
 import wallet_ic from "../files/add_f_ic.png"
-import { getLimits } from "../../WalletsNew";
 const initialState = {
     step: 1,
     wallet: null,
@@ -194,7 +192,7 @@ const WalletFundsFlow = ({ setAction }) => {
             dataHandler("loading", true)
             if (data.mobile_wallet_service?.payment_page_id) {
                 try {
-                    const data = {
+                    const dataa = {
                         wallet_id: data.wallet?._id,
                         country_iso_code: userDetails?.country_iso_code,
                         payment_page_id: data.mobile_wallet_service?.payment_page_id,
@@ -204,7 +202,7 @@ const WalletFundsFlow = ({ setAction }) => {
                         service_name: data.channel?.sub_name
                     }
 
-                    const encrypted = encryptData(data)
+                    const encrypted = encryptData(dataa)
                     const res = await axios.post(
                         `${process.env.REACT_APP_IP_DEV_API}/api/collection/get-rates`,
                         {
@@ -365,24 +363,6 @@ const WalletFundsFlow = ({ setAction }) => {
         }
     }
 
-    const getExchangedAmounts = async (from, to, amount) => {
-        if(amount == undefined) return
-        dataHandler("loading", true)
-        try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
-                headers: authHeader
-            });
-            const dec = decryptData(res?.data?.data);
-            return dec?.exchangeRate?.exchanged_amount ?? 0;
-        } catch (error) {
-            dataHandler("error", "Something went wrong while getting PayPal Amount.")
-            return 0; // return 0 in case of error
-        }
-        finally {
-            dataHandler("loading", false)
-        }
-    };
-
     // useEffect(() => {
     //     if (data.channel?.value === "paypal" && !PaypalCurrencies.some(item => item === data.wallet?.currency?.code)) {
     //         getExchangedAmounts(data.wallet?.currency?.code, "USD", data.amount)
@@ -414,6 +394,7 @@ const WalletFundsFlow = ({ setAction }) => {
                         (contentYear === currentYear && contentMonth > currentMonth);
                     return !data.selectedSavedCard?._id && (!data.cardNumber || !data.expiry || !isValidExpiry || !data.cvc || data.cvc?.length < 3 || !data.cardHolderName)
                 }
+            break;    
             default:
                 return false;
         }
@@ -706,7 +687,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                                 }
 
                                                 {
-                                                    data.step == 4
+                                                    data.step === 4
                                                         ?
                                                         (
                                                             data.channel?.sub_name === "wallet"
@@ -986,7 +967,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                                 }
 
                                                 {
-                                                    data.step == 4
+                                                    data.step === 4
                                                         ?
                                                         (
                                                             data.channel?.value === "mobile"
