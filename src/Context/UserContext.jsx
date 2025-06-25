@@ -134,6 +134,8 @@ const UserState = ({ children }) => {
     })
     const [pAddressData, setPAddressData] = useState({})
     const [missingTabsData, setMissingTabsData] = useState([])
+    const [available, setAvailable] = useState([])
+    const [blocked, setBlocked] = useState([])
 
     const authHeader = {
         "Authorization": `Bearer ${token}`,
@@ -338,10 +340,38 @@ const UserState = ({ children }) => {
     }
 
 
-    // user wallets
+    const getExchangedAmounts = async (from, to, amount) => {
+        if (amount) {
+            try {
+                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
+                    headers: authHeader
+                });
+                const dec = decryptData(res?.data?.data);
+                return dec?.exchangeRate?.exchanged_amount ?? 0;
+            } catch (error) {
+                return 0;
+            } finally {
+            }
+        } else {
+            return 0
+        }
+    };
+
+
+    const calculateAvailable = async (wallets) => {
+        const promises = wallets.filter(item => item?.wallet_type === "insta").map(item => getExchangedAmounts(item?.currency?.code, "USD", item?.balance?.available));
+        const balances = await Promise.all(promises);
+        return balances
+    }
+
+    const calculateBlocked = async (wallets) => {
+        const promises = await wallets.filter(item => item?.wallet_type === "insta").map(item => getExchangedAmounts(item?.currency?.code, "USD", item?.balance?.reserved));
+        const balances = await Promise.all(promises);
+        return balances
+    }
     const getUserWallets = (dontSort) => {
         axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-user-wallet/${userDetails?._id}`, { headers: authHeader })
-            .then(res => {
+            .then(async (res) => {
                 const decrypted = decryptData(res.data.data)
                 const sorted = decrypted.walletList.sort((a, b) => {
                     if (a.wallet_type === 'insta' && b.wallet_type === 'crypto') {
@@ -354,13 +384,22 @@ const UserState = ({ children }) => {
 
                 if (dontSort) {
                     setUserWallets(sorted)
+                    const availableBalance = await calculateAvailable(sorted)
+                    const blockedBalance = await calculateBlocked(sorted)
+                    setAvailable(availableBalance)
+                    setBlocked(blockedBalance)
                 } else {
                     const defaultWallet = decrypted.walletList.find(w => w.default);
                     const otherWallets = sorted.filter(w => !w.default);
-                    setUserWallets(defaultWallet ? [defaultWallet, ...otherWallets] : otherWallets);
+                    const wallets = defaultWallet ? [defaultWallet, ...otherWallets] : otherWallets
+                    const availableBalance = await calculateAvailable(wallets)
+                    const blockedBalance = await calculateBlocked(wallets)
+                    setAvailable(availableBalance)
+                    setBlocked(blockedBalance)
+                    setUserWallets(wallets);
                 }
             })
-            .catch(err => "a") // console.log(decryptData(err.response.data.data)))
+            .catch(err => "a")
     }
 
     const getPAddressDets = async () => {
@@ -387,6 +426,9 @@ const UserState = ({ children }) => {
             getPAddressDets()
         }
     }, [userDetails])
+
+
+
 
     // user beneficiaries
     const getUserBeneficiaries = async () => {
@@ -665,7 +707,6 @@ const UserState = ({ children }) => {
                         headers: authHeader
                     })
                     const dec = decryptData(res.data.data)
-                    console.log('financialQuestions', dec)
                     setIs30DaysInfo(dec?.thirtyDaysCheck)
                     if (!dec?.thirtyDaysCheck) {
                         set3DaysReminderInfo(dec?.currentCheck)
@@ -684,7 +725,7 @@ const UserState = ({ children }) => {
 
 
     return (
-        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData }}>
+        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked }}>
             {showModalState && <Modal isOpen={showModalState} toggle={() => window.history.replaceState(null, null, "")} />}
             {children}
         </UserContext.Provider>

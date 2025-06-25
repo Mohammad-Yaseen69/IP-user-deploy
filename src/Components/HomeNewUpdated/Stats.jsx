@@ -8,7 +8,6 @@ import { UserContext } from '../../Context/UserContext';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import InstaPayLoader from '../Loader';
 import styles from "./styles/Stats.module.css"
-import { Calendar } from 'react-feather';
 import { service_name_formatter } from '../TransactionsNewApi/TransactionItem';
 
 export function getMonthName(dateString) {
@@ -70,7 +69,7 @@ const Stats = ({ currentWallet }) => {
     const chartRef = useRef(null);
     const chartRefMobile = useRef(null);
     const { t } = useTranslation()
-    const { authHeader, userDetails } = useContext(UserContext)
+    const { authHeader } = useContext(UserContext)
     const [isLoading, setIsLoading] = useState(true)
 
     const dateRanges = useMemo(() => {
@@ -285,7 +284,7 @@ const Stats = ({ currentWallet }) => {
             yaxis: {
                 labels: {
                     formatter: function (val) {
-                        if (val == 0) {
+                        if (val === 0) {
                             return "0"
                         }
                         return `${(val < 100000 ? val / 1000 : val / 1000000).toString()}${val < 100000 ? "K" : "M"}`;

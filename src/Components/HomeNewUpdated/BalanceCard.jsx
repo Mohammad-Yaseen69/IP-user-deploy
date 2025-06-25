@@ -3,46 +3,27 @@ import { Card, CardBody } from 'reactstrap';
 import styles from "./styles/balance.module.css"
 import { useTranslation } from 'react-i18next';
 import { UserContext } from '../../Context/UserContext';
-import axios from 'axios';
-import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 
 const BalanceComponent = () => {
     const { t } = useTranslation()
-    const { userWallets, authHeader } = useContext(UserContext)
-
-
+    const { available } = useContext(UserContext)
     const [isLoading, setIsLoading] = useState(true)
     const [totalBalance, setTotalBalance] = useState(0)
 
-    const getExchangedAmounts = async (from, to, amount) => {
-        if(amount === undefined) {return 0}
-        setIsLoading(true);
-        try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
-                headers: authHeader
-            });
-            const dec = decryptData(res?.data?.data);
-            return dec?.exchangeRate?.exchanged_amount ?? 0;
-        } catch (error) {
-            return 0;
-        } finally {
-            // setIsLoading(false);
-        }
-    };
+
 
     useEffect(() => {
-        if (userWallets?.length > 0) {
+        if (available) {
             const calculateTotal = async () => {
-                const promises = userWallets.filter(item => item?.wallet_type === "insta").map(item => getExchangedAmounts(item?.currency?.code, "USD", item?.balance?.available));
-                const balances = await Promise.all(promises);
-                const total = balances.reduce((acc, balance) => acc + balance, 0);
+                const total = available?.reduce((acc, balance) => acc + balance, 0);
                 setTotalBalance(total ?? 0);
                 setIsLoading(false)
             };
 
+
             calculateTotal();
         }
-    }, [userWallets]);
+    }, [available])
 
     return (
         <Card style={{ marginBottom: 0, minWidth: "220px", flex: 2, background: "#fafafa", boxShadow: "0px 0px 146px 0px rgba(109, 41, 220, 0.05) inset" }}>

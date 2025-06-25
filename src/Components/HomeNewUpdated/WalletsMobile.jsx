@@ -13,47 +13,24 @@ import OtherBalance from './OtherBalance'
 
 const WalletsMobile = ({ setCurrentWallet }) => {
     const { t } = useTranslation()
-    const { userWallets, totalReferralAmount, authHeader } = useContext(UserContext)
-    const [defaultAmount, setDefaultAmount] = useState("$0.00")
+    const { userWallets, totalReferralAmount, available } = useContext(UserContext)
     const [activeDot, setActiveDot] = useState(0)
-
-    // useEffect(() => {
-    //     const defaultWallet = userWallets?.filter(item => item?.default)?.[0]
-    //     setDefaultAmount(`${defaultWallet?.currency?.code ?? ""}${defaultWallet?.balance?.available?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? ""}`)
-    // }, [userWallets])
     const [isLoading, setIsLoading] = useState(true)
     const [totalBalance, setTotalBalance] = useState(0)
 
-    const getExchangedAmounts = async (from, to, amount) => {
-        if(amount == undefined) return
-        setIsLoading(true);
-        try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
-                headers: authHeader
-            });
-            const dec = decryptData(res?.data?.data);
-            return dec?.exchangeRate?.exchanged_amount ?? 0;
-        } catch (error) {
-            return 0;
-        } finally {
-            // setIsLoading(false);
-        }
-    };
 
     useEffect(() => {
-        if (userWallets?.length > 0) {
+        if (available) {
             const calculateTotal = async () => {
-                const wallets = userWallets.filter(item => item?.wallet_type === "insta")
-                const promises = wallets.map(item => getExchangedAmounts(item?.currency?.code, "USD", item?.balance?.available));
-                const balances = await Promise.all(promises);
-                const total = balances.reduce((acc, balance) => acc + balance, 0);
+                const total = available?.reduce((acc, balance) => acc + balance, 0);
                 setTotalBalance(total ?? 0);
                 setIsLoading(false)
+                console.log(total)
             };
 
             calculateTotal();
         }
-    }, [userWallets]);
+    }, [available]);
 
     useEffect(() => {
         setCurrentWallet(userWallets?.[activeDot])
