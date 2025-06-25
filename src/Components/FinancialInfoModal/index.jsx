@@ -13,6 +13,7 @@ import axios from 'axios'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import { toast } from 'react-toastify'
 import useWindowWidth from '../../utils/useWindowWidth'
+import LanguagePicker from '../LanguagePicker'
 
 const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessModal }) => {
     const [activeStep, setActiveStep] = useState()
@@ -213,7 +214,7 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
 
 
             setQuestions(prev => prev.filter(q => q.type !== activeStep))
-            } catch (error) {
+        } catch (error) {
             const dec = decryptData(error.response.data.data)
             toast.error(dec?.message || t("Something went wrong while adding your answer"))
         }
@@ -403,15 +404,22 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
                         (
                             <div className={styles.container}>
                                 <div style={{ backgroundImage: `url(${back})` }} className={styles.left}>
-                                    <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", gap: "15px" }}>
-                                        {toggle
-                                            &&
-                                            <p onClick={toggle} style={{ fontSize: "10px", fontWeight: 600, color: 'white', marginBottom: '0px', cursor: "pointer" }}>Cancel</p>
-                                        }
-                                        <span className={styles.label}>{t("Individual")}</span>
-                                        <h1>Tell us more about you..</h1>
+                                    <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", gap: "15px", width: "100%" }}>
+                                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                            <div>
+                                                {toggle
+                                                    &&
+                                                    <p onClick={toggle} style={{ fontSize: "10px", fontWeight: 600, color: 'white', marginBottom: '10px', cursor: "pointer" }}>Cancel</p>
+                                                }
+                                                <span className={styles.label}>{t("Individual")}</span>
+                                            </div>
+
+
+                                            <LanguagePicker backgroundWhite={true} />
+                                        </div>
+                                        <h1>{t("Tell us more about you")}..</h1>
                                     </div>
-                                    <div style={{ minHeight: '550px' }} className={styles.questions}>
+                                    <div style={{ minHeight: '550px', zIndex: 1 }} className={styles.questions}>
                                         {questions.map((question, index) => (
                                             <div onClick={() => setActiveStep(question?.type)} style={{ opacity: question.type !== activeStep && 0.3, width: width < 1100 && "90%", flexShrink: "0" }} key={index} className={styles.question}>
                                                 <div>
@@ -433,17 +441,22 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
                         (
                             <div style={{ gridTemplateColumns: "1fr" }} className={styles.container}>
                                 <div style={{ backgroundImage: `url(${back})` }} className={styles.left}>
-                                    <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", gap: "15px" }}>
-                                        <div>
-                                            {toggle
-                                                &&
-                                                <p onClick={toggle} style={{ fontSize: "12px", fontWeight: 600, color: 'white', marginBottom: '10px', cursor: "pointer" }}>Cancel</p>
-                                            }
-                                            <span className={styles.label}>{t("Individual")}</span>
+                                    <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", gap: "15px", width: "100%" }}>
+                                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                            <div>
+                                                {toggle
+                                                    &&
+                                                    <p onClick={toggle} style={{ fontSize: "10px", fontWeight: 600, color: 'white', marginBottom: '10px', cursor: "pointer" }}>Cancel</p>
+                                                }
+                                                <span className={styles.label}>{t("Individual")}</span>
+                                            </div>
+
+
+                                            <LanguagePicker backgroundWhite={true} />
                                         </div>
-                                        <h1>Tell us more about you..</h1>
+                                        <h1>{t("Tell us more about you")}..</h1>
                                     </div>
-                                    <div style={{ padding: "0px", background: "transparent" }} className={styles.questions}>
+                                    <div style={{ padding: "0px", background: "transparent",zIndex: 1 }} className={styles.questions}>
                                         {questions.map((question, index) => (
                                             <React.Fragment key={index}>
                                                 <div

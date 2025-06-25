@@ -8,7 +8,7 @@ import axios from "axios"
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import { UserContext } from "../../Context/UserContext"
 
-const LanguagePicker = ({ size = "24" }) => {
+const LanguagePicker = ({ size = "24", backgroundWhite }) => {
     const { i18n, t } = useTranslation()
     const [showDropDown, setShowDropDown] = useState()
     const [currentLang, setCurrentLang] = useState(localStorage.getItem("i18nextLng"))
@@ -249,7 +249,8 @@ const LanguagePicker = ({ size = "24" }) => {
                         alignItems: "center",
                         borderRadius: "10px",
                         border: "1.11414px solid rgba(0, 0, 0, 0.08)",
-                        cursor: "pointer"
+                        cursor: "pointer",
+                        background:   backgroundWhite && "white"
                     }} onClick={() => setShowDropDown(!showDropDown)}>
                         <GlobeSVG size={size} />
                     </Col>
@@ -267,7 +268,9 @@ const LanguagePicker = ({ size = "24" }) => {
                         width: "100%",
                         zIndex: 1000,
                         containerType: "inline-size",
-                        flex: 1
+                        flex: 1,
+                        background :backgroundWhite && 'white',
+                        zIndex: backgroundWhite &&  999,
                     }} className={styles.active}>
                         <GlobeSVG size={size} />
                         <span style={{
