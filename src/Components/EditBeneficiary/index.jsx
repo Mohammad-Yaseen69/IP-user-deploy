@@ -556,7 +556,20 @@ const EditBeneficiary = () => {
 
     // bank details
     useEffect(() => {
-        if (formData.bank_name && formData.branch_name && formData.bank_account_number && formData.bank_postal_code && formData.bank_branch_street && formData.bank_city && formData.bank_province && Object.keys(bankExtras).filter(item => serviceFieldInfoValidate(services?.find(item => item?.name?.toLowerCase()?.includes("bank")), "credit_party_identifiers_accepted", item)).every(item => bankExtras?.[item]?.length > 0)) {
+        const fields = services?.find(item =>
+            item?.name?.toLowerCase()?.includes("bank")
+        )
+
+        const resultKeys = Object.keys(bankExtras)
+            .filter(item =>
+                serviceFieldInfoValidate(fields, "credit_party_identifiers_accepted", item)
+            )
+            .filter(item => {
+                if (item === "iban" && accNumType === "IBAN") return false
+                if (item === "swift_bic_code" && accNumType === "Swift") return false
+                return true
+            })
+        if (formData.bank_name && formData.branch_name && formData.bank_account_number && formData.bank_postal_code && formData.bank_branch_street && formData.bank_city && formData.bank_province && resultKeys.every(item => bankExtras?.[item]?.length > 0)) {
             setCompletedBank(true)
         } else {
             setCompletedBank(false)
