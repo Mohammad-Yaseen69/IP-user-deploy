@@ -85,11 +85,11 @@ const ADCard = ({ data, isActive }) => {
                             <h5>{data.currency?.code} {Number(data.balance.available + data.balance.reserved)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
                         </div>
                         <div style={{ display: "flex", flexDirection: "column" }}>
-                            <div style={{ padding: "0px", background: "none", flex: 1, justifyContent: window.innerWidth < 500 && "flex-start", gap: "4px" }} className={`${r_styles.flex} ${r_styles.r_blocked}`}>
+                            <div style={{ padding: "0px", background: "none", flex: 1, justifyContent:  "flex-start", gap: "4px" }} className={`${r_styles.flex} ${r_styles.r_blocked}`}>
                                 <span style={{ fontSize: '9px', fontWeight: 600 }}>{t("Available balance")}:</span>
                                 <h5>{data.currency?.code} {Number(data.balance.available)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
                             </div>
-                            <div style={{ padding: "0px", background: "none", flex: 1, justifyContent: window.innerWidth < 500 && "flex-start", gap: "4px" }} className={`${r_styles.flex} ${r_styles.r_blocked}`} >
+                            <div style={{ padding: "0px", background: "none", flex: 1, justifyContent:  "flex-start", gap: "4px" }} className={`${r_styles.flex} ${r_styles.r_blocked}`} >
                                 <span style={{ fontSize: '9px', fontWeight: 600 }}>{t("Blocked balance")}:</span>
                                 <h5>{data.currency?.code} {Number(data.balance.reserved)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
                             </div>

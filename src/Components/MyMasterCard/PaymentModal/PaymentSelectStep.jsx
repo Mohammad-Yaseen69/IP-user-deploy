@@ -25,13 +25,15 @@ const options = [
         type: "mobile",
         text: "Mobile money (coming soon)",
         icon: Mobile,
-        hoverIcon: Mobile_h
+        hoverIcon: Mobile_h,
+        comingSoon: true
     },
     {
         type: "bank",
         text: "Bank transfer (coming soon)",
         icon: Bank,
-        hoverIcon: Bank_h
+        hoverIcon: Bank_h,
+        comingSoon: true
     },
 ]
 
@@ -43,13 +45,14 @@ const PaymentSelect = ({ setPaymentType, setStep, paymentType, marginTop, stylin
                 {options.map(option => (
                     <div
                         onClick={() => {
-                            setPaymentType(option.type)
-                            if (option.type !== "paypal" && window.innerWidth > 1000 && setStep) {
-                                setStep(2)
+                            if(!option.comingSoon){
+                                setPaymentType(option.type)
+                                if (option.type !== "paypal" && window.innerWidth > 1000 && setStep) {
+                                    setStep(2)
+                                }
                             }
                         }}
                         key={option.type}
-
                         className={`${styles.paymentOptions} ${paymentType === option.type && styles.selected}`}>
                         <div>
 

@@ -470,6 +470,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
             feeDetails={feeDetails}
             sendOtp={sendOtp}
             setStep={setStep}
+            paymentType={paymentType}
             walletState={walletState}
           />
         }

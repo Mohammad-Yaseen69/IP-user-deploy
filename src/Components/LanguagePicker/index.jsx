@@ -8,7 +8,7 @@ import axios from "axios"
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import { UserContext } from "../../Context/UserContext"
 
-const LanguagePicker = ({ size = "24", backgroundWhite }) => {
+const   LanguagePicker = ({ size = "24", backgroundWhite }) => {
     const { i18n, t } = useTranslation()
     const [showDropDown, setShowDropDown] = useState()
     const [currentLang, setCurrentLang] = useState(localStorage.getItem("i18nextLng"))

@@ -398,6 +398,16 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         if (step === 2) {
             setPaymentType("")
         }
+        if (step === 3) {
+            setWalletState({})
+            setCardDetails({
+                cardNumber: "",
+                cardExpiry: "",
+                cardCVC: "",
+                cardHolderName: "",
+            })
+            setSelectedSaveCard({});
+        }
         if (step === 4 && paymentType === "paypal") {
             setStep(prev => prev - 2)
         }
@@ -490,6 +500,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
                                     addFunds={true}
                                     setStep={setStep}
                                     cardDets={card}
+                                    paymentType={paymentType}
                                 />
                             }
 
@@ -560,7 +571,6 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             <Modal isOpen={isOpen && width > 1000} style={{ minWidth: '850px' }} toggle={handleClose}>
                 <ModalBody>
                     {renderData()}
-
                 </ModalBody>
             </Modal>
 

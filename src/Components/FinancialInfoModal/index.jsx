@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styles from "./styles/index.module.scss"
-import { Modal, ModalBody, ModalHeader } from 'reactstrap'
+import { Modal, ModalBody } from 'reactstrap'
 import back from "./back.png"
 import { limitVolume, sourceOfFunds, sourceOfWealth, volume, professions } from './data'
 import ContactBox from '../MyMasterCard/PaymentModal/ContactBox'
@@ -14,6 +14,7 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import { toast } from 'react-toastify'
 import useWindowWidth from '../../utils/useWindowWidth'
 import LanguagePicker from '../LanguagePicker'
+import { useNavigate } from 'react-router-dom'
 
 const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessModal }) => {
     const [activeStep, setActiveStep] = useState()
@@ -27,7 +28,13 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
     const [searchQuery, setSearchQuery] = useState("")
     const { t } = useTranslation()
     const [loading, setLoading] = useState()
-    const { userDetails, authHeader } = useContext(UserContext)
+    const { userDetails, authHeader, allowedCountries } = useContext(UserContext)
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/login");
+    };
 
     const handleSearch = (query) => {
         setSearchQuery(query)
@@ -39,7 +46,7 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
             )
         } else if (activeStep === "country") {
             setFilteredCountries(
-                countriesInDiffLangs[i18next.language].filter(country =>
+                availableCountries.filter(country =>
                     country.name.toLowerCase().includes(query.toLowerCase())
                 )
             )
@@ -88,7 +95,7 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
     const [questions, setQuestions] = useState([
         {
             question: "What keeps you busy these days?",
-            info: "Whether you're running a business, freelancing, creating, or simply managing your personal finances — we’d love to hear about you!",
+            info: "Whether you're running a business, freelancing, creating, or simply managing your personal finances — we'd love to hear about you!",
             step: 1,
             type: "keeps_busy"
         },
@@ -132,7 +139,23 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
 
     const [filteredProfessions, setFilteredProfessions] = useState(professions)
     const [filteredCountries, setFilteredCountries] = useState(countriesInDiffLangs[i18next.language])
+    const [availableCountries, setAvailableCountries] = useState([])
 
+
+    useEffect(() => {
+        if (Array.isArray(allowedCountries) && allowedCountries.length > 0) {
+            setFilteredCountries(
+                countriesInDiffLangs[i18next.language].filter(
+                    c => allowedCountries.some(c2 => c2.country_iso_code === c.alpha3)
+                )
+            );
+            setAvailableCountries(countriesInDiffLangs[i18next.language].filter(
+                c => allowedCountries.some(c2 => c2.country_iso_code === c.alpha3)
+            ))
+        } else {
+            setFilteredCountries(countriesInDiffLangs[i18next.language]);
+        }
+    }, [allowedCountries, i18next.language]);
 
     const isNextDisabled = () => {
         switch (activeStep) {
@@ -280,11 +303,18 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
                 </div>
                 <div style={{ padding: activeStep === "keeps_busy" && "20px", paddingTop: isMobile && "5px" }} className={styles.content}>
                     {activeStep === "keeps_busy" && (
-                        <textarea
-                            placeholder='Type your answer'
-                            value={textAreaValue}
-                            onChange={(e) => setTextAreaValue(e.target.value)}
-                        />
+                        <div style={{ position: 'relative', width: '100%' }}>
+                            <textarea
+                                placeholder={t('Type your answer')}
+                                value={textAreaValue}
+                                onChange={(e) => setTextAreaValue(e.target.value)}
+                                maxLength={250}
+                                style={{ width: '100%', height: '120px', resize: 'none' }}
+                            />
+                            <span style={{ position: 'absolute', bottom: '10px', right: '10px', fontSize: '12px', color: '#888' }}>
+                                {textAreaValue.length} / 250
+                            </span>
+                        </div>
                     )}
 
                     {activeStep !== "keeps_busy" &&
@@ -302,7 +332,7 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
                                         </defs>
                                     </svg>
                                     <input
-                                        placeholder='Search'
+                                        placeholder={t('Search')}
                                         type="text"
                                         style={{ border: "none", background: "transparent" }}
                                         value={searchQuery}
@@ -373,7 +403,7 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
                 </div>
             </div>
             <div className={styles.buttons}>
-                <ContactBox />
+                <ContactBox style={{padding: width < 500 && "0px"}}/>
 
                 <div className={styles.btns}>
                     {!checkForFirst() && (
@@ -388,9 +418,11 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
                         style={{ opacity: (isNextDisabled() || loading) && 0.4 }}
                     >
                         {t("Add")}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                            <path d="M5.25 10.5L8.75 7L5.25 3.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
+                        {width > 500 &&
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                <path d="M5.25 10.5L8.75 7L5.25 3.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        }
                     </button>
                 </div>
             </div>
@@ -399,7 +431,7 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
     return (
         <>
             <Modal style={{ minWidth: width > 1100 && "1100px" }} isOpen={isOpen}>
-                <ModalBody style={{ padding: "12px", background: "#E5E5E5" }} >
+                <ModalBody style={{ padding: width > 500 ? "12px" : "0px", background: "#E5E5E5" }} >
                     {width > 1100 ?
                         (
                             <div className={styles.container}>
@@ -415,7 +447,12 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
                                             </div>
 
 
-                                            <LanguagePicker backgroundWhite={true} />
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                                <LanguagePicker backgroundWhite={true} />
+                                                <button onClick={handleLogout} style={{ background: 'white', border: 'none', color: 'black', cursor: 'pointer', borderRadius: "10px", padding: ".5rem", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                                                </button>
+                                            </div>
                                         </div>
                                         <h1>{t("Tell us more about you")}..</h1>
                                     </div>
@@ -452,11 +489,16 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
                                             </div>
 
 
-                                            <LanguagePicker backgroundWhite={true} />
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                                <LanguagePicker backgroundWhite={true} />
+                                                <button onClick={handleLogout} style={{ background: 'white', border: 'none', color: 'black', cursor: 'pointer', borderRadius: "10px", padding: ".5rem", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                                                </button>
+                                            </div>
                                         </div>
                                         <h1>{t("Tell us more about you")}..</h1>
                                     </div>
-                                    <div style={{ padding: "0px", background: "transparent",zIndex: 1 }} className={styles.questions}>
+                                    <div style={{ padding: "0px", background: "transparent", zIndex: 1 }} className={styles.questions}>
                                         {questions.map((question, index) => (
                                             <React.Fragment key={index}>
                                                 <div
@@ -475,7 +517,7 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
                                                     <h4>{t(question.question)}</h4>
                                                 </div>
                                                 {activeStep === question.type && (
-                                                    <div style={{ width: "100%" }}>
+                                                    <div style={{ width: "100%", }}>
                                                         {rightContent("mobile")}
                                                     </div>
                                                 )}
