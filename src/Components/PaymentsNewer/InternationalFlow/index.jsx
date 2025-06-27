@@ -50,8 +50,9 @@ export const apiErrors = {
     "token_expired": "You waited too long to complete this transaction. Please try again",
     "invalid_card_details": "The card details you entered don’t match your selected country.",
     "incorrect_card": "This card does not belong to your account. Please use a valid card.",
-    "transaction_failed": "The transaction couldn’t be completed. Please try again or use a different method.",
-    "feature_not_allowed": "This feature is currently disabled for your account. Contact support for assistance."
+    "transaction_failed": "The transaction couldn't be completed. Please try again or use a different method.",
+    "feature_not_allowed": "This feature is currently disabled for your account. Contact support for assistance.",
+    "beneficiary_details_missing": "It appears that some required beneficiary details are either missing or incorrect. Please review and update the beneficiary information, ensuring all fields are properly filled, and try again."
 }
 
 
