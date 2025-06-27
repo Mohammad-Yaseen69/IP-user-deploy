@@ -177,6 +177,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         }
 
         if (paymentType === "card") {
+            data.data.token = feeDetails.token
             if (selectedSaveCard?._id) {
                 data.data.pan = selectedSaveCard?._id
             } else {
