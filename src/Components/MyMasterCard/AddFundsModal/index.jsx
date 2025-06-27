@@ -280,20 +280,20 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             otp,
             type: codeType,
             token,
-            panData: {
-                token: feeDetails.token,
-                accountId: userDetails?._id
-            }
+            // panData: {
+            //     token: feeDetails.token,
+            //     accountId: userDetails?._id
+            // }
         }
 
-        if (paymentType === "card") {
-            if (selectedSaveCard?._id) {
-                data.panData.pan = selectedSaveCard._id
-            } else {
-                data.panData.is_card_save = saveCard
-                data.panData.se_shambey = createShambeToken(cardDetail)
-            }
-        }
+        // if (paymentType === "card") {
+        //     if (selectedSaveCard?._id) {
+        //         data.panData.pan = selectedSaveCard._id
+        //     } else {
+        //         data.panData.is_card_save = saveCard
+        //         data.panData.se_shambey = createShambeToken(cardDetail)
+        //     }
+        // }
 
         const enc = encryptData(data)
 
