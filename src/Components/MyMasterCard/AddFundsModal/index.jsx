@@ -163,7 +163,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         const data = {
             data: {
                 token: feeDetails.token,
-                account: userDetails._id
+                accountId: userDetails._id
             },
             type: codeType
         }
@@ -173,7 +173,6 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         }
 
         if (paymentType === "paypal" || paymentType === "card") {
-            data.data.accountId = userDetails._id
         }
 
         if (paymentType === "card") {

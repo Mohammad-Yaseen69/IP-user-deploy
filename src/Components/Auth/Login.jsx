@@ -34,7 +34,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [isPressed, setIsPressed] = useState(false)
     const [loginToken, setLoginToken] = useState("")
     const [step, setStep] = useState(1)
-    const { profileLockTIme, setProfileLockTime, setUserDetails } = useContext(UserContext)
+    const { profileLockTIme, setProfileLockTime, setUserDetails, setShowInactivityModal } = useContext(UserContext)
     const [loginMethod, setLoginMethod] = useState("phone")
     const [currentActiveInput, setCurrentActiveInput] = useState(1)
     const [isOtpCorrect, setIsOtpCorrect] = useState(false)
@@ -396,6 +396,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         localStorage.setItem("login", true)
                         localStorage.setItem("token", token)
                         setUserDetails(dec)
+                        setShowInactivityModal(false)
                         if (dec?.country?.status) {
                             const data = await getUserInfo()
                                 .catch(() => {
@@ -549,6 +550,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     localStorage.setItem("login", true)
                     localStorage.setItem("token", token)
                     setUserDetails(dec)
+                    setShowInactivityModal(false)
                     if (dec?.country?.status) {
                         const data = await getUserInfo()
                             .catch(() => {

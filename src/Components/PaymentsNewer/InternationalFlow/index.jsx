@@ -58,6 +58,7 @@ export const apiErrors = {
 
 export const apiErrorMessage = (code) => {
     let error;
+    console.log(code, "lololo")
     for (const key in apiErrors) {
         if (code.includes(key)) {
             error = apiErrors[key]
@@ -373,7 +374,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
         }
     }
 
-    
+
 
     const getExchangeRateNew = async (amount, setLimitType, wallet_id = "", currency_code = "", avoid_balance = true, setLoading = () => { }) => {
         setLoading(true)
@@ -665,7 +666,14 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
         } catch (error) {
             const dec = decryptData(error.response.data.data)
             console.log(dec)
-            updateInternationalData("error", typeof dec === "string" ? `${dec} Quotation ID:${internationalData.created_quotation?.QuotationID}` : `${dec?.message} Quotation ID: ${internationalData.created_quotation?.QuotationID}` ?? `Something went wrong, Please try again! Quotation ID: ${internationalData.created_quotation?.QuotationID}`)
+            const error2 = apiErrorMessage(dec?.message)
+
+
+            if (error2) {
+                updateInternationalData("error", `${t(error2)} Quotation ID: ${internationalData.created_quotation?.QuotationID}` ?? `Something went wrong, Please try again! Quotation ID: ${internationalData.created_quotation?.QuotationID}`)
+            } else {
+                updateInternationalData("error", typeof dec === "string" ? `${dec} Quotation ID:${internationalData.created_quotation?.QuotationID}` : `${dec?.message} Quotation ID: ${internationalData.created_quotation?.QuotationID}` ?? `Something went wrong, Please try again! Quotation ID: ${internationalData.created_quotation?.QuotationID}`)
+            }
         }
         finally {
             setLoading(false)
@@ -755,6 +763,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
                 const error2 = apiErrorMessage(decrypted?.message)
 
+
                 if (error2) {
                     updateInternationalData("otpError", t(error2))
                 }
@@ -798,7 +807,13 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             console.log(decrypted)
             const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
             updateInternationalData("otpError", decrypted?.message ?? "You have entered wrong OTP.")
-            if (error) {
+            const error2 = apiErrorMessage(decrypted?.message)
+
+
+            if (error2) {
+                updateInternationalData("otpError", t(error2))
+            }
+            else if (error) {
                 updateInternationalData("otpError", error)
             } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                 const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
@@ -983,7 +998,15 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             console.log(decrypted)
             const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
             updateInternationalData("otpError", decrypted?.message ?? "You have entered wrong OTP.")
-            if (error) {
+
+
+            const error2 = apiErrorMessage(decrypted?.message)
+
+
+            if (error2) {
+                updateInternationalData("otpError", t(error2))
+            }
+            else if (error) {
                 updateInternationalData("otpError", error)
             } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                 const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
