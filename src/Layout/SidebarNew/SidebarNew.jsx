@@ -30,14 +30,14 @@ const SidebarNew = ({ setShowModal, showModal }) => {
         setWidth(window.innerWidth - 500);
         setMobileView(window.innerWidth <= 670)
     };
-    const id = window.location.pathname.split("/").pop();
+    const id = window.location.pathname.split("/")?.pop();
     const layout = id;
     useEffect(() => {
         setLeftArrow(true);
     }, []);
 
     useEffect(() => {
-        document.querySelector(".left-arrow").classList.add("d-none");
+        document.querySelector(".left-arrow")?.classList?.add("d-none");
         window.addEventListener("resize", handleResize);
         handleResize();
         return () => {
