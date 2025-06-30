@@ -15,13 +15,30 @@ import AddFundsModal from "./AddFundsModal"
 import { useLocation, useNavigate } from 'react-router';
 import useWindowWidth from '../../utils/useWindowWidth';
 import CardtoCard from './CardtoCardModal';
-import { Modal, ModalBody, ModalHeader, Input } from 'reactstrap';
+import { Modal, ModalBody, ModalHeader, Input, ModalFooter } from 'reactstrap';
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 import OTPConfirmation from "../UserSettingsNew/OTPConfirmation"
 import { getDecimalPointIndex } from '../../Helper/getDecimalIndex';
 import CardtoWallet from './CardtoWallet';
 import { useTranslation } from 'react-i18next';
-
+import { DateRangePicker } from 'react-date-range';
+import "./styles/modal.reset.css"
+// Add PDF and DOCX generation imports
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import {
+    Packer,
+    Document,
+    Paragraph,
+    TextRun,
+    Table,
+    TableRow,
+    TableCell,
+    HeadingLevel,
+    WidthType,
+} from "docx";
+import * as FileSaver from "file-saver";
+import img from "../../assets/images/logo/logo2.png"
 
 export const Toggle = ({ checked, onChange, isCheckbox = false }) => (
     <label className={isCheckbox ? styles.checkbox : styles.toggle}>
@@ -38,19 +55,53 @@ export const Toggle = ({ checked, onChange, isCheckbox = false }) => (
     </label>
 );
 
-const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCardDetails, setCurrentCardDetails }) => {
+// Tooltip component for local use
+const Tooltip = ({ children, targetId, isOpen, setIsOpen }) => {
+    return (
+        <>
+            {isOpen && (
+                <div style={{
+                    position: 'absolute',
+                    top: '-32px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    background: '#333',
+                    color: '#fff',
+                    padding: '6px 12px',
+                    borderRadius: '4px',
+                    fontSize: '13px',
+                    whiteSpace: 'nowrap',
+                    zIndex: 1000,
+                    pointerEvents: 'none',
+                }}>
+                    {children}
+                </div>
+            )}
+        </>
+    );
+};
+
+const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCardDetails, setCurrentCardDetails, transactions }) => {
     const [checks, setChecks] = useState({
         cardStatus: true,
-        onlinePurchases: true,
-        bAndG: true,
-        contactlessPay: true
+        onlinePurchases: false,
+        bAndG: false,
+        contactlessPay: false
     });
     const swiperRef = useRef()
     const [showModals, setShowModals] = useState({
         addFunds: false,
         ctc: false,
-        ctw: false
+        ctw: false,
+        download: false
     })
+    const [dateRanges, setDateRanges] = useState({
+        startDate: "",
+        endDate: "",
+        key: 'selection',
+    })
+    const [fileType, setFileType] = useState("pdf")
+    const [downloading, setDownloading] = useState(false)
 
     const { authHeader, userDetails, setUserDetails } = useContext(UserContext)
     const [cardLoading, setCardLoading] = useState(true)
@@ -58,6 +109,15 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
     const [showEmailModal, setShowEmailModal] = useState(false)
     const [flippedCards, setFlippedCards] = useState({});
     const { t } = useTranslation()
+    const [tooltipOpen, setTooltipOpen] = useState({
+        onlinePurchases: false,
+        bAndG: false,
+        contactlessPay: false,
+        blockedCountries: false,
+        notificationSettings: false,
+        reportLost: false
+    });
+
     const handleCardFlip = (cardId) => {
         setFlippedCards(prev => ({
             ...prev,
@@ -137,13 +197,9 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
     const [showOtp, setShowOtp] = useState(false)
     const [codeType, setCodeType] = useState("sms")
 
-
-    console.log(showModals)
     const sendOtp = async (type = "") => {
         setIsSaving(true)
         setOtpType(type === "email" ? "email" : "phone")
-
-
 
         try {
             const body = {
@@ -218,6 +274,280 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
         }
         setIsSaving(false)
     }
+
+    const handleChange = (ranges) => {
+        console.log(ranges)
+        if (ranges.selection) {
+            setDateRanges(ranges.selection)
+        }
+    }
+    const handleDownload = () => {
+        let filteredTransactions = transactions;
+        if (dateRanges.startDate && dateRanges.endDate) {
+            const startDate = new Date(dateRanges.startDate);
+            startDate.setHours(0, 0, 0, 0);
+            const endDate = new Date(dateRanges.endDate);
+            endDate.setHours(23, 59, 59, 999);
+
+            filteredTransactions = filteredTransactions.filter(t => {
+                const txDate = new Date(t.createdAt);
+                return txDate >= startDate && txDate <= endDate;
+            });
+        }
+        
+        if (fileType === "pdf") {
+            generatePDF(filteredTransactions);
+        } else {
+            generateDOCX(filteredTransactions);
+        }
+    };
+
+    const generatePDF = (filteredTransactions) => {
+        setDownloading(true);
+        const tableStyles = {
+            fontSize: 8,
+        };
+        const tableHeaderStyles = {
+            fontSize: 8,
+            fillColor: [89, 38, 240],
+            textColor: [255, 255, 255],
+        };
+
+        const doc = new jsPDF();
+
+        // Add logo
+        doc.addImage(img, "png", 14, 10, 46.5, 13);
+        doc.setFont("sans-serif", "normal", "normal");
+        doc.setFontSize(10);
+        doc.text(`Transaction Statement for ${userDetails?.first_name} ${userDetails?.last_name}`, 14, 32, { maxWidth: 200 });
+        
+        const currentDate = new Date();
+        const formattedDate = `Generated on ${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
+        doc.setFont("sans-serif", "normal", "bold");
+        doc.setFontSize(10);
+        doc.text(formattedDate, 148, 17.5);
+
+        // Add card info
+        doc.setFont("sans-serif", "normal", "bold");
+        doc.setFontSize(12);
+        doc.text("Card Information:", 14, 45);
+        doc.setFont("sans-serif", "normal", "normal");
+        doc.setFontSize(10);
+        doc.text(`Card Number: •••• •••• •••• ${currentCardDetails?.card_number?.slice(-4)}`, 14, 55);
+        doc.text(`Card Type: ${cards[current]?.type === "standard" ? "Standard" : "Premium"}`, 14, 62);
+
+        // Add date range if selected
+        if (dateRanges.startDate && dateRanges.endDate) {
+            const startDate = new Date(dateRanges.startDate).toLocaleDateString();
+            const endDate = new Date(dateRanges.endDate).toLocaleDateString();
+            doc.text(`Period: ${startDate} to ${endDate}`, 14, 69);
+        }
+
+        doc.setFont("sans-serif", "normal", "bold");
+        doc.setFontSize(14);
+        doc.text("Transaction Details:", 14, 85);
+
+        // Prepare transaction data
+        const transactionBody = filteredTransactions.map(tx => [
+            new Date(tx.createdAt).toLocaleString(),
+            tx.transactionId,
+            `•••• •••• •••• ${tx.cardNo?.slice(-4) || "N/A"}`,
+            tx.type?.toUpperCase() || "N/A",
+            tx.transaction_type?.replace(/_/g, ' ').toUpperCase() || "N/A",
+            tx.reason || tx.merchantName || "N/A",
+            `${tx.currency} ${tx.txAmount?.toFixed(2) || "0.00"}`,
+            tx.status || "N/A"
+        ]);
+
+        const transactionTable = {
+            head: [['Date & Time', 'Transaction ID', 'Card No', 'Type', 'Transaction Type', 'Reason', 'Amount', 'Status']],
+            body: transactionBody,
+            startY: 95,
+            styles: tableStyles,
+            headStyles: tableHeaderStyles,
+        };
+
+        doc.autoTable(transactionTable);
+
+        const fileName = `transaction_statement_${userDetails?.first_name}_${userDetails?.last_name}_${new Date().toISOString().split('T')[0]}.pdf`;
+        doc.save(fileName);
+        setDownloading(false);
+    };
+
+    const generateDOCX = (filteredTransactions) => {
+        setDownloading(true);
+        
+        const generateTableRows = () => {
+            const rows = [];
+            
+            // Add header row
+            rows.push(
+                new TableRow({
+                    children: [
+                        new TableCell({
+                            children: [new Paragraph("Date & Time")],
+                            shading: { fill: "A9A9A9" },
+                        }),
+                        new TableCell({
+                            children: [new Paragraph("Transaction ID")],
+                            shading: { fill: "A9A9A9" },
+                        }),
+                        new TableCell({
+                            children: [new Paragraph("Card No")],
+                            shading: { fill: "A9A9A9" },
+                        }),
+                        new TableCell({
+                            children: [new Paragraph("Type")],
+                            shading: { fill: "A9A9A9" },
+                        }),
+                        new TableCell({
+                            children: [new Paragraph("Transaction Type")],
+                            shading: { fill: "A9A9A9" },
+                        }),
+                        new TableCell({
+                            children: [new Paragraph("Reason")],
+                            shading: { fill: "A9A9A9" },
+                        }),
+                        new TableCell({
+                            children: [new Paragraph("Amount")],
+                            shading: { fill: "A9A9A9" },
+                        }),
+                        new TableCell({
+                            children: [new Paragraph("Status")],
+                            shading: { fill: "A9A9A9" },
+                        }),
+                    ],
+                })
+            );
+
+            // Add transaction rows
+            filteredTransactions.forEach(tx => {
+                rows.push(
+                    new TableRow({
+                        children: [
+                            new TableCell({
+                                children: [new Paragraph(new Date(tx.createdAt).toLocaleString())],
+                            }),
+                            new TableCell({
+                                children: [new Paragraph(tx.transactionId || "N/A")],
+                            }),
+                            new TableCell({
+                                children: [new Paragraph(`•••• •••• •••• ${tx.cardNo?.slice(-4) || "N/A"}`)],
+                            }),
+                            new TableCell({
+                                children: [new Paragraph(tx.type?.toUpperCase() || "N/A")],
+                            }),
+                            new TableCell({
+                                children: [new Paragraph(tx.transaction_type?.replace(/_/g, ' ').toUpperCase() || "N/A")],
+                            }),
+                            new TableCell({
+                                children: [new Paragraph(tx.reason || tx.merchantName || "N/A")],
+                            }),
+                            new TableCell({
+                                children: [new Paragraph(`${tx.currency} ${tx.txAmount?.toFixed(2) || "0.00"}`)],
+                            }),
+                            new TableCell({
+                                children: [new Paragraph(tx.status || "N/A")],
+                            }),
+                        ],
+                    })
+                );
+            });
+
+            return rows;
+        };
+
+        const doc = new Document({
+            sections: [
+                {
+                    properties: {},
+                    children: [
+                        new Paragraph({
+                            text: `Transaction Statement`,
+                            heading: HeadingLevel.HEADING_1,
+                            bold: true,
+                            spacing: {
+                                before: 240,
+                                after: 240,
+                            },
+                        }),
+                        new Paragraph({
+                            children: [
+                                new TextRun({
+                                    text: `Transaction Statement for ${userDetails?.first_name} ${userDetails?.last_name}`,
+                                    size: 18,
+                                    spacing: {
+                                        before: 240,
+                                        after: 240,
+                                    },
+                                }),
+                            ],
+                        }),
+                        new Paragraph({
+                            children: [
+                                new TextRun({
+                                    text: `Card Number: •••• •••• •••• ${currentCardDetails?.card_number?.slice(-4)}`,
+                                    size: 16,
+                                    spacing: {
+                                        before: 120,
+                                        after: 120,
+                                    },
+                                }),
+                            ],
+                        }),
+                        new Paragraph({
+                            children: [
+                                new TextRun({
+                                    text: `Card Type: ${cards[current]?.type === "standard" ? "Standard" : "Premium"}`,
+                                    size: 16,
+                                    spacing: {
+                                        before: 120,
+                                        after: 120,
+                                    },
+                                }),
+                            ],
+                        }),
+                        ...(dateRanges.startDate && dateRanges.endDate ? [
+                            new Paragraph({
+                                children: [
+                                    new TextRun({
+                                        text: `Period: ${new Date(dateRanges.startDate).toLocaleDateString()} to ${new Date(dateRanges.endDate).toLocaleDateString()}`,
+                                        size: 16,
+                                        spacing: {
+                                            before: 120,
+                                            after: 240,
+                                        },
+                                    }),
+                                ],
+                            })
+                        ] : []),
+                        new Paragraph({
+                            text: "Transaction Details",
+                            heading: HeadingLevel.HEADING_2,
+                            bold: true,
+                            spacing: {
+                                before: 240,
+                                after: 240,
+                            },
+                        }),
+                        new Table({
+                            rows: generateTableRows(),
+                            width: {
+                                size: 100,
+                                type: WidthType.PERCENTAGE,
+                            },
+                        }),
+                    ],
+                },
+            ],
+        });
+
+        Packer.toBlob(doc).then((blob) => {
+            const fileName = `transaction_statement_${userDetails?.first_name}_${userDetails?.last_name}_${new Date().toISOString().split('T')[0]}.docx`;
+            FileSaver.saveAs(blob, fileName);
+            setDownloading(false);
+        });
+    };
 
     return (
         <>
@@ -299,10 +629,10 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                                     </span>
                                                 </div>
 
-                                                <div style={{alignItems: 'flex-end'}}>
+                                                <div style={{ alignItems: 'flex-end' }}>
                                                     <h2>{userDetails?.first_name} {userDetails?.last_name}</h2>
 
-                                                    <div style={{display: "flex", flexDirection: "column", alignItems: "flex-end", gap :'4px'}}>
+                                                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: '4px' }}>
                                                         {card?.premium_features?.apple_pay === true && <img src={ApayWhite} alt="" />}
                                                         <h3>
                                                             {t('Virtual')} <br /> {t('Card')}
@@ -472,7 +802,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                         <img src={Wallet2} alt="" />
                                         <span>{t('Card to Wallet Transfer')}</span>
                                     </div>
-                                    <div style={{ cursor: "pointer" }} className={styles.iconBox}>
+                                    <div onClick={() => openModal("download")} style={{ cursor: "pointer" }} className={styles.iconBox}>
                                         <img src={FileDown} alt="" />
                                         <span>{t('Download Statement')}</span>
                                     </div>
@@ -495,36 +825,51 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                             <h4 className={styles.title}>{t('Card Settings')}</h4>
 
                             <div style={{ display: "grid", gridTemplateColumns: window.innerWidth > 1000 ? "1fr 1fr 1fr" : "1fr", gap: "10px", width: "100%" }}>
-                                <div style={{ justifyContent: "space-between" }} className={styles.iconBox}>
-                                    <span>{t('Online Purchases')}</span>
-
+                                <div style={{ justifyContent: "space-between", position: 'relative' }} className={styles.iconBox}
+                                    onMouseEnter={() => setTooltipOpen(prev => ({ ...prev, onlinePurchases: true }))}
+                                    onMouseLeave={() => setTooltipOpen(prev => ({ ...prev, onlinePurchases: false }))}>
+                                    <span id="online-purchases-label">{t('Online Purchases')}</span>
+                                    <Tooltip isOpen={tooltipOpen.onlinePurchases}>{t('Coming soon')}</Tooltip>
                                     <Toggle checked={checks.onlinePurchases} onChange={() => handleToggle("onlinePurchases")} />
                                 </div>
-                                <div style={{ justifyContent: "space-between" }} className={styles.iconBox}>
-                                    <span>{t('Online Betting and Gambling')}</span>
-
+                                <div style={{ justifyContent: "space-between", position: 'relative' }} className={styles.iconBox}
+                                    onMouseEnter={() => setTooltipOpen(prev => ({ ...prev, bAndG: true }))}
+                                    onMouseLeave={() => setTooltipOpen(prev => ({ ...prev, bAndG: false }))}>
+                                    <span id="betting-gambling-label">{t('Online Betting and Gambling')}</span>
+                                    <Tooltip isOpen={tooltipOpen.bAndG}>{t('Coming soon')}</Tooltip>
                                     <Toggle checked={checks.bAndG} onChange={() => handleToggle("bAndG")} />
                                 </div>
-                                <div style={{ justifyContent: "space-between" }} className={styles.iconBox}>
-                                    <span>{t('Contactless Payment')}</span>
-
+                                <div style={{ justifyContent: "space-between", position: 'relative' }} className={styles.iconBox}
+                                    onMouseEnter={() => setTooltipOpen(prev => ({ ...prev, contactlessPay: true }))}
+                                    onMouseLeave={() => setTooltipOpen(prev => ({ ...prev, contactlessPay: false }))}>
+                                    <span id="contactless-label">{t('Contactless Payment')}</span>
+                                    <Tooltip isOpen={tooltipOpen.contactlessPay}>{t('Coming soon')}</Tooltip>
                                     <Toggle checked={checks.contactlessPay} onChange={() => handleToggle("contactlessPay")} />
                                 </div>
                             </div>
 
                             <div style={{ display: "grid", gridTemplateColumns: window.innerWidth > 1000 ? "1fr 1fr 1fr" : "1fr", gap: "10px", width: "100%" }}>
-                                <div className={styles.iconBox}>
-                                    <img src={CreditCardR} alt="" />
+                                <div className={styles.iconBox} style={{ position: 'relative' }}
+                                    onMouseEnter={() => setTooltipOpen(prev => ({ ...prev, blockedCountries: true }))}
+                                    onMouseLeave={() => setTooltipOpen(prev => ({ ...prev, blockedCountries: false }))}>
+                                    <img src={CreditCardR} alt="" id="blocked-countries-label" />
                                     <span>{t('Blocked Countries & Regions')}</span>
+                                    <Tooltip isOpen={tooltipOpen.blockedCountries}>{t('Coming soon')}</Tooltip>
                                 </div>
 
-                                <div className={styles.iconBox}>
-                                    <img src={Notification} alt="" />
+                                <div className={styles.iconBox} style={{ position: 'relative' }}
+                                    onMouseEnter={() => setTooltipOpen(prev => ({ ...prev, notificationSettings: true }))}
+                                    onMouseLeave={() => setTooltipOpen(prev => ({ ...prev, notificationSettings: false }))}>
+                                    <img src={Notification} alt="" id="notification-settings-label" />
                                     <span>{t('Notification Settings')}</span>
+                                    <Tooltip isOpen={tooltipOpen.notificationSettings}>{t('Coming soon')}</Tooltip>
                                 </div>
-                                <div className={styles.iconBox}>
-                                    <img src={Speaker} alt="" />
+                                <div className={styles.iconBox} style={{ position: 'relative' }}
+                                    onMouseEnter={() => setTooltipOpen(prev => ({ ...prev, reportLost: true }))}
+                                    onMouseLeave={() => setTooltipOpen(prev => ({ ...prev, reportLost: false }))}>
+                                    <img src={Speaker} alt="" id="report-lost-label" />
                                     <span>{t('Report Lost/Stolen Card')}</span>
+                                    <Tooltip isOpen={tooltipOpen.reportLost}>{t('Coming soon')}</Tooltip>
                                 </div>
                             </div>
                         </div>
@@ -614,6 +959,52 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                     setOpen={setShowModals}
                 />
             }
+            <Modal style={{ minWidth: "700px" }} isOpen={showModals.download} toggle={() => setShowModals({ ...showModals, download: false })}>
+                <ModalHeader toggle={() => setShowModals({ ...showModals, download: false })}>
+                    Download Your Statement
+                </ModalHeader>
+
+                <ModalBody>
+                    <div className='date-range-ms'>
+                        <h5 style={{ fontWeight: 600, marginBottom: "15px" }}>Select The Date Range.</h5>
+                        <DateRangePicker
+                            maxDate={new Date()}
+                            ranges={[dateRanges]}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    <div style={{ marginTop: "20px" }}>
+                        <h5 style={{ fontWeight: 600, marginBottom: "15px" }}>Select The Type.</h5>
+                        <select 
+                            style={{ width: "100%", outline: "none", padding: "7px 10px", borderRadius: "5px", borderColor: "lightgray" }} 
+                            value={fileType}
+                            onChange={(e) => setFileType(e.target.value)}
+                        >
+                            <option value="pdf">PDF</option>
+                            <option value="docx">DOCX</option>
+                        </select>
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <button 
+                        onClick={handleDownload} 
+                        disabled={downloading}
+                        style={{ 
+                            border: 'none', 
+                            outline: "none", 
+                            padding: "7px 15px", 
+                            borderRadius: "5px", 
+                            fontWeight: 600, 
+                            background: downloading ? "#ccc" : "#5526e0", 
+                            color: "white",
+                            cursor: downloading ? "not-allowed" : "pointer"
+                        }}
+                    >
+                        {downloading ? "Downloading..." : "Download"}
+                    </button>
+                </ModalFooter>
+            </Modal>
         </>
     );
 };

@@ -5,3 +5,10 @@
 .ctw-modal .modal-content {
     border-radius: 16px !important;
 }
+
+
+.date-range-ms .rdrDateRangePickerWrapper{
+    display: grid !important;
+    width: 100% !important;
+    grid-template-columns: .4fr 1fr !important;
+}

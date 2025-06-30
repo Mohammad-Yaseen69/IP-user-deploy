@@ -14,10 +14,6 @@ import useWindowWidth from '../../utils/useWindowWidth';
 import { useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
-
-
-
-
 const MyMasterCard = () => {
   const [cardPurchased, setCardPurchased] = useState(false)
   const { setTogglSidebar } = useContext(CustomizerContext)
@@ -26,7 +22,7 @@ const MyMasterCard = () => {
   const [cards, setCards] = useState([])
   const [reRender, setReRender] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [current, setCurrent] = useState(0)
+  const [current, setCurrent] = useState(1)
   const [transactions, setTransactions] = useState([])
   const width = useWindowWidth()
   const location = useLocation()
@@ -123,6 +119,7 @@ const MyMasterCard = () => {
                   setCurrent={setCurrent}
                   cards={cards}
                   setCardPurchased={setCardPurchased}
+                  transactions={transactions}
                 />
                 {((!addFundsMobile && !ctcMobile && !ctwMobile) || width > 1000)  && <TransactionsTable ref={ref} cardNo={currentCardDetails?.card_number} transactions={transactions} isLoading={loading} />}
               </>

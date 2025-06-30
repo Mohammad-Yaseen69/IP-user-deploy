@@ -4,7 +4,7 @@ import { Calendar, CreditCard, Home, Mail, Phone, User } from "react-feather";
 import { Button, Card, CardBody, CardHeader, Input, Label } from "reactstrap";
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import UserState, { UserContext } from "../../Context/UserContext";
+import { UserContext } from "../../Context/UserContext";
 import img from "../../assets/images/logo/logo2.png"
 import {
     Packer,
@@ -46,8 +46,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                 const dec = decryptData(res.data.data)
                 setSavedCards(dec?.panList)
             } catch (error) {
-                const dec = decryptData(error.response.data.data)
-                // console.log(dec)
+
             }
         }
 
@@ -100,9 +99,6 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
 
 
 
-    const toggleAccordion = () => {
-        setIsCollapsed(isCollapsed ? "download" : "");
-    };
 
     const generatePDF = () => {
         setDownloading(true)
