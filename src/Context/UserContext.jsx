@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { publicRoutes } from "../RouteNew/Routes";
 import questionsData from "../Components/Settings/questions.json"
 import Modal from "../Components/SessionExpireModal"
+import { AiOutlineConsoleSql } from "react-icons/ai";
 
 axios.defaults.timeout = 10000;
 axios.defaults.timeoutErrorMessage = "Server Timeout."
@@ -90,15 +91,30 @@ const UserState = ({ children }) => {
 
     const checkIndividualBeneficiary = async (email, phone) => {
         const data = { email, phone }
-        if (email && phone) {
+
+        if (email || phone) {
             const encrypted = encryptData(data)
             try {
-                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/account-check/individual`, {
+                await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/account-check/beneficiary`, {
                     data: encrypted
-                })
-                return decryptData(res.data.data).status
+                }, { headers: authHeader })
+
+
+                return { status: false, existType: undefined }
+
             } catch (error) {
-                return decryptData(error.response.data.data).status
+                const dec = decryptData(error.response.data.data)
+
+                if (dec?.foundVia === "email" && email) {
+                    return { status: true, existType: "email" }
+                }
+                else if (dec?.foundVia === "phone" && phone) {
+                    return { status: true, existType: "phone" }
+                }
+                else if ((email && phone) && (dec?.foundVia === "phone" || dec?.foundVia === "email")) {
+                    return { status: true, existType: "phone" }
+                }
+                return { status: false, existType: undefined }
             }
         }
     }
@@ -236,7 +252,6 @@ const UserState = ({ children }) => {
                 getImage(pAddressData?.profileImage?.url, coordinates, "pa", "dp")
             }
             else {
-                console.log(pAddressData?.coverImage?.url)
                 getImage(pAddressData?.coverImage?.url, coordinates, "pa", "cover")
             }
         }
@@ -448,22 +463,21 @@ const UserState = ({ children }) => {
         if (beneficiaries.length > 0) {
             Promise.all(beneficiaries.map(async (benef) => {
                 if (benef.beneficiary_type === "individual") {
-                    const isNotRegistered = await checkIndividualBeneficiary(benef.email, benef.phone);
-                    // // console.log(benef.email, benef.beneficiary_type, benef.phone, "not registered", isNotRegistered);
-                    return !isNotRegistered;
+                    const result = await checkIndividualBeneficiary(benef.email, benef.phone);
+                    return { ...benef, ...result };
                 } else {
-                    const isNotRegistered = await checkBusinessBeneficiary(benef.email);
-                    // // console.log(benef.email, "not registered", isNotRegistered);
-                    return !isNotRegistered;
+                    const status = await checkBusinessBeneficiary(benef.email);
+                    return { ...benef, status: !status, existType: status === false ? "email" : null };
                 }
             })).then((results) => {
-                const filtered = beneficiaries.filter((_, index) => results[index]);
+                const filtered = results.filter(b => b.status === true);
+
+                console.log(filtered)
                 setRegisteredBeneficiaries(filtered);
-                // // console.log(filtered);
             }).catch((error) => {
                 console.error("An error occurred while checking beneficiaries:", error);
             });
-        };
+        }
     }
 
     // security questions
@@ -477,8 +491,6 @@ const UserState = ({ children }) => {
                     const question = questionsData.find(it => it.language_code === (userDetails?.language ?? "en") && it.number === item?.question_no)
                     return { ...question, ...item }
                 })
-                console.log(decrypted.questionsList)
-                console.log(questions)
                 setUserSecurityQues(questions)
             })
             .catch(err => {
@@ -529,7 +541,6 @@ const UserState = ({ children }) => {
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
-                console.log(decrypted)
                 const { completedBasicFields, totalBasicFields, completedProfilePercent } = decrypted?.fieldsInformation
                 setProfileIncompleteReason(completedBasicFields !== totalBasicFields ? "basic" : "")
                 setProfileCompleted(completedProfilePercent === 100)
@@ -583,12 +594,7 @@ const UserState = ({ children }) => {
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
-                console.log(decrypted)
                 setUserVideos(decrypted.result)
-            })
-            .catch(err => {
-                const decrypted = decryptData(err.response.data.data)
-                console.log(decrypted)
             })
     }
 

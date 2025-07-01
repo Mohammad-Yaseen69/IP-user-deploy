@@ -727,10 +727,24 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
         return () => clearTimeout(timeout)
     }, [data.payment_type?.value, data.wallet?._id, data.payment_type, data.currency])
 
+    const verifyWallet = async () => {
+        try {
+            await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-active-wallet`, { data: encryptData({ walletId: data?.beneficiary_wallet?.wallet_id }) }, {
+                headers: authHeader
+            });
+            dataHandler("step", 2)
+        } catch (error) {
+            const dec = decryptData(error.response.data.data)
+            console.log(dec)
+            if (dec.status === false) {
+                dataHandler("error", "The wallet that you have selected is disabled please select another wallet.")
+            }
+        }
+    }
     const handleClick = () => {
         switch (data.step) {
             case 1:
-                dataHandler("step", 2)
+                verifyWallet()
                 break;
             case 2:
                 dataHandler("step", 3)
