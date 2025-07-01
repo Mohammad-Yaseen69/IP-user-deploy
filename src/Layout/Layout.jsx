@@ -293,7 +293,7 @@ const Layout = ({ children, classNames, ...rest }) => {
             Questions Added
           </ModalHeader>
           <ModalBody>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: 'center', flexDirection: 'column',height: "400px" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: 'center', flexDirection: 'column', }}>
               <img width={300} src={success} alt="" />
               <h4 style={{ textAlign: "center" }}>Your Financial Questions are all added successfully.</h4>
             </div>
