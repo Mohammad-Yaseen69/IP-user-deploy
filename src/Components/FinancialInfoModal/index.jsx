@@ -334,7 +334,7 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
                                     <input
                                         placeholder={t('Search')}
                                         type="text"
-                                        style={{ border: "none", background: "transparent" }}
+                                        style={{ border: "none", background: "transparent", outline: "none" }}
                                         value={searchQuery}
                                         onChange={(e) => handleSearch(e.target.value)}
                                     />

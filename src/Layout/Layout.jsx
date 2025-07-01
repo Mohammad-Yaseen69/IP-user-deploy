@@ -288,12 +288,12 @@ const Layout = ({ children, classNames, ...rest }) => {
               toggle={() => set3DaysReminder(!threeDaysReminder)}
             />
         }
-        <Modal toggle={() => setShowSuccessModal(false)} isOpen={showSuccessModal}>
+        <Modal toggle={() => setShowSuccessModal(false)} isOpen={true}>
           <ModalHeader toggle={() => setShowSuccessModal(false)}>
             Questions Added
           </ModalHeader>
           <ModalBody>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: 'center', flexDirection: 'column' }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: 'center', flexDirection: 'column',height: "400px" }}>
               <img width={300} src={success} alt="" />
               <h4 style={{ textAlign: "center" }}>Your Financial Questions are all added successfully.</h4>
             </div>
