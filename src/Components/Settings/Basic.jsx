@@ -20,7 +20,7 @@ export const currentDate = new Date();
 export const minDate = new Date(currentDate.getFullYear() - 15, currentDate.getMonth(), currentDate.getDate());
 let timeout;
 
-const Basic = ({setCurrentTab}) => {
+const Basic = ({ setCurrentTab }) => {
     const { t } = useTranslation()
     const { userDetails, authHeader, verifyToken, missingTabsData, userWallets } = useContext(UserContext);
     const [company, setCompany] = useState('');
@@ -47,6 +47,7 @@ const Basic = ({setCurrentTab}) => {
     const [codeType, setCodeType] = useState("")
     const [otpType, setOtpType] = useState("")
     const [showNextStepModal, setShowNextStepModal] = useState(false)
+    const [loading, setLoading] = useState()
 
     useEffect(() => {
         setCodeType("sms")
@@ -72,6 +73,7 @@ const Basic = ({setCurrentTab}) => {
             return;
         };
         setUsernameValid(false)
+        setLoading(true)
         const data = {
             username: value
         }
@@ -93,6 +95,8 @@ const Basic = ({setCurrentTab}) => {
                     setUsernameValid(decrypted.status)
                     setUserNameError("Username not available.")
                 }
+            }).finally(() => {
+                setLoading(false)
             })
     }
 
@@ -313,13 +317,13 @@ const Basic = ({setCurrentTab}) => {
 
     const handleUsernameChange = (e) => {
         const value = e.target.value;
-        if (value.length >= 30) return;
+        if (value.length > 30) return;
         if (/^[a-zA-Z0-9_]*$/.test(value)) {
             setUsername(value?.trim()?.toLowerCase());
             if (timeout) {
                 clearTimeout(timeout)
             }
-            if (value.length > 6) {
+            if (value.length >= 6) {
                 timeout = setTimeout(() => {
                     checkUsername(value?.trim()?.toLowerCase())
                 }, 1000)
@@ -476,9 +480,22 @@ const Basic = ({setCurrentTab}) => {
                         {t("Username")}
                         {!username && <span style={{ color: "red" }}>{t("(Required)")}</span>}
                     </Label>
-                    <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} style={{
-                        borderColor: !isEditMode ? "#eeeeee" : usernameValid ? "green" : "red",
-                    }} value={username} onChange={handleUsernameChange} onFocus={() => setShowUsernameGuide(true)} onBlur={() => setShowUsernameGuide(false)} />
+                    <div style={{ position: "relative" }}>
+                        <Input disabled={!isEditMode} readOnly={!isEditMode} style={{
+                            borderColor: !isEditMode ? "#eeeeee" : usernameValid ? "green" : "red",
+                        }} value={username} onChange={handleUsernameChange} onFocus={() => setShowUsernameGuide(true)} onBlur={() => setShowUsernameGuide(false)} />
+
+
+                        {loading &&
+                            <div style={{ position: "absolute", right: "7px", top: "7px" }}>
+                                <div class="d-flex justify-content-center">
+                                    <div class="spinner-border" color='primary' role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
                     {
                         (username && usernameError) &&
                         <div style={{ fontSize: ".8rem", fontWeight: 600, color: "red", marginTop: "5px" }}>{usernameError}</div>
