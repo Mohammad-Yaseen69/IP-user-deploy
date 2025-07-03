@@ -66,12 +66,13 @@ const RecentBeneficiary = ({ data, dataHandler, setExpandRecent, expandRecent })
             style={{ maxHeight: (expandRecent || width < 1000) && "400px" }}
             onMouseEnter={() => {
                 if (width > 1000) {
+                    
                     setExpandRecent(true)
                 }
             }}
-            // onMouseLeave={() => {
-            //     setExpandRecent(false)
-            // }}  
+                // onMouseLeave={() => {
+                //     setExpandRecent(false)
+                // }}  
             className={styles.container}
         >
             <h1> {t("Beneficiaries")} </h1>

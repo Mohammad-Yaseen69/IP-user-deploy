@@ -99,6 +99,8 @@ function reducer(state, action) {
                 [action.field]: action.value
             };
         // other cases can be added here
+        case "RESET":
+            return initialState
         default:
             return state;
     }
@@ -112,8 +114,13 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
     const dataHandler = (field, value) => {
         dispatch({ type: "UPDATE_FIELD", field, value });
     };
+
+    const resetStates = () => {
+        dispatch({ type: "RESET" })
+    }
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
+
 
     const payment_type = queryParams.get("payment_type")
 
@@ -128,7 +135,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
     useEffect(() => {
         if (data.wallet?._id) {
             if (data?.wallet?._id === data?.currency?._id) return;
-            dataHandler("currency", data.wallet)
+            // dataHandler("currency", data.wallet)
         } else {
             if (userWallets?.length > 0) {
                 const def = userWallets?.[0]?.wallet_type === "insta" && !userWallets?.[0]?.blocked && !userWallets?.[0]?.admin_blocked && userWallets?.[0]?.status?.toLowerCase() === "active"
@@ -922,7 +929,10 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                             title={t("Wallet to Wallet Transfer")}
                             icon={wallet_ic}
                             desc={t("Instantly transfer money to other InstaPay users with our secure wallet-to-wallet \nservice. Send and receive funds hassle-free within seconds.")}
-                            setter={setSendPaymentType}
+                            setter={(val) => {
+                                setSendPaymentType(val)
+                                resetStates()
+                            }}
                             setterValue="wallet"
                             setStep={setStep}
                             showDesc={sendPaymentType === "wallet"}

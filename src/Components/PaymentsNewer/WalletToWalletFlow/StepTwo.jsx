@@ -12,7 +12,7 @@ import { formatCurrency } from "../../../Helper/AmountFormat"
 import { cleanString } from "../../../Helper/cleanString"
 
 let api_timeout;
-const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
+const StepTwo = ({ data, dataHandler, getExchangeRate, showFee }) => {
     const { userDetails, userWallets } = useContext(UserContext)
     const { t } = useTranslation()
     const [limitType, setLimitType] = useState("")
@@ -112,20 +112,6 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
         formatCurrency(e.target.value, true, setValueR);
     };
 
-    const getDecimalPointIndex = (val) => {
-        if (val) {
-            const [_, decimals] = val?.toString()?.split(".");
-
-            if (decimals) {
-                for (let idx = 0; idx < decimals.length; idx++) {
-                    if (decimals[idx] !== "0") {
-                        return idx + 1;
-                    }
-                }
-            }
-        }
-    }
-
     return (
         <div className={styles.container}>
             <div className={styles.amount_and_currency}>
@@ -203,22 +189,22 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                             textAlign: "center"
                         }}>
                             {
-                                data?.exchange_rate_error == "zero"
+                                data?.exchange_rate_error === "zero"
                                 &&
                                 t(`Amount needs to be at least 1.00 ${data?.currency}.`)
                             }
                             {
-                                data?.exchange_rate_error == "exceed send"
+                                data?.exchange_rate_error === "exceed send"
                                 &&
                                 t(`Amount needs to be maximum of ${data?.exchange_rate?.limits_used?.[`${limitType}_sending_limit_used`]?.toFixed(2)} ${data?.currency}`)
                             }
                             {
-                                data?.exchange_rate_error == "exceed receive"
+                                data?.exchange_rate_error === "exceed receive"
                                 &&
                                 t(`Amount needs to be maximum of ${userDetails?.used_limits?.daily_receiving_limit} USD`)
                             }
                             {
-                                data?.exchange_rate_error == "Invalid Amount Fee"
+                                data?.exchange_rate_error === "Invalid Amount Fee"
                                 &&
                                 t(`Amount needs to be greater than ${data?.exchange_rate?.fee?.amount} ${data?.currency}`)
                             }
@@ -259,7 +245,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                         :
                         <div className={styles.exchange_rate} style={{ justifyContent: window.innerWidth > 1000 ? "inherit" : "center" }}>
                             {
-                                data?.exchange_rate?.receiver?.currency == data?.currency?.currency?.code
+                                data?.exchange_rate?.receiver?.currency === data?.currency?.currency?.code
                                     ?
                                     ""
                                     :
@@ -311,7 +297,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                                             type="text"
                                             value={data.recipient_amount}
                                             onChange={(e) => {
-                                                if (e.target.value == "") {
+                                                if (e.target.value === "") {
                                                     dataHandler("amount", '')
                                                 }
                                                 dataHandler("recipient_amount", e.target.value)
@@ -338,7 +324,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                     background: window.innerWidth > 1000 ? "transparent" : "rgba(0, 0, 0, 0.02)"
                 }}>
                     {
-                        data?.exchange_rate?.receiver?.currency == data?.currency?.currency?.code
+                        data?.exchange_rate?.receiver?.currency === data?.currency?.currency?.code
                             ?
                             ""
                             :
@@ -351,11 +337,20 @@ const StepTwo = ({ data, dataHandler, getExchangeRate }) => {
                                 </span>
                             </div>
                     }
-                 
+
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
                         <span>{t("Estimated time")}</span>
                         <span>{t("Within minutes")}</span>
                     </div>
+                    {
+                        (data.exchange_rate?.fee?.amount && showFee)
+                        &&
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
+                            <strong>{t("Fee")}</strong>
+                            <strong>{Number(cleanString(data.exchange_rate?.fee?.amount))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data.exchange_rate?.fee?.currency} </strong>
+                            {/* <strong>{Number(data.exchange_rate?.total)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data.currency?.currency?.code} </strong> */}
+                        </div>
+                    }
                     {
                         data.exchange_rate?.total
                         &&

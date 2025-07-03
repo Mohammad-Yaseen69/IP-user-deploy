@@ -596,7 +596,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                 dataHandler("step", 3)
                 break;
             case 3:
-                dataHandler("step", 5)
+                dataHandler("step", 4)
                 break;
             case 4:
                 if (data.payment_type?.value === "mobile") {
@@ -898,6 +898,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                     data={data}
                                                     dataHandler={dataHandler}
                                                     getExchangeRate={getExchangeRate}
+                                                    showFee={true}
                                                 />
                                             }
                                             {
@@ -1020,7 +1021,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                             // }
                                                             else if (data.step === 5) {
                                                                 dataHandler("showCard", false)
-                                                                dataHandler("step", data.step - 2)
+                                                                dataHandler("step", data.step - 1)
                                                             }
                                                             else {
                                                                 dataHandler("step", data.step - 1)

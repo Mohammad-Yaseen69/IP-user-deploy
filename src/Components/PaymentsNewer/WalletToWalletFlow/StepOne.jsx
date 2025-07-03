@@ -25,6 +25,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
 
     const handleSearch = async (e) => {
         e.preventDefault();
+        setExpandRecent(false)
         dataHandler("loading", true);
         dataHandler("beneficiary_wallet", {});
         dataHandler("beneficiary", {});
@@ -254,12 +255,12 @@ export const BeneficiaryCard = ({ data, dataHandler, item, type, setBenWalletsFo
                                     onClick={() => {
                                         if (type === "recent") {
                                             if (item?.wallets) {
-                                                if(item.existType === "wallet"){ 
+                                                if (item.existType === "wallet") {
                                                     const filteredWallets = item?.wallets?.filter(w => !userWallets.find(userW => userW.wallet_id === w?.wallet_id))
                                                     setBenWallets(filteredWallets)
                                                     setShowMore(true)
                                                 }
-                                                else{
+                                                else {
                                                     setBenWallets(item?.wallets)
                                                     setShowMore(true)
                                                 }
