@@ -145,18 +145,20 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
     useEffect(() => {
         setCardLoading(true)
         const getCardDetail = async () => {
+            console.log(cards, current)
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-details/${cards[current]._id}`, {
+                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-details/${cards[current - 1]._id}`, {
                     headers: authHeader
                 })
 
                 const dec = decryptData(res.data.data)
                 setCurrentCardDetails(dec.data)
 
-                console.log(dec)
+                console.log(dec, "lala")
             } catch (error) {
-                const dec = decryptData(error.response.data.data)
-                console.log(dec)
+                console.log(error)
+                const dec = decryptData(error.response?.data?.data)
+                console.log(dec, "lala")
             }
             finally {
                 setCardLoading(false)
@@ -590,7 +592,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                 grabCursor={true}
                                 modules={[EffectCoverflow]}
                                 onSlideChange={e => {
-                                    setCurrent(e.activeIndex)
+                                    setCurrent(e.activeIndex + 1)
                                     setFlippedCards({})
                                 }}
                                 ref={swiperRef}

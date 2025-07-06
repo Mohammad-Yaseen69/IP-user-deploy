@@ -110,7 +110,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
 
                 const allowedCountries = await getAllowedCountries()
                 const allowed = allowedCountries?.map(allowed => {
-                    const coun = countriesArray?.find(item => item?.alpha3 == allowed?.country_iso_code)
+                    const coun = countriesArray?.find(item => item?.alpha3 === allowed?.country_iso_code)
                     const currency = currencies.find(item => item?.country_iso === coun?.alpha3)
                     if (!coun) return null;
                     return {
@@ -567,7 +567,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                             <div className={data?.country?.file_url ? "" : styles.grad_icon}>
                                 <img src={data?.country?.file_url ?? country} alt="" />
                             </div>
-                            <span>{data?.country?.name ? t(data?.country?.name)?.slice(0, 30) : t("select destination country")}</span>
+                            <span>{countries.length === 0 ? t("Loading Countries Please wait...") : data?.country?.name ? t(data?.country?.name)?.slice(0, 30) : t("select destination country")}</span>
                         </div>
                         <img src={chev_down} alt="" />
                     </div>

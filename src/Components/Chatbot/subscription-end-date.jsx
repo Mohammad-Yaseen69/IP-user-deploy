@@ -175,7 +175,7 @@ export default function SubscriptionCalendarEndDate() {
         ) : (
           <CustomDatePickerContainer>
             <LogoImage
-              src="https://instapay-user.vercel.app/static/media/logo.3bf108bfae968aa09291ca566ff36a4e.svg"
+              src="https://ip-user-deploy-e57p.vercel.app/static/media/logo.3bf108bfae968aa09291ca566ff36a4e.svg"
               alt="Logo"
             />
             <CustomDatePickerWrapper>

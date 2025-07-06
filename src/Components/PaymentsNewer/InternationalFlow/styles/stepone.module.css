@@ -124,6 +124,12 @@
     background: #FFF;
     padding: .6rem 1rem;
     cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.country.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .total {
