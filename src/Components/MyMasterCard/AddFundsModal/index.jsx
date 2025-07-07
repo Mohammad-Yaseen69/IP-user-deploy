@@ -22,6 +22,7 @@ import useWindowWidth from '../../../utils/useWindowWidth'
 import { createShambeToken } from '../../../Helper/CreateToken'
 import TrustpaymentPage from '../../AddFunds/WalletFund/CreditTransaction'
 import { useTranslation } from 'react-i18next'
+import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow';
 
 const PLACEHOLDER_CARD_TYPE = {
     type: 'placeholder',
@@ -307,7 +308,13 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             setCardTransactionDetails(dec.data)
             console.log(dec)
         } catch (err) {
-            errorHandler(err, setError)
+            const decrypted = decryptData(err.response.data.data);
+            const error2 = apiErrorMessage(decrypted?.message);
+            if (error2) {
+                setError(error2);
+            } else {
+                errorHandler(err, setError);
+            }
         }
         finally {
             setLoading(false)
@@ -334,7 +341,13 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             console.log(dec)
         }
         catch (err) {
-            errorHandler(err, setError)
+            const decrypted = decryptData(err.response.data.data);
+            const error2 = apiErrorMessage(decrypted?.message);
+            if (error2) {
+                setError(error2);
+            } else {
+                errorHandler(err, setError);
+            }
         }
         finally {
             setLoading(false)
@@ -358,7 +371,13 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             setStep(prev => prev + 1)
             console.log(dec)
         } catch (err) {
-            errorHandler(err, setError)
+            const decrypted = decryptData(err.response.data.data);
+            const error2 = apiErrorMessage(decrypted?.message);
+            if (error2) {
+                setError(error2);
+            } else {
+                errorHandler(err, setError);
+            }
         }
         finally {
             setLoading(true)

@@ -27,7 +27,8 @@ export const possibleErrors = {
     rml400: "Receiver's Monthly Receiving Limit exceeded",
     ryl400: "Receiver's Yearly Receiving Limit exceeded",
     rbl400: "Receiver's Balance Limit Reached.",
-    "Feature not available!": "Feature not available!"
+    "Feature not available!": "Feature not available!",
+    tpl400 : "Topup Amount Limit exceeded"
 }
 
 export const LimitsErrorMessage = (message = "") => {

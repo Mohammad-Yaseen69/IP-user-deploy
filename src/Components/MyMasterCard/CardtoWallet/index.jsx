@@ -20,6 +20,7 @@ import StepOne from '../../PaymentsNewer/WalletToWalletFlow/StepOne.jsx'
 import useWindowWidth from '../../../utils/useWindowWidth.jsx'
 import { useLocation, useNavigate } from 'react-router'
 import { useTranslation } from 'react-i18next'
+import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow';
 
 const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCardDetails }) => {
     // const [sideText, setSideText] = useState("")
@@ -185,7 +186,12 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
             console.log(dec)
         } catch (error) {
             const dec = decryptData(error.response.data.data)
-            toast.error(dec?.message)
+            const error2 = apiErrorMessage(dec?.message);
+            if (error2) {
+                setOtpError(error2);
+            } else {
+                toast.error(dec?.message)
+            }
             setOtpToken(null)
             setshowotp(false)
         }

@@ -61,7 +61,7 @@ const RecentBeneficiary = ({ data, dataHandler, setExpandRecent, expandRecent })
         return ownAccountFilteration
     }, [registeredBeneficiaries])
 
-    
+
     return uniqueBeneficiaries?.length ? (
         <div
             style={{ maxHeight: (expandRecent || width < 1000) && "400px" }}
@@ -70,7 +70,7 @@ const RecentBeneficiary = ({ data, dataHandler, setExpandRecent, expandRecent })
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
                 <h1> {t("Beneficiaries")} </h1>
                 <p onClick={() => setExpandRecent(!expandRecent)} style={{ fontWeight: 600, cursor: "pointer" }}>
-                    {expandRecent ? t("View Less") : t("View More")}
+                    {(uniqueBeneficiaries?.length > 1 && (expandRecent) ? t("View Less") : t("View More"))}
                 </p>
             </div>
 

@@ -16,6 +16,7 @@ import PaymentStep from './PaymentStep'
 import ConfirmationStep from './ConfirmationStep'
 import SuccessStep from './SuccessStep'
 import { useTranslation } from 'react-i18next'
+import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow';
 
 
 const PLACEHOLDER_CARD_TYPE = {
@@ -262,7 +263,13 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
       setshowOtpModal(false)
 
     } catch (err) {
-      errorHandler(err, setError)
+      const decrypted = decryptData(err.response.data.data);
+      const error2 = apiErrorMessage(decrypted?.message);
+      if (error2) {
+        setError(error2);
+      } else {
+        errorHandler(err, setError);
+      }
     }
   }
 
@@ -387,7 +394,13 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
       const dec = decryptData(res.data.data)
       setCardTransactionDetails(dec)
     } catch (err) {
-      errorHandler(err, setError)
+      const decrypted = decryptData(err.response.data.data);
+      const error2 = apiErrorMessage(decrypted?.message);
+      if (error2) {
+        setError(error2);
+      } else {
+        errorHandler(err, setError);
+      }
     }
   }
 
@@ -410,7 +423,13 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
       window.location.href = dec?.url
 
     } catch (err) {
-      errorHandler(err, setError)
+      const decrypted = decryptData(err.response.data.data);
+      const error2 = apiErrorMessage(decrypted?.message);
+      if (error2) {
+        setError(error2);
+      } else {
+        errorHandler(err, setError);
+      }
     }
   }
 

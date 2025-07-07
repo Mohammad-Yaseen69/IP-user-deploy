@@ -439,7 +439,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             }
         } catch (err) {
             const dec = decryptData(err?.response.data.data)
-            updateInternationalData("ex_extra_error", typeof dec?.message === "string" ? dec?.message : dec?.message?.[0]?.message)
+            updateInternationalData("ex_extra_error", typeof dec?.message === "string" ? dec?.message : dec?.message?.[0]?.message ? "We were unable to process your request at the moment please try again later." : "")
             console.log(dec)
             if (typeof dec?.message == "object") {
                 if (dec?.message?.[0]?.code === "1003007") {

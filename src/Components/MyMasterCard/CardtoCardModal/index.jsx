@@ -17,7 +17,7 @@ import { toast } from 'react-toastify'
 import OtpConfirmation from "../../PaymentsNewer/InternationalFlow/OtpConfirmation"
 import InstaPayLoader from '../../Loader'
 import { Link } from 'react-router-dom'
-
+import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow';
 
 
 const initialState = {
@@ -343,8 +343,12 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
 
     } catch (error) {
       const dec = decryptData(error.response.data.data)
-
-      toast.error(dec.message.split("_").map((w) => w[0].toUpperCase() + w.slice(1)).join(" ") ?? "Something went wrong while making the transaction please try again!")
+      const error2 = apiErrorMessage(dec?.message);
+      if (error2) {
+        updateHandler("otpError", error2);
+      } else {
+        toast.error(dec.message.split("_").map((w) => w[0].toUpperCase() + w.slice(1)).join(" ") ?? "Something went wrong while making the transaction please try again!")
+      }
       updateHandler("showOtpModal", false)
       updateHandler("token", "")
     }
