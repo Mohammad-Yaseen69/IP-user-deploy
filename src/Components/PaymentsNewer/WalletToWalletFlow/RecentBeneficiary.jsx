@@ -61,21 +61,18 @@ const RecentBeneficiary = ({ data, dataHandler, setExpandRecent, expandRecent })
         return ownAccountFilteration
     }, [registeredBeneficiaries])
 
+    
     return uniqueBeneficiaries?.length ? (
         <div
             style={{ maxHeight: (expandRecent || width < 1000) && "400px" }}
-            onMouseEnter={() => {
-                if (width > 1000) {
-                    
-                    setExpandRecent(true)
-                }
-            }}
-                // onMouseLeave={() => {
-                //     setExpandRecent(false)
-                // }}  
             className={styles.container}
         >
-            <h1> {t("Beneficiaries")} </h1>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+                <h1> {t("Beneficiaries")} </h1>
+                <p onClick={() => setExpandRecent(!expandRecent)} style={{ fontWeight: 600, cursor: "pointer" }}>
+                    {expandRecent ? t("View Less") : t("View More")}
+                </p>
+            </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 {uniqueBeneficiaries?.map((item) => (

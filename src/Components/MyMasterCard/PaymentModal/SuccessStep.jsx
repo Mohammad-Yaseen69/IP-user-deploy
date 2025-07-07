@@ -4,6 +4,7 @@ import { Help, Svg, Trans } from "../files"
 import useWindowWidth from "../../../utils/useWindowWidth"
 import { useNavigate } from "react-router"
 import { useTranslation } from "react-i18next"
+import success from "../../PaymentsNewer/InternationalFlow/files/success.gif"
 
 export const paymentConfirmOptions = [
     {
@@ -36,11 +37,14 @@ const SuccessStep = ({
         <div className={styles.step4}>
             <div style={{ gap: "12px" }} className={styles.infoDiv}>
                 <div className={styles.paymentInfo}>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
-                        <p>{t("You Have to Pay")}</p>
-                        <h1>{!addFunds ? feeDetails.currency : feeDetails?.feeDetails?.currency}{!addFunds ? feeDetails.fee : feeDetails?.feeDetails?.totalAmount}</h1>
-                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center" }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
+                            <p>{t("You Have Paid")}</p>
+                            <h1>{!addFunds ? feeDetails.currency : feeDetails?.feeDetails?.currency}{!addFunds ? feeDetails.fee : feeDetails?.feeDetails?.totalAmount} $1000</h1>
+                        </div>
 
+                        <img src={success} style={{width: "100px"}} alt="" />
+                    </div>
 
                     <img src={Svg} style={{ position: "absolute", right: "10px", top: "0px" }} alt="" />
                 </div>
@@ -49,7 +53,7 @@ const SuccessStep = ({
 
                     <div>
                         <div>
-                            <p>{t("You are using")}</p>
+                            <p>{t("You used")}</p>
 
                             {paymentType === "wallet"
                                 &&
@@ -110,7 +114,7 @@ const SuccessStep = ({
                         <div onClick={() => !option.link && navigate(option.navigate)} style={{ width: width < 660 && "100%" }} key={option.text}>
                             <img src={option.icon} alt="" />
                             <p>
-                                {option.link ? <a style={{color: "black"}} href={option.navigate}>{t(option.text)}</a> : t(option.text)}
+                                {option.link ? <a style={{ color: "black" }} href={option.navigate}>{t(option.text)}</a> : t(option.text)}
                             </p>
                         </div>
                     ))}
