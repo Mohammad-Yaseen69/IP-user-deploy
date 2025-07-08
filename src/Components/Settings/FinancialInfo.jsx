@@ -74,6 +74,7 @@ const FinancialInfo = () => {
     const { t } = useTranslation()
     const [editMode, setEditMode] = useState(false)
     const [apiQuestions, setApiQuestions] = useState(questionsArray)
+    const [loading, setLoading] = useState(false)
 
 
 
@@ -146,12 +147,15 @@ const FinancialInfo = () => {
     }
 
     const saveHandler = async () => {
+        setLoading(true)
         try {
-            const data = encryptData({
+            const data = {
                 answers: questions,
                 account_id: userDetails?._id
-            })
+            }
 
+
+            console.log(data)
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/user/update-financial-answers`, { data: encryptData(data) }, {
                 headers: authHeader
             })
@@ -164,6 +168,9 @@ const FinancialInfo = () => {
         } catch (error) {
             const dec = decryptData(error.response.data.data)
             toast.error(dec?.message || "We couldn't edit your financial info at the moment please try again later.")
+        }
+        finally{
+            setLoading(false)
         }
     }
     return (
@@ -209,7 +216,7 @@ const FinancialInfo = () => {
                             />
                             {editMode &&
                                 <span style={{ position: 'absolute', bottom: '10px', right: '10px', fontSize: '12px', color: '#888' }}>
-                                    {question?.answers?.length} / 250
+                                    {questions.find(q => q.question_key === "keeps_busy").answers?.length} / 250
                                 </span>
                             }
                         </div>
@@ -313,7 +320,7 @@ const FinancialInfo = () => {
                         }}
                         style={{ fontWeight: 600, background: "transparent", border: "none", outline: "none" }}
                     >Cancel</button>
-                    <button onClick={saveHandler} disabled={questions.some(q => (!q.answers || q.answers.length === 0))} style={{ opacity: questions.some(q => (!q.answers || q.answers.length === 0)) && .3 }} className={styles.editBtn}>Save</button>
+                    <button onClick={saveHandler} disabled={questions.some(q => (!q.answers || q.answers.length === 0)) || loading} style={{ opacity: questions.some(q => (!q.answers || q.answers.length === 0)) && .3 }} className={styles.editBtn}>Save</button>
                 </div>
             }
         </div >
