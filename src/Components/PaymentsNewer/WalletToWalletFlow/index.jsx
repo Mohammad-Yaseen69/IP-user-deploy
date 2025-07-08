@@ -88,7 +88,8 @@ const initialState = {
     mobile_wallet_service: {},
     timezone: "",
     first_time: true,
-    limitReached: false
+    limitReached: false,
+    ratesError: false
 }
 
 function reducer(state, action) {
@@ -515,9 +516,10 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
         dataHandler("exchange_rate_error", "")
         dataHandler("exchange_rate", {})
         dataHandler("limitReached", false)
+        dataHandler("ratesError", false)
         console.log(data)
         try {
-            const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=${payment_type ?? "wallet_to_wallet"}&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${data.beneficiary_wallet?._id}&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}`
+            const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=${payment_type ?? "wallet_to_wallet"}&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${data.beneficiary_wallet?._id}&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}&preserved_amount=${data.recipient_amount}`
 
             const res = await axios.get(url, { headers: authHeader })
             const decrypted = decryptData(res.data.data)
@@ -576,6 +578,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
         catch (err) {
             const dec = decryptData(err?.response.data.data)
             console.log(dec)
+            dataHandler("ratesError", true)
             if (typeof dec?.message == "object") {
                 if (dec?.message?.[0]?.code === "1003007") {
                     dataHandler("exchange_rate_error", "payer_unavailable")
@@ -892,7 +895,9 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                     isOpen={data.error}
                     toggle={() => {
                         dataHandler("error", "")
+                        dataHandler("ratesError", false)
                     }}
+                    heading={data.ratesError ? "Transaction could not be proceed!" : "Transaction Failed!"}
                     message={data.error}
                 />
             }
