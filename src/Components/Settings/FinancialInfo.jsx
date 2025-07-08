@@ -1,75 +1,86 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styles from "./styles/FinInfo.module.scss"
 import CitiesData from "../CitiesDropDown/CitiesData.json"
-import { ChevronRight } from 'react-feather'
+import { Check, ChevronRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { UserContext } from '../../Context/UserContext'
+import Select from "react-select"
+import { sourceOfFunds, sourceOfWealth, volume, limitVolume, professions } from '../FinancialInfoModal/data.js'
+import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
+import { toast } from 'react-toastify'
+import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
+import axios from 'axios'
+
+
+const questionsArray = [
+    {
+        question: "What keeps you busy these days?",
+        info: "Whether you're running a business, freelancing, creating, or simply managing your personal finances — we'd love to hear about you!",
+        step: 1,
+        answers: "",
+        question_key: "keeps_busy"
+    },
+    {
+        question: "What best describes your profession?",
+        info: "Choose one or more from our full industry list!",
+        step: 2,
+        answers: [],
+        question_key: "profession"
+    },
+    {
+        question: "Expected Monthly Transaction Volume?",
+        info: "Estimate how much money will come into your account each month.",
+        step: 3,
+        answers: "",
+        question_key: "volume"
+    },
+    {
+        question: "Expected Number of Transactions per Month?",
+        info: "Estimate how much money will come into your account each month.",
+        step: 4,
+        answers: "",
+        question_key: "transaction_limit"
+    },
+    {
+        question: "In Which Countries Will You Send Funds?",
+        info: "Select all that apply or search country.",
+        step: 5,
+        answers: [],
+        question_key: "country"
+    },
+    {
+        question: "Source of Funds",
+        info: "Where does your money come from?",
+        step: 6,
+        answers: "",
+        question_key: "source_of_funds"
+    },
+    {
+        question: "Source of Wealth",
+        info: "How was your wealth accumulated?",
+        step: 7,
+        answers: "",
+        question_key: "source_of_wealth"
+    }
+]
 
 const FinancialInfo = () => {
-    const [questions, setQuestions] = useState([
-        {
-            question: "What keeps you busy these days?",
-            info: "Whether you're running a business, freelancing, creating, or simply managing your personal finances — we'd love to hear about you!",
-            step: 1,
-            answer: "",
-            type: "keeps_busy"
-        },
-        {
-            question: "What best describes your profession?",
-            info: "Choose one or more from our full industry list!",
-            step: 2,
-            answer: [],
-            type: "profession"
-        },
-        {
-            question: "Expected Monthly Transaction Volume?",
-            info: "Estimate how much money will come into your account each month.",
-            step: 3,
-            answer: "",
-            type: "volume"
-        },
-        {
-            question: "Expected Number of Transactions per Month?",
-            info: "Estimate how much money will come into your account each month.",
-            step: 4,
-            answer: "",
-            type: "transaction_limit"
-        },
-        {
-            question: "In Which Countries Will You Send Funds?",
-            info: "Select all that apply or search country.",
-            step: 5,
-            answer: [],
-            type: "country"
-        },
-        {
-            question: "Source of Funds",
-            info: "Where does your money come from?",
-            step: 6,
-            answer: "",
-            type: "source_of_funds"
-        },
-        {
-            question: "Source of Wealth",
-            info: "How was your wealth accumulated?",
-            step: 7,
-            answer: "",
-            type: "source_of_wealth"
-        }
-    ])
+    const [questions, setQuestions] = useState(questionsArray)
     const [countriesWithRegion, setCountriesWithRegion] = useState({})
     const [filteredCountriesWithRegion, setFilteredCountriesWithRegion] = useState({})
     const [activeDropdown, setActiveDropdown] = useState(1)
     const [search, setSearch] = useState()
-    const { userDetails } = useContext(UserContext)
+    const { userDetails, allowedCountries, authHeader } = useContext(UserContext)
     const { t } = useTranslation()
+    const [editMode, setEditMode] = useState(false)
+    const [apiQuestions, setApiQuestions] = useState(questionsArray)
 
 
 
     useEffect(() => {
         const countryFilteration = () => {
-            const countryAnswers = questions.find(q => q?.type === "country")
-            const filteredCountries = CitiesData.filter(cont => countryAnswers?.answer?.includes(cont?.iso3))
+            const countryAnswers = questions.find(q => q?.question_key === "country")
+            const filteredCountries = editMode ? CitiesData.filter(cont => allowedCountries?.find(c => c.country_iso_code === cont.iso3)) : CitiesData.filter(cont => countryAnswers?.answers?.includes(cont?.iso3))
             const regionCountries = filteredCountries?.reduce((acc, country) => {
                 const region = country?.region
                 if (!acc[region]) {
@@ -81,11 +92,10 @@ const FinancialInfo = () => {
 
             setCountriesWithRegion(regionCountries)
 
-            console.log(regionCountries, "with region")
         }
 
         countryFilteration()
-    }, [CitiesData, questions])
+    }, [CitiesData, questions, editMode])
 
     useEffect(() => {
         if (search?.trim()) {
@@ -108,41 +118,129 @@ const FinancialInfo = () => {
 
     useEffect(() => {
         if (userDetails) {
-            setQuestions(questions.filter(q => userDetails?.user?.financial_answers?.some(a => a?.question_key === q?.type))?.map((answer) => {
-                const userAnswer = userDetails?.user?.financial_answers?.find(a => a?.question_key === answer?.type)
-                return userAnswer ? { ...answer, answer: userAnswer?.answers } : answer
-            }))
+            const filterations = questionsArray.filter(q => userDetails?.user?.financial_answers?.some(a => a?.question_key === q?.question_key))?.map((answers) => {
+                const userAnswer = userDetails?.user?.financial_answers?.find(a => a?.question_key === answers?.question_key)
+                return userAnswer ? { ...answers, answers: userAnswer?.answers } : answers
+            })
+            setQuestions(filterations)
+            setApiQuestions(filterations)
 
             console.log(userDetails?.user)
         }
     }, [userDetails])
+
+    const updateData = (field, value,) => {
+        if (field === "country") {
+            setQuestions(questions.map(q => q.question_key === field ? { ...q, answers: [...q.answers, value] } : q))
+        } else {
+            setQuestions(questions.map(q => q.question_key === field ? { ...q, answers: value } : q))
+        }
+    }
+
+    const selectOptions = {
+        source_of_funds: sourceOfFunds.map(opt => ({ label: opt, value: opt })),
+        source_of_wealth: sourceOfWealth.map(opt => ({ label: opt, value: opt })),
+        volume: volume.map(opt => ({ label: opt, value: opt })),
+        transaction_limit: limitVolume.map(opt => ({ label: opt, value: opt })),
+        profession: professions.map(opt => ({ label: opt, value: opt })),
+    }
+
+    const saveHandler = async () => {
+        try {
+            const data = encryptData({
+                answers: questions,
+                account_id: userDetails?._id
+            })
+
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/user/update-financial-answers`, { data: encryptData(data) }, {
+                headers: authHeader
+            })
+
+            const dec = decryptData(res.data.data)
+            setEditMode(false)
+            setApiQuestions(questions)
+            console.log(dec)
+
+        } catch (error) {
+            const dec = decryptData(error.response.data.data)
+            toast.error(dec?.message || "We couldn't edit your financial info at the moment please try again later.")
+        }
+    }
     return (
         <div style={{ backgroundColor: 'white' }} className={styles.container}>
-
+            {!editMode && <button onClick={() => setEditMode(true)} className={styles.editBtn}>Edit</button>}
             {questions?.map((question, idx) => (
                 <div key={idx} className={styles.contentBox}>
                     <span className={styles.label}>{t(question?.question)}</span>
 
-                    {(question?.type !== "profession" && question?.type !== "country" && question?.type !== "keeps_busy") &&
-                        <div className={styles.option}>
-                            <span>
-                                {t(question?.answer)}
-                            </span>
-                        </div>
-                    }
-                    {question?.type === "keeps_busy" && <textarea value={question?.answer} />}
-                    {question?.type === "profession" &&
-                        <div className={styles.multiOptions}>
-                            {question?.answer?.map((item, idx2) => (
-                                <div key={idx2} style={{ flex: 1, minWidth: "45%" }} className={styles.option}>
+                    {(question?.question_key !== "profession" && question?.question_key !== "country" && question?.question_key !== "keeps_busy") &&
+                        (
+                            !editMode ?
+                                <div className={styles.option}>
                                     <span>
-                                        {t(item)}
+                                        {t(question?.answers)}
                                     </span>
                                 </div>
-                            ))}
+                                :
+                                (Select &&
+                                    <Select
+                                        options={selectOptions[question.question_key]}
+                                        value={
+                                            selectOptions[question.question_key]?.find(opt => opt.value === question.answers) ||
+                                            (question.answers && typeof question.answers === 'string' && selectOptions[question.question_key]?.some(opt => opt.value === question.answers) === false ? { label: question.answers, value: question.answers } : null)
+                                        }
+                                        styles={{
+                                            container: (base) => ({ ...base, width: '100%', outline: "none" }),
+                                            control: (base) => ({ ...base, fontWeight: 600 }),
+                                        }}
+                                        onChange={option => updateData(question.question_key, option ? option.value : "")}
+                                    />
+                                )
+                        )
+                    }
+                    {question?.question_key === "keeps_busy" &&
+                        <div style={{ position: "relative", width: "100%" }}>
+                            <textarea
+                                onChange={(e) => editMode ? updateData("keeps_busy", e.target.value) : e.preventDefault()}
+                                value={question?.answers}
+                                placeholder={t('question_key your answers')}
+                                maxLength={250}
+                                style={{ width: '100%', height: '120px', resize: 'none' }}
+                            />
+                            {editMode &&
+                                <span style={{ position: 'absolute', bottom: '10px', right: '10px', fontSize: '12px', color: '#888' }}>
+                                    {question?.answers?.length} / 250
+                                </span>
+                            }
                         </div>
                     }
-                    {question?.type === "country" &&
+                    {question?.question_key === "profession" &&
+                        (!editMode ?
+                            <div className={styles.multiOptions}>
+                                {Array.isArray(question.answers) && question?.answers?.map((item, idx2) => (
+                                    <div key={idx2} style={{ flex: 1, minWidth: "45%" }} className={styles.option}>
+                                        <span>
+                                            {t(item)}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                            :
+                            (Select &&
+                                <Select
+                                    options={selectOptions.profession}
+                                    value={selectOptions.profession.filter(opt => Array.isArray(question.answers) && question.answers.includes(opt.value))}
+                                    onChange={options => updateData("profession", options ? options.map(opt => opt.value) : [])}
+                                    isMulti
+                                    styles={{
+                                        container: (base) => ({ ...base, width: '100%' }),
+                                        control: (base) => ({ ...base, fontWeight: 600 })
+                                    }}
+                                />
+                            )
+                        )
+                    }
+                    {question?.question_key === "country" &&
                         <div className={styles.countryOptions}>
                             <div className={`${styles.option} ${styles.inputBox}`}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -156,12 +254,12 @@ const FinancialInfo = () => {
                                     </defs>
                                 </svg>
 
-                                <input value={search} onChange={(e) => setSearch(e.target.value)} type="text" placeholder='Search...' style={{ border: "none", outline: "none", background: "transparent", fontWeight: 600 }} />
+                                <input value={search} onChange={(e) => setSearch(e.target.value)} question_key="text" placeholder='Search...' style={{ border: "none", outline: "none", background: "transparent", fontWeight: 600 }} />
                             </div>
 
                             <div className={styles.dropDownCont}>
                                 {Object.entries(filteredCountriesWithRegion)?.map(([region, countries], idx) => (
-                                    <div key={`${idx}-${region}`} className={styles.dropdown}>
+                                    <div style={{ overflow: "auto" }} key={`${idx}-${region}`} className={styles.dropdown}>
                                         <div
                                             className={styles.head}
                                             onClick={() => setActiveDropdown(idx + 1)}
@@ -178,8 +276,21 @@ const FinancialInfo = () => {
                                         {activeDropdown === idx + 1 && (
                                             <div className={styles.countries}>
                                                 {countries?.map((cont, i) => (
-                                                    <div key={i} className={styles.option}>
+                                                    <div
+                                                        onClick={() => updateData("country", cont.iso3)}
+                                                        key={i}
+                                                        className={styles.option}
+                                                        style={
+                                                            {
+                                                                display: "flex",
+                                                                justifyContent: 'space-between',
+                                                                alignItems: "center",
+                                                                borderColor: !question.answers.includes(cont.iso3) && "transparent"
+                                                            }
+                                                        }
+                                                    >
                                                         <span>{t(cont?.name)}</span>
+                                                        {question.answers.includes(cont.iso3) && <Check width={15} />}
                                                     </div>
                                                 ))}
                                             </div>
@@ -192,7 +303,20 @@ const FinancialInfo = () => {
                 </div>
             ))}
 
-        </div>
+
+            {editMode &&
+                <div style={{ display: "flex", gap: "1rem", marginTop: "4rem" }}>
+                    <button
+                        onClick={() => {
+                            setEditMode(false)
+                            setQuestions(apiQuestions)
+                        }}
+                        style={{ fontWeight: 600, background: "transparent", border: "none", outline: "none" }}
+                    >Cancel</button>
+                    <button onClick={saveHandler} disabled={questions.some(q => (!q.answers || q.answers.length === 0))} style={{ opacity: questions.some(q => (!q.answers || q.answers.length === 0)) && .3 }} className={styles.editBtn}>Save</button>
+                </div>
+            }
+        </div >
     )
 }
 

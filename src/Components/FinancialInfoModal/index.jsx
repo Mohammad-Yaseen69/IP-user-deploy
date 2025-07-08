@@ -305,9 +305,9 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
                     {activeStep === "keeps_busy" && (
                         <div style={{ position: 'relative', width: '100%' }}>
                             <textarea
-                                placeholder={t('Type your answer')}
                                 value={textAreaValue}
                                 onChange={(e) => setTextAreaValue(e.target.value)}
+                                placeholder={t('Type your answer')}
                                 maxLength={250}
                                 style={{ width: '100%', height: '120px', resize: 'none' }}
                             />

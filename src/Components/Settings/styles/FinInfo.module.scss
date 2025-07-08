@@ -1,13 +1,29 @@
 .container {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-end;
     gap: var(--SPACING-spacing-4, 32px);
     align-self: stretch;
     padding: 24px;
 
-
+    .editBtn {
+        display: flex;
+        padding: var(--SPACING-spacing-0, 8px) 14px;
+        justify-content: center;
+        align-items: center;
+        border-radius: var(--RADIUS-radius-1, 4px);
+        font-size: 12px;
+        font-weight: 600;
+        float: right;
+        border: none;
+        outline: none;
+        background: var(--COLORS-Primary-300, #5926F0);
+        gap: var(--SPACING-spacing-0, 8px);
+        color: white;
+    }
     .contentBox {
+
+
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -60,7 +76,9 @@
                 flex-direction: column;
                 align-items: flex-start;
                 gap: var(--Gaps-Gap-Medium, 12px);
-                align-self: stretch;                    .dropdown {
+                align-self: stretch;
+
+                .dropdown {
                     display: flex;
                     padding: var(--Gaps-Gap-Large, 16px);
                     flex-direction: column;
@@ -70,7 +88,7 @@
                     border-radius: var(--Corner-Radius-Small-Roundness, 8px);
                     background: #FAFAFA;
                     // overflow: hidden;
-                    transition: all 0.2s ;
+                    transition: all 0.2s;
                     max-height: 700px;
 
                     &.hide {
@@ -123,6 +141,7 @@
             border: 1px solid #b9c7fd;
             background: #FDFDFD;
             cursor: pointer;
+        
 
             span {
                 color: #000;
