@@ -1587,7 +1587,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                     }
                                                 </button>
                                             }
-                                            <button style={{
+                                            {/* <button style={{
                                                 all: "unset",
                                                 padding: mobileView ? ".25rem" : "1rem",
                                                 boxShadow: "0 0 3px rgba(128,128,128,0.4)",
@@ -1616,7 +1616,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                         {!completedCrypto ? <Circle /> : <CheckCircle />}
                                                     </>
                                                 }
-                                            </button>
+                                            </button> */}
                                             {
                                                 userDetails?.level?.wallet_to_wallet?.send
                                                 &&

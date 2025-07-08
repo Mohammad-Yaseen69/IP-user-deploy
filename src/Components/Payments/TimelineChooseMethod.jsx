@@ -185,7 +185,7 @@ const TimelineChooseMethod = ({ method, setMethod, mobileView, setStepNumber }) 
                             </div>
 
                             <div className="btn-showcase info_btn">
-                                <PaymentsButton
+                                {/* <PaymentsButton
                                     value={"Crypto Wallet"}
                                     size={"sm"}
                                     attr={{
@@ -201,8 +201,8 @@ const TimelineChooseMethod = ({ method, setMethod, mobileView, setStepNumber }) 
                                             width: "140px"
                                         }
                                     }}
-                                />
-                                <ButtonInfo message={"Send funds to a recipient's crypto wallet. Utilize the power of blockchain technology to transfer digital assets securely and efficiently to crypto wallets."} />
+                                /> */}
+                                {/* <ButtonInfo message={"Send funds to a recipient's crypto wallet. Utilize the power of blockchain technology to transfer digital assets securely and efficiently to crypto wallets."} /> */}
                             </div>
                         </div>
                     </>

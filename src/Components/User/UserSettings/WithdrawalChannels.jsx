@@ -564,11 +564,11 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
                                         &&
                                         <CardP values={card} changeHandler={cardHandler} isEditMode={isEditMode} />
                                     }
-                                    {
+                                    {/* {
                                         payoutChannel?.value === "crypto"
                                         &&
                                         <Crypto values={bankMobCrypto} changeHandler={bmcHandler} isEditMode={isEditMode} />
-                                    }
+                                    } */}
                                     {
                                         payoutChannel?.value === "cash"
                                         &&

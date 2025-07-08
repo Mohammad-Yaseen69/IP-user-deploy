@@ -20,7 +20,7 @@ const QuickLinksMobile = () => {
     { icon: sm, text: t('Send Money'), width: "27px", link: "/payments?payment_action=send_money" },
     { icon: rm, text: t('Request Money'), width: "26px", link: "/payments?payment_action=req_money" },
     { icon: sq, text: t('Send A Quote'), width: "21px", link: "/payments?payment_action=send_quote" },
-    { icon: cf, text: t('Pay With Crypto'), width: "23px", link: "/payments?payment_action=send_crypto" },
+    // { icon: cf, text: t('Pay With Crypto'), width: "23px", link: "/payments?payment_action=send_crypto" },
   ];
 
   const [selected, setSelected] = useState(items[0])

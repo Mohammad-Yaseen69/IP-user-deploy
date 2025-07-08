@@ -34,8 +34,6 @@ window.addEventListener("error", (e) => {
 
 Sentry.init({
     dsn: "https://448eafaae4776c67a2f5831cf64a23e5@o4509485673349120.ingest.us.sentry.io/4509485675118592",
-    // Setting this option to true will send default PII data to Sentry.
-    // For example, automatic IP address collection on events
     sendDefaultPii: true,
     integrations: [
         Sentry.browserTracingIntegration(),
@@ -45,12 +43,10 @@ Sentry.init({
         }),
         Sentry.browserProfilingIntegration()
     ],
-    // Tracing
     tracesSampleRate: 1.0,
     tracePropagationTargets: ["localhost", "https://my.insta-pay.ch", "https://ip-user-deploy-e57p.vercel.app"],
-    // Session Replay
-    replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
-    replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+    replaysSessionSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1.0,
     environment: process.env.NODE_ENV === "development" ? "development" : "production",
     beforeSend(event, hint) {
         if (!event.exception) return null;

@@ -24,7 +24,7 @@ const steps = [
         list: [
             "Bank accounts",
             "Mobile wallets/mobile money",
-            "Crypto wallets",
+            // "Crypto wallets",
             "Cash pick-up locations"
         ]
     },

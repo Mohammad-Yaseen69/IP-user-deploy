@@ -675,7 +675,7 @@ const WithdrawalChannels = () => {
                                                         payers={payers}
                                                     />
                                                 }
-                                                {
+                                                {/* {
                                                     payoutChannel?.value === "crypto"
                                                     &&
                                                     <Crypto
@@ -684,7 +684,7 @@ const WithdrawalChannels = () => {
                                                         isEditMode={isEditMode}
                                                         payers={payers}
                                                     />
-                                                }
+                                                } */}
                                                 {
                                                     payoutChannel?.value === "cash"
                                                     &&

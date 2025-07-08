@@ -93,7 +93,7 @@ const PaymentAction = ({ setAction, setStep }) => {
                 )
                 &&
                 <div style={{ position: "relative", cursor: "not-allowed" }} onMouseEnter={_ => setShowSoonCrypto(true)} onMouseLeave={_ => setShowSoonCrypto(false)}>
-                    <ActionCard bg={s_crypto} title={t("Pay With Crypto")} icon={ctf} desc={t("Experience our user-centric, secure, and efficient Cash-Out Crypto to Fiat Conversion.")} setter={setAction} setterValue="crypto_fiat" setStep={setStep} />
+                    {/* <ActionCard bg={s_crypto} title={t("Pay With Crypto")} icon={ctf} desc={t("Experience our user-centric, secure, and efficient Cash-Out Crypto to Fiat Conversion.")} setter={setAction} setterValue="crypto_fiat" setStep={setStep} /> */}
                     {
                         showSoonCrypto
                         &&
