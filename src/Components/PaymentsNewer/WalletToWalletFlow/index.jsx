@@ -237,7 +237,9 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                         "type": data.payment_duration?.value,
                         "payment_type": payment_type ?? "wallet_to_wallet",
                         'description': data.comment,
-                        "token": data.payment_type?.value === "paypal" ? data.exchange_rate?.token : ""
+                        "token": data.payment_type?.value === "paypal" ? data.exchange_rate?.token : "",
+                        // preserved_amount=${Number(String(data.recipient_amount)?.replace(",",""))}
+                        "preserved_amount": Number(String(data.recipient_amount)?.replace(",", ""))
                     },
                     type: codeType || data.codeType
                 }
@@ -258,7 +260,8 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                         "cycles": data.payment_duration?.unlimited ? "unlimited" : data.payment_duration?.cycles,
                         "date": date,
                         "timezone": data?.timezone,
-                        "token": data.payment_type?.value === "paypal" ? data.exchange_rate?.token : ""
+                        "token": data.payment_type?.value === "paypal" ? data.exchange_rate?.token : "",
+                        "preserved_amount": Number(String(data.recipient_amount)?.replace(",", ""))
                     },
                     type: codeType || data.codeType
                 }
@@ -279,7 +282,8 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                         "time": data.payment_duration?.scheduleTime,
                         "date": date,
                         "timezone": data?.timezone,
-                        "token": data.payment_type?.value === "paypal" ? data.exchange_rate?.token : ""
+                        "token": data.payment_type?.value === "paypal" ? data.exchange_rate?.token : "",
+                        "preserved_amount": Number(String(data.recipient_amount)?.replace(",", ""))
                     },
                     type: codeType || data.codeType
                 }
@@ -519,7 +523,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
         dataHandler("ratesError", false)
         console.log(data)
         try {
-            const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=${payment_type ?? "wallet_to_wallet"}&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${data.beneficiary_wallet?._id}&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}&preserved_amount=${Number(String(data.recipient_amount)?.replace(",",""))}`
+            const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=${payment_type ?? "wallet_to_wallet"}&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${data.beneficiary_wallet?._id}&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}&preserved_amount=${Number(String(data.recipient_amount)?.replace(",", ""))}`
 
             const res = await axios.get(url, { headers: authHeader })
             const decrypted = decryptData(res.data.data)
