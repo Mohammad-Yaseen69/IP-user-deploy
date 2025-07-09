@@ -175,7 +175,6 @@ const FinancialInfo = () => {
         }
     }
 
-    console.log(questions)
     return (
         <div style={{ backgroundColor: 'white' }} className={styles.container}>
             {!editMode && <button onClick={() => setEditMode(true)} className={styles.editBtn}>Edit</button>}
@@ -223,7 +222,7 @@ const FinancialInfo = () => {
                     }
                     {question?.question_key === "profession" &&
                         (!editMode ?
-                            <div className={styles.multiOptions}>
+                            <div style={{flexDirection: window.innerWidth < 700 && "column"}} className={styles.multiOptions}>
                                 {Array.isArray(question.answers) && question?.answers?.map((item, idx2) => (
                                     <div key={idx2} style={{ flex: 1, minWidth: "45%" }} className={styles.option}>
                                         <span>
@@ -269,7 +268,7 @@ const FinancialInfo = () => {
                                     <div style={{ overflow: "auto" }} key={`${idx}-${region}`} className={styles.dropdown}>
                                         <div
                                             className={styles.head}
-                                            onClick={() => setActiveDropdown(idx + 1)}
+                                            onClick={() => setActiveDropdown(activeDropdown === idx + 1 ? null : idx + 1)}
                                             style={{ cursor: "pointer" }}
                                         >
                                             <span>{t(region)}</span>

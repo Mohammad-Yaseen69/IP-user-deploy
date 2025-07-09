@@ -145,9 +145,9 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
     useEffect(() => {
         setCardLoading(true)
         const getCardDetail = async () => {
-            console.log(cards, current)
+
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-details/${cards[current - 1]._id}`, {
+                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-details/${cards[current]._id}`, {
                     headers: authHeader
                 })
 
@@ -551,6 +551,8 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
         });
     };
 
+    console.log(cards, current, cards[current])
+
     return (
         <>
             {(((!showModals.addFunds && !addFundsMobile) && (!showModals.ctc && !ctcMobile) && (!showModals.ctw && !ctwMobile)) || width > 1000) &&
@@ -592,7 +594,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                 grabCursor={true}
                                 modules={[EffectCoverflow]}
                                 onSlideChange={e => {
-                                    setCurrent(e.activeIndex + 1)
+                                    setCurrent(e.activeIndex)
                                     setFlippedCards({})
                                 }}
                                 ref={swiperRef}

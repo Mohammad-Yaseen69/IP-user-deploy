@@ -192,6 +192,10 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
         setLoading(true)
         let answer;
 
+        const getAnswer = (type) => {
+            return userDetails?.user?.financial_answers?.find(q => q.question_key === type)?.answers
+        }
+
         switch (activeStep) {
             case "keeps_busy":
                 answer = [textAreaValue];

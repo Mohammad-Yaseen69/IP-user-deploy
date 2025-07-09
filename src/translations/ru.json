@@ -2501,5 +2501,11 @@
   "Two Factor Authentication Updated Succsessfully!": "Двухфакторная аутентификация успешно обновлена!",
   "Whatsapp": "Ватсап",
   "No Categories Added, Click here to add": "Категории не добавлены. Нажмите здесь, чтобы добавить.",
-  "Tell us more about you": "Расскажите нам больше о себе"
+  "Tell us more about you": "Расскажите нам больше о себе",
+  "Whether you're running a business, freelancing, creating, or simply managing your personal finances — we'd love to hear about you": "Если вы управляете бизнесом, работаете фрилансером, творите или просто управляете личными финансами — мы будем рады узнать о вас",
+  "Type your answer": "Введите свой ответ",
+  "Are you a crypto user?": "Вы пользователь криптовалюты?",
+  "Do you use crypto currency to send or receive your money?": "Используете ли вы криптовалюту для отправки или получения денег?",
+  "Yes": "Да",
+  "No": "Нет"
 }

@@ -433,9 +433,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         else {
             setStep(prev => prev - 1)
         }
-
     }
-
 
 
     const renderData = () => (

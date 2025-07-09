@@ -2597,5 +2597,11 @@
   "Two Factor Authentication Updated Succsessfully!": "Двофакторну автентифікацію успішно оновлено!",
   "Whatsapp": "WhatsApp",
   "No Categories Added, Click here to add": "Категорії не додано, натисніть тут, щоб додати",
-  "Tell us more about you": "Розкажіть про себе більше"
+  "Tell us more about you": "Розкажіть про себе більше",
+  "Whether you're running a business, freelancing, creating, or simply managing your personal finances — we'd love to hear about you": "Незалежно від того, чи ви ведете бізнес, працюєте на фрілансі, створюєте чи просто керуєте особистими фінансами — ми будемо раді почути про вас",
+  "Type your answer": "Введіть свою відповідь",
+  "Are you a crypto user?": "Ви криптокористувач?",
+  "Do you use crypto currency to send or receive your money?": "Чи використовуєте ви криптовалюту для надсилання чи отримання грошей?",
+  "Yes": "так",
+  "No": "немає"
 }

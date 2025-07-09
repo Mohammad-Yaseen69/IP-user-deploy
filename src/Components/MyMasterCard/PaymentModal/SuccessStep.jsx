@@ -40,7 +40,7 @@ const SuccessStep = ({
                     <div style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center" }}>
                         <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
                             <p>{t("You Have Paid")}</p>
-                            <h1>{!addFunds ? feeDetails.currency : feeDetails?.feeDetails?.currency}{!addFunds ? feeDetails.fee : feeDetails?.feeDetails?.totalAmount} $1000</h1>
+                            <h1>{!addFunds ? feeDetails.currency : feeDetails?.feeDetails?.currency}{!addFunds ? feeDetails.fee : feeDetails?.feeDetails?.totalAmount}</h1>
                         </div>
 
                         <img src={success} style={{width: "100px"}} alt="" />

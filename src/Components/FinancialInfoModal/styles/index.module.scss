@@ -303,17 +303,21 @@
 }
 
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 700px) {
     .right {
         .buttons {
             padding: 12px 16px;
+            flex-direction: column;
+            justify-content: center;
 
             .btns {
                 padding: 0px;
+                justify-content: space-between;
+                width: 100%;
 
 
                 .next {
-                    width: fit-content;
+                    width: 120px;
                 }
 
                 .back {

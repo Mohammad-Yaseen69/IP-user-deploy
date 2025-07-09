@@ -56,6 +56,10 @@ const MyMasterCard = () => {
         const dec = decryptData(res.data.data)
         console.log(dec)
         // dec?.data?.pop()
+
+        if(dec?.data?.length === 1){
+          setCurrent(0)
+        }
         setCards(dec?.data ?? [])
         if (dec?.data.length) {
           setCardPurchased(true)

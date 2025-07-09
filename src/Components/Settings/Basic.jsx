@@ -114,11 +114,12 @@ const Basic = ({ setCurrentTab }) => {
         setAboutMe(userDetails?.about_me)
         setGender(userDetails?.gender)
         setTimezone(userDetails?.timezone)
-        setDateOfBirth()
-        const day = userDetails?.dob?.split("-")?.[0]
-        const month = userDetails?.dob?.split("-")?.[1]
-        const year = userDetails?.dob?.split("-")?.[2]
-        setDateOfBirth(`${year}-${month}-${day}`)
+        if (userDetails?.dob) {
+            const [day, month, year] = userDetails.dob.split("-");
+            setDateOfBirth(`${year}-${month}-${day}`);
+        } else {
+            setDateOfBirth("");
+        }
     }, [userDetails, isEditMode])
 
     const updateUsername = () => {

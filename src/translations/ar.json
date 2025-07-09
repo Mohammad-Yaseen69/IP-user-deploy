@@ -2590,5 +2590,11 @@
   "Two Factor Authentication Updated Succsessfully!": "تم تحديث المصادقة الثنائية بنجاح!",
   "Whatsapp": "واتساب",
   "No Categories Added, Click here to add": "لم تتم إضافة أي فئات، انقر هنا للإضافة",
-  "Tell us more about you": "أخبرنا المزيد عنك"
+  "Tell us more about you": "أخبرنا المزيد عنك",
+  "Whether you're running a business, freelancing, creating, or simply managing your personal finances — we'd love to hear about you": "سواء كنت تدير عملًا تجاريًا أو تعمل لحسابك الخاص أو تنشئ أو تدير شؤونك المالية الشخصية ببساطة - يسعدنا أن نسمع عنك",
+  "Type your answer": "اكتب إجابتك",
+  "Are you a crypto user?": "هل أنت مستخدم للعملات المشفرة؟",
+  "Do you use crypto currency to send or receive your money?": "هل تستخدم العملة المشفرة لإرسال أو استقبال أموالك؟",
+  "Yes": "نعم",
+  "No": "لا"
 }
