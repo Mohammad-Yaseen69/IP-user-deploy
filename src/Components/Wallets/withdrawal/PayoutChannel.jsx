@@ -55,14 +55,6 @@ const PayoutChannel = ({
                 value: "card",
                 sub_value: "payment_card"
             } : { id: 1000 },
-        userWithdrawals?.crypto_wallet?.length > 0
-            ?
-            {
-                name: "Crypto Wallet",
-                id: 4,
-                icon: cw,
-                value: "crypto",
-            } : { id: 1000 },
     ].filter(item => item?.name)
 
     useEffect(() => {

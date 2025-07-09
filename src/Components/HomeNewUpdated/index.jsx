@@ -327,7 +327,7 @@ const HomeNewUpdated = () => {
                         setCurrentWallet={setSelectedWallet}
                     />
                     {/* crypto */}
-                    <div className={styles.crypto}>
+                    {/* <div className={styles.crypto}>
                         <h5>{t("crypto wallet balance").split(" ")?.map(item => service_name_formatter(item))?.join(" ")}</h5>
                         <div className={styles.scroll_view}>
                             {
@@ -350,7 +350,7 @@ const HomeNewUpdated = () => {
                             <span style={{ color: "white", WebkitTextFillColor: "white", fontSize: ".9rem" }}>{t("Upgrade to Business Account")}</span>
                             <BsFillPlayFill size={25} style={{ marginLeft: "auto" }} />
                         </button>
-                    </div>
+                    </div> */}
                     <QuickLinksMobile />
                     <Stats
                         currentWallet={selectedWallet}

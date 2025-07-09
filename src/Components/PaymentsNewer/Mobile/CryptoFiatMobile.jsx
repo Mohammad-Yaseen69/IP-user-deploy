@@ -95,11 +95,11 @@ const CryptoFiatMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
                     &&
                     <OTPConfirmation setSubStep={setStep} type="crypto" />
                 }
-                {
+                {/* {
                     step === 7
                     &&
                     <CryptoFiatReceipt amount={amount} cryptoCurrency={cryptoCurrency} setSubStep={setStep} walletAddress={walletAddress} />
-                }
+                } */}
             </div>
         </div>
     )

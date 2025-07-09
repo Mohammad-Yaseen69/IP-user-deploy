@@ -233,11 +233,11 @@ const AddFunds = () => {
                         </div>
                     }
 
-                    {
+                    {/* {
                         action === "crypto"
                         &&
                         <CryptoFund setAction={setAction} />
-                    }
+                    } */}
                     {
                         action === "money"
                         &&
@@ -297,11 +297,11 @@ const AddFunds = () => {
                             </div>
                         </div>
                     }
-                    {
+                    {/* {
                         action === "crypto"
                         &&
                         <CryptoFund setAction={setAction} />
-                    }
+                    } */}
                     {
                         action === "money"
                         &&

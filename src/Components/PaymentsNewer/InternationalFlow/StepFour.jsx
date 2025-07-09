@@ -51,12 +51,6 @@ export const typesData = [
         sub_name: "wallet",
         id: 1
     },
-    {
-        name: "Crypto",
-        value: "crypto",
-        icon: crypto,
-        status: "Coming Soon"
-    },
 ]
 
 const StepFour = ({ data, dataHandler, callback = () => { }, loading = false, error = "", filteringValue = "dummy", customStyles = {}, isAirtime }) => {
