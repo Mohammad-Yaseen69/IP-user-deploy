@@ -134,12 +134,19 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
             info: "How was your wealth accumulated?",
             step: 7,
             type: "source_of_wealth"
-        }
+        },
+        {
+            question: "Are you a crypto user?",
+            info: "Do you use crypto currency to send or receive your money?",
+            step: 8,
+            type: "crypto"
+        },
     ])
 
     const [filteredProfessions, setFilteredProfessions] = useState(professions)
     const [filteredCountries, setFilteredCountries] = useState(countriesInDiffLangs[i18next.language])
     const [availableCountries, setAvailableCountries] = useState([])
+    const [cryptoCheck, setCryptoCheck] = useState(null)
 
 
     useEffect(() => {
@@ -173,6 +180,8 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
                 return !selectedSourceOfFunds;
             case "source_of_wealth":
                 return !selectedSourceOfWealth;
+            case "crypto":
+                return (cryptoCheck !== true && cryptoCheck !== false)
             default:
                 return true;
         }
@@ -204,6 +213,9 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
                 break;
             case "source_of_wealth":
                 answer = [selectedSourceOfWealth];
+                break;
+            case "crypto":
+                answer = [cryptoCheck]
                 break;
             default:
                 answer = "";
@@ -397,13 +409,34 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
                                 </div>
                             ))}
 
+                            {activeStep === "crypto" &&
+                                <div style={{ padding: "0px" }} className={styles.options}>
+                                    <div onClick={() => setCryptoCheck(true)} style={{ justifyContent: "flex-start", gap: "10px" }} className={`${styles.option} ${cryptoCheck === true && styles.checked}`}>
+                                        <span className={styles.circle}>
+                                            {cryptoCheck === true && <span></span>}
+                                        </span>
+                                        <p style={{ fontSize: "15px", fontWeight: 600, marginBottom: "0px" }}>
+                                            {t("Yes")}
+                                        </p>
+                                    </div>
+                                    <div onClick={() => setCryptoCheck(false)} style={{ justifyContent: "flex-start", gap: "10px" }} className={`${styles.option}  ${cryptoCheck === false && styles.checked}`}>
+                                        <span className={styles.circle}>
+                                            {cryptoCheck === false && <span></span>}
+                                        </span>
+                                        <p style={{ fontSize: "15px", fontWeight: 600, marginBottom: "0px" }}>
+                                            {t("No")}
+                                        </p>
+                                    </div>
+                                </div>
+                            }
+
 
                         </div>
                     }
                 </div>
             </div>
             <div className={styles.buttons}>
-                <ContactBox style={{padding: width < 500 && "0px"}}/>
+                <ContactBox style={{ padding: width < 500 && "0px" }} />
 
                 <div className={styles.btns}>
                     {!checkForFirst() && (

@@ -21,6 +21,7 @@
         gap: var(--SPACING-spacing-0, 8px);
         color: white;
     }
+
     .contentBox {
 
 
@@ -141,7 +142,29 @@
             border: 1px solid #b9c7fd;
             background: #FDFDFD;
             cursor: pointer;
-        
+
+            &.checked{
+                border-color: var(--COLORS-Primary-300, #5926F0);
+            }
+
+            .circle {
+                width: 16px;
+                display: flex;
+                height: 16px;
+                justify-content: center;
+                align-items: center;
+                border: 2px solid #5926f0;
+                border-radius: 100%;
+
+                span {
+                    width: 7px;
+                    height: 7px;
+                    background-color: #5926F0;
+                    border-radius: 100%;
+                    display: block;
+                    flex-shrink: 0;
+                }
+            }
 
             span {
                 color: #000;

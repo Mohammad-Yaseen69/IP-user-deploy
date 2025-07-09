@@ -16,52 +16,51 @@ const questionsArray = [
     {
         question: "What keeps you busy these days?",
         info: "Whether you're running a business, freelancing, creating, or simply managing your personal finances — we'd love to hear about you!",
-        step: 1,
         answers: "",
         question_key: "keeps_busy"
     },
     {
         question: "What best describes your profession?",
         info: "Choose one or more from our full industry list!",
-        step: 2,
         answers: [],
         question_key: "profession"
     },
     {
         question: "Expected Monthly Transaction Volume?",
         info: "Estimate how much money will come into your account each month.",
-        step: 3,
         answers: "",
         question_key: "volume"
     },
     {
         question: "Expected Number of Transactions per Month?",
         info: "Estimate how much money will come into your account each month.",
-        step: 4,
         answers: "",
         question_key: "transaction_limit"
     },
     {
         question: "In Which Countries Will You Send Funds?",
         info: "Select all that apply or search country.",
-        step: 5,
         answers: [],
         question_key: "country"
     },
     {
         question: "Source of Funds",
         info: "Where does your money come from?",
-        step: 6,
         answers: "",
         question_key: "source_of_funds"
     },
     {
         question: "Source of Wealth",
         info: "How was your wealth accumulated?",
-        step: 7,
         answers: "",
         question_key: "source_of_wealth"
-    }
+    },
+    {
+        question: "Are you a crypto user?",
+        info: "Do you use crypto currency to send or receive your money?",
+        question_key: "crypto",
+        answers: null
+    },
 ]
 
 const FinancialInfo = () => {
@@ -119,10 +118,12 @@ const FinancialInfo = () => {
 
     useEffect(() => {
         if (userDetails) {
-            const filterations = questionsArray.filter(q => userDetails?.user?.financial_answers?.some(a => a?.question_key === q?.question_key))?.map((answers) => {
+            let filterations = questionsArray.filter(q => userDetails?.user?.financial_answers?.some(a => a?.question_key === q?.question_key))?.map((answers) => {
                 const userAnswer = userDetails?.user?.financial_answers?.find(a => a?.question_key === answers?.question_key)
                 return userAnswer ? { ...answers, answers: userAnswer?.answers } : answers
             })
+
+            filterations = filterations.map((q) => q.question_key === "crypto" ? { ...q, answers: q.answers[0] === "false" ? false : true } : q)
             setQuestions(filterations)
             setApiQuestions(filterations)
 
@@ -169,10 +170,12 @@ const FinancialInfo = () => {
             const dec = decryptData(error.response.data.data)
             toast.error(dec?.message || "We couldn't edit your financial info at the moment please try again later.")
         }
-        finally{
+        finally {
             setLoading(false)
         }
     }
+
+    console.log(questions)
     return (
         <div style={{ backgroundColor: 'white' }} className={styles.container}>
             {!editMode && <button onClick={() => setEditMode(true)} className={styles.editBtn}>Edit</button>}
@@ -180,7 +183,7 @@ const FinancialInfo = () => {
                 <div key={idx} className={styles.contentBox}>
                     <span className={styles.label}>{t(question?.question)}</span>
 
-                    {(question?.question_key !== "profession" && question?.question_key !== "country" && question?.question_key !== "keeps_busy") &&
+                    {(question?.question_key !== "profession" && question?.question_key !== "country" && question?.question_key !== "keeps_busy" && question?.question_key !== "crypto") &&
                         (
                             !editMode ?
                                 <div className={styles.option}>
@@ -307,6 +310,39 @@ const FinancialInfo = () => {
                             </div>
                         </div>
                     }
+
+                    {question?.question_key === "crypto" &&
+                        (!editMode ?
+                            <div className={`${styles.option}`}>
+                                <span>
+                                    {question.answers === true
+                                        ? t("Yes")
+                                        : question.answers === false
+                                            ? t("No")
+                                            : ""}
+                                </span>
+                            </div>
+                            :
+                            <div className={styles.multiOptions}>
+                                <div onClick={() => updateData("crypto", true)} style={{ justifyContent: "flex-start", gap: "10px", width: "100%" }} className={`${styles.option} ${question.answers === true && styles.checked}`}>
+                                    <span className={styles.circle}>
+                                        {question.answers === true && <span></span>}
+                                    </span>
+                                    <p style={{ fontSize: "15px", fontWeight: 600, marginBottom: "0px" }}>
+                                        {t("Yes")}
+                                    </p>
+                                </div>
+                                <div onClick={() => updateData("crypto", false)} style={{ justifyContent: "flex-start", gap: "10px", width: "100%" }} className={`${styles.option}  ${question.answers === false && styles.checked}`}>
+                                    <span className={styles.circle}>
+                                        {question.answers === false && <span></span>}
+                                    </span>
+                                    <p style={{ fontSize: "15px", fontWeight: 600, marginBottom: "0px" }}>
+                                        {t("No")}
+                                    </p>
+                                </div>
+                            </div>
+                        )
+                    }
                 </div>
             ))}
 
@@ -320,7 +356,19 @@ const FinancialInfo = () => {
                         }}
                         style={{ fontWeight: 600, background: "transparent", border: "none", outline: "none" }}
                     >Cancel</button>
-                    <button onClick={saveHandler} disabled={questions.some(q => (!q.answers || q.answers.length === 0)) || loading} style={{ opacity: questions.some(q => (!q.answers || q.answers.length === 0)) && .3 }} className={styles.editBtn}>Save</button>
+                    <button
+                        onClick={saveHandler}
+                        disabled={
+                            questions.some(
+                                q =>
+                                (q.question_key === "crypto"
+                                    ? q.answers === null || q.answers === undefined
+                                    : !q.answers || q.answers.length === 0
+                                )
+                            ) || loading
+                        }
+                        style={{ opacity: questions.some(q => (!q.answers || q.answers.length === 0)) && .3 }}
+                        className={styles.editBtn}>Save</button>
                 </div>
             }
         </div >
