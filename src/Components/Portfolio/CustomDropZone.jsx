@@ -38,7 +38,9 @@ const Dropzone = ({ file, setFile, setFileType, pAddress }) => {
         }
 
         setFile(droppedFile);
-        setFileType(droppedFile?.type?.split('/')[0]);
+        if(setFileType){
+            setFileType(droppedFile?.type?.split('/')[0]);
+        }
 
         const reader = new FileReader();
         reader.onload = () => {
@@ -60,7 +62,9 @@ const Dropzone = ({ file, setFile, setFileType, pAddress }) => {
         }
 
         setFile(selectedFile);
-        setFileType(selectedFile?.type?.split('/')[0]);
+        if(setFileType){
+            setFileType(selectedFile?.type?.split('/')[0]);
+        }
 
         const reader = new FileReader();
         reader.onload = () => {

@@ -22,6 +22,7 @@ import Providers from "./Providers";
 import CreditCard from "../../PaymentsNewer/InternationalFlow/CreditCard";
 import PaypalCurrencies from "../PaypalCurrencies.json"
 import wallet_ic from "../files/add_f_ic.png"
+import BankDeposit from "./BankDeposit";
 const initialState = {
     step: 1,
     wallet: null,
@@ -334,7 +335,10 @@ const WalletFundsFlow = ({ setAction }) => {
                 }
                 break;
             case 4:
-                dataHandler("show_confirmation", true)
+                   // if => not bank
+                   dataHandler("show_confirmation", true)
+                    // if bank 
+                    // switch bank step 1 => make it 2 => make it 3 => confirm it
                 break;
             default:
                 break;
@@ -356,6 +360,7 @@ const WalletFundsFlow = ({ setAction }) => {
                 dataHandler("step", 3)
                 dataHandler("selectedSavedCard", {})
                 dataHandler("mobile_wallet_service", {})
+
                 break;
 
             default:
@@ -394,7 +399,7 @@ const WalletFundsFlow = ({ setAction }) => {
                         (contentYear === currentYear && contentMonth > currentMonth);
                     return !data.selectedSavedCard?._id && (!data.cardNumber || !data.expiry || !isValidExpiry || !data.cvc || data.cvc?.length < 3 || !data.cardHolderName)
                 }
-            break;    
+                break;
             default:
                 return false;
         }
@@ -767,7 +772,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                                 ?
                                                 "Confirm Your Payment"
                                                 :
-                                               t(headings[data.step - 1])
+                                                t(headings[data.step - 1])
                                 }
                             </h2>
                         </div>
