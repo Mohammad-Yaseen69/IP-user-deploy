@@ -359,15 +359,9 @@ const FinancialInfo = () => {
                     <button
                         onClick={saveHandler}
                         disabled={
-                            questions.some(
-                                q =>
-                                (q.question_key === "crypto"
-                                    ? q.answers === null || q.answers === undefined
-                                    : !q.answers || q.answers.length === 0
-                                )
-                            ) || loading
+                            questions.some(q => q.answers === "" || q.answers === undefined || q.answers === null || q.answers.length === 0) || loading
                         }
-                        style={{ opacity: questions.some(q => (!q.answers || q.answers.length === 0)) && .3 }}
+                        style={{ opacity: (questions.some(q => q.answers === "" || q.answers === undefined || q.answers === null || q.answers.length === 0) || loading) && .3 }}
                         className={styles.editBtn}>Save</button>
                 </div>
             }

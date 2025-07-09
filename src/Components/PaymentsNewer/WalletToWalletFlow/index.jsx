@@ -70,7 +70,7 @@ const initialState = {
     cardError: "",
     selectedSavedCard: {},
     cardTransactionDetails: {},
-    codeType: "sms",
+    codeType: "authenticator",
     exchange_rate: {},
     exchange_rate_error: "",
     error: "",
@@ -126,10 +126,15 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
     const payment_type = queryParams.get("payment_type")
 
     useEffect(() => {
-        if (userDetails?.tfa) {
-            dataHandler("codeType", "authenticator")
+        if (userDetails?._id) {
+            if (userDetails?.tfa) {
+                console.log("authcode-auth", userDetails?.tfa)
+                dataHandler("codeType", "authenticator")
+            } else {
+                dataHandler("codeType", "sms")
+            }
+            dataHandler("timezone", userDetails?.timezone)
         }
-        dataHandler("timezone", userDetails?.timezone)
     }, [userDetails])
 
 

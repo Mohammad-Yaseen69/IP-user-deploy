@@ -29,7 +29,7 @@ import { ChevronDown } from 'react-feather';
 
 const TwoFactorAuth = () => {
     const { t } = useTranslation()
-    const { userDetails, authHeader, verifyToken, setProfileLockTime, setMissingTabsData } = useContext(UserContext)
+    const { userDetails, authHeader, verifyToken, setProfileLockTime, setMissingTabsData, setUserDetails } = useContext(UserContext)
     const [emailActive, setEmailActive] = useState(false)
     const [smsActive, setSmsActive] = useState(false)
     const [wpActive, setWpActive] = useState(false)
@@ -114,6 +114,10 @@ const TwoFactorAuth = () => {
 
                 setMissingTabsData(prev => ([...prev, "tfa"]))
                 const dec = decryptData(res.data.data)
+                setUserDetails(prev => ({
+                    ...prev,
+                    tfa: false
+                }))
                 setAuthenticatorActive(false)
                 console.log(dec)
             } catch (error) {
