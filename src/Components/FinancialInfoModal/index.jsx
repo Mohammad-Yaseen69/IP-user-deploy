@@ -95,7 +95,7 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
     const [questions, setQuestions] = useState([
         {
             question: "What keeps you busy these days?",
-            info: "Whether you're running a business, freelancing, creating, or simply managing your personal finances — we'd love to hear about you!",
+            info: "Whether you're running a business, freelancing, creating, or simply managing your personal finances — we'd love to hear about you",
             step: 1,
             type: "keeps_busy"
         },
@@ -300,10 +300,10 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
             userDetails.user &&
             Array.isArray(userDetails.user.financial_answers)
         ) {
-            let filteringQuestions = [...questions]
-            filteringQuestions = filteringQuestions.filter(q => !userDetails?.user?.financial_answers?.some(a => a.question_key === q?.type))
-            setQuestions(filteringQuestions)
-            setActiveStep(filteringQuestions[0]?.type)
+            // let filteringQuestions = [...questions]
+            // filteringQuestions = filteringQuestions.filter(q => !userDetails?.user?.financial_answers?.some(a => a.question_key === q?.type))
+            // setQuestions(filteringQuestions)
+            // setActiveStep(filteringQuestions[0]?.type)
         }
     }, [userDetails])
     const width = useWindowWidth()
