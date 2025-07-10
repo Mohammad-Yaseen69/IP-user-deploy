@@ -15,7 +15,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
     const [search, setSearch] = useState("")
     const [showInviteModal, setShowInviteModal] = useState(false)
     const [searchedUsers, setSearchedUsers] = useState([])
-    const { authHeader, userDetails } = useContext(UserContext)
+    const { authHeader, userDetails, benLoading } = useContext(UserContext)
     const [error, setError] = useState("")
     const [expandRecent, setExpandRecent] = useState(false)
 
@@ -120,7 +120,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
                                 </div>
                             }
                             {
-                                (searchedUsers.length === 0 && !error && !data.loading)
+                                (searchedUsers.length === 0 && !error && (!data.loading && !benLoading))
                                 &&
                                 <div className={styles.guide}>
                                     <p>{t("Please follow these examples:")}</p>
@@ -133,7 +133,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
 
                             <div className={styles.users}>
                                 {
-                                    data.loading
+                                    ((data.loading || benLoading))
                                         ?
                                         <div className={styles.loader}>
                                             <InstaPayLoader />
@@ -158,7 +158,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
                             </div>
                         </>}
 
-                    {!data.loading &&
+                    {(!data.loading && !benLoading) &&
                         <RecentBeneficiary expandRecent={expandRecent} data={data} dataHandler={dataHandler} setExpandRecent={setExpandRecent} />
                     }
                 </AnimatePresence>
