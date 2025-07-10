@@ -23,8 +23,8 @@ import { getDecimalPointIndex } from "../../Helper/getDecimalIndex"
 import useWindowWidth from "../../utils/useWindowWidth"
 import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation"
 import NotFound from "../NotFound";
-import { faL } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from "react-i18next";
+import localforage from "localforage"
 
 const QrQuickerPay = () => {
   const [step, setStep] = useState(1)
@@ -105,9 +105,9 @@ const QrQuickerPay = () => {
 
 
       if (dec?.localStorage === false && phone) {
-        localStorage.setItem("phone", phone)
+        await localforage.setItem("phone", phone)
 
-        const localphone = localStorage.getItem("phone")
+        const localphone = await localforage.getItem("phone")
         console.log(localphone, "local storage value")
       }
       setFeeData(exchange_rate_details);
@@ -228,7 +228,7 @@ const QrQuickerPay = () => {
   const handleBiometricVerification = async () => {
     try {
       setIsPressed(true)
-      const localPhone = localStorage.getItem("phone");
+      const localPhone = await localforage.getItem("phone");
 
       const payload = {
         qr_quicker_pay: true
@@ -378,7 +378,7 @@ const QrQuickerPay = () => {
     )
   }
 
-  const {t} = useTranslation()
+  const { t } = useTranslation()
 
   return (
     <div style={{ position: 'relative' }} className={styles.cont}>
