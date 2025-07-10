@@ -192,9 +192,7 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
         setLoading(true)
         let answer;
 
-        const getAnswer = (type) => {
-            return userDetails?.user?.financial_answers?.find(q => q.question_key === type)?.answers
-        }
+
 
         switch (activeStep) {
             case "keeps_busy":
@@ -300,10 +298,10 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
             userDetails.user &&
             Array.isArray(userDetails.user.financial_answers)
         ) {
-            // let filteringQuestions = [...questions]
-            // filteringQuestions = filteringQuestions.filter(q => !userDetails?.user?.financial_answers?.some(a => a.question_key === q?.type))
-            // setQuestions(filteringQuestions)
-            // setActiveStep(filteringQuestions[0]?.type)
+            let filteringQuestions = [...questions]
+            filteringQuestions = filteringQuestions.filter(q => !userDetails?.user?.financial_answers?.some(a => a.question_key === q?.type))
+            setQuestions(filteringQuestions)
+            setActiveStep(filteringQuestions[0]?.type)
         }
     }, [userDetails])
     const width = useWindowWidth()
