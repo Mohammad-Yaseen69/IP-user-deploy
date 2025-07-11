@@ -2598,5 +2598,8 @@
   "Are you a crypto user?": "Kripto para kullanıcısı mısınız?",
   "Do you use crypto currency to send or receive your money?": "Paranızı göndermek veya almak için kripto para kullanıyor musunuz?",
   "Yes": "Evet",
-  "No": "HAYIR"
+  "No": "HAYIR",
+  "After buying, you will get a QR Code. Scan it to install the eSIM profile. When you arrive at your destination, remember to turn on data roaming in your device settings.": "Satın aldıktan sonra bir QR Kodu alacaksınız. eSIM profilini yüklemek için kodu tarayın. Hedefinize vardığınızda, cihaz ayarlarınızdan veri dolaşımını etkinleştirmeyi unutmayın.",
+  "SEND TOP-UP & ESIM": "TOP-UP & ESIM GÖNDER",
+  "Esim Price": "Esim Fiyatı"
 }

@@ -2611,5 +2611,8 @@
   "Are you a crypto user?": "Are you a crypto user?",
   "Do you use crypto currency to send or receive your money?": "Do you use crypto currency to send or receive your money?",
   "Yes": "Yes",
-  "No": "No"
+  "No": "No",
+  "After buying, you will get a QR Code. Scan it to install the eSIM profile. When you arrive at your destination, remember to turn on data roaming in your device settings.": "After buying, you will get a QR Code. Scan it to install the eSIM profile. When you arrive at your destination, remember to turn on data roaming in your device settings.",
+  "SEND TOP-UP & ESIM": "SEND TOP-UP & ESIM",
+  "Esim Price": "Esim Price"
 }

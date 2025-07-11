@@ -2598,5 +2598,8 @@
   "Are you a crypto user?": "Je, wewe ni mtumiaji wa crypto?",
   "Do you use crypto currency to send or receive your money?": "Je, unatumia sarafu ya crypto kutuma au kupokea pesa zako?",
   "Yes": "Ndiyo",
-  "No": "Hapana"
+  "No": "Hapana",
+  "After buying, you will get a QR Code. Scan it to install the eSIM profile. When you arrive at your destination, remember to turn on data roaming in your device settings.": "Baada ya kununua, utapata Msimbo wa QR. Ichanganue ili kusakinisha wasifu wa eSIM. Ukifika unakoenda, kumbuka kuwasha utumiaji wa data nje ya mtandao katika mipangilio ya kifaa chako.",
+  "SEND TOP-UP & ESIM": "TUMA TOP-UP & ESIM",
+  "Esim Price": "Bei ya Esim"
 }

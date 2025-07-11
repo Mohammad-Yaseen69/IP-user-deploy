@@ -1,28 +1,29 @@
 import React, { useContext, useEffect, useState } from 'react'
 import QrReader from "react-qr-reader";
-import CryptoJS from 'crypto-js';
-import invite from "../files/invite.png"
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { UserContext } from '../../../Context/UserContext';
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption';
 import styles from "./styles/aqd.module.css"
 import { useLocation } from 'react-router';
-import { getConstraints } from '../QRCodeScan';
 import InviteFriendModal from '../InviteFriendModal';
-import useWindowWidth from '../../../utils/useWindowWidth';
 import addU from "../../QuickQrPay/files/add-user.png"
 
-const AddQRDetails = ({ setSubStep, dataHandler }) => {
+const AddQRDetails = ({ setSubStep, dataHandler, sendPaymentType }) => {
     const [walletError, setWalletError] = useState("")
     const [isReady, setIsReady] = useState(false)
     const [result, setResult] = useState("");
     const { t } = useTranslation()
     const { authHeader, userDetails } = useContext(UserContext)
     const [isOpen, setIsOpen] = useState(false)
-    const [method, setMethod] = useState("qr")
+    const [method, setMethod] = useState()
 
 
+    useEffect(() => {
+        if (sendPaymentType === "qr_pay") {
+            setMethod("qr")
+        }
+    }, [sendPaymentType])
     useEffect(() => {
         if (result && result?.length === 8) {
             axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-user-wallets/${result}`, {

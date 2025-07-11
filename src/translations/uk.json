@@ -2603,5 +2603,8 @@
   "Are you a crypto user?": "Ви криптокористувач?",
   "Do you use crypto currency to send or receive your money?": "Чи використовуєте ви криптовалюту для надсилання чи отримання грошей?",
   "Yes": "так",
-  "No": "немає"
+  "No": "немає",
+  "After buying, you will get a QR Code. Scan it to install the eSIM profile. When you arrive at your destination, remember to turn on data roaming in your device settings.": "Після покупки ви отримаєте QR-код. Відскануйте його, щоб установити профіль eSIM. Коли ви прибудете в пункт призначення, не забудьте ввімкнути передачу даних у роумінгу в налаштуваннях свого пристрою.",
+  "SEND TOP-UP & ESIM": "ВІДПРАВИТИ ПОПОВНЕННЯ ТА ESIM",
+  "Esim Price": "Есім Ціна"
 }

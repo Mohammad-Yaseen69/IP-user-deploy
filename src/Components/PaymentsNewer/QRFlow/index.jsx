@@ -1125,6 +1125,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                                     <AddQRDetails
                                                                         setSubStep={() => { }}
                                                                         dataHandler={dataHandler}
+                                                                        sendPaymentType={sendPaymentType}
                                                                     />
                                                             )
                                                         }

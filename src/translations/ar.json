@@ -2596,5 +2596,8 @@
   "Are you a crypto user?": "هل أنت مستخدم للعملات المشفرة؟",
   "Do you use crypto currency to send or receive your money?": "هل تستخدم العملة المشفرة لإرسال أو استقبال أموالك؟",
   "Yes": "نعم",
-  "No": "لا"
+  "No": "لا",
+  "After buying, you will get a QR Code. Scan it to install the eSIM profile. When you arrive at your destination, remember to turn on data roaming in your device settings.": "بعد الشراء، ستحصل على رمز الاستجابة السريعة (QR Code). امسحه ضوئيًا لتثبيت ملف تعريف eSIM. عند وصولك إلى وجهتك، تذكر تفعيل خدمة تجوال البيانات في إعدادات جهازك.",
+  "SEND TOP-UP & ESIM": "إرسال شحن الرصيد وبطاقة ESIM",
+  "Esim Price": "سعر إيسيم"
 }

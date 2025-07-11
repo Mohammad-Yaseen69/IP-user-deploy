@@ -2507,5 +2507,8 @@
   "Are you a crypto user?": "Вы пользователь криптовалюты?",
   "Do you use crypto currency to send or receive your money?": "Используете ли вы криптовалюту для отправки или получения денег?",
   "Yes": "Да",
-  "No": "Нет"
+  "No": "Нет",
+  "After buying, you will get a QR Code. Scan it to install the eSIM profile. When you arrive at your destination, remember to turn on data roaming in your device settings.": "После покупки вы получите QR-код. Отсканируйте его, чтобы установить профиль eSIM. По прибытии в пункт назначения не забудьте включить роуминг данных в настройках устройства.",
+  "SEND TOP-UP & ESIM": "ОТПРАВИТЬ ПОПОЛНЕНИЕ И ESIM",
+  "Esim Price": "Эсим Прайс"
 }

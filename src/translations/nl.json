@@ -2585,5 +2585,8 @@
   "Are you a crypto user?": "Bent u een cryptogebruiker?",
   "Do you use crypto currency to send or receive your money?": "Gebruikt u cryptovaluta om uw geld te verzenden of ontvangen?",
   "Yes": "Ja",
-  "No": "Nee"
+  "No": "Nee",
+  "After buying, you will get a QR Code. Scan it to install the eSIM profile. When you arrive at your destination, remember to turn on data roaming in your device settings.": "Na aankoop ontvang je een QR-code. Scan deze om het eSIM-profiel te installeren. Vergeet bij aankomst op je bestemming niet om dataroaming in te schakelen in de instellingen van je apparaat.",
+  "SEND TOP-UP & ESIM": "VERSTUUR TOP-UP & ESIM",
+  "Esim Price": "Esim-prijs"
 }

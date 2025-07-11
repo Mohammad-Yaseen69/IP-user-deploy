@@ -2596,5 +2596,8 @@
   "Are you a crypto user?": "Ṣe o jẹ olumulo crypto kan?",
   "Do you use crypto currency to send or receive your money?": "Ṣe o lo owo crypto lati firanṣẹ tabi gba owo rẹ?",
   "Yes": "Bẹẹni",
-  "No": "Rara"
+  "No": "Rara",
+  "After buying, you will get a QR Code. Scan it to install the eSIM profile. When you arrive at your destination, remember to turn on data roaming in your device settings.": "Lẹhin rira, iwọ yoo gba koodu QR kan. Ṣe ayẹwo rẹ lati fi profaili eSIM sori ẹrọ. Nigbati o ba de opin irin ajo rẹ, ranti lati tan lilọ kiri data ninu awọn eto ẹrọ rẹ.",
+  "SEND TOP-UP & ESIM": "Firanṣẹ TOP-UP & SIM",
+  "Esim Price": "Iye owo Esim"
 }

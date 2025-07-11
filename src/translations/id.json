@@ -2596,5 +2596,8 @@
   "Are you a crypto user?": "Apakah Anda pengguna kripto?",
   "Do you use crypto currency to send or receive your money?": "Apakah Anda menggunakan mata uang kripto untuk mengirim atau menerima uang Anda?",
   "Yes": "Ya",
-  "No": "TIDAK"
+  "No": "TIDAK",
+  "After buying, you will get a QR Code. Scan it to install the eSIM profile. When you arrive at your destination, remember to turn on data roaming in your device settings.": "Setelah pembelian, Anda akan menerima Kode QR. Pindai untuk memasang profil eSIM. Setibanya di tujuan, jangan lupa untuk mengaktifkan roaming data di pengaturan perangkat Anda.",
+  "SEND TOP-UP & ESIM": "KIRIM TOP-UP & ESIM",
+  "Esim Price": "Harga Esim"
 }
