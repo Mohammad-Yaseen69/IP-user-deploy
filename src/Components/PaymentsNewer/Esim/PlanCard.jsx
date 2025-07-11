@@ -35,11 +35,11 @@ const PlanCard = ({plan, data, handlePlanSelect}) => {
                         </div>
 
                         <div className={styles.dets}>
-                            <div className={styles.det}>
+                            <div style={{alignItems: "flex-end"}} className={styles.det}>
                                 <span>{t("Operator")}</span>
                                 <p>{plan.operator}</p>
                             </div>
-                            <div className={styles.det}>
+                            <div style={{alignItems: "flex-end"}} className={styles.det}>
                                 <span>{t("Operator Id")}</span>
                                 <p>{plan.operatorId}</p>
                             </div>
@@ -49,7 +49,7 @@ const PlanCard = ({plan, data, handlePlanSelect}) => {
                     <div className={styles.usageDiv}>
                         <div>
                             <span>{t("Usage info")}</span>
-                            <p>{plan.usageInfo}</p>
+                            <p>{t(plan.usageInfo)}</p>
                         </div>
                         <img src={data?.eSimData?.selectedPlan?.productId === plan.productId ? line2 : line} alt="" />
                     </div>

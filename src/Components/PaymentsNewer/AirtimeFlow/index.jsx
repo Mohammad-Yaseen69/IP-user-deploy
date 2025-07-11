@@ -220,11 +220,13 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                 userWallets?.[0]
                 :
                 userWallets?.find(item => item?.default)
+
+            console.log(data.wallet, data.payment_type)
             const dataa =
             {
                 "product_id": data?.package?.id || data.eSimData.selectedPlan?.productId,
                 "payment_method": data.payment_type?.value,
-                "wallet_id": data.payment_type === "wallet" ? data.airtime_currency?._id : data.default_wallet?._id,
+                "wallet_id": data.payment_type === "wallet" ? data.airtime_currency?._id : (data.flow === "e-sim" && data.payment_type?.value === "wallet") ? data?.wallet?._id  : data.default_wallet?._id,
                 "sub_service_id": data.service_type?.id || 12,
                 "local_wallet_id": def?._id,
                 "type": data.flow === "e-sim" && "esim"

@@ -44,7 +44,7 @@ const StepFour = ({ data, dataHandler, dataHandlerE }) => {
         <div style={{ maxHeight: "fit-content", }} className={styles.plans}>
           <div className={styles.inputs}>
             <div className={styles.input}>
-              <label htmlFor="">{t("Mobile number")}</label>
+              <label htmlFor="">{t("Mobile Number")}</label>
               <input
                 value={data.eSimData.phone}
                 type="number"
@@ -60,7 +60,7 @@ const StepFour = ({ data, dataHandler, dataHandlerE }) => {
             {showError && <p style={{ color: "red", fontSize: "12px", marginBottom: "0px" }}>{t(showError)}</p>}
 
             <div className={styles.input}>
-              <label htmlFor="">{t("Email address")}</label>
+              <label htmlFor="">{t("Email Address")}</label>
               <input value={data.eSimData.email} onChange={(e) => {
                 dataHandlerE("email", e.target.value)
               }} type="text" />

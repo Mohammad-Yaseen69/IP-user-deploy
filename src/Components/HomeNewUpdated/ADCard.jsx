@@ -85,18 +85,18 @@ const ADCard = ({ data, isActive }) => {
                             <h5>{data.currency?.code} {Number(data.balance.available + data.balance.reserved)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
                         </div>
                         <div style={{ display: "flex", flexDirection: "column" }}>
-                            <div style={{ padding: "0px", background: "none", flex: 1, justifyContent:  "flex-start", gap: "4px" }} className={`${r_styles.flex} ${r_styles.r_blocked}`}>
+                            <div style={{ padding: "0px", background: "none", flex: 1, justifyContent: "flex-start", gap: "4px" }} className={`${r_styles.flex} ${r_styles.r_blocked}`}>
                                 <span style={{ fontSize: '9px', fontWeight: 600 }}>{t("Available balance")}:</span>
                                 <h5>{data.currency?.code} {Number(data.balance.available)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
                             </div>
-                            <div style={{ padding: "0px", background: "none", flex: 1, justifyContent:  "flex-start", gap: "4px" }} className={`${r_styles.flex} ${r_styles.r_blocked}`} >
+                            <div style={{ padding: "0px", background: "none", flex: 1, justifyContent: "flex-start", gap: "4px" }} className={`${r_styles.flex} ${r_styles.r_blocked}`} >
                                 <span style={{ fontSize: '9px', fontWeight: 600 }}>{t("Blocked balance")}:</span>
                                 <h5>{data.currency?.code} {Number(data.balance.reserved)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
                             </div>
                         </div>
                         <div className={`${r_styles.flex} ${r_styles.r_wallet}`}>
                             <span>{t("Wallet ID")}:</span>
-                            <h5 style={{fontSize: '10px'}}>
+                            <h5 style={{ fontSize: '10px' }}>
                                 {data?.wallet_id}
                                 {
                                     copied
@@ -159,7 +159,7 @@ const ADCard = ({ data, isActive }) => {
                         </div>
                         <div className={styles.bottom}>
                             <p>{t("Monthly limit")}</p>
-                            <h3>{walletData?.balance_limits?.total} / {walletData?.balance_limits?.remaining}</h3>
+                            <h3 style={{ fontSize: (`${walletData?.balance_limits?.total} / ${walletData?.balance_limits?.remaining}`.length > 35 && window.innerWidth > 1000) && "min(.9vw, 20px)" }}>{walletData?.balance_limits?.total} / {walletData?.balance_limits?.remaining}</h3>
                             <div className={styles.bb}>
                                 <Progress
                                     value={(removeCommasAndCurrency(walletData?.balance_limits?.used) / removeCommasAndCurrency(walletData?.balance_limits?.total)) * 100}

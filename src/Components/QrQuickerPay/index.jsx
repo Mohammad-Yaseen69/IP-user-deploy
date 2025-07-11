@@ -396,7 +396,7 @@ const QrQuickerPay = () => {
                   <p style={{ fontWeight: 600, fontSize: "15px", color: "#6f6f6f" }}>{t(error)}</p>
 
                   <div style={{ display: "flex", gap: "10px", flexDirection: windowWidth < 400 && "column", marginTop: "2rem" }}>
-                    {(error.toLowerCase().inclerror.toLowerCase()?.includes("amount exceeds")udes("inactive") || limitErrors || error.toLowerCase()?.includes("amount exceeds")) &&
+                    {(error.toLowerCase().includes("inactive") || limitErrors || error.toLowerCase()?.includes("amount exceeds")) &&
                       <button
                         onClick={() => {
                           setStep(1)
