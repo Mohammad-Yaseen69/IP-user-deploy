@@ -190,7 +190,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             }
         }
 
-    }, [userDetails, userWithdrawals, missingTabsData]);
+    }, [userDetails, userWithdrawals, missingTabsData, profileCompleted]);
 
     console.log(missingTabsData)
 

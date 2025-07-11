@@ -227,7 +227,7 @@ const BeneficiaryCard = ({ user }) => {
                             // aspectRatio: 1
                         }} />
                     </div>
-                    <div className={styles.icon_con} style={{
+                    {/* <div className={styles.icon_con} style={{
                         background: "linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%)",
                         display: "flex",
                         justifyContent: "center",
@@ -242,7 +242,7 @@ const BeneficiaryCard = ({ user }) => {
                             // objectFit: "contain",
                             // aspectRatio: 1
                         }} />
-                    </div>
+                    </div> */}
                     <div className={styles.t_d} onClick={toggleShowMore}>
                         <MoreHorizontal style={{ transform: "translateY(-7px)" }} />
                         {

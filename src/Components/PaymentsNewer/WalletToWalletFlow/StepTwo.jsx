@@ -344,12 +344,12 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee }) => {
                     </div>
                     {
                         (data.exchange_rate?.fee?.amount && showFee)
-                        &&
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
-                            <strong>{t("Fee")}</strong>
-                            <strong>{Number(cleanString(data.exchange_rate?.fee?.amount))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data.exchange_rate?.fee?.currency} </strong>
-                            {/* <strong>{Number(data.exchange_rate?.total)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data.currency?.currency?.code} </strong> */}
-                        </div>
+                            ?
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
+                                <strong>{t("Fee")}</strong>
+                                <strong>{Number(cleanString(data.exchange_rate?.fee?.amount))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data.exchange_rate?.fee?.currency} </strong>
+                                {/* <strong>{Number(data.exchange_rate?.total)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data.currency?.currency?.code} </strong> */}
+                            </div> : null
                     }
                     {
                         data.exchange_rate?.total

@@ -101,13 +101,6 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             cardCVC: "",
             cardHolderName: "",
         });
-
-        if (feeDetails?.feeDetails?.amountToTopup) {
-            setCurrentCardDetails(prev => ({
-                ...prev,
-                balance: (+prev.balance + +feeDetails?.feeDetails?.amountToTopup).toFixed(2),
-            }))
-        }
         if (width < 1000) {
             navigate("/my-mastercard")
         }
@@ -369,6 +362,10 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             setshowOtpModal(false)
             const dec = decryptData(res.data.data)
             setStep(prev => prev + 1)
+            setCurrentCardDetails(prev => ({
+                ...prev,
+                balance: (+prev?.balance + +feeDetails?.feeDetails?.amountToTopup).toFixed(2),
+            }))
             console.log(dec)
         } catch (err) {
             const decrypted = decryptData(err.response.data.data);

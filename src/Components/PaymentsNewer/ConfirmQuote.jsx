@@ -8,7 +8,6 @@ import SelectedAmountAndCurrency from "./SelectedAmountAndCurrency";
 import SelectedPaymentType from "./SelectedPaymentType";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css"
-import { useDispatch } from "react-redux";
 import faded_lines from "./files/faded_lines.png"
 import { FaRegFilePdf, FaRegFileVideo } from "react-icons/fa";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
@@ -21,7 +20,6 @@ import { useNavigate } from "react-router";
 const ConfirmQuote = ({ beneficiary, amount, currency, setConfirmed, setSubStep, title, description, isBargainable, files, setBeneficiary, quotationDetails, setToken, totalBalance }) => {
     const { t } = useTranslation()
     const [complete, setComplete] = useState(false);
-    const dispatch = useDispatch();
     const pRef = useRef(null)
     const divRef = useRef(null)
     const svgRef = useRef(null)

@@ -99,7 +99,7 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
                             onClick={() => {
                                 if (step === 4) {
                                     setReRender(true)
-                                    setCardPurchased(true)
+                                    // setCardPurchased(true)
                                     return
                                 }
                                 if (step !== 3) {

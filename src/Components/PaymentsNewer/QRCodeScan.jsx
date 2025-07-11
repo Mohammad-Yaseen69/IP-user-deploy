@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Card, CardBody, Input, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import QrReader from 'react-qr-reader';
-import CryptoJS from 'crypto-js';
 import invite from "./files/invite.png"
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
