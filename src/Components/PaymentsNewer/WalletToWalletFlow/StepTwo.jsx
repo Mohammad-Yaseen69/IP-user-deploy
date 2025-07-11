@@ -10,6 +10,7 @@ import { currencies } from "../InternationalFlow/StepOne"
 import { possibleErrors } from "../OTPConfirmation"
 import { formatCurrency } from "../../../Helper/AmountFormat"
 import { cleanString } from "../../../Helper/cleanString"
+import useWindowWidth from "../../../utils/useWindowWidth"
 
 let api_timeout;
 const StepTwo = ({ data, dataHandler, getExchangeRate, showFee }) => {
@@ -19,6 +20,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee }) => {
     const [showCurrency, setShowCurrency] = useState(false)
     const [amountLoading, setAmountLoading] = useState(false)
     const [receivingAmountLoading, setReceivingAmountLoading] = useState(false)
+    const width = useWindowWidth()
 
     useEffect(() => {
         if (userWallets?.length > 0 && !data.currency?._id && !data.currency_wallet?._id && !data.wallet?._id) {
@@ -59,7 +61,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee }) => {
         return () => {
             clearTimeout(api_timeout)
         }
-    }, [data?.currency, data.amount])
+    }, [data?.currency, data.reCallApi])
 
     const wallets = useMemo(() => {
         return userWallets.filter(item => item?.wallet_type === "insta" && !item?.blocked && !item?.admin_blocked && item?.status === "active").map(item => {
@@ -114,7 +116,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee }) => {
 
     return (
         <div className={styles.container}>
-            <div className={styles.amount_and_currency}>
+            <div style={{ flexDirection: width < 500 && "column", alignItems: width < 500 && "flex-start" }} className={styles.amount_and_currency}>
                 {
                     amountLoading
                         ?
@@ -126,11 +128,13 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee }) => {
                             <label>{t("You Send")}</label>
                             <input
                                 type="text"
+                                style={{ fontSize: width < 500 && "1.5rem" }}
                                 value={data.amount}
                                 onChange={(e) => {
                                     if (e.target.value === "") {
                                         dataHandler("recipient_amount", "")
                                     }
+                                    dataHandler("reCallApi", e.target.value)
                                     dataHandler("amount", e.target.value)
                                 }}
                                 onKeyDown={(e) => {
@@ -146,7 +150,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee }) => {
                             />
                         </div>
                 }
-                <div className={styles.currency} onClick={() => setShowCurrency(true)}>
+                <div style={{ width: width < 500 && "100%", justifyContent: width < 500 && "center" }} className={styles.currency} onClick={() => setShowCurrency(true)}>
                     <img src={data.currency?.file_url} alt="" style={{ height: "15px", width: "15px", objectFit: "cover", boxShadow: "0 0 3px #1111111e", borderRadius: "4px", marginRight: "-.3rem" }} />
                     <span>{data?.currency?.currency?.code} </span>
                     <img className={styles.chev} src={chev_down} alt="" />
@@ -243,7 +247,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee }) => {
                             }
                         </div>
                         :
-                        <div className={styles.exchange_rate} style={{ justifyContent: window.innerWidth > 1000 ? "inherit" : "center" }}>
+                        <div className={styles.exchange_rate} style={{ justifyContent: width > 1000 ? "inherit" : "center" }}>
                             {
                                 data?.exchange_rate?.receiver?.currency === data?.currency?.currency?.code
                                     ?
@@ -291,7 +295,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee }) => {
                                 :
                                 <>
                                     <span>{t("They Receive")}</span>
-                                    <h5 style={{ display: "flex", gap: ".5rem" }}>
+                                    <h5 style={{ display: "flex", gap: ".5rem", fontSize: width < 500 && "24px" }}>
                                         {data?.beneficiary_wallet?.currency?.code}
                                         <input
                                             type="text"
@@ -321,7 +325,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee }) => {
                     display: "flex",
                     flexDirection: "column",
                     gap: "1rem",
-                    background: window.innerWidth > 1000 ? "transparent" : "rgba(0, 0, 0, 0.02)"
+                    background: width > 1000 ? "transparent" : "rgba(0, 0, 0, 0.02)"
                 }}>
                     {
                         data?.exchange_rate?.receiver?.currency === data?.currency?.currency?.code

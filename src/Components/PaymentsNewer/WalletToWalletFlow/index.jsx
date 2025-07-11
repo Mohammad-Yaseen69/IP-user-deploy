@@ -89,7 +89,8 @@ const initialState = {
     timezone: "",
     first_time: true,
     limitReached: false,
-    ratesError: false
+    ratesError: false,
+    reCallApi: ""
 }
 
 function reducer(state, action) {
