@@ -396,7 +396,7 @@ const QrQuickerPay = () => {
                   <p style={{ fontWeight: 600, fontSize: "15px", color: "#6f6f6f" }}>{t(error)}</p>
 
                   <div style={{ display: "flex", gap: "10px", flexDirection: windowWidth < 400 && "column", marginTop: "2rem" }}>
-                    {(error.toLowerCase().includes("inactive") || limitErrors) &&
+                    {(error.toLowerCase().inclerror.toLowerCase()?.includes("amount exceeds")udes("inactive") || limitErrors || error.toLowerCase()?.includes("amount exceeds")) &&
                       <button
                         onClick={() => {
                           setStep(1)
@@ -407,9 +407,11 @@ const QrQuickerPay = () => {
                         {t("Change Amount")}
                       </button>
                     }
-                    <button onClick={() => navigate(`/q/${wallet_id}?login_flow=true`)} style={{ background: "#ff4b4b", color: "#fff", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600 }}>
-                      {t("Login and Continue")}
-                    </button>
+                    {error.toLowerCase()?.includes("amount exceeds") &&
+                      <button onClick={() => navigate(`/q/${wallet_id}?login_flow=true`)} style={{ background: "#ff4b4b", color: "#fff", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600 }}>
+                        {t("Login and Continue")}
+                      </button>
+                    }
                   </div>
                 </ModalBody>
               </Modal>
