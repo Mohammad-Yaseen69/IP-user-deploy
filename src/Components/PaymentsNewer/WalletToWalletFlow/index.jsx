@@ -99,7 +99,18 @@ function reducer(state, action) {
                 ...state,
                 [action.field]: action.value
             };
-        // other cases can be added here
+        case "CLEAR_STEP_TWO_DATA":
+            return {
+                ...state,
+                beneficiary: {},
+                beneficiary_wallet: {},
+                amount: 1.00,
+                recipient_amount: 0.00,
+                exchange_rate: {},
+                exchange_rate_error: "",
+                currency: {},
+                currency_wallet: {},
+            };
         case "RESET":
             return initialState
         default:
@@ -1259,6 +1270,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                             else if (data.step === 2 && Object.keys(data.beneficiary).length > 0 && Object.keys(data.beneficiary_wallet)) {
                                                                 dataHandler("beneficiary", {})
                                                                 dataHandler("beneficiary_wallet", {})
+                                                                dispatch({ type: "CLEAR_STEP_TWO_DATA" })
                                                                 // dataHandler("amount", 1)
                                                                 dataHandler("step", data.step - 1)
                                                             }
@@ -1567,6 +1579,10 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                         }
                                                         else if (data.step === 5) {
                                                             dataHandler("showCard", false)
+                                                            dataHandler("step", data.step - 1)
+                                                        }
+                                                        else if (data.step === 2) {
+                                                            dispatch({ type: "CLEAR_STEP_TWO_DATA" })
                                                             dataHandler("step", data.step - 1)
                                                         }
                                                         else {

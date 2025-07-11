@@ -724,7 +724,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                             <div className={styles.bottom}>
                                 {!cardLoading &&
                                     <h2>
-                                        ${currentCardDetails?.balance >= 0.01 ? Number(currentCardDetails.balance)?.toFixed(2) : Number(currentCardDetails?.balance).toFixed(getDecimalPointIndex(+currentCardDetails?.balance))}
+                                        ${currentCardDetails?.balance >= 0.01 ? Number(currentCardDetails?.balance)?.toFixed(2) : Number(currentCardDetails?.balance).toFixed(getDecimalPointIndex(+currentCardDetails?.balance))}
                                     </h2>}
                                 {cardLoading &&
                                     <div style={{ width: '150px' }}>

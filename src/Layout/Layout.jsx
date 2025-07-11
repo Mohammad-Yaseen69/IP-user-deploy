@@ -258,25 +258,25 @@ const Layout = ({ children, classNames, ...rest }) => {
           toggle={() => setShowInactivityModal(!showInactivityModal)}
         />
         {
-          is30DaysInfo
+          (is30DaysInfo && profileCompleted === true)
           &&
           <FinancialInfoModal
-            isOpen={is30DaysInfo}
+            isOpen={is30DaysInfo && profileCompleted === true}
             toggleOnSuccess={() => setIs30DaysInfo(!is30DaysInfo)}
             setShowSuccessModal={setShowSuccessModal}
           />
         }
 
-        {threeDaysReminderInfo &&
+        {(threeDaysReminderInfo && profileCompleted === true) &&
           <FinancialInfoModal
-            isOpen={threeDaysReminderInfo}
+            isOpen={threeDaysReminderInfo && profileCompleted === true}
             toggle={() => set3DaysReminderInfo(!threeDaysReminderInfo)}
             toggleOnSuccess={() => set3DaysReminderInfo(!threeDaysReminderInfo)}
             setShowSuccessModal={setShowSuccessModal}
           />
         }
         {
-          is30Days
+          (is30Days && !threeDaysReminderInfo && profileCompleted === true && !is30DaysInfo)
             ?
             <ThirtyDaysModal
               isOpen={is30Days}
@@ -284,7 +284,7 @@ const Layout = ({ children, classNames, ...rest }) => {
             />
             :
             <ThreeDaysModal
-              isOpen={threeDaysReminder}
+              isOpen={threeDaysReminder && !threeDaysReminderInfo && profileCompleted === true && !is30DaysInfo}
               toggle={() => set3DaysReminder(!threeDaysReminder)}
             />
         }

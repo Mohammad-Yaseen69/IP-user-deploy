@@ -141,7 +141,7 @@ const UserState = ({ children }) => {
     const [profileCompletedPercentage, setProfileCompletedPercentage] = useState(0)
     const [profileIncompleteReason, setProfileIncompleteReason] = useState("")
     const [showModalState, setShowModalState] = useState(false)
-    const [benLoading, setBenLoading] = useState(true)
+    const [benLoading, setBenLoading] = useState(false)
     const navigate = useNavigate()
     const [croppedImages, setCroppedImages] = useState({
         profileDP: "",

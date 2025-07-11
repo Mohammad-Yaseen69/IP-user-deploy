@@ -212,9 +212,37 @@ export const BeneficiaryCard = ({ data, dataHandler, item, type, setBenWalletsFo
         gridTemplateColumns: "repeat(auto-fit, minmax(40px, 1fr))"
     }
     return (
-        <div className={`${styles.user} ${showMore ? styles.user_full : ""}`}>
+        <div className={`${styles.user} ${showMore ? styles.user_full : ""}`} >
 
-            <div className={styles.user_details}>
+            <div onClick={() => {
+                if (type === "recent") {
+                    if (!showMore) {
+                        if (item?.wallets) {
+                            if (item.existType === "wallet") {
+                                const filteredWallets = item?.wallets?.filter(w => !userWallets.find(userW => userW.wallet_id === w?.wallet_id))
+                                setBenWallets(filteredWallets)
+                                setShowMore(true)
+                            }
+                            else {
+                                setBenWallets(item?.wallets)
+                                setShowMore(true)
+                            }
+                        }
+                        else {
+                            if (item?.existType === "phone") {
+                                findWallets(item?.phone)
+                            }
+                            else if (item?.existType === "email") {
+                                findWallets(item?.email)
+                            }
+                        }
+                    } else {
+                        setShowMore(false)
+                    }
+                }
+            }}
+                className={styles.user_details}
+            >
                 {
                     item?.profileImage
                         ?
