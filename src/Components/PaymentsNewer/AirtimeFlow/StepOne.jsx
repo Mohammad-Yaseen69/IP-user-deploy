@@ -7,11 +7,13 @@ import esim from "./files/esim.svg"
 import e_dude from "./files/e_dude.png"
 import utils from "./files/utils.svg"
 import { ChevronRight } from 'react-feather'
+import useWindowWidth from '../../../utils/useWindowWidth'
 
 const StepOne = ({ data, dataHandler, setCurrentFlow, setAction, setStep }) => {
     const { t } = useTranslation()
+    const width = useWindowWidth()
     return (
-        <div style={{height: "100%"}} className={styles.container}>
+        <div style={{ height: "100%" }} className={styles.container}>
             <div className={styles.cards}>
                 <div className={`${styles.card} ${data.flow === "airtime" ? styles.active : ""}`} onClick={() => {
                     // if (window.innerWidth < 1000) {
@@ -40,7 +42,7 @@ const StepOne = ({ data, dataHandler, setCurrentFlow, setAction, setStep }) => {
                         <img src={esim} alt="" className={styles.icon} />
                         <span>{t("E-SIM")}</span>
                     </div>
-                    <img src={e_dude} alt="" />
+                    <img style={{ width: width < 600 && "120%", bottom: width < 600 && "0px", right : width < 600 && "-100px" }} src={e_dude} alt="" />
                 </div>
                 <div className={`${styles.card} ${styles.coming_soon}`}>
                     <h4>{t("Coming Soon")}</h4>
