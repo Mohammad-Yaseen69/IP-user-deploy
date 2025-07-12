@@ -838,9 +838,6 @@
                 }
             }
 
-            .table_body_mobile {
-                display: none;
-            }
 
             .table_body {
                 display: flex;
@@ -1249,6 +1246,82 @@
         .walletOptions {
             flex-direction: column !important;
             gap: 12px !important;
+        }
+    }
+
+    .table {
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-bottom: 3rem;
+
+            .right {
+                display: flex;
+                overflow-x: auto;
+                gap: 1.25rem;
+                padding-bottom: .5rem;
+
+                .menu_item {
+                    display: flex;
+                    align-items: center;
+                    gap: .75rem;
+                    padding: 5px 10px;
+                    border-radius: 9px;
+                    flex-shrink: 0;
+                    min-width: 120px;
+                }
+            }
+
+            .left {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                position: relative;
+                background: #FAFAFA;
+                padding: .75rem;
+                border-radius: 10px;
+                justify-content: space-between;
+
+                .search {
+                    display: flex;
+                    align-items: center;
+                    background: #fff;
+                    box-shadow: 0px 4.327520847320557px 35.70204544067383px 0px rgba(0, 0, 0, 0.06);
+                    padding: 7px 13px;
+                    border-radius: 12px;
+                    flex: 1;
+
+                    input {
+                        all: unset;
+                        width: 100%;
+                        padding-left: 13px;
+                    }
+                }
+
+                img {
+                    width: 35px;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .tableWrapper {
+            .table_header {
+                display: none;
+            }
+
+            .table_body {
+                display: none;
+            }
+
+            .table_body_mobile {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+                max-height: 60vh;
+                overflow-y: auto;
+            }
         }
     }
 }

@@ -12,7 +12,8 @@ import recieved_white from "../TransactionsNewApi/files/received_white.png"
 import recieved_grey from "../TransactionsNewApi/files/received_grey.png"
 import { DateRangePicker } from "react-date-range";
 import TransactionItem from "../TransactionsNewApi/TransactionItem";
-import TransactionItemMobile from "../TransactionsNewApi/Mobile/TransactionItemMobile";
+import MobileTransactionItem from "./MobileTransactionItem";
+import useWindowWidth from "../../utils/useWindowWidth";
 
 const TransactionsTable = ({ transactions = [], isLoading = false, cardNo, ref }) => {
     const { t } = useTranslation()
@@ -27,7 +28,7 @@ const TransactionsTable = ({ transactions = [], isLoading = false, cardNo, ref }
     const datePickerRef = useRef(null);
     const [searchQuery, setSearchQuery] = useState("")
     const [filteredTransactions, setFilteredTransactions] = useState(transactions)
-
+    const width = useWindowWidth()
 
     console.log("transactions", transactions)
     const handleDatePickerClick = useCallback(() => {
@@ -59,18 +60,6 @@ const TransactionsTable = ({ transactions = [], isLoading = false, cardNo, ref }
             icon_white: recieved_white,
             icon_grey: recieved_grey
         },
-        // {
-        //     id: 4,
-        //     name: "Send",
-        //     icon_white: sent_white,
-        //     icon_grey: send_grey
-        // },
-        // {
-        //     id: 5,
-        //     name: "Recieved",
-        //     icon_white: recieved_white,
-        //     icon_grey: recieved_grey
-        // },
     ]), [])
 
     const tableWrapperRef = useRef(null)
@@ -90,6 +79,65 @@ const TransactionsTable = ({ transactions = [], isLoading = false, cardNo, ref }
     useEffect(() => {
         setFilteredTransactions(transactions)
     }, [transactions])
+
+    if (width < 1000) {
+        return (
+            <div ref={ref ?? null} style={{ marginTop: "1rem" }} className={styles.table}>
+                <div className={styles.menu}>
+                    <div className={styles.right}>
+                        {menuData.map(item => (
+                            <div key={item.id} style={{
+                                background: active === item.name ? "linear-gradient(346deg, #E64067 0%, #5926F0 55.65%, #4828A0 100%), #D9D9D9" : "#f8f8f8",
+                                boxShadow: active === item.name ? "0px 11.90068244934082px 8.655041694641113px rgba(89, 38, 240, 0.17)" : "none",
+                                color: active === item.name ? "white" : "#848484"
+                            }} className={styles.menu_item} onClick={() => setActive(item.name)}>
+                                <img src={active === item.name ? item.icon_white : item.icon_grey} style={{ width: "18px" }} alt={t(item.name)} />
+                                <span>{t(item.name)}</span>
+                                {active === item.name && <div className={styles.dot}></div>}
+                            </div>
+                        ))}
+                    </div>
+                    <div className={styles.left}>
+                        <div className={styles.search}>
+                            <Search size={16} color="#848484" />
+                            <Input placeholder={t("Search Transactions")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                        </div>
+                        <img src={calendar} alt={t("calendar")} onClick={handleDatePickerClick} />
+                        {showDatePicker && (
+                            <div ref={datePickerRef} style={{ position: "absolute", top: "100%", right: 0, boxShadow: "0px 0px 3px rgba(0,0,0,0.1)", borderRadius: "10px", overflow: "hidden", zIndex: 10000000 }}>
+                                <DateRangePicker
+                                    maxDate={new Date()}
+                                    ranges={[dateRange]}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        )}
+                    </div>
+                </div>
+                <div className={styles.tableWrapper}>
+                    <div className={styles.table_body_mobile} ref={tableWrapperRefMobile} style={{ minHeight: "300px" }}>
+                        {isLoading ? (
+                            <div style={{ textAlign: "center", marginTop: "2rem" }}>{t("Loading...")}</div>
+                        ) : filteredTransactions.length > 0 ? (
+                            filteredTransactions.map((item, index) => (
+                                <MobileTransactionItem
+                                    item={item}
+                                    key={item._id}
+                                    activeItem={activeItem}
+                                    setActiveItem={setActiveItem}
+                                    index={index}
+                                    cardNo={cardNo}
+                                />
+                            ))
+                        ) : (
+                            <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Transactions")}</span>
+                        )}
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div ref={ref ?? null} style={{ marginTop: "1rem" }} className={styles.table}>
             <div className={styles.menu}>
@@ -151,27 +199,6 @@ const TransactionsTable = ({ transactions = [], isLoading = false, cardNo, ref }
                                 index={index}
                                 vvc={true}
                                 cardNo={cardNo}
-                            />
-                        ))
-                    ) : (
-                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Transactions")}</span>
-                    )}
-                </div>
-                <div className={styles.table_body_mobile} ref={tableWrapperRefMobile} style={{ minHeight: "300px" }}>
-                    {isLoading ? (
-                        <div style={{ textAlign: "center", marginTop: "2rem" }}>{t("Loading...")}</div>
-                    ) : filteredTransactions.length > 0 ? (
-                        filteredTransactions.map((item, index) => (
-                            <TransactionItemMobile
-                                color={item?.status?.toLowerCase() === "completed" ? "#15bd43" :
-                                    item?.status?.toLowerCase() === "pending" ? "rgba(89, 38, 240, 0.55)" :
-                                        item?.status?.toLowerCase() === "cancelled" ? "#ed1d1d" : ""}
-                                item={item}
-                                key={item._id}
-                                activeItem={activeItem}
-                                setActiveItem={setActiveItem}
-                                index={index}
-                                vvc={true}
                             />
                         ))
                     ) : (
