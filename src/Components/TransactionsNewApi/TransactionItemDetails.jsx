@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import styles from "./styles/TransactionItemDetails.module.css"
-import { useMemo, useState } from "react"
+import { useContext, useMemo, useState } from "react"
 import countries from "../PaymentsNewer/CountriesData.json"
 import { service_name_formatter } from "./TransactionItem"
 import CatDown from "./CatDown"
@@ -11,9 +11,11 @@ import status_styles from "../PaymentsNewer/InternationalFlow/styles/receipt.mod
 import { Check } from "react-feather"
 import { Button } from "reactstrap"
 import ImageSwiperView from "../ImageSwiperView"
+import { UserContext } from "../../Context/UserContext"
 
-const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver, selectedCategory, setSelectedCategory, isEditMode, showCategories = false, addCategoriesToTransaction, message, setMessage, setIsEditMode, isSaving, note, setNote, fromReferral = false, vvc, amount }) => {
+const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver, selectedCategory, setSelectedCategory, isEditMode, showCategories = false, addCategoriesToTransaction, message, setMessage, setIsEditMode, isSaving, note, setNote, fromReferral = false, vvc, amount, cardNo }) => {
     const { t } = useTranslation()
+    const { userDetails} = useContext(UserContext)
 
     const country = useMemo(() => {
         return countries.find(item => internationalReceiver?.country_iso_code ? item.alpha3 === internationalReceiver?.country_iso_code : item?.receiver?.country_iso_code === item.alpha3)
@@ -48,7 +50,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                 </>
                                 :
                                 <>
-                                    {Number(item?.total)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item?.currency?.code}
+                                    {Number((item?.total || item?.billAmount))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item?.currency?.code || item?.currency}
                                 </>
                         }
 
@@ -61,15 +63,15 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                     item?.transaction_type === "debit"
                         ?
                         <div className={styles.er_item}>
-                            <span>{t("Amount To Send")}: {Number(item?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item?.currency?.code}  </span>
+                            <span>{t("Amount To Send")}: {Number(item?.amount || item?.txAmount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item?.currency?.code || item?.currency}  </span>
                         </div>
                         :
                         <div className={styles.er_item}>
-                            <span>{t("Received Amount")}: {Number(item?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item?.currency?.code}  </span>
+                            <span>{t("Received Amount")}: {Number(item?.amount || item?.txAmount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item?.currency?.code || item?.currency}  </span>
                         </div>
                 }
                 <div className={styles.er_item}>
-                    <span>{t("Fees")}: {Number(item?.fee ?? 0)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item?.currency?.code} </span>
+                    <span>{t("Fees")}: {Number(item?.fee ?? 0)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item?.currency?.code || item?.currency} </span>
                 </div>
                 {
                     item?.payment_type?.toLowerCase() === "commission" && item?.replacement_currency?.value
@@ -151,7 +153,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                                                                 ?
                                                                                 `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)?.[0]
                                                                                 :
-                                                                                `${internationalReceiver?.first_name ?? item?.account?.user?.first_name} ${internationalReceiver?.last_name?? item?.account?.user?.last_name}`.slice(0, 20)?.[0]
+                                                                                `${internationalReceiver?.first_name ?? item?.account?.user?.first_name} ${internationalReceiver?.last_name ?? item?.account?.user?.last_name}`.slice(0, 20)?.[0]
                                                             }
                                                         </>
                                                         :
@@ -159,7 +161,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                                             ?
                                                             `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)?.[0]
                                                             :
-                                                            `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)?.[0]
+                                                            `${item?.sender?.user?.first_name ?? item?.senderCard?.account?.first_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.first_name ?? userDetails?.first_name} ${item?.sender?.user?.last_name ?? item?.senderCard?.account?.last_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.last_name ?? userDetails?.last_name ?? ""}`.slice(0, 20)?.[0]
                                     }
                                 </div>
                                 {
@@ -195,7 +197,13 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                                                                     ?
                                                                                     `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`
                                                                                     :
-                                                                                    `${internationalReceiver?.first_name ?? item.receiverCard?.account?.first_name?? item?.account?.user?.first_name} ${internationalReceiver?.last_name ?? item.receiverCard?.account?.first_name?? item?.account?.user?.last_name}`
+                                                                                    `${internationalReceiver?.first_name ?? item.receiverCard?.account?.first_name ?? item?.account?.user?.first_name} ${internationalReceiver?.last_name ?? item.receiverCard?.account?.first_name ?? item?.account?.user?.last_name}`
+
+                                                                        // (item?.receiverCard?.account?.first_name && item?.receiverCard?.account?.last_name) ?
+                                                                        //     (item?.receiverCard?.account?.first_name + " " + item?.receiverCard?.account?.last_name) :
+                                                                        //     (item?.receiverWallet?.account?.first_name && item?.receiverWallet?.account?.last_name) ?
+                                                                        //         (item?.receiverWallet?.account?.first_name + " " + item?.receiverWallet?.account?.last_name) :
+                                                                        //         (item?.merchantName) : ""
                                                                     }
                                                                 </>
                                                                 :
@@ -203,17 +211,19 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                                                     ?
                                                                     `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`
                                                                     :
-                                                                    `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`
+                                                                    `${item?.sender?.user?.first_name ?? item?.senderCard?.account?.first_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.first_name ?? userDetails?.first_name} ${item?.sender?.user?.last_name ?? item?.senderCard?.account?.last_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.last_name ?? userDetails?.last_name}`
                                             }
                                         </h5>
                                         {
-                                            item?.service_type === "payment_address" && item?.guest_details
+                                            (item?.service_type === "payment_address" && item?.guest_details) || item?.cardNo
                                                 ?
                                                 ""
                                                 :
                                                 <p>INSTA-{item?.wallet_id}</p>
                                         }
-                                    </div>}
+                                        {item?.cardNo && <p>Card Number: ••{cardNo?.slice(-4)} </p>}
+                                    </div>
+                                }
                             </div>
                         </div>
                         {
@@ -246,7 +256,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                                 ?
                                                 "Referral Commission"
                                                 :
-                                                service_name_formatter(item?.payment_type)
+                                                service_name_formatter(item?.payment_type) || service_name_formatter(item?.transaction_type)?.replace("Mastercard", "")
                             }</p>
                         </div>
                     </div>
@@ -275,50 +285,70 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                     }
                 </div>
                 {
-                    showCategories
+                    (showCategories && !item.cardNo)
                     &&
                     <div className={styles.r_item}>
                         <span>{t("Category")}:</span>
                         <CatDown selectedCategories={selectedCategory} setSelectedCategories={setSelectedCategory} isEditMode={isEditMode} item={item} />
                     </div>
                 }
-                <div className={styles.files}>
-                    <span>{t("Attached Files")}</span>
-                    <div className={styles.files_count}>
-                        <img src={file} alt="" />
-                        <span>{item?.attachments?.length} File</span>
+                {!item.cardNo &&
+                    <>
+                        <div className={styles.files}>
+                            <span>{t("Attached Files")}</span>
+                            <div className={styles.files_count}>
+                                <img src={file} alt="" />
+                                <span>{item?.attachments?.length} File</span>
+                            </div>
+                            {
+                                item?.attachments && item?.attachments?.length > 0
+                                    ?
+                                    <>
+                                        <span className={styles.open_btn} onClick={() => setShowImgPreview(true)}>
+                                            {t("Open")}
+                                        </span>
+                                        {
+                                            showImgPreview
+                                            &&
+                                            <ImageSwiperView
+                                                isOpen={showImgPreview}
+                                                toggle={() => setShowImgPreview(false)}
+                                                images={item?.attachments}
+                                            />
+                                        }
+                                    </>
+                                    :
+                                    ""
+                            }
+                        </div>
+                        <div className={styles.r_item}>
+                            <span>{t("Note")}:</span>
+                            {
+                                isEditMode
+                                    ?
+                                    <input type="text" value={note} onChange={e => setNote(e.target.value)} style={{ width: "100%", borderRadius: "6px", border: "none", outline: "none", padding: ".6rem 1rem" }} />
+                                    :
+                                    <p className={styles.note}>{note}</p>
+                            }
+                        </div>
+                    </>
+                }
+
+                {item?.reason &&
+                    <div className={styles.r_item}>
+                        <span>{t("Reason")}: </span>
+                        <p className={styles.p_type}>{item?.reason}</p>
                     </div>
-                    {
-                        item?.attachments && item?.attachments?.length > 0
-                            ?
-                            <>
-                                <span className={styles.open_btn} onClick={() => setShowImgPreview(true)}>
-                                    {t("Open")}
-                                </span>
-                                {
-                                    showImgPreview
-                                    &&
-                                    <ImageSwiperView
-                                        isOpen={showImgPreview}
-                                        toggle={() => setShowImgPreview(false)}
-                                        images={item?.attachments}
-                                    />
-                                }
-                            </>
-                            :
-                            ""
-                    }
-                </div>
-                <div className={styles.r_item}>
-                    <span>{t("Note")}:</span>
-                    {
-                        isEditMode
-                            ?
-                            <input type="text" value={note} onChange={e => setNote(e.target.value)} style={{ width: "100%", borderRadius: "6px", border: "none", outline: "none", padding: ".6rem 1rem" }} />
-                            :
-                            <p className={styles.note}>{note}</p>
-                    }
-                </div>
+                }
+                {/* {item?.merchantCategory &&
+                    <div className={styles.r_item}>
+                        <span>{t("Merchant Category")}: </span>
+                        <p className={styles.p_type}>{item?.merchantCategory}</p>
+                    </div>
+                } */}
+
+
+
                 {
                     item?.timeline?.length > 0
                     &&
@@ -345,44 +375,45 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                         </div>
                     </div>
                 }
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    {
-                        message
-                            ?
-                            <span style={{ fontWeight: 700 }}>{message}</span>
-                            :
-                            <div></div>
-                    }
-                    {
-                        isEditMode
-                            ?
-                            <Button style={{
-                                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                                border: "none",
-                                outline: "none",
-                                borderRadius: "10px"
-                            }}
-                                onClick={addCategoriesToTransaction}
-                                disabled={isSaving || (selectedCategory.length < 1 && !note)}
-                            >
-                                {isSaving ? t("Saving") : t("Save")}
-                            </Button>
-                            :
-                            <Button style={{
-                                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                                border: "none",
-                                outline: "none",
-                                borderRadius: "10px"
-                            }}
-                                onClick={() => {
-                                    setIsEditMode(true)
-                                    setMessage("")
+                {!item.cardNo &&
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        {
+                            message
+                                ?
+                                <span style={{ fontWeight: 700 }}>{message}</span>
+                                :
+                                <div></div>
+                        }
+                        {
+                            isEditMode
+                                ?
+                                <Button style={{
+                                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                    border: "none",
+                                    outline: "none",
+                                    borderRadius: "10px"
                                 }}
-                            >
-                                {t("Edit")}
-                            </Button>
-                    }
-                </div>
+                                    onClick={addCategoriesToTransaction}
+                                    disabled={isSaving || (selectedCategory.length < 1 && !note)}
+                                >
+                                    {isSaving ? t("Saving") : t("Save")}
+                                </Button>
+                                :
+                                <Button style={{
+                                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                    border: "none",
+                                    outline: "none",
+                                    borderRadius: "10px"
+                                }}
+                                    onClick={() => {
+                                        setIsEditMode(true)
+                                        setMessage("")
+                                    }}
+                                >
+                                    {t("Edit")}
+                                </Button>
+                        }
+                    </div>}
             </div>
         </div>
     )

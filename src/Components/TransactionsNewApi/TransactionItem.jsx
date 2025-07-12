@@ -149,7 +149,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
     return (
         <div>
             <div className={styles.body_item} onClick={() => {
-                if(vvc) return
+                // if(vvc) return
                 if (!activeItem || activeItem !== index + 1) {
                     setActiveItem(index + 1)
                 } else {
@@ -160,8 +160,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                 {vvc && <div>{item?.transactionId}</div>}
                 {vvc && <div>••{cardNo?.slice(-4)}</div>}
                 {vvc && <div>{item?.type}</div>}
-                {vvc && <div>{item?.transaction_type ?? "--"} </div>}
-                {vvc && <div>{item?.reason ?? "--"}</div>}
+                {vvc && <div>{service_name_formatter(item?.transaction_type)?.replace("Mastercard", "") ?? "--"} </div>}
 
 
                 {!vvc &&
@@ -236,7 +235,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
 
 
                 {vvc &&
-                    <div style={{ marginRight: "2.3rem", color: item?.type === "credit" ? "green" : "red" }}>
+                    <div style={{ color: item?.type === "credit" ? "green" : "red" }}>
                         {symbol}{addDecimals(item?.billAmount)} {item?.type === "credit" ? "+" : "-"}
                     </div>
                 }
@@ -255,7 +254,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                 </div>
 
 
-               {!vvc &&
+               {true &&
                 <div style={{ maxWidth: "15px" }}>{
                     activeItem === index + 1
                         ?
@@ -286,6 +285,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                     setMessage={setMessage}
                     note={note}
                     setNote={setNote}
+                    cardNo={cardNo}
                 />
             }
         </div>

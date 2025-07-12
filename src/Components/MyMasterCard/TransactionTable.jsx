@@ -178,7 +178,6 @@ const TransactionsTable = ({ transactions = [], isLoading = false, cardNo, ref }
                     <div>{t("Card No")}</div>
                     <div>{t("Type")}</div>
                     <div>{t("Transaction Type")}</div>
-                    <div>{t("Reason")}</div>
                     <div>{t("Amount")}</div>
                     <div>{t("Status")}</div>
                     <div style={{ maxWidth: "15px" }}></div>
