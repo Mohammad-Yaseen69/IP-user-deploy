@@ -184,7 +184,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
     const getPackageRates = async () => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/service-products-details/${data.airtime_currency?._id}/${data.package?.id || data.eSimData.selectedPlan?.productId}`, {
+            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/service-products-details/${data.default_wallet?._id}/${data.package?.id || data.eSimData.selectedPlan?.productId}`, {
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
