@@ -44,7 +44,7 @@ const TopBar = () => {
                 </div>
                 <div className={styles.right}>
                     <LanguagePicker />
-                    <Col xs="auto" style={{
+                    {/* <Col xs="auto" style={{
                         padding: ".5rem",
                         boxShadow: "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
                         display: "flex",
@@ -57,7 +57,7 @@ const TopBar = () => {
                         height: "43px"
                     }}>
                         <img src={msg} alt="" />
-                    </Col>
+                    </Col> */}
                     <Notifications />
                 </div>
             </div>

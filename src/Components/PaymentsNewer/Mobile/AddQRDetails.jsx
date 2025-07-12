@@ -131,7 +131,7 @@ const AddQRDetails = ({ setSubStep, dataHandler, sendPaymentType }) => {
                         facingMode={{ facingMode: "environment" }}
                     />
                     <label htmlFor="input_qr">
-                        <div className={styles.mobileBtn}>
+                        <div style={{width: "45px", height: "45px", display: "grid", placeContent: "center"}} className={styles.mobileBtn}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="26" viewBox="0 0 25 26" fill="none">
                                 <path d="M21.5867 20.4045V6.13452C21.5867 5.01331 20.6693 4.09595 19.5481 4.09595H5.27809C4.15688 4.09595 3.23952 5.01331 3.23952 6.13452V20.4045C3.23952 21.5258 4.15688 22.4431 5.27809 22.4431H19.5481C20.6693 22.4431 21.5867 21.5258 21.5867 20.4045ZM9.25331 15.2877L11.3938 17.8665L14.5536 13.7996C14.7575 13.5345 15.1652 13.5345 15.369 13.8098L18.9467 18.58C19.0035 18.6557 19.0381 18.7458 19.0466 18.84C19.0551 18.9343 19.0372 19.0291 18.9949 19.1137C18.9525 19.1984 18.8875 19.2696 18.8069 19.3193C18.7264 19.3691 18.6337 19.3954 18.539 19.3954H6.31776C5.88966 19.3954 5.65523 18.9062 5.92024 18.5698L8.45827 15.3081C8.65193 15.0431 9.03926 15.0329 9.25331 15.2877Z" fill="#404040" />
                             </svg>
@@ -157,11 +157,11 @@ const AddQRDetails = ({ setSubStep, dataHandler, sendPaymentType }) => {
                     <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
                             <img src={addU} alt="" />
-                            <h6>
+                            <h6 style={{marginBottom: "0px"}}>
                                 Recipient Not on InstaPay?
                             </h6>
                         </div>
-                        <button onClick={() => setIsOpen(false)}><p>Invite them</p></button>
+                        <button onClick={() => setIsOpen(true)}><p>Invite them</p></button>
                     </div>
                     {walletError && <p className={styles.error} style={{ fontWeight: 600, color: "red" }}>{walletError}</p>}
                 </div>
