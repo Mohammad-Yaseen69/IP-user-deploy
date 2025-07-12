@@ -70,7 +70,7 @@ const AirtimeMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
                 }}>
                     <ChevronLeft />
                 </button>
-                <h5>{t("Send Top-up & eSIM").toUpperCase()}</h5>
+                <h5>{t("SEND TOP-UP AND E-SIM").toUpperCase()}</h5>
                 <div>
                     <TopIcon fill={step > 2 ? "#5926f0" : "black"} />
                 </div>

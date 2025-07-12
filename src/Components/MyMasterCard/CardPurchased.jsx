@@ -296,7 +296,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                 return txDate >= startDate && txDate <= endDate;
             });
         }
-        
+
         if (fileType === "pdf") {
             generatePDF(filteredTransactions);
         } else {
@@ -322,7 +322,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
         doc.setFont("sans-serif", "normal", "normal");
         doc.setFontSize(10);
         doc.text(`Transaction Statement for ${userDetails?.first_name} ${userDetails?.last_name}`, 14, 32, { maxWidth: 200 });
-        
+
         const currentDate = new Date();
         const formattedDate = `Generated on ${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
         doc.setFont("sans-serif", "normal", "bold");
@@ -378,10 +378,10 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
     const generateDOCX = (filteredTransactions) => {
         setDownloading(true);
-        
+
         const generateTableRows = () => {
             const rows = [];
-            
+
             // Add header row
             rows.push(
                 new TableRow({
@@ -834,21 +834,30 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     onMouseLeave={() => setTooltipOpen(prev => ({ ...prev, onlinePurchases: false }))}>
                                     <span id="online-purchases-label">{t('Online Purchases')}</span>
                                     <Tooltip isOpen={tooltipOpen.onlinePurchases}>{t('Coming soon')}</Tooltip>
-                                    <Toggle checked={checks.onlinePurchases} onChange={() => handleToggle("onlinePurchases")} />
+                                    <Toggle
+                                        checked={checks.onlinePurchases}
+                                    // onChange={() => handleToggle("onlinePurchases")}
+                                    />
                                 </div>
                                 <div style={{ justifyContent: "space-between", position: 'relative' }} className={styles.iconBox}
                                     onMouseEnter={() => setTooltipOpen(prev => ({ ...prev, bAndG: true }))}
                                     onMouseLeave={() => setTooltipOpen(prev => ({ ...prev, bAndG: false }))}>
                                     <span id="betting-gambling-label">{t('Online Betting and Gambling')}</span>
                                     <Tooltip isOpen={tooltipOpen.bAndG}>{t('Coming soon')}</Tooltip>
-                                    <Toggle checked={checks.bAndG} onChange={() => handleToggle("bAndG")} />
+                                    <Toggle
+                                        checked={checks.bAndG}
+                                    // onChange={() => handleToggle("bAndG")}
+                                    />
                                 </div>
                                 <div style={{ justifyContent: "space-between", position: 'relative' }} className={styles.iconBox}
                                     onMouseEnter={() => setTooltipOpen(prev => ({ ...prev, contactlessPay: true }))}
                                     onMouseLeave={() => setTooltipOpen(prev => ({ ...prev, contactlessPay: false }))}>
                                     <span id="contactless-label">{t('Contactless Payment')}</span>
                                     <Tooltip isOpen={tooltipOpen.contactlessPay}>{t('Coming soon')}</Tooltip>
-                                    <Toggle checked={checks.contactlessPay} onChange={() => handleToggle("contactlessPay")} />
+                                    <Toggle
+                                        checked={checks.contactlessPay}
+                                        // onChange={() => handleToggle("contactlessPay")}
+                                    />
                                 </div>
                             </div>
 
@@ -980,8 +989,8 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                     <div style={{ marginTop: "20px" }}>
                         <h5 style={{ fontWeight: 600, marginBottom: "15px" }}>Select The Type.</h5>
-                        <select 
-                            style={{ width: "100%", outline: "none", padding: "7px 10px", borderRadius: "5px", borderColor: "lightgray" }} 
+                        <select
+                            style={{ width: "100%", outline: "none", padding: "7px 10px", borderRadius: "5px", borderColor: "lightgray" }}
                             value={fileType}
                             onChange={(e) => setFileType(e.target.value)}
                         >
@@ -991,16 +1000,16 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                     </div>
                 </ModalBody>
                 <ModalFooter>
-                    <button 
-                        onClick={handleDownload} 
+                    <button
+                        onClick={handleDownload}
                         disabled={downloading}
-                        style={{ 
-                            border: 'none', 
-                            outline: "none", 
-                            padding: "7px 15px", 
-                            borderRadius: "5px", 
-                            fontWeight: 600, 
-                            background: downloading ? "#ccc" : "#5526e0", 
+                        style={{
+                            border: 'none',
+                            outline: "none",
+                            padding: "7px 15px",
+                            borderRadius: "5px",
+                            fontWeight: 600,
+                            background: downloading ? "#ccc" : "#5526e0",
                             color: "white",
                             cursor: downloading ? "not-allowed" : "pointer"
                         }}
