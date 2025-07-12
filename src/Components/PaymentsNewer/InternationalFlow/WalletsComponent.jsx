@@ -94,7 +94,8 @@ const WalletsComponent = ({ data, dataHandler, loading = false, inEsim }) => {
                             padding: "0 1.5rem",
                             borderRadius: ".6rem ",
                             textAlign: "center "
-                        }}>You have selected <strong style={{ fontWeight: "900", fontSize: "1rem" }}>{data.wallet?.currency?.code}</strong> currency wallet for this transaction.</p>
+                        }}>{t("You Have Selected PKR Currency Wallet For This Transaction").replace("PKR", `${data.wallet?.currency?.code}`)}</p>
+                        // <strong style={{ fontWeight: "900", fontSize: "1rem" }}>{data.wallet?.currency?.code}</strong>
                     }
                     {
                         filteredWallets?.length > 1 && (!inEsim)

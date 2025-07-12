@@ -632,7 +632,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                             style={{ height: "650px !important", maxWidth: "320px !important", aspectRatio: "unset !important", width: "fit-content", minWidth: window.innerWidth > 1650 ? "270px" : "200px", minHeight: "650px" }}
                             className={cardStyles.container}
                         >
-                            <img src={w3} className={cardStyles.bg} />
+                            <img alt="" src={w3} className={cardStyles.bg} />
                             <div className={cardStyles.item_dets}
                                 style={{ justifyContent: "space-between", minHeight: "650px" }}
                             >

@@ -28,14 +28,14 @@ const PlanCard = ({plan, data, handlePlanSelect}) => {
                                 <span>{t("Plan details")}</span>
                                 <p>{plan.name}</p>
                             </div>
-                            <div className={styles.det}>
+                            <div style={{alignItems: "flex-end"}} className={styles.det}>
                                 <span>{t("Product Id")}</span>
                                 <p >{plan.productId}</p>
                             </div>
                         </div>
 
                         <div className={styles.dets}>
-                            <div style={{alignItems: "flex-end"}} className={styles.det}>
+                            <div className={styles.det}>
                                 <span>{t("Operator")}</span>
                                 <p>{plan.operator}</p>
                             </div>

@@ -206,7 +206,7 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
                             heading: "Select the country where do you want to top-up a mobile phone?",
                             list: countries
                         }}
-                        heading="SEND TOP-UP & E-SIM"
+                        heading="SEND TOP-UP AND E-SIM"
                         isOpen={showModal}
                         onSelectHandler={(item) => {
                             dataHandler("recipient", "")
