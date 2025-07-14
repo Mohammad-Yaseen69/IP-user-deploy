@@ -8,7 +8,7 @@ import useWindowWidth from '../../../utils/useWindowWidth'
 import { useTranslation } from 'react-i18next'
 
 const Receipt = ({ data, dataHandler, createTransaction }) => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
 
   const width = useWindowWidth()
 
@@ -26,9 +26,9 @@ const Receipt = ({ data, dataHandler, createTransaction }) => {
         <img style={{ maxWidth: "100%" }} src={eSimBanner} alt="" />
       </div>
 
-      <div style={{ flexDirection: width < 700 && 'column' }} className={styles.cont}>
+      <div style={{ flexDirection: 'column' }} className={styles.cont}>
 
-        <div style={{ width: width < 700 && '100%' }} className={styles.receipt}>
+        <div style={{ width: '100%' }} className={styles.receipt}>
           <div style={{ background: `url(${receiptBg})`, }} className={styles.top}>
             <img src={ipLogo} alt="" />
           </div>

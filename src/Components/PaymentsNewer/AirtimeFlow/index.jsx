@@ -32,6 +32,7 @@ import errors from "../../AddFunds/TrustPaymentErrors.json"
 import StepTwoE from "../Esim/StepTwo"
 import StepFourE from "../Esim/StepFour"
 import ReceiptE from "../Esim/Receipt"
+import countries from "../../CitiesDropDown/CitiesData.json"
 import PrevModal from "./PrevModal";
 
 const initialState = {
@@ -69,6 +70,7 @@ const initialState = {
     cardTransactionDetails: {},
     showCard: false,
     default_wallet: {},
+    localWallet: {},
     eSimData: {
         region: "",
         selectedPlan: {},
@@ -134,6 +136,28 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
 
     useEffect(() => {
+        if (userWallets?.length > 0 && countries) {
+            const localCurrency = countries?.find(c => c?.iso3 === userDetails?.country_iso_code)?.currency
+            let localWallet;
+
+            if (localCurrency) {
+                const wallet = userWallets?.find(item => item?.currency?.code === localCurrency)
+
+                if (wallet && !wallet?.blocked && !wallet?.admin_blocked && wallet?.status?.toLowerCase() === "active") {
+                    localWallet = wallet
+                } else {
+                    localWallet = userWallets?.find(item => item?.default)
+                }
+
+
+            } else {
+                localWallet = userWallets?.find(item => item?.default)
+            }
+
+            updateDataHandler("localWallet", localWallet)
+        }
+    }, [userWallets])
+    useEffect(() => {
         if (userDetails) {
             if (userDetails.phone) {
                 updateEsimHandler("phone", userDetails.phone)
@@ -184,7 +208,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
     const getPackageRates = async () => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/service-products-details/${data.default_wallet?._id}/${data.package?.id || data.eSimData.selectedPlan?.productId}`, {
+            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/service-products-details/${data.localWallet?._id}/${data.package?.id || data.eSimData.selectedPlan?.productId}`, {
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
@@ -226,9 +250,9 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             {
                 "product_id": data?.package?.id || data.eSimData.selectedPlan?.productId,
                 "payment_method": data.payment_type?.value,
-                "wallet_id": data.payment_type === "wallet" ? data.airtime_currency?._id : (data.flow === "e-sim" && data.payment_type?.value === "wallet") ? data?.wallet?._id  : data.default_wallet?._id,
+                "wallet_id": data.payment_type === "wallet" ? data.airtime_currency?._id : (data.flow === "e-sim" && data.payment_type?.value === "wallet") ? data?.wallet?._id : data.default_wallet?._id,
                 "sub_service_id": data.service_type?.id || 12,
-                "local_wallet_id": def?._id,
+                "local_wallet_id": data?.localWallet?._id,
                 "type": data.flow === "e-sim" && "esim"
             }
             if (isOpenRange) {

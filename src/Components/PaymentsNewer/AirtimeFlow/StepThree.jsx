@@ -55,8 +55,7 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                     //     data: encryptData(dataa)
                     // })
                     const dataa = {
-                        // wallet_id: data.airtime_currency?._id,
-                        wallet_id: data.default_wallet?._id,
+                        wallet_id: data.localWallet?._id,
                     }
                     const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/service-products/${data.country?.alpha3}/${data.providers?.[0]?.id}/${data.service}/${data.service_type?.id}`, {
                         data: encryptData(dataa)
