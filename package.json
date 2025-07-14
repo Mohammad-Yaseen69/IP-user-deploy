@@ -150,12 +150,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "eslintConfig": {
-    "rules": {
-      "react-hooks/exhaustive-deps": "off",
-      "no-dupe-keys": "off"
-    }
-  },
+ 
   "browserslist": {
     "production": [
       ">0.2%",

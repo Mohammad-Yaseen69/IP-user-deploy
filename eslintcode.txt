@@ -23,3 +23,10 @@
       "react-app/jest",
       "plugin:i18next/recommended"
     ]
+
+     "eslintConfig": {
+    "rules": {
+      "react-hooks/exhaustive-deps": "off",
+      "no-dupe-keys": "off"
+    }
+  },
