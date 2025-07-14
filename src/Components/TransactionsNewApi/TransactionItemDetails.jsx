@@ -23,10 +23,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
 
 
     function capitalizeStatus(str) {
-        return str
-            .split(" ")
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ");
+        return str[0]?.toUpperCase() + str?.slice(1)?.toLowerCase()
     }
     const [showImgPreview, setShowImgPreview] = useState(false)
     return (
@@ -221,7 +218,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                                 :
                                                 <p>INSTA-{item?.wallet_id}</p>
                                         }
-                                        {item?.cardNo && <p>Card Number: ••{cardNo?.slice(-4)} </p>}
+                                        {item?.cardNo && <p>{t("Card Number")}: ••{cardNo?.slice(-4)} </p>}
                                     </div>
                                 }
                             </div>

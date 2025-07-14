@@ -41,7 +41,7 @@ const SentTransactionItem = ({ color, item, activeItem, setActiveItem, index, cu
                         margin: "0 auto",
                         padding: "5px",
                         borderRadius: "30px"
-                    }}>{item?.status[0].toUpperCase() + item?.status.slice(1)}</div>
+                    }}>{t(item?.status[0].toUpperCase() + item?.status.slice(1)?.toLowerCase())}</div>
                 </div>
                 <div>
                     <div style={{

@@ -686,7 +686,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                             ?
                             <>
                                 <div className={styles.inp_con}>
-                                    <label>{loginMethod === "phone" ? t("Enter your phone number") : t("Enter your email")}</label>
+                                    <label>{loginMethod === "phone" ? t("Enter your phone number") : t("Enter Your Email")}</label>
                                     {
                                         loginMethod === "phone"
                                             ?
@@ -710,7 +710,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                 ?
                                                 t("Login With Phone Number")
                                                 :
-                                                t("Login with Email")
+                                                t("Login with email")
                                         }
                                         {/* {t("Login with")} {loginMethod === "email" ? t("Phone Number") : t("Email")} */}
                                     </div>
@@ -967,7 +967,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                                     src={method.icon}
                                                                     alt=""
                                                                 />
-                                                                <span style={{ marginBottom: "0", textDecoration: "underline", textDecorationColor: "white", color: 'black', whiteSpace: 'nowrap' }}>
+                                                                <span style={{ marginBottom: "0", textDecoration: "underline", textDecorationColor: "white", color: 'black', whiteSpace: 'nowrap' }}
+                                                                >
                                                                     {t(method.text)}
                                                                 </span>
                                                             </button>

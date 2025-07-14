@@ -1080,7 +1080,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                         </FormGroup>
                                                         <FormGroup style={{ flex: 1, margin: 0 }}>
                                                             <Label className="col-form-label" htmlFor="id_number">{t("ID Number")} <span className="req_star">*</span></Label>
-                                                            <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="id_number" id="id_number" type="text" placeholder='ID Number' value={basicExtras.id_number} onChange={handleBasicExtraChange} />
+                                                            <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="id_number" id="id_number" type="text" placeholder={t('ID Number')} value={basicExtras.id_number} onChange={handleBasicExtraChange} />
                                                         </FormGroup>
                                                     </>
                                                     : ""
@@ -1198,7 +1198,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                             border: "1px solid red"
                                                         }}
                                                     >
-                                                        {t("Select country first")}
+                                                        {t("Select Country First")}
                                                     </div>
                                                 }
                                             </FormGroup>
@@ -1256,7 +1256,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                     border: "1px solid red"
                                                 }}
                                             >
-                                                {t("Select country first")}
+                                                {t("Select Country First")}
                                             </div>
                                         }
                                         {
@@ -2106,7 +2106,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                 {
                                                     (!mobileNumber || mobileNumber.length < 9)
                                                     &&
-                                                    <span>Must add phone number to enable these fields.</span>
+                                                    <span>{t("Must add phone number to enable these fields.")}</span>
                                                 }
                                             </>
                                         }
@@ -2130,7 +2130,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                         }
                                         onClick={addBeneficiaryHandler}
                                     >
-                                        {benLoading ? t("Adding...") : t("Add Beneficiary")} {/* Add loading state text */}
+                                        {benLoading ? t("Adding") + "..." : t("Add Beneficiary")} {/* Add loading state text */}
                                     </Button>
                                     {/* <ConfirmationModal isOpen={showConfirmation} toggle={() => setShowConfirmation(!showConfirmation)} onConfirm={changeUserDetailsAsPerBankDetails} onCancel={onCancelHandler} /> */}
                                 </CardFooter>

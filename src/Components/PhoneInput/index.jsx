@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import CountryCode from './CountryCode'
 import PhoneNumber from './PhoneNumber'
 import styles from "./styles/index.module.css"
+import { useTranslation } from 'react-i18next';
 
 function extractNumber(value) {
     const digits = value?.replace(/\D/g, '');
@@ -11,6 +12,7 @@ function extractNumber(value) {
 const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabled = false, phone = "", customStyles = {}, error, setError, inputStyles, disableDropdown }) => {
     const [selectedCountry, setSelectedCountry] = useState({})
     const [number, setNumber] = useState("")
+    const {t} = useTranslation()
 
     // useEffect(() => {
     //     if (!phone) {
@@ -55,7 +57,7 @@ const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabled = fals
                 />
             </div>
 
-            {error && <p style={{ marginTop: "4px", fontWeight: 600, color: "red", fontSize: "12px", marginBottom: "0" }}>{error}</p>}
+            {error && <p style={{ marginTop: "4px", fontWeight: 600, color: "red", fontSize: "12px", marginBottom: "0" }}>{t(error)}</p>}
         </>
     )
 }

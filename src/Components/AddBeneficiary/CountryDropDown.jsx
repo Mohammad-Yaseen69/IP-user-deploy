@@ -96,7 +96,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
                 {
                     isOpen
                         ?
-                        <input style={{ border: "none", outline: "none", padding: 0, margin: 0, height: "100%", width: "100%", background: "transparent" }} placeholder='Search Country' ref={countryInputRef} onClick={(e) => e.stopPropagation()} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} onFocus={() => setIsCountryInFocus(true)} onBlur={() => setIsCountryInFocus(false)} />
+                        <input style={{ border: "none", outline: "none", padding: 0, margin: 0, height: "100%", width: "100%", background: "transparent" }} placeholder={t('Search Country')} ref={countryInputRef} onClick={(e) => e.stopPropagation()} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} onFocus={() => setIsCountryInFocus(true)} onBlur={() => setIsCountryInFocus(false)} />
                         :
                         <>
                             {selectedCountry ? (

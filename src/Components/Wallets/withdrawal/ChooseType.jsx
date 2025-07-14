@@ -25,7 +25,7 @@ const ChooseType = ({ selected, setter }) => {
                 fontSize: "1rem",
                 fontWeight: "500",
                 marginBottom: "1rem"
-            }}>{service_name_formatter(t("How would you like to cashout?"))}:</h5>
+            }}>{service_name_formatter(t("How Would You Like To Cashout?:"))}</h5>
             <div style={{
                 paddingBottom: "0",
                 display: "flex",
