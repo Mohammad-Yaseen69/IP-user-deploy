@@ -153,11 +153,31 @@
   "eslintConfig": {
     "rules": {
       "react-hooks/exhaustive-deps": "off",
-      "no-dupe-keys": "off"
+      "no-dupe-keys": "off",
+      "i18next/no-literal-string": [
+        "error",
+        {
+          "markupOnly": true,
+          "ignoreAttribute": [
+            "data-testid",
+            "to",
+            "src",
+            "alt",
+            "href",
+            "className",
+            "id",
+            "key"
+          ]
+        }
+      ]
     },
+    "plugins": [
+      "i18next"
+    ],
     "extends": [
       "react-app",
-      "react-app/jest"
+      "react-app/jest",
+      "plugin:i18next/recommended"
     ]
   },
   "browserslist": {
@@ -174,7 +194,8 @@
   },
   "devDependencies": {
     "@types/html2canvas": "^1.0.0",
-    "@types/react-slick": "^0.23.10"
+    "@types/react-slick": "^0.23.10",
+    "eslint-plugin-i18next": "^6.1.2"
   },
   "engines": {
     "node": "18.19.1"
