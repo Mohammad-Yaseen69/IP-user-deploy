@@ -153,23 +153,7 @@
   "eslintConfig": {
     "rules": {
       "react-hooks/exhaustive-deps": "off",
-      "no-dupe-keys": "off",
-      "i18next/no-literal-string": [
-        "error",
-        {
-          "markupOnly": true,
-          "ignoreAttribute": [
-            "data-testid",
-            "to",
-            "src",
-            "alt",
-            "href",
-            "className",
-            "id",
-            "key"
-          ]
-        }
-      ]
+      "no-dupe-keys": "off"
     },
     "plugins": [
       "i18next"
