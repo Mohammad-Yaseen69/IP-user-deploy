@@ -154,15 +154,7 @@
     "rules": {
       "react-hooks/exhaustive-deps": "off",
       "no-dupe-keys": "off"
-    },
-    "plugins": [
-      "i18next"
-    ],
-    "extends": [
-      "react-app",
-      "react-app/jest",
-      "plugin:i18next/recommended"
-    ]
+    }
   },
   "browserslist": {
     "production": [

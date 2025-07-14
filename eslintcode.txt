@@ -14,3 +14,12 @@
           ]
         }
       ]
+
+       "plugins": [
+      "i18next"
+    ],
+    "extends": [
+      "react-app",
+      "react-app/jest",
+      "plugin:i18next/recommended"
+    ]
