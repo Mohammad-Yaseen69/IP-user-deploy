@@ -11,7 +11,6 @@ import gs from "./files/gs.svg"
 import as from "./files/as.svg"
 import authenticator from "./files/authenticator.png"
 import axios from "axios";
-import { countries } from "country-list-json";
 import LanguagePicker from "../LanguagePicker";
 import FaceAnimation from "./FaceAnimation"
 import BiometricSvg from "../../assets/icons/fingerprint.png"
@@ -282,21 +281,21 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
     const getUserInfo = async () => {
         try {
-            const res = await axios.get(`https://ipinfo.io?token=${process.env.REACT_APP_IP_INFO_TOKEN}`)
-            const location = res.data;
+            const res = await fetch(`https://get.geojs.io/v1/ip/geo.json`)
+            const location = await res.json();
+
             if (location) {
-                const country_name = countries.find(item => item?.code === location?.country)?.name
                 return {
-                    browser_name: navigator?.userAgentData?.brands[0]?.brand ?? "N/A",
+                    browser_name: rdd.browserName ?? "N/A",
                     platform: navigator?.userAgentData?.platform,
-                    browser_version: navigator?.userAgentData?.brands[0]?.version ?? "N/A",
-                    is_mobile_user: navigator?.userAgentData?.mobile,
+                    browser_version: rdd.browserVersion ?? "N/A",
+                    is_mobile_user: navigator?.userAgentData?.mobile ?? rdd.isMobile,
                     IPv4: location?.ip,
                     city: location?.city,
-                    country_code: location?.country,
-                    country_name: country_name ?? "N/A",
-                    latitude: 0.00,
-                    longitude: 0.00,
+                    country_code: location?.country_code,
+                    country_name: location?.country,
+                    latitude: location?.latitude,
+                    longitude: location?.latitude,
                     postal: location?.postal,
                     state: location?.region,
                 }
@@ -305,21 +304,23 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             try {
                 const res = await fetch("https://geolocation-db.com/json/")
                 const location = await res.json()
+
                 if (location) {
                     return {
-                        browser_name: navigator?.userAgentData?.brands[0]?.brand ?? "N/A",
+                        browser_name: rdd.browserName ?? "N/A",
                         platform: navigator?.userAgentData?.platform,
                         ...location,
-                        browser_version: navigator?.userAgentData?.brands[0]?.version ?? "N/A",
-                        is_mobile_user: navigator?.userAgentData?.mobile,
+                        browser_version: rdd.browserVersion ?? "N/A",
+                        is_mobile_user: navigator?.userAgentData?.mobile ?? rdd.isMobile,
                     }
                 }
             } catch (error) {
                 setIsPressed(false)
-                // setIsLoginError("Something went wrong. Please try again.")
             }
         }
     }
+
+
     const [resendTimer, setResendTimer] = useState(0)
     const numberOfFields = 6;
     const [otpValues, setOTPValues] = useState(Array(numberOfFields).fill(''));
@@ -414,6 +415,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     ...data
                                 }
                             )
+
+                            console.log(data, "shi shi")
                             axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/login/create-login-history`, {
                                 data: encrypted
                             })

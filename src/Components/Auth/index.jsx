@@ -13,7 +13,6 @@ import { useTranslation } from "react-i18next"
 import logo from "../../assets/images/logo/logo2.png"
 import Login from "./Login"
 import coun from "../PaymentsNewer/CountriesData.json"
-import SidePopup from "../SidePopup"
 import Signup from "./Signup"
 
 const swissFlag = coun.find(item => item.alpha3 === "CHE")?.file_url
@@ -65,22 +64,15 @@ const Auth = () => {
                 setCountry(ipBasedStoredCountry)
             } else {
                 try {
-                    const res = await axios.get(`https://ipinfo.io?token=${process.env.REACT_APP_IP_INFO_TOKEN}`)
-                    const location = res.data;
-
-
-                    console.log(res.data)
+                    const res = await fetch(`https://get.geojs.io/v1/ip/geo.json`)
+                    const location = await res.json();
 
                     if (location) {
-                        const findCOuntry = countries.find(item => item?.code === location?.country)
-
-                        if (findCOuntry) {
-                            const foundCount = allowedCountries?.find(item => item?.country_name?.toLowerCase() === findCOuntry?.name?.toLowerCase() || item?.country_name?.toLowerCase()?.includes(findCOuntry?.name?.toLowerCase()))
-                            if (foundCount?.country_iso_code) {
-                                localStorage.setItem("ip_country", foundCount?.country_iso_code)
-                            }
-                            setCountry(foundCount?.country_iso_code ?? localStorage.getItem("ip_country"))
+                        const foundCount = allowedCountries?.find(item => item?.country_name?.toLowerCase() === location?.country?.toLowerCase() || item?.country_name?.toLowerCase()?.includes(location?.country?.toLowerCase()))
+                        if (foundCount?.country_iso_code) {
+                            localStorage.setItem("ip_country", foundCount?.country_iso_code)
                         }
+                        setCountry(foundCount?.country_iso_code ?? localStorage.getItem("ip_country") ?? "USA")
                     }
                 } catch (error) {
                     const res = await fetch("https://geolocation-db.com/json/")
