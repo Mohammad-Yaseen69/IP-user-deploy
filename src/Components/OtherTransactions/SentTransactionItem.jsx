@@ -103,7 +103,7 @@ const SentTransactionItem = ({ color, item, activeItem, setActiveItem, index, cu
                                     item?.description
                                     &&
                                     <div>
-                                        <span>Note:</span>
+                                        <span>{t("Note")}:</span>
                                         <h5>{item?.description}</h5>
                                     </div>
                                 }
@@ -111,7 +111,7 @@ const SentTransactionItem = ({ color, item, activeItem, setActiveItem, index, cu
                                     item?.attachments?.length > 0
                                     &&
                                     <div>
-                                        <span>Attachments:</span>
+                                        <span>{t("Attachments")}:</span>
                                         <div style={{
                                             display: "flex",
                                             gap: ".75rem",

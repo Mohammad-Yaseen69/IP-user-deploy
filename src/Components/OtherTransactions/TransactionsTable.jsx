@@ -174,6 +174,7 @@ const TransactionsTable = () => {
         <div className={styles.table}>
             <div className={styles.menu}>
                 <div className={styles.right}>
+                    
                     {
                         menuData.map(item => (
                             <div key={item.id} style={{

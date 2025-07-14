@@ -33,6 +33,7 @@ const PlanCard = ({plan, data, handlePlanSelect}) => {
                                 <p >{plan.productId}</p>
                             </div>
                         </div>
+                        
 
                         <div className={styles.dets}>
                             <div className={styles.det}>
