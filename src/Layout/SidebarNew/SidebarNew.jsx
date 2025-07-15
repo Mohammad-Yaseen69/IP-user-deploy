@@ -156,7 +156,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                                                         </clipPath>
                                                     </defs>
                                                 </svg>
-                                                <span>Sign Up</span>
+                                                <span>{t("Sign Up")}</span>
                                                 <ChevronRight style={{ position: "absolute", right: ".5rem" }} />
                                             </Link>
                                             <Link to={"/login"} style={{
@@ -182,7 +182,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                                                         </linearGradient>
                                                     </defs>
                                                 </svg>
-                                                <span>Login</span>
+                                                <span>{t("Login")}</span>
                                                 <ChevronRight style={{ position: "absolute", right: ".5rem", color: "#5926f0" }} />
                                             </Link>
                                         </>

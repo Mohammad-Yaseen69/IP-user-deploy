@@ -4,8 +4,6 @@ import { ActiveNavLinkUrl } from "../../Helper/ActioveNavUrl";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Search } from "react-feather";
-import { Input, Form } from "reactstrap";
 import CustomizerContext from "../../Helper/Customizer";
 import { UserContext } from "../../Context/UserContext";
 
@@ -164,13 +162,13 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
                                 </li>
                         }
                     </>
-                )
+                )  
             })}
             {
                 !togglSidebar
                 &&
                 <div style={{ marginTop: "2rem", padding: "0 0 0 24px", color: "#848484", fontSize: ".6rem" }}>
-                    <span>{t("Powered By")} <Link style={{ color: "#848484", textDecoration: "underline", whiteSpace: "nowrap" }}>Kemit Kingdom SA</Link></span>
+                    <span>{t("Powered By")} <Link style={{ color: "#848484", textDecoration: "underline", whiteSpace: "nowrap" }}>{t("Kemit Kingdom SA")}</Link></span>
                     <p style={{ fontSize: ".6rem" }}>{t("A Swiss Company")}</p>
                 </div>
             }

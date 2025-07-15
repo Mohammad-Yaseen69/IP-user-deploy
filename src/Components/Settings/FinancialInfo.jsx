@@ -177,7 +177,7 @@ const FinancialInfo = () => {
 
     return (
         <div style={{ backgroundColor: 'white' }} className={styles.container}>
-            {!editMode && <button onClick={() => setEditMode(true)} className={styles.editBtn}>Edit</button>}
+            {!editMode && <button onClick={() => setEditMode(true)} className={styles.editBtn}>{t("Edit")}</button>}
             {questions?.map((question, idx) => (
                 <div key={idx} className={styles.contentBox}>
                     <span className={styles.label}>{t(question?.question)}</span>
@@ -209,20 +209,20 @@ const FinancialInfo = () => {
                             <textarea
                                 onChange={(e) => editMode ? updateData("keeps_busy", e.target.value) : e.preventDefault()}
                                 value={question?.answers}
-                                placeholder={t('question_key your answers')}
+                                placeholder={t('Type your answer')}
                                 maxLength={250}
                                 style={{ width: '100%', height: '120px', resize: 'none' }}
                             />
                             {editMode &&
                                 <span style={{ position: 'absolute', bottom: '10px', right: '10px', fontSize: '12px', color: '#888' }}>
-                                    {questions.find(q => q.question_key === "keeps_busy").answers?.length} / 250
+                                    {questions.find(q => q.question_key === "keeps_busy").answers?.length}{" / 250"}
                                 </span>
                             }
                         </div>
                     }
                     {question?.question_key === "profession" &&
                         (!editMode ?
-                            <div style={{flexDirection: window.innerWidth < 700 && "column"}} className={styles.multiOptions}>
+                            <div style={{ flexDirection: window.innerWidth < 700 && "column" }} className={styles.multiOptions}>
                                 {Array.isArray(question.answers) && question?.answers?.map((item, idx2) => (
                                     <div key={idx2} style={{ flex: 1, minWidth: "45%" }} className={styles.option}>
                                         <span>
@@ -351,14 +351,14 @@ const FinancialInfo = () => {
                             setQuestions(apiQuestions)
                         }}
                         style={{ fontWeight: 600, background: "transparent", border: "none", outline: "none" }}
-                    >Cancel</button>
+                    >{t("Cancel")}</button>
                     <button
                         onClick={saveHandler}
                         disabled={
                             questions.some(q => q.answers === "" || q.answers === undefined || q.answers === null || q.answers.length === 0) || loading
                         }
                         style={{ opacity: (questions.some(q => q.answers === "" || q.answers === undefined || q.answers === null || q.answers.length === 0) || loading) && .3 }}
-                        className={styles.editBtn}>Save</button>
+                        className={styles.editBtn}>{t("Save")}</button>
                 </div>
             }
         </div >
