@@ -145,12 +145,11 @@
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "start": "node --max-old-space-size=12288 node_modules/react-scripts/scripts/start.js --host",
-    "build": "node --max-old-space-size=12288 node_modules/react-scripts/scripts/build.js",
+    "start": "cross-env NODE_ENV=development node --max-old-space-size=12288 node_modules/react-scripts/scripts/start.js --host",
+    "build": "cross-env NODE_ENV=production node --max-old-space-size=12288 node_modules/react-scripts/scripts/build.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
- 
   "browserslist": {
     "production": [
       ">0.2%",
@@ -166,6 +165,7 @@
   "devDependencies": {
     "@types/html2canvas": "^1.0.0",
     "@types/react-slick": "^0.23.10",
+    "cross-env": "^7.0.3",
     "eslint-plugin-i18next": "^6.1.2"
   },
   "engines": {
