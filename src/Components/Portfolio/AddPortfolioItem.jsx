@@ -208,7 +208,7 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
                                     lineHeight: 'normal',
                                     marginTop: "24px"
                                 }}>
-                                    Title
+                                    {t("Title")}
                                 </Label>
                                 <Input type='text' style={{
                                     borderRadius: "12px",
@@ -227,7 +227,7 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
                                     lineHeight: 'normal',
                                     marginTop: "24px"
                                 }}>
-                                    Description
+                                    {t("Description")}
                                 </Label>
                                 <Input type='textarea' style={{
                                     borderRadius: "12px",
@@ -261,7 +261,7 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
                             isSaving
                                 ?
                                 <div style={{ fontSize: ".9rem", fontWeight: 700, textAlign: "right", }}>
-                                    Uploading file, please do not close the window.
+                                    {t("Uploading file, please do not close the window.")}
                                 </div>
                                 :
                                 <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>

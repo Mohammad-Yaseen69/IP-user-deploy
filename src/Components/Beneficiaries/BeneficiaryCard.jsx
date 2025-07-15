@@ -64,7 +64,7 @@ const BeneficiaryCard = ({ user }) => {
                             }
                             {/* </Link> */}
                             <img src={country?.file_url} alt={country?.alpha3} style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", }} className={styles.flag} draggable="false" />
-                            <div className={styles.type_badge}>{t(user?.beneficiary_type)}</div>
+                            <div className={styles.type_badge}>{t(user?.beneficiary_type[0]?.toUpperCase() + user?.beneficiary_type?.slice(1)?.toLowerCase())}</div>
                         </div>
                         <button className={styles.toggle} onClick={e => {
                             e.stopPropagation()

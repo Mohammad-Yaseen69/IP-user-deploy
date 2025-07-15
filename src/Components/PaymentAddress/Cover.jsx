@@ -117,7 +117,7 @@ const Cover = ({ cover, setCover, dets }) => {
                             onClick={handleSave}
                             disabled={isSaving}
                         >
-                            {isSaving ? "Saving" : "Save"}
+                            {isSaving ? t("Saving"): t("Save")}
                         </Button> :
                             <Button color='primary'
                                 style={{

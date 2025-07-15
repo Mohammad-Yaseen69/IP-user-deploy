@@ -9,6 +9,7 @@ import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import InstaPayLoader from '../Loader';
 import styles from "./styles/Stats.module.css"
 import { service_name_formatter } from '../TransactionsNewApi/TransactionItem';
+import i18next from 'i18next';
 
 export function getMonthName(dateString) {
     const months = [
@@ -68,7 +69,7 @@ const Stats = ({ currentWallet }) => {
     };
     const chartRef = useRef(null);
     const chartRefMobile = useRef(null);
-    const { t } = useTranslation()
+    const { t,  } = useTranslation()
     const { authHeader } = useContext(UserContext)
     const [isLoading, setIsLoading] = useState(true)
 
@@ -329,7 +330,7 @@ const Stats = ({ currentWallet }) => {
             chart.destroy();
             chart2.destroy();
         };
-    }, [months]);
+    }, [months, i18next.language]);
 
     const yearsToShow = useMemo(() => {
         const currentDate = new Date();

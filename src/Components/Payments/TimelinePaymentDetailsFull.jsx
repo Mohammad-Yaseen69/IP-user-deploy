@@ -5,9 +5,11 @@ import { H4 } from '../../AbstractElements'
 import GradientButton from '../User/UserSettings/GradientButton'
 import styles from "./styles/TimelineStepThree.module.scss"
 import banner from "./receipt_banner.png"
+import { useTranslation } from 'react-i18next'
 
 const TimelinePaymentDetailsFull = ({ action, mobileView, setStepNumber, paymentType, scheduleDate, recursiveStart, amount, sendBeneficiaries }) => {
     const [completed, setCompleted] = useState(false)
+    const { t } = useTranslation()
 
     return (
         <VerticalTimelineElement
@@ -52,13 +54,13 @@ const TimelinePaymentDetailsFull = ({ action, mobileView, setStepNumber, payment
                     </div>
                     :
                     <>
-                        <H4 attrH4={{ className: "vertical-timeline-element-subtitle" }}>Payment Details</H4>
+                        <H4 attrH4={{ className: "vertical-timeline-element-subtitle" }}>{t("Payment Details")}</H4>
                         <img src={banner} draggable="false" style={{
                             width: "100%",
                             marginTop: "1rem"
                         }} />
                         <div className={styles.container}>
-                            <p className={styles.topHead}>You are {action == "send" ? "sending" : ""}{action == "request" ? "requesting" : ""}{action == "quote" ? "quoting" : ""} (amount) {action == "send" ? "to" : "from"} (recipient's name).</p>
+                            <p className={styles.topHead}>{t("You are ")}{action == "send" ? t("sending") : ""}{action == "request" ? t("requesting") : ""}{action == "quote" ? t("quoting") : ""} (amount) {action == "send" ? t("to") : t("from")} (recipient's name).</p>
                             <div className={styles.details}>
                                 {/* <div className={styles.item}>
                                     <p className={styles.itemHead}>Transaction ID</p>
@@ -103,32 +105,32 @@ const TimelinePaymentDetailsFull = ({ action, mobileView, setStepNumber, payment
                                     </p>
                                 </div> */}
                                 <div className={styles.item}>
-                                    <p className={styles.itemHead}>Commission:</p>
+                                    <p className={styles.itemHead}>{t("Commission")}:</p>
                                     <p className={styles.itemAmount}>$5</p>
                                 </div>
                                 <div className={styles.item}>
-                                    <p className={styles.itemHead}>Exchange Rate:</p>
+                                    <p className={styles.itemHead}>{t("Exchange Rate:")}</p>
                                     <p className={styles.itemAmount}>$1.10</p>
                                 </div>
                                 <div className={styles.item}>
-                                    <p className={styles.itemHead}>Total Amount:</p>
+                                    <p className={styles.itemHead}>{t("Total Amount:")}</p>
                                     <p className={styles.itemAmount}>$330</p>
                                 </div>
                                 <div className={styles.item}>
-                                    <p className={styles.itemHead}>Recipients:</p>
+                                    <p className={styles.itemHead}>{t("Recipient")}:</p>
                                     <p className={styles.itemAmount}>Imtiaz, Zaitmi, Miz</p>
                                 </div>
                                 <div className={styles.item}>
-                                    <p className={styles.itemHead}>Account Number:</p>
+                                    <p className={styles.itemHead}>{t("Account Number:")}</p>
                                     <p className={styles.itemAmount}>1111 2222 3333 4444</p>
                                 </div>
                                 <div className={styles.item}>
-                                    <p className={styles.itemHead}>Country:</p>
+                                    <p className={styles.itemHead}>{t("Country:")}</p>
                                     <p className={styles.itemAmount}>Pakistan</p>
                                 </div>
                             </div>
                             <div className={styles.bottom}>
-                                <GradientButton value={"Confirm"} size="sm" attr={{
+                                <GradientButton value={t("Confirm")} size="sm" attr={{
                                     onClick: () => {
                                         setStepNumber(10)
                                         setCompleted(true)

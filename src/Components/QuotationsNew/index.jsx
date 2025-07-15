@@ -257,7 +257,7 @@ const Quotations = () => {
                                                             )
                                                         })
                                                         :
-                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>No Quotations</span>
+                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Quotations")}</span>
                                                 }
                                             </>
                                         }
@@ -284,7 +284,7 @@ const Quotations = () => {
                                                             )
                                                         })
                                                         :
-                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>No Quotations</span>
+                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Quotations")}</span>
                                                 }
                                             </>
                                         }
@@ -377,7 +377,7 @@ const Quotations = () => {
                                                             )
                                                         })
                                                         :
-                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>No Quotations</span>
+                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Quotations")}</span>
                                                 }
                                             </>
                                         }
@@ -404,7 +404,7 @@ const Quotations = () => {
                                                             )
                                                         })
                                                         :
-                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>No Quotations</span>
+                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Quotations")}</span>
                                                 }
                                             </>
                                         }
@@ -442,7 +442,7 @@ const Quotations = () => {
                                                             )
                                                         })
                                                         :
-                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>No Quotations</span>
+                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Quotations")}</span>
                                                 }
                                             </>
                                         }
@@ -469,7 +469,7 @@ const Quotations = () => {
                                                             )
                                                         })
                                                         :
-                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>No Quotations</span>
+                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Quotations")}</span>
                                                 }
                                             </>
                                         }

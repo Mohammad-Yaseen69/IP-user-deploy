@@ -358,7 +358,7 @@ const ReferralsNew = () => {
                                     <div className={styles.ref_table}>
                                         <div className={styles.item}>
                                             <div style={{ fontSize: "1.1rem", fontWeight: 700 }}>{t(currentTab)}</div>
-                                            <Button color="primary" style={{ borderRadius: "8px" }} onClick={() => setCurrentTab(currentTab === "My Referrals" ? "My withdrawals" : "My Referrals")}>{currentTab === "My Referrals" ? t("My Withdrawls") : t("My Referrals")}</Button>
+                                            <Button color="primary" style={{ borderRadius: "8px" }} onClick={() => setCurrentTab(currentTab === "My Referrals" ? "my withdrawls" : "My Referrals")}>{currentTab === "My Referrals" ? t("My Withdrawls") : t("My Referrals")}</Button>
                                         </div>
                                         {
                                             currentTab === "My Referrals"

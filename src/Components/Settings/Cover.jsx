@@ -10,6 +10,7 @@ import DeleteImageModal from "./DeleteImageModal"
 import { toast } from "react-toastify"
 import change_dp from "./change_img.svg"
 import AdjustModal from "./AdjustModal"
+import { t } from "i18next"
 
 const Cover = () => {
     const [coverPhoto, setCoverPhoto] = useState(cover)
@@ -128,7 +129,7 @@ const Cover = () => {
                             }}>
                                 <label htmlFor="cover_photo" onClick={toggleMenu} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", marginBottom: "0", cursor: "pointer" }}>
                                     <Camera size={18} />
-                                    <span style={{ whiteSpace: "nowrap" }}>Edit Cover Photo</span>
+                                    <span style={{ whiteSpace: "nowrap" }}>{t("Edit Cover Photo")}</span>
                                 </label>
                                 {
                                     userDetails?.coverImage?.url
@@ -139,14 +140,14 @@ const Cover = () => {
                                             setShowAdjustModal(true)
                                         }}>
                                             <Camera size={18} />
-                                            <span style={{ whiteSpace: "nowrap" }}>Adjust Cover Photo</span>
+                                            <span style={{ whiteSpace: "nowrap" }}>{t("Adjust Cover Photo")}</span>
                                         </label>
                                         <label style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", marginBottom: "0", cursor: "pointer" }} onClick={() => {
                                             setShowDelModal(true)
                                             toggleMenu()
                                         }} >
                                             <Trash2 size={18} />
-                                            <span style={{ whiteSpace: "nowrap" }}>Remove Cover Photo</span>
+                                            <span style={{ whiteSpace: "nowrap" }}>{t("Remove Cover Photo")}</span>
                                         </label>
                                     </>
                                 }

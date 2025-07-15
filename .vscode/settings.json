@@ -5,10 +5,10 @@
   "i18n-ally.sourceLanguage": "en",
   "i18n-ally.keystyle": "flat",
   "i18n-ally.extract.autoDetect": false,
-  "eslint.rules.customizations": [
-    {
-      "rule": "i18next/no-literal-string",
-      "severity": "info"
-    }
-  ]
+  // "eslint.rules.customizations": [
+  //   {
+  //     "rule": "i18next/no-literal-string",
+  //     "severity": "info"
+  //   }
+  // ]
 }

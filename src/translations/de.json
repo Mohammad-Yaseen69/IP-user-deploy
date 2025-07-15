@@ -2561,5 +2561,6 @@
   "No": "NEIN",
   "After buying, you will get a QR Code. Scan it to install the eSIM profile. When you arrive at your destination, remember to turn on data roaming in your device settings.": "Nach dem Kauf erhalten Sie einen QR-Code. Scannen Sie ihn, um das eSIM-Profil zu installieren. Denken Sie daran, bei Ihrer Ankunft am Zielort Datenroaming in Ihren Geräteeinstellungen zu aktivieren.",
   "SEND TOP-UP & ESIM": "AUFLADUNG & ESIM SENDEN",
-  "Esim Price": "Esim-Preis"
+  "Esim Price": "Esim-Preis",
+  "No transactions": "Keine Transaktionen"
 }

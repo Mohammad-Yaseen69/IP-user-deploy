@@ -329,7 +329,7 @@ const PendingNew = () => {
                                                             )
                                                         })
                                                         :
-                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>No Pending Items</span>
+                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Pending Items")}</span>
                                                 }
                                             </>
                                         }
@@ -357,7 +357,7 @@ const PendingNew = () => {
                                                             )
                                                         })
                                                         :
-                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>No Pending Items</span>
+                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Pending Items")}</span>
                                                 }
                                             </>
                                         }
@@ -444,7 +444,7 @@ const PendingNew = () => {
                                                             )
                                                         })
                                                         :
-                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>No Pending Items</span>
+                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Pending Items")}</span>
                                                 }
                                             </>
                                         }
@@ -465,7 +465,7 @@ const PendingNew = () => {
                                                             )
                                                         })
                                                         :
-                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>No Pending Items</span>
+                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Pending Items")}</span>
                                                 }
                                             </>
                                         }
@@ -497,7 +497,7 @@ const PendingNew = () => {
                                                             )
                                                         })
                                                         :
-                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>No Pending Items</span>
+                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Pending Items")}</span>
                                                 }
                                             </>
                                         }
@@ -518,7 +518,7 @@ const PendingNew = () => {
                                                             )
                                                         })
                                                         :
-                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>No Pending Items</span>
+                                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Pending Items")}</span>
                                                 }
                                             </>
                                         }

@@ -12,7 +12,7 @@ const InstructionsModal = ({ isOpen, toggle }) => {
   const { t } = useTranslation()
   return (
     <Modal isOpen={isOpen} toggle={toggle} style={{ minWidth: window.innerWidth > 1500 ? "60vw" : "75vw", }}>
-      <ModalHeader toggle={toggle}>{("My Payment Address")}</ModalHeader>
+      <ModalHeader toggle={toggle}>{t("My Payment Address")}</ModalHeader>
       <ModalBody style={{ containerType: "inline-size", display: "flex", gap: "1rem", padding: "24px 24px 24px 24px" }}>
         <div style={{ maxHeight: "620px", overflowY: "auto" }}>
           <p style={{ marginBottom: "1.5rem", color: "#5926f0", fontWeight: 700, fontSize: "min(3.5cqi, 26px)" }}>{t("Maximize Your Social Media Earnings with Your InstaPay Payment Address")}</p>

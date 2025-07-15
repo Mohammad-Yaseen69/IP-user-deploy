@@ -255,7 +255,7 @@ const ProfileComponent = () => {
                                                     <div className={styles.dp} style={{ overflow: "hidden" }}>{userDetails?.first_name?.[0]}</div>
                                             }
                                             <div className={styles.basic_dets}>
-                                                <div className={styles.badge}>{userDetails?.account_type === "individual" ? "Personal" : "Business"} Account</div>
+                                                <div className={styles.badge}>{userDetails?.account_type === "individual" ? t("Personal") : t("Business")} {t("Account")}</div>
                                                 {/* <div className={styles.badge} style={{ background: userDetails?.kyc_status === "approved" ? "green" : "grey" }}>{userDetails?.kyc_status === "approved" ? "Verified" : "Unverified"}</div> */}
                                                 <div style={{ /*display: "flex", gap: ".5rem", alignItems: "center",*/ position: "relative" }}>
                                                     <h4 style={{ marginBottom: 0, display: "inline", marginRight: ".3rem" }}>{userDetails?.first_name} {userDetails?.last_name}</h4>
@@ -295,16 +295,16 @@ const ProfileComponent = () => {
                                                 userDetails?.about_me
                                                 &&
                                                 <div className={styles.about}>
-                                                    <h5>About Me:</h5>
+                                                    <h5>{t("About Me:")}</h5>
                                                     <p>{userDetails?.about_me?.length > 150 ? userDetails?.about_me + ".." : userDetails?.about_me}</p>
                                                     {
                                                         userDetails?.about_me?.length > 150
                                                         &&
-                                                        <p style={{ fontSize: "12px", color: "black", cursor: "pointer" }} onClick={() => setShowAboutModal(!showAboutModal)}>Read more {">"}</p>
+                                                        <p style={{ fontSize: "12px", color: "black", cursor: "pointer" }} onClick={() => setShowAboutModal(!showAboutModal)}>{t("Read more")} {">"}</p>
                                                     }
                                                     <Modal isOpen={showAboutModal} toggle={() => setShowAboutModal(!showAboutModal)}>
                                                         <ModalHeader toggle={() => setShowAboutModal(!showAboutModal)}>
-                                                            About
+                                                            {t("About")}
                                                         </ModalHeader>
                                                         <ModalBody>{userDetails?.about_me}</ModalBody>
                                                     </Modal>
@@ -343,7 +343,7 @@ const ProfileComponent = () => {
                                         <div className={styles.item} style={{ cursor: "pointer" }} onClick={() => setShowMore(!showMore)}>
                                             <div className={styles.left}>
                                                 <span>{
-                                                    showMore ? "Less" : "More"}</span>
+                                                    showMore ? t("Less") : t("More")}</span>
                                             </div>
                                             <div className={styles.right}>
                                                 <div>{">"}</div>
@@ -374,7 +374,7 @@ const ProfileComponent = () => {
                                                     />
                                                 </div>
                                                 <div className={styles.qr_info}>
-                                                    <h5>InstaPay ID:</h5>
+                                                    <h5>{t("InstaPay ID:")}</h5>
                                                     <div className={`${styles.qri_box} ${styles.qri_box_p}`}>
                                                         <span>INSTA-{userWallet?.wallet_id}</span>
                                                         <img src={copy} alt="c" style={{ cursor: "pointer" }} onClick={() => {
@@ -398,14 +398,14 @@ const ProfileComponent = () => {
                                                 <div>
                                                     <Rating initialRating={currentRevTab === "Seller" ? averageRatingAsSeller : averageRatingAsBuyer} emptySymbol="fa fa-star-o fa-2x" fullSymbol="fa fa-star fa-2x" readonly></Rating>
                                                 </div>
-                                                <span>{currentRevTab === "Seller" ? totalReviewsAsSeller : totalReviewsAsBuyer} ratings</span>
+                                                <span>{currentRevTab === "Seller" ? totalReviewsAsSeller : totalReviewsAsBuyer} {t("ratings")}</span>
                                             </div>
                                             <div className={styles.actions}>
                                                 <Link to={`/payments?payment_action=req_money&username=${user_name?.toLowerCase()}`} className={styles.action}>
-                                                    <span>Request Payment</span>
+                                                    <span>{t("Request Payment")}</span>
                                                 </Link>
                                                 <Link to={`/payments?payment_action=send_money&send_type=wallet&wallet_id=${userWallet?.wallet_id}`} className={styles.action}>
-                                                    <span>Initiate A Payment</span>
+                                                    <span>{t("Initiate A Payment")}</span>
                                                 </Link>
                                                 <button className={styles.action} style={{
                                                     background: "rgba(230, 64, 103, 0.16)"
@@ -413,7 +413,7 @@ const ProfileComponent = () => {
                                                     disabled={reported}
                                                     onClick={() => reported ? "" : setShowReportModal(true)}
                                                 >
-                                                    <span>{reported ? "Reported" : "Report this person"}</span>
+                                                    <span>{reported ? t("Reported") : t("Report this person")}</span>
                                                 </button>
                                                 <ReportModal user={userDetails} isOpen={showReportModal} toggle={() => setShowReportModal(!showReportModal)} setReported={setReported} />
                                             </div>
@@ -422,7 +422,7 @@ const ProfileComponent = () => {
 
                                     <div className={styles.feed_reviews}>
                                         <div className={styles.feed}>
-                                            <h5>Portfolio:</h5>
+                                            <h5>{t("Portfolio")}:</h5>
                                             <div className={styles.posts}>
                                                 {
                                                     userPortfolio && userPortfolio.length > 0
@@ -431,11 +431,11 @@ const ProfileComponent = () => {
                                                             <PortfolioItem item={item} key={ind} />
                                                         ))
                                                         :
-                                                        <div className="text-center my-4 align-self-center" style={{ flex: 1 }}>No Portfolio Items</div>
+                                                        <div className="text-center my-4 align-self-center" style={{ flex: 1 }}>{t("No Portfolio Items")}</div>
                                                 }
                                             </div>
                                             <div className={styles.see_more}>
-                                                See More {">"}
+                                                {t("See More")} {">"}
                                             </div>
                                         </div>
                                         <div className={styles.reviews}>
@@ -485,7 +485,7 @@ const ProfileComponent = () => {
                                                                         <div className={styles.rc_top}>
                                                                             <div className={styles.rct_left}>
                                                                                 <div className={styles.rctl_top}>
-                                                                                    <span>Replied to </span>
+                                                                                    <span>{t("Replied to ")}</span>
                                                                                     <div>{item?.buyer?.user?.first_name} {item?.buyer?.user?.last_name}</div>
                                                                                 </div>
                                                                                 <div className={styles.rctl_bottom}>
@@ -498,7 +498,7 @@ const ProfileComponent = () => {
                                                                                     }
                                                                                     <div className={styles.rctl_dets}>
                                                                                         <div className={styles.seller_res_badge}>
-                                                                                            Seller Response
+                                                                                            {t("Seller Response")}
                                                                                         </div>
                                                                                         <h5>{userDetails?.first_name} {userDetails?.last_name}</h5>
                                                                                         <span>{userDetails?.account_type}</span>

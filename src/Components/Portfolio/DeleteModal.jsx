@@ -5,11 +5,13 @@ import { UserContext } from '../../Context/UserContext'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router'
+import { useTranslation } from 'react-i18next'
 
 const DeleteModal = ({ isOpen, toggle, item, pAddress }) => {
     const { authHeader, getUserDocuments, getUserVideos } = useContext(UserContext)
     const [deleting, setDeleting] = useState(false)
     const navigate = useNavigate()
+    const {t} = useTranslation()
 
     const deleteHandler = () => {
         setDeleting(true)
@@ -37,13 +39,13 @@ const DeleteModal = ({ isOpen, toggle, item, pAddress }) => {
     return (
         <Modal isOpen={isOpen} toggle={toggle}>
             <ModalHeader toggle={toggle}>
-                Confirm
+                {t("Confirm")}
             </ModalHeader>
             <ModalBody>
-                Are you sure you want to delete this portfolio item?
+                {t("Are you sure you want to delete this portfolio item?")}
             </ModalBody>
             <ModalFooter>
-                <Button onClick={deleteHandler} disabled={deleting}>Delete</Button>
+                <Button onClick={deleteHandler} disabled={deleting}>{t("Delete")}</Button>
             </ModalFooter>
         </Modal>
     )

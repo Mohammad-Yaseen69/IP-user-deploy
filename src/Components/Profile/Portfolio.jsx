@@ -35,11 +35,11 @@ const Portfolio = () => {
                             </>
                         ))
                         :
-                        <div className="text-center my-4">No Portfolio Items</div>
+                        <div className="text-center my-4">{t("No Portfolio Items")}</div>
                 }
             </div>
             <div className={styles.see_more}>
-                See More {">"}
+                {t("See More")} {">"}
             </div>
         </div>
     )

@@ -767,7 +767,7 @@ const Basic = ({ setCurrentTab }) => {
                                 border: "none",
                                 outline: "none",
                                 borderRadius: "10px"
-                            }} onClick={() => setIsEditMode(false)} disabled={isSaving}>Cancel</Button>
+                            }} onClick={() => setIsEditMode(false)} disabled={isSaving}>{t("Cancel")}</Button>
                             <Button style={{
                                 background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                                 border: "none",

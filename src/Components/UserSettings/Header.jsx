@@ -224,7 +224,7 @@ const Header = () => {
                                 }}>
                                     <label htmlFor="dp" onClick={toggleMenu} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", marginBottom: "0", cursor: "pointer" }}>
                                         <Camera size={18} />
-                                        <span style={{ whiteSpace: "nowrap" }}>Upload</span>
+                                        <span style={{ whiteSpace: "nowrap" }}>{t("Upload")}</span>
                                     </label>
                                     {
                                         userDetails?.profileImage?.url
@@ -236,14 +236,14 @@ const Header = () => {
                                                 setIsAdjusting(true)
                                             }}>
                                                 <Camera size={18} />
-                                                <span style={{ whiteSpace: "nowrap" }}>Adjust</span>
+                                                <span style={{ whiteSpace: "nowrap" }}>{t("Adjust")}</span>
                                             </label>
                                             <label style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", marginBottom: "0", cursor: "pointer" }} onClick={() => {
                                                 setShowDelModal(true)
                                                 toggleMenu()
                                             }} >
                                                 <Trash2 size={18} />
-                                                <span style={{ whiteSpace: "nowrap" }}>Remove</span>
+                                                <span style={{ whiteSpace: "nowrap" }}>{t("Remove")}</span>
                                             </label>
                                         </>
                                     }

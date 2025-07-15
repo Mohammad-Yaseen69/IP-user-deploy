@@ -7,6 +7,7 @@ import { NumberInputValidator } from '../../Helper/NumberInput'
 import { NumberSeperator } from '../../Helper/NumberSeperator'
 import PaymentsButton from './PaymentsButton'
 import { countries } from 'country-list-json'
+import { useTranslation } from 'react-i18next'
 
 const TimelineAmount = ({ action, mobileView, setStepNumber, quotedRecipient, amount, setAmount, rc }) => {
     const [completed, setCompleted] = useState(false)
@@ -14,6 +15,7 @@ const TimelineAmount = ({ action, mobileView, setStepNumber, quotedRecipient, am
     const [currency, setCurrency] = useState("USD")
     const [isLoading, setIsLoading] = useState(false)
     const [exchanegRate, setExchangeRate] = useState()
+    const {t} = useTranslation()
 
     useEffect(() => {
         const getExRate = async () => {
@@ -63,7 +65,7 @@ const TimelineAmount = ({ action, mobileView, setStepNumber, quotedRecipient, am
                 !completed
                     ?
                     <>
-                        <H4 attrH4={{ className: "vertical-timeline-element-subtitle" }}>Enter Amount</H4>
+                        <H4 attrH4={{ className: "vertical-timeline-element-subtitle" }}>{t("Enter Amount")}</H4>
                         <P>
                             {action === "quote" && `Ready to make a deal? Send a Quote to ${quotedRecipient.join(", ")} and seal the transaction.`}
                         </P>
@@ -96,15 +98,15 @@ const TimelineAmount = ({ action, mobileView, setStepNumber, quotedRecipient, am
                                     }
                                     <p style={{ padding: 0, margin: 0, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                                         <span style={{ color: "var(--theme-default)" }}>+ {amount.split(",").join("") / 20} {currency}</span>
-                                        <span>Commission</span>
+                                        <span>{t("Commission")}</span>
                                     </p>
                                     <p style={{ padding: 0, margin: 0, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                                         <span>= {amount} {currency}</span>
-                                        <span>Total Amount</span>
+                                        <span>{t("Total Amount")}</span>
                                     </p>
                                     <p style={{ padding: 0, margin: 0, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                                         <span>+ 1 {currency} = {exchanegRate} PKR</span>
-                                        <span>Exchange Rate</span>
+                                        <span>{t("Exchange Rate")}</span>
                                     </p>
                                     <div
                                         style={{
@@ -117,7 +119,7 @@ const TimelineAmount = ({ action, mobileView, setStepNumber, quotedRecipient, am
                                             marginTop: ".5rem"
                                         }}>
                                         <div>
-                                            <span>Total Receiver Gets</span>
+                                            <span>{t("Total Receiver Gets")}</span>
                                             <h4 style={{ marginBottom: 0 }}>{((80 * (amount * exchanegRate)) / 100).toFixed(2)}</h4>
                                         </div>
                                         <h4 style={{ marginBottom: 0 }}>PKR</h4>

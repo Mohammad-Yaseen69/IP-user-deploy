@@ -150,7 +150,7 @@ const ProfileComponent = () => {
                                     <div className={styles.dp}>{userDetails?.user?.first_name?.[0]}</div>
                             }
                             <div className={styles.basic_dets}>
-                                <div className={styles.badge}>{userDetails?.account_type === "individual" ? "Personal" : "Business"} Account</div>
+                                <div className={styles.badge}>{userDetails?.account_type === "individual" ? t("Personal") : t("Business")} {t("Account")}</div>
                                 <h4>{userDetails?.user?.first_name} {userDetails?.user?.last_name}</h4>
                                 <div className={styles.country}>
                                     <img src={userCountry?.file_url} alt={userCountry?.alpha3} style={{ boxShadow: "0 0 5px #afafaf" }} />
@@ -160,16 +160,16 @@ const ProfileComponent = () => {
                         </div>
                         <div className={styles.top_right}>
                             <div className={styles.about}>
-                                <h5>About Me:</h5>
+                                <h5>{t("About Me:")}</h5>
                                 <p>{userDetails?.about_me?.length > 150 ? userDetails?.about_me + ".." : userDetails?.about_me}</p>
                                 {
                                     userDetails?.about_me?.length > 150
                                     &&
-                                    <p style={{ fontSize: "12px", color: "black", cursor: "pointer" }} onClick={() => setShowAboutModal(!showAboutModal)}>Read more {">"}</p>
+                                    <p style={{ fontSize: "12px", color: "black", cursor: "pointer" }} onClick={() => setShowAboutModal(!showAboutModal)}>{t("Read more")} {">"}</p>
                                 }
                                 <Modal isOpen={showAboutModal} toggle={() => setShowAboutModal(!showAboutModal)}>
                                     <ModalHeader toggle={() => setShowAboutModal(!showAboutModal)}>
-                                        About
+                                        {t("About")}
                                     </ModalHeader>
                                     <ModalBody>{userDetails?.about_me}</ModalBody>
                                 </Modal>
@@ -217,13 +217,13 @@ const ProfileComponent = () => {
                                     }}
                                 />
                                 <div className={styles.qr_info}>
-                                    <h5>InstaPay ID:</h5>
+                                    <h5>{t("InstaPay ID:")}</h5>
                                     <div className={`${styles.qri_box} ${styles.qri_box_p}`}>
                                         <span>INSTA-{userWallet?.wallet_id}</span>
                                         <img src={copy} alt="c" />
                                     </div>
                                     <div className={`${styles.qri_box} ${styles.qri_box_g}`}>
-                                        <span>Download QR Code</span>
+                                        <span>{t("Download QR Code")}</span>
                                         <img src={download} alt="d" />
                                     </div>
                                 </div>
@@ -236,26 +236,26 @@ const ProfileComponent = () => {
                                 <div>
                                     <Rating initialRating={currentRevTab === "Seller" ? averageRatingAsSeller : averageRatingAsBuyer} emptySymbol="fa fa-star-o fa-2x" fullSymbol="fa fa-star fa-2x" readonly></Rating>
                                 </div>
-                                <span>{currentRevTab === "Seller" ? totalReviewsAsSeller : totalReviewsAsBuyer} ratings</span>
+                                <span>{currentRevTab === "Seller" ? totalReviewsAsSeller : totalReviewsAsBuyer} {t("ratings")}</span>
                             </div>
                             <div className={styles.actions}>
                                 <button className={styles.action}>
                                     <div>
                                         <img src={req} alt="req" />
                                     </div>
-                                    <span>Request A Quote</span>
+                                    <span>{t("Request A Quote")}</span>
                                 </button>
                                 <button className={styles.action}>
                                     <div>
                                         <img src={init} alt="init" />
                                     </div>
-                                    <span>Initiate A Payment</span>
+                                    <span>{t("Initiate A Payment")}</span>
                                 </button>
                                 <button className={styles.action} style={{
                                     background: "rgba(230, 64, 103, 0.16)"
                                 }}>
                                     <img src={report} alt="report" />
-                                    <span>Report this person</span>
+                                    <span>{t("Report this person")}</span>
                                 </button>
                             </div>
                         </div>
@@ -263,7 +263,7 @@ const ProfileComponent = () => {
 
                     <div className={styles.feed_reviews}>
                         <div className={styles.feed}>
-                            <h5>My Portfolio:</h5>
+                            <h5>{t("My Portfolio:")}</h5>
                             <div className={styles.posts}>
                                 <div style={{
                                     height: "231px",
@@ -282,7 +282,7 @@ const ProfileComponent = () => {
                                         borderRadius: "50px",
                                         background: "#FFF",
                                         color: "black"
-                                    }} onClick={toggleAddPortfolio}>Add Now</button>
+                                    }} onClick={toggleAddPortfolio}>{t("Add Now")}</button>
                                 </div>
                                 {
                                     userPortfolio && userPortfolio.length > 0
@@ -297,15 +297,15 @@ const ProfileComponent = () => {
                                             </>
                                         ))
                                         :
-                                        <div className="text-center my-4">No Portfolio Items</div>
+                                        <div className="text-center my-4">{t("No Portfolio Items")}</div>
                                 }
                             </div>
                             <div className={styles.see_more}>
-                                See More {">"}
+                                {t("See More")} {">"}
                             </div>
                         </div>
                         <div className={styles.reviews}>
-                            <h5>Recent Reviews:</h5>
+                            <h5>{t("Recent Reviews:")}</h5>
                             <div style={{ display: "flex", width: "100%", marginBottom: "1rem", gap: ".25rem" }}>
                                 <div style={{
                                     padding: "16px",
@@ -319,7 +319,7 @@ const ProfileComponent = () => {
                                     borderRadius: "20px",
                                     cursor: "pointer"
                                 }} onClick={() => setCurrentRevTab("Seller")}>
-                                    Reviews As Seller
+                                    {t("Reviews As Seller")}
                                 </div>
                                 <div style={{
                                     padding: "16px",
@@ -333,7 +333,7 @@ const ProfileComponent = () => {
                                     borderRadius: "20px",
                                     cursor: "pointer"
                                 }} onClick={() => setCurrentRevTab("Buyer")}>
-                                    Reviews As Buyer
+                                    {t("Reviews As Buyer")}
                                 </div>
                             </div>
                             <div className={styles.reviews_body}>

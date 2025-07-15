@@ -5,9 +5,11 @@ import { H4 } from '../../AbstractElements'
 import GradientButton from '../User/UserSettings/GradientButton'
 import styles from "./styles/TimelineStepFive.module.scss"
 import banner from "./receipt_banner.png"
+import { useTranslation } from 'react-i18next'
 
 const TimelineReceipt = ({ mobileView, action, setStepNumber }) => {
     const [completed, setCompleted] = useState(false)
+    const { t } = useTranslation()
 
     return (
         <VerticalTimelineElement
@@ -53,7 +55,7 @@ const TimelineReceipt = ({ mobileView, action, setStepNumber }) => {
                     </div >
                     :
                     <>
-                        <H4 attrH4={{ className: "vertical-timeline-element-subtitle" }}>Receipt</H4>
+                        <H4 attrH4={{ className: "vertical-timeline-element-subtitle" }}>{t("Receipt")}</H4>
                         <img src={banner} draggable="false" style={{
                             width: "100%",
                             marginTop: "1rem"
@@ -62,7 +64,7 @@ const TimelineReceipt = ({ mobileView, action, setStepNumber }) => {
                             <div className={styles.top}>
                                 <Check size={65} color="white" />
                             </div>
-                            <h4 className='text-center mb-2'>Confirmation</h4>
+                            <h4 className='text-center mb-2'>{t("Confirmation")}</h4>
                             <div className={styles.details}>
                                 {/* <div className={styles.item}>
                         <p className={styles.itemHead}>Transaction ID</p>
@@ -107,48 +109,48 @@ const TimelineReceipt = ({ mobileView, action, setStepNumber }) => {
                         <p className={styles.itemAmount}>Imtiaz, Zaitmi, Miz</p>
                     </div> */}
                                 <div className={styles.item}>
-                                    <p className={styles.itemHead}>Transaction ID</p>
+                                    <p className={styles.itemHead}>{t("Transaction ID")}</p>
                                     <p className={styles.itemAmount}>1287897291</p>
                                 </div>
                                 <div className={styles.item}>
-                                    <p className={styles.itemHead}>Payment Type</p>
-                                    <p className={styles.itemAmount}>International Money Transfer</p>
+                                    <p className={styles.itemHead}>{t("Payment Type")}</p>
+                                    <p className={styles.itemAmount}>{t("International Money Transfer")}</p>
                                 </div>
                                 <div className={styles.item}>
-                                    <p className={styles.itemHead} style={{ fontWeight: "800" }}>You Pay</p>
+                                    <p className={styles.itemHead} style={{ fontWeight: "800" }}>{t("You Pay")}</p>
                                     <p className={styles.itemAmount} style={{ fontWeight: "800" }}>$1,000 USD</p>
                                 </div>
                                 <div className={styles.item}>
-                                    <p className={styles.itemHead}>Purpose </p>
-                                    <p className={styles.itemAmount}>Family Support</p>
+                                    <p className={styles.itemHead}>{t("Purpose")}</p>
+                                    <p className={styles.itemAmount}>{t("Family Support")}</p>
                                 </div>
                                 <div className={styles.item}>
-                                    <p className={styles.itemHead}>Commission:</p>
+                                    <p className={styles.itemHead}>{t("Commission")}:</p>
                                     <p className={styles.itemAmount}>$5</p>
                                 </div>
                                 <div className={styles.item}>
-                                    <p className={styles.itemHead}>Exchange Rate:</p>
+                                    <p className={styles.itemHead}>{t("Exchange Rate:")}</p>
                                     <p className={styles.itemAmount}>$1.10</p>
                                 </div>
                                 <div className={styles.item}>
-                                    <p className={styles.itemHead}>Total Amount:</p>
+                                    <p className={styles.itemHead}>{t("Total Amount:")}</p>
                                     <p className={styles.itemAmount}>$330</p>
                                 </div>
                                 <div className={styles.item}>
-                                    <p className={styles.itemHead}>Recipients:</p>
+                                    <p className={styles.itemHead}>{t("Recipient")}:</p>
                                     <p className={styles.itemAmount}>Imtiaz, Zaitmi, Miz</p>
                                 </div>
                                 <div className={styles.item}>
-                                    <p className={styles.itemHead}>Account Number:</p>
+                                    <p className={styles.itemHead}>{t("Account Number:")}</p>
                                     <p className={styles.itemAmount}>1111 2222 3333 4444</p>
                                 </div>
                                 <div className={styles.item}>
-                                    <p className={styles.itemHead}>Country:</p>
+                                    <p className={styles.itemHead}>{t("Country:")}</p>
                                     <p className={styles.itemAmount}>Pakistan</p>
                                 </div>
                             </div>
                             <div className={styles.bottom}>
-                                <GradientButton value={"Done"} size="sm" attr={{
+                                <GradientButton value={t("Done")} size="sm" attr={{
                                     onClick: () => {
                                         setStepNumber(12)
                                         setCompleted(true)

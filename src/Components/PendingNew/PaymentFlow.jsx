@@ -173,7 +173,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                 }}
             />
             <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-                <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
+                <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation
                         callback={acceptRequest}
@@ -192,7 +192,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                     step === 1
                     &&
                     <div className={styles.step_one}>
-                        <h5>Select Your Currency</h5>
+                        <h5>{t("Select Your Currency")}</h5>
                         <div className={styles.wallet_container}>
                             {
                                 userWallets?.length > 0
@@ -215,7 +215,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                             opacity: sending ? .7 : 1,
                             pointerEvents: sending ? "none" : "all",
                         }}>
-                            <span>Proceed</span>
+                            <span>{t("Proceed")}</span>
                             <ChevronRight />
                         </button>
                     </div>
@@ -226,14 +226,14 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                     <>
                         <div className={styles.side_info}>
                             <div className={styles.amount_dets}>
-                                <span>You are transferring</span>
+                                <span>{t("You are transferring")}</span>
                                 <h4>{currentWallet?.currency?.code} {total?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h4>
                             </div>
                             <Wizard subStep={step} />
                         </div>
                         <div className={styles.step_two}>
                             <div className={styles.purple_card} style={{ flexDirection: "column" }}>
-                                <span>Via:</span>
+                                <span>{t("Via")}:</span>
                                 <div style={{ gap: ".5rem" }}>
                                     <p>{currentWallet?.currency?.code} </p>
                                     <span>{currentWallet?.balance?.available?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
@@ -313,8 +313,8 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                             <video src={confirmationVideo} autoPlay loop style={{ width: "100%", height: "100%", objectFit: "cover" }}></video>
                         </div>
                         <div className={styles.step_three}>
-                            <h4>Your Payment <br />Is Confirmed</h4>
-                            <p>Thanks For Using<br />InstaPay</p>
+                            <h4>{t("Your Payment")} <br />{t("Is Confirmed")}</h4>
+                            <p>{t("Thanks For Using")}<br />{t("InstaPay")}</p>
                         </div>
                     </>
                 }

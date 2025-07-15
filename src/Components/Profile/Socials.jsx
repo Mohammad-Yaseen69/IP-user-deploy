@@ -43,7 +43,7 @@ const Socials = () => {
                 const index1 = arr.findIndex(social => social.name.trim() === "Facebook:");
                 const index2 = arr.findIndex(social => social.name.trim() === "Telegram:");
 
-                arr[index2].followers =  userDetails?.telegram_bot ? "connected" : "not connected"
+                arr[index2].followers = userDetails?.telegram_bot ? "connected" : "not connected"
                 const temp = arr[index1]
 
                 arr[index1] = arr[index2]
@@ -119,7 +119,7 @@ const Socials = () => {
             <div className={styles.item} style={{ cursor: "pointer" }} onClick={() => setShowMore(!showMore)}>
                 <div className={styles.left}>
                     <span>{
-                        showMore ? "Less" : "More"}</span>
+                        showMore ? t("Less") : t("More")}</span>
                 </div>
                 <div className={styles.right}>
                     <div>{">"}</div>

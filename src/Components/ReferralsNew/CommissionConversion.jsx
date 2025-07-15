@@ -234,19 +234,19 @@ const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurr
                                                         <>
                                                             <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginTop: "1rem" }}>
                                                                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
-                                                                    <span>Converting</span>
+                                                                    <span>{t("Converting")}</span>
                                                                     <span>{Number(amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</span>
                                                                 </div>
                                                                 {
                                                                     currency !== "USD"
                                                                     &&
                                                                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
-                                                                        <span>Exchange Rate</span>
+                                                                        <span>{t("Exchange Rate")}</span>
                                                                         <span>1.00 USD = {Number(fx?.exchange_rate?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {fx?.exchange_rate?.currency}</span>
                                                                     </div>
                                                                 }
                                                                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
-                                                                    <span>You'll Get</span>
+                                                                    <span>{t("You will Get")}</span>
                                                                     <span>{Number(fx?.recipient?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {fx?.recipient?.currency}</span>
                                                                 </div>
 

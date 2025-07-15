@@ -833,7 +833,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     onMouseEnter={() => setTooltipOpen(prev => ({ ...prev, onlinePurchases: true }))}
                                     onMouseLeave={() => setTooltipOpen(prev => ({ ...prev, onlinePurchases: false }))}>
                                     <span id="online-purchases-label">{t('Online Purchases')}</span>
-                                    <Tooltip isOpen={tooltipOpen.onlinePurchases}>{t('Coming soon')}</Tooltip>
+                                    <Tooltip isOpen={tooltipOpen.onlinePurchases}>{t('Coming Soon')}</Tooltip>
                                     <Toggle
                                         checked={checks.onlinePurchases}
                                     // onChange={() => handleToggle("onlinePurchases")}
@@ -843,7 +843,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     onMouseEnter={() => setTooltipOpen(prev => ({ ...prev, bAndG: true }))}
                                     onMouseLeave={() => setTooltipOpen(prev => ({ ...prev, bAndG: false }))}>
                                     <span id="betting-gambling-label">{t('Online Betting and Gambling')}</span>
-                                    <Tooltip isOpen={tooltipOpen.bAndG}>{t('Coming soon')}</Tooltip>
+                                    <Tooltip isOpen={tooltipOpen.bAndG}>{t('Coming Soon')}</Tooltip>
                                     <Toggle
                                         checked={checks.bAndG}
                                     // onChange={() => handleToggle("bAndG")}
@@ -974,12 +974,12 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
             }
             <Modal style={{ minWidth: "700px" }} isOpen={showModals.download} toggle={() => setShowModals({ ...showModals, download: false })}>
                 <ModalHeader toggle={() => setShowModals({ ...showModals, download: false })}>
-                    Download Your Statement
+                    {t("Download Your Statement")}
                 </ModalHeader>
 
                 <ModalBody>
                     <div className='date-range-ms'>
-                        <h5 style={{ fontWeight: 600, marginBottom: "15px" }}>Select The Date Range.</h5>
+                        <h5 style={{ fontWeight: 600, marginBottom: "15px" }}>{t("Select The Date Range")}.</h5>
                         <DateRangePicker
                             maxDate={new Date()}
                             ranges={[dateRanges]}
@@ -988,7 +988,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                     </div>
 
                     <div style={{ marginTop: "20px" }}>
-                        <h5 style={{ fontWeight: 600, marginBottom: "15px" }}>Select The Type.</h5>
+                        <h5 style={{ fontWeight: 600, marginBottom: "15px" }}>{t("Select The Type")}.</h5>
                         <select
                             style={{ width: "100%", outline: "none", padding: "7px 10px", borderRadius: "5px", borderColor: "lightgray" }}
                             value={fileType}
@@ -1014,7 +1014,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                             cursor: downloading ? "not-allowed" : "pointer"
                         }}
                     >
-                        {downloading ? "Downloading..." : "Download"}
+                        {downloading ? t("Downloading") : t("Download")}
                     </button>
                 </ModalFooter>
             </Modal>

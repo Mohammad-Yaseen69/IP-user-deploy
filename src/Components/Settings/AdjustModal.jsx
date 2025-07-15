@@ -5,6 +5,7 @@ import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import axios from 'axios'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import { UserContext } from '../../Context/UserContext'
+import { useTranslation } from 'react-i18next'
 
 
 
@@ -13,6 +14,7 @@ const AdjustModal = ({ isOpen, toggle, imageUrl, accountId, authHeader, type, na
     const [crop, setCrop] = useState({ x: 0, y: 0 })
     const [zoom, setZoom] = useState(1)
     const [modalPixels, setModalPixels] = useState()
+    const {t} = useTranslation()
     const { updateCoordinates } = useContext(UserContext)
 
 
@@ -74,8 +76,8 @@ const AdjustModal = ({ isOpen, toggle, imageUrl, accountId, authHeader, type, na
                     />
                 </div>
                 <div className="d-flex justify-content-end mt-3">
-                    <Button color="secondary" className="me-2" onClick={toggle}>Cancel</Button>
-                    <Button color="primary" onClick={handleSave}>Save</Button>
+                    <Button color="secondary" className="me-2" onClick={toggle}>{t("Cancel")}</Button>
+                    <Button color="primary" onClick={handleSave}>{t("Save")}</Button>
                 </div>
             </ModalBody>
         </Modal>

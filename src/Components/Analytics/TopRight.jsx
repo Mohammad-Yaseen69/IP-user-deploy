@@ -108,7 +108,6 @@ const TopRight = ({ data, reports, currentWallet, setApiDates, isLoading }) => {
             }
         }
     }, [reports, currentWallet, data]);
-
     useEffect(() => {
         setTotal(data?.total?.totalAmounts ?? 0)
     }, [data])

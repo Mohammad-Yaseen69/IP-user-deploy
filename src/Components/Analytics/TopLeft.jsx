@@ -9,6 +9,7 @@ import ApexCharts from 'apexcharts';
 import arrow_l from "./files/arrow_l.svg"
 import arrow_r from "./files/arrow_r.svg"
 import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 
 function generateRandomArray(currentPage) {
@@ -94,31 +95,31 @@ const TopLeft = ({ setApiDates, currentWallet, setCurrentWallet, creditPayments,
     const [filters, setFilters] = useState({
         international: {
             active: true,
-            label: t("International Transfer")
+            label: "International Transfer"
         },
         wallet: {
             active: true,
-            label: t("Wallet to Wallet Transfer")
+            label: "Wallet to Wallet Transfer"
         },
         qr: {
             active: true,
-            label: t("QR Code Payment")
+            label: "QR Code Payment"
         },
         quotation: {
             active: true,
-            label: t("Quotations")
+            label: "Quotations"
         },
         request: {
             active: true,
-            label: t("Payment Requests")
+            label: "Payment Requests"
         },
         address: {
             active: true,
-            label: t("My Payment Address").slice(3)
+            label: "My Payment Address"
         },
         conversion: {
             active: true,
-            label: t("Conversion")
+            label: "Conversion"
         }
     })
 
@@ -265,7 +266,7 @@ const TopLeft = ({ setApiDates, currentWallet, setCurrentWallet, creditPayments,
         return () => {
             chart.destroy();
         };
-    }, [credited, debited, currentChartPage, currentWallet]);
+    }, [credited, debited, currentChartPage, currentWallet, i18next.language]);
 
     return (
         <div className={styles.container}>
@@ -379,7 +380,7 @@ const TopLeft = ({ setApiDates, currentWallet, setCurrentWallet, creditPayments,
                         Object.keys(filters).map(item => (
                             <div key={item} className={`${styles.filter} ${filters[item].active ? styles.filter_active : ""}`}>
                                 <Input type='checkbox' name={item} id={item} checked={filters[item].active} onChange={handleFilter} />
-                                <label htmlFor={item}>{filters[item].label}</label>
+                                <label htmlFor={item}>{t(filters[item].label)}</label>
                             </div>
                         ))
                     }

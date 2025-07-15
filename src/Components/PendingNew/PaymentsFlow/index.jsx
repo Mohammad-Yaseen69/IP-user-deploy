@@ -261,7 +261,7 @@ const PaymentsFlow = ({ item }) => {
         <div className={styles.container}>
             <div className={styles.left}>
                 <h1>{t("Received Requests")}</h1>
-                <h2>{"Send Money"}</h2>
+                <h2>{t("Send Money")}</h2>
 
                 {
                     window.innerWidth > 1000
@@ -285,7 +285,7 @@ const PaymentsFlow = ({ item }) => {
                             fontSize: ".66rem",
                             fontWeight: 600,
                         }}>
-                            The fee and the received amount may vary depending on the chosen <strong onClick={() => handleModalToggle("payment_type_info")} style={{ cursor: "pointer", fontSize: ".75rem", fontWeight: 800 }}>Payment method.</strong>
+                            {t("The fee and the received amount may vary depending on the chosen")} <strong onClick={() => handleModalToggle("payment_type_info")} style={{ cursor: "pointer", fontSize: ".75rem", fontWeight: 800 }}>{t("Payment method")}.</strong>
                         </span>
                     </div>
                 }
@@ -369,7 +369,7 @@ const PaymentsFlow = ({ item }) => {
                             fontSize: ".66rem",
                             fontWeight: 600,
                         }}>
-                            The fee and the received amount may vary depending on the chosen <strong onClick={() => handleModalToggle("payment_type_info")} style={{ cursor: "pointer", fontSize: ".75rem", fontWeight: 800 }}>Payment method.</strong>
+                            {t("The fee and the received amount may vary depending on the chosen")} <strong onClick={() => handleModalToggle("payment_type_info")} style={{ cursor: "pointer", fontSize: ".75rem", fontWeight: 800 }}>{t("Payment method")}.</strong>
                         </span>
                     </div>
                 }

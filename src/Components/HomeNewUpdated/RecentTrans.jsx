@@ -108,7 +108,7 @@ const RecentTrans = ({ currentWallet }) => {
                                         />
                                     ))
                                     :
-                                    <div style={{ margin: "1rem auto", textAlign: "center" }}>No Transactions</div>
+                                    <div style={{ margin: "1rem auto", textAlign: "center" }}>{t("No Transactions")}</div>
                             }
                         </>
                 }

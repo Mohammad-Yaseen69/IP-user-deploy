@@ -400,7 +400,7 @@ const TransactionsTable = () => {
                                             )
                                         })
                                         :
-                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No transaction found")}</span>
+                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No transactions")}</span>
                                 }
                             </>
                     }
@@ -427,7 +427,7 @@ const TransactionsTable = () => {
                                             )
                                         })
                                         :
-                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No transaction found")}</span>
+                                        <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No transactions")}</span>
                                 }
                             </>
                     }
