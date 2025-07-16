@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import styles from "./styles/BottomLeft.module.css"
-// import { Chart } from 'react-chartjs-2'
 import Chart from "react-apexcharts"
 import { MoreHorizontal } from 'react-feather'
 import { useTranslation } from 'react-i18next'

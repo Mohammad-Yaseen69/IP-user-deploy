@@ -7,8 +7,6 @@ import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import styled from "@emotion/styled";
 import axios from "axios";
 import { useLocation, useParams } from "react-router-dom";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import { useTimezones } from "../../Context/TimezoneContext";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { Autocomplete, TextField } from "@mui/material";

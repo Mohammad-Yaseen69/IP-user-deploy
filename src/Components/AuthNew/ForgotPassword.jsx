@@ -16,7 +16,6 @@ import { useTranslation } from "react-i18next"
 import PhoneInput from "../PhoneInput"
 import { toast } from "react-toastify"
 import { smsIcon, whatsappIcon } from "../Auth/files"
-import { trimEnd } from "lodash"
 
 const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
     const { t } = useTranslation()

@@ -4,7 +4,6 @@ import './index.scss';
 import App from './App';
 // import reportWebVitals from './reportWebVitals';
 import './i18n'
-// import { GoogleOAuthProvider } from '@react-oauth/google';
 // import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 // libs css

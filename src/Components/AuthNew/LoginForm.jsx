@@ -15,7 +15,6 @@ import { UserContext } from "../../Context/UserContext"
 import { countries } from "country-list-json"
 import PhoneInput from "../PhoneInput"
 import { useTranslation } from "react-i18next"
-// import { GoogleLogin } from '@react-oauth/google';
 
 const LoginForm = ({ setIsLoginForm, setIsForgot, country }) => {
     const { t } = useTranslation()

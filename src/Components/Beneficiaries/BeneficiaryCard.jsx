@@ -12,7 +12,6 @@ import { useContext, useState } from "react"
 import { UserContext } from "../../Context/UserContext"
 import { Button } from "reactstrap"
 import DeleteBeneficiary from "./DeleteBeneficiary"
-import { repeat } from "lodash"
 
 const BeneficiaryCard = ({ user }) => {
     const { t } = useTranslation()

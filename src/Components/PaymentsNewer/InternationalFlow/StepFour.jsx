@@ -14,7 +14,6 @@ import FeesComponent from "./FeesComponent"
 import InstaPayLoader from "../../Loader"
 import TypingSpan from "../../TypingSpan"
 import { UserContext } from "../../../Context/UserContext"
-// import { ReactTyped } from "react-typed"
 
 export const typesData = [
     {

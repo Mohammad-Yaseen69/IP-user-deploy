@@ -5,10 +5,8 @@ import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import styled from "@emotion/styled";
 import { MobileTimePicker } from "@mui/x-date-pickers/MobileTimePicker";
 import axios from "axios";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import { useTimezones } from "../../Context/TimezoneContext";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { Autocomplete, TextField } from "@mui/material";
@@ -37,13 +35,6 @@ const CustomLabel = styled.label`
   color: #333;
 `;
 
-const CustomDatePicker = styled(MobileDatePicker)`
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-`;
 
 const CustomSubmitButton = styled.button`
   margin-top: 20px;
@@ -76,23 +67,7 @@ const LogoImage = styled.img`
   height: 140px;
   margin-bottom: 20px; /* Add some spacing between the logo and the form */
 `;
-const SuccessImage = styled.img`
-  width: 200px;
-  height: 200px;
-  margin-bottom: 20px;
-`;
-const SuccessTick = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="green"
-  >
-    <path d="M0 0h24v24H0z" fill="none" />
-    <path d="M9 16.2l-2.5-2.5L5 15l4 4 8-8-1.4-1.4-6.6 6.6z" />
-  </svg>
-);
+
 
 const RequestCalendar = () => {
   const { timezones } = useTimezones();
@@ -167,7 +142,7 @@ const RequestCalendar = () => {
   const isFormValid = isDateValid && isTimeValid;
 
   const handleTimezoneFilter = (options, { inputValue }) => {
-    const normalizedInput = inputValue.replace(/^(\+)([1-9])$/, '$10$2') 
+    const normalizedInput = inputValue.replace(/^(\+)([1-9])$/, '$10$2')
     return options.filter(option =>
       option.toLowerCase().includes(normalizedInput.toLowerCase())
     );
