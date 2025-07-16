@@ -1,7 +1,7 @@
 
 import styles from "./styles/index.module.css"
-import man from "./files/man.png"
-import woman from "./files/woman.png"
+import man from "./files/man.webp"
+import woman from "./files/woman.webp"
 import overlay from "./files/overlay.svg"
 import { useContext, useEffect, useState } from "react"
 import RegistrationCompleted from "../AuthNew/RegistrationCompleted"
@@ -104,9 +104,9 @@ const Auth = () => {
                         <img src={overlay} alt="overlay" className={styles.overlay} />
                         {
                             step < 2 ?
-                                <img src={man} alt="man" className={styles.man} />
+                                <img src={man} rel="preload" loading="lazy"  alt="man" className={styles.man} />
                                 :
-                                <img src={woman} alt="woman" className={styles.man} />
+                                <img src={woman} rel="preload" loading="lazy"  alt="woman" className={styles.man} />
                         }
                         <div className={styles.form}>
                             <div style={{ visibility: hideLogo && "hidden" }} className={styles.f_top}>

@@ -94,7 +94,7 @@ const App = () => {
           <BroadcastPage />
           :
           <ErrorBoundary>
-            <Suspense fallback={<InstaPayLoader opacity={1} />}>
+            <Suspense fallback={<InstaPayLoader opacity={1} fallback={true}  />}>
               <TimezonesProvider>
                 <UserState>
                   <InactivityWrapper>
