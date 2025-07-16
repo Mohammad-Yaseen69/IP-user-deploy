@@ -82,7 +82,6 @@ import FormValidationContain from "../Components/Forms/Form Control/Form Validat
 import DetailCourseContain from "../Components/Learning/DetailCourse";
 import ApexchartsContain from "../Components/Charts/apexCharts";
 import GoogleChartsContain from "../Components/Charts/googleCharts";
-import DraggableContain from "../Components/Calender/Draggable Calender/index";
 import ChartistContain from "../Components/Charts/chartistCharts";
 import ChartJsContain from "../Components/Charts/chartsjs";
 import DataTablesContain from "../Components/Tables/DataTable";
@@ -297,7 +296,6 @@ export const routes = [
   { path: `${process.env.PUBLIC_URL}/charts/apexCharts`, Component: <ApexchartsContain /> },
   { path: `${process.env.PUBLIC_URL}/charts/googleChart`, Component: <GoogleChartsContain /> },
   { path: `${process.env.PUBLIC_URL}/charts/googleChart`, Component: <ChartJsContain /> },
-  { path: `${process.env.PUBLIC_URL}/calendar/draggable-calendar`, Component: <DraggableContain /> },
   { path: `${process.env.PUBLIC_URL}/charts/chartistComponent`, Component: <ChartistContain /> },
   { path: `${process.env.PUBLIC_URL}/charts/chartJs`, Component: <ChartJsContain /> },
   { path: `${process.env.PUBLIC_URL}/table/datatable`, Component: <DataTablesContain /> },
