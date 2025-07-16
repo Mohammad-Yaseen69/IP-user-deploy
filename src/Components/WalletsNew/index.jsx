@@ -20,7 +20,7 @@ export const getLimits = async (currentWallet, setData, authHeader, setLoading, 
     setData({})
     try {
         const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-account-limits/${currentWallet?._id}`, { headers: authHeader, cancelToken })
-        const dec = decryptData(res.data.data)
+        const dec = decryptData(res?.data?.data)
         const { topup_values, limits, limits_used } = dec?.data;
 
         setData({
@@ -103,8 +103,8 @@ export const getLimits = async (currentWallet, setData, authHeader, setLoading, 
         })
     }
     catch (error) {
-        if(error.response.data.data){
-            const dec = decryptData(error.response.data?.data)
+        if(error.response?.data?.data){
+            const dec = decryptData(error.response?.data?.data)
             if (axios.isCancel(error)) {
                 return;
             }

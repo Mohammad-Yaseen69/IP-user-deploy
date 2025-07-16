@@ -15,7 +15,7 @@ import { UserContext } from "../../Context/UserContext"
 
 const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver, selectedCategory, setSelectedCategory, isEditMode, showCategories = false, addCategoriesToTransaction, message, setMessage, setIsEditMode, isSaving, note, setNote, fromReferral = false, vvc, amount, cardNo }) => {
     const { t } = useTranslation()
-    const { userDetails} = useContext(UserContext)
+    const { userDetails } = useContext(UserContext)
 
     const country = useMemo(() => {
         return countries.find(item => internationalReceiver?.country_iso_code ? item.alpha3 === internationalReceiver?.country_iso_code : item?.receiver?.country_iso_code === item.alpha3)
@@ -100,11 +100,11 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                     </div>
                 }
                 {
-                    desc
+                    (desc || item.status?.toLowerCase() === "reversed")
                         ?
                         <div className={styles.er_item}>
                             <span>{t("Description")}</span>
-                            <p>{desc}</p>
+                            <p>{desc || t("The transaction has been reversed, and the funds have been added back to your CHF currency wallet.")?.replace("CHF", item?.currency?.code)}</p>
                         </div>
                         :
                         ""
