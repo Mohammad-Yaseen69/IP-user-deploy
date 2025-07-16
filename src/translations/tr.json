@@ -2647,5 +2647,6 @@
   "Edit Cover Photo": "Kapak Fotoğrafını Düzenle",
   "Adjust Cover Photo": "Kapak Fotoğrafını Ayarla",
   "Remove Cover Photo": "Kapak Fotoğrafını Kaldır",
-  "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "İşlem geri alındı ve para CHF para cüzdanınıza geri eklendi."
+  "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "İşlem geri alındı ve para CHF para cüzdanınıza geri eklendi.",
+  "Add Payment Purpose and Reference": "Ödeme Amacını ve Referansını Ekleyin"
 }

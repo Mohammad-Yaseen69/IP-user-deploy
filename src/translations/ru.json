@@ -2556,5 +2556,6 @@
   "Edit Cover Photo": "Редактировать фото обложки",
   "Adjust Cover Photo": "Изменить фото обложки",
   "Remove Cover Photo": "Удалить фото обложки",
-  "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "Транзакция была отменена, и средства были возвращены на ваш валютный кошелек CHF."
+  "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "Транзакция была отменена, и средства были возвращены на ваш валютный кошелек CHF.",
+  "Add Payment Purpose and Reference": "Добавить назначение платежа и ссылку"
 }

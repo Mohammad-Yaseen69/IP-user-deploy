@@ -2652,5 +2652,6 @@
   "Edit Cover Photo": "Редагувати обкладинку",
   "Adjust Cover Photo": "Налаштуйте обкладинку",
   "Remove Cover Photo": "Видалити обкладинку",
-  "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "Трансакцію було скасовано, а кошти повернуто у ваш гаманець CHF."
+  "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "Трансакцію було скасовано, а кошти повернуто у ваш гаманець CHF.",
+  "Add Payment Purpose and Reference": "Додайте призначення та посилання платежу"
 }

@@ -44,7 +44,7 @@ import { apiErrorMessage } from "../InternationalFlow";
 const leftSideContent = [
     "Choose the beneficiary!",
     "Enter The Amount",
-    "Add Remarks And Comments",
+    "Add Payment Purpose and Reference",
     "Select Payment Type",
     "Review transfer"
 ]

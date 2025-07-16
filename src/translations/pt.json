@@ -2652,5 +2652,6 @@
   "Edit Cover Photo": "Editar foto da capa",
   "Adjust Cover Photo": "Ajustar foto da capa",
   "Remove Cover Photo": "Remover foto da capa",
-  "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "A transação foi revertida e os fundos foram adicionados de volta à sua carteira de moeda CHF."
+  "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "A transação foi revertida e os fundos foram adicionados de volta à sua carteira de moeda CHF.",
+  "Add Payment Purpose and Reference": "Adicionar finalidade e referência de pagamento"
 }

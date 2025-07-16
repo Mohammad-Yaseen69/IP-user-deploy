@@ -2646,5 +2646,6 @@
   "Edit Cover Photo": "编辑封面照片",
   "Adjust Cover Photo": "调整封面照片",
   "Remove Cover Photo": "删除封面照片",
-  "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "交易已被撤销，资金已重新添加至您的 CHF 货币钱包。"
+  "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "交易已被撤销，资金已重新添加至您的 CHF 货币钱包。",
+  "Add Payment Purpose and Reference": "添加付款目的和参考"
 }

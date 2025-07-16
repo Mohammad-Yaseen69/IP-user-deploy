@@ -2645,5 +2645,6 @@
   "Edit Cover Photo": "تعديل صورة الغلاف",
   "Adjust Cover Photo": "ضبط صورة الغلاف",
   "Remove Cover Photo": "إزالة صورة الغلاف",
-  "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "لقد تم عكس المعاملة وتمت إضافة الأموال مرة أخرى إلى محفظة العملة CHF الخاصة بك."
+  "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "لقد تم عكس المعاملة وتمت إضافة الأموال مرة أخرى إلى محفظة العملة CHF الخاصة بك.",
+  "Add Payment Purpose and Reference": "إضافة غرض الدفع والمرجع"
 }

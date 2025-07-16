@@ -39,7 +39,7 @@ import AddBeneficiaryAddressModal from "../../AddBeneficiaryAddressModal"
 const leftSideContent = [
     "Enter The Amount",
     "Choose the beneficiary!",
-    "Add Remarks And Comments",
+    "Add Payment Purpose and Reference",
     "Select Payment Type",
     "Review transfer"
 ]
