@@ -1,6 +1,7 @@
 import React from 'react'
 import load from "../../assets/load.gif"
 const InstaPayLoader = ({ opacity = 1, fallback = false }) => {
+    console.log(load)
     return fallback ? (<div
         style={{
             height: "100vh",
@@ -15,7 +16,7 @@ const InstaPayLoader = ({ opacity = 1, fallback = false }) => {
         aria-hidden="true"
     >
         <img
-            src="/static/media/load.97d7a54eff2a0b0ec6f2.gif"
+            src={load}
             alt="loading"
             style={{
                 height: "70%",
@@ -23,9 +24,9 @@ const InstaPayLoader = ({ opacity = 1, fallback = false }) => {
                 objectFit: "contain",
                 // transform: "scale(4)"
             }}
-            loading="lazy"
             decoding="async"
-            fetchpriority="low"
+            rel='preload'
+            fetchpriority="high"
         />
     </div>) :
         (

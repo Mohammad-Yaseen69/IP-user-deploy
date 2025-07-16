@@ -1,4 +1,4 @@
-import React, {  useLayoutEffect, useState } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import Routers from "./RouteNew"
 import CustomizerProvider from './Helper/Customizer/CustomizerProvider'
 import ProjectProvider from './Helper/Project/ProjectProvider'
@@ -94,7 +94,7 @@ const App = () => {
           <BroadcastPage />
           :
           <ErrorBoundary>
-            <Suspense fallback={<InstaPayLoader opacity={1} fallback={true}  />}>
+            <Suspense fallback={<InstaPayLoader opacity={1} fallback={true} />}>
               <TimezonesProvider>
                 <UserState>
                   <InactivityWrapper>

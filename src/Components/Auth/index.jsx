@@ -104,9 +104,9 @@ const Auth = () => {
                         <img src={overlay} alt="overlay" className={styles.overlay} />
                         {
                             step < 2 ?
-                                <img src={man} rel="preload" loading="lazy"  alt="man" className={styles.man} />
+                                <img src={man} alt="man" className={styles.man} />
                                 :
-                                <img src={woman} rel="preload" loading="lazy"  alt="woman" className={styles.man} />
+                                <img src={woman} alt="woman" className={styles.man} />
                         }
                         <div className={styles.form}>
                             <div style={{ visibility: hideLogo && "hidden" }} className={styles.f_top}>
