@@ -2633,5 +2633,6 @@
   "Upload": "Uploaden",
   "Edit Cover Photo": "Omslagfoto bewerken",
   "Adjust Cover Photo": "Omslagfoto aanpassen",
-  "Remove Cover Photo": "Verwijder omslagfoto"
+  "Remove Cover Photo": "Verwijder omslagfoto",
+  "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "De transactie is teruggedraaid en het geld is teruggestort in uw CHF-valutaportemonnee."
 }

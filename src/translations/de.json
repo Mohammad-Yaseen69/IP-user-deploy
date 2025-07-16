@@ -2606,5 +2606,6 @@
   "Upload": "Hochladen",
   "Edit Cover Photo": "Titelbild bearbeiten",
   "Adjust Cover Photo": "Titelbild anpassen",
-  "Remove Cover Photo": "Titelbild entfernen"
+  "Remove Cover Photo": "Titelbild entfernen",
+  "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "Die Transaktion wurde rückgängig gemacht und das Geld wurde Ihrem CHF-Währungs-Wallet wieder hinzugefügt."
 }

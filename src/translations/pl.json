@@ -2646,5 +2646,6 @@
   "Upload": "Wgrywać",
   "Edit Cover Photo": "Edytuj zdjęcie na okładce",
   "Adjust Cover Photo": "Dostosuj zdjęcie na okładce",
-  "Remove Cover Photo": "Usuń zdjęcie okładki"
+  "Remove Cover Photo": "Usuń zdjęcie okładki",
+  "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "Transakcja została cofnięta, a środki zostały dodane z powrotem do Twojego portfela walutowego CHF."
 }
