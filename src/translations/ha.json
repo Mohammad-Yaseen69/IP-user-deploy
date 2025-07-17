@@ -2607,5 +2607,16 @@
   "Adjust Cover Photo": "Daidaita Hoton Murfin",
   "Remove Cover Photo": "Cire Hoton Murfin",
   "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "An canza ma'amalar, kuma an ƙara kuɗin zuwa walat ɗin ku na CHF.",
-  "Add Payment Purpose and Reference": "Ƙara Manufar Biyan Kuɗi da Reference"
+  "Add Payment Purpose and Reference": "Ƙara Manufar Biyan Kuɗi da Reference",
+  "Product ID": "ID na samfur",
+  "Transfer Note": "Bayanin Canja wurin",
+  "Select Purpose of Payment": "Zaɓi Manufar Biyan Kuɗi",
+  "Select the payer": "Zaɓi mai biyan kuɗi",
+  "Destination Country": "Kasar Makoma",
+  "Select the Payer": "Zaɓi Mai Biyar",
+  "Select Receiving Method": "Zaɓi Hanyar Karɓa",
+  "Select country to continue": "Zaɓi ƙasa don ci gaba",
+  "Min Amount": "Min adadin",
+  "Minimum Amount. ": "Mafi ƙarancin kuɗi. ",
+  "Maximum Amount. ": "Matsakaicin Adadi. "
 }

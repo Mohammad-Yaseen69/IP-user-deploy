@@ -534,8 +534,28 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                         {
                             isReceivingAmountLoading
                                 ?
-                                <div style={{ height: "40px", width: "40px" }}>
-                                    <InstaPayLoader />
+                                <div>
+                                    {countries.length === 0 ?
+                                        <div style={{ width: "40px", height: "40px" }}>
+                                            <InstaPayLoader />
+                                        </div>
+                                        :
+                                        <>
+                                            {
+                                                !data?.country?.name ?
+                                                    <span>{t("Select country to continue")}</span> :
+                                                !data?.payoutChannel?.name ?
+                                                    <span>{t("Select Receiving Method")}</span> :
+                                                !data?.payer?.name ?
+                                                    <span>{t("Select the Payer")}</span> :
+
+
+                                                    <div style={{ width: "40px", height: "40px" }}>
+                                                         <InstaPayLoader />
+                                                    </div>
+                                            }
+                                        </>
+                                    }
                                 </div>
                                 :
                                 <>
@@ -567,7 +587,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                             <div className={data?.country?.file_url ? "" : styles.grad_icon}>
                                 <img src={data?.country?.file_url ?? country} alt="" />
                             </div>
-                            <span>{countries.length === 0 ? t("Loading Countries Please wait...") : data?.country?.name ? t(data?.country?.name)?.slice(0, 30) : t("select destination country")}</span>
+                            <span>{countries.length === 0 ? t("Loading Countries...") : data?.country?.name ? t(data?.country?.name)?.slice(0, 30) : t("Destination Country")}</span>
                         </div>
                         <img src={chev_down} alt="" />
                     </div>

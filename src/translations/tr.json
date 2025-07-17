@@ -2648,5 +2648,16 @@
   "Adjust Cover Photo": "Kapak Fotoğrafını Ayarla",
   "Remove Cover Photo": "Kapak Fotoğrafını Kaldır",
   "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "İşlem geri alındı ve para CHF para cüzdanınıza geri eklendi.",
-  "Add Payment Purpose and Reference": "Ödeme Amacını ve Referansını Ekleyin"
+  "Add Payment Purpose and Reference": "Ödeme Amacını ve Referansını Ekleyin",
+  "Product ID": "Ürün Kimliği",
+  "Transfer Note": "Transfer Notu",
+  "Select Purpose of Payment": "Ödeme Amacını Seçin",
+  "Select the payer": "Ödeyen kişiyi seçin",
+  "Destination Country": "Hedef Ülke",
+  "Select the Payer": "Ödeyen'i seçin",
+  "Select Receiving Method": "Alma Yöntemini Seçin",
+  "Select country to continue": "Devam etmek için ülkeyi seçin",
+  "Min Amount": "Minimum Miktar",
+  "Minimum Amount. ": "Minimum Tutar.",
+  "Maximum Amount. ": "Maksimum Tutar."
 }

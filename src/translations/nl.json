@@ -2635,5 +2635,16 @@
   "Adjust Cover Photo": "Omslagfoto aanpassen",
   "Remove Cover Photo": "Verwijder omslagfoto",
   "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "De transactie is teruggedraaid en het geld is teruggestort in uw CHF-valutaportemonnee.",
-  "Add Payment Purpose and Reference": "Betalingsdoel en referentie toevoegen"
+  "Add Payment Purpose and Reference": "Betalingsdoel en referentie toevoegen",
+  "Product ID": "Product-ID",
+  "Transfer Note": "Overdrachtsnota",
+  "Select Purpose of Payment": "Selecteer het betalingsdoel",
+  "Select the payer": "Selecteer de betaler",
+  "Destination Country": "Bestemmingsland",
+  "Select the Payer": "Selecteer de betaler",
+  "Select Receiving Method": "Selecteer ontvangstmethode",
+  "Select country to continue": "Selecteer een land om door te gaan",
+  "Min Amount": "Minimumbedrag",
+  "Minimum Amount. ": "Minimumbedrag.",
+  "Maximum Amount. ": "Maximaal bedrag."
 }

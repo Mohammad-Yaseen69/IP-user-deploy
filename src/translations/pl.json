@@ -2648,5 +2648,16 @@
   "Adjust Cover Photo": "Dostosuj zdjęcie na okładce",
   "Remove Cover Photo": "Usuń zdjęcie okładki",
   "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "Transakcja została cofnięta, a środki zostały dodane z powrotem do Twojego portfela walutowego CHF.",
-  "Add Payment Purpose and Reference": "Dodaj cel płatności i odniesienie"
+  "Add Payment Purpose and Reference": "Dodaj cel płatności i odniesienie",
+  "Product ID": "Identyfikator produktu",
+  "Transfer Note": "Nota transferowa",
+  "Select Purpose of Payment": "Wybierz cel płatności",
+  "Select the payer": "Wybierz płatnika",
+  "Destination Country": "Kraj docelowy",
+  "Select the Payer": "Wybierz płatnika",
+  "Select Receiving Method": "Wybierz metodę odbioru",
+  "Select country to continue": "Wybierz kraj, aby kontynuować",
+  "Min Amount": "Minimalna kwota",
+  "Minimum Amount. ": "Kwota minimalna.",
+  "Maximum Amount. ": "Maksymalna kwota."
 }

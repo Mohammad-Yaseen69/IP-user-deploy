@@ -2661,5 +2661,16 @@
   "Adjust Cover Photo": "Adjust Cover Photo",
   "Remove Cover Photo": "Remove Cover Photo",
   "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.",
-  "Add Payment Purpose and Reference": "Add Payment Purpose and Reference"
+  "Add Payment Purpose and Reference": "Add Payment Purpose and Reference",
+  "Product ID": "Product ID",
+  "Transfer Note": "Transfer Note",
+  "Select Purpose of Payment": "Select Purpose of Payment",
+  "Select the payer": "Select the payer",
+  "Destination Country": "Destination Country",
+  "Select the Payer": "Select the Payer",
+  "Select Receiving Method": "Select Receiving Method",
+  "Select country to continue": "Select country to continue",
+  "Min Amount": "Min Amount",
+  "Minimum Amount. ": "Minimum Amount. ",
+  "Maximum Amount. ": "Maximum Amount. "
 }

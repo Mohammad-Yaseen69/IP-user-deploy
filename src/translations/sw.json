@@ -2648,5 +2648,16 @@
   "Adjust Cover Photo": "Rekebisha Picha ya Jalada",
   "Remove Cover Photo": "Ondoa Picha ya Jalada",
   "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "Muamala umebatilishwa, na pesa zimeongezwa kwenye pochi yako ya sarafu ya CHF.",
-  "Add Payment Purpose and Reference": "Ongeza Madhumuni ya Malipo na Marejeleo"
+  "Add Payment Purpose and Reference": "Ongeza Madhumuni ya Malipo na Marejeleo",
+  "Product ID": "Kitambulisho cha bidhaa",
+  "Transfer Note": "Uhamisho wa Kumbuka",
+  "Select Purpose of Payment": "Chagua Kusudi la Malipo",
+  "Select the payer": "Chagua mlipaji",
+  "Destination Country": "Nchi Lengwa",
+  "Select the Payer": "Chagua Mlipaji",
+  "Select Receiving Method": "Chagua Njia ya Kupokea",
+  "Select country to continue": "Chagua nchi ili kuendelea",
+  "Min Amount": "Kiasi kidogo",
+  "Minimum Amount. ": "Kiasi cha Chini. ",
+  "Maximum Amount. ": "Kiasi cha Juu. "
 }

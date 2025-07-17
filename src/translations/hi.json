@@ -2648,5 +2648,16 @@
   "Adjust Cover Photo": "कवर फ़ोटो समायोजित करें",
   "Remove Cover Photo": "कवर फ़ोटो हटाएँ",
   "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "लेन-देन को उलट दिया गया है, और धनराशि को आपके CHF मुद्रा वॉलेट में वापस जोड़ दिया गया है।",
-  "Add Payment Purpose and Reference": "भुगतान उद्देश्य और संदर्भ जोड़ें"
+  "Add Payment Purpose and Reference": "भुगतान उद्देश्य और संदर्भ जोड़ें",
+  "Product ID": "उत्पाद आयडी",
+  "Transfer Note": "स्थानांतरण नोट",
+  "Select Purpose of Payment": "भुगतान का उद्देश्य चुनें",
+  "Select the payer": "भुगतानकर्ता का चयन करें",
+  "Destination Country": "गंतव्य देश",
+  "Select the Payer": "भुगतानकर्ता का चयन करें",
+  "Select Receiving Method": "प्राप्ति विधि चुनें",
+  "Select country to continue": "जारी रखने के लिए देश चुनें",
+  "Min Amount": "न्यूनतम राशि",
+  "Minimum Amount. ": "न्यूनतम राशि.",
+  "Maximum Amount. ": "अधिकतम राशि। "
 }

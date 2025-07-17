@@ -2647,5 +2647,16 @@
   "Adjust Cover Photo": "调整封面照片",
   "Remove Cover Photo": "删除封面照片",
   "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "交易已被撤销，资金已重新添加至您的 CHF 货币钱包。",
-  "Add Payment Purpose and Reference": "添加付款目的和参考"
+  "Add Payment Purpose and Reference": "添加付款目的和参考",
+  "Product ID": "产品 ID",
+  "Transfer Note": "转让通知",
+  "Select Purpose of Payment": "选择付款用途",
+  "Select the payer": "选择付款人",
+  "Destination Country": "目的地国家",
+  "Select the Payer": "选择付款人",
+  "Select Receiving Method": "选择接收方式",
+  "Select country to continue": "选择国家/地区继续",
+  "Min Amount": "最低金额",
+  "Minimum Amount. ": "最低金额。",
+  "Maximum Amount. ": "最高金额。"
 }

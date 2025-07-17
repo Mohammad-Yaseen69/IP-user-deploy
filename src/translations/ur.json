@@ -2646,5 +2646,16 @@
   "Adjust Cover Photo": "کور تصویر کو ایڈجسٹ کریں۔",
   "Remove Cover Photo": "کور فوٹو ہٹا دیں۔",
   "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "لین دین کو تبدیل کر دیا گیا ہے، اور فنڈز آپ کے CHF کرنسی والیٹ میں واپس شامل کر دیے گئے ہیں۔",
-  "Add Payment Purpose and Reference": "ادائیگی کا مقصد اور حوالہ شامل کریں۔"
+  "Add Payment Purpose and Reference": "ادائیگی کا مقصد اور حوالہ شامل کریں۔",
+  "Product ID": "پروڈکٹ کی شناخت",
+  "Transfer Note": "ٹرانسفر نوٹ",
+  "Select Purpose of Payment": "ادائیگی کا مقصد منتخب کریں۔",
+  "Select the payer": "ادا کرنے والے کو منتخب کریں۔",
+  "Destination Country": "منزل کا ملک",
+  "Select the Payer": "ادا کرنے والے کو منتخب کریں۔",
+  "Select Receiving Method": "وصول کرنے کا طریقہ منتخب کریں۔",
+  "Select country to continue": "جاری رکھنے کے لیے ملک منتخب کریں۔",
+  "Min Amount": "کم سے کم رقم",
+  "Minimum Amount. ": "کم از کم رقم۔ ",
+  "Maximum Amount. ": "زیادہ سے زیادہ رقم۔ "
 }

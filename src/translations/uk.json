@@ -2653,5 +2653,16 @@
   "Adjust Cover Photo": "Налаштуйте обкладинку",
   "Remove Cover Photo": "Видалити обкладинку",
   "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "Трансакцію було скасовано, а кошти повернуто у ваш гаманець CHF.",
-  "Add Payment Purpose and Reference": "Додайте призначення та посилання платежу"
+  "Add Payment Purpose and Reference": "Додайте призначення та посилання платежу",
+  "Product ID": "ID продукту",
+  "Transfer Note": "Примітка про передачу",
+  "Select Purpose of Payment": "Виберіть Призначення платежу",
+  "Select the payer": "Виберіть платника",
+  "Destination Country": "Країна призначення",
+  "Select the Payer": "Виберіть платника",
+  "Select Receiving Method": "Виберіть спосіб отримання",
+  "Select country to continue": "Виберіть країну, щоб продовжити",
+  "Min Amount": "Мінімальна сума",
+  "Minimum Amount. ": "Мінімальна сума. ",
+  "Maximum Amount. ": "Максимальна сума. "
 }

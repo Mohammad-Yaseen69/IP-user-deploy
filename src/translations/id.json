@@ -2646,5 +2646,16 @@
   "Adjust Cover Photo": "Sesuaikan Foto Sampul",
   "Remove Cover Photo": "Hapus Foto Sampul",
   "The transaction has been reversed, and the funds have been added back to your CHF currency wallet.": "Transaksi telah dibatalkan, dan dana telah ditambahkan kembali ke dompet mata uang CHF Anda.",
-  "Add Payment Purpose and Reference": "Tambahkan Tujuan Pembayaran dan Referensi"
+  "Add Payment Purpose and Reference": "Tambahkan Tujuan Pembayaran dan Referensi",
+  "Product ID": "ID Produk",
+  "Transfer Note": "Catatan Transfer",
+  "Select Purpose of Payment": "Pilih Tujuan Pembayaran",
+  "Select the payer": "Pilih pembayar",
+  "Destination Country": "Negara Tujuan",
+  "Select the Payer": "Pilih Pembayar",
+  "Select Receiving Method": "Pilih Metode Penerimaan",
+  "Select country to continue": "Pilih negara untuk melanjutkan",
+  "Min Amount": "Jumlah Minimum",
+  "Minimum Amount. ": "Jumlah Minimum.",
+  "Maximum Amount. ": "Jumlah Maksimum."
 }
