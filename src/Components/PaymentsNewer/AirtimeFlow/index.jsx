@@ -51,7 +51,6 @@ const initialState = {
     packages: [],
     package: {},
     airtime_amount: 0,
-    airtime_currency: {},
     payment_type: {},
     package_details: {},
     show_otp: false,
@@ -122,11 +121,6 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         }
     }, [userDetails])
 
-    useEffect(() => {
-        if (userWallets?.length > 0 && !data.airtime_currency?._id) {
-            updateDataHandler("airtime_currency", data.localWallet)
-        }
-    }, [userWallets, data.airtime_currency])
 
 
     useEffect(() => {
@@ -162,24 +156,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         }
     }, [userDetails])
 
-    useEffect(() => {
-        if (data.wallet?.currency?.code && data.wallet?.currency?.code !== data?.airtime_currency?.currency?.code) {
-            const getExchangedAmounts = async () => {
-                // try {
-                //     const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${data?.airtime_currency?.currency?.code}&to=${data.wallet?.currency?.code}&amount=${data.airtime_amount}`, {
-                //         headers: authHeader
-                //     });
-                //     const dec = decryptData(res?.data?.data);
-                //     updateDataHandler("airtime_amount", dec?.exchangeRate?.exchanged_amount ?? 0)
-                updateDataHandler("airtime_currency", data.wallet)
-                // } catch (error) {
-                //     return 0; // return 0 in case of error
-                // }
-            };
 
-            getExchangedAmounts()
-        }
-    }, [data.wallet])
 
     useEffect(() => {
         const getCountryOperators = async () => {
@@ -237,7 +214,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             {
                 "product_id": data?.package?.id || data.eSimData.selectedPlan?.productId,
                 "payment_method": data.payment_type?.value,
-                "wallet_id": data.payment_type === "wallet" ? data.airtime_currency?._id : (data.flow === "e-sim" && data.payment_type?.value === "wallet") ? data?.wallet?._id : data.localWallet?._id,
+                "wallet_id": data.payment_type === "wallet" ? data.wallet?._id : data.localWallet?._id,
                 "sub_service_id": data.flow === "e-sim" ? 14 : data.service_type?.id || 12,
                 "local_wallet_id": data?.localWallet?._id,
                 "type": data.flow === "e-sim" && "esim"
@@ -269,46 +246,12 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
         }
     }
 
-    // const createTransaction = async (codeType = "") => {
-    //     updateDataHandler("loading", true)
-    //     const isFixedAirtime = data.service_type?.id === 11 && !data.packages?.[0]?.baseAmount
-
-    //     try {
-    //         const payload = {
-    //             wallet_id: data.airtime_currency?._id,
-    //             amount: data.package?.prices?.amount ?? data?.airtime_amount,
-    //             token: data.package_details?.token,
-    //             number: `+${data.recipient}`,
-    //             type: codeType || data.codeType
-    //         }
-
-    //         console.log(payload)
-    //         if (isFixedAirtime) payload.product_id = data.package?.id;
-
-    //         const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/create${isFixedAirtime ? "-airtime" : ""}-transaction`, {
-    //             data: encryptData(payload)
-    //         }, {
-    //             headers: authHeader
-    //         })
-    //         const dec = decryptData(res.data.data)
-    //         console.log(dec)
-    //         updateDataHandler("created_transaction", dec)
-    //         updateDataHandler("show_otp", true)
-    //     } catch (error) {
-    //         const dec = decryptData(error.response.data.data)
-    //         console.log(dec)
-    //         updateDataHandler("error", dec?.message ?? "Something went wrong while confirming the transaction.")
-    //     }
-    //     finally {
-    //         updateDataHandler("loading", false)
-    //     }
-    // }
 
     const createTransaction = async (codeType = "") => {
         try {
             const payload = {
                 data: {
-                    wallet_id: data.airtime_currency?._id,
+                    wallet_id: data.wallet?._id,
                     token: data.package_details?.data?.token,
                     number: data.recipient ? `+${data.recipient}` : data.eSimData.phone ? `+${data.eSimData.phone}` : `+${userDetails.phone}`,
                     type: data.flow === "e-sim" && "esim"
@@ -494,7 +437,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                 otp: otp,
                 type: data.codeType,
                 panData: {
-                    wallet_id: data.airtime_currency?._id,
+                    wallet_id: data.localWallet?._id,
                     number: data.recipient ? `+${data.recipient}` : data.eSimData.phone ? `+${data.eSimData.phone}` : `+${userDetails.phone}`,
                     payment_type: data.payment_type?.value ?? "card",
                     airtime_token: data.package_details?.data?.token,

@@ -217,7 +217,7 @@ export const WalletCard = ({
                     amount = data.package_details?.filteredData?.[0]?.total
                 }
 
-                const apidata = [data?.currency_wallet?.currency?.code ?? data?.airtime_currency?.currency?.code, wallet?.currency?.code, Number(amount) || data?.package?.prices?.amount]
+                const apidata = [data?.currency_wallet?.currency?.code ?? data?.localWallet?.currency?.code, wallet?.currency?.code, Number(amount) || data?.package?.prices?.amount]
 
                 getExchangedAmounts(...apidata)
                     .then(res => {
