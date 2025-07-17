@@ -795,7 +795,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                                                     updateDataHandler("step", 3)
                                                                 }
                                                             }} className={styles.trs}>{t("Back")}</button>
-                                                            <button disabled={data.loading || !data.payment_type?.name || (data.payment_type?.value === "wallet" ? !data.wallet?._id : data.payment_type?.value === "card" ? !data?.selectedSavedCard?._id && (!data.cardHolderName || !data.cardNumber || !data.cvc || !data.expiry || data.cardError) : false)} onClick={() => {
+                                                            <button disabled={data.loading || !data.payment_type?.name || (!data?.selectedSavedCard?._id && (!data.cardHolderName || !data.cardNumber || !data.cvc || !data.expiry || data.cardError))} onClick={() => {
                                                                 if (data.payment_type?.value === "card" && !data.showCard) {
                                                                     updateDataHandler("showCard", true)
                                                                 } else {

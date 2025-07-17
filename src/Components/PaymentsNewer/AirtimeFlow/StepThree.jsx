@@ -163,11 +163,11 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                                                         </div>
                                                     </div>
                                                     <div className={styles.operator}>
-                                                        <span>Operator</span>
+                                                        <span>{t("Operator")}</span>
                                                         <p>{data?.providers?.[0]?.name}</p>
                                                     </div>
                                                     <div className={styles.c_bot}>
-                                                        <span>Product ID: <strong>{item?.id}</strong></span>
+                                                        <span>{t("Product ID")}: <strong>{item?.id}</strong></span>
                                                         <div>&rarr;</div>
                                                     </div>
                                                 </div>
@@ -179,7 +179,7 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                                         data.packages?.length === 1 && data.packages?.[0]?.baseAmount
                                             ?
                                             <div className={styles.amount_con}>
-                                                <label>{t("Enter custom amount")}  <span style={{ fontSize: "70%" }}>({data.default_wallet?.currency?.code}  {Number(data.package?.baseAmount?.min)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} - {data.default_wallet?.currency?.code}  {Number(data.package?.baseAmount?.max)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</span></label>
+                                                <label>{t("Enter custom amount")}  <span style={{ fontSize: "70%" }}>({data.localWallet?.currency?.code}  {Number(data.package?.baseAmount?.min)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} - {data.localWallet?.currency?.code}  {Number(data.package?.baseAmount?.max)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</span></label>
                                                 <div className={styles.am_a_c}>
                                                     {
                                                         window.innerWidth < 1000
@@ -187,7 +187,7 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                                                             <div className={styles.am}>
                                                                 <label>{t("Enter the amount")}</label>
                                                                 <div>
-                                                                    <span>{data.default_wallet?.currency?.code} </span>
+                                                                    <span>{data.localWallet?.currency?.code} </span>
                                                                     <input
                                                                         type="text"
                                                                         value={data.airtime_amount}
@@ -202,7 +202,7 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                                                             </div>
                                                             :
                                                             <div className={styles.am}>
-                                                                <span>{data.default_wallet?.currency?.code} </span>
+                                                                <span>{data.localWallet?.currency?.code} </span>
                                                                 <input
                                                                     type="text"
                                                                     value={data.airtime_amount}
@@ -216,8 +216,7 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                                                             </div>
                                                     }
                                                     <div className={styles.cur}>
-                                                        <div>{data.default_wallet?.currency?.code} </div>
-                                                        {/* <span>{data.default_wallet?.currency?.code} </span> */}
+                                                        <div>{data.localWallet?.currency?.code} </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -235,11 +234,11 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                                                                 </div>
                                                             </div>
                                                             <div className={styles.operator}>
-                                                                <span>Operator</span>
+                                                                <span>{t("Operator")}</span>
                                                                 <p>{data?.providers?.[0]?.name}</p>
                                                             </div>
                                                             <div className={styles.c_bot}>
-                                                                <span>Product ID: <strong>{item?.id}</strong></span>
+                                                                <span>{t("Product ID")}: <strong>{item?.id}</strong></span>
                                                                 <div>&rarr;</div>
                                                             </div>
                                                         </div>

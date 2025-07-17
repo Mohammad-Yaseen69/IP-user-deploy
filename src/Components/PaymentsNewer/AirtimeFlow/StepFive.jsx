@@ -216,11 +216,7 @@ const StepFive = ({ data, dataHandler, createTransaction }) => {
                         navigate("/payments")
                         dataHandler("step", 1)
                     } else {
-                        if (data.payment_type?.value) {
-                            dataHandler("payment_type", {})
-                        } else {
-                            dataHandler("step", 4)
-                        }
+                        dataHandler("step", 4)
                     }
                 }} className={styles.trs}>{t("Back")}</button>
                 <button disabled={data.loading} onClick={() => data.verified ? navigate("/") : createTransaction()}>
