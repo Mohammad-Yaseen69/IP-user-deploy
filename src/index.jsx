@@ -48,8 +48,6 @@ Sentry.init({
     replaysOnErrorSampleRate: 1.0,
     environment: process.env.NODE_ENV === "development" ? "development" : "production",
     beforeSend(event, hint) {
-        if (!event.exception) return null;
-
         if (process.env.NODE_ENV === 'development') return null;
 
         return event;

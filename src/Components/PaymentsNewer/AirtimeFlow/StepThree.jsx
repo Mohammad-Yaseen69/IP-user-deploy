@@ -45,6 +45,8 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
             console.log("getting packages")
             const getPackages = async () => {
                 setPakLoading(true)
+                dataHandler("packages", [])
+                dataHandler("package", {})
                 try {
                     const dataa = {
                         wallet_id: data.localWallet?._id,
@@ -122,7 +124,7 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                                 data.service_types?.length > 0
                                     ?
                                     data.service_types?.map(item => (
-                                        <div style={{padding: window.innerWidth < 400 && ".6rem 1rem"}} className={`${styles.tab} ${data.service_type?.name === item?.name ? styles.tab_a : ""}`} key={item?.name} onClick={() => dataHandler("service_type", item)}>
+                                        <div style={{ padding: window.innerWidth < 400 && ".6rem 1rem" }} className={`${styles.tab} ${data.service_type?.name === item?.name ? styles.tab_a : ""}`} key={item?.name} onClick={() => dataHandler("service_type", item)}>
                                             {t(item?.name?.toLowerCase())}
                                         </div>
                                     ))
@@ -144,26 +146,33 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                                     ?
                                     <div className={styles.cards}>
                                         {
-                                            data.packages?.map((item, i) => (
-                                                <div className={`${styles.card} ${item?.id === data.package?.id ? styles.active : ""}`} key={item?.id} onClick={() => dataHandler("package", item)}>
-                                                    <div className={styles.c_top}>
-                                                        <h2 style={{ whiteSpace: "nowrap" }}>{item?.prices?.unit} {Number(item?.prices?.amount)?.toFixed(2)}</h2>
-                                                        <div>
-                                                            <span>{t("Name")}</span>
-                                                            <p>{t(item?.name)}</p>
-                                                            <span style={{ maxWidth: "40ch" }}>{t(item?.description)}</span>
+                                            Array.isArray(data.packages) ?
+                                                data.packages?.map((item, i) => (
+                                                    <div className={`${styles.card} ${item?.id === data.package?.id ? styles.active : ""}`} key={item?.id} onClick={() => dataHandler("package", item)}>
+                                                        <div className={styles.c_top}>
+                                                            <h2 style={{ whiteSpace: "nowrap" }}>{item?.prices?.unit} {Number(item?.prices?.amount)?.toFixed(2)}</h2>
+                                                            <div>
+                                                                <span>{t("Name")}</span>
+                                                                <p>{t(item?.name)}</p>
+                                                                <span style={{ maxWidth: "40ch" }}>{t(item?.description)}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className={styles.operator}>
+                                                            <span>{t("Operator")}</span>
+                                                            <p>{data?.providers?.[0]?.name}</p>
+                                                        </div>
+                                                        <div className={styles.c_bot}>
+                                                            <span>{t("Product ID")}: <strong>{item?.id}</strong></span>
+                                                            <div>&rarr;</div>
                                                         </div>
                                                     </div>
-                                                    <div className={styles.operator}>
-                                                        <span>{t("Operator")}</span>
-                                                        <p>{data?.providers?.[0]?.name}</p>
-                                                    </div>
-                                                    <div className={styles.c_bot}>
-                                                        <span>{t("Product ID")}: <strong>{item?.id}</strong></span>
-                                                        <div>&rarr;</div>
-                                                    </div>
+                                                )) :
+                                                <div style={{
+                                                    height: "100%",
+                                                    width: "100%",
+                                                }}>
+                                                    <InstaPayLoader />
                                                 </div>
-                                            ))
                                         }
                                     </div>
                                     :

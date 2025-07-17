@@ -50,7 +50,7 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
                 const coun = allowed?.find(item => item?.alpha3 === userDetails?.country_iso_code)
                 dataHandler("country", coun ?? {})
             } catch (error) {
-                dataHandler("error", "Something went wrong while getting countries.")
+                // dataHandler("err          or", "Something went wrong while getting countries.")
                 return null;
             }
             finally {
@@ -80,17 +80,17 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
 
     return (
         <div className={styles.container}>
-          {data.flow === "airtime" &&
-            <div className={styles.banner}>
-                <div className={styles.b_left}>
-                    <span>{t("Send Top-up").toUpperCase()}</span>
-                    <div>
-                        <img src={data.flow === "airtime" ? airtime : esim} alt="" />
-                        <span>{t(`${data.flow === "airtime" ? "Mobile Airtime" : "eSim"}`)}</span>
+            {data.flow === "airtime" &&
+                <div className={styles.banner}>
+                    <div className={styles.b_left}>
+                        <span>{t("Send Top-up").toUpperCase()}</span>
+                        <div>
+                            <img src={data.flow === "airtime" ? airtime : esim} alt="" />
+                            <span>{t(`${data.flow === "airtime" ? "Mobile Airtime" : "eSim"}`)}</span>
+                        </div>
                     </div>
-                </div>
-                <img src={data.flow === "airtime" ? air_dude : e_dude} alt="" />
-            </div>}
+                    <img src={data.flow === "airtime" ? air_dude : e_dude} alt="" />
+                </div>}
             {data.flow === "airtime" ?
                 loadingCountries
                     ?

@@ -38,6 +38,9 @@ const StepFour = ({ data, updateDataHandler, getPackageDetails }) => {
                         }
                         else {
                             updateDataHandler("step", 3)
+                            updateDataHandler("service_type", data.service_types[0]);
+                            updateDataHandler("packages", []);
+                            updateDataHandler("package", {});
                         }
                     }}>
                         <ChevronLeft />
