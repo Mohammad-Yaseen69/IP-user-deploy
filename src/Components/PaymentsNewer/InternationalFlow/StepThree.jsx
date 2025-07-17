@@ -36,7 +36,7 @@ const StepThree = ({ data, dataHandler }) => {
     return (
         <div className={styles.container}>
             <select value={data.reason} onChange={e => dataHandler("reason", e.target.value)}>
-                <option value="" disabled>{t("Select Remark Reason")}</option>
+                <option value="" disabled>{t("Select Purpose of Payment")}</option>
                 {
                     Object.keys(reasons).map(item => (
                         <option value={item} key={item}>{t(reasons[item])}</option>

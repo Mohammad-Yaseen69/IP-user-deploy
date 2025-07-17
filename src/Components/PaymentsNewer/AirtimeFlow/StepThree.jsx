@@ -124,7 +124,7 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                                 data.service_types?.length > 0
                                     ?
                                     data.service_types?.map(item => (
-                                        <div style={{ padding: window.innerWidth < 400 && ".6rem 1rem" }} className={`${styles.tab} ${data.service_type?.name === item?.name ? styles.tab_a : ""}`} key={item?.name} onClick={() => dataHandler("service_type", item)}>
+                                        <div style={{ padding: window.innerWidth < 400 && ".6rem 1rem", pointerEvents: pakLoading && "none", opacity: pakLoading && .6 }} className={`${styles.tab} ${data.service_type?.name === item?.name ? styles.tab_a : ""}`} key={item?.name} onClick={() => dataHandler("service_type", item)}>
                                             {t(item?.name?.toLowerCase())}
                                         </div>
                                     ))
@@ -136,7 +136,7 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                             pakLoading
                                 ?
                                 <div style={{
-                                    height: "100%",
+                                    height: "70%",
                                     width: "100%",
                                 }}>
                                     <InstaPayLoader />
@@ -146,7 +146,7 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                                     ?
                                     <div className={styles.cards}>
                                         {
-                                            Array.isArray(data.packages) ?
+                                            !data.packages[0]?.baseAmount?.max ?
                                                 data.packages?.map((item, i) => (
                                                     <div className={`${styles.card} ${item?.id === data.package?.id ? styles.active : ""}`} key={item?.id} onClick={() => dataHandler("package", item)}>
                                                         <div className={styles.c_top}>
