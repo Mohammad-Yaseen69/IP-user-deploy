@@ -123,15 +123,9 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
     }, [userDetails])
 
     useEffect(() => {
-        const def = userWallets?.[0]?.wallet_type === "insta" && !userWallets?.[0]?.blocked && !userWallets?.[0]?.admin_blocked && userWallets?.[0]?.status?.toLowerCase() === "active"
-            ?
-            userWallets?.[0]
-            :
-            userWallets?.find(item => item?.default)
         if (userWallets?.length > 0 && !data.airtime_currency?._id) {
-            updateDataHandler("airtime_currency", def)
+            updateDataHandler("airtime_currency", data.localWallet)
         }
-        updateDataHandler("default_wallet", def)
     }, [userWallets, data.airtime_currency])
 
 
@@ -225,10 +219,8 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             // const dataa = data.airtime_amount > 0 && data.service_type?.name?.toLowerCase()?.includes("airtime") ? {
             //     amount: data.airtime_amount,
             //     type: "RANGED_VALUE_RECHARGE",
-            //     wallet_id: data.airtime_currency?._id,
             //     type: "Other"
             // } : {
-            //     wallet_id: data.airtime_currency?._id,
             //     type: "Other"
             // }
             // // console.log(data)
@@ -239,11 +231,6 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             //     headers: authHeader
             // })
             const isOpenRange = +String(data?.airtime_amount)?.replaceAll(",", "") > 0 && data.service_type?.name?.toLowerCase()?.includes("airtime");
-            const def = userWallets?.[0]?.wallet_type === "insta" && !userWallets?.[0]?.blocked && !userWallets?.[0]?.admin_blocked && userWallets?.[0]?.status?.toLowerCase() === "active"
-                ?
-                userWallets?.[0]
-                :
-                userWallets?.find(item => item?.default)
 
             console.log(data.wallet, data.payment_type)
             const dataa =

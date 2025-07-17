@@ -46,14 +46,6 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
             const getPackages = async () => {
                 setPakLoading(true)
                 try {
-                    // const dataa = {
-                    //     wallet_id: data.airtime_currency?._id,
-                    //     amount: data.airtime_amount
-                    // }
-                    // console.log(data)
-                    // const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/products/${data.country?.alpha3}/${data.providers?.[0]?.id}/${data.service}/${data.service_type?.id}`, {
-                    //     data: encryptData(dataa)
-                    // })
                     const dataa = {
                         wallet_id: data.localWallet?._id,
                     }
