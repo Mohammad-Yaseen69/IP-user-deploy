@@ -214,7 +214,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             {
                 "product_id": data?.package?.id || data.eSimData.selectedPlan?.productId,
                 "payment_method": data.payment_type?.value,
-                "wallet_id": data.payment_type === "wallet" ? data.wallet?._id : data.localWallet?._id,
+                "wallet_id": data.payment_type?.value === "wallet" ? data.wallet?._id : data.localWallet?._id,
                 "sub_service_id": data.flow === "e-sim" ? 14 : data.service_type?.id || 12,
                 "local_wallet_id": data?.localWallet?._id,
                 "type": data.flow === "e-sim" && "esim"

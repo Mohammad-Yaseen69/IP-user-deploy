@@ -44,7 +44,7 @@ const StepThree = ({ data, dataHandler }) => {
                 }
             </select>
             <div className={styles.comment_files}>
-                <input type="text" placeholder={t("Comments")} value={data.comment} onChange={e => dataHandler("comment", e.target.value)} />
+                <input type="text" placeholder={t("Transfer Note")} value={data.comment} onChange={e => dataHandler("comment", e.target.value)} />
                 <label htmlFor="files" className={styles.files}>
                     <span style={{ whiteSpace: "nowrap" }}>{t("Attach Files")}</span>
                     <img src={file} alt="" />

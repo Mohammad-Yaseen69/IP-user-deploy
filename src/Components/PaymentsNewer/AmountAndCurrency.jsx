@@ -778,7 +778,7 @@ const AmountAndCurrency = ({ setSubStep, amount, setAmount, currency, setCurrenc
                             </>
                         }
                         <div style={{ position: "relative" }}>
-                            <Input placeholder={t("Comments")}
+                            <Input placeholder={t("Transfer Note")}
                                 style={{
                                     background: "rgba(89, 38, 240, 0.04)",
                                     borderRadius: "10px",
