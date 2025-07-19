@@ -17,6 +17,7 @@ import { BsThreeDots } from "react-icons/bs"
 import InstaPayLoader from "../Loader"
 import { Link } from "react-router-dom"
 import stylesForButtons from "./InternationalFlow/styles/index.module.css"
+import i18next from "i18next"
 
 const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "Sending", payoutChannel = "", international = null, country = null, countryCode = null, backHandler = () => { } }) => {
     const { t } = useTranslation()
@@ -49,6 +50,7 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
     useEffect(() => {
         let fil = payoutChannel ? beneficiaries.filter(item => item.account_type.some(item => item.toLowerCase().includes(payoutChannel.toLowerCase()))) : registeredBeneficiaries
 
+        fil =[]
         if (fil?.length === 0) {
             setAddMessage(t(`You have no beneficiary.`))
         }
@@ -71,7 +73,7 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
         }
 
         setFiltered(fil)
-    }, [registeredBeneficiaries])
+    }, [registeredBeneficiaries, i18next.language])
 
     useEffect(() => {
         getUserBeneficiaries()

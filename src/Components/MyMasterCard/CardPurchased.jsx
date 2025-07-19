@@ -81,6 +81,31 @@ const Tooltip = ({ children, targetId, isOpen, setIsOpen }) => {
     );
 };
 
+// 1. Add a reusable DisabledOverlay component for the blur+message effect
+const DisabledOverlay = ({ message }) => (
+    <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'rgba(255,255,255,0.7)',
+        backdropFilter: 'blur(2px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 2,
+        borderRadius: '8px',
+        fontWeight: 600,
+        fontSize: 16,
+        color: '#421cb1',
+        textAlign: 'center',
+        pointerEvents: 'none',
+    }}>
+        {message}
+    </div>
+);
+
 const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCardDetails, setCurrentCardDetails, transactions }) => {
     const [checks, setChecks] = useState({
         cardStatus: true,
@@ -117,6 +142,8 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
         notificationSettings: false,
         reportLost: false
     });
+    const [cardStatus, setCardStatus] = useState("active")
+    const [freezeLoading, setFreezeLoading] = useState(false);
 
     const handleCardFlip = (cardId) => {
         setFlippedCards(prev => ({
@@ -153,7 +180,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                 const dec = decryptData(res.data.data)
                 setCurrentCardDetails(dec.data)
-
+                setCardStatus(dec?.status === '1' ? "activate" : "deactive")
                 console.log(dec, "lala")
             } catch (error) {
                 console.log(error)
@@ -169,6 +196,30 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
     }, [current])
 
 
+    const freezeToggle = async () => {
+        setFreezeLoading(true);
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/${cardStatus === "deactive" ? "activate" : "freeze"}`,
+                {
+                    data: encryptData({ card_id: cards[current]._id })
+                },
+                {
+                    headers: authHeader
+                }
+            )
+
+            console.log(decryptData(res.data?.data))
+            if (cardStatus === "deactive") {
+                setCardStatus("active")
+            } else {
+                setCardStatus("deactive")
+            }
+        } catch (error) {
+            const dec = decryptData(error.response.data.data)
+            console.log(dec)
+        }
+        setFreezeLoading(false);
+    }
     const handleToggle = (property) => {
         setChecks(prev => ({
             ...prev,
@@ -761,9 +812,9 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                                     <Toggle checked={checks.cardStatus} onChange={() => handleToggle("cardStatus")} />
                                 </div>
-                                <div style={{ cursor: "pointer" }} className={styles.iconBox}>
+                                <div onClick={freezeToggle} style={{ cursor: freezeLoading ? "wait" : "pointer", position: 'relative', opacity: freezeLoading ? 0.7 : 1 }} className={styles.iconBox}>
                                     <img src={Freeze} alt="" />
-                                    <span>{t('Freeze Card')}</span>
+                                    <span>{freezeLoading ? t('Processing...') : (cardStatus === "active" ? t('Freeze Card') : t('Activate Card'))}</span>
                                 </div>
                             </div>
 
@@ -771,40 +822,60 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                 <div style={{ display: "flex", flexDirection: "column", gap: '12px', justifyContent: "center", flex: 1 }}>
                                     <div
                                         onClick={() => {
+                                            if (cardStatus === "deactive") return;
                                             openModal("addFunds")
                                             if (width < 1000) {
                                                 navigate("/my-mastercard?addFundsMobile=true")
                                             }
                                         }}
-                                        style={{ cursor: "pointer" }}
+                                        style={{
+                                            cursor: cardStatus === "deactive" ? "not-allowed" : "pointer",
+                                            opacity: cardStatus === "deactive" ? 0.7 : 1,
+                                            position: 'relative'
+                                        }}
                                         className={styles.iconBox}
+                                        onMouseEnter={e => cardStatus === "deactive" && (e.currentTarget.querySelector('.disabled-overlay').style.display = 'flex')}
+                                        onMouseLeave={e => cardStatus === "deactive" && (e.currentTarget.querySelector('.disabled-overlay').style.display = 'none')}
                                     >
                                         <img src={plus} alt="" />
                                         <span>{t('Add Funds')}</span>
+                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay message="Your card is freeze" /></div>}
                                     </div>
                                     <div
                                         onClick={() => {
+                                            if (cardStatus === "deactive") return;
                                             openModal("ctc")
                                             if (width < 1000) {
                                                 navigate("/my-mastercard?ctcMobile=true")
                                             }
                                         }}
-                                        style={{ cursor: "pointer" }}
+                                        style={{ cursor: cardStatus === "deactive" ? "not-allowed" : "pointer", opacity: cardStatus === "deactive" ? 0.7 : 1, position: 'relative' }}
                                         className={styles.iconBox}
+                                        onMouseEnter={e => cardStatus === "deactive" && (e.currentTarget.querySelector('.disabled-overlay').style.display = 'flex')}
+                                        onMouseLeave={e => cardStatus === "deactive" && (e.currentTarget.querySelector('.disabled-overlay').style.display = 'none')}
                                     >
                                         <img src={CreditCardR} alt="" />
                                         <span>{t('Card to Card Transfer')}</span>
+                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay message="Your card is freeze" /></div>}
                                     </div>
                                 </div>
                                 <div style={{ display: "flex", flexDirection: "column", gap: '12px', justifyContent: "center", flex: 1 }}>
-                                    <div onClick={() => {
-                                        openModal("ctw")
-                                        if (width < 1000) {
-                                            navigate("/my-mastercard?ctwMobile=true")
-                                        }
-                                    }} style={{ cursor: "pointer" }} className={styles.iconBox}>
+                                    <div
+                                        onClick={() => {
+                                            if (cardStatus === "deactive") return;
+                                            openModal("ctw")
+                                            if (width < 1000) {
+                                                navigate("/my-mastercard?ctwMobile=true")
+                                            }
+                                        }}
+                                        style={{ cursor: cardStatus === "deactive" ? "not-allowed" : "pointer", opacity: cardStatus === "deactive" ? 0.7 : 1, position: 'relative' }}
+                                        className={styles.iconBox}
+                                        onMouseEnter={e => cardStatus === "deactive" && (e.currentTarget.querySelector('.disabled-overlay').style.display = 'flex')}
+                                        onMouseLeave={e => cardStatus === "deactive" && (e.currentTarget.querySelector('.disabled-overlay').style.display = 'none')}
+                                    >
                                         <img src={Wallet2} alt="" />
                                         <span>{t('Card to Wallet Transfer')}</span>
+                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay message="Your card is freeze" /></div>}
                                     </div>
                                     <div onClick={() => openModal("download")} style={{ cursor: "pointer" }} className={styles.iconBox}>
                                         <img src={FileDown} alt="" />
@@ -856,7 +927,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     <Tooltip isOpen={tooltipOpen.contactlessPay}>{t('Coming soon')}</Tooltip>
                                     <Toggle
                                         checked={checks.contactlessPay}
-                                        // onChange={() => handleToggle("contactlessPay")}
+                                    // onChange={() => handleToggle("contactlessPay")}
                                     />
                                 </div>
                             </div>

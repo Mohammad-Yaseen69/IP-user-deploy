@@ -419,7 +419,7 @@ return (
                                                         </p>
                                                         <Modal isOpen={showAboutModal} toggle={() => setShowAboutModal(!showAboutModal)}>
                                                             <ModalHeader toggle={() => setShowAboutModal(!showAboutModal)}>
-                                                                Description
+                                                                {t("Description")}
                                                             </ModalHeader>
                                                             <ModalBody>{description}</ModalBody>
                                                         </Modal>
