@@ -70,7 +70,7 @@ function reducer(state, action) {
 }
 
 const headings = [
-    "Choose the Wallet",
+    "Choose The Wallet",
     "Enter the Amount",
     "Choose The Top-Up Channel"
 ]

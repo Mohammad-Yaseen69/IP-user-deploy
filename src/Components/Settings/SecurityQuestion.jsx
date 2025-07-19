@@ -271,7 +271,7 @@ const SecurityQuestions = () => {
                         border: "none",
                         outline: "none",
                         borderRadius: "10px"
-                    }} onClick={() => setIsEditable(false)} type='button'>Cancel</Button>
+                    }} onClick={() => setIsEditable(false)} type='button'>{t("Cancel")}</Button>
                 }
                 {
                     isEditable

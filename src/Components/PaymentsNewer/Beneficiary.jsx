@@ -1,3 +1,4 @@
+/* eslint-disable no-template-curly-in-string */
 import { Check, ChevronLeft, ChevronRight, HelpCircle, Search, X, XCircle } from "react-feather"
 import { Badge, Button, Card, CardBody, Input } from "reactstrap"
 import { useSelector } from "react-redux"
@@ -49,21 +50,23 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
         let fil = payoutChannel ? beneficiaries.filter(item => item.account_type.some(item => item.toLowerCase().includes(payoutChannel.toLowerCase()))) : registeredBeneficiaries
 
         if (fil?.length === 0) {
-            setAddMessage(`You have no beneficiary.`)
+            setAddMessage(t(`You have no beneficiary.`))
         }
 
         if (country) {
             fil = fil.filter(item => item?.country_name?.toLowerCase()?.includes(country?.toLowerCase()))
 
             if (fil?.length === 0) {
-                setAddMessage(`You have no beneficiary from ${country} having ${payoutChannel} details.`)
+                // eslint-disable-next-line no-template-curly-in-string
+                setAddMessage(t("You have no beneficiary from ${country} having ${payoutChannel} details.").replace("${country}", country)?.replace("${payoutChannel}", payoutChannel))
             }
         }
 
         if (payoutChannel === "mobile") {
+            // You have no beneficiary from ${country} having ${} details.
             fil = fil.filter(item => item?.mobile_wallet?.[0]?.money_provider == international?.payer_id)
             if (fil?.length === 0) {
-                setAddMessage(`You have no beneficiary from ${country} having ${international?.subServices?.find(item => item?.id === international?.payer_id)?.name} details.`)
+                setAddMessage(t("You have no beneficiary from ${country} having ${payoutChannel} details.").replace("${country}", country)?.replace("${payoutChannel}", international?.subServices?.find(item => item?.id === international?.payer_id)?.name))
             }
         }
 
@@ -413,7 +416,7 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                             :
                             <div style={{ textAlign: "center", display: "flex", flexDirection: "column", gpa: ".5rem", alignItems: "center", fontWeight: "600" }}>
                                 <span style={{ display: "flex", gap: "1rem", textAlign: "center", maxWidth: "30ch" }}>{addMessage}</span>
-                                <Link style={{ textDecoration: "underline", color: "#5926f0", fontWeight: "600" }} to={"/beneficiaries/add"}>Add Now</Link>
+                                <Link style={{ textDecoration: "underline", color: "#5926f0", fontWeight: "600" }} to={"/beneficiaries/add"}>{t("Add Now")}</Link>
                             </div>
                     }
                 </div>
@@ -459,7 +462,7 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                         onClick={createQuotations}
                         disabled={isChecking || beneficiary.length < 1}
                     >
-                        {isChecking ? t("Confirming") : "Confirm"} <ChevronRight size={20} />
+                        {isChecking ? t("Confirming") : t("Confirm")} <ChevronRight size={20} />
                     </Button>
                 </div>
             </div>
@@ -481,7 +484,7 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                         onClick={createQuotations}
                         disabled={isChecking || beneficiary.length < 1}
                     >
-                        {isChecking ? t("Confirming") : "Confirm"} <ChevronRight size={20} />
+                        {isChecking ? t("Confirming") : t("Confirm")} <ChevronRight size={20} />
                     </button>
                 </div>
 

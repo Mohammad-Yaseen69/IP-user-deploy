@@ -128,7 +128,7 @@ const RequestReceipt = ({ beneficiary, amount, currency, paymentType, setShowSta
                 <div style={{ display: 'flex', alignItems: "center", gap: ".5rem", justifyContent: "center", padding: "14px" }}>
                     <Link to={`/payment-requests?current-index=1&tab=sent`} style={{ display: "flex", alignItems: "center", background: "#fff", borderRadius: "50px", padding: "10px", gap: ".3rem", cursor: "pointer" }}>
                         <img src={w} alt="w" style={{ height: "25px", width: "25px", objectFit: "contain" }} />
-                        <span style={{ fontWeight: "600", color: "black" }}>{t("Where is my payment?")}</span>
+                        <span style={{ fontWeight: "600", color: "black" }}>{t("Where Is My Payment?")}</span>
                     </Link>
                     {
                         downloading

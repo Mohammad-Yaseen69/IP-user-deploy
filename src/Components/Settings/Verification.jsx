@@ -190,35 +190,35 @@ const Verification = () => {
                             processing === "processing" ?
                                 <h5 className='modal-title' style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '2rem' }}>
                                     <AiOutlineClockCircle  size={64} className="text-warning" />
-                                    Payment is in Processing!
+                                    {t("Payment is in Processing!")}
                                 </h5>
                                 :
                                 statusModal === "success"
                                     ?
                                     <h5 className='modal-title' style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '2rem' }}>
                                         <CheckCircle size={64} className="text-success" />
-                                        Payment Successful!
+                                        {t("Payment Successful!")}
                                     </h5>
                                     :
                                     <h5 className='modal-title' style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '2rem' }}>
                                         <XCircle size={64} className="text-danger" />
-                                        Payment Failed!
+                                        {t("Payment Failed!")}
                                     </h5>
                         }
                         <div className="text-center">
                             {
                                 processing === "processing" ?
-                                    <p className="mb-0">Your payment is being processed. Please wait or refresh the page for updates</p>
+                                    <p className="mb-0">{t("Your payment is being processed. Please wait or refresh the page for updates")}</p>
                                     :
                                     statusModal === "success"
                                         ?
-                                        <p className="mb-0">KYC Fee has been paid successfully!
-                                            <span style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }} onClick={() => userDetails?.kyc_verification_paid ? handleVerify() : setStatusModal("")}>Continue</span></p>
+                                        <p className="mb-0">{t("KYC Fee has been paid successfully!")}
+                                            <span style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }} onClick={() => userDetails?.kyc_verification_paid ? handleVerify() : setStatusModal("")}>{t("Continue")}</span></p>
                                         :
-                                        <p className="mb-0">{error_message()} <br /> <span style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }} onClick={() => {
+                                        <p className="mb-0">{t(error_message())} <br /> <span style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }} onClick={() => {
                                             setShowVerificationModal(true)
                                             setStatusModal("")
-                                        }}> Start again!</span></p>
+                                        }}>{t("Start again!")}</span></p>
                             }
                         </div>
                     </ModalBody>
@@ -303,14 +303,14 @@ const Verification = () => {
                     <Col md="12" className='mb-4'>
                         <div>
                             <Label className="form-label">{t("Briefly describe yourself and explain your reasons for using InstaPay.")}</Label>
-                            <Input type="textarea" className="form-control" rows="5" placeholder={t("Enter You Message")} value={message} onChange={e => setMessage(e.target.value)} disabled={userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "pending" || userDetails?.user?.kyc_status === "needs-review"} />
+                            <Input type="textarea" className="form-control" rows="5" placeholder={t("Enter Your Message")} value={message} onChange={e => setMessage(e.target.value)} disabled={userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "pending" || userDetails?.user?.kyc_status === "needs-review"} />
                         </div>
                     </Col>
                     <Col md="12" className='mb-4'>
                         <div>
                             <Label className="form-label">{t("Select Occupation")}</Label>
                             <Input type="select" className="form-control" value={occupation} onChange={e => setOccupation(e.target.value)} disabled={userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "pending" || userDetails?.user?.kyc_status === "needs-review"}>
-                                <option value="" disabled="">Select</option>
+                                <option value="" disabled="">{t("Select")}</option>
                                 {
                                     industries.map(item => (
                                         <option value={item} key={item}>{item}</option>
@@ -333,7 +333,7 @@ const Verification = () => {
                         <div>
                             <Label className="form-label">{t("Select Source Of Fund")}</Label>
                             <Input type="select" className="form-control" disabled={userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "pending" || userDetails?.user?.kyc_status === "needs-review"} value={sourceOfFund} onChange={e => setSourceOfFund(e.target.value)}>
-                                <option value="" disabled="">Select</option>
+                                <option value="" disabled="">{t("Select")}</option>
                                 {
                                     sourceOfFunds.map(item => (
                                         <option value={item.toUpperCase()}>{t(item)}</option>

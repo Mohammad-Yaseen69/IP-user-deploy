@@ -7,11 +7,13 @@ import logo_w from "../../assets/images/logo/logo_white.png"
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import { current } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
+import { useTranslation } from 'react-i18next'
 
 
 const ManageSaveCards = () => {
     const [cards, setCards] = useState()
     const { authHeader, userDetails } = useContext(UserContext)
+    const {t} = useTranslation()
     const [isDeleting, setIsDeleting] = useState()
     const [deleteData, setDeleteData] = useState({
         show: false,
@@ -57,7 +59,7 @@ const ManageSaveCards = () => {
 
     return (
         <div style={{ padding: '2rem' }}>
-            <h1 style={{ fontWeight: 600, color: 'black', fontSize: "24px" }}>Manage Your Save Cards</h1>
+            <h1 style={{ fontWeight: 600, color: 'black', fontSize: "24px" }}>{t("Manage Your Save Cards")}</h1>
 
             <div style={{
                 display: "flex",
@@ -119,7 +121,7 @@ const ManageSaveCards = () => {
                                         zIndex: 10
                                     }}
                                 >
-                                    Delete
+                                    {t("Delete")}
                                 </span>
                             </div>
                         </div>
@@ -129,14 +131,14 @@ const ManageSaveCards = () => {
 
             <Modal isOpen={deleteData.show} toggle={() => setDeleteData({ show: false, current: {} })}>
                 <ModalHeader toggle={() => setDeleteData({ show: false, current: {} })}>
-                    Delete Card Info
+                    {t("Delete Card Info")}
                 </ModalHeader>
                 <ModalBody>
-                    Are you sure you want to delete the Credit/Debit card ending with {deleteData.current?.last4}?
+                    {t("Are you sure you want to delete the Credit/Debit card ending with")} {deleteData.current?.last4}?
                 </ModalBody>
                 <ModalFooter>
                     <Button color='danger' onClick={deleteCard} disabled={isDeleting} style={{ borderRadius: "8px", padding: ".7rem 1.5rem" }}>
-                        Delete
+                        {t("Delete")}
                     </Button>
                 </ModalFooter>
             </Modal>

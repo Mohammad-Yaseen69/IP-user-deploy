@@ -39,7 +39,7 @@ const FailedTransaction = ({ showBack, backHandler }) => {
                     showBack
                     &&
                     <div style={{ fontSize: ".9rem", fontWeight: 600, color: "#afafaf", cursor: "pointer", marginLeft: "auto" }} onClick={backHandler}>
-                        Back
+                        {t("Back")}
                     </div>
                 }
             </div>

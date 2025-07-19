@@ -77,12 +77,12 @@ const SessionItem = ({ session, index }) => {
                 <p>
                     <span>{session?.browser_name} <span>v{session?.browser_version}</span> on {session?.platform === "Linux" ? "Mobile" : session?.platform}</span>
                     {/* <span>{session?.isActive ? "Your current session" : ""}</span> */}
-                    <span>IP Address: {session?.location?.IPv4}</span>
+                    <span>{t("IP Address")}: {session?.location?.IPv4}</span>
                 </p>
             </div>
             <div className={styles.s_right} style={{ width: window.innerWidth < 1000 ? "100%" : "inherit" }}>
                 {
-                    index === 0 && <Badges attrBadge={{ color: "success", variant: "rounded", style: { fontSize: ".7rem" } }}>{t("active")?.toUpperCase()}</Badges>
+                    index === 0 && <Badges attrBadge={{ color: "success", variant: "rounded", style: { fontSize: ".7rem" } }}>{t("Active")?.toUpperCase()}</Badges>
                 }
                 <p style={{ margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{session?.location?.city}, {session?.location?.state}, {session?.location?.country_name}</p>
                 <p style={{

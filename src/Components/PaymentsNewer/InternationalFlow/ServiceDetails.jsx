@@ -196,7 +196,7 @@ const ServiceDetails = ({ data }) => {
                                             <div className={styles.grad_icon}>
                                                 <img src={item?.[item?.id == current?.id ? "active_icon" : "icon"]} />
                                             </div>
-                                            <span>{item?.name}</span>
+                                            <span>{t(item?.name)}</span>
                                         </div>
                                     ))
                                     :
@@ -207,7 +207,7 @@ const ServiceDetails = ({ data }) => {
                                                     <div className={styles.grad_icon}>
                                                         <img src={item?.[item?.id == current?.id ? "active_icon" : "icon"]} />
                                                     </div>
-                                                    <span>{item?.name}</span>
+                                                    <span>{t(item?.name)}</span>
                                                 </div>
                                             ))
                                         }

@@ -298,7 +298,7 @@ const RequestMoney = ({ setAction, setStep }) => {
                                         paddingBottom: 0,
                                         width: "100%"
                                     }}>
-                                        <span>Updates:</span>
+                                        <span>{t("Updates")}:</span>
                                         <Timeline items={timelineData} />
                                     </CardBody>
                                 </Card>

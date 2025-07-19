@@ -105,7 +105,7 @@ const QuotationDetails = ({ amount, currency, setAmount, setCurrency, title, set
                         maxLength={12}
                         onChange={(e) => setFormattedAmount(e.target.value)}
                         onKeyUp={handleKeyUp}
-                        onBlur={handleBlur} maxLength={12}
+                        onBlur={handleBlur} 
                         placeholder="10.00"
                         data-type="currency"
                         style={{
@@ -257,8 +257,8 @@ const QuotationDetails = ({ amount, currency, setAmount, setCurrency, title, set
 
                 {/* remove file modal */}
                 <Modal isOpen={showDelModal} toggle={() => setShowDelModal(!showDelModal)}>
-                    <ModalHeader toggle={() => setShowDelModal(!showDelModal)}>Confirm Removing File</ModalHeader>
-                    <ModalBody>Are you sure, you want to remove this file?</ModalBody>
+                    <ModalHeader toggle={() => setShowDelModal(!showDelModal)}>{t("Confirm Removing File")}</ModalHeader>
+                    <ModalBody>{t("Are you sure, you want to remove this file?")}</ModalBody>
                     <ModalFooter>
                         <Button style={{
                             background: "linear-gradient(to right, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0",
@@ -268,7 +268,7 @@ const QuotationDetails = ({ amount, currency, setAmount, setCurrency, title, set
                             const filtered = files.filter((_, i) => i !== currentItem)
                             setFiles(filtered)
                             setShowDelModal(false)
-                        }}>Remove</Button>
+                        }}>{t("Remove")}</Button>
                     </ModalFooter>
                 </Modal>
 
@@ -293,7 +293,7 @@ const QuotationDetails = ({ amount, currency, setAmount, setCurrency, title, set
                     <span>{t(`Trouble ${type} Money?`)}</span>
                 </p>
                 <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: ".7rem" }}>
-                    <button style={{ all: "unset", cursor: "pointer" }} onClick={() => setSubStep(prev => prev - 1)}>Back</button>
+                    <button style={{ all: "unset", cursor: "pointer" }} onClick={() => setSubStep(prev => prev - 1)}>{t("Back")}</button>
                     <Button
                         size="sm"
                         style={{

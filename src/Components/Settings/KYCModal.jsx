@@ -1,8 +1,10 @@
 import React from "react";
 import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import { CheckCircle, XCircle, HelpCircle } from "react-feather";
+import { useTranslation } from "react-i18next";
 
 const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
+    const {t} = useTranslation()
     const modalStyle = {
         maxWidth: "600px",
         margin: "0 auto",
@@ -23,20 +25,13 @@ const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
         docCheck: "Document Check",
     };
 
-    const customDescriptions = {
-        faceMatching: "Custom description for Face Matching",
-        poa: "Custom description for Proof of Address",
-        profileCheck: "Custom description for Profile Check",
-        livenessCheck: "Custom description for Liveness Check",
-        docCheck: "Custom description for Document Check",
-    };
 
     const replacePoaWithPOA = (description) => {
         return description.replace(/PoA/g, "Proof of Address");
     };
     return (
         <Modal isOpen={showModal} toggle={() => setShowModal(!showModal)} style={{ ...modalStyle, minWidth: "60wv" }}>
-            <ModalHeader style={headerStyle}>Verification Status</ModalHeader>
+            <ModalHeader style={headerStyle}>{t("Verification Status")}</ModalHeader>
             <ModalBody>
                 {KYCStatus &&
                     KYCComments &&

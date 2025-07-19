@@ -394,7 +394,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
                 break;
             case 3:
                 setDisabled(!feeDetails.token && !walletState._id)
-                setSideText(width > 1000 ? t("Choose the method") : paymentType === 'wallet' ? t("Choose the wallet") : t("Payment Details"))
+                setSideText(width > 1000 ? t("Choose the method") : paymentType === 'wallet' ? t("Choose The Wallet") : t("Payment Details"))
                 break;
             case 4:
                 setDisabled(false)

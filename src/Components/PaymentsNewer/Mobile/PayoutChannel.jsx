@@ -105,7 +105,7 @@ const PayoutChannel = ({ payoutChannel, setPayoutChannel, setStep, services = []
                                     <div className={styles.icon}>
                                         <img src={item.icon} alt={item.id} />
                                     </div>
-                                    <span>{item.name}</span>
+                                    <span>{t(item.name)}</span>
                                 </div>
                                 <div className={styles.right}>
                                     {
@@ -121,7 +121,7 @@ const PayoutChannel = ({ payoutChannel, setPayoutChannel, setStep, services = []
                             </div>
                         ))
                         :
-                        <div>No Available Payout channels</div>
+                        <div>{t("No Available Payout channels")}</div>
                 }
             </div>
             <Button className={styles.button} disabled={!payoutChannel} onClick={() => setStep(prev => prev + 1)}>
