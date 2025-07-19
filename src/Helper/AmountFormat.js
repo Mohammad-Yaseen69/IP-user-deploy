@@ -22,7 +22,7 @@ const getDecimalPointIndex = (val) => {
     return 2;
 };
 
-export const formatCurrency = (inputValue, blur, setValue, centeredInput, e) => {
+export const formatCurrency = (inputValue, blur, setValue = undefined, centeredInput, e) => {
     if (inputValue === "") return "";
 
     let inputVal = inputValue.toString();
@@ -68,5 +68,9 @@ export const formatCurrency = (inputValue, blur, setValue, centeredInput, e) => 
             e.target.size = Math.max(inputVal.length, 1);
         }
     }
-    setValue(inputVal);
+    if (setValue) {
+        setValue(inputVal);
+    } else {
+        return inputVal
+    }
 };

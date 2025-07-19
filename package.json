@@ -100,6 +100,8 @@
     "simplebar-react": "^3.2.0",
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^4.7.2",
+    "source-map-explorer": "^2.5.3",
+    "source-map-loader": "^5.0.0",
     "styled-components": "^5.3.5",
     "sweetalert2": "^11.4.29",
     "swiper": "^9.3.2",
