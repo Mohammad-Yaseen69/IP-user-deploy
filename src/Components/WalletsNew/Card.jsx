@@ -73,23 +73,23 @@ const Card = ({ wallet, current, index, data }) => {
                 wallet?.balance?.reserved
                     ?
                     <>
-                        <div className={`${r_styles.flex} ${r_styles.r_total}`}>
-                            <span>{t("Total Balance")}:</span>
+                        <div style={{ padding: '0px', background: "none" }} className={`${r_styles.flex} ${r_styles.r_total}`}>
+                            <span style={{ fontSize: '10px', fontWeight: 600 }}>{t("Total Balance")}:</span>
                             <h5>{wallet.currency?.code} {Number(wallet.balance.available + wallet.balance.reserved)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
                         </div>
-                        <div style={{ display: "flex", gap: "3px", width: "100%", flexDirection :"column" }}>
-                            <div className={` ${r_styles.r_blocked}`} style={{ flex: 1, padding: 0, background: "transparent", display: "flex",alignItems: "center", justifyContent: "flex-start", gap: "12px" }}>
-                                <span>{t("Available balance")}:</span>
-                                <h5 style={{fontSize: "12px", marginBottom: "0"}}>{wallet.currency?.code} {Number(wallet.balance.available)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
+                        <div style={{ display: "flex", flexDirection: "column" }}>
+                            <div style={{ padding: "0px", background: "none", flex: 1, justifyContent: "flex-start", gap: "4px" }} className={`${r_styles.flex} ${r_styles.r_blocked}`}>
+                                <span style={{ fontSize: '9px', fontWeight: 600 }}>{t("Available balance")}:</span>
+                                <h5>{wallet.currency?.code} {Number(wallet.balance.available)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
                             </div>
-                            <div className={` ${r_styles.r_blocked}`} style={{ flex: 1, padding: 0, background: "transparent", display: "flex",alignItems: "center", justifyContent: "flex-start", gap: "12px" }}>
-                                <span>{t("Blocked balance")}:</span>
-                                <h5 style={{fontSize: "12px", marginBottom: "0"}}>{wallet.currency?.code} {Number(wallet.balance.reserved)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
+                            <div style={{ padding: "0px", background: "none", flex: 1, justifyContent: "flex-start", gap: "4px" }} className={`${r_styles.flex} ${r_styles.r_blocked}`} >
+                                <span style={{ fontSize: '9px', fontWeight: 600 }}>{t("Blocked balance")}:</span>
+                                <h5>{wallet.currency?.code} {Number(wallet.balance.reserved)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
                             </div>
                         </div>
                         <div className={`${r_styles.flex} ${r_styles.r_wallet}`}>
                             <span>{t("Wallet ID")}:</span>
-                            <h5>
+                            <h5 style={{ fontSize: '10px' }}>
                                 {wallet?.wallet_id}
                                 {
                                     copied
@@ -102,7 +102,7 @@ const Card = ({ wallet, current, index, data }) => {
                                 }
                             </h5>
                         </div>
-                        <div className={`${r_styles.flex} ${r_styles.r_bal}`} style={{ marginTop: ".3rem" }}>
+                        <div className={`${r_styles.flex} ${r_styles.r_bal}`} style={{ marginTop: ".5rem" }}>
                             <span>{t("Monthly limit")}:</span>
                             <h5>{data?.balance_limits?.total} / {data?.balance_limits?.remaining}</h5>
                         </div>
