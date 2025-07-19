@@ -786,7 +786,14 @@ const AmountAndCurrency = ({ setSubStep, amount, setAmount, currency, setCurrenc
                                     fontSize: "1rem",
                                     fontWeight: 600,
                                     padding: "1rem 8rem 1rem 1.25rem"
-                                }} value={comment} onChange={(e) => setComment(e.target.value)} />
+                                }} value={comment} onChange={(e) => {
+                                    if (e.target.value.length <= 120) setComment(e.target.value)
+                                }}
+                                maxLength={120}
+                            />
+                            <div style={{ textAlign: "right", fontSize: ".8rem", color: comment.length === 120 ? "#E64067" : "#888" }}>
+                                {comment.length}/120
+                            </div>
                             <Label htmlFor="file" style={{
                                 background: "white",
                                 padding: ".4rem .5rem",

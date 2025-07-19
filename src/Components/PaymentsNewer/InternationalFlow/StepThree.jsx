@@ -44,7 +44,15 @@ const StepThree = ({ data, dataHandler }) => {
                 }
             </select>
             <div className={styles.comment_files}>
-                <input type="text" placeholder={t("Transfer Note")} value={data.comment} onChange={e => dataHandler("comment", e.target.value)} />
+                <input type="text" placeholder={t("Transfer Note")} value={data.comment} 
+                    onChange={e => {
+                        if (e.target.value.length <= 120) dataHandler("comment", e.target.value)
+                    }}
+                    maxLength={120}
+                />
+                <div style={{ textAlign: "right", fontSize: ".8rem", color: data.comment.length === 120 ? "#E64067" : "#888", }}>
+                    {data.comment.length}/120
+                </div>
                 <label htmlFor="files" className={styles.files}>
                     <span style={{ whiteSpace: "nowrap" }}>{t("Attach Files")}</span>
                     <img src={file} alt="" />

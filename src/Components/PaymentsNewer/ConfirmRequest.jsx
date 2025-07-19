@@ -168,21 +168,20 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
     }, [isPreferencesCheck, preferences])
 
     async function getCountryByCoods(latitude, longitude) {
-        setLoading(true)
+        setLoading(true);
         try {
             const url = `https://geocode.maps.co/reverse?lat=${latitude}&lon=${longitude}&api_key=6723a535c69dc210230851dly54f0c1`;
+            const res = await fetch(url);
+            const response = await res.json();
 
-            const response = await axios.get(url);
-
-
-            if (response.status === 200) {
-                const country = CitiesData.find((cont) => cont.iso2.toLowerCase() == response.data?.address?.country_code?.toLowerCase())
+            if (response?.address?.country_code) {
+                const country = CitiesData.find((cont) => cont.iso2.toLowerCase() === response?.address?.country_code?.toLowerCase())
                 prefrencesFunc(country)
             } else {
                 return { status: false };
             }
         } catch (error) {
-            console.error('Error fetching geocode data:', error.message);
+            console.error('[getCountryByCoods] Error fetching geocode data:', error.message);
             return { status: false };
         }
         setShowLocation(false)
@@ -203,12 +202,10 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
                     isOpen={showLocation}
                     setCoords={setCoords}
                     toggle={() => {
-                        
-                       
                         if (coords) {
-                            getCountryByCoods(coords?.latitude, coords?.longitude)
+                            console.log("asfdaf")
+                            getCountryByCoods(coords?.latitude, coords?.longitude).catch(e => console.error("getCountryByCoods error", e));
                         }
-                       
                     }}
                     cancelPayment={() => window.location.reload()}
                 />
@@ -305,7 +302,7 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
                         complete
                         &&
                         <p style={{ marginBottom: "0", fontSize: window.innerWidth > 1700 ? "1.1rem" : ".95rem", fontWeight: 500, color: "white" }}>
-                            {!loading ?  t("Payment Confirmed") : t("Processing")}
+                            {!loading ? t("Payment Confirmed") : t("Processing")}
                         </p>
                     }
                 </div>
