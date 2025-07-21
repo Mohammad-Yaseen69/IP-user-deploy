@@ -7,7 +7,7 @@ const Abort = () => {
     const { code } = useParams()
 
     const error_message = () => {
-        return errors?.[code] ?? "Something went wrong."
+        return errors?.[code] ?? "We cannot process your request at the moment, please try again later."
     }
     return (
         <Modal isOpen={true}>

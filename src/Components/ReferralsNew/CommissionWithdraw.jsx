@@ -82,7 +82,7 @@ const CommissionWithdraw = ({ isOpen, toggle, referralBalance = 0, defaultCurren
             verifyToken()
         } catch (err) {
             const decrypted = decryptData(err.response.data.data);
-            setError("Something went wrong.")
+            setError("We cannot process your request at the moment, please try again later.")
             if (decrypted?.message?.toLowerCase()?.includes("otp")) {
                 setError("Invalid Verification Code!")
             }

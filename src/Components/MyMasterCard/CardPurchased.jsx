@@ -814,7 +814,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                 </div>
                                 <div onClick={freezeToggle} style={{ cursor: freezeLoading ? "wait" : "pointer", position: 'relative', opacity: freezeLoading ? 0.7 : 1 }} className={styles.iconBox}>
                                     <img src={Freeze} alt="" />
-                                    <span>{freezeLoading ? t('Processing...') : (cardStatus === "active" ? t('Freeze Card') : t('Activate Card'))}</span>
+                                    <span>{freezeLoading ? t('Processing') + "..." : (cardStatus === "active" ? t('Freeze Card') : t('Activate Card'))}</span>
                                 </div>
                             </div>
 
@@ -924,7 +924,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     onMouseEnter={() => setTooltipOpen(prev => ({ ...prev, contactlessPay: true }))}
                                     onMouseLeave={() => setTooltipOpen(prev => ({ ...prev, contactlessPay: false }))}>
                                     <span id="contactless-label">{t('Contactless Payment')}</span>
-                                    <Tooltip isOpen={tooltipOpen.contactlessPay}>{t('Coming soon')}</Tooltip>
+                                    <Tooltip isOpen={tooltipOpen.contactlessPay}>{t('Coming Soon')}</Tooltip>
                                     <Toggle
                                         checked={checks.contactlessPay}
                                     // onChange={() => handleToggle("contactlessPay")}
@@ -938,7 +938,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     onMouseLeave={() => setTooltipOpen(prev => ({ ...prev, blockedCountries: false }))}>
                                     <img src={CreditCardR} alt="" id="blocked-countries-label" />
                                     <span>{t('Blocked Countries & Regions')}</span>
-                                    <Tooltip isOpen={tooltipOpen.blockedCountries}>{t('Coming soon')}</Tooltip>
+                                    <Tooltip isOpen={tooltipOpen.blockedCountries}>{t('Coming Soon')}</Tooltip>
                                 </div>
 
                                 <div className={styles.iconBox} style={{ position: 'relative' }}
@@ -946,14 +946,14 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     onMouseLeave={() => setTooltipOpen(prev => ({ ...prev, notificationSettings: false }))}>
                                     <img src={Notification} alt="" id="notification-settings-label" />
                                     <span>{t('Notification Settings')}</span>
-                                    <Tooltip isOpen={tooltipOpen.notificationSettings}>{t('Coming soon')}</Tooltip>
+                                    <Tooltip isOpen={tooltipOpen.notificationSettings}>{t('Coming Soon')}</Tooltip>
                                 </div>
                                 <div className={styles.iconBox} style={{ position: 'relative' }}
                                     onMouseEnter={() => setTooltipOpen(prev => ({ ...prev, reportLost: true }))}
                                     onMouseLeave={() => setTooltipOpen(prev => ({ ...prev, reportLost: false }))}>
                                     <img src={Speaker} alt="" id="report-lost-label" />
                                     <span>{t('Report Lost/Stolen Card')}</span>
-                                    <Tooltip isOpen={tooltipOpen.reportLost}>{t('Coming soon')}</Tooltip>
+                                    <Tooltip isOpen={tooltipOpen.reportLost}>{t('Coming Soon')}</Tooltip>
                                 </div>
                             </div>
                         </div>

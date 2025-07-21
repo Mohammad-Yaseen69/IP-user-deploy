@@ -18,7 +18,7 @@ const FailedTransaction = ({ showBack, backHandler }) => {
     const code = query.get("code")
 
     const error_message = () => {
-        return errors.find(item => item?.code == code)?.message ?? "Something went wrong."
+        return errors.find(item => item?.code == code)?.message ?? "We cannot process your request at the moment, please try again later."
     }
     return (
         <div className={styles.container}>

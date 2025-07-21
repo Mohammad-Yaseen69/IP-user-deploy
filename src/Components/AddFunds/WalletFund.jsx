@@ -233,7 +233,7 @@ const WalletFund = ({ setAction }) => {
                         localStorage.setItem("ip_country", coun)
                         window.location.pathname = "/login";
                     }
-                    setError(dec?.message ?? "Something went wrong.")
+                    setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
                     console.log(dec)
                 } finally {
                     setLoading(false)
@@ -301,7 +301,7 @@ const WalletFund = ({ setAction }) => {
                         window.location.pathname = "/login";
                     }
                     console.log(dec)
-                    setError(dec?.message ?? "Something went wrong.")
+                    setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
                 } finally {
                     setLoading(false)
                 }

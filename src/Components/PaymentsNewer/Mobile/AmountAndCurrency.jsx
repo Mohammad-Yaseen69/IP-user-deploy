@@ -572,7 +572,7 @@ const AmountAndCurrency = ({ setStep, amount, setAmount, currency, setCurrency, 
                                                 exchangeError?.includes('An error occurred while creating the quotation')
                                                 &&
                                                 <>
-                                                    <h2 style={{ marginBottom: 0, textAlign: "center", fontSize: "1.4rem", fontWeight: 800 }}>{t("Something went wrong.")}</h2>
+                                                    <h2 style={{ marginBottom: 0, textAlign: "center", fontSize: "1.4rem", fontWeight: 800 }}>{t("We cannot process your request at the moment, please try again later.")}</h2>
                                                     <p style={{ marginBottom: 0, textAlign: "center" }}>{t("Please try again later")}</p>
                                                 </>
                                             }

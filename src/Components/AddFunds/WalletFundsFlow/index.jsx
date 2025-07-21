@@ -229,7 +229,7 @@ const WalletFundsFlow = ({ setAction }) => {
                 } catch (error) {
                     const dec = decryptData(error?.response?.data?.data);
                     console.log(dec)
-                    dataHandler("exchange_rate_error", dec?.message ?? "Something went wrong.")
+                    dataHandler("exchange_rate_error", dec?.message ?? "We cannot process your request at the moment, please try again later.")
                 } finally {
                     dataHandler("loading", false)
                 }
@@ -263,7 +263,7 @@ const WalletFundsFlow = ({ setAction }) => {
                     })
                 } catch (error) {
                     const dec = decryptData(error?.response?.data?.data);
-                    dataHandler("exchange_rate_error", dec?.message ?? "Something went wrong.")
+                    dataHandler("exchange_rate_error", dec?.message ?? "We cannot process your request at the moment, please try again later.")
                     console.log(dec)
                 } finally {
                     dataHandler("loading", false)
@@ -291,7 +291,7 @@ const WalletFundsFlow = ({ setAction }) => {
                     })
                 } catch (error) {
                     const dec = decryptData(error?.response?.data?.data);
-                    dataHandler("exchange_rate_error", dec?.message ?? "Something went wrong.")
+                    dataHandler("exchange_rate_error", dec?.message ?? "We cannot process your request at the moment, please try again later.")
                     console.log(dec)
                 } finally {
                     dataHandler("loading", false)

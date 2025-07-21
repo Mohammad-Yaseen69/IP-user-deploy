@@ -28,7 +28,7 @@ class ErrorBoundary extends Component {
             return (
                 <div className="error-container">
                     <div className="error-box">
-                        <h1>Oops! Something went wrong.</h1>
+                        <h1>Oops! We cannot process your request at the moment, please try again later."</h1>
                         <p>We're working to fix it. Please try refreshing the page or clear your browsing data for smooth experience.</p>
                         <p>Error ID: {this.state.eventId}</p>
                         <p>If the issue continues, please email us at  <a href="mailto:support@insta-pay.ch">support@insta-pay.ch</a> with the Error ID, your username, and phone number for further assistance.</p>

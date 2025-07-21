@@ -91,7 +91,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
         }
         catch (error) {
             const dec = decryptData(error?.response?.data?.data);
-            dataHandler("error", dec?.message ?? "Something went wrong.")
+            dataHandler("error", dec?.message ?? "We cannot process your request at the moment, please try again later.")
             dataHandler("loading", false)
         }
         finally {
@@ -129,7 +129,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
             if (dec?.message === "Invalid card.") {
                 setShowCardModal(true)
             }
-            dataHandler("error", dec?.message ?? "Something went wrong.")
+            dataHandler("error", dec?.message ?? "We cannot process your request at the moment, please try again later.")
             dataHandler("loading", false)
         }
         finally {
@@ -279,7 +279,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
             })
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data);
-            dataHandler("exchange_rate_error", dec?.message ?? "Something went wrong.")
+            dataHandler("exchange_rate_error", dec?.message ?? "We cannot process your request at the moment, please try again later.")
             console.log(dec)
         } finally {
             dataHandler("loading", false)
@@ -301,7 +301,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
             })
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data);
-            dataHandler("exchange_rate_error", dec?.message ?? "Something went wrong.")
+            dataHandler("exchange_rate_error", dec?.message ?? "We cannot process your request at the moment, please try again later.")
             console.log(dec)
         } finally {
             dataHandler("loading", false)
