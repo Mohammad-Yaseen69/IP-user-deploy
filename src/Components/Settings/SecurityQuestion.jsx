@@ -142,7 +142,7 @@ const SecurityQuestions = () => {
                     localStorage.setItem("ip_country", coun)
                     navigate("/login")
                 }
-                error("Something went wrong!")
+                error("We cannot process your request at the moment, please try again later.")
             }).finally(() => setSaving(false))
     }
 

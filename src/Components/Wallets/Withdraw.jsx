@@ -275,7 +275,7 @@ const WithdrawOldFlow = ({
             setStep(prev => prev + 1)
         } catch (err) {
             const dec = decryptData(err.response.data.data)
-            setAmountError(dec?.message ?? "Something went wrong!")
+            setAmountError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
         }
 
         setIsLoading(false)

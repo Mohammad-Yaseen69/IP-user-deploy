@@ -32,7 +32,7 @@ const DeclineQuotation = ({ item, isOpen, toggle }) => {
             setStep(2)
         } catch (error) {
             const dec = decryptData(error.response.data.data)
-            setError(dec?.message ?? "Something went wrong!")
+            setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
         }
         finally {
             setIsDeleting(false)

@@ -89,8 +89,8 @@ const AccountItem = ({ data }) => {
             .catch(error => {
                 const dec = decryptData(error.response.data.data)
                 console.log(dec)
-                setError(dec?.message ?? "Something went wrong!")
-                toast.error(dec?.message ?? "Something went wrong!")
+                setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                toast.error(dec?.message ?? "We cannot process your request at the moment, please try again later.")
             })
             .finally(() => {
                 setSaving(false)

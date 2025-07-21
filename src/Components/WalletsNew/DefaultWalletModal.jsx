@@ -23,7 +23,7 @@ const DefaultWalletModal = ({ showConfirmationModal, setShowConfirmationModal, w
             .catch(err => {
                 const decrypted = decryptData(err.response.data.data)
                 console.log(decrypted)
-                toast.error(decrypted?.message ?? "Something went wrong!")
+                toast.error(decrypted?.message ?? "We cannot process your request at the moment, please try again later.")
             })
             .finally(() => setIsSaving(false))
     }

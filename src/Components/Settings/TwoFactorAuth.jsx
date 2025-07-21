@@ -687,7 +687,7 @@ const TwoFactorAuth = () => {
 
 
                                             {!showSuccess &&
-                                                <p style={{ marginBottom: "0", position: 'absolute', top: "25%", right: "8px", fontSize: "10px", color: "#BBBBB", fontWeight: 600 }}>{remainingChar}/24 {t("Characters Remaining")}
+                                                <p style={{ marginBottom: "0", position: 'absolute', top: "35%", right: "8px", fontSize: "10px", color: "#BBBBB", fontWeight: 600 }}>{remainingChar}/24 {t("Characters Remaining")}
                                                 </p>
                                             }
                                         </div>

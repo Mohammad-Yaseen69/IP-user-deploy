@@ -186,7 +186,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             return dec?.data?.token
         } catch (err) {
             const decrypted = decryptData(err.response.data.data);
-            updateDataHandler("error", decrypted?.message ?? decrypted ?? "Something went wrong!")
+            updateDataHandler("error", decrypted?.message ?? decrypted ?? "We cannot process your request at the moment, please try again later.")
         }
     }
 
@@ -239,7 +239,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             updateDataHandler("step", data.step + 1)
         } catch (err) {
             const decrypted = decryptData(err.response.data.data);
-            updateDataHandler("error", decrypted?.message ?? decrypted ?? "Something went wrong!")
+            updateDataHandler("error", decrypted?.message ?? decrypted ?? "We cannot process your request at the moment, please try again later.")
         }
         finally {
             updateDataHandler("loading", false)

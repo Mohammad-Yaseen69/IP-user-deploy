@@ -200,7 +200,7 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
                     if (error) {
                         toast.error(error)
                     } else {
-                        toast.error("Something went wrong!")
+                        toast.error("We cannot process your request at the moment, please try again later.")
                     }
                 })
                 .finally(() => {

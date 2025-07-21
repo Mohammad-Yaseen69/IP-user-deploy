@@ -148,7 +148,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                     setError("Invalid Verification Code")
                 }
                 else {
-                    setError("Something went wrong!")
+                    setError("We cannot process your request at the moment, please try again later.")
                 }
             })
             .finally(() => setSending(false))

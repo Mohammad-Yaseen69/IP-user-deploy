@@ -186,7 +186,7 @@ const AirtimeProviderDetails = ({ setSubStep, service, providers, serviceType, s
             setSelectedPackage(decrypted)
         } catch (err) {
             const decrypted = decryptData(err.response.data.data);
-            setExchangeError(decrypted?.message ?? decrypted ?? "Something went wrong!")
+            setExchangeError(decrypted?.message ?? decrypted ?? "We cannot process your request at the moment, please try again later.")
         }
         finally {
             setExchangeLoader(false)

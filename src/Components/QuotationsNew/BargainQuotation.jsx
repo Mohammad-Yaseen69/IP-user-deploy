@@ -92,7 +92,7 @@ const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor =
                 setError("Receiver's receiving limit has been reached!")
             }
             else {
-                setError(dec?.message ?? "Something went wrong!")
+                setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
             }
         }
         finally {

@@ -91,7 +91,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     setCurrentActive(false)
                 })
                 .catch(err => {
-                    toast.error("Something went wrong!")
+                    toast.error("We cannot process your request at the moment, please try again later.")
                 })
         } else {
             axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/activate-wallet/${currentWallet?._id}`, {
@@ -101,7 +101,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     setCurrentActive(true)
                 })
                 .catch(err => {
-                    toast.error("Something went wrong!")
+                    toast.error("We cannot process your request at the moment, please try again later.")
                 })
         }
     }
@@ -117,7 +117,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     getUserWallets(true)
                 })
                 .catch(err => {
-                    toast.error("Something went wrong!")
+                    toast.error("We cannot process your request at the moment, please try again later.")
                 }).finally(() => {
                     setBlocking(false)
                 })
@@ -130,7 +130,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     getUserWallets(true)
                 })
                 .catch(err => {
-                    toast.error("Something went wrong!")
+                    toast.error("We cannot process your request at the moment, please try again later.")
                 }).finally(() => {
                     setBlocking(false)
                 })

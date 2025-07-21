@@ -102,7 +102,7 @@ const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurr
             })
             .catch(err => {
                 const decrypted = decryptData(err.response.data.data);
-                setOtpError(decrypted?.message ?? "Something went wrong!")
+                setOtpError(decrypted?.message ?? "We cannot process your request at the moment, please try again later.")
                 if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                     const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                     const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])

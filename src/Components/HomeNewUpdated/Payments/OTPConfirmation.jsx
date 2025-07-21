@@ -146,7 +146,7 @@ const OTPConfirmation = ({ setStep, createdTransaction = "", setTransactionDetai
                         })
                         .catch(err => {
                             // console.log(decryptData(err.response.data.data))
-                            setOtpError("Something went wrong!")
+                            setOtpError("We cannot process your request at the moment, please try again later.")
                         })
                 }
                 if (requestObject.paymentType.value === "subscription") {
@@ -188,7 +188,7 @@ const OTPConfirmation = ({ setStep, createdTransaction = "", setTransactionDetai
                         })
                         .catch(err => {
                             // console.log(decryptData(err.response.data.data))
-                            setOtpError("Something went wrong!")
+                            setOtpError("We cannot process your request at the moment, please try again later.")
                         })
                 }
                 if (requestObject.paymentType.value === "schedule") {
@@ -230,7 +230,7 @@ const OTPConfirmation = ({ setStep, createdTransaction = "", setTransactionDetai
                         })
                         .catch(err => {
                             // console.log(decryptData(err.response.data.data))
-                            setOtpError("Something went wrong!")
+                            setOtpError("We cannot process your request at the moment, please try again later.")
                         })
                 }
             })
@@ -285,7 +285,7 @@ const OTPConfirmation = ({ setStep, createdTransaction = "", setTransactionDetai
                     })
                     .catch(err => {
                         const decrypted = decryptData(err.response.data.data)
-                        setOtpError("Something Went Wrong!")
+                        setOtpError("We cannot process your request at the moment, please try again later.")
                         // console.log(decrypted)
                     })
             }
@@ -321,7 +321,7 @@ const OTPConfirmation = ({ setStep, createdTransaction = "", setTransactionDetai
                     })
                     .catch(err => {
                         const decrypted = decryptData(err.response.data.data)
-                        setOtpError("Something Went Wrong!")
+                        setOtpError("We cannot process your request at the moment, please try again later.")
                         // console.log(decrypted)
                     })
 
@@ -358,7 +358,7 @@ const OTPConfirmation = ({ setStep, createdTransaction = "", setTransactionDetai
                     })
                     .catch(err => {
                         const decrypted = decryptData(err.response.data.data)
-                        setOtpError("Something Went Wrong!")
+                        setOtpError("We cannot process your request at the moment, please try again later.")
                         // console.log(decrypted)
                     })
             }

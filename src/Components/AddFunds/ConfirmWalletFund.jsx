@@ -102,7 +102,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                         if (error2) {
                             setError(t(error2))
                         } else {
-                            setError(dec?.message ?? "Something went wrong!")
+                            setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
                         }
                     }
                     // console.log(dec)
@@ -213,7 +213,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                 <ModalBody style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <XCircle size={70} color="red" />
                     <p color="red" style={{ fontSize: "1.1rem", fontWeight: "600", color: "red", marginTop: ".3rem" }}>
-                        Something went wrong!
+                        We cannot process your request at the moment, please try again later.
                     </p>
                     <p style={{ fontSize: ".6rem", marginTop: ".5rem" }}>We're sorry about that.
 

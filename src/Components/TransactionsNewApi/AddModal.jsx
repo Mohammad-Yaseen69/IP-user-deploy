@@ -37,7 +37,7 @@ const AddModal = ({ showAddModal, setShowAddModal, setCategories }) => {
             .catch(err => {
                 const decrypted = decryptData(err.response.data.data)
                 // console.log(decrypted)
-                setError("Something Went Wrong!")
+                setError("We cannot process your request at the moment, please try again later.")
                 setIsSaving(false)
             })
     }

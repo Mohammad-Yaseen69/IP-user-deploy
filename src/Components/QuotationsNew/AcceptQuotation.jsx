@@ -338,7 +338,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
             dataHandler("payment_token", dec?.token)
         } catch (error) {
             const err = decryptData(error.response.data.data)
-            toast.error(err.message ?? "Something went wrong!")
+            toast.error(err.message ?? "We cannot process your request at the moment, please try again later.")
         }
         finally {
             dataHandler("loading", false)

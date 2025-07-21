@@ -95,7 +95,7 @@ const Verification = () => {
 
             // console.log("try ran in handlesend");
         } catch (error) {
-            toast.error("Something went wrong!")
+            toast.error("We cannot process your request at the moment, please try again later.")
             // console.log("try ran in error", error);
             // console.log(decryptData(error.response.data.data));
         }

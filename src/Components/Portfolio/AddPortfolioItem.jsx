@@ -286,10 +286,10 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
                                             border: "none",
                                             outline: "none",
                                             padding: "9px 16px",
-                                            opacity: ((!title) && !pAddress) || !file || isSaving ? .7 : 1,
-                                            cursor: ((!title) && !pAddress) || !file  || isSaving ? "not-allowed" : "pointer"
+                                            opacity: ((!title || !description) && !pAddress) || !file || isSaving ? .7 : 1,
+                                            cursor: ((!title || !description) && !pAddress) || !file  || isSaving ? "not-allowed" : "pointer"
                                         }}
-                                        disabled={((!title) && !pAddress) || !file || isSaving}
+                                        disabled={((!title || !description ) && !pAddress) || !file || isSaving}
                                         onClick={String(file?.type)?.toLowerCase()?.includes("video") || String(file?.type)?.toLowerCase()?.includes("audio") ? addPortfolioItem : addPortfolioItemAws}
                                     >{t("Save And Post")}</button>
                                 </div>

@@ -553,7 +553,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             })
             .catch(err => {
                 const decrypted = decryptData(err.response.data.data)
-                toast.error(decrypted?.message ?? "Something went wrong!")
+                toast.error(decrypted?.message ?? "We cannot process your request at the moment, please try again later.")
                 // console.log(decrypted)
                 setIsSaving(false)
             })
@@ -677,7 +677,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             })
             .catch(err => {
                 const decrypted = decryptData(err.response.data.data)
-                toast.error(decrypted?.message ?? "Something went wrong!")
+                toast.error(decrypted?.message ?? "We cannot process your request at the moment, please try again later.")
                 setIsSaving(false)
                 // console.log(decrypted)
             })
@@ -1118,7 +1118,7 @@ export const MoreMenu = ({ withdrawal_id }) => {
         } catch (error) {
             toggleDelModal()
             const dec = decryptData(error.response.data.data)
-            toast.error(dec?.message ?? "Something went wrong!")
+            toast.error(dec?.message ?? "We cannot process your request at the moment, please try again later.")
         }
     }
     return (

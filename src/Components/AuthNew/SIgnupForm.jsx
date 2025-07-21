@@ -1353,7 +1353,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                                         lineHeight: "130%",
                                         marginBottom: "28px",
                                         marginTop: "10px"
-                                    }}>{t("Something went wrong!")}</h2>
+                                    }}>{t("We cannot process your request at the moment, please try again later.")}</h2>
                                     <p style={{
                                         color: "#575757",
                                         textAlign: "center",

@@ -157,7 +157,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
             verifyToken()
         } catch (error) {
             console.log(decryptData(error.response.data.data))
-            toast.error("Something went wrong!")
+            toast.error("We cannot process your request at the moment, please try again later.")
         }
     }
 
