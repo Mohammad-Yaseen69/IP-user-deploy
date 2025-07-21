@@ -198,7 +198,7 @@ const OTPConfirmation = ({
                     console.log(decrypted)
                     const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
                     if (error) {
-                        setOtpError(error)
+                        setOtpError(t(error))
                     } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                         const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                         const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
@@ -251,7 +251,7 @@ const OTPConfirmation = ({
                     const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
                     console.log(decrypted)
                     if (error) {
-                        setOtpError(error)
+                        setOtpError(t(error))
                     } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                         const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                         const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
@@ -310,7 +310,7 @@ const OTPConfirmation = ({
                             const decrypted = decryptData(err.response.data.data)
                             const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
                             if (error) {
-                                setOtpError(error)
+                                setOtpError(t(error))
                             } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                                 const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                                 const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
@@ -366,7 +366,7 @@ const OTPConfirmation = ({
                             const decrypted = decryptData(err.response.data.data)
                             const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
                             if (error) {
-                                setOtpError(error)
+                                setOtpError(t(error))
                             } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                                 const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                                 const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
@@ -422,7 +422,7 @@ const OTPConfirmation = ({
                             const decrypted = decryptData(err.response.data.data)
                             const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
                             if (error) {
-                                setOtpError(error)
+                                setOtpError(t(error))
                             } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                                 const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                                 const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
@@ -482,7 +482,7 @@ const OTPConfirmation = ({
                             setOtpError(t(error2))
                         }
                         else if (error) {
-                            setOtpError(error)
+                            setOtpError(t(error))
                         } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                             const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                             const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
@@ -525,7 +525,7 @@ const OTPConfirmation = ({
                         const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
                         console.log(decrypted)
                         if (error) {
-                            setOtpError(error)
+                            setOtpError(t(error))
                         } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                             const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                             const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
@@ -586,7 +586,7 @@ const OTPConfirmation = ({
                                 setOtpError(t(error2))
                             }
                             else if (error) {
-                                setOtpError(error)
+                                setOtpError(t(error))
                             } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                                 const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                                 const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
@@ -631,7 +631,7 @@ const OTPConfirmation = ({
                             console.log(decrypted)
                             const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
                             if (error) {
-                                setOtpError(error)
+                                setOtpError(t(error))
                             } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                                 const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                                 const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
@@ -675,7 +675,7 @@ const OTPConfirmation = ({
                         const decrypted = decryptData(err.response.data.data)
                         const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
                         if (error) {
-                            setOtpError(error)
+                            setOtpError(t(error))
                         } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                             const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                             const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
@@ -719,7 +719,7 @@ const OTPConfirmation = ({
                         const decrypted = decryptData(err.response.data.data)
                         const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
                         if (error) {
-                            setOtpError(error)
+                            setOtpError(t(error))
                         } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                             const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                             const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])

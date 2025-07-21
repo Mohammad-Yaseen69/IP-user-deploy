@@ -215,7 +215,7 @@ const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHa
                                 </button>
                             </div>
                     }
-                    {data.otpError || error ? <p style={{ marginBottom: "0", textAlign: "center", fontSize: ".8rem", fontWeight: 500, color: "red" }}>{data?.otpError?.length > 0 ? data?.otpError : error}</p> : ""}
+                    {data.otpError || error ? <p style={{ marginBottom: "0", textAlign: "center", fontSize: ".8rem", fontWeight: 500, color: "red" }}>{data?.otpError?.length > 0 ? t(data?.otpError) : t(error)}</p> : ""}
                     <div className={styles.buttons}>
                         <button disabled={isLoading} className={styles.cancel} onClick={() => {
                             dataHandler("error", "")

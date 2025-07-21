@@ -222,7 +222,7 @@ const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurr
                                                 fxError
                                                     ?
                                                     <div style={{ margin: "1rem", textAlign: "center", color: "red", fontSize: ".9rem", fontWeight: "600" }}>
-                                                        {fxError}
+                                                        {t(fxError)}
                                                     </div>
                                                     :
                                                     loading
