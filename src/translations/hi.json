@@ -2710,5 +2710,6 @@
   "Uh-Oh! Your account is currently on delete status.": "ओह! आपका खाता अभी डिलीट स्थिति में है।",
   "Account is locked. Try again in MM:SS minutes.": "खाता लॉक कर दिया गया है। MM:SS मिनट में पुनः प्रयास करें।",
   "Your password has been updated successfully!": "आपका पासवर्ड सफलतापूर्वक अपडेट कर दिया गया है!",
-  "Uh-Oh! The password/phone number you entered is wrong.": "ओह! आपने जो पासवर्ड/फ़ोन नंबर डाला है वह ग़लत है।"
+  "Uh-Oh! The password/phone number you entered is wrong.": "ओह! आपने जो पासवर्ड/फ़ोन नंबर डाला है वह ग़लत है।",
+  "Account is locked. Try again in {{time}} minutes.": "खाता लॉक कर दिया गया है। {{time}} मिनट बाद पुनः प्रयास करें।"
 }

@@ -2697,5 +2697,6 @@
   "Uh-Oh! Your account is currently on delete status.": "Oei! Je account is momenteel verwijderd.",
   "Account is locked. Try again in MM:SS minutes.": "Account is geblokkeerd. Probeer het over MM:SS minuten opnieuw.",
   "Your password has been updated successfully!": "Uw wachtwoord is succesvol bijgewerkt!",
-  "Uh-Oh! The password/phone number you entered is wrong.": "Oei! Het wachtwoord/telefoonnummer dat u hebt ingevoerd, is onjuist."
+  "Uh-Oh! The password/phone number you entered is wrong.": "Oei! Het wachtwoord/telefoonnummer dat u hebt ingevoerd, is onjuist.",
+  "Account is locked. Try again in {{time}} minutes.": "Account is vergrendeld. Probeer het over {{time}} minuten opnieuw."
 }

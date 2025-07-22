@@ -2709,5 +2709,6 @@
   "Uh-Oh! Your account is currently on delete status.": "哎呀！您的帐户目前处于删除状态。",
   "Account is locked. Try again in MM:SS minutes.": "帐户已被锁定。请在 MM:SS 分钟后重试。",
   "Your password has been updated successfully!": "您的密码已成功更新！",
-  "Uh-Oh! The password/phone number you entered is wrong.": "哎呀！您输入的密码/电话号码错误。"
+  "Uh-Oh! The password/phone number you entered is wrong.": "哎呀！您输入的密码/电话号码错误。",
+  "Account is locked. Try again in {{time}} minutes.": "帐户已被锁定。请在 {{time}} 分钟后重试。"
 }

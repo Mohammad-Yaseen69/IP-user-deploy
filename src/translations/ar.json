@@ -2708,5 +2708,6 @@
   "Uh-Oh! Your account is currently on delete status.": "أوه! حسابك حاليًا في حالة حذف.",
   "Account is locked. Try again in MM:SS minutes.": "تم قفل الحساب. حاول مرة أخرى خلال دقائق.",
   "Your password has been updated successfully!": "لقد تم تحديث كلمة المرور الخاصة بك بنجاح!",
-  "Uh-Oh! The password/phone number you entered is wrong.": "أوه! كلمة المرور/رقم الهاتف الذي أدخلته خاطئ."
+  "Uh-Oh! The password/phone number you entered is wrong.": "أوه! كلمة المرور/رقم الهاتف الذي أدخلته خاطئ.",
+  "Account is locked. Try again in {{time}} minutes.": "تم قفل الحساب. حاول مرة أخرى بعد {{time}} دقيقة."
 }

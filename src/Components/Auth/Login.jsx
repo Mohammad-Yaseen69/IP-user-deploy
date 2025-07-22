@@ -243,7 +243,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         if (profileLockTIme > 0) {
             let minutes = Math.floor(profileLockTIme / 60);
             let remainingSeconds = profileLockTIme % 60;
-            setIsLoginError(t(`Account is locked. Try again in MM:SS minutes.`).replace("MM:SS", `${minutes < 10 ? `0${minutes}` : minutes}:${remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}`))
+            setIsLoginError(
+                t("Account is locked. Try again in {{time}} minutes.", {
+                    time: `${minutes < 10 ? `0${minutes}` : minutes}:${remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}`
+                })
+            )
         } else {
             setIsLoginError("")
         }
@@ -618,15 +622,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
     };
 
-    useEffect(() => {
-        if (profileLockTIme > 0) {
-            let minutes = Math.floor(profileLockTIme / 60);
-            let remainingSeconds = profileLockTIme % 60;
-            setIsLoginError(`Account is locked. Try again in ${minutes < 10 ? `0${minutes}` : minutes}:${remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds} minutes.`)
-        } else {
-            setIsLoginError("")
-        }
-    }, [profileLockTIme])
 
     useEffect(() => {
         let timeout;

@@ -2710,5 +2710,6 @@
   "Uh-Oh! Your account is currently on delete status.": "Lo! Akaunti yako iko kwenye hali ya kufuta kwa sasa.",
   "Account is locked. Try again in MM:SS minutes.": "Akaunti imefungwa. Jaribu tena baada ya dakika MM:SS.",
   "Your password has been updated successfully!": "Nenosiri lako limesasishwa kwa mafanikio!",
-  "Uh-Oh! The password/phone number you entered is wrong.": "Lo! Nenosiri/nambari ya simu uliyoweka si sahihi."
+  "Uh-Oh! The password/phone number you entered is wrong.": "Lo! Nenosiri/nambari ya simu uliyoweka si sahihi.",
+  "Account is locked. Try again in {{time}} minutes.": "Akaunti imefungwa. Jaribu tena baada ya dakika {{time}}."
 }
