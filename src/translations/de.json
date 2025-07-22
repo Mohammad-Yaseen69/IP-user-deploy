@@ -1254,7 +1254,7 @@
   "Incorrect current password. Please try again.": "Falsches aktuelles Passwort. Bitte versuchen Sie es erneut.",
   "Invalid selection made. Please choose a valid option.": "Ungültige Auswahl getroffen. Bitte wählen Sie eine gültige Option.",
   "User already exists. Please log in or reset the password if needed.": "Benutzer existiert bereits. Bitte melden Sie sich an oder setzen Sie das Passwort zurück, wenn erforderlich.",
-  "No transaction found.": "Keine Transaktion gefunden.",
+  "No transaction found": "Keine Transaktion gefunden.",
   "Invalid selected transactions.": "Ungültig ausgewählte Transaktionen.",
   "Data has not been saved. Please try again.": "Die Daten wurden nicht gespeichert. Bitte versuchen Sie es erneut.",
   "Invalid request type.": "Ungültiger Anforderungstyp.",

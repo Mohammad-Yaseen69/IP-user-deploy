@@ -611,7 +611,7 @@ const TwoFactorAuth = () => {
                             const whatsapp = current === "WP" ? !wpActive : wpActive
                             updateHandler(sms, email, whatsapp, c)
                         }}
-                        successTitle={current !== "Google" ? 'Two Factor Authentication Updated Succsessfully!' : "Google Two Factor Authentication is now linked to your InstaPay Account."}
+                        successTitle={current !== "Google" ? 'Two Factor Authentication Updated Succsessfully!' : "Google Two Factor Authentication Is Now Linked To Your Instapay Account."}
                         sideText={`${current} Authenticator`}
                     />
                 }

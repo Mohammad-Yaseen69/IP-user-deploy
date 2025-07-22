@@ -3,6 +3,7 @@ import otp_icon from '../../PaymentsNewer/files/otp_icon.png';
 import { Button } from 'reactstrap';
 import { ChevronRight } from 'react-feather';
 import { InactivityContext } from '../../../InactivityWrapper';
+import { useTranslation } from 'react-i18next';
 
 const OTPConfirmation = ({ setter, callback, setterValue, hideOtp }) => {
     const numberOfFields = 4;
@@ -19,7 +20,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp }) => {
     const [otpError, setOtpError] = useState("")
     const { setIsExtended } = useContext(InactivityContext)
     const [isSaving, setIsSaving] = useState(false)
-
+    const {t} = useTranslation()
     useEffect(() => {
         setIsExtended(true)
     }, [])
@@ -175,7 +176,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp }) => {
                             {
                                 resendTimer > 0
                                     ?
-                                    "Resend available in " + resendTimer + " seconds"
+                                    t("Resend available in ") + resendTimer + " seconds"
                                     :
                                     <>
                                         {"Didn't receive OTP? "}

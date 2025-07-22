@@ -338,7 +338,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                                             dataHandler("verified", true)
                                         }
                                     }}
-                                    heading={t("Signup Error")}
+                                    heading={"Cannot Proceed"}
                                     message={data.error}
                                 />
                             }

@@ -49,8 +49,15 @@ Sentry.init({
     environment: process.env.NODE_ENV === "development" ? "development" : "production",
     beforeSend(event, hint) {
         if (process.env.NODE_ENV === 'development') return null;
+        const isException = event.exception && event.exception.values && event.exception.values.length > 0;
+        const isMessage = !!event.message;
+        const isErrorLevel = event.level === 'error';
 
-        return event;
+        if (isException || isMessage || isErrorLevel) {
+            return event;
+        }else{
+            return null;
+        }
     },
     defaultIntegrations: false,
     profilesSampleRate: 1.0

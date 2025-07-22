@@ -237,7 +237,7 @@ const Password = () => {
                 >{t("Change Password")}</Button>
             </div>
             <Modal isOpen={showOtp}>
-                <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
+                <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation
                         callback={updatePasswordHandler}
@@ -254,7 +254,7 @@ const Password = () => {
             <SuccessModal
                 isOpen={showSuccess}
                 message={"Your password has been updated successfully!"}
-                subMessage={"Password Updated"}
+                subMessage={"Password Updated Successfully!"}
                 toggle={() => setShowSuccess(false)}
             />
         </div>

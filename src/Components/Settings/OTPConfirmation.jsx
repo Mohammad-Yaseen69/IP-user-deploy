@@ -4,6 +4,7 @@ import { Button } from 'reactstrap';
 import { ChevronRight } from 'react-feather';
 import { InactivityContext } from '../../InactivityWrapper';
 import { UserContext } from '../../Context/UserContext';
+import { t } from 'i18next';
 
 const OTPConfirmation = ({ setter, callback, setterValue, hideOtp }) => {
     const numberOfFields = 4;
@@ -177,7 +178,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp }) => {
                             {
                                 resendTimer > 0
                                     ?
-                                    "Resend available in " + resendTimer + " seconds"
+                                    t("Resend available in ") + resendTimer + " seconds"
                                     :
                                     <>
                                         {"Didn't receive OTP? "}

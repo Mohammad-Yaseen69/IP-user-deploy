@@ -242,7 +242,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         if (profileLockTIme > 0) {
             let minutes = Math.floor(profileLockTIme / 60);
             let remainingSeconds = profileLockTIme % 60;
-            setIsLoginError(`Account is locked. Try again in ${minutes < 10 ? `0${minutes}` : minutes}:${remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds} minutes.`)
+            setIsLoginError(t(`Account is locked. Try again in MM:SS minutes.`).replace("MM:SS", `${minutes < 10 ? `0${minutes}` : minutes}:${remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}`))
         } else {
             setIsLoginError("")
         }
@@ -754,7 +754,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         &&
                         <div className={styles.input_error}>
                             <AlertTriangle size={17} color="#F32D2D" />
-                            <span>{t(isLoginError)}</span>
+                            <span>{profileLockTIme > 0 ? isLoginError : t(isLoginError)}</span>
                         </div>
                     }
                     <div className={styles.center_bottom}>

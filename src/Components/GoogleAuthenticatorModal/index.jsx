@@ -21,7 +21,7 @@ const GoogleAuthenticatorModal = ({
     smsActive,
     emailActive,
     passwordNext = () => { },
-    successTitle = "Google Two Factor Authentication is now linked to your InstaPay Account.",
+    successTitle = "Google Two Factor Authentication Is Now Linked To Your Instapay Account.",
     sideText = "Google Authenticator",
     isBiometricChecks,
     bioMetricHandler,
@@ -105,7 +105,7 @@ const GoogleAuthenticatorModal = ({
             }
 
         } catch (error) {
-            const dec = decryptData(error.response.data)
+            const dec = decryptData(error.response.data?.data)
             console.log(dec)
             toast.error(dec?.message ?? "Something went wrong while verifying password.")
         }
