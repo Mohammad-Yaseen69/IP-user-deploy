@@ -19,6 +19,7 @@ import * as rdd from "react-device-detect";
 import { authIcon, instaIcon, smsIcon, whatsappIcon } from "./files"
 import "./styles/index.module.css";
 import useWindowWidth from "../../utils/useWindowWidth";
+import i18next from "i18next";
 
 const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const navigate = useNavigate()
@@ -246,7 +247,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         } else {
             setIsLoginError("")
         }
-    }, [profileLockTIme])
+    }, [profileLockTIme, i18next.language])
 
     // service error
 
