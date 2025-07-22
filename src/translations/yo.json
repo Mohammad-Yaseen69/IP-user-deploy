@@ -2683,5 +2683,11 @@
   "You have no beneficiary.": "O ko ni alanfani.",
   "You have no beneficiary from ${country} having ${payoutChannel} details.": "O ko ni anfani lati ${orilẹ-ede} ti o ni awọn alaye ${payoutChannel}.",
   "Confirm Removing File": "Jẹrisi Yiyọ Faili",
-  "Are you sure, you want to remove this file?": "Ṣe o da ọ loju, o fẹ yọ faili yii kuro?"
+  "Are you sure, you want to remove this file?": "Ṣe o da ọ loju, o fẹ yọ faili yii kuro?",
+  "Activate Card": "Mu Kaadi ṣiṣẹ",
+  "Your card is freeze": "Kaadi rẹ ti wa ni didi",
+  "Your payment is in process": "Owo sisan rẹ wa ni ilana",
+  "Your payment is Failed": "Owo sisan rẹ ti kuna",
+  "Thanks for Using InstaPay": "O ṣeun fun Lilo InstaPay",
+  "We cannot process your request at the moment, please try again later.": "A ko le ṣe ilana ibeere rẹ ni akoko yii, jọwọ gbiyanju lẹẹkansi nigbamii."
 }

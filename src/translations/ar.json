@@ -2683,5 +2683,11 @@
   "You have no beneficiary.": "ليس لديك مستفيد.",
   "You have no beneficiary from ${country} having ${payoutChannel} details.": "ليس لديك أي مستفيد من ${country} لديه تفاصيل ${payoutChannel}.",
   "Confirm Removing File": "تأكيد إزالة الملف",
-  "Are you sure, you want to remove this file?": "هل أنت متأكد أنك تريد إزالة هذا الملف؟"
+  "Are you sure, you want to remove this file?": "هل أنت متأكد أنك تريد إزالة هذا الملف؟",
+  "Activate Card": "تفعيل البطاقة",
+  "Your card is freeze": "بطاقتك متجمدة",
+  "Your payment is in process": "الدفع الخاص بك قيد المعالجة",
+  "Your payment is Failed": "لقد فشلت عملية الدفع الخاصة بك",
+  "Thanks for Using InstaPay": "شكرا لاستخدامك InstaPay",
+  "We cannot process your request at the moment, please try again later.": "لا يمكننا معالجة طلبك في الوقت الحالي، يرجى المحاولة مرة أخرى لاحقًا."
 }

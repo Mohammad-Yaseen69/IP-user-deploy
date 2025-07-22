@@ -2684,5 +2684,11 @@
   "You have no beneficiary.": "您没有受益人。",
   "You have no beneficiary from ${country} having ${payoutChannel} details.": "您没有来自${country}的受益人拥有${payoutChannel}的详细信息。",
   "Confirm Removing File": "确认删除文件",
-  "Are you sure, you want to remove this file?": "您确定要删除此文件吗？"
+  "Are you sure, you want to remove this file?": "您确定要删除此文件吗？",
+  "Activate Card": "激活卡",
+  "Your card is freeze": "您的卡已被冻结",
+  "Your payment is in process": "您的付款正在处理中",
+  "Your payment is Failed": "您的付款失败",
+  "Thanks for Using InstaPay": "感谢您使用 InstaPay",
+  "We cannot process your request at the moment, please try again later.": "我们目前无法处理您的请求，请稍后再试。"
 }

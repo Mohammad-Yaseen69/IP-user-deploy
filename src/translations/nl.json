@@ -2672,5 +2672,11 @@
   "You have no beneficiary.": "U hebt geen begunstigde.",
   "You have no beneficiary from ${country} having ${payoutChannel} details.": "U hebt geen begunstigde uit ${country} met ${payoutChannel} gegevens.",
   "Confirm Removing File": "Bevestig het verwijderen van het bestand",
-  "Are you sure, you want to remove this file?": "Weet u zeker dat u dit bestand wilt verwijderen?"
+  "Are you sure, you want to remove this file?": "Weet u zeker dat u dit bestand wilt verwijderen?",
+  "Activate Card": "Activeer kaart",
+  "Your card is freeze": "Uw kaart is geblokkeerd",
+  "Your payment is in process": "Uw betaling is in behandeling",
+  "Your payment is Failed": "Uw betaling is mislukt",
+  "Thanks for Using InstaPay": "Bedankt voor het gebruik van InstaPay",
+  "We cannot process your request at the moment, please try again later.": "We kunnen uw verzoek momenteel niet verwerken. Probeer het later opnieuw."
 }

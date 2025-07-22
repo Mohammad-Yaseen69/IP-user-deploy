@@ -2683,5 +2683,11 @@
   "You have no beneficiary.": "Anda tidak memiliki penerima manfaat.",
   "You have no beneficiary from ${country} having ${payoutChannel} details.": "Anda tidak memiliki penerima manfaat dari ${country} yang memiliki detail ${payoutChannel}.",
   "Confirm Removing File": "Konfirmasi Penghapusan File",
-  "Are you sure, you want to remove this file?": "Apakah Anda yakin ingin menghapus berkas ini?"
+  "Are you sure, you want to remove this file?": "Apakah Anda yakin ingin menghapus berkas ini?",
+  "Activate Card": "Aktifkan Kartu",
+  "Your card is freeze": "Kartu Anda dibekukan",
+  "Your payment is in process": "Pembayaran Anda sedang diproses",
+  "Your payment is Failed": "Pembayaran Anda Gagal",
+  "Thanks for Using InstaPay": "Terima kasih telah menggunakan InstaPay",
+  "We cannot process your request at the moment, please try again later.": "Kami tidak dapat memproses permintaan Anda saat ini, silakan coba lagi nanti."
 }

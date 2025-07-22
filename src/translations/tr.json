@@ -2685,5 +2685,11 @@
   "You have no beneficiary.": "Hiçbir menfaat sahibiniz yok.",
   "You have no beneficiary from ${country} having ${payoutChannel} details.": "${payoutChannel} bilgilerine sahip ${country}'den hiçbir yararlanıcınız yok.",
   "Confirm Removing File": "Dosyanın Kaldırılmasını Onayla",
-  "Are you sure, you want to remove this file?": "Bu dosyayı kaldırmak istediğinizden emin misiniz?"
+  "Are you sure, you want to remove this file?": "Bu dosyayı kaldırmak istediğinizden emin misiniz?",
+  "Activate Card": "Kartı Etkinleştir",
+  "Your card is freeze": "Kartınız donduruldu",
+  "Your payment is in process": "Ödemeniz işleniyor",
+  "Your payment is Failed": "Ödemeniz Başarısız",
+  "Thanks for Using InstaPay": "InstaPay'i kullandığınız için teşekkürler",
+  "We cannot process your request at the moment, please try again later.": "Talebinizi şu anda işleme koyamıyoruz, lütfen daha sonra tekrar deneyin."
 }

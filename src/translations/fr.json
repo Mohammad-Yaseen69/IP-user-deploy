@@ -2690,5 +2690,11 @@
   "You have no beneficiary.": "Vous n'avez pas de bénéficiaire.",
   "You have no beneficiary from ${country} having ${payoutChannel} details.": "Vous n'avez aucun bénéficiaire de ${country} ayant les détails de ${payoutChannel}.",
   "Confirm Removing File": "Confirmer la suppression du fichier",
-  "Are you sure, you want to remove this file?": "Êtes-vous sûr de vouloir supprimer ce fichier ?"
+  "Are you sure, you want to remove this file?": "Êtes-vous sûr de vouloir supprimer ce fichier ?",
+  "Activate Card": "Activer la carte",
+  "Your card is freeze": "Votre carte est gelée",
+  "Your payment is in process": "Votre paiement est en cours de traitement",
+  "Your payment is Failed": "Votre paiement a échoué",
+  "Thanks for Using InstaPay": "Merci d'utiliser InstaPay",
+  "We cannot process your request at the moment, please try again later.": "Nous ne pouvons pas traiter votre demande pour le moment, veuillez réessayer plus tard."
 }

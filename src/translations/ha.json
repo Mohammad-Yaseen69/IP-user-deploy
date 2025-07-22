@@ -2644,5 +2644,11 @@
   "You have no beneficiary.": "Ba ku da mai amfana.",
   "You have no beneficiary from ${country} having ${payoutChannel} details.": "Ba ku da mai amfana daga ${kasa} mai samun bayanan ${payoutChannel}.",
   "Confirm Removing File": "Tabbatar da Cire Fayil",
-  "Are you sure, you want to remove this file?": "Shin kun tabbata, kuna son cire wannan fayil ɗin?"
+  "Are you sure, you want to remove this file?": "Shin kun tabbata, kuna son cire wannan fayil ɗin?",
+  "Activate Card": "Kunna Katin",
+  "Your card is freeze": "Katin ku ya daskare",
+  "Your payment is in process": "Biyan ku yana kan aiwatarwa",
+  "Your payment is Failed": "Biyan ku ya gaza",
+  "Thanks for Using InstaPay": "Godiya da Amfani da InstaPay",
+  "We cannot process your request at the moment, please try again later.": "Ba za mu iya aiwatar da buƙatarku a halin yanzu ba, da fatan za a sake gwadawa daga baya."
 }

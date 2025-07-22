@@ -2594,5 +2594,11 @@
   "You have no beneficiary.": "У вас нет бенефициара.",
   "You have no beneficiary from ${country} having ${payoutChannel} details.": "У вас нет получателя из страны ${country} с реквизитами ${payoutChannel}.",
   "Confirm Removing File": "Подтвердите удаление файла",
-  "Are you sure, you want to remove this file?": "Вы уверены, что хотите удалить этот файл?"
+  "Are you sure, you want to remove this file?": "Вы уверены, что хотите удалить этот файл?",
+  "Activate Card": "Активировать карту",
+  "Your card is freeze": "Ваша карта заморожена",
+  "Your payment is in process": "Ваш платеж находится в процессе обработки.",
+  "Your payment is Failed": "Ваш платеж не пройден",
+  "Thanks for Using InstaPay": "Спасибо за использование InstaPay",
+  "We cannot process your request at the moment, please try again later.": "В данный момент мы не можем обработать ваш запрос. Повторите попытку позже."
 }

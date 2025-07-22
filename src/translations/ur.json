@@ -2683,5 +2683,11 @@
   "You have no beneficiary.": "آپ کا کوئی فائدہ اٹھانے والا نہیں ہے۔",
   "You have no beneficiary from ${country} having ${payoutChannel} details.": "آپ کے پاس ${country} سے کوئی مستفید کنندہ نہیں ہے جس میں ${payoutChannel} کی تفصیلات ہوں۔",
   "Confirm Removing File": "فائل کو ہٹانے کی تصدیق کریں۔",
-  "Are you sure, you want to remove this file?": "کیا آپ واقعی اس فائل کو ہٹانا چاہتے ہیں؟"
+  "Are you sure, you want to remove this file?": "کیا آپ واقعی اس فائل کو ہٹانا چاہتے ہیں؟",
+  "Activate Card": "کارڈ کو چالو کریں۔",
+  "Your card is freeze": "آپ کا کارڈ منجمد ہے۔",
+  "Your payment is in process": "آپ کی ادائیگی عمل میں ہے۔",
+  "Your payment is Failed": "آپ کی ادائیگی ناکام ہو گئی ہے۔",
+  "Thanks for Using InstaPay": "InstaPay استعمال کرنے کا شکریہ",
+  "We cannot process your request at the moment, please try again later.": "ہم اس وقت آپ کی درخواست پر کارروائی نہیں کر سکتے، براہ کرم بعد میں دوبارہ کوشش کریں۔"
 }

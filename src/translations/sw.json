@@ -2685,5 +2685,11 @@
   "You have no beneficiary.": "Huna mnufaika.",
   "You have no beneficiary from ${country} having ${payoutChannel} details.": "Huna mnufaika kutoka ${country} aliye na maelezo ya ${payoutChannel}.",
   "Confirm Removing File": "Thibitisha Kuondoa Faili",
-  "Are you sure, you want to remove this file?": "Je, una uhakika, ungependa kuondoa faili hii?"
+  "Are you sure, you want to remove this file?": "Je, una uhakika, ungependa kuondoa faili hii?",
+  "Activate Card": "Washa Kadi",
+  "Your card is freeze": "Kadi yako imeganda",
+  "Your payment is in process": "Malipo yako yanashughulikiwa",
+  "Your payment is Failed": "Malipo yako Yameshindwa",
+  "Thanks for Using InstaPay": "Asante kwa Kutumia InstaPay",
+  "We cannot process your request at the moment, please try again later.": "Hatuwezi kushughulikia ombi lako kwa sasa, tafadhali jaribu tena baadaye."
 }
