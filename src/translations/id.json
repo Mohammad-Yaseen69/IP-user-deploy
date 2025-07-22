@@ -2707,5 +2707,6 @@
   "Uh-Oh! Your account is onhold.": "Aduh! Akun Anda ditangguhkan.",
   "Uh-Oh! Your account is currently on delete status.": "Aduh! Akun Anda saat ini berstatus hapus.",
   "Account is locked. Try again in MM:SS minutes.": "Akun terkunci. Coba lagi dalam MM:DD menit.",
-  "Your password has been updated successfully!": "Kata sandi Anda telah berhasil diperbarui!"
+  "Your password has been updated successfully!": "Kata sandi Anda telah berhasil diperbarui!",
+  "Uh-Oh! The password/phone number you entered is wrong.": "Aduh! Kata sandi/nomor telepon yang Anda masukkan salah."
 }

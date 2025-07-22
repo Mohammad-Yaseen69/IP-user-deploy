@@ -2668,5 +2668,6 @@
   "Uh-Oh! Your account is onhold.": "U-Oh! An ajiye asusun ku.",
   "Uh-Oh! Your account is currently on delete status.": "U-Oh! A halin yanzu asusunku yana kan matsayin sharewa.",
   "Account is locked. Try again in MM:SS minutes.": "An kulle asusun. A sake gwadawa cikin MM:SS mintuna.",
-  "Your password has been updated successfully!": "An sabunta kalmar sirrinka cikin nasara!"
+  "Your password has been updated successfully!": "An sabunta kalmar sirrinka cikin nasara!",
+  "Uh-Oh! The password/phone number you entered is wrong.": "U-Oh! Kalmar sirri/lambar wayar da kuka shigar ba daidai ba ne."
 }

@@ -2714,5 +2714,6 @@
   "Uh-Oh! Your account is onhold.": "¡Oh, oh! Tu cuenta está retenida.",
   "Uh-Oh! Your account is currently on delete status.": "¡Oh! Tu cuenta está actualmente en estado de eliminación.",
   "Account is locked. Try again in MM:SS minutes.": "La cuenta está bloqueada. Inténtalo de nuevo en MM:SS minutos.",
-  "Your password has been updated successfully!": "¡Tu contraseña ha sido actualizada exitosamente!"
+  "Your password has been updated successfully!": "¡Tu contraseña ha sido actualizada exitosamente!",
+  "Uh-Oh! The password/phone number you entered is wrong.": "¡Oh! La contraseña o el número de teléfono que ingresaste son incorrectos."
 }

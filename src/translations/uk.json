@@ -2714,5 +2714,6 @@
   "Uh-Oh! Your account is onhold.": "О-о! Ваш обліковий запис призупинено.",
   "Uh-Oh! Your account is currently on delete status.": "О-о! Ваш обліковий запис зараз у статусі видалення.",
   "Account is locked. Try again in MM:SS minutes.": "Обліковий запис заблоковано. Повторіть спробу через MM:SS хв.",
-  "Your password has been updated successfully!": "Ваш пароль успішно оновлено!"
+  "Your password has been updated successfully!": "Ваш пароль успішно оновлено!",
+  "Uh-Oh! The password/phone number you entered is wrong.": "О-о! Ви ввели неправильний пароль/номер телефону."
 }

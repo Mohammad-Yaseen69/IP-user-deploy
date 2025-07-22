@@ -2618,5 +2618,6 @@
   "Uh-Oh! Your account is onhold.": "Ой-ой! Ваш аккаунт заблокирован.",
   "Uh-Oh! Your account is currently on delete status.": "Ой-ой! Ваша учётная запись сейчас находится в статусе удаления.",
   "Account is locked. Try again in MM:SS minutes.": "Аккаунт заблокирован. Повторите попытку через MM:SS минут.",
-  "Your password has been updated successfully!": "Ваш пароль успешно обновлен!"
+  "Your password has been updated successfully!": "Ваш пароль успешно обновлен!",
+  "Uh-Oh! The password/phone number you entered is wrong.": "Ой-ой! Вы ввели неверный пароль/номер телефона."
 }

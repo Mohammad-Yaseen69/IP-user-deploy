@@ -2714,5 +2714,6 @@
   "Uh-Oh! Your account is onhold.": "Oh-Oh ! Votre compte est suspendu.",
   "Uh-Oh! Your account is currently on delete status.": "Oh-Oh ! Votre compte est actuellement en cours de suppression.",
   "Account is locked. Try again in MM:SS minutes.": "Compte verrouillé. Réessayez dans MM:SS minutes.",
-  "Your password has been updated successfully!": "Votre mot de passe a été mis à jour avec succès !"
+  "Your password has been updated successfully!": "Votre mot de passe a été mis à jour avec succès !",
+  "Uh-Oh! The password/phone number you entered is wrong.": "Oh-Oh ! Le mot de passe/numéro de téléphone que vous avez saisi est incorrect."
 }
