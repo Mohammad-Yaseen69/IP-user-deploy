@@ -2710,5 +2710,6 @@
   "Account is locked. Try again in MM:SS minutes.": "帐户已被锁定。请在 MM:SS 分钟后重试。",
   "Your password has been updated successfully!": "您的密码已成功更新！",
   "Uh-Oh! The password/phone number you entered is wrong.": "哎呀！您输入的密码/电话号码错误。",
-  "Account is locked. Try again in {{time}} minutes.": "帐户已被锁定。请在 {{time}} 分钟后重试。"
+  "Account is locked. Try again in {{time}} minutes.": "帐户已被锁定。请在 {{time}} 分钟后重试。",
+  "Phone number or Email already exist!": "电话号码或电子邮件已存在！"
 }

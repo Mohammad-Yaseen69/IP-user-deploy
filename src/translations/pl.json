@@ -2711,5 +2711,6 @@
   "Account is locked. Try again in MM:SS minutes.": "Konto jest zablokowane. Spróbuj ponownie za MM:SS minut.",
   "Your password has been updated successfully!": "Twoje hasło zostało pomyślnie zaktualizowane!",
   "Uh-Oh! The password/phone number you entered is wrong.": "Ojej! Podane hasło/numer telefonu są nieprawidłowe.",
-  "Account is locked. Try again in {{time}} minutes.": "Konto jest zablokowane. Spróbuj ponownie za {{time}} minut."
+  "Account is locked. Try again in {{time}} minutes.": "Konto jest zablokowane. Spróbuj ponownie za {{time}} minut.",
+  "Phone number or Email already exist!": "Podany numer telefonu lub adres e-mail już istnieje!"
 }

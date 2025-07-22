@@ -2709,5 +2709,6 @@
   "Account is locked. Try again in MM:SS minutes.": "تم قفل الحساب. حاول مرة أخرى خلال دقائق.",
   "Your password has been updated successfully!": "لقد تم تحديث كلمة المرور الخاصة بك بنجاح!",
   "Uh-Oh! The password/phone number you entered is wrong.": "أوه! كلمة المرور/رقم الهاتف الذي أدخلته خاطئ.",
-  "Account is locked. Try again in {{time}} minutes.": "تم قفل الحساب. حاول مرة أخرى بعد {{time}} دقيقة."
+  "Account is locked. Try again in {{time}} minutes.": "تم قفل الحساب. حاول مرة أخرى بعد {{time}} دقيقة.",
+  "Phone number or Email already exist!": "رقم الهاتف أو البريد الإلكتروني موجود بالفعل!"
 }

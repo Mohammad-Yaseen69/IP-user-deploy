@@ -207,7 +207,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                     (
                                         authType === "sms"
                                             ?
-                                            t(`A one-time verification code has been sent to your ${userDetails?.email  ? "email address and":""} ${otpTypeOnProfile ? "email address": ""} ${otpTypeOnProfile !== "email" ?  "phone number": ""}.`.replace("phone", userDetails.phone?.slice(0, 3) === "971" ? "whatsapp":  "phone"))
+                                            t(`A one-time verification code has been sent to your ${userDetails?.email ? "email address" : ""} and phone number.`).replace("phone", userDetails.phone?.slice(0, 3) === "971" ? "whatsapp":  "phone")
                                             :
                                             t("Enter a code shown in the app to make sure everything works fine.")
                                     )
@@ -266,7 +266,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                     <span onClick={() => navigate("/settings?tab=tfa")} style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }}>{t("Setup Authenticator")}</span>
                         }
                         {
-                            otpError && <span style={{ fontSize: ".8rem", fontWeight: 700, color: "red" }}>{otpError}</span>
+                            otpError && <span style={{ fontSize: ".8rem", fontWeight: 700, color: "red" }}>{t(otpError)}</span>
                         }
                         <span style={{ fontSize: "12px", color: "#aeaeae", fontWeight: 600 }}>
                             {
@@ -275,7 +275,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                 (
                                     resendTimer > 0
                                         ?
-                                        "Resend available in " + resendTimer + " seconds"
+                                        t("Resend available in ") + resendTimer + " seconds"
                                         :
                                         <>
                                             {"Didn't receive OTP? "}
@@ -283,7 +283,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                                 setOTPValues(Array(numberOfFields).fill(''))
                                                 resendHandler()
                                                 setResendTimer(90)
-                                            }}>Resend Now</span>
+                                            }}>{t("Resend Now")}</span>
                                         </>
                                 )
                             }
@@ -305,7 +305,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                             className="i_t_button"
                             disabled={isAnyFieldEmpty || isSaving || processing}
                         >
-                            {isSaving ? "Verifing" : "Verify"} <ChevronRight size={24} />
+                            {isSaving ? t("Verifing") : t("Verify")} <ChevronRight size={24} />
                         </Button>
                     </>
                 </div>

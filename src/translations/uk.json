@@ -2716,5 +2716,6 @@
   "Account is locked. Try again in MM:SS minutes.": "Обліковий запис заблоковано. Повторіть спробу через MM:SS хв.",
   "Your password has been updated successfully!": "Ваш пароль успішно оновлено!",
   "Uh-Oh! The password/phone number you entered is wrong.": "О-о! Ви ввели неправильний пароль/номер телефону.",
-  "Account is locked. Try again in {{time}} minutes.": "Обліковий запис заблоковано. Повторіть спробу через {{time}} хв."
+  "Account is locked. Try again in {{time}} minutes.": "Обліковий запис заблоковано. Повторіть спробу через {{time}} хв.",
+  "Phone number or Email already exist!": "Номер телефону або Email вже є!"
 }

@@ -2724,5 +2724,6 @@
   "Account is locked. Try again in MM:SS minutes.": "Account is locked. Try again in MM:SS minutes.",
   "Your password has been updated successfully!": "Your password has been updated successfully!",
   "Uh-Oh! The password/phone number you entered is wrong.": "Uh-Oh! The password/phone number you entered is wrong.",
-  "Account is locked. Try again in {{time}} minutes.": "Account is locked. Try again in {{time}} minutes."
+  "Account is locked. Try again in {{time}} minutes.": "Account is locked. Try again in {{time}} minutes.",
+  "Phone number or Email already exist!": "Phone number or Email already exist!"
 }

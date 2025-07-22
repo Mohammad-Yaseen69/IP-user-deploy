@@ -2709,5 +2709,6 @@
   "Account is locked. Try again in MM:SS minutes.": "Akọọlẹ ti wa ni titiipa. Gbiyanju lẹẹkansi ni MM: SS iṣẹju.",
   "Your password has been updated successfully!": "Ọrọigbaniwọle rẹ ti ni imudojuiwọn ni aṣeyọri!",
   "Uh-Oh! The password/phone number you entered is wrong.": "Ah-O! Ọrọigbaniwọle/nọmba foonu ti o tẹ jẹ aṣiṣe.",
-  "Account is locked. Try again in {{time}} minutes.": "Akọọlẹ ti wa ni titiipa. Gbiyanju lẹẹkansi ni awọn iṣẹju {{akoko}}."
+  "Account is locked. Try again in {{time}} minutes.": "Akọọlẹ ti wa ni titiipa. Gbiyanju lẹẹkansi ni awọn iṣẹju {{akoko}}.",
+  "Phone number or Email already exist!": "Nọmba foonu tabi Imeeli ti wa tẹlẹ!"
 }

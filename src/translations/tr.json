@@ -2711,5 +2711,6 @@
   "Account is locked. Try again in MM:SS minutes.": "Hesap kilitlendi. DD:SS dakika içinde tekrar deneyin.",
   "Your password has been updated successfully!": "Şifreniz başarıyla güncellendi!",
   "Uh-Oh! The password/phone number you entered is wrong.": "Eyvah! Girdiğiniz şifre/telefon numarası yanlış.",
-  "Account is locked. Try again in {{time}} minutes.": "Hesap kilitlendi. {{time}} dakika içinde tekrar deneyin."
+  "Account is locked. Try again in {{time}} minutes.": "Hesap kilitlendi. {{time}} dakika içinde tekrar deneyin.",
+  "Phone number or Email already exist!": "Telefon numarası veya E-posta zaten mevcut!"
 }

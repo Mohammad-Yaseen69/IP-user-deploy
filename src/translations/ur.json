@@ -2709,5 +2709,6 @@
   "Account is locked. Try again in MM:SS minutes.": "اکاؤنٹ لاک ہے۔ MM:SS منٹ میں دوبارہ کوشش کریں۔",
   "Your password has been updated successfully!": "آپ کا پاس ورڈ کامیابی کے ساتھ اپ ڈیٹ ہو گیا ہے!",
   "Uh-Oh! The password/phone number you entered is wrong.": "اوہ! آپ کا درج کردہ پاس ورڈ/فون نمبر غلط ہے۔",
-  "Account is locked. Try again in {{time}} minutes.": "اکاؤنٹ لاک ہے۔ {{time}} منٹ میں دوبارہ کوشش کریں۔"
+  "Account is locked. Try again in {{time}} minutes.": "اکاؤنٹ لاک ہے۔ {{time}} منٹ میں دوبارہ کوشش کریں۔",
+  "Phone number or Email already exist!": "فون نمبر یا ای میل پہلے سے موجود ہے!"
 }

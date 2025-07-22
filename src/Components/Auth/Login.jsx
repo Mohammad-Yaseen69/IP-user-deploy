@@ -872,7 +872,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                         :
                                                         currentOtpMethod === "wp"
                                                             ?
-                                                            t("Enter the code sent on your Whatsapp")
+                                                            t("Enter the code send on your Whatsapp")
                                                             :
                                                             t(`Enter the SMS code sent to +41********4053`)
                                                                 .replace(
