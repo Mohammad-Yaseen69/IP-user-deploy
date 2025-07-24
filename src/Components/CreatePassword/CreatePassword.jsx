@@ -236,18 +236,26 @@ const CreatePassword = () => {
                             <h3 style={{ fontSize: "18px", fontWeight: 700 }}>{t("Your password has been set!")}</h3>
                             <p style={{ color: "#575757", fontSize: "14px", fontWeight: 600, width: "300px", marginTop: "8px" }}>{t("You may close this window and proceed further on {{platform}}",{platform: data.platform === "telegram" ? "Telegram" : "Instagram"})}</p>
 
-                            <button
-                                style={{ padding: "0.9rem 1rem", borderRadius: "9px", backgroundColor: "#5926f0fe", color: "white", border: "none", cursor: "pointer", width: "100%", fontSize: "16px" }}
-                                onClick={() => {
-                                    if (data.platform === "telegram") {
-                                        window.location.href = "https://t.me/Instapay_swiss_bot";
-                                    } else {
-                                        window.location.href = "https://ig.me/m/Instapay_swiss";
-                                    }
+                            <a
+                                href={data.platform === "telegram" ? "https://t.me/Instapay_swiss_bot" : "https://ig.me/m/Instapay_swiss"}
+                                style={{
+                                    display: "inline-block",
+                                    padding: "0.9rem 1rem",
+                                    borderRadius: "9px",
+                                    backgroundColor: "#5926f0fe",
+                                    color: "white",
+                                    border: "none",
+                                    cursor: "pointer",
+                                    width: "100%",
+                                    fontSize: "16px",
+                                    textAlign: "center",
+                                    textDecoration: "none"
                                 }}
+                                target="_blank"
+                                rel="noopener noreferrer"
                             >
                                 {data.platform === "telegram" ? t("Go Back to {{platform}}",{platform: "Telegram"}) : t("Go Back to {{platform}}",{platform: "Instagram"})}
-                            </button>
+                            </a>
                         </div>
 
 

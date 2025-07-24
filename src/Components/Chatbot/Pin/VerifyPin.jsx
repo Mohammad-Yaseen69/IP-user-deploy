@@ -139,7 +139,7 @@ const CreatePin = () => {
             console.log(data)
             const enc = encryptData(data)
 
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/${flow === "connect" ? "connect-account" :"verify-pin"}`, { data: enc })
+            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/${flow === "connect" ? "connect-account" : "verify-pin"}`, { data: enc })
 
             const dec = decryptData(response.data.data)
 
@@ -243,18 +243,27 @@ const CreatePin = () => {
                             ) : t("Verify")}
                         </button>
                     </div> :
-                    <button
-                        style={{ padding: "0.5rem 1rem", borderRadius: "9px", backgroundColor: "#5926f0fe", color: "white", border: "none", cursor: "pointer" }}
-                        onClick={() => {
-                            if (platformType === "telegram") {
-                                window.location.href = "https://t.me/Instapay_swiss_bot";
-                            } else {
-                                window.location.href = "https://ig.me/m/Instapay_swiss";
-                            }
+
+                    <a
+                        href={platformType === "telegram" ? "https://t.me/Instapay_swiss_bot" : "https://ig.me/m/Instapay_swiss"}
+                        style={{
+                            display: "inline-block",
+                            padding: "0.9rem 1rem",
+                            borderRadius: "9px",
+                            backgroundColor: "#5926f0fe",
+                            color: "white",
+                            border: "none",
+                            cursor: "pointer",
+                            width: "100%",
+                            fontSize: "16px",
+                            textAlign: "center",
+                            textDecoration: "none"
                         }}
+                        target="_blank"
+                        rel="noopener noreferrer"
                     >
-                        {platformType === "telegram" ? t("Go Back to Telegram") : t("Go Back to Instagram")}
-                    </button>
+                        {platformType === "telegram" ? t("Go Back to {{platform}}", { platform: "Telegram" }) : t("Go Back to {{platform}}", { platform: "Instagram" })}
+                    </a>
                 }
             </div>
         </div>
