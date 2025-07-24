@@ -9,6 +9,7 @@ import axios from "axios";
 import { useParams, useLocation } from "react-router-dom";
 import CryptoJS from "crypto-js";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import RedirectButton from "../../CommonElements/RedirectButton";
 
 // Styled components for custom styling
 const CustomDatePickerContainer = styled.div`
@@ -192,25 +193,7 @@ export default function SubscriptionRequestEndDate() {
                 ? "You can now close this webpage and go back to Telegram."
                 : "You can now close this webpage and go back to Instagram."}
             </h5>
-            <a
-              href={platform === "telegram" ? "https://t.me/Instapay_swiss_bot" : "https://ig.me/m/Instapay_swiss"}
-              style={{
-                display: "inline-block",
-                padding: "0.5rem 1rem",
-                borderRadius: "9px",
-                backgroundColor: "#5926f0fe",
-                color: "white",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "16px",
-                textAlign: "center",
-                textDecoration: "none"
-              }}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {platform === "telegram" ? "Go Back to Telegram" : "Go Back to Instagram"}
-            </a>
+            <RedirectButton platform={platform} />
           </CustomDatePickerContainer>
         ) : (
           <CustomDatePickerContainer>

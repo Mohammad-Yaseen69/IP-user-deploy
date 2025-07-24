@@ -13,6 +13,7 @@ import countries from "../PaymentsNewer/CountriesData.json";
 import { toast } from "react-toastify";
 import cameraGif from "./files/camera.gif"
 import { useTranslation } from "react-i18next";
+import RedirectButton from "../../CommonElements/RedirectButton";
 
 const QuickQrPay = () => {
     const [step, setStep] = useState(1)
@@ -386,26 +387,7 @@ const QuickQrPay = () => {
                                     {t("You can now close this window and go back to chatbot.")}
                                 </p>
 
-                                <a
-                                    href={platform === "telegram" ? "https://t.me/Instapay_swiss_bot" : "https://ig.me/m/Instapay_swiss"}
-                                    style={{
-                                        display: "inline-block",
-                                        padding: "0.9rem 1rem",
-                                        borderRadius: "9px",
-                                        backgroundColor: "#5926f0fe",
-                                        color: "white",
-                                        border: "none",
-                                        cursor: "pointer",
-                                        width: "100%",
-                                        fontSize: "16px",
-                                        textAlign: "center",
-                                        textDecoration: "none"
-                                    }}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    {platform === "telegram" ? t("Go Back to {{platform}}", { platform: "Telegram" }) : t("Go Back to {{platform}}", { platform: "Instagram" })}
-                                </a>
+                                <RedirectButton platform={platform} />
                             </div>
                         </div>
                     </div>
