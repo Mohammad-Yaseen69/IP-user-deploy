@@ -127,6 +127,7 @@ export default function SubscriptionRequest() {
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const defaul = queryParams.get("default")
+  const platform = queryParams.get("platform")
 
   React.useEffect(() => {
     if (defaul) {
@@ -139,6 +140,9 @@ export default function SubscriptionRequest() {
     }
   }, [defaul, timezones])
   const isDateValid = selectedDate.isAfter(dayjs(), "day") || selectedDate.isSame(dayjs(), "day");
+
+  // Example usage of platform for conditional UI (add where needed)
+  // <div>{platform === "telegram" ? "Telegram flow" : "Instagram flow"}</div>
 
   const handleTimezoneFilter = (options, { inputValue }) => {
     const normalizedInput = inputValue.replace(/^(\+)([1-9])$/, '$10$2') // Remove leading zeros
@@ -167,7 +171,21 @@ export default function SubscriptionRequest() {
               loop={true}
               autoplay={true}
             />
-            <h5 style={{ padding: "1rem", textAlign: "center" }}>You can now close this webpage and go back to Instagram.</h5>
+            <h5 style={{ padding: "1rem", textAlign: "center" }}>
+              You can now close this webpage and go back to {platform === "telegram" ? "Telegram" : "Instagram"}.
+            </h5>
+            <button
+              style={{ padding: "0.5rem 1rem", borderRadius: "9px", backgroundColor: "#5926f0fe", color: "white", border: "none", cursor: "pointer" }}
+              onClick={() => {
+                if (platform === "telegram") {
+                  window.location.href = 'https://t.me/Instapay_swiss_bot';
+                } else {
+                  window.location.href = 'https://ig.me/m/Instapay_swiss';
+                }
+              }}
+            >
+              Go Back to {platform === "telegram" ? "Telegram" : "Instagram"}
+            </button>
           </CustomDatePickerContainer>
         ) : (
           <CustomDatePickerContainer>

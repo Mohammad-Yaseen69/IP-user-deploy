@@ -65,9 +65,9 @@ const PaypalTransactions = () => {
 
 
         if (status && id) {
-            if(platform && platform === "telegram"){
+            if (platform && platform === "telegram") {
                 hitNotificationTelegram()
-            }else{
+            } else {
                 hitNotification()
             }
         }
@@ -86,7 +86,21 @@ const PaypalTransactions = () => {
                     loop={true}
                     autoplay={true}
                 />
-                <h5 style={{ padding: "1rem", textAlign: "center", fontSize: ".9rem", fontWeight: 600 }}>You can now close this webpage and go back to Instagram.</h5>
+                <h5 style={{ padding: "1rem", textAlign: "center", fontSize: ".9rem", fontWeight: 600 }}>
+                    You can now close this webpage and go back to {platform === "telegram" ? "Telegram" : "Instagram"}.
+                </h5>
+                <button
+                    style={{ padding: "0.5rem 1rem", borderRadius: "9px", backgroundColor: "#5926f0fe", color: "white", border: "none", cursor: "pointer" }}
+                    onClick={() => {
+                        if (platform === "telegram") {
+                            window.location.href = 'https://t.me/Instapay_swiss_bot';
+                        } else {
+                            window.location.href = 'https://ig.me/m/Instapay_swiss';
+                        }
+                    }}
+                >
+                    Go Back to {platform === "telegram" ? "Telegram" : "Instagram"}
+                </button>
             </CustomDatePickerContainer>
             :
             <div style={{ height: "100vh", width: "100vw" }}>

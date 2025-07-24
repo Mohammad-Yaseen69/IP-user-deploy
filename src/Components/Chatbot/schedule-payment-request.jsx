@@ -121,6 +121,7 @@ const RequestCalendar = () => {
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const defaul = queryParams.get("default")
+  const platform = queryParams.get("platform")
 
   React.useEffect(() => {
     if (defaul) {
@@ -135,6 +136,10 @@ const RequestCalendar = () => {
 
 
   const isDateValid = selectedDate.isAfter(dayjs(), "day") || selectedDate.isSame(dayjs(), "day");
+
+  // Example usage of platform for conditional UI (add where needed)
+  // e.g., show a message or button based on platform
+  // <div>{platform === "telegram" ? "Telegram flow" : "Instagram flow"}</div>
   const isTimeValid = selectedDate.isSame(dayjs(), "day")
     ? selectedTime.isAfter(dayjs().add(5, "minute"))
     : true;
@@ -168,7 +173,23 @@ const RequestCalendar = () => {
               loop={true}
               autoplay={true}
             />
-            <h5 style={{ padding: "1rem", textAlign: "center" }}>You can now close this webpage and go back to Instagram.</h5>
+            <h5 style={{ padding: "1rem", textAlign: "center" }}>
+              {platform === "telegram"
+                ? "You can now close this webpage and go back to Telegram."
+                : "You can now close this webpage and go back to Instagram."}
+            </h5>
+            <button
+              style={{ padding: "0.5rem 1rem", borderRadius: "9px", backgroundColor: "#5926f0fe", color: "white", border: "none", cursor: "pointer" }}
+              onClick={() => {
+                if (platform === "telegram") {
+                  window.location.href = "https://t.me/Instapay_swiss_bot";
+                } else {
+                  window.location.href = "https://ig.me/m/Instapay_swiss";
+                }
+              }}
+            >
+              {platform === "telegram" ? "Go Back to Telegram" : "Go Back to Instagram"}
+            </button>
           </CustomDatePickerContainer>
         ) : (
           <CustomDatePickerContainer>

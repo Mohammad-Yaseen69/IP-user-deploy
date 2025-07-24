@@ -6,7 +6,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import styled from "@emotion/styled";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import CryptoJS from "crypto-js";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
@@ -85,6 +85,9 @@ export default function SubscriptionRequestEndDate() {
   const [success, setSuccess] = useState(false);
   const [isValidDate, setIsValidDate] = useState(true);
   const { token, date } = useParams();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const platform = queryParams.get("platform");
 
   var bytes = CryptoJS.AES.decrypt(date, "subscription_date_encryption");
   var pass = bytes.toString(CryptoJS.enc.Utf8);
@@ -184,7 +187,23 @@ export default function SubscriptionRequestEndDate() {
               loop={true}
               autoplay={true}
             />
-            <h5 style={{ padding: "1rem", textAlign: "center" }}>You can now close this webpage and go back to Instagram.</h5>
+            <h5 style={{ padding: "1rem", textAlign: "center" }}>
+              {platform === "telegram"
+                ? "You can now close this webpage and go back to Telegram."
+                : "You can now close this webpage and go back to Instagram."}
+            </h5>
+            <button
+              style={{ padding: "0.5rem 1rem", borderRadius: "9px", backgroundColor: "#5926f0fe", color: "white", border: "none", cursor: "pointer" }}
+              onClick={() => {
+                if (platform === "telegram") {
+                  window.location.href = "https://t.me/Instapay_swiss_bot";
+                } else {
+                  window.location.href = "https://ig.me/m/Instapay_swiss";
+                }
+              }}
+            >
+              {platform === "telegram" ? "Go Back to Telegram" : "Go Back to Instagram"}
+            </button>
           </CustomDatePickerContainer>
         ) : (
           <CustomDatePickerContainer>

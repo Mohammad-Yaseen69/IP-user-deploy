@@ -61,7 +61,20 @@ const GetLocation = () => {
                     loop={true}
                     autoplay={true}
                 />
-                <h5 style={{ padding: "1rem", textAlign: "center" }}>You can now close this webpage and go back to Instagram.</h5>
+                <h5 style={{ padding: "1rem", textAlign: "center" }}>You can now close this webpage and go back to {platform === "telegram" ? "Telegram" : "Instagram"}.</h5>
+
+                <button
+                    style={{ padding: "0.5rem 1rem", borderRadius: "9px", backgroundColor: "#5926f0fe", color: "white", border: "none", cursor: "pointer" }}
+                    onClick={() => {
+                        if (platform === "telegram") {
+                            window.location.href = 'https://t.me/Instapay_swiss_bot'
+                        } else {
+                            window.location.href = 'https://ig.me/m/Instapay_swiss'
+                        }
+                    }}
+                >
+                    Go Back to {platform === "telegram" ? "Telegram" : "Instagram"}
+                </button>
             </CustomDatePickerContainer>
             :
             <RequestLocation
@@ -208,7 +221,7 @@ const RequestLocation = ({ coords, setCoords, isOpen, toggle, cancelPayment, dis
                         ?
                         <>
                             <iframe
-                               title='google map'
+                                title='google map'
                                 src={`//maps.google.com/maps?q=${coords?.latitude},${coords?.longitude}&z=15&output=embed`}
                                 style={{
                                     width: "100%",
