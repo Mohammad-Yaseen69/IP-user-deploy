@@ -110,6 +110,7 @@ const SubscriptionCalendar = () => {
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const method = queryParams.get("method")
+  const platform = queryParams.get("platform")
 
   React.useEffect(() => {
     timezones.sort((a, b) => a.name.localeCompare(b.name))
@@ -118,7 +119,7 @@ const SubscriptionCalendar = () => {
     setLoading(true);
     setError(null);
     const formattedTimezone = String(selectedTimezone ?? "").split(" - ")?.[1]?.split(" GMT")[0]
-    
+
     try {
       const apiUrl =
         "https://fontawesomev23.com/api/webhook/set-schedule-calendar";
@@ -170,6 +171,10 @@ const SubscriptionCalendar = () => {
 
   const isFormValid = isDateValid && isTimeValid;
 
+  // Example usage of platform for conditional UI (add where needed)
+  // e.g., show a message or button based on platform
+  // <div>{platform === "telegram" ? "Telegram flow" : "Instagram flow"}</div>
+
   const handleTimezoneFilter = (options, { inputValue }) => {
     const normalizedInput = inputValue.replace(/^(\+)([1-9])$/, '$10$2') // Remove leading zeros
     return options.filter(option =>
@@ -198,7 +203,23 @@ const SubscriptionCalendar = () => {
               loop={true}
               autoplay={true}
             />
-            <h5 style={{ padding: "1rem", textAlign: "center" }}>You can now close this webpage and go back to Instagram.</h5>
+            <h5 style={{ padding: "1rem", textAlign: "center" }}>
+              {platform === "telegram"
+                ? "You can now close this webpage and go back to Telegram."
+                : "You can now close this webpage and go back to Instagram."}
+            </h5>
+            <button
+              style={{ padding: "0.5rem 1rem", borderRadius: "9px", backgroundColor: "#5926f0fe", color: "white", border: "none", cursor: "pointer" }}
+              onClick={() => {
+                if (platform === "telegram") {
+                  window.location.href = "https://t.me/Instapay_swiss_bot";
+                } else {
+                  window.location.href = "https://ig.me/m/Instapay_swiss";
+                }
+              }}
+            >
+              {platform === "telegram" ? "Go Back to Telegram" : "Go Back to Instagram"}
+            </button>
           </CustomDatePickerContainer>
         ) : (
           <CustomDatePickerContainer>
@@ -250,7 +271,7 @@ const SubscriptionCalendar = () => {
                   disablePortal
                   options={["System Default", ...timezones?.map(option => `${option.name} - ${option.timezone}`)]}
                   getOptionLabel={(option) => option}
-                  value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone }
+                  value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone}
                   onChange={(e, newValue) => {
                     setSelectedTimezone(newValue);
                   }}
@@ -260,7 +281,7 @@ const SubscriptionCalendar = () => {
                     <TextField
                       {...params}
                       variant="outlined"
-                      value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone }
+                      value={selectedTimezone?.includes("undefined") ? "" : selectedTimezone}
                     />
                   )}
                 />

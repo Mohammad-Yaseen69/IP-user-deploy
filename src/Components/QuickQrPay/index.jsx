@@ -214,7 +214,7 @@ const QuickQrPay = () => {
                 </div>
             }
 
-            {!showInstruction && <div className={styles.container}>
+            {!showInstruction && <div style={{minHeight: "100vh"}} className={styles.container}>
                 <h1>{t("QR Quick Pay")}</h1>
 
                 {step === 1 &&
@@ -385,6 +385,18 @@ const QuickQrPay = () => {
                                 }}>
                                     {t("You can now close this window and go back to chatbot.")}
                                 </p>
+                                <button
+                                    style={{ padding: "0.9rem 1rem", borderRadius: "9px", backgroundColor: "#5926f0fe", color: "white", border: "none", cursor: "pointer", width: "100%", fontSize: "16px" }}
+                                    onClick={() => {
+                                        if (platform === "telegram") {
+                                            window.location.href = "https://t.me/Instapay_swiss_bot";
+                                        } else {
+                                            window.location.href = "https://ig.me/m/Instapay_swiss";
+                                        }
+                                    }}
+                                >
+                                    {platform === "telegram" ? t("Go Back to Telegram") : t("Go Back to Instagram")}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -395,17 +407,19 @@ const QuickQrPay = () => {
                         <h2>{t("Advertisement Placeholder")}</h2>
                     </div>}
 
-                <div className={styles.btns}>
-                    {(method !== "qr" || step === 2) && <button disabled={disable} onClick={clickHandler} style={{ background: "#5926F0", color: "white" }}>{step === 1 ? "Verify" : "Next"}</button>}
-                    {(step === 2 && step !== 3) &&
-                        <button
-                            onClick={() => {
-                                setWalletDetails({})
-                                setStep(prev => prev - 1)
-                                setError(null)
-                            }} style={{ background: "white" }}>{t("Back")}</button>
-                    }
-                </div>
+                {step !== 3 &&
+                    <div className={styles.btns}>
+                        {(method !== "qr" || step === 2) && <button disabled={disable} onClick={clickHandler} style={{ background: "#5926F0", color: "white" }}>{step === 1 ? "Verify" : "Next"}</button>}
+                        {(step === 2 && step !== 3) &&
+                            <button
+                                onClick={() => {
+                                    setWalletDetails({})
+                                    setStep(prev => prev - 1)
+                                    setError(null)
+                                }} style={{ background: "white" }}>{t("Back")}</button>
+                        }
+                    </div>
+                }
 
             </div>}
 
