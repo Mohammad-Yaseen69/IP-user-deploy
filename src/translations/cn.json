@@ -2711,5 +2711,20 @@
   "Your password has been updated successfully!": "您的密码已成功更新！",
   "Uh-Oh! The password/phone number you entered is wrong.": "哎呀！您输入的密码/电话号码错误。",
   "Account is locked. Try again in {{time}} minutes.": "帐户已被锁定。请在 {{time}} 分钟后重试。",
-  "Phone number or Email already exist!": "电话号码或电子邮件已存在！"
+  "Phone number or Email already exist!": "电话号码或电子邮件已存在！",
+  "You may close this window and proceed further on {{platform}}": "您可以关闭此窗口并继续在 {{platform}} 上进行操作",
+  "Go Back to {{platform}}": "返回 {{platform}}",
+  "Enter Your PIN": "输入您的 PIN 码",
+  "To continue, please enter your 4-digit security PIN.": "要继续，请输入您的 4 位数安全 PIN。",
+  "You can now close this window and go back to chatbot": "您现在可以关闭此窗口并返回聊天机器人",
+  "Your PIN has been successfully created! You can now close this window and go back to {{platform}}.": "您的 PIN 码已成功创建！您现在可以关闭此窗口并返回 {{platform}}。",
+  "Instructions to Open the Link in an External Browser.": "在外部浏览器中打开链接的说明。",
+  "Locate and click the three dots icon in the top-right corner of the interface.": "找到并单击界面右上角的三个点图标。",
+  "From the dropdown menu, select \"Open with\".": "从下拉菜单中选择“打开方式”。",
+  "Choose your preferred external browser from the available options.": "从可用选项中选择您喜欢的外部浏览器。",
+  "The link will open in the selected browser.": "该链接将在选定的浏览器中打开。",
+  "Revisit the website, and when prompted, allow location access.": "重新访问该网站，并在出现提示时允许位置访问。",
+  "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "如果该网站未出现在浏览器设置中，请清除浏览器的缓存或历史记录，然后重试。",
+  "Allow InstaPay to access your Location": "允许 InstaPay 访问您的位置",
+  "You can now close this webpage and go back to {{platform}}.": "您现在可以关闭此网页并返回 {{platform}}。"
 }

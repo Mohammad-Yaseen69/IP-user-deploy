@@ -2621,5 +2621,20 @@
   "Your password has been updated successfully!": "Ваш пароль успешно обновлен!",
   "Uh-Oh! The password/phone number you entered is wrong.": "Ой-ой! Вы ввели неверный пароль/номер телефона.",
   "Account is locked. Try again in {{time}} minutes.": "Аккаунт заблокирован. Повторите попытку через {{time}} минут.",
-  "Phone number or Email already exist!": "Номер телефона или адрес электронной почты уже существуют!"
+  "Phone number or Email already exist!": "Номер телефона или адрес электронной почты уже существуют!",
+  "You may close this window and proceed further on {{platform}}": "Вы можете закрыть это окно и продолжить работу на {{platform}}",
+  "Go Back to {{platform}}": "Вернуться на {{платформу}}",
+  "Enter Your PIN": "Введите свой PIN-код",
+  "To continue, please enter your 4-digit security PIN.": "Чтобы продолжить, введите 4-значный PIN-код безопасности.",
+  "You can now close this window and go back to chatbot": "Теперь вы можете закрыть это окно и вернуться к чат-боту.",
+  "Your PIN has been successfully created! You can now close this window and go back to {{platform}}.": "Ваш PIN-код успешно создан! Теперь вы можете закрыть это окно и вернуться на {{platform}}.",
+  "Instructions to Open the Link in an External Browser.": "Инструкции по открытию ссылки во внешнем браузере.",
+  "Locate and click the three dots icon in the top-right corner of the interface.": "Найдите и нажмите на значок с тремя точками в правом верхнем углу интерфейса.",
+  "From the dropdown menu, select \"Open with\".": "В раскрывающемся меню выберите «Открыть с помощью».",
+  "Choose your preferred external browser from the available options.": "Выберите предпочитаемый вами внешний браузер из доступных вариантов.",
+  "The link will open in the selected browser.": "Ссылка откроется в выбранном браузере.",
+  "Revisit the website, and when prompted, allow location access.": "Повторно посетите веб-сайт и при появлении соответствующего запроса разрешите доступ к данным о местоположении.",
+  "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Если веб-сайт не отображается в настройках браузера, очистите кэш или историю браузера и повторите попытку.",
+  "Allow InstaPay to access your Location": "Разрешите InstaPay доступ к вашему местоположению",
+  "You can now close this webpage and go back to {{platform}}.": "Теперь вы можете закрыть эту веб-страницу и вернуться на {{platform}}."
 }

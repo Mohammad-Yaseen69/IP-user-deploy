@@ -2725,5 +2725,20 @@
   "Your password has been updated successfully!": "Your password has been updated successfully!",
   "Uh-Oh! The password/phone number you entered is wrong.": "Uh-Oh! The password/phone number you entered is wrong.",
   "Account is locked. Try again in {{time}} minutes.": "Account is locked. Try again in {{time}} minutes.",
-  "Phone number or Email already exist!": "Phone number or Email already exist!"
+  "Phone number or Email already exist!": "Phone number or Email already exist!",
+  "You may close this window and proceed further on {{platform}}": "You may close this window and proceed further on {{platform}}",
+  "Go Back to {{platform}}": "Go Back to {{platform}}",
+  "Enter Your PIN": "Enter Your PIN",
+  "To continue, please enter your 4-digit security PIN.": "To continue, please enter your 4-digit security PIN.",
+  "You can now close this window and go back to chatbot": "You can now close this window and go back to chatbot",
+  "Your PIN has been successfully created! You can now close this window and go back to {{platform}}.": "Your PIN has been successfully created! You can now close this window and go back to {{platform}}.",
+  "Instructions to Open the Link in an External Browser.": "Instructions to Open the Link in an External Browser.",
+  "Locate and click the three dots icon in the top-right corner of the interface.": "Locate and click the three dots icon in the top-right corner of the interface.",
+  "From the dropdown menu, select \"Open with\".": "From the dropdown menu, select \"Open with\".",
+  "Choose your preferred external browser from the available options.": "Choose your preferred external browser from the available options.",
+  "The link will open in the selected browser.": "The link will open in the selected browser.",
+  "Revisit the website, and when prompted, allow location access.": "Revisit the website, and when prompted, allow location access.",
+  "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.",
+  "Allow InstaPay to access your Location": "Allow InstaPay to access your Location",
+  "You can now close this webpage and go back to {{platform}}.": "You can now close this webpage and go back to {{platform}}."
 }

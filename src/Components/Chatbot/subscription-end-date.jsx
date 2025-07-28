@@ -9,6 +9,8 @@ import axios from "axios";
 import { useLocation, useParams } from "react-router-dom";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import RedirectButton from "../../CommonElements/RedirectButton";
+import { t } from "i18next";
+import i18next from "i18next";
 
 // Styled components for custom styling
 const CustomDatePickerContainer = styled.div`
@@ -123,6 +125,12 @@ export default function SubscriptionCalendarEndDate() {
   const queryParams = new URLSearchParams(location.search)
   const method = queryParams.get("method")
   const platform = queryParams.get("platform")
+  const lang = queryParams.get("lang") || "en"
+
+  useEffect(() => {
+    i18next.changeLanguage(lang)
+  }, [lang])
+
   const handleSubmit = async () => {
     if (!isValidDate) {
       return;
@@ -173,9 +181,7 @@ export default function SubscriptionCalendarEndDate() {
               autoplay={true}
             />
             <h5 style={{ padding: "1rem", textAlign: "center" }}>
-              {platform === "telegram"
-                ? "You can now close this webpage and go back to Telegram."
-                : "You can now close this webpage and go back to Instagram."}
+              {t("You can now close this webpage and go back to {{platform}}.", { platform: platform === "telegram" ? "Telegram" : "Instagram" })}
             </h5>
             <RedirectButton platform={platform} />
           </CustomDatePickerContainer>
@@ -229,4 +235,5 @@ export default function SubscriptionCalendarEndDate() {
 }
 
 // Example usage of platform for conditional UI (add where needed)
+// <div>{platform === "telegram" ? "Telegram flow" : "Instagram flow"}</div>
 // <div>{platform === "telegram" ? "Telegram flow" : "Instagram flow"}</div>

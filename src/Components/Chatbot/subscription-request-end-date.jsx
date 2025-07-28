@@ -10,6 +10,7 @@ import { useParams, useLocation } from "react-router-dom";
 import CryptoJS from "crypto-js";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import RedirectButton from "../../CommonElements/RedirectButton";
+import i18next from "i18next";
 
 // Styled components for custom styling
 const CustomDatePickerContainer = styled.div`
@@ -89,6 +90,11 @@ export default function SubscriptionRequestEndDate() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const platform = queryParams.get("platform");
+  const lang = queryParams.get("lang") || "en";
+
+  useEffect(() => {
+    i18next.changeLanguage(lang);
+  }, [lang]);
 
   var bytes = CryptoJS.AES.decrypt(date, "subscription_date_encryption");
   var pass = bytes.toString(CryptoJS.enc.Utf8);

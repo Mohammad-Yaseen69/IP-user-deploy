@@ -9,6 +9,7 @@ import { toast } from "react-toastify"
 import QrGenerate from "../../Settings/QrGenerate"
 import { useTranslation } from "react-i18next"
 import RedirectButton from "../../../CommonElements/RedirectButton"
+import i18next from "i18next"
 
 const CreatePin = () => {
     const [pinFields, setPinFields] = useState({
@@ -26,10 +27,15 @@ const CreatePin = () => {
     const location = useLocation()
     const query = new URLSearchParams(location.search)
     const walletId = query.get("w")
+    const lang = query.get("lang") || "en"
     const { t } = useTranslation()
 
     const pinRefs = useRef(Array(4).fill(null));
     const confirmRefs = useRef(Array(4).fill(null));
+
+    useEffect(() => {
+        i18next.changeLanguage(lang)
+    }, [lang])
 
     useEffect(() => {
         setDisabled(loading || confirmPinFields.data.join("").length < 4 || pinFields.data.join("").length < 4)
@@ -331,8 +337,8 @@ const CreatePin = () => {
                             lineHeight: "26px"
                         }}>
                             {platformType === "telegram"
-                                ? t("Your PIN has been successfully created! You can now close this window and go back to Telegram.")
-                                : t("Your PIN has been successfully created! You can now close this window and go back to Instagram.")}
+                                ? t("Your PIN has been successfully created! You can now close this window and go back to {{platform}}.", { platform: "Telegram" })
+                                : t("Your PIN has been successfully created! You can now close this window and go back to {{platform}}.", { platform: "Instagram" })}
                         </p>
 
                         <RedirectButton platform={platformType} />

@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import cameraGif from "./files/camera.gif"
 import { useTranslation } from "react-i18next";
 import RedirectButton from "../../CommonElements/RedirectButton";
+import i18next from "i18next";
 
 const QuickQrPay = () => {
     const [step, setStep] = useState(1)
@@ -25,6 +26,7 @@ const QuickQrPay = () => {
     const query = new URLSearchParams(location.search)
     const bot_id = query.get("bot_id")
     const platform = query.get("bot")
+    const lang = query.get("lang") || "en"
     const [disable, setDisabled] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const [showInstruction, setShowInstruction] = useState(true)
@@ -48,6 +50,10 @@ const QuickQrPay = () => {
 
     const { t } = useTranslation()
 
+
+    useEffect(() => {
+        i18next.changeLanguage(lang)
+    }, [lang])
 
     useEffect(() => {
         let timeout;

@@ -11,6 +11,8 @@ import { useTimezones } from "../../Context/TimezoneContext";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { Autocomplete, TextField } from "@mui/material";
 import RedirectButton from "../../CommonElements/RedirectButton";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 // Styled components for custom styling
 const CustomDatePickerContainer = styled.div`
@@ -81,6 +83,7 @@ const SuccessImage = styled.img`
 `;
 
 export default function SubscriptionRequest() {
+  const { t } = useTranslation();
   const { timezones } = useTimezones();
   const tomorrow = dayjs().add(1, "day"); // Get tomorrow's date
 
@@ -129,6 +132,11 @@ export default function SubscriptionRequest() {
   const queryParams = new URLSearchParams(location.search)
   const defaul = queryParams.get("default")
   const platform = queryParams.get("platform")
+  const lang = queryParams.get("lang") || "en"
+
+  React.useEffect(() => {
+    i18next.changeLanguage(lang)
+  }, [lang])
 
   React.useEffect(() => {
     if (defaul) {
@@ -173,7 +181,7 @@ export default function SubscriptionRequest() {
               autoplay={true}
             />
             <h5 style={{ padding: "1rem", textAlign: "center" }}>
-              You can now close this webpage and go back to {platform === "telegram" ? "Telegram" : "Instagram"}.
+              {t("You can now close this webpage and go back to {{platform}}.", { platform: platform === "telegram" ? "Telegram" : "Instagram" })}
             </h5>
             <RedirectButton platform={platform} />
           </CustomDatePickerContainer>

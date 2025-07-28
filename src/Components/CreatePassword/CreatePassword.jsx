@@ -1,17 +1,17 @@
-import {  useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import styles from "./styles/index.module.css"
 import { AlertTriangle, Check, ChevronRight, Eye, EyeOff } from "react-feather"
 import { jwtDecode } from "jwt-decode"
 import axios from "axios"
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
-import { useParams } from "react-router"
+import { useLocation, useParams } from "react-router"
 import { useTranslation } from "react-i18next"
 import Cross from "./Cross.svg"
 import { toast } from "react-toastify"
 import Logo from "../../assets/images/logo/logo2.png"
 import Gif from "../../assets/gif.gif"
-import LanguagePicker from '../LanguagePicker'
+import i18next from "i18next"
 
 const CreatePassword = () => {
     const { t } = useTranslation()
@@ -29,6 +29,13 @@ const CreatePassword = () => {
             show: false
         }
     })
+    const location = useLocation()
+    const queryParams = new URLSearchParams(location.search)
+    const lang = queryParams.get("lang") || "en"
+
+    useEffect(() => {
+        i18next.changeLanguage(lang)
+    }, [lang])
 
 
     const changePassHandler = (e) => {
@@ -71,11 +78,11 @@ const CreatePassword = () => {
             axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/set-password`, {
                 data: encryptedData
             }).then((res) => {
-                    const dec = decryptData(res.data.data)
-                    toast.success("Password set successfully")
-                    setSuccess(true)
-                    console.log(dec)
-                })
+                const dec = decryptData(res.data.data)
+                toast.success("Password set successfully")
+                setSuccess(true)
+                console.log(dec)
+            })
                 .catch((err) => {
                     const dec = decryptData(err.response.data.data)
                     toast.error(dec?.message || "Something went wrong")
@@ -98,8 +105,7 @@ const CreatePassword = () => {
             {!success ?
                 (<div className={styles.wrapper}>
                     <>
-                        <LanguagePicker />
-                        <span className={styles.topHeading} style={{marginTop: "15px"}}>{t("Sign Up")} </span>
+                        <span className={styles.topHeading} style={{ marginTop: "15px" }}>{t("Sign Up")} </span>
                         <h4 style={{
                             fontSize: "18px",
                             fontStyle: "normal",
@@ -234,7 +240,7 @@ const CreatePassword = () => {
                         <img src={Gif} style={{ width: '220px', height: "220px", borderRadius: "8px" }} alt="" />
                         <div style={{ position: "relative" }}>
                             <h3 style={{ fontSize: "18px", fontWeight: 700 }}>{t("Your password has been set!")}</h3>
-                            <p style={{ color: "#575757", fontSize: "14px", fontWeight: 600, width: "300px", marginTop: "8px" }}>{t("You may close this window and proceed further on {{platform}}",{platform: data.platform === "telegram" ? "Telegram" : "Instagram"})}</p>
+                            <p style={{ color: "#575757", fontSize: "14px", fontWeight: 600, width: "300px", marginTop: "8px" }}>{t("You may close this window and proceed further on {{platform}}", { platform: data.platform === "telegram" ? "Telegram" : "Instagram" })}</p>
 
                             <a
                                 href={data.platform === "telegram" ? "https://t.me/Instapay_swiss_bot" : "https://ig.me/m/Instapay_swiss"}
@@ -254,7 +260,7 @@ const CreatePassword = () => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                {data.platform === "telegram" ? t("Go Back to {{platform}}",{platform: "Telegram"}) : t("Go Back to {{platform}}",{platform: "Instagram"})}
+                                {data.platform === "telegram" ? t("Go Back to {{platform}}", { platform: "Telegram" }) : t("Go Back to {{platform}}", { platform: "Instagram" })}
                             </a>
                         </div>
 

@@ -2717,5 +2717,20 @@
   "Your password has been updated successfully!": "Votre mot de passe a été mis à jour avec succès !",
   "Uh-Oh! The password/phone number you entered is wrong.": "Oh-Oh ! Le mot de passe/numéro de téléphone que vous avez saisi est incorrect.",
   "Account is locked. Try again in {{time}} minutes.": "Votre compte est verrouillé. Veuillez réessayer dans {{time}} minutes.",
-  "Phone number or Email already exist!": "Le numéro de téléphone ou l'e-mail existe déjà !"
+  "Phone number or Email already exist!": "Le numéro de téléphone ou l'e-mail existe déjà !",
+  "You may close this window and proceed further on {{platform}}": "Vous pouvez fermer cette fenêtre et continuer sur {{platform}}",
+  "Go Back to {{platform}}": "Retourner à {{platform}}",
+  "Enter Your PIN": "Entrez votre code PIN",
+  "To continue, please enter your 4-digit security PIN.": "Pour continuer, veuillez saisir votre code PIN de sécurité à 4 chiffres.",
+  "You can now close this window and go back to chatbot": "Vous pouvez maintenant fermer cette fenêtre et revenir au chatbot",
+  "Your PIN has been successfully created! You can now close this window and go back to {{platform}}.": "Votre code PIN a été créé avec succès ! Vous pouvez maintenant fermer cette fenêtre et revenir à {{platform}}.",
+  "Instructions to Open the Link in an External Browser.": "Instructions pour ouvrir le lien dans un navigateur externe.",
+  "Locate and click the three dots icon in the top-right corner of the interface.": "Localisez et cliquez sur l’icône à trois points dans le coin supérieur droit de l’interface.",
+  "From the dropdown menu, select \"Open with\".": "Dans le menu déroulant, sélectionnez « Ouvrir avec ».",
+  "Choose your preferred external browser from the available options.": "Choisissez votre navigateur externe préféré parmi les options disponibles.",
+  "The link will open in the selected browser.": "Le lien s'ouvrira dans le navigateur sélectionné.",
+  "Revisit the website, and when prompted, allow location access.": "Revenez sur le site Web et, lorsque vous y êtes invité, autorisez l’accès à la localisation.",
+  "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Si le site Web n’apparaît pas dans les paramètres du navigateur, effacez le cache ou l’historique de votre navigateur et réessayez.",
+  "Allow InstaPay to access your Location": "Autoriser InstaPay à accéder à votre localisation",
+  "You can now close this webpage and go back to {{platform}}.": "Vous pouvez maintenant fermer cette page Web et revenir à {{platform}}."
 }

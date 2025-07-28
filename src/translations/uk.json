@@ -2717,5 +2717,20 @@
   "Your password has been updated successfully!": "Ваш пароль успішно оновлено!",
   "Uh-Oh! The password/phone number you entered is wrong.": "О-о! Ви ввели неправильний пароль/номер телефону.",
   "Account is locked. Try again in {{time}} minutes.": "Обліковий запис заблоковано. Повторіть спробу через {{time}} хв.",
-  "Phone number or Email already exist!": "Номер телефону або Email вже є!"
+  "Phone number or Email already exist!": "Номер телефону або Email вже є!",
+  "You may close this window and proceed further on {{platform}}": "Ви можете закрити це вікно та продовжити на {{платформі}}",
+  "Go Back to {{platform}}": "Повернутися до {{платформи}}",
+  "Enter Your PIN": "Введіть свій PIN-код",
+  "To continue, please enter your 4-digit security PIN.": "Щоб продовжити, введіть свій 4-значний PIN-код безпеки.",
+  "You can now close this window and go back to chatbot": "Тепер ви можете закрити це вікно та повернутися до чат-бота",
+  "Your PIN has been successfully created! You can now close this window and go back to {{platform}}.": "Ваш PIN-код успішно створено! Тепер ви можете закрити це вікно та повернутися до {{платформи}}.",
+  "Instructions to Open the Link in an External Browser.": "Інструкції щодо відкриття посилання у зовнішньому браузері.",
+  "Locate and click the three dots icon in the top-right corner of the interface.": "Знайдіть і натисніть значок із трьома крапками у верхньому правому куті інтерфейсу.",
+  "From the dropdown menu, select \"Open with\".": "У спадному меню виберіть «Відкрити за допомогою».",
+  "Choose your preferred external browser from the available options.": "Виберіть потрібний зовнішній браузер із доступних варіантів.",
+  "The link will open in the selected browser.": "Посилання відкриється у вибраному браузері.",
+  "Revisit the website, and when prompted, allow location access.": "Знову перейдіть на веб-сайт і, коли буде запропоновано, надайте доступ до місцезнаходження.",
+  "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Якщо веб-сайт не відображається в налаштуваннях веб-переглядача, очистіть кеш або історію веб-переглядача та повторіть спробу.",
+  "Allow InstaPay to access your Location": "Дозвольте InstaPay отримати доступ до вашого місцезнаходження",
+  "You can now close this webpage and go back to {{platform}}.": "Тепер ви можете закрити цю веб-сторінку та повернутися до {{платформи}}."
 }

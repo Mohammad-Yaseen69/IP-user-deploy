@@ -8,6 +8,8 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import { CustomDatePickerContainer, SuccessImage } from './schedule-calendar'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 import RedirectButton from '../../CommonElements/RedirectButton'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const PaypalTransactions = () => {
     const { status, id } = useParams()
@@ -16,6 +18,12 @@ const PaypalTransactions = () => {
     const queryParams = new URLSearchParams(location.search)
     const flow = queryParams.get("flow")
     const platform = queryParams.get("platform")
+    const { t } = useTranslation()
+    const lang = queryParams.get("lang") || "en"
+
+    useEffect(() => {
+        i18next.changeLanguage(lang)
+    }, [lang])
 
 
     useEffect(() => {
@@ -88,7 +96,7 @@ const PaypalTransactions = () => {
                     autoplay={true}
                 />
                 <h5 style={{ padding: "1rem", textAlign: "center", fontSize: ".9rem", fontWeight: 600 }}>
-                    You can now close this webpage and go back to {platform === "telegram" ? "Telegram" : "Instagram"}.
+                    {t("You can now close this webpage and go back to {{platform}}.", { platform: platform === "telegram" ? "Telegram" : "Instagram" })}
                 </h5>
                 <RedirectButton platform={platform} />
             </CustomDatePickerContainer>

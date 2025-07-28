@@ -2699,5 +2699,20 @@
   "Your password has been updated successfully!": "Uw wachtwoord is succesvol bijgewerkt!",
   "Uh-Oh! The password/phone number you entered is wrong.": "Oei! Het wachtwoord/telefoonnummer dat u hebt ingevoerd, is onjuist.",
   "Account is locked. Try again in {{time}} minutes.": "Account is vergrendeld. Probeer het over {{time}} minuten opnieuw.",
-  "Phone number or Email already exist!": "Telefoonnummer of e-mailadres bestaat al!"
+  "Phone number or Email already exist!": "Telefoonnummer of e-mailadres bestaat al!",
+  "You may close this window and proceed further on {{platform}}": "U kunt dit venster sluiten en verdergaan op {{platform}}",
+  "Go Back to {{platform}}": "Ga terug naar {{platform}}",
+  "Enter Your PIN": "Voer uw pincode in",
+  "To continue, please enter your 4-digit security PIN.": "Om door te gaan, voert u uw 4-cijferige beveiligingspincode in.",
+  "You can now close this window and go back to chatbot": "U kunt dit venster nu sluiten en teruggaan naar de chatbot",
+  "Your PIN has been successfully created! You can now close this window and go back to {{platform}}.": "Je pincode is succesvol aangemaakt! Je kunt dit venster nu sluiten en teruggaan naar {{platform}}.",
+  "Instructions to Open the Link in an External Browser.": "Instructies voor het openen van de link in een externe browser.",
+  "Locate and click the three dots icon in the top-right corner of the interface.": "Zoek het pictogram met de drie puntjes in de rechterbovenhoek van de interface en klik erop.",
+  "From the dropdown menu, select \"Open with\".": "Selecteer 'Openen met' in het keuzemenu.",
+  "Choose your preferred external browser from the available options.": "Kies uw favoriete externe browser uit de beschikbare opties.",
+  "The link will open in the selected browser.": "De link wordt geopend in de geselecteerde browser.",
+  "Revisit the website, and when prompted, allow location access.": "Bezoek de website opnieuw en geef toestemming voor locatietoegang als daarom wordt gevraagd.",
+  "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Als de website niet in de browserinstellingen verschijnt, wist u de cache of geschiedenis van uw browser en probeert u het opnieuw.",
+  "Allow InstaPay to access your Location": "Geef InstaPay toegang tot uw locatie",
+  "You can now close this webpage and go back to {{platform}}.": "U kunt deze webpagina nu sluiten en teruggaan naar {{platform}}."
 }

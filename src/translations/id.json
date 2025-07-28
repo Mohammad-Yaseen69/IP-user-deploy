@@ -2710,5 +2710,20 @@
   "Your password has been updated successfully!": "Kata sandi Anda telah berhasil diperbarui!",
   "Uh-Oh! The password/phone number you entered is wrong.": "Aduh! Kata sandi/nomor telepon yang Anda masukkan salah.",
   "Account is locked. Try again in {{time}} minutes.": "Akun terkunci. Coba lagi dalam {{time}} menit.",
-  "Phone number or Email already exist!": "Nomor telepon atau Email sudah ada!"
+  "Phone number or Email already exist!": "Nomor telepon atau Email sudah ada!",
+  "You may close this window and proceed further on {{platform}}": "Anda dapat menutup jendela ini dan melanjutkan lebih lanjut di {{platform}}",
+  "Go Back to {{platform}}": "Kembali ke {{platform}}",
+  "Enter Your PIN": "Masukkan PIN Anda",
+  "To continue, please enter your 4-digit security PIN.": "Untuk melanjutkan, masukkan PIN keamanan 4 digit Anda.",
+  "You can now close this window and go back to chatbot": "Anda sekarang dapat menutup jendela ini dan kembali ke chatbot",
+  "Your PIN has been successfully created! You can now close this window and go back to {{platform}}.": "PIN Anda telah berhasil dibuat! Anda sekarang dapat menutup jendela ini dan kembali ke {{platform}}.",
+  "Instructions to Open the Link in an External Browser.": "Petunjuk untuk Membuka Tautan di Peramban Eksternal.",
+  "Locate and click the three dots icon in the top-right corner of the interface.": "Temukan dan klik ikon tiga titik di sudut kanan atas antarmuka.",
+  "From the dropdown menu, select \"Open with\".": "Dari menu tarik-turun, pilih \"Buka dengan\".",
+  "Choose your preferred external browser from the available options.": "Pilih browser eksternal pilihan Anda dari pilihan yang tersedia.",
+  "The link will open in the selected browser.": "Tautan akan terbuka di peramban yang dipilih.",
+  "Revisit the website, and when prompted, allow location access.": "Kunjungi kembali situs web tersebut, dan ketika diminta, izinkan akses lokasi.",
+  "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Jika situs web tidak muncul di pengaturan browser, bersihkan cache atau riwayat browser Anda dan coba lagi.",
+  "Allow InstaPay to access your Location": "Izinkan InstaPay mengakses Lokasi Anda",
+  "You can now close this webpage and go back to {{platform}}.": "Anda sekarang dapat menutup halaman web ini dan kembali ke {{platform}}."
 }

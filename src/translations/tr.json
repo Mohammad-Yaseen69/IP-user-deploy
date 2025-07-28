@@ -2712,5 +2712,20 @@
   "Your password has been updated successfully!": "Şifreniz başarıyla güncellendi!",
   "Uh-Oh! The password/phone number you entered is wrong.": "Eyvah! Girdiğiniz şifre/telefon numarası yanlış.",
   "Account is locked. Try again in {{time}} minutes.": "Hesap kilitlendi. {{time}} dakika içinde tekrar deneyin.",
-  "Phone number or Email already exist!": "Telefon numarası veya E-posta zaten mevcut!"
+  "Phone number or Email already exist!": "Telefon numarası veya E-posta zaten mevcut!",
+  "You may close this window and proceed further on {{platform}}": "Bu pencereyi kapatıp {{platform}} üzerinde devam edebilirsiniz",
+  "Go Back to {{platform}}": "{{platform}}'a geri dön",
+  "Enter Your PIN": "PIN'inizi girin",
+  "To continue, please enter your 4-digit security PIN.": "Devam etmek için lütfen 4 haneli güvenlik PIN kodunuzu giriniz.",
+  "You can now close this window and go back to chatbot": "Artık bu pencereyi kapatabilir ve sohbet robotuna geri dönebilirsiniz",
+  "Your PIN has been successfully created! You can now close this window and go back to {{platform}}.": "PIN kodunuz başarıyla oluşturuldu! Artık bu pencereyi kapatıp {{platform}}'a geri dönebilirsiniz.",
+  "Instructions to Open the Link in an External Browser.": "Bağlantıyı Harici Bir Tarayıcıda Açma Talimatları.",
+  "Locate and click the three dots icon in the top-right corner of the interface.": "Arayüzün sağ üst köşesindeki üç nokta simgesini bulup tıklayın.",
+  "From the dropdown menu, select \"Open with\".": "Açılır menüden \"Birlikte aç\" seçeneğini seçin.",
+  "Choose your preferred external browser from the available options.": "Mevcut seçenekler arasından tercih ettiğiniz harici tarayıcıyı seçin.",
+  "The link will open in the selected browser.": "Bağlantı seçili tarayıcıda açılacaktır.",
+  "Revisit the website, and when prompted, allow location access.": "Web sitesini tekrar ziyaret edin ve istendiğinde konum erişimine izin verin.",
+  "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Eğer web sitesi tarayıcı ayarlarında görünmüyorsa, tarayıcınızın önbelleğini veya geçmişini temizleyip tekrar deneyin.",
+  "Allow InstaPay to access your Location": "InstaPay'in Konumunuza erişmesine izin verin",
+  "You can now close this webpage and go back to {{platform}}.": "Artık bu web sayfasını kapatıp {{platform}}'a geri dönebilirsiniz."
 }

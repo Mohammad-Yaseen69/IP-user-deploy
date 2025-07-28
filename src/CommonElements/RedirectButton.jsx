@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const RedirectButton = ({ platform }) => {
+    const {t} = useTranslation()
     const handleRedirect = () => {
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
@@ -65,7 +67,7 @@ const RedirectButton = ({ platform }) => {
                 width: "100%",
             }}
         >
-            {platform === "telegram" ? "Go Back to Telegram" : "Go Back to Instagram"}
+            {platform === "telegram" ? t("Go Back to {{platform}}",{platform: "Telegram"}) : t("Go Back to {{platform}}",{platform: "Instagram"})}
         </button>
     );
 };

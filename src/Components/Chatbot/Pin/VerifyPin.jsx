@@ -1,15 +1,13 @@
-import { useRef, useState, useContext, useEffect } from "react"
+import { useRef, useState, useEffect } from "react"
 import styles from "../../CreatePin/styles/index.module.scss"
 import PinFields from "../../CreatePin/PinFields"
 import axios from "axios"
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
-import { UserContext } from '../../../Context/UserContext'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
-import { useLocation, useNavigate, useParams } from "react-router-dom"
-import { Modal, ModalBody, ModalHeader } from "reactstrap"
-import { toast } from "react-toastify"
+import { useLocation, useParams } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import RedirectButton from "../../../CommonElements/RedirectButton"
+import i18next from "i18next"
 
 
 
@@ -30,11 +28,19 @@ const CreatePin = () => {
     const query = new URLSearchParams(location.search)
     const flow = query.get("flow")
     const chatId = query.get("chatId")
+    const lang = query.get("lang")
     const { t } = useTranslation()
 
     useEffect(() => {
         setDisabled(loading || pinFields.data.join("").length < 4)
     }, [loading, pinFields.data])
+
+
+    useEffect(( ) => {
+        if(lang){
+            i18next.changeLanguage(lang)
+        }
+    },[lang])
 
 
     useEffect(() => {

@@ -2710,5 +2710,20 @@
   "Your password has been updated successfully!": "Ọrọigbaniwọle rẹ ti ni imudojuiwọn ni aṣeyọri!",
   "Uh-Oh! The password/phone number you entered is wrong.": "Ah-O! Ọrọigbaniwọle/nọmba foonu ti o tẹ jẹ aṣiṣe.",
   "Account is locked. Try again in {{time}} minutes.": "Akọọlẹ ti wa ni titiipa. Gbiyanju lẹẹkansi ni awọn iṣẹju {{akoko}}.",
-  "Phone number or Email already exist!": "Nọmba foonu tabi Imeeli ti wa tẹlẹ!"
+  "Phone number or Email already exist!": "Nọmba foonu tabi Imeeli ti wa tẹlẹ!",
+  "You may close this window and proceed further on {{platform}}": "O le tii ferese yii ki o tẹsiwaju siwaju lori {{platform}}",
+  "Go Back to {{platform}}": "Pada si {{platform}}",
+  "Enter Your PIN": "Tẹ PIN rẹ sii",
+  "To continue, please enter your 4-digit security PIN.": "Lati tẹsiwaju, jọwọ tẹ PIN aabo oni-nọmba mẹrin rẹ sii.",
+  "You can now close this window and go back to chatbot": "O le tii ferese yii ki o pada si chatbot",
+  "Your PIN has been successfully created! You can now close this window and go back to {{platform}}.": "PIN rẹ ti ṣẹda ni aṣeyọri! O le tii ferese yii ki o pada si {{platform}}.",
+  "Instructions to Open the Link in an External Browser.": "Awọn ilana lati Ṣii Ọna asopọ ni Ẹrọ aṣawakiri Ita kan.",
+  "Locate and click the three dots icon in the top-right corner of the interface.": "Wa ki o tẹ aami aami aami mẹta ni igun apa ọtun oke ti wiwo naa.",
+  "From the dropdown menu, select \"Open with\".": "Lati akojọ aṣayan silẹ, yan \"Ṣii pẹlu\".",
+  "Choose your preferred external browser from the available options.": "Yan ẹrọ aṣawakiri ita ti o fẹ lati awọn aṣayan to wa.",
+  "The link will open in the selected browser.": "Ọna asopọ yoo ṣii ni ẹrọ aṣawakiri ti o yan.",
+  "Revisit the website, and when prompted, allow location access.": "Ṣatunṣe oju opo wẹẹbu naa, ati nigbati o ba ṣetan, gba iraye si ipo.",
+  "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Ti oju opo wẹẹbu naa ko ba han ninu awọn eto aṣawakiri, ko kaṣe aṣawakiri rẹ kuro tabi itan-akọọlẹ ki o tun gbiyanju lẹẹkansi.",
+  "Allow InstaPay to access your Location": "Gba InstaPay laaye lati wọle si Ipo rẹ",
+  "You can now close this webpage and go back to {{platform}}.": "Bayi o le tii oju-iwe wẹẹbu yii ki o pada si {{platform}}."
 }

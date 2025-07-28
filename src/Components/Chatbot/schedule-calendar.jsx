@@ -11,6 +11,8 @@ import { useTimezones } from "../../Context/TimezoneContext";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { Autocomplete, TextField } from "@mui/material";
 import RedirectButton from "../../CommonElements/RedirectButton";
+import i18next from "i18next";
+import { useTranslation } from "react-i18next";
 
 // Define custom styled components
 export const CustomDatePickerContainer = styled.div`
@@ -111,7 +113,13 @@ const SubscriptionCalendar = () => {
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const method = queryParams.get("method")
+  const {t} = useTranslation()
   const platform = queryParams.get("platform")
+  const lang = queryParams.get("lang") || "en"
+
+  React.useEffect(() => {
+    i18next.changeLanguage(lang)
+  }, [lang])
 
   React.useEffect(() => {
     timezones.sort((a, b) => a.name.localeCompare(b.name))
@@ -205,9 +213,7 @@ const SubscriptionCalendar = () => {
               autoplay={true}
             />
             <h5 style={{ padding: "1rem", textAlign: "center" }}>
-              {platform === "telegram"
-                ? "You can now close this webpage and go back to Telegram."
-                : "You can now close this webpage and go back to Instagram."}
+              {t("You can now close this webpage and go back to {{platform}}.", { platform: platform === "telegram" ? "Telegram" : "Instagram" })}
             </h5>
             <RedirectButton platform={platform} />
           </CustomDatePickerContainer>

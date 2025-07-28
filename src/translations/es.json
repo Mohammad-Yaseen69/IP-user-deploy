@@ -2717,5 +2717,20 @@
   "Your password has been updated successfully!": "¡Tu contraseña ha sido actualizada exitosamente!",
   "Uh-Oh! The password/phone number you entered is wrong.": "¡Oh! La contraseña o el número de teléfono que ingresaste son incorrectos.",
   "Account is locked. Try again in {{time}} minutes.": "La cuenta está bloqueada. Inténtalo de nuevo en {{time}} minutos.",
-  "Phone number or Email already exist!": "¡El número de teléfono o correo electrónico ya existe!"
+  "Phone number or Email already exist!": "¡El número de teléfono o correo electrónico ya existe!",
+  "You may close this window and proceed further on {{platform}}": "Puede cerrar esta ventana y continuar en {{platform}}",
+  "Go Back to {{platform}}": "Regresar a {{platform}}",
+  "Enter Your PIN": "Introduzca su PIN",
+  "To continue, please enter your 4-digit security PIN.": "Para continuar, ingrese su PIN de seguridad de 4 dígitos.",
+  "You can now close this window and go back to chatbot": "Ahora puedes cerrar esta ventana y volver al chatbot.",
+  "Your PIN has been successfully created! You can now close this window and go back to {{platform}}.": "¡Tu PIN se ha creado correctamente! Ahora puedes cerrar esta ventana y volver a {{platform}}.",
+  "Instructions to Open the Link in an External Browser.": "Instrucciones para abrir el enlace en un navegador externo.",
+  "Locate and click the three dots icon in the top-right corner of the interface.": "Localice y haga clic en el ícono de tres puntos en la esquina superior derecha de la interfaz.",
+  "From the dropdown menu, select \"Open with\".": "En el menú desplegable, seleccione \"Abrir con\".",
+  "Choose your preferred external browser from the available options.": "Elija su navegador externo preferido entre las opciones disponibles.",
+  "The link will open in the selected browser.": "El enlace se abrirá en el navegador seleccionado.",
+  "Revisit the website, and when prompted, allow location access.": "Vuelva al sitio web y, cuando se le solicite, permita el acceso a la ubicación.",
+  "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Si el sitio web no aparece en la configuración del navegador, borre el caché o el historial de su navegador y vuelva a intentarlo.",
+  "Allow InstaPay to access your Location": "Permitir que InstaPay acceda a su ubicación",
+  "You can now close this webpage and go back to {{platform}}.": "Ahora puedes cerrar esta página web y volver a {{platform}}."
 }

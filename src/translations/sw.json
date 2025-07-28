@@ -2712,5 +2712,20 @@
   "Your password has been updated successfully!": "Nenosiri lako limesasishwa kwa mafanikio!",
   "Uh-Oh! The password/phone number you entered is wrong.": "Lo! Nenosiri/nambari ya simu uliyoweka si sahihi.",
   "Account is locked. Try again in {{time}} minutes.": "Akaunti imefungwa. Jaribu tena baada ya dakika {{time}}.",
-  "Phone number or Email already exist!": "Nambari ya simu au Barua pepe tayari zipo!"
+  "Phone number or Email already exist!": "Nambari ya simu au Barua pepe tayari zipo!",
+  "You may close this window and proceed further on {{platform}}": "Unaweza kufunga dirisha hili na kuendelea zaidi kwenye {{platform}}",
+  "Go Back to {{platform}}": "Rudi kwenye {{platform}}",
+  "Enter Your PIN": "Weka PIN yako",
+  "To continue, please enter your 4-digit security PIN.": "Ili kuendelea, tafadhali weka PIN yako ya usalama yenye tarakimu 4.",
+  "You can now close this window and go back to chatbot": "Sasa unaweza kufunga dirisha hili na urudi kwenye chatbot",
+  "Your PIN has been successfully created! You can now close this window and go back to {{platform}}.": "PIN yako imeundwa! Sasa unaweza kufunga dirisha hili na kurudi kwenye {{platform}}.",
+  "Instructions to Open the Link in an External Browser.": "Maagizo ya Kufungua Kiungo katika Kivinjari cha Nje.",
+  "Locate and click the three dots icon in the top-right corner of the interface.": "Tafuta na ubofye ikoni ya nukta tatu kwenye kona ya juu kulia ya kiolesura.",
+  "From the dropdown menu, select \"Open with\".": "Kutoka kwenye orodha ya kushuka, chagua \"Fungua na\".",
+  "Choose your preferred external browser from the available options.": "Chagua kivinjari chako cha nje unachopendelea kutoka kwa chaguo zinazopatikana.",
+  "The link will open in the selected browser.": "Kiungo kitafungua kwenye kivinjari kilichochaguliwa.",
+  "Revisit the website, and when prompted, allow location access.": "Tembelea tena tovuti, na unapoombwa, ruhusu ufikiaji wa eneo.",
+  "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Ikiwa tovuti haionekani katika mipangilio ya kivinjari, futa akiba ya kivinjari chako au historia na ujaribu tena.",
+  "Allow InstaPay to access your Location": "Ruhusu InstaPay kufikia Mahali ulipo",
+  "You can now close this webpage and go back to {{platform}}.": "Sasa unaweza kufunga ukurasa huu wa tovuti na kurudi kwenye {{platform}}."
 }

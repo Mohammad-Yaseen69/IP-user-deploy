@@ -2710,5 +2710,20 @@
   "Your password has been updated successfully!": "آپ کا پاس ورڈ کامیابی کے ساتھ اپ ڈیٹ ہو گیا ہے!",
   "Uh-Oh! The password/phone number you entered is wrong.": "اوہ! آپ کا درج کردہ پاس ورڈ/فون نمبر غلط ہے۔",
   "Account is locked. Try again in {{time}} minutes.": "اکاؤنٹ لاک ہے۔ {{time}} منٹ میں دوبارہ کوشش کریں۔",
-  "Phone number or Email already exist!": "فون نمبر یا ای میل پہلے سے موجود ہے!"
+  "Phone number or Email already exist!": "فون نمبر یا ای میل پہلے سے موجود ہے!",
+  "You may close this window and proceed further on {{platform}}": "آپ اس ونڈو کو بند کر سکتے ہیں اور {{platform}} پر آگے بڑھ سکتے ہیں",
+  "Go Back to {{platform}}": "{{platform}} پر واپس جائیں",
+  "Enter Your PIN": "اپنا PIN درج کریں۔",
+  "To continue, please enter your 4-digit security PIN.": "جاری رکھنے کے لیے، براہ کرم اپنا 4 ہندسوں والا سیکیورٹی پن درج کریں۔",
+  "You can now close this window and go back to chatbot": "اب آپ اس ونڈو کو بند کر کے چیٹ بوٹ پر واپس جا سکتے ہیں۔",
+  "Your PIN has been successfully created! You can now close this window and go back to {{platform}}.": "آپ کا PIN کامیابی کے ساتھ بن گیا ہے! اب آپ اس ونڈو کو بند کر سکتے ہیں اور واپس {{platform}} پر جا سکتے ہیں۔",
+  "Instructions to Open the Link in an External Browser.": "ایکسٹرنل براؤزر میں لنک کھولنے کی ہدایات۔",
+  "Locate and click the three dots icon in the top-right corner of the interface.": "انٹرفیس کے اوپری دائیں کونے میں تین نقطوں کے آئیکن کو تلاش کریں اور کلک کریں۔",
+  "From the dropdown menu, select \"Open with\".": "ڈراپ ڈاؤن مینو سے، \"اس کے ساتھ کھولیں\" کو منتخب کریں۔",
+  "Choose your preferred external browser from the available options.": "دستیاب اختیارات میں سے اپنے پسندیدہ بیرونی براؤزر کا انتخاب کریں۔",
+  "The link will open in the selected browser.": "لنک منتخب براؤزر میں کھل جائے گا۔",
+  "Revisit the website, and when prompted, allow location access.": "ویب سائٹ پر دوبارہ جائیں، اور جب اشارہ کیا جائے، مقام تک رسائی کی اجازت دیں۔",
+  "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "اگر ویب سائٹ براؤزر کی سیٹنگز میں نظر نہیں آتی ہے تو اپنے براؤزر کی کیش یا ہسٹری کو صاف کریں اور دوبارہ کوشش کریں۔",
+  "Allow InstaPay to access your Location": "InstaPay کو اپنے مقام تک رسائی کی اجازت دیں۔",
+  "You can now close this webpage and go back to {{platform}}.": "اب آپ اس ویب پیج کو بند کر سکتے ہیں اور واپس {{platform}} پر جا سکتے ہیں۔"
 }
