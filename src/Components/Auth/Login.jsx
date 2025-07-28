@@ -20,6 +20,7 @@ import { authIcon, instaIcon, smsIcon, whatsappIcon } from "./files"
 import "./styles/index.module.css";
 import useWindowWidth from "../../utils/useWindowWidth";
 import i18next from "i18next";
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 
 const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const navigate = useNavigate()
@@ -47,6 +48,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [firstTime, setFirstTime] = useState(true)
     const width = useWindowWidth()
     const [methodLoading, setMethodLoading] = useState(false)
+    const [showNoticeModal, setShowNoticeModal] = useState(false);
+
     // convert this object into an array of object it should just have a type property which should tell like whatsapp insta biometric instead of a object property
 
     const [methods, setMethods] = useState([
@@ -286,9 +289,10 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
     const getUserInfo = async () => {
         try {
-            const res = await fetch(`https://get.geojs.io/v1/ip/geo.json`)
-            const location = await res.json();
+            const res = await fetch(`https://iplocate.io/api/lookup?apikey=${process.env.REACT_APP_IP_LOCATE_API_KEY}`)
+            const location = await res.json()
 
+            console.log("locate api", location)
             if (location) {
                 return {
                     browser_name: rdd.browserName ?? "N/A",
@@ -301,13 +305,15 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     country_name: location?.country,
                     latitude: location?.latitude,
                     longitude: location?.latitude,
-                    postal: location?.postal,
-                    state: location?.region,
+                    postal: location?.postal_code,
+                    state: location?.subdivision,
+                    ...location
                 }
             }
+
         } catch (error) {
             try {
-                const res = await fetch("https://geolocation-db.com/json/")
+                const res = await fetch("https://geolocation-db.com/json")
                 const location = await res.json()
 
                 if (location) {
@@ -399,14 +405,14 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     .then(async res => {
                         const decrypted = decryptData(res.data.data)
                         const dec = decryptData(res.data.data)
-                        localStorage.setItem("login", true)
-                        localStorage.setItem("token", token)
-                        setUserDetails(dec)
                         setShowInactivityModal(false)
                         if (dec?.country?.status) {
                             const data = await getUserInfo()
                                 .catch(() => {
                                     const path = sessionStorage.getItem("path")
+                                    localStorage.setItem("login", true)
+                                    localStorage.setItem("token", token)
+                                    setUserDetails(dec)
                                     if (path && path !== "undefined") {
                                         navigate(path)
                                     } else {
@@ -420,35 +426,42 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     ...data
                                 }
                             )
-
-                            console.log(data, "shi shi")
-                            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/login/create-login-history`, {
-                                data: encrypted
-                            })
-                                .then(res => {
-                                    const path = sessionStorage.getItem("path")
-                                    if (path && path !== "undefined") {
-                                        navigate(path)
-                                    } else {
-                                        navigate("/")
-                                    }
-                                    sessionStorage.clear()
-                                    setIsPressed(false)
+                            if (data?.privacy?.is_proxy === true || data?.privacy?.is_tor === true || data?.privacy?.is_vpn === true) {
+                                setShowNoticeModal(true);
+                            } else {
+                                localStorage.setItem("login", true)
+                                localStorage.setItem("token", token)
+                                setUserDetails(dec)
+                                console.log(data, "shi shi")
+                                axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/login/create-login-history`, {
+                                    data: encrypted
                                 })
-                                .catch(err => {
-                                    setIsPressed(false)
-                                    setIsLoginError("Something went wrong while creating login details")
-                                    const path = sessionStorage.getItem("path")
-                                    console.log(path)
-                                    if (path && path !== "undefined") {
-                                        navigate(path)
-                                    } else {
-                                        navigate("/")
-                                    }
-                                    sessionStorage.clear()
-                                })
+                                    .then(res => {
+                                        const path = sessionStorage.getItem("path")
+                                        if (path && path !== "undefined") {
+                                            navigate(path)
+                                        } else {
+                                            navigate("/")
+                                        }
+                                        sessionStorage.clear()
+                                        setIsPressed(false)
+                                    })
+                                    .catch(err => {
+                                        setIsPressed(false)
+                                        setIsLoginError("Something went wrong while creating login details")
+                                        const path = sessionStorage.getItem("path")
+                                        console.log(path)
+                                        if (path && path !== "undefined") {
+                                            navigate(path)
+                                        } else {
+                                            navigate("/")
+                                        }
+                                        sessionStorage.clear()
+                                    })
+                            }
                         }
                         else {
+                            setUserDetails(dec)
                             sessionStorage.setItem("country_status_error", "Service not available in your country!")
                         }
                     })
@@ -555,14 +568,14 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 .then(async res => {
                     const decrypted = decryptData(res.data.data)
                     const dec = decryptData(res.data.data)
-                    localStorage.setItem("login", true)
-                    localStorage.setItem("token", token)
-                    setUserDetails(dec)
                     setShowInactivityModal(false)
                     if (dec?.country?.status) {
                         const data = await getUserInfo()
                             .catch(() => {
                                 const path = sessionStorage.getItem("path")
+                                localStorage.setItem("login", true)
+                                localStorage.setItem("token", token)
+                                setUserDetails(dec)
                                 if (path && path !== "undefined") {
                                     navigate(path)
                                 } else {
@@ -576,31 +589,38 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 ...data
                             }
                         )
-                        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/login/create-login-history`, {
-                            data: encrypted
-                        })
-                            .then(res => {
-                                const path = sessionStorage.getItem("path")
-                                if (path && path !== "undefined") {
-                                    navigate(path)
-                                } else {
-                                    navigate("/")
-                                }
-                                sessionStorage.clear()
-                                setIsPressed(false)
+                        if (data?.privacy?.is_proxy === true || data?.privacy?.is_tor === true || data?.privacy?.is_vpn === true) {
+                            setShowNoticeModal(true);
+                        } else {
+                            localStorage.setItem("login", true)
+                            localStorage.setItem("token", token)
+                            setUserDetails(dec)
+                            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/login/create-login-history`, {
+                                data: encrypted
                             })
-                            .catch(err => {
-                                setIsPressed(false)
-                                setIsLoginError("Something went wrong while creating login details")
-                                const path = sessionStorage.getItem("path")
-                                console.log(path)
-                                if (path && path !== "undefined") {
-                                    navigate(path)
-                                } else {
-                                    navigate("/")
-                                }
-                                sessionStorage.clear()
-                            })
+                                .then(res => {
+                                    const path = sessionStorage.getItem("path")
+                                    if (path && path !== "undefined") {
+                                        navigate(path)
+                                    } else {
+                                        navigate("/")
+                                    }
+                                    sessionStorage.clear()
+                                    setIsPressed(false)
+                                })
+                                .catch(err => {
+                                    setIsPressed(false)
+                                    setIsLoginError("Something went wrong while creating login details")
+                                    const path = sessionStorage.getItem("path")
+                                    console.log(path)
+                                    if (path && path !== "undefined") {
+                                        navigate(path)
+                                    } else {
+                                        navigate("/")
+                                    }
+                                    sessionStorage.clear()
+                                })
+                        }
                     } else {
                         sessionStorage.setItem("country_status_error", "Service not available in your country!")
                     }
@@ -664,8 +684,24 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         setStep(1) // Reset step to 1
     }
 
+    const noticeMessage = `It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.\nThank you for your understanding.`;
+
     return (
         <>
+            {/* Notice Modal for VPN/Proxy/TOR */}
+            <Modal isOpen={showNoticeModal} toggle={() => setShowNoticeModal(false)}>
+                <ModalHeader> <h4 style={{ fontSize: "22px", fontWeight: 700, marginBottom: "0" }}>{t("Notice")}</h4> </ModalHeader>
+                <ModalBody>
+                    <p style={{ fontWeight: 600, fontSize: "15px", marginBottom: "0px" }}>
+                        {noticeMessage}
+                    </p>
+                </ModalBody>
+                <ModalFooter>
+                    <button style={{ borderRadius: "8px", backgroundColor: "#5926f0", fontWeight: 600, border: "none", outline: "none", color: "white", padding: "10px 20px" }} onClick={() => setShowNoticeModal(false)}>
+                        {t("Close")}
+                    </button>
+                </ModalFooter>
+            </Modal>
             <form onSubmit={emailVerified ? loginHandler : checkEmailHandler} className={styles.form_details} style={width > 1000 ? { opacity: step === 1 ? 1 : 0, pointerEvents: step === 1 ? "all" : "none" } : { display: step === 1 ? "inherit" : "none" }}>
                 <div className={styles.left}>
                     <h1>{t("Login")}</h1>
