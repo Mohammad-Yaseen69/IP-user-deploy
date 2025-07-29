@@ -98,8 +98,9 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                             data={data}
                             receiverLabel={`They will receive `}
                             error={data.exchange_rate_error}
-                            feesLabel="Fees"
+                            feesLabel="Sending Fees"
                             sendingLabel="You are Sending"
+                            receiverFee={true}
                             totalLabel="Amount To Pay"
                             bright={true}
                             guest={true}

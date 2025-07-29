@@ -3,7 +3,7 @@ import styles from "./styles/feescomp.module.css"
 import { Info } from "react-feather"
 import { cleanString } from "../../../Helper/cleanString"
 
-const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Exchange Rate", feesLabel = "Transfer Fees", totalLabel = "Total Amount", error = "", receiverLabel = "They Receive", bright = false, extraContent, guest }) => {
+const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Exchange Rate", feesLabel = "Transfer Fees", totalLabel = "Total Amount", error = "", receiverLabel = "They Receive", bright = false, extraContent, guest, receiverFee }) => {
     const { t } = useTranslation()
     console.log(data.exchange_rate)
     return (
@@ -27,7 +27,10 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                     &&
                     <div style={{ padding: guest && "12px", borderRadius: guest && '6px', gap: guest && ".3rem", background: guest && "rgba(109, 41, 220, 0.04)" }} className={styles.item}>
                         <span>{t(receiverLabel)}</span>
-                        <p>{Number(cleanString(data?.exchange_rate?.receiver?.amount))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} {data.exchange_rate?.receiver?.currency}</p>
+                        <p>{Number(cleanString(data?.exchange_rate?.receiver?.amount))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })}
+                            {data.exchange_rate?.receiver?.currency}
+                            {receiverFee && ` (fee ${Number(cleanString(data?.exchange_rate?.fee?.paymentAddressFee))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} ${data.exchange_rate?.sending?.currency})`}
+                        </p>
                     </div>
                 }
                 {
