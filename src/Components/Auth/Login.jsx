@@ -733,7 +733,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
     return (
         <>
-            {/* Notice Modal for VPN/Proxy/TOR */}
             <Modal isOpen={showNoticeModal}>
                 <ModalHeader>
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -745,7 +744,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 </ModalHeader>
                 <ModalBody>
                     <p style={{ fontWeight: 600, fontSize: "15px", marginBottom: "15px" }}>
-                        {noticeMessage}
+                        {t(noticeMessage)}
                     </p>
                     <p style={{ fontWeight: 600, fontSize: "15px", marginBottom: "0px" }}>
                         {t("Thank you for your understanding.")}
@@ -811,24 +810,39 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             <div className={styles.user_info}>
                                                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                                                     {loginData?.pfp ?
-                                                        <img style={{ width: "50px", borderRadius: "100%", height: "50px", objectFit: "cover" }} src={loginData?.pfp} alt="" /> :
+                                                        <img style={{ width: "50px", borderRadius: "100%", height: "50px", objectFit: "cover", flexShrink: 0 }} src={loginData?.pfp} alt="" /> :
                                                         <div className={styles.dp}>{loginData?.name?.[0]?.toUpperCase()}</div>
                                                     }
                                                     <div>
                                                         <h4 style={{ marginBottom: "0", fontWeight: 600, color: "black", fontSize: "15px" }}>{loginData?.name}</h4>
                                                     </div>
                                                 </div>
+                                                {width > 1000 &&
+                                                    <div
+                                                        className={styles.loginWith}
+                                                        onClick={() => {
+                                                            setShowQuickLogin(false)
+                                                            setEmail("")
+                                                        }}
+                                                        style={{ position: "relative", top: "0", left: "0px" }}
+                                                    >
+                                                        {t("Change Account")}
+                                                    </div>
+                                                }
+                                            </div>
+
+                                            {width < 1000 &&
                                                 <div
                                                     className={styles.loginWith}
                                                     onClick={() => {
                                                         setShowQuickLogin(false)
                                                         setEmail("")
                                                     }}
-                                                    style={{ position: "relative", top: "0", left: "0px" }}
+                                                    style={{ position: "relative", top: "0", left: "0px", margin: "20px auto" }}
                                                 >
                                                     {t("Change Account")}
                                                 </div>
-                                            </div>
+                                            }
                                         </div>
                                     </>
                                 }

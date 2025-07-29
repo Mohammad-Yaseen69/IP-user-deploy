@@ -2726,5 +2726,12 @@
   "Revisit the website, and when prompted, allow location access.": "重新访问该网站，并在出现提示时允许位置访问。",
   "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "如果该网站未出现在浏览器设置中，请清除浏览器的缓存或历史记录，然后重试。",
   "Allow InstaPay to access your Location": "允许 InstaPay 访问您的位置",
-  "You can now close this webpage and go back to {{platform}}.": "您现在可以关闭此网页并返回 {{platform}}。"
+  "You can now close this webpage and go back to {{platform}}.": "您现在可以关闭此网页并返回 {{platform}}。",
+  "Total Account Balance": "账户总余额",
+  "Welcome Back!": "欢迎回来！",
+  "Thank you for your understanding.": "感谢您的理解。",
+  "Change Account": "更改帐户",
+  "It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.": "您的连接似乎正在通过 VPN、代理或 TOR 网络建立。出于安全和合规方面的考虑，请禁用所有此类服务并刷新页面以继续使用 InstaPay。",
+  "Refresh Page": "刷新页面",
+  "Notice": "注意"
 }

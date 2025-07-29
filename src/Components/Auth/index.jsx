@@ -111,7 +111,7 @@ const Auth = () => {
                 </ModalHeader>
                 <ModalBody>
                     <p style={{ fontWeight: 600, fontSize: "15px", marginBottom: "15px" }}>
-                        {noticeMessage}
+                        {t(noticeMessage)}
                     </p>
                     <p style={{ fontWeight: 600, fontSize: "15px", marginBottom: "0px" }}>
                         {t("Thank you for your understanding.")}

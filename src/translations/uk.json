@@ -2732,5 +2732,12 @@
   "Revisit the website, and when prompted, allow location access.": "Знову перейдіть на веб-сайт і, коли буде запропоновано, надайте доступ до місцезнаходження.",
   "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Якщо веб-сайт не відображається в налаштуваннях веб-переглядача, очистіть кеш або історію веб-переглядача та повторіть спробу.",
   "Allow InstaPay to access your Location": "Дозвольте InstaPay отримати доступ до вашого місцезнаходження",
-  "You can now close this webpage and go back to {{platform}}.": "Тепер ви можете закрити цю веб-сторінку та повернутися до {{платформи}}."
+  "You can now close this webpage and go back to {{platform}}.": "Тепер ви можете закрити цю веб-сторінку та повернутися до {{платформи}}.",
+  "Total Account Balance": "Загальний баланс рахунку",
+  "Welcome Back!": "Ласкаво просимо назад!",
+  "Thank you for your understanding.": "Дякуємо за розуміння.",
+  "Change Account": "Змінити обліковий запис",
+  "It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.": "Здається, ваше з’єднання здійснюється через мережу VPN, проксі або TOR. З міркувань безпеки та відповідності вимкніть будь-які такі служби та оновіть сторінку, щоб продовжити використання InstaPay.",
+  "Refresh Page": "Оновити сторінку",
+  "Notice": "Повідомлення"
 }

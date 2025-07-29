@@ -2686,5 +2686,11 @@
   "Revisit the website, and when prompted, allow location access.": "Sake ziyartan gidan yanar gizon, kuma idan an buƙata, ba da izinin shiga wurin.",
   "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Idan gidan yanar gizon bai bayyana a cikin saitunan burauza ba, share cache ko tarihin burauzar ku sannan a sake gwadawa.",
   "Allow InstaPay to access your Location": "Bada InstaPay damar shiga wurin ku",
-  "You can now close this webpage and go back to {{platform}}.": "Yanzu zaku iya rufe wannan shafin yanar gizon kuma ku koma {{platform}}."
+  "You can now close this webpage and go back to {{platform}}.": "Yanzu zaku iya rufe wannan shafin yanar gizon kuma ku koma {{platform}}.",
+  "Welcome Back!": "Barka da Dawo!",
+  "Thank you for your understanding.": "Na gode da fahimtar ku.",
+  "Change Account": "Canja Asusu",
+  "It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.": "Ya bayyana cewa ana haɗa haɗin ku ta hanyar VPN, wakili, ko cibiyar sadarwar TOR. Don dalilai na tsaro da yarda, da fatan za a kashe kowane irin waɗannan sabis ɗin kuma sabunta shafin don ci gaba da amfani da InstaPay.",
+  "Refresh Page": "Shafi na wartsake",
+  "Notice": "Sanarwa"
 }

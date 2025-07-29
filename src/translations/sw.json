@@ -2727,5 +2727,12 @@
   "Revisit the website, and when prompted, allow location access.": "Tembelea tena tovuti, na unapoombwa, ruhusu ufikiaji wa eneo.",
   "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Ikiwa tovuti haionekani katika mipangilio ya kivinjari, futa akiba ya kivinjari chako au historia na ujaribu tena.",
   "Allow InstaPay to access your Location": "Ruhusu InstaPay kufikia Mahali ulipo",
-  "You can now close this webpage and go back to {{platform}}.": "Sasa unaweza kufunga ukurasa huu wa tovuti na kurudi kwenye {{platform}}."
+  "You can now close this webpage and go back to {{platform}}.": "Sasa unaweza kufunga ukurasa huu wa tovuti na kurudi kwenye {{platform}}.",
+  "Total Account Balance": "Jumla ya Salio la Akaunti",
+  "Welcome Back!": "Karibu tena!",
+  "Thank you for your understanding.": "Asante kwa ufahamu wako.",
+  "Change Account": "Badilisha Akaunti",
+  "It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.": "Inaonekana kwamba muunganisho wako unafanywa kupitia VPN, proksi, au mtandao wa TOR. Kwa sababu za usalama na kufuata, tafadhali zima huduma zozote kama hizo na uonyeshe upya ukurasa ili kuendelea kutumia InstaPay.",
+  "Refresh Page": "Onyesha upya Ukurasa",
+  "Notice": "Taarifa"
 }

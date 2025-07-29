@@ -2732,5 +2732,12 @@
   "Revisit the website, and when prompted, allow location access.": "Vuelva al sitio web y, cuando se le solicite, permita el acceso a la ubicación.",
   "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Si el sitio web no aparece en la configuración del navegador, borre el caché o el historial de su navegador y vuelva a intentarlo.",
   "Allow InstaPay to access your Location": "Permitir que InstaPay acceda a su ubicación",
-  "You can now close this webpage and go back to {{platform}}.": "Ahora puedes cerrar esta página web y volver a {{platform}}."
+  "You can now close this webpage and go back to {{platform}}.": "Ahora puedes cerrar esta página web y volver a {{platform}}.",
+  "Total Account Balance": "Saldo total de la cuenta",
+  "Welcome Back!": "¡Bienvenido de nuevo!",
+  "Thank you for your understanding.": "Gracias por su comprensión.",
+  "Change Account": "Cambiar cuenta",
+  "It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.": "Parece que su conexión se realiza a través de una VPN, un proxy o una red TOR. Por motivos de seguridad y cumplimiento normativo, desactive dichos servicios y actualice la página para continuar usando InstaPay.",
+  "Refresh Page": "Actualizar página",
+  "Notice": "Aviso"
 }

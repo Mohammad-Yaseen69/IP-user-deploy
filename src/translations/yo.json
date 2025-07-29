@@ -2725,5 +2725,12 @@
   "Revisit the website, and when prompted, allow location access.": "Ṣatunṣe oju opo wẹẹbu naa, ati nigbati o ba ṣetan, gba iraye si ipo.",
   "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Ti oju opo wẹẹbu naa ko ba han ninu awọn eto aṣawakiri, ko kaṣe aṣawakiri rẹ kuro tabi itan-akọọlẹ ki o tun gbiyanju lẹẹkansi.",
   "Allow InstaPay to access your Location": "Gba InstaPay laaye lati wọle si Ipo rẹ",
-  "You can now close this webpage and go back to {{platform}}.": "Bayi o le tii oju-iwe wẹẹbu yii ki o pada si {{platform}}."
+  "You can now close this webpage and go back to {{platform}}.": "Bayi o le tii oju-iwe wẹẹbu yii ki o pada si {{platform}}.",
+  "Total Account Balance": "Total Account Iwontunws.funfun",
+  "Welcome Back!": "Ku aabọ pada!",
+  "Thank you for your understanding.": "O ṣeun fun oye rẹ.",
+  "Change Account": "Yi Account",
+  "It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.": "O han pe asopọ rẹ n ṣe nipasẹ VPN, aṣoju, tabi nẹtiwọki TOR. Fun aabo ati awọn idi ibamu, jọwọ mu eyikeyi iru awọn iṣẹ bẹ ṣiṣẹ ki o sọ oju-iwe naa sọ lati tẹsiwaju lilo InstaPay.",
+  "Refresh Page": "Oju-iwe sọtun",
+  "Notice": "Akiyesi"
 }

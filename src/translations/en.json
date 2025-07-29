@@ -2740,5 +2740,12 @@
   "Revisit the website, and when prompted, allow location access.": "Revisit the website, and when prompted, allow location access.",
   "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.",
   "Allow InstaPay to access your Location": "Allow InstaPay to access your Location",
-  "You can now close this webpage and go back to {{platform}}.": "You can now close this webpage and go back to {{platform}}."
+  "You can now close this webpage and go back to {{platform}}.": "You can now close this webpage and go back to {{platform}}.",
+  "Total Account Balance": "Total Account Balance",
+  "Welcome Back!": "Welcome Back!",
+  "Thank you for your understanding.": "Thank you for your understanding.",
+  "Change Account": "Change Account",
+  "It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.": "It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.",
+  "Refresh Page": "Refresh Page",
+  "Notice": "Notice"
 }

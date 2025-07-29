@@ -2636,5 +2636,12 @@
   "Revisit the website, and when prompted, allow location access.": "Повторно посетите веб-сайт и при появлении соответствующего запроса разрешите доступ к данным о местоположении.",
   "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Если веб-сайт не отображается в настройках браузера, очистите кэш или историю браузера и повторите попытку.",
   "Allow InstaPay to access your Location": "Разрешите InstaPay доступ к вашему местоположению",
-  "You can now close this webpage and go back to {{platform}}.": "Теперь вы можете закрыть эту веб-страницу и вернуться на {{platform}}."
+  "You can now close this webpage and go back to {{platform}}.": "Теперь вы можете закрыть эту веб-страницу и вернуться на {{platform}}.",
+  "Total Account Balance": "Общий баланс счета",
+  "Welcome Back!": "Добро пожаловать!",
+  "Thank you for your understanding.": "Благодарим вас за понимание.",
+  "Change Account": "Изменить аккаунт",
+  "It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.": "Похоже, ваше подключение осуществляется через VPN, прокси-сервер или сеть TOR. В целях безопасности и соблюдения правил отключите все подобные сервисы и обновите страницу, чтобы продолжить использование InstaPay.",
+  "Refresh Page": "Обновить страницу",
+  "Notice": "Уведомление"
 }

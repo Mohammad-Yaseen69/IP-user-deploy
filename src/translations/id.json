@@ -2725,5 +2725,12 @@
   "Revisit the website, and when prompted, allow location access.": "Kunjungi kembali situs web tersebut, dan ketika diminta, izinkan akses lokasi.",
   "If the website does not appear in the browser settings, clear your browser’s cache or history and try again.": "Jika situs web tidak muncul di pengaturan browser, bersihkan cache atau riwayat browser Anda dan coba lagi.",
   "Allow InstaPay to access your Location": "Izinkan InstaPay mengakses Lokasi Anda",
-  "You can now close this webpage and go back to {{platform}}.": "Anda sekarang dapat menutup halaman web ini dan kembali ke {{platform}}."
+  "You can now close this webpage and go back to {{platform}}.": "Anda sekarang dapat menutup halaman web ini dan kembali ke {{platform}}.",
+  "Total Account Balance": "Total Saldo Akun",
+  "Welcome Back!": "Selamat Datang kembali!",
+  "Thank you for your understanding.": "Terima kasih atas pengertian Anda.",
+  "Change Account": "Ganti Akun",
+  "It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.": "Tampaknya koneksi Anda dilakukan melalui VPN, proksi, atau jaringan TOR. Demi keamanan dan kepatuhan, harap nonaktifkan layanan tersebut dan segarkan halaman untuk melanjutkan penggunaan InstaPay.",
+  "Refresh Page": "Segarkan Halaman",
+  "Notice": "Melihat"
 }
