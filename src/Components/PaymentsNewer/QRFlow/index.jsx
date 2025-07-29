@@ -1003,7 +1003,10 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                         <button className={styles.transparent} disabled={data.loading} onClick={() => {
                                                             if (data.step === 4 && data.payment_type?.value) {
                                                                 dataHandler("payment_type", {})
-                                                                dataHandler("payment_duration", {})
+                                                                dataHandler("payment_duration", {
+                                                                    name: "Instant Payment",
+                                                                    value: "instant",
+                                                                })
                                                                 dataHandler("show_payment_type", false)
                                                             }
                                                             else if (data.step === 4 && data.payment_type?.value === "card") {
@@ -1242,7 +1245,10 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                     <button disabled={data.loading} onClick={() => {
                                                         if (data.step === 4 && data.payment_type?.value) {
                                                             dataHandler("payment_type", {})
-                                                            dataHandler("payment_duration", {})
+                                                            dataHandler("payment_duration", {
+                                                                name: "Instant Payment",
+                                                                value: "instant",
+                                                            })
                                                             dataHandler("show_payment_type", false)
                                                         }
                                                         else if (data.step === 4 && data.payment_type?.value === "card") {

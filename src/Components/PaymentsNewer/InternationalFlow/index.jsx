@@ -60,7 +60,7 @@ export const apiErrorMessage = (code) => {
     let error;
     console.log(code, "lololo")
     for (const key in apiErrors) {
-        if (code.includes(key)) {
+        if (code?.includes(key)) {
             error = apiErrors[key]
             break;
         }

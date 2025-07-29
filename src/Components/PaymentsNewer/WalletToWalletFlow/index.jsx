@@ -243,7 +243,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
     const sendOtp = async (codeType = "") => {
         dataHandler("loading", true)
         try {
-            let payload;
+            let payload = {};
             if (data.payment_duration?.value === "instant") {
                 payload = {
                     data: {
@@ -306,7 +306,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                 }
             }
 
-            console.log(payload)
+            console.log(payload, data.payment_duration)
             const encrypted = encryptData(payload)
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
                 data: encrypted
@@ -430,6 +430,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                 const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
                 const error2 = apiErrorMessage(decrypted?.message)
 
+                console.log(error, error2)
                 if (error2) {
                     dataHandler("otpError", t(error2))
                 }
@@ -1265,7 +1266,10 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                         <button className={styles.transparent} disabled={data.loading} onClick={() => {
                                                             if (data.step === 4 && data.payment_type?.value) {
                                                                 dataHandler("payment_type", {})
-                                                                dataHandler("payment_duration", {})
+                                                                dataHandler("payment_duration", {
+                                                                    name: "Instant Payment",
+                                                                    value: "instant",
+                                                                })
                                                                 dataHandler("show_payment_type", false)
                                                             }
                                                             else if (data.step === 2 && Object.keys(data.beneficiary).length > 0 && Object.keys(data.beneficiary_wallet)) {
@@ -1570,7 +1574,10 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                         // }
                                                         if (data.step === 4 && data.payment_type?.value) {
                                                             dataHandler("payment_type", {})
-                                                            dataHandler("payment_duration", {})
+                                                            dataHandler("payment_duration", {
+                                                                name: "Instant Payment",
+                                                                value: "instant",
+                                                            })
                                                             dataHandler("show_payment_type", false)
                                                         }
                                                         else if (data.step === 4 && data.payment_type?.value === "card") {
