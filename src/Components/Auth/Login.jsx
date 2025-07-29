@@ -20,8 +20,8 @@ import { authIcon, instaIcon, smsIcon, whatsappIcon } from "./files"
 import "./styles/index.module.css";
 import useWindowWidth from "../../utils/useWindowWidth";
 import i18next from "i18next";
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import localforage from "localforage"
 const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
@@ -49,6 +49,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const width = useWindowWidth()
     const [methodLoading, setMethodLoading] = useState(false)
     const [showNoticeModal, setShowNoticeModal] = useState(false);
+    const [loginData, setLoginData] = useState(null)
+    const [showQuickLogin, setShowQuickLogin] = useState(false)
 
     // convert this object into an array of object it should just have a type property which should tell like whatsapp insta biometric instead of a object property
 
@@ -109,8 +111,28 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
     }, [])
 
+    useEffect(() => {
+        const getData = async () => {
+            const data = await localforage.getItem("loginData")
+            if (data) {
+                setLoginData(data)
+                setShowQuickLogin(true)
+                setEmail(data?.credential)
+                setLoginMethod(data?.loginMethod)
+            } else {
+                setShowQuickLogin(false)
+            }
+        }
+
+        getData()
+    }, [])
+
+    console.log(loginData, email, loginMethod, "quick login")
 
 
+    const setData = async (data) => {
+        await localforage.setItem("loginData", data)
+    }
 
 
 
@@ -412,6 +434,12 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     const path = sessionStorage.getItem("path")
                                     localStorage.setItem("login", true)
                                     localStorage.setItem("token", token)
+                                    setData({
+                                        pfp: dec?.profileImage?.url,
+                                        name: dec?.first_name + " " + dec?.last_name,
+                                        loginMethod: loginMethod,
+                                        credential: email,
+                                    })
                                     setUserDetails(dec)
                                     if (path && path !== "undefined") {
                                         navigate(path)
@@ -432,7 +460,12 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 localStorage.setItem("login", true)
                                 localStorage.setItem("token", token)
                                 setUserDetails(dec)
-                                console.log(data, "shi shi")
+                                setData({
+                                    pfp: dec?.profileImage?.url,
+                                    name: dec?.first_name + " " + dec?.last_name,
+                                    loginMethod: loginMethod,
+                                    credential: email,
+                                })
                                 axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/login/create-login-history`, {
                                     data: encrypted
                                 })
@@ -576,6 +609,12 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 localStorage.setItem("login", true)
                                 localStorage.setItem("token", token)
                                 setUserDetails(dec)
+                                setData({
+                                    pfp: dec?.profileImage?.url,
+                                    name: dec?.first_name + " " + dec?.last_name,
+                                    loginMethod: loginMethod,
+                                    credential: email,
+                                })
                                 if (path && path !== "undefined") {
                                     navigate(path)
                                 } else {
@@ -595,6 +634,12 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                             localStorage.setItem("login", true)
                             localStorage.setItem("token", token)
                             setUserDetails(dec)
+                            setData({
+                                pfp: dec?.profileImage?.url,
+                                name: dec?.first_name + " " + dec?.last_name,
+                                loginMethod: loginMethod,
+                                credential: email,
+                            })
                             axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/login/create-login-history`, {
                                 data: encrypted
                             })
@@ -684,21 +729,32 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         setStep(1) // Reset step to 1
     }
 
-    const noticeMessage = `It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.\nThank you for your understanding.`;
+    const noticeMessage = `It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.`;
 
     return (
         <>
             {/* Notice Modal for VPN/Proxy/TOR */}
-            <Modal isOpen={showNoticeModal} toggle={() => setShowNoticeModal(false)}>
-                <ModalHeader> <h4 style={{ fontSize: "22px", fontWeight: 700, marginBottom: "0" }}>{t("Notice")}</h4> </ModalHeader>
+            <Modal isOpen={showNoticeModal}>
+                <ModalHeader>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="49" height="48" viewBox="0 0 49 48" fill="none">
+                            <path d="M24.1519 18V26M24.1519 34H24.1719M21.3825 7.78342L4.93272 36.1967C4.02031 37.7726 3.5641 38.5606 3.63153 39.2074C3.69034 39.7715 3.98588 40.2841 4.4446 40.6176C4.97051 41 5.88104 41 7.70209 41H40.6016C42.4227 41 43.3332 41 43.8591 40.6176C44.3178 40.2841 44.6134 39.7715 44.6722 39.2074C44.7396 38.5606 44.2834 37.7726 43.371 36.1967L26.9212 7.78341C26.0121 6.21309 25.5575 5.42793 24.9645 5.16422C24.4471 4.93419 23.8566 4.93419 23.3393 5.16422C22.7462 5.42793 22.2916 6.21309 21.3825 7.78342Z" stroke="red" stroke-width="4" stroke-linecap="round" />
+                        </svg>
+                        <h4 style={{ fontSize: "22px", fontWeight: 700, marginBottom: "0", color: "red" }}>{t("Notice")}</h4>
+                    </div>
+                </ModalHeader>
                 <ModalBody>
-                    <p style={{ fontWeight: 600, fontSize: "15px", marginBottom: "0px" }}>
+                    <p style={{ fontWeight: 600, fontSize: "15px", marginBottom: "15px" }}>
                         {noticeMessage}
                     </p>
+                    <p style={{ fontWeight: 600, fontSize: "15px", marginBottom: "0px" }}>
+                        {t("Thank you for your understanding.")}
+                    </p>
+
                 </ModalBody>
                 <ModalFooter>
-                    <button style={{ borderRadius: "8px", backgroundColor: "#5926f0", fontWeight: 600, border: "none", outline: "none", color: "white", padding: "10px 20px" }} onClick={() => setShowNoticeModal(false)}>
-                        {t("Close")}
+                    <button style={{ borderRadius: "8px", backgroundColor: "#5926f0", fontWeight: 600, border: "none", outline: "none", color: "white", padding: "10px 20px" }} onClick={() => window.location.reload()}>
+                        {t("Refresh Page")}
                     </button>
                 </ModalFooter>
             </Modal>
@@ -717,36 +773,65 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         !emailVerified
                             ?
                             <>
-                                <div className={styles.inp_con}>
-                                    <label>{loginMethod === "phone" ? t("Enter your phone number") : t("Enter Your Email")}</label>
-                                    {
-                                        loginMethod === "phone"
-                                            ?
-                                            <PhoneInput
-                                                setPhone={setEmail}
-                                                country={country}
-                                            />
-                                            :
-                                            <input type="email" placeholder={t("eg: john@doe.org")} value={email} onChange={e => setEmail(e.target.value?.toLowerCase())} autoComplete="on" name="email" />
-                                    }
-                                    <div
-                                        className={styles.loginWith}
-                                        onClick={() => {
-                                            setLoginMethod(loginMethod === "email" ? "phone" : "email")
-                                            localStorage.setItem("loginWith", loginMethod === "email" ? "phone" : "email")
-                                            setEmail("")
-                                        }}
-                                    >
+                                {!showQuickLogin ? <>
+                                    <div className={styles.inp_con}>
+                                        <label>{loginMethod === "phone" ? t("Enter your phone number") : t("Enter Your Email")}</label>
                                         {
-                                            loginMethod === "email"
+                                            loginMethod === "phone"
                                                 ?
-                                                t("Login With Phone Number")
+                                                <PhoneInput
+                                                    setPhone={setEmail}
+                                                    country={country}
+                                                />
                                                 :
-                                                t("Login with email")
+                                                <input type="email" placeholder={t("eg: john@doe.org")} value={email} onChange={e => setEmail(e.target.value?.toLowerCase())} autoComplete="on" name="email" />
                                         }
-                                        {/* {t("Login with")} {loginMethod === "email" ? t("Phone Number") : t("Email")} */}
+                                        <div
+                                            className={styles.loginWith}
+                                            onClick={() => {
+                                                setLoginMethod(loginMethod === "email" ? "phone" : "email")
+                                                localStorage.setItem("loginWith", loginMethod === "email" ? "phone" : "email")
+                                                setEmail("")
+                                            }}
+                                        >
+                                            {
+                                                loginMethod === "email"
+                                                    ?
+                                                    t("Login With Phone Number")
+                                                    :
+                                                    t("Login with email")
+                                            }
+                                            {/* {t("Login with")} {loginMethod === "email" ? t("Phone Number") : t("Email")} */}
+                                        </div>
                                     </div>
-                                </div>
+                                </> :
+                                    <>
+                                        <div className={styles.inp_con}>
+                                            <label>{t("Welcome Back!")}</label>
+                                            <div className={styles.user_info}>
+                                                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                                                    {loginData?.pfp ?
+                                                        <img style={{ width: "50px", borderRadius: "100%", height: "50px", objectFit: "cover" }} src={loginData?.pfp} alt="" /> :
+                                                        <div className={styles.dp}>{loginData?.name?.[0]?.toUpperCase()}</div>
+                                                    }
+                                                    <div>
+                                                        <h4 style={{ marginBottom: "0", fontWeight: 600, color: "black", fontSize: "15px" }}>{loginData?.name}</h4>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    className={styles.loginWith}
+                                                    onClick={() => {
+                                                        setShowQuickLogin(false)
+                                                        setEmail("")
+                                                    }}
+                                                    style={{ position: "relative", top: "0", left: "0px" }}
+                                                >
+                                                    {t("Change Account")}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
+                                }
                             </>
                             :
                             <div className={`${styles.inp_con} ${styles.password_field}`}>

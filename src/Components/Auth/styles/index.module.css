@@ -181,6 +181,39 @@
     color: #000;
 }
 
+
+.user_info {
+    width: 100%;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    background: #FFF;
+    box-shadow: 0px 4px 11px 0px rgba(0, 0, 0, 0.16), 0px 0px 4px 6px #FDFDFD inset;
+    padding: 16px 23px;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    color: #000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dp{
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    background: linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%);
+    color: white;
+    font-weight: 700;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
 .inp_con input::placeholder {
     color: #D9D9D9;
 }
