@@ -18,6 +18,7 @@ import { useNavigate } from "react-router";
 import { createShambeToken } from "../../Helper/CreateToken";
 import NotFoundModal from "../NotFound/NotFoundModal";
 import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow";
+import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
 
 const isBig = window.innerWidth > 1000
 
@@ -98,8 +99,13 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                     } else {
                         setShowCardModal(false)
                         const error2 = apiErrorMessage(dec?.message)
+                        const error1 = LimitsErrorMessage(dec?.code)
 
-                        if (error2) {
+                        console.log(error1, error2)
+                        if (error1) {
+                            setError(t(error1))
+                        }
+                        else if (error2) {
                             setError(t(error2))
                         } else {
                             setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
@@ -212,15 +218,14 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
             <Modal isOpen={error}>
                 <ModalBody style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <XCircle size={70} color="red" />
-                    <p color="red" style={{ fontSize: "1.1rem", fontWeight: "600", color: "red", marginTop: ".3rem" }}>
-                        We cannot process your request at the moment, please try again later.
+                    <p color="red" style={{ fontSize: "1.1rem", fontWeight: "600", color: "red", marginTop: ".3rem", textAlign:"center" }}>
+                        {error}
                     </p>
-                    <p style={{ fontSize: ".6rem", marginTop: ".5rem" }}>We're sorry about that.
-
+                    <p style={{ fontSize: ".6rem", marginTop: ".5rem" }}>{t("We're sorry about that.")}
                         <span onClick={() => {
                             setSubStep(1)
                             setError("")
-                        }} style={{ textDecoration: "underline", color: "#5926f0", cursor: "pointer" }}>Try Again</span>
+                        }} style={{ textDecoration: "underline", color: "#5926f0", cursor: "pointer" }}>{t("Try Again")}</span>
                     </p>
                 </ModalBody>
             </Modal>

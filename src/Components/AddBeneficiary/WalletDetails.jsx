@@ -10,6 +10,7 @@ const WalletDetails = ({ wallet, authHeader, setWalletError, setWalletIds, setDu
 
     useEffect(() => {
         setDuplicateWallet(false)
+        console.log(wallet)
         if (wallet?.wallet_id ? wallet?.wallet_id?.length : wallet.length === 8) {
             axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-by-wallet-id/${wallet?.wallet_id ?? wallet}`, {
                 headers: authHeader
@@ -17,7 +18,7 @@ const WalletDetails = ({ wallet, authHeader, setWalletError, setWalletIds, setDu
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
 
-                    if(!firstName && !lastName){
+                    if ((!firstName && !lastName) && (setFirstName && setLastName)) {
                         setFirstName(decrypted.walletDetails.first_name)
                         setLastName(decrypted.walletDetails.last_name)
                     }
@@ -30,6 +31,7 @@ const WalletDetails = ({ wallet, authHeader, setWalletError, setWalletIds, setDu
                     setWalletError("")
                 })
                 .catch(err => {
+                    console.log("Error fetching wallet details:", err)
                     const decrypted = decryptData(err.response.data.data)
                     if (decrypted?.message === "Unauthorize to access this route") {
                         const coun = localStorage.getItem("ip_country")
