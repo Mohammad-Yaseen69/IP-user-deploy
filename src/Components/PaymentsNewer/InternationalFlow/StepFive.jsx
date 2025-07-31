@@ -52,7 +52,7 @@ const StepFive = ({ data, dataHandler }) => {
                             <div className={styles.wc_pt}>
                                 <div>
                                     <img src={data.payment_type?.icon} alt="" />
-                                    <span>{data.payment_type?.name}</span>
+                                    <span>{t(data.payment_type?.name)}</span>
                                 </div>
                                 <span style={{ textAlign: "right" }}>{data?.wallet?.wallet_id}</span>
                             </div>

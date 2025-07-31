@@ -6,6 +6,7 @@ import { UserContext } from "../../../Context/UserContext"
 import { Link } from "react-router-dom"
 import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem"
 import { useTranslation } from "react-i18next"
+import i18next from "i18next"
 
 function levenshteinDistance(a, b) {
     const dp = Array(a.length + 1)
@@ -42,7 +43,7 @@ function calculateSimilarity(a, b) {
 const StepTwo = ({ data, dataHandler }) => {
     const { t } = useTranslation()
     const { getUserBeneficiaries, beneficiaries } = useContext(UserContext)
-    const [message, setMessage] = useState("No beneficiary found.")
+    const [message, setMessage] = useState(t("No beneficiary found."))
     const navigate = useNavigate()
     const [search, setSearch] = useState("")
     const [showOthers, setShowOthers] = useState(false)
@@ -68,12 +69,12 @@ const StepTwo = ({ data, dataHandler }) => {
                 }
                 return false
             })
-            setMessage(`No beneficiary found from ${data.country?.name} having ${data.payoutChannel?.value} details.`)
+            setMessage(t(`No beneficiary found from {{country}} having {{value}} details.`, { value: data.payoutChannel?.value, country: data.country?.name }))
         }
 
         if (data.payoutChannel?.value === "mobile") {
             fil = fil.filter(item => +item?.mobile_wallet?.[0]?.money_provider === +data.payer?.id)
-            setMessage(`No beneficiary found from ${data.country?.name} having ${data.payer?.name} details.`)
+            setMessage(t(`No beneficiary found from {{country}} having {{value}} details.`, { value: data.payer?.name, country: data.country?.name }))
         }
 
         if (data.payoutChannel?.value === "bank") {
@@ -99,11 +100,11 @@ const StepTwo = ({ data, dataHandler }) => {
             );
 
             if (fil.length === 0) setShowOthers(true);
-            setMessage(`No beneficiary found from ${data.country?.name} having ${data.payer?.name} details.`)
+            setMessage(t(`No beneficiary found from {{country}} having {{value}} details.`, { value: data.payer?.name, country: data.country?.name }))
         }
 
         return fil
-    }, [beneficiaries])
+    }, [beneficiaries, i18next.language])
 
     const bankBens = useMemo(() => {
         let fil = beneficiaries.filter(item => item.account_type.some(item => item.toLowerCase().includes(data.payoutChannel?.value?.toLowerCase())))
@@ -165,7 +166,7 @@ const StepTwo = ({ data, dataHandler }) => {
                 />
                 <input
                     type="search"
-                    placeholder="Search"
+                    placeholder={t("Search")}
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                 />
@@ -203,7 +204,7 @@ const StepTwo = ({ data, dataHandler }) => {
                                         } */}
                                     </div>
                                     <span>
-                                        {data?.payoutChannel?.value === "mobile" ? "Mobile Wallet" : data?.payoutChannel?.value === "cash" ? "Cash Point" : "Bank"}
+                                        {data?.payoutChannel?.value === "mobile" ? t("Mobile Wallet") : data?.payoutChannel?.value === "cash" ? t("Cash Point") : t("Bank")}
                                         :
                                         {data?.payoutChannel?.value === "mobile" ? data?.payer?.name : data?.payoutChannel?.value === "cash" ? data?.payer?.name : service_name_formatter(item?.bank_details?.[0]?.bank_name ?? item?.bank_details?.[0]?.name ?? "N/A")}
                                     </span>
@@ -214,22 +215,22 @@ const StepTwo = ({ data, dataHandler }) => {
                                             (
                                                 item?.bank_details?.[0]?.iban
                                                     ?
-                                                    `IBAN: ${item?.bank_details?.[0]?.iban}`
+                                                    `${t("IBAN")}: ${item?.bank_details?.[0]?.iban}`
                                                     :
-                                                    `Account Number: ${item?.bank_details?.[0]?.account_number}`
+                                                    `${t("Account Number")}: ${item?.bank_details?.[0]?.account_number}`
                                             )
                                         }
                                         {
                                             data.payoutChannel?.value === "mobile"
                                             &&
-                                            `NUMBER: ${item?.mobile_wallet?.[0]?.wallet_account_number}`
+                                            `${t("Number")}: ${item?.mobile_wallet?.[0]?.wallet_account_number}`
                                         }
                                     </span>
                                 </div>
                             </div>
                         ))
                         :
-                        <div style={{ margin: "1rem auto", textAlign: "center", fontSize: ".8rem" }}>{t(message)} <Link to={"/beneficiaries/add"}>{t("Add Now")}</Link></div>
+                        <div style={{ margin: "1rem auto", textAlign: "center", fontSize: ".8rem" }}>{message} <Link to={"/beneficiaries/add"}>{t("Add Now")}</Link></div>
                 }
                 {
                     filterd.length > 0
@@ -238,9 +239,9 @@ const StepTwo = ({ data, dataHandler }) => {
                         {
                             showOthers
                                 ?
-                                "Show Less"
+                                t("Show Less")
                                 :
-                                "Show More"
+                                t("Show More")
                         }
                     </div>
                 }
@@ -273,7 +274,7 @@ const StepTwo = ({ data, dataHandler }) => {
                                                 } */}
                                             </div>
                                             <span>
-                                                {data?.payoutChannel?.value === "mobile" ? "Mobile Wallet" : data?.payoutChannel?.value === "cash" ? "Cash Point" : "Bank"}
+                                                {data?.payoutChannel?.value === "mobile" ? t("Mobile Wallet"): data?.payoutChannel?.value === "cash" ? t("Cash Point") : t("Bank")}
                                                 :
                                                 {data?.payoutChannel?.value === "mobile" ? data?.payer?.name : data?.payoutChannel?.value === "cash" ? data?.payer?.name : service_name_formatter(item?.bank_details?.[0]?.bank_name ?? item?.bank_details?.[0]?.name ?? "N/A")}
                                             </span>
@@ -284,9 +285,9 @@ const StepTwo = ({ data, dataHandler }) => {
                                                     (
                                                         item?.bank_details?.[0]?.iban
                                                             ?
-                                                            `IBAN: ${item?.bank_details?.[0]?.iban}`
+                                                            `${t("IBAN")}: ${item?.bank_details?.[0]?.iban}`
                                                             :
-                                                            `Account Number: ${item?.bank_details?.[0]?.account_number}`
+                                                            `${("Account Number")}: ${item?.bank_details?.[0]?.account_number}`
                                                     )
                                                 }
                                                 {

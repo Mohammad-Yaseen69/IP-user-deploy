@@ -437,7 +437,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             return data.amount - Number(dec?.feeDetails)
         } catch (error) {
             const dec = decryptData(error.response.data.data)
-            dataHandler("error", typeof dec === "string" ? dec : dec?.message ?? "Something went wrong, Please try again!")
+            dataHandler("error", typeof dec === "string" ? dec : dec?.message ?? "We cannot process your request at the moment, please try again later.!")
         } finally {
             dataHandler("loading", false)
         }

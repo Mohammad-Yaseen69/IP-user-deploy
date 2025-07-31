@@ -674,7 +674,7 @@ const WalletFund = ({ setAction }) => {
                                                             lineHeight: 1.3,
                                                             letterSpacing: '-0.28px'
                                                         }}>
-                                                            {t(`${wallet?.currency?.code} is not supported by Paypal, USD will be used as the default currency.`)}
+                                                            {t(`PKR is not supported by Paypal, USD will be used as the default currency.`).replace("PKR", wallet?.currency?.code)}
                                                         </span>
                                                     </div>
                                                     <div style={{

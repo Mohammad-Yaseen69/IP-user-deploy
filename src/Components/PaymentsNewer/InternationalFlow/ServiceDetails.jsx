@@ -304,10 +304,10 @@ const ServiceDetails = ({ data }) => {
                                                 data.exchange_rate?.limits
                                                     ?
                                                     Object.keys(data.exchange_rate?.limits)?.map(item => item.includes("receiving") ? " " : (
-                                                        <li>{service_name_formatter(item)}: {Number(data.exchange_rate?.limits?.[item]?.total_limits - data.exchange_rate?.limits?.[item]?.limits_used)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data?.currency_wallet?.currency?.code} </li>
+                                                        <li>{t(service_name_formatter(item))}: {Number(data.exchange_rate?.limits?.[item]?.total_limits - data.exchange_rate?.limits?.[item]?.limits_used)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data?.currency_wallet?.currency?.code} </li>
                                                     ))
                                                     :
-                                                    <div style={{ margin: "1rem auto", textAlign: "center" }}>{t("No data to show")}</div>
+                                                    <div style={{ margin: "1rem auto", textAlign: "center" }}>{t("No Data To Show")}</div>
                                             }
                                         </ul>
                                     </div>

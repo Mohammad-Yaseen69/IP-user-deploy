@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router'
 
 const paymentChannels = [
     {
-        name: "InstaPay Wallet",
+        name: "Instapay Wallet",
         icon: bd,
         value: "wallet"
     },

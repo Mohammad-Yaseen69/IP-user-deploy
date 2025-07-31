@@ -629,7 +629,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
         catch (error) {
             const dec = decryptData(error.response.data.data)
             toast.error(internationalData)
-            updateInternationalData("error", typeof dec === "string" ? dec : dec?.message ?? "Something went wrong, Please try again!")
+            updateInternationalData("error", typeof dec === "string" ? dec : dec?.message ?? "We cannot process your request at the moment, please try again later.!")
         }
         finally {
             setLoading(false)
@@ -670,9 +670,9 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
 
 
             if (error2) {
-                updateInternationalData("error", `${t(error2)} Quotation ID: ${internationalData.created_quotation?.QuotationID}` ?? `Something went wrong, Please try again! Quotation ID: ${internationalData.created_quotation?.QuotationID}`)
+                updateInternationalData("error", `${t(error2)} Quotation ID: ${internationalData.created_quotation?.QuotationID}` ?? `We cannot process your request at the moment, please try again later.! Quotation ID: ${internationalData.created_quotation?.QuotationID}`)
             } else {
-                updateInternationalData("error", typeof dec === "string" ? `${dec} Quotation ID:${internationalData.created_quotation?.QuotationID}` : `${dec?.message} Quotation ID: ${internationalData.created_quotation?.QuotationID}` ?? `Something went wrong, Please try again! Quotation ID: ${internationalData.created_quotation?.QuotationID}`)
+                updateInternationalData("error", typeof dec === "string" ? `${dec} Quotation ID:${internationalData.created_quotation?.QuotationID}` : `${dec?.message} Quotation ID: ${internationalData.created_quotation?.QuotationID}` ?? `We cannot process your request at the moment, please try again later.! Quotation ID: ${internationalData.created_quotation?.QuotationID}`)
             }
         }
         finally {
@@ -717,7 +717,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             window.location.href = dec?.external_link
         } catch (error) {
             const dec = decryptData(error.response.data.data)
-            updateInternationalData("error", typeof dec === "string" ? dec : dec?.message ?? "Something went wrong, Please try again!")
+            updateInternationalData("error", typeof dec === "string" ? dec : dec?.message ?? "We cannot process your request at the moment, please try again later.!")
         }
         finally {
             setLoading(false)
@@ -840,7 +840,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
     //         return +String(internationalData.amount)?.replaceAll(",", "") - Number(dec?.feeDetails)
     //     } catch (error) {
     //         const dec = decryptData(error.response.data.data)
-    //         updateInternationalData("error", typeof dec === "string" ? dec : dec?.message ?? "Something went wrong, Please try again!")
+    //         updateInternationalData("error", typeof dec === "string" ? dec : dec?.message ?? "We cannot process your request at the moment, please try again later.!")
     //     } finally {
     //         setLoading(false)
     //     }
@@ -1273,7 +1273,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                                                         <SelectedCard
                                                                             title="Receive Method"
                                                                             list={[
-                                                                                { text: internationalData.payoutChannel?.name, url: internationalData.payoutChannel?.icon },
+                                                                                { text: t(internationalData.payoutChannel?.name), url: internationalData.payoutChannel?.icon },
                                                                                 { text: internationalData.payer?.name, url: internationalData.payer?.icon },
                                                                             ]}
                                                                             changeHandler={() => setSubStep(1)}

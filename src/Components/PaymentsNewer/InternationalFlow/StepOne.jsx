@@ -461,7 +461,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                             {
                                 data?.exchange_rate_error === "sww"
                                 &&
-                                t("Something went wrong, Please try again.")
+                                t("We cannot process your request at the moment, please try again later.")
                             }
                             {
                                 data?.exchange_rate_error === "payer_unavailable"
@@ -476,12 +476,12 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                             {
                                 data?.exchange_rate_error === "max payer"
                                 &&
-                                `${t("Maximum Amount: ")}: ${data.exchange_rate_error_value} ${data?.conversion_in}`
+                                `${t("Maximum Amount")}:: ${data.exchange_rate_error_value} ${data?.conversion_in}`
                             }
                             {
                                 data?.exchange_rate_error === "min payer"
                                 &&
-                                `${t("Minimum Amount: ")}: ${data.exchange_rate_error_value} ${data?.conversion_in}`
+                                `${t("Minimum Amount")}:: ${data.exchange_rate_error_value} ${data?.conversion_in}`
                             }
                             {
                                 data?.exchange_rate_error === "Invalid Amount.."
@@ -587,7 +587,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                             <div className={data?.country?.file_url ? "" : styles.grad_icon}>
                                 <img src={data?.country?.file_url ?? country} alt="" />
                             </div>
-                            <span>{countries.length === 0 ? t("Loading Countries...") : data?.country?.name ? t(data?.country?.name)?.slice(0, 30) : t("Destination Country")}</span>
+                            <span>{countries.length === 0 ? t("Loading Countries") + "..." : data?.country?.name ? t(data?.country?.name)?.slice(0, 30) : t("Destination Country")}</span>
                         </div>
                         <img src={chev_down} alt="" />
                     </div>
@@ -602,7 +602,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                                 <div className={data?.payoutChannel?.icon ? styles.grad_icon : ""}>
                                     <img src={data?.payoutChannel?.icon ?? channel} alt="" />
                                 </div>
-                                <span>{data?.payoutChannel?.name ?? t("Select Method")}</span>
+                                <span>{t(data?.payoutChannel?.name) || t("Select Method")}</span>
                             </div>
                             <img className={styles.chev} src={chev_down} alt="" />
                         </div>

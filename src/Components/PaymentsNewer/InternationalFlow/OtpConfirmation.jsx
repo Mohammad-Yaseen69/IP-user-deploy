@@ -158,7 +158,7 @@ const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHa
                                             (
                                                 resendTimer > 0
                                                     ?
-                                                    t("Resend available in ") + resendTimer + " seconds"
+                                                    t("Resend available in ") + resendTimer + " " + t("seconds")
                                                     :
                                                     <>
                                                         {t("Didn't receive the verification code?")}
@@ -185,7 +185,7 @@ const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHa
                                     }
                                     dataHandler("codeType", data.codeType === "sms" ? "authenticator" : "sms")
                                 }}>
-                                    {data.codeType !== "sms" ? "Verify Using SMS/Email".replace("SMS", userDetails?.phone?.slice(0, 3) === "971" ? "Whatsapp" : "SMS") : "Verify Using Authenticator"}
+                                    {data.codeType !== "sms" ? t("Verify Using Sms/Email").replace("SMS", userDetails?.phone?.slice(0, 3) === "971" ? "Whatsapp" : "SMS") : t("Verify Using Authenticator")}
                                 </button>
                             </div>
                             :

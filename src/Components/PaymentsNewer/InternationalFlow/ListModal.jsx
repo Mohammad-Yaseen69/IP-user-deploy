@@ -63,7 +63,7 @@ const ListModal = ({ isOpen, toggle, content, onSelectHandler, searchable = fals
                                 <div className={styles.searchable}>
                                     <div className={styles.search_con}>
                                         <BsSearch className={styles.icon} size={18} />
-                                        <input type="text" placeholder="Search" value={search} onChange={e => setSearch(e.target.value)} ref={inputRef} />
+                                        <input type="text" placeholder={t("Search")} value={search} onChange={e => setSearch(e.target.value)} ref={inputRef} />
                                     </div>
                                     <div className={`${styles.list} ${styles.list_s}`}>
                                         {
@@ -118,7 +118,7 @@ const ListModal = ({ isOpen, toggle, content, onSelectHandler, searchable = fals
                                                             <img src={item?.icon} alt="" />
                                                         </div>
                                                     }
-                                                    <span>{service_name_formatter(item?.name)}</span>
+                                                    <span>{t(service_name_formatter(item?.name))}</span>
                                                     {
                                                         current?.name === item?.name
                                                             ?

@@ -335,10 +335,10 @@ const WalletFundsFlow = ({ setAction }) => {
                 }
                 break;
             case 4:
-                   // if => not bank
-                   dataHandler("show_confirmation", true)
-                    // if bank 
-                    // switch bank step 1 => make it 2 => make it 3 => confirm it
+                // if => not bank
+                dataHandler("show_confirmation", true)
+                // if bank 
+                // switch bank step 1 => make it 2 => make it 3 => confirm it
                 break;
             default:
                 break;
@@ -543,7 +543,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                                                             lineHeight: 1.3,
                                                                             letterSpacing: '-0.28px'
                                                                         }}>
-                                                                            {t(`${data.wallet?.currency?.code} is not supported by Paypal, USD will be used as the default currency.`)}
+                                                                            {t(`PKR is not supported by Paypal, USD will be used as the default currency.`).replace("PKR", data.wallet?.currency?.code)}
                                                                         </span>
                                                                     </div>
                                                                     <div style={{
@@ -823,7 +823,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                                                     lineHeight: 1.3,
                                                                     letterSpacing: '-0.28px'
                                                                 }}>
-                                                                    {t(`${data.wallet?.currency?.code} is not supported by Paypal, USD will be used as the default currency.`)}
+                                                                    {t(`PKR is not supported by Paypal, USD will be used as the default currency.`).replace("PKR", data.wallet?.currency?.code)}
                                                                 </span>
                                                             </div>
                                                             <div style={{

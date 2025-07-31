@@ -23,13 +23,13 @@ export const typesData = [
         status: "Active"
     },
     {
-        name: "InstaPay Wallet",
+        name: "Instapay Wallet",
         value: "wallet",
         icon: instapay,
         status: "Active"
     },
     {
-        name: "PayPal",
+        name: "Paypal",
         value: "paypal",
         icon: paypal,
         status: "Active"
