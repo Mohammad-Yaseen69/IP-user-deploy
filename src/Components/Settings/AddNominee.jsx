@@ -12,6 +12,8 @@ import { useTranslation } from 'react-i18next'
 import NestedDropdown from '../NestedDropdown'
 import { BeneficiaryRelation, friendsAndFamily } from '../AddBeneficiary/IndividualAccount'
 import africanCountries from "../../Data/AfricanCountries.json"
+import { toast } from 'react-toastify'
+import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 
 
 const AddNominee = ({ setNominee, setAddNominee }) => {
@@ -140,6 +142,18 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
             .finally(() => setLoading(false))
     }
 
+
+    const NumberValidation = async () => {
+        try {
+            await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
+                data: encryptData({ number: `+${contact}` })
+            });
+            addNomineeHandler()
+        } catch (error) {
+            toast.error(t("Incorrect phone number, please enter a valid number."))
+        }
+    }
+
     return (
         <div>
             <div className={styles.top}>
@@ -158,16 +172,16 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                 </div>
                 <div className={styles.top_right}>
                     <div className={styles.inp_con}>
-                        <Label style={{ display: "flex", alignItems: 'center' }}>{t("Name")} <span style={{ color: "red", fontSize: '13px', display: fullName && "none" }}>*</span></Label>
+                        <Label style={{ display: "flex", alignItems: 'center' }}>{t("Name")} <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
                         <Input placeholder={t(`Nominee's Full Name`)} value={fullName} onChange={e => setFullName(e.target.value)} />
                     </div>
                     <div className={styles.mul_inp}>
                         <div className={styles.inp_con}>
-                            <Label>{t("Date Of Birth")}  <span style={{ color: "red", fontSize: '13px', display: dob && "none" }}>*</span></Label>
+                            <Label>{t("Date Of Birth")}  <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
                             <Input type='date' placeholder={`Nominee's Date Of Birth`} value={dob} onChange={e => setDob(e.target.value)} />
                         </div>
                         <div className={styles.inp_con}>
-                            <Label>{t("Gender")}  <span style={{ color: "red", fontSize: '13px', display: gender && "none" }}>*</span></Label>
+                            <Label>{t("Gender")}  <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
                             <Input type='select' value={gender} onChange={e => setGender(e.target.value)}>
                                 <option value="" disabled>--{t("Select Gender")}--</option>
                                 <option value="male">{t("Male")}</option>
@@ -180,7 +194,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
             </div>
             <div style={{ marginBottom: '15px' }} className={styles.mul_inp}>
                 <div className={styles.inp_con}>
-                    <Label>{t("Relationship with Nominee")}  <span style={{ color: "red", fontSize: '13px', display: relationship && "none" }}>*</span></Label>
+                    <Label>{t("Relationship with Nominee")}  <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
                     <NestedDropdown
                         child={friendsAndFamily}
                         parent={BeneficiaryRelation}
@@ -194,7 +208,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                     />
                 </div>
                 <div className={styles.inp_con}>
-                    <Label>{t("Nominee Contact Number")}  <span style={{ color: "red", fontSize: '13px', display: contact && "none" }}>*</span></Label>
+                    <Label>{t("Nominee Contact Number")}  <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
                     <PhoneInput
                         placeholder="Enter Phone number"
                         phone={contact}
@@ -202,43 +216,30 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                             setContact(e)
                         }}
                         customStyles={{
-                            boxShadow: "none",
+                            boxShadow: "inline",
                             border: '1px solid #eeeeee'
                         }}
                         setCountry={(e) => {
                             setCountryIsoCode(e.alpha3)
                         }}
                         country={userDetails.country_iso_code}
-
-                    // inputProps={{
-                    //     id: "mobile_number",
-                    //     name: "mobile_number",
-                    // }}
-                    // inputStyle={{
-                    //     width: "100%",
-                    //     flex: 1,
-                    //     minWidth: "250px",
-                    //     padding: "22px 15px 22px 48px",
-                    //     lineHeight: "1.5",
-                    //     border: "1px solid #ced4da",
-                    // }}
                     />
 
                 </div>
             </div>
-            <div style={{position: "relative"}} className={styles.inp_con}>
-                <Label>{t("Nominee Address")}  <span style={{ color: "red", fontSize: '13px', display: address && "none" }}>*</span></Label>
+            <div style={{ position: "relative" }} className={styles.inp_con}>
+                <Label>{t("Nominee Address")}  <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
                 <Input
                     type='textarea'
                     placeholder={t('Nominee Permanent Address')}
                     value={address}
                     onChange={e => setAddress(e.target.value)}
                     onFocus={() => setAddressInFocus(true)}
-                        onBlur={() => {
-                            setTimeout(() => {
-                                setAddressInFocus(false)
-                            }, 100)
-                        }}
+                    onBlur={() => {
+                        setTimeout(() => {
+                            setAddressInFocus(false)
+                        }, 100)
+                    }}
                 />
                 {
                     addressInFocus && addresses.length > 0
@@ -285,11 +286,11 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                 <Button
                     style={{
                         background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                        border: "none",
-                        outline: "none",
+                        border: "inline",
+                        outline: "inline",
                         borderRadius: "10px"
                     }}
-                    onClick={addNomineeHandler}
+                    onClick={NumberValidation}
                     disabled={!fullName || !image || !dob || !address || !relationship || !gender || !contact || contact.length < 9 || loading}
                 >
                     {t("Save")}

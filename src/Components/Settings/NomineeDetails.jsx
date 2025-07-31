@@ -11,6 +11,7 @@ import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import { minDate } from './Basic'
+import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 
 const NomineeDetails = ({ nominee, setNominee }) => {
     const { t } = useTranslation()
@@ -82,6 +83,16 @@ const NomineeDetails = ({ nominee, setNominee }) => {
             .finally(() => setLoading(false))
     }
 
+    const NumberValidation = async () => {
+        try {
+            await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
+                data: encryptData({ number: `+${contact}` })
+            });
+            updateNomineeHandler()
+        } catch (error) {
+            toast.error(t("Incorrect phone number, please enter a valid number."))
+        }
+    }
     const deleteNomineeHandler = () => {
         setLoading(true)
         axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/nominee/delete-nominee/${userDetails?._id}`, {
@@ -209,7 +220,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
                                     outline: "none",
                                     borderRadius: "10px"
                                 }}
-                                onClick={updateNomineeHandler}
+                                onClick={NumberValidation}
                                 disabled={!fullName || !userImage || !dob || !address || !relationship || !gender || !contact || contact.length < 9 || loading}
                             >
                                 {t("Save")}
