@@ -143,7 +143,7 @@ const CategoryDropdown = ({ category = "", disabled = false, padding = ".7rem .5
                     {
                         isOpen
                             ?
-                            <Input style={{ border: "none", outline: "none", padding: 0, margin: 0 }} placeholder='Search Here' ref={categoryInputRef} onClick={(e) => e.stopPropagation()} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+                            <Input style={{ border: "none", outline: "none", padding: 0, margin: 0 }} placeholder={t('Search')} ref={categoryInputRef} onClick={(e) => e.stopPropagation()} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
                             :
                             <>
                                 {selectedCategory ? (

@@ -2801,5 +2801,12 @@
   "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "It may take a few hours for the funds to appear in <user>{{name}}</user> account",
   "A Verification code has been sent to your number.": "A Verification code has been sent to your number.",
   "Verify Using {{method}}": "Verify Using {{method}}",
-  "Didn't receive OTP?": "Didn't receive OTP?"
+  "Didn't receive OTP?": "Didn't receive OTP?",
+  "Biometric": "Biometric",
+  "Topup Amount Limit exceeded": "Topup Amount Limit exceeded",
+  "VALID THRU": "VALID THRU",
+  "Who would you like to send money to?": "Who would you like to send money to?",
+  "You used": "You used",
+  "STEP": "STEP",
+  "Select a saved payment card": "Select a saved payment card"
 }

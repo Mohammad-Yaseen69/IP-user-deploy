@@ -2793,5 +2793,12 @@
   "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "Es posible que pasen algunas horas hasta que los fondos aparezcan en la cuenta <user>{{name}}</user>",
   "A Verification code has been sent to your number.": "Se ha enviado un código de verificación a tu número.",
   "Verify Using {{method}}": "Verificar usando {{method}}",
-  "Didn't receive OTP?": "¿No recibiste OTP?"
+  "Didn't receive OTP?": "¿No recibiste OTP?",
+  "Biometric": "Biométrico",
+  "Topup Amount Limit exceeded": "Límite de monto de recarga excedido",
+  "VALID THRU": "VÁLIDO HASTA",
+  "Who would you like to send money to?": "¿A quién le gustaría enviar dinero?",
+  "You used": "Tú usaste",
+  "STEP": "PASO",
+  "Select a saved payment card": "Seleccione una tarjeta de pago guardada"
 }

@@ -2775,5 +2775,12 @@
   "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "Het kan een paar uur duren voordat het geld op de rekening van <user>{{name}}</user> staat",
   "A Verification code has been sent to your number.": "Er is een verificatiecode naar uw nummer verzonden.",
   "Verify Using {{method}}": "Verifiëren met behulp van {{method}}",
-  "Didn't receive OTP?": "Geen OTP ontvangen?"
+  "Didn't receive OTP?": "Geen OTP ontvangen?",
+  "Biometric": "Biometrisch",
+  "Topup Amount Limit exceeded": "Limiet voor opwaardeerbedrag overschreden",
+  "VALID THRU": "GELDIG TOT",
+  "Who would you like to send money to?": "Naar wie wilt u geld sturen?",
+  "You used": "Je hebt gebruikt",
+  "STEP": "STAP",
+  "Select a saved payment card": "Selecteer een opgeslagen betaalkaart"
 }

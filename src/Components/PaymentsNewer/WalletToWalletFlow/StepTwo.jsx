@@ -243,7 +243,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee }) => {
                                 t("Invalid Amount")
                             }
                             {
-                                possibleErrors?.[Object.keys(possibleErrors).find(item => possibleErrors[item] === data?.exchange_rate_error)] ?? ""
+                                t(possibleErrors?.[Object.keys(possibleErrors).find(item => possibleErrors[item] === data?.exchange_rate_error)]) ?? ""
                             }
                         </div>
                         :

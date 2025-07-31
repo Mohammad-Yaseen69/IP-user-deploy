@@ -59,7 +59,7 @@ const CryptoFund = ({ setAction }) => {
                                                 marginTop: "-.6rem",
                                                 maxWidth: "320px"
                                             }} className="confirm_container">
-                                                <h4 style={{ color: "#5936f0", wordBreak: "normal", padding: "2rem" }} className="head_confirm">Confirm Your Payment</h4>
+                                                <h4 style={{ color: "#5936f0", wordBreak: "normal", padding: "2rem" }} className="head_confirm">{t("Confirm Your Payment")}</h4>
                                                 <video src={cfm_vid} autoPlay loop="true" style={{ height: "100%", width: "100%", objectFit: "cover", mixBlendMode: "multiply", paddingBottom: "2rem" }}></video>
                                             </div>
                                         }

@@ -20,7 +20,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
             inputRefs?.current?.[0]?.focus()
         }
     }, [])
-    
+
     const [verified, setVerified] = useState(false);
     const [resendTimer, setResendTimer] = useState(90);
     const [isAnyFieldEmpty, setIsAnyFieldEmpty] = useState(true);
@@ -180,7 +180,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                             ?
                                             t("Verification Code Verified")
                                             :
-                                            (showAuthToggle ? t("Authenticator Code Verified") :  null)
+                                            (showAuthToggle ? t("Authenticator Code Verified") : null)
                                     )
                                     :
                                     (
@@ -207,7 +207,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                     (
                                         authType === "sms"
                                             ?
-                                            t(`A one-time verification code has been sent to your ${userDetails?.email ? "email address" : ""} and phone number.`).replace("phone", userDetails.phone?.slice(0, 3) === "971" ? "whatsapp":  "phone")
+                                            t(`A one-time verification code has been sent to your ${userDetails?.email ? "email address" : ""} and phone number.`).replace("phone", userDetails.phone?.slice(0, 3) === "971" ? "whatsapp" : "phone")
                                             :
                                             t("Enter a code shown in the app to make sure everything works fine.")
                                     )
@@ -260,7 +260,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                         }
                                         setAuthType(authType === "sms" ? "authenticator" : "sms")
                                     }}>
-                                        <span style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }}>{authType === "sms" ? (showAuthToggle ? t("Verify Using Authenticator"): null) :  t("Verify Using Sms/Email")}</span>
+                                        <span style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }}>{authType === "sms" ? (showAuthToggle ? t("Verify Using Authenticator") : null) : t("Verify Using Sms/Email")}</span>
                                     </span>
                                     :
                                     <span onClick={() => navigate("/settings?tab=tfa")} style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }}>{t("Setup Authenticator")}</span>
@@ -275,7 +275,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                 (
                                     resendTimer > 0
                                         ?
-                                        t("Resend available in ") + resendTimer + " seconds"
+                                        t("Resend available in ") + resendTimer + " " + t("seconds")
                                         :
                                         <>
                                             {"Didn't receive OTP? "}

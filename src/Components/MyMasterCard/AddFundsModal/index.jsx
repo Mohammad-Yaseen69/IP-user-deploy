@@ -596,7 +596,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
 
 
             <Modal isOpen={showOtpModal}>
-                <ModalHeader toggle={() => setshowOtpModal(false)}> Confirm </ModalHeader>
+                <ModalHeader toggle={() => setshowOtpModal(false)}> {t("Confirm")} </ModalHeader>
                 <ModalBody>
                     <OTPConfirmation
                         callback={paymentType === "wallet" ? walletTopup : paymentType === "paypal" ? paypalTopup : cardTopup}

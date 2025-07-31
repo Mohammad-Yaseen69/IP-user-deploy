@@ -2697,5 +2697,12 @@
   "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "Появление средств на счете <user>{{name}}</user> может занять несколько часов.",
   "A Verification code has been sent to your number.": "На ваш номер был отправлен проверочный код.",
   "Verify Using {{method}}": "Проверить с помощью {{method}}",
-  "Didn't receive OTP?": "Не получили OTP?"
+  "Didn't receive OTP?": "Не получили OTP?",
+  "Biometric": "Биометрический",
+  "Topup Amount Limit exceeded": "Превышен лимит суммы пополнения",
+  "VALID THRU": "Действителен до",
+  "Who would you like to send money to?": "Кому бы вы хотели отправить деньги?",
+  "You used": "Вы использовали",
+  "STEP": "ШАГ",
+  "Select a saved payment card": "Выберите сохраненную платежную карту"
 }

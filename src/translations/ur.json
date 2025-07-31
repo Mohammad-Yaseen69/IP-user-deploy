@@ -2786,5 +2786,12 @@
   "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "فنڈز کو <user>{{name}}</user> اکاؤنٹ میں ظاہر ہونے میں چند گھنٹے لگ سکتے ہیں۔",
   "A Verification code has been sent to your number.": "آپ کے نمبر پر ایک تصدیقی کوڈ بھیجا گیا ہے۔",
   "Verify Using {{method}}": "{{method}} کا استعمال کرتے ہوئے تصدیق کریں",
-  "Didn't receive OTP?": "OTP موصول نہیں ہوا؟"
+  "Didn't receive OTP?": "OTP موصول نہیں ہوا؟",
+  "Biometric": "بائیو میٹرک",
+  "Topup Amount Limit exceeded": "ٹاپ اپ رقم کی حد سے تجاوز کر گیا۔",
+  "VALID THRU": "کے ذریعے درست",
+  "Who would you like to send money to?": "آپ کس کو پیسے بھیجنا چاہیں گے؟",
+  "You used": "آپ نے استعمال کیا۔",
+  "STEP": "قدم",
+  "Select a saved payment card": "محفوظ کردہ ادائیگی کارڈ منتخب کریں۔"
 }

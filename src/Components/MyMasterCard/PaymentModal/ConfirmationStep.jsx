@@ -44,7 +44,7 @@ const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds,
                         <div>
                             <p>{t("You are using")}</p>
                             <div style={{ gap: "0" }}>
-                                <span>{walletState?.name} {paymentType === "card" ? t("Card Payment") : paymentType === "paypal" ? t("Paypal") : t("Wallet")}</span>
+                                <span>{walletState?.name} {paymentType === "card" ? t("Payment Card") : paymentType === "paypal" ? t("Paypal") : t("Wallet")}</span>
                                 <p>{walletState?.wallet_id}</p>
                             </div>
                         </div>

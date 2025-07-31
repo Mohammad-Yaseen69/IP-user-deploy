@@ -2786,5 +2786,12 @@
   "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "قد يستغرق الأمر بضع ساعات حتى تظهر الأموال في حساب <user>{{name}}</user>",
   "A Verification code has been sent to your number.": "لقد تم إرسال رمز التحقق إلى رقمك.",
   "Verify Using {{method}}": "التحقق باستخدام {{method}}",
-  "Didn't receive OTP?": "لم تستلم OTP؟"
+  "Didn't receive OTP?": "لم تستلم OTP؟",
+  "Biometric": "البيانات الحيوية",
+  "Topup Amount Limit exceeded": "تم تجاوز الحد الأقصى لمبلغ إعادة الشحن",
+  "VALID THRU": "صالحة حتى",
+  "Who would you like to send money to?": "من تريد إرسال الأموال إليه؟",
+  "You used": "لقد استخدمت",
+  "STEP": "خطوة",
+  "Select a saved payment card": "حدد بطاقة الدفع المحفوظة"
 }

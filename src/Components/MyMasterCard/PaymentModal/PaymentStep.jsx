@@ -202,7 +202,7 @@ const PaymentStep = (
                             </div>
 
                             <div className={styles.field}>
-                                <h3 className={styles.label}>{t("Expiry date")} {!cardDetail.cardExpiry && "*"}</h3>
+                                <h3 className={styles.label}>{t("Expiry Date")} {!cardDetail.cardExpiry && "*"}</h3>
                                 <CardExpiry
                                     content={cardDetail.cardExpiry}
                                     setContent={(e) => {
@@ -215,7 +215,7 @@ const PaymentStep = (
                             </div>
                         </div>
                         <div className={styles.field}>
-                            <h3 className={styles.label}>{t("Expiry Holder Name")} {!cardDetail.cardHolderName && "*"}</h3>
+                            <h3 className={styles.label}>{t("Card Holder Name")} {!cardDetail.cardHolderName && "*"}</h3>
                             <CardHolderName
                                 content={cardDetail.cardHolderName}
                                 setContent={(e) => {

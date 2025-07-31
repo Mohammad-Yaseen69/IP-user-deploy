@@ -490,7 +490,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                                     :
                                                     data.show_confirmation
                                                         ?
-                                                        "Confirm Your Payment"
+                                                        t("Confirm Your Payment")
                                                         :
                                                         t(headings[data.step - 1])
                                         }
@@ -770,7 +770,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                             :
                                             data.show_confirmation
                                                 ?
-                                                "Confirm Your Payment"
+                                                t("Confirm Your Payment")
                                                 :
                                                 t(headings[data.step - 1])
                                 }

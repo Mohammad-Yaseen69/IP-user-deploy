@@ -17,7 +17,7 @@ const SideProgress = ({ isActive, isCompleted, Text, Icon, step }) => {
                 </div>
 
                 <div className={styles.textCont}>
-                    <span>{t('Step')} 0{step}</span>
+                    <span>{t(`Step 0${step}`)}</span>
                     <p>{t(Text)}</p>
                 </div>
             </div>

@@ -2793,5 +2793,12 @@
   "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "Може минути кілька годин, перш ніж кошти з’являться на рахунку <user>{{name}}</user>",
   "A Verification code has been sent to your number.": "На ваш номер надіслано код підтвердження.",
   "Verify Using {{method}}": "Перевірте за допомогою {{method}}",
-  "Didn't receive OTP?": "Не отримали OTP?"
+  "Didn't receive OTP?": "Не отримали OTP?",
+  "Biometric": "Біометричний",
+  "Topup Amount Limit exceeded": "Ліміт суми поповнення перевищено",
+  "VALID THRU": "ДІЙСНИЙ ЧЕРЕЗ",
+  "Who would you like to send money to?": "Кому б ви хотіли надіслати гроші?",
+  "You used": "Ви використовували",
+  "STEP": "КРОК",
+  "Select a saved payment card": "Виберіть збережену платіжну картку"
 }

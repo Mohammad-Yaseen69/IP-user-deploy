@@ -2744,5 +2744,12 @@
   "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "Yana iya ɗaukar sa'o'i kaɗan kafin kudaden su bayyana a cikin asusun <user>{{name}}</user>",
   "A Verification code has been sent to your number.": "An aika lambar tabbatarwa zuwa lambar ku.",
   "Verify Using {{method}}": "Tabbatar da Amfani da {{hanyar}}",
-  "Didn't receive OTP?": "Ba a sami OTP ba?"
+  "Didn't receive OTP?": "Ba a sami OTP ba?",
+  "Biometric": "Biometric",
+  "Topup Amount Limit exceeded": "Ƙidaya Ƙididdiga na Sakawa ya wuce",
+  "VALID THRU": "INGANCI TA",
+  "Who would you like to send money to?": "Wa kuke so a aika wa kuɗi?",
+  "You used": "Ka yi amfani",
+  "STEP": "MATAKI",
+  "Select a saved payment card": "Zaɓi katin biyan kuɗi da aka ajiye"
 }

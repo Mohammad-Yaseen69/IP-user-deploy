@@ -2788,5 +2788,12 @@
   "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "Huenda ikachukua saa chache kwa pesa kuonekana kwenye akaunti ya <user>{{name}}</user>",
   "A Verification code has been sent to your number.": "Nambari ya kuthibitisha imetumwa kwa nambari yako.",
   "Verify Using {{method}}": "Thibitisha Kwa Kutumia {{njia}}",
-  "Didn't receive OTP?": "Hukupokea OTP?"
+  "Didn't receive OTP?": "Hukupokea OTP?",
+  "Biometric": "Biometriska",
+  "Topup Amount Limit exceeded": "Kikomo cha Kiasi cha Kuongeza Kimezidishwa",
+  "VALID THRU": "KUPITIA HALALI",
+  "Who would you like to send money to?": "Je, ungependa kutuma pesa kwa nani?",
+  "You used": "Umetumia",
+  "STEP": "HATUA",
+  "Select a saved payment card": "Chagua kadi ya malipo iliyohifadhiwa"
 }

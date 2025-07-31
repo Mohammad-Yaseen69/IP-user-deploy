@@ -2788,5 +2788,12 @@
   "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "Może minąć kilka godzin, zanim środki pojawią się na koncie <user>{{name}}</user>",
   "A Verification code has been sent to your number.": "Kod weryfikacyjny został wysłany na Twój numer.",
   "Verify Using {{method}}": "Zweryfikuj za pomocą {{method}}",
-  "Didn't receive OTP?": "Nie otrzymałeś OTP?"
+  "Didn't receive OTP?": "Nie otrzymałeś OTP?",
+  "Biometric": "Biometryczny",
+  "Topup Amount Limit exceeded": "Przekroczono limit kwoty doładowania",
+  "VALID THRU": "WAŻNE DO",
+  "Who would you like to send money to?": "Do kogo chcesz wysłać pieniądze?",
+  "You used": "Użyłeś",
+  "STEP": "KROK",
+  "Select a saved payment card": "Wybierz zapisaną kartę płatniczą"
 }

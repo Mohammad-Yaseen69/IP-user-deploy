@@ -502,7 +502,7 @@ const QrQuickerPay = () => {
 
                     <div className={styles.walletDets}>
                       <span>
-                        {step === 2 ? "You are using" : " You used"}
+                        {step === 2 ? t("You are using") : t("You used")}
                       </span>
 
                       <div>

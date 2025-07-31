@@ -2786,5 +2786,12 @@
   "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "O le gba to wakati diẹ fun awọn owo lati han ni <user>{{name}}</user> akọọlẹ",
   "A Verification code has been sent to your number.": "A ti fi koodu ijẹrisi ranṣẹ si nọmba rẹ.",
   "Verify Using {{method}}": "Jẹrisi Lilo {{ọna}}",
-  "Didn't receive OTP?": "Ko gba OTP bi?"
+  "Didn't receive OTP?": "Ko gba OTP bi?",
+  "Biometric": "Biometric",
+  "Topup Amount Limit exceeded": "Ifilelẹ iye to pọ ju",
+  "VALID THRU": "WULO NIPA",
+  "Who would you like to send money to?": "Tani iwọ yoo fẹ lati fi owo ranṣẹ si?",
+  "You used": "O lo",
+  "STEP": "Igbesẹ",
+  "Select a saved payment card": "Yan kaadi sisanwo ti o fipamọ"
 }

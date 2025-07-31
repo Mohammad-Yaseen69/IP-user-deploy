@@ -2745,5 +2745,12 @@
   "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "Es kann einige Stunden dauern, bis das Guthaben auf dem Konto von <user>{{name}}</user> erscheint",
   "A Verification code has been sent to your number.": "Ein Bestätigungscode wurde an Ihre Nummer gesendet.",
   "Verify Using {{method}}": "Überprüfen mit {{method}}",
-  "Didn't receive OTP?": "Sie haben kein OTP erhalten?"
+  "Didn't receive OTP?": "Sie haben kein OTP erhalten?",
+  "Biometric": "Biometrische",
+  "Topup Amount Limit exceeded": "Aufladebetragslimit überschritten",
+  "VALID THRU": "GÜLTIG BIS",
+  "Who would you like to send money to?": "Wem möchten Sie Geld senden?",
+  "You used": "Sie haben",
+  "STEP": "SCHRITT",
+  "Select a saved payment card": "Wählen Sie eine gespeicherte Zahlungskarte aus"
 }

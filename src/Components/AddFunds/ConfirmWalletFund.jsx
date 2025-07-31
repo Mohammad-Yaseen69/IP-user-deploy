@@ -101,7 +101,6 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                         const error2 = apiErrorMessage(dec?.message)
                         const error1 = LimitsErrorMessage(dec?.code)
 
-                        console.log(error1, error2)
                         if (error1) {
                             setError(t(error1))
                         }
@@ -144,8 +143,17 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                         localStorage.setItem("ip_country", coun)
                         window.location.pathname = "/login";
                     }
-                    console.log(dec)
-                    setError(dec?.message)
+                    const error2 = apiErrorMessage(dec?.message)
+                    const error1 = LimitsErrorMessage(dec?.code)
+
+                    if (error1) {
+                        setError(t(error1))
+                    }
+                    else if (error2) {
+                        setError(t(error2))
+                    } else {
+                        setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                    }
                 }
                 finally {
                     setLoading(false)
@@ -180,7 +188,17 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                         localStorage.setItem("ip_country", coun)
                         window.location.pathname = "/login";
                     }
-                    setError(dec?.message)
+                    const error2 = apiErrorMessage(dec?.message)
+                    const error1 = LimitsErrorMessage(dec?.code)
+
+                    if (error1) {
+                        setError(t(error1))
+                    }
+                    else if (error2) {
+                        setError(t(error2))
+                    } else {
+                        setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                    }
                 }
                 finally {
                     setLoading(false)
@@ -218,8 +236,8 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
             <Modal isOpen={error}>
                 <ModalBody style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <XCircle size={70} color="red" />
-                    <p color="red" style={{ fontSize: "1.1rem", fontWeight: "600", color: "red", marginTop: ".3rem", textAlign:"center" }}>
-                        {error}
+                    <p color="red" style={{ fontSize: "1.1rem", fontWeight: "600", color: "red", marginTop: ".3rem", textAlign: "center" }}>
+                        {t(error)}
                     </p>
                     <p style={{ fontSize: ".6rem", marginTop: ".5rem" }}>{t("We're sorry about that.")}
                         <span onClick={() => {

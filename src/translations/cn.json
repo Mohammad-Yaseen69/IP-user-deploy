@@ -2787,5 +2787,12 @@
   "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "资金可能需要几个小时才能出现在<user>{{name}}}帐户中",
   "A Verification code has been sent to your number.": "验证码已发送至您的号码。",
   "Verify Using {{method}}": "使用 {{method}} 验证",
-  "Didn't receive OTP?": "没有收到 OTP？"
+  "Didn't receive OTP?": "没有收到 OTP？",
+  "Biometric": "生物识别",
+  "Topup Amount Limit exceeded": "充值金额超出限制",
+  "VALID THRU": "有效期至",
+  "Who would you like to send money to?": "您想向谁汇款？",
+  "You used": "你使用了",
+  "STEP": "步",
+  "Select a saved payment card": "选择已保存的支付卡"
 }

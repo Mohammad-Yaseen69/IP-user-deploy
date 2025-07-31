@@ -2788,5 +2788,12 @@
   "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "<user>{{name}}</user> खाते में धनराशि आने में कुछ घंटे लग सकते हैं",
   "A Verification code has been sent to your number.": "आपके नंबर पर एक सत्यापन कोड भेजा गया है।",
   "Verify Using {{method}}": "{{विधि}} का उपयोग करके सत्यापित करें",
-  "Didn't receive OTP?": "क्या आपको OTP प्राप्त नहीं हुआ?"
+  "Didn't receive OTP?": "क्या आपको OTP प्राप्त नहीं हुआ?",
+  "Biometric": "बॉयोमीट्रिक",
+  "Topup Amount Limit exceeded": "टॉपअप राशि सीमा पार हो गई",
+  "VALID THRU": "के जरिए मान्य",
+  "Who would you like to send money to?": "आप किसे पैसा भेजना चाहेंगे?",
+  "You used": "तुमने इस्तेमाल किया",
+  "STEP": "कदम",
+  "Select a saved payment card": "सहेजे गए भुगतान कार्ड का चयन करें"
 }

@@ -164,7 +164,7 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
                     {
                         isDropdownOpen
                             ?
-                            <Input style={{ border: "none", outline: "none", padding: ".75rem 1rem", borderRadius: "14px", }} placeholder='Search Here' value={searchTerm} onChange={e => setSearchTerm(e.target.value)} onClick={e => e.stopPropagation()} />
+                            <Input style={{ border: "none", outline: "none", padding: ".75rem 1rem", borderRadius: "14px", }} placeholder={t('Search')} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} onClick={e => e.stopPropagation()} />
                             :
                             <>
                                 {

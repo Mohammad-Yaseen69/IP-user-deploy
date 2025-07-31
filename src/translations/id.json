@@ -2786,5 +2786,12 @@
   "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "Mungkin butuh beberapa jam agar dana muncul di akun <user>{{name}}</user>",
   "A Verification code has been sent to your number.": "Kode Verifikasi telah dikirim ke nomor Anda.",
   "Verify Using {{method}}": "Verifikasi Menggunakan {{method}}",
-  "Didn't receive OTP?": "Tidak menerima OTP?"
+  "Didn't receive OTP?": "Tidak menerima OTP?",
+  "Biometric": "Biometrik",
+  "Topup Amount Limit exceeded": "Batas Jumlah Isi Ulang Terlampaui",
+  "VALID THRU": "BERLAKU SAMPAI",
+  "Who would you like to send money to?": "Kepada siapa Anda ingin mengirim uang?",
+  "You used": "Kamu sudah menggunakannya",
+  "STEP": "MELANGKAH",
+  "Select a saved payment card": "Pilih kartu pembayaran yang disimpan"
 }

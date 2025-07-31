@@ -82,7 +82,7 @@ const Tooltip = ({ children, targetId, isOpen, setIsOpen }) => {
 };
 
 // 1. Add a reusable DisabledOverlay component for the blur+message effect
-const DisabledOverlay = ({ message }) => (
+const DisabledOverlay = ({ message, t }) => (
     <div style={{
         position: 'absolute',
         top: 0,
@@ -102,7 +102,7 @@ const DisabledOverlay = ({ message }) => (
         textAlign: 'center',
         pointerEvents: 'none',
     }}>
-        {message}
+        {t(message)}
     </div>
 );
 
@@ -180,7 +180,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                 const dec = decryptData(res.data.data)
                 setCurrentCardDetails(dec.data)
-                setCardStatus(dec?.status === '1' ? "activate" : "deactive")
+                setCardStatus(dec?.data?.status === '1' ? "activate" : "deactive")
                 console.log(dec, "lala")
             } catch (error) {
                 console.log(error)
@@ -727,7 +727,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                                                     <div className={styles.row}>
                                                         <div className={styles.dets}>
-                                                            <span className={styles.lab}>{t('valid thru')}</span>
+                                                            <span className={styles.lab}>{t('VALID THRU')}</span>
                                                             <h3 className={styles.vals}>{currentCardDetails?.exp_date}</h3>
                                                         </div>
                                                         <div className={styles.dets}>
@@ -814,7 +814,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                 </div>
                                 <div onClick={freezeToggle} style={{ cursor: freezeLoading ? "wait" : "pointer", position: 'relative', opacity: freezeLoading ? 0.7 : 1 }} className={styles.iconBox}>
                                     <img src={Freeze} alt="" />
-                                    <span>{freezeLoading ? t('Processing') + "..." : (cardStatus === "active" ? t('Freeze Card') : t('Activate Card'))}</span>
+                                    <span>{freezeLoading ? t('Processing') + "..." : (cardStatus !== "deactive" ? t('Freeze Card') : t('Activate Card'))}</span>
                                 </div>
                             </div>
 
@@ -839,7 +839,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     >
                                         <img src={plus} alt="" />
                                         <span>{t('Add Funds')}</span>
-                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay message="Your card is freeze" /></div>}
+                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay t={t} message="Your card is freeze" /></div>}
                                     </div>
                                     <div
                                         onClick={() => {
@@ -856,7 +856,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     >
                                         <img src={CreditCardR} alt="" />
                                         <span>{t('Card to Card Transfer')}</span>
-                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay message="Your card is freeze" /></div>}
+                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay t={t} message="Your card is freeze" /></div>}
                                     </div>
                                 </div>
                                 <div style={{ display: "flex", flexDirection: "column", gap: '12px', justifyContent: "center", flex: 1 }}>
@@ -875,7 +875,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     >
                                         <img src={Wallet2} alt="" />
                                         <span>{t('Card to Wallet Transfer')}</span>
-                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay message="Your card is freeze" /></div>}
+                                        {cardStatus === "deactive" && <div className="disabled-overlay" style={{ display: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}><DisabledOverlay t={t} message="Your card is freeze" /></div>}
                                     </div>
                                     <div onClick={() => openModal("download")} style={{ cursor: "pointer" }} className={styles.iconBox}>
                                         <img src={FileDown} alt="" />
