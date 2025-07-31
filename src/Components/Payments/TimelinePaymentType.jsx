@@ -4,6 +4,7 @@ import { VerticalTimelineElement } from 'react-vertical-timeline-component'
 import { H4, } from '../../AbstractElements'
 import PaymentsButton from './PaymentsButton'
 import da from "./d_a.gif"
+import { useTranslation } from 'react-i18next'
 // import ButtonInfo from './ButtonInfo'
 
 const TimelinePaymentType = ({ action, mobileView, setStepNumber, setPaymentType, paymentType }) => {
@@ -14,7 +15,7 @@ const TimelinePaymentType = ({ action, mobileView, setStepNumber, setPaymentType
     const [tooltipTwo, setTooltipTwo] = useState(false);
     const toggleTwo = () => setTooltipTwo(!tooltipTwo);
     const [tooltipThree, setTooltipThree] = useState(false);
-    const toggleThree = () => setTooltipThree(!tooltipThree);
+    const {t} = useTranslation()
 
 
     return (
@@ -99,7 +100,7 @@ const TimelinePaymentType = ({ action, mobileView, setStepNumber, setPaymentType
                         }}>
                             <div className="btn-showcase info_btn">
                                 <PaymentsButton
-                                    value={action === "request" ? "Standard Request" : "Instant Payment"}
+                                    value={action === "request" ? t("Standard Request") : "Instant Payment"}
                                     size={"sm"}
                                     attr={{
                                         onClick: () => {

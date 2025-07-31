@@ -378,7 +378,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                                                 style={{ display: 'flex', alignItems: "center", gap: "7px", padding: '10px 15px', boxShadow: "0px 0px 4px #0000002e", borderRadius: "6px", cursor: "pointer" }}>
                                                 <img style={{ width: '24px' }} src={currentMethod === "sms" ? whatsappIcon : smsIcon} alt="" />
                                                 <span style={{ fontWeight: 600, color: 'black' }}>
-                                                    Verify Using {currentMethod === "sms" ? "Whatsapp" : "SMS"}
+                                                    {t("Verify Using {{method}}", { method: currentMethod === "sms" ? "Whatsapp" : "SMS" })}
                                                 </span>
                                             </span>
 

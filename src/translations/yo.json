@@ -2772,5 +2772,19 @@
   "Payment of rewards": "Owo sisan ti awọn ere",
   "Payment of Influencer": "Owo sisan ti Influencer",
   "Broker, commitment, guarantee and other fees": "Alagbata, ifaramo, iṣeduro ati awọn idiyele miiran",
-  "Other purposes": "Awọn idi miiran"
+  "Other purposes": "Awọn idi miiran",
+  "Daily Sending Limit": "Ifiranṣẹ ojoojumọ Ifilelẹ",
+  "Monthly Sending Limit": "Oṣooṣu Ifiranṣẹ Ifilelẹ",
+  "Yearly Sending Limit": "Ifiranṣẹ Ọdọọdun",
+  "Instant Payment": "Isanwo Lẹsẹkẹsẹ",
+  "Instalment Payment": "Isanwo Fidiẹ",
+  "Schedule Payment": "Iṣeto Isanwo",
+  "Security Deposit": "Idogo Aabo",
+  "Split Payment": "Pipin Owo sisan",
+  "Transfer Initiated": "Ibẹrẹ Gbigbe",
+  "Transfer in progress": "Gbigbe ni ilọsiwaju",
+  "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "O le gba to wakati diẹ fun awọn owo lati han ni <user>{{name}}</user> akọọlẹ",
+  "A Verification code has been sent to your number.": "A ti fi koodu ijẹrisi ranṣẹ si nọmba rẹ.",
+  "Verify Using {{method}}": "Jẹrisi Lilo {{ọna}}",
+  "Didn't receive OTP?": "Ko gba OTP bi?"
 }

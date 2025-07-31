@@ -2774,5 +2774,19 @@
   "Payment of rewards": "Wypłata nagród",
   "Payment of Influencer": "Płatność dla influencera",
   "Broker, commitment, guarantee and other fees": "Opłaty brokerskie, zobowiązania, gwarancje i inne",
-  "Other purposes": "Inne cele"
+  "Other purposes": "Inne cele",
+  "Daily Sending Limit": "Dzienny limit wysyłania",
+  "Monthly Sending Limit": "Miesięczny limit wysyłania",
+  "Yearly Sending Limit": "Roczny limit wysyłania",
+  "Instant Payment": "Płatność natychmiastowa",
+  "Instalment Payment": "Płatność ratalna",
+  "Schedule Payment": "Harmonogram płatności",
+  "Security Deposit": "Kaucja",
+  "Split Payment": "Podzielona płatność",
+  "Transfer Initiated": "Transfer zainicjowany",
+  "Transfer in progress": "Transfer w toku",
+  "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "Może minąć kilka godzin, zanim środki pojawią się na koncie <user>{{name}}</user>",
+  "A Verification code has been sent to your number.": "Kod weryfikacyjny został wysłany na Twój numer.",
+  "Verify Using {{method}}": "Zweryfikuj za pomocą {{method}}",
+  "Didn't receive OTP?": "Nie otrzymałeś OTP?"
 }

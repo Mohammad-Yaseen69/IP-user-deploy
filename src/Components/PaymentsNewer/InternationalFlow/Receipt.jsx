@@ -1,7 +1,7 @@
 import styles from "./styles/receipt.module.css"
 import logo from "./files/ins_logo.svg"
 import confirm_vid from "../files/confirm.mp4"
-import { useTranslation } from "react-i18next"
+import { Trans, useTranslation } from "react-i18next"
 import { Check, Info } from "react-feather"
 import w from "../files/where.png"
 import share from "../files/share.png"
@@ -97,7 +97,7 @@ const Receipt = ({ data, showBack = false, backHandler = () => { }, showTrxBtn =
                                     <Check color="white" size={10} />
                                 </div>
                                 <div className={styles.status_item}>
-                                    <h5>{t("Transfer initiated")}</h5>
+                                    <h5>{t("Transfer Initiated")}</h5>
                                     <p>{new Date().toLocaleString()}</p>
                                 </div>
                                 <div className={styles.circle}>
@@ -111,18 +111,19 @@ const Receipt = ({ data, showBack = false, backHandler = () => { }, showTrxBtn =
                         {transactionStatus !== "error" &&
                             <div className={styles.note}>
                                 <Info size={20} />
-                                <span>It may take a few hours for the funds to appear in <strong>
-                                    {
-                                        title
-                                            ?
-                                            title
-                                            :
-                                            <>
-                                                {data.beneficiary?.firstname ?? data.beneficiary?.first_name} {data.beneficiary?.lastname ?? data.beneficiary?.last_name}
-                                            </>
-                                    }
-                                    ’s
-                                </strong> account</span>
+                                <span>
+                                    <Trans
+                                        i18nKey="It may take a few hours for the funds to appear in <user>{{name}}</user> account"
+                                        values={{
+                                            name: title
+                                                ? title
+                                                : `${data.beneficiary?.firstname ?? data.beneficiary?.first_name} ${data.beneficiary?.lastname ?? data.beneficiary?.last_name}`,
+                                        }}
+                                        components={{
+                                            user: <strong />,
+                                        }}
+                                    />
+                                </span>
                             </div>
                         }
                     </div>

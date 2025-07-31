@@ -15,7 +15,7 @@ const PaymentType = ({ data, dataHandler }) => {
                         <div className={icon_styles.grad_icon} style={{ marginLeft: 0 }}>
                             <img src={item.icon} alt="" />
                         </div>
-                        <span>{item.name}</span>
+                        <span>{t(item.name)}</span>
 
                         {
                             item?.coming_soon

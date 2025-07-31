@@ -2779,5 +2779,19 @@
   "Payment of rewards": "Виплата винагород",
   "Payment of Influencer": "Оплата інфлюенсера",
   "Broker, commitment, guarantee and other fees": "Брокерські, зобов'язання, гарантії та інші комісії",
-  "Other purposes": "Інші цілі"
+  "Other purposes": "Інші цілі",
+  "Daily Sending Limit": "Добовий ліміт надсилання",
+  "Monthly Sending Limit": "Місячний ліміт надсилання",
+  "Yearly Sending Limit": "Річний ліміт надсилання",
+  "Instant Payment": "Миттєва оплата",
+  "Instalment Payment": "Розстрочка платежу",
+  "Schedule Payment": "Графік оплати",
+  "Security Deposit": "Гарантійний депозит",
+  "Split Payment": "Роздільна оплата",
+  "Transfer Initiated": "Передачу розпочато",
+  "Transfer in progress": "Виконується передача",
+  "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "Може минути кілька годин, перш ніж кошти з’являться на рахунку <user>{{name}}</user>",
+  "A Verification code has been sent to your number.": "На ваш номер надіслано код підтвердження.",
+  "Verify Using {{method}}": "Перевірте за допомогою {{method}}",
+  "Didn't receive OTP?": "Не отримали OTP?"
 }

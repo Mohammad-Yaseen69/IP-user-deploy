@@ -2774,5 +2774,19 @@
   "Payment of rewards": "Malipo ya tuzo",
   "Payment of Influencer": "Malipo ya Mshawishi",
   "Broker, commitment, guarantee and other fees": "Dalali, kujitolea, dhamana na ada zingine",
-  "Other purposes": "Madhumuni mengine"
+  "Other purposes": "Madhumuni mengine",
+  "Daily Sending Limit": "Kikomo cha Kutuma Kila Siku",
+  "Monthly Sending Limit": "Kikomo cha Kutuma Kila Mwezi",
+  "Yearly Sending Limit": "Kikomo cha Kutuma kwa Mwaka",
+  "Instant Payment": "Malipo ya Papo hapo",
+  "Instalment Payment": "Malipo ya Awamu",
+  "Schedule Payment": "Ratiba ya Malipo",
+  "Security Deposit": "Amana ya Usalama",
+  "Split Payment": "Gawanya Malipo",
+  "Transfer Initiated": "Uhamisho Umeanzishwa",
+  "Transfer in progress": "Uhamisho unaendelea",
+  "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "Huenda ikachukua saa chache kwa pesa kuonekana kwenye akaunti ya <user>{{name}}</user>",
+  "A Verification code has been sent to your number.": "Nambari ya kuthibitisha imetumwa kwa nambari yako.",
+  "Verify Using {{method}}": "Thibitisha Kwa Kutumia {{njia}}",
+  "Didn't receive OTP?": "Hukupokea OTP?"
 }

@@ -2683,5 +2683,19 @@
   "Payment of rewards": "Выплата вознаграждений",
   "Payment of Influencer": "Оплата инфлюенсера",
   "Broker, commitment, guarantee and other fees": "Брокерские, гарантийные, гарантийные и другие сборы",
-  "Other purposes": "Другие цели"
+  "Other purposes": "Другие цели",
+  "Daily Sending Limit": "Ежедневный лимит отправки",
+  "Monthly Sending Limit": "Ежемесячный лимит отправки",
+  "Yearly Sending Limit": "Годовой лимит отправки",
+  "Instant Payment": "Мгновенная оплата",
+  "Instalment Payment": "Рассрочка платежа",
+  "Schedule Payment": "График платежей",
+  "Security Deposit": "Залоговый депозит",
+  "Split Payment": "Раздельный платеж",
+  "Transfer Initiated": "Перевод инициирован",
+  "Transfer in progress": "Перевод в процессе",
+  "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "Появление средств на счете <user>{{name}}</user> может занять несколько часов.",
+  "A Verification code has been sent to your number.": "На ваш номер был отправлен проверочный код.",
+  "Verify Using {{method}}": "Проверить с помощью {{method}}",
+  "Didn't receive OTP?": "Не получили OTP?"
 }

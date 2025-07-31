@@ -2787,5 +2787,19 @@
   "Payment of rewards": "Payment of rewards",
   "Payment of Influencer": "Payment of Influencer",
   "Broker, commitment, guarantee and other fees": "Broker, commitment, guarantee and other fees",
-  "Other purposes": "Other purposes"
+  "Other purposes": "Other purposes",
+  "Daily Sending Limit": "Daily Sending Limit",
+  "Monthly Sending Limit": "Monthly Sending Limit",
+  "Yearly Sending Limit": "Yearly Sending Limit",
+  "Instant Payment": "Instant Payment",
+  "Instalment Payment": "Instalment Payment",
+  "Schedule Payment": "Schedule Payment",
+  "Security Deposit": "Security Deposit",
+  "Split Payment": "Split Payment",
+  "Transfer Initiated": "Transfer Initiated",
+  "Transfer in progress": "Transfer in progress",
+  "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "It may take a few hours for the funds to appear in <user>{{name}}</user> account",
+  "A Verification code has been sent to your number.": "A Verification code has been sent to your number.",
+  "Verify Using {{method}}": "Verify Using {{method}}",
+  "Didn't receive OTP?": "Didn't receive OTP?"
 }

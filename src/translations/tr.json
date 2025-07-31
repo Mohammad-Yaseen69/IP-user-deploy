@@ -2774,5 +2774,19 @@
   "Payment of rewards": "Ödüllerin ödenmesi",
   "Payment of Influencer": "Etkileyicinin Ödemesi",
   "Broker, commitment, guarantee and other fees": "Broker, taahhüt, garanti ve diğer ücretler",
-  "Other purposes": "Diğer amaçlar"
+  "Other purposes": "Diğer amaçlar",
+  "Daily Sending Limit": "Günlük Gönderim Limiti",
+  "Monthly Sending Limit": "Aylık Gönderim Limiti",
+  "Yearly Sending Limit": "Yıllık Gönderim Limiti",
+  "Instant Payment": "Anında Ödeme",
+  "Instalment Payment": "Taksitli Ödeme",
+  "Schedule Payment": "Ödeme Planı",
+  "Security Deposit": "Güvenlik Depozitosu",
+  "Split Payment": "Bölünmüş Ödeme",
+  "Transfer Initiated": "Transfer Başlatıldı",
+  "Transfer in progress": "Transfer devam ediyor",
+  "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "Paranın <user>{{name}}</user> hesabında görünmesi birkaç saat sürebilir",
+  "A Verification code has been sent to your number.": "Numaranıza Doğrulama kodu gönderildi.",
+  "Verify Using {{method}}": "{{method}} Kullanarak Doğrulayın",
+  "Didn't receive OTP?": "OTP'yi almadınız mı?"
 }

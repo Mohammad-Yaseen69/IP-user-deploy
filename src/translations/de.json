@@ -2733,5 +2733,17 @@
   "Payment of rewards": "Auszahlung von Prämien",
   "Payment of Influencer": "Bezahlung des Influencers",
   "Broker, commitment, guarantee and other fees": "Makler-, Verpflichtungs-, Garantie- und sonstige Gebühren",
-  "Other purposes": "Andere Zwecke"
+  "Other purposes": "Andere Zwecke",
+  "Daily Sending Limit": "Tägliches Sendelimit",
+  "Monthly Sending Limit": "Monatliches Sendelimit",
+  "Yearly Sending Limit": "Jährliches Sendelimit",
+  "Instalment Payment": "Ratenzahlung",
+  "Schedule Payment": "Zahlungsplan",
+  "Security Deposit": "Kaution",
+  "Transfer Initiated": "Übertragung eingeleitet",
+  "Transfer in progress": "Übertragung läuft",
+  "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "Es kann einige Stunden dauern, bis das Guthaben auf dem Konto von <user>{{name}}</user> erscheint",
+  "A Verification code has been sent to your number.": "Ein Bestätigungscode wurde an Ihre Nummer gesendet.",
+  "Verify Using {{method}}": "Überprüfen mit {{method}}",
+  "Didn't receive OTP?": "Sie haben kein OTP erhalten?"
 }

@@ -2772,5 +2772,19 @@
   "Payment of rewards": "دفع المكافآت",
   "Payment of Influencer": "دفع المؤثرين",
   "Broker, commitment, guarantee and other fees": "رسوم السمسرة والالتزام والضمان وغيرها",
-  "Other purposes": "أغراض أخرى"
+  "Other purposes": "أغراض أخرى",
+  "Daily Sending Limit": "حد الإرسال اليومي",
+  "Monthly Sending Limit": "حد الإرسال الشهري",
+  "Yearly Sending Limit": "حد الإرسال السنوي",
+  "Instant Payment": "الدفع الفوري",
+  "Instalment Payment": "الدفع بالتقسيط",
+  "Schedule Payment": "جدولة الدفع",
+  "Security Deposit": "وديعة الضمان",
+  "Split Payment": "الدفع المقسم",
+  "Transfer Initiated": "تم بدء النقل",
+  "Transfer in progress": "جاري النقل",
+  "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "قد يستغرق الأمر بضع ساعات حتى تظهر الأموال في حساب <user>{{name}}</user>",
+  "A Verification code has been sent to your number.": "لقد تم إرسال رمز التحقق إلى رقمك.",
+  "Verify Using {{method}}": "التحقق باستخدام {{method}}",
+  "Didn't receive OTP?": "لم تستلم OTP؟"
 }

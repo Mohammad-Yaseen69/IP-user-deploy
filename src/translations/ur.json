@@ -2772,5 +2772,19 @@
   "Payment of rewards": "انعامات کی ادائیگی",
   "Payment of Influencer": "متاثر کن کی ادائیگی",
   "Broker, commitment, guarantee and other fees": "بروکر، عزم، گارنٹی اور دیگر فیس",
-  "Other purposes": "دوسرے مقاصد"
+  "Other purposes": "دوسرے مقاصد",
+  "Daily Sending Limit": "روزانہ بھیجنے کی حد",
+  "Monthly Sending Limit": "ماہانہ بھیجنے کی حد",
+  "Yearly Sending Limit": "سالانہ بھیجنے کی حد",
+  "Instant Payment": "فوری ادائیگی",
+  "Instalment Payment": "قسط کی ادائیگی",
+  "Schedule Payment": "ادائیگی کا شیڈول بنائیں",
+  "Security Deposit": "سیکیورٹی ڈپازٹ",
+  "Split Payment": "تقسیم ادائیگی",
+  "Transfer Initiated": "منتقلی شروع کر دی گئی۔",
+  "Transfer in progress": "منتقلی جاری ہے۔",
+  "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "فنڈز کو <user>{{name}}</user> اکاؤنٹ میں ظاہر ہونے میں چند گھنٹے لگ سکتے ہیں۔",
+  "A Verification code has been sent to your number.": "آپ کے نمبر پر ایک تصدیقی کوڈ بھیجا گیا ہے۔",
+  "Verify Using {{method}}": "{{method}} کا استعمال کرتے ہوئے تصدیق کریں",
+  "Didn't receive OTP?": "OTP موصول نہیں ہوا؟"
 }

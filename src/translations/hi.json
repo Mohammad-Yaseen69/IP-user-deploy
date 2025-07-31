@@ -2774,5 +2774,19 @@
   "Payment of rewards": "पुरस्कारों का भुगतान",
   "Payment of Influencer": "प्रभावशाली व्यक्ति का भुगतान",
   "Broker, commitment, guarantee and other fees": "ब्रोकर, प्रतिबद्धता, गारंटी और अन्य शुल्क",
-  "Other purposes": "अन्य उद्देश्य"
+  "Other purposes": "अन्य उद्देश्य",
+  "Daily Sending Limit": "दैनिक भेजने की सीमा",
+  "Monthly Sending Limit": "मासिक भेजने की सीमा",
+  "Yearly Sending Limit": "वार्षिक भेजने की सीमा",
+  "Instant Payment": "तत्काल भुगतान",
+  "Instalment Payment": "किश्त भुगतान",
+  "Schedule Payment": "भुगतान निर्धारित करें",
+  "Security Deposit": "सुरक्षा जमा राशि",
+  "Split Payment": "भाजित भुगतान",
+  "Transfer Initiated": "स्थानांतरण आरंभ",
+  "Transfer in progress": "स्थानांतरण प्रगति पर है",
+  "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "<user>{{name}}</user> खाते में धनराशि आने में कुछ घंटे लग सकते हैं",
+  "A Verification code has been sent to your number.": "आपके नंबर पर एक सत्यापन कोड भेजा गया है।",
+  "Verify Using {{method}}": "{{विधि}} का उपयोग करके सत्यापित करें",
+  "Didn't receive OTP?": "क्या आपको OTP प्राप्त नहीं हुआ?"
 }

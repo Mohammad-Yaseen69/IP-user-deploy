@@ -2779,5 +2779,19 @@
   "Payment of rewards": "Pago de recompensas",
   "Payment of Influencer": "Pago de Influencers",
   "Broker, commitment, guarantee and other fees": "Comisiones de intermediario, compromiso, garantía y otros honorarios",
-  "Other purposes": "Otros fines"
+  "Other purposes": "Otros fines",
+  "Daily Sending Limit": "Límite de envío diario",
+  "Monthly Sending Limit": "Límite de envío mensual",
+  "Yearly Sending Limit": "Límite de envío anual",
+  "Instant Payment": "Pago instantáneo",
+  "Instalment Payment": "Pago a plazos",
+  "Schedule Payment": "Programar pago",
+  "Security Deposit": "Depósito de seguridad",
+  "Split Payment": "Pago fraccionado",
+  "Transfer Initiated": "Transferencia iniciada",
+  "Transfer in progress": "Transferencia en curso",
+  "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "Es posible que pasen algunas horas hasta que los fondos aparezcan en la cuenta <user>{{name}}</user>",
+  "A Verification code has been sent to your number.": "Se ha enviado un código de verificación a tu número.",
+  "Verify Using {{method}}": "Verificar usando {{method}}",
+  "Didn't receive OTP?": "¿No recibiste OTP?"
 }

@@ -2772,5 +2772,19 @@
   "Payment of rewards": "Pembayaran hadiah",
   "Payment of Influencer": "Pembayaran Influencer",
   "Broker, commitment, guarantee and other fees": "Biaya broker, komitmen, jaminan, dan biaya lainnya",
-  "Other purposes": "Tujuan lainnya"
+  "Other purposes": "Tujuan lainnya",
+  "Daily Sending Limit": "Batas Pengiriman Harian",
+  "Monthly Sending Limit": "Batas Pengiriman Bulanan",
+  "Yearly Sending Limit": "Batas Pengiriman Tahunan",
+  "Instant Payment": "Pembayaran Instan",
+  "Instalment Payment": "Pembayaran Angsuran",
+  "Schedule Payment": "Jadwal Pembayaran",
+  "Security Deposit": "Uang Jaminan",
+  "Split Payment": "Pembayaran Terpisah",
+  "Transfer Initiated": "Transfer Dimulai",
+  "Transfer in progress": "Transfer sedang berlangsung",
+  "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "Mungkin butuh beberapa jam agar dana muncul di akun <user>{{name}}</user>",
+  "A Verification code has been sent to your number.": "Kode Verifikasi telah dikirim ke nomor Anda.",
+  "Verify Using {{method}}": "Verifikasi Menggunakan {{method}}",
+  "Didn't receive OTP?": "Tidak menerima OTP?"
 }

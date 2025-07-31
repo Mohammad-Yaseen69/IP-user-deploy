@@ -2732,5 +2732,17 @@
   "Payment of rewards": "Biyan lada",
   "Payment of Influencer": "Biyan Mai Tasiri",
   "Broker, commitment, guarantee and other fees": "Dillali, sadaukarwa, garanti da sauran kudade",
-  "Other purposes": "Wasu dalilai"
+  "Other purposes": "Wasu dalilai",
+  "Daily Sending Limit": "Iyakar Aika Kullum",
+  "Monthly Sending Limit": "Iyakancin Aikawa kowane wata",
+  "Yearly Sending Limit": "Iyakar Aika Shekara-shekara",
+  "Instalment Payment": "Biyan Kuɗi",
+  "Schedule Payment": "Jadawalin Biyan Kuɗi",
+  "Security Deposit": "Adadin Tsaro",
+  "Transfer Initiated": "Canja wurin farawa",
+  "Transfer in progress": "Canja wurin yana ci gaba",
+  "It may take a few hours for the funds to appear in <user>{{name}}</user> account": "Yana iya ɗaukar sa'o'i kaɗan kafin kudaden su bayyana a cikin asusun <user>{{name}}</user>",
+  "A Verification code has been sent to your number.": "An aika lambar tabbatarwa zuwa lambar ku.",
+  "Verify Using {{method}}": "Tabbatar da Amfani da {{hanyar}}",
+  "Didn't receive OTP?": "Ba a sami OTP ba?"
 }
