@@ -662,7 +662,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
             setLoading(true)
 
             try {
-                const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/w2w-rates?from=${from}&to=${data.beneficiary_wallet?.currency?.code || currency}&amount=${amount}&type=wallet_to_wallet&level_id=${userDetails?.level?._id}&payment_type=wallet&&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}&fromOrTo=${fromOrTo}`
+                const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/w2w-rates?from=${from}&to=${data.beneficiary_wallet?.currency?.code || currency}&amount=${amount}&type=wallet_to_wallet&level_id=${userDetails?.level?._id}&payment_type=wallet&&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}&fromOrTo=${fromOrTo}&receiver_wallet_id=${data.beneficiary_wallet?._id}`
 
 
                 const res = await axios.get(url, { headers: authHeader })
