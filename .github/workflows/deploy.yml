@@ -39,6 +39,8 @@ jobs:
         run: |
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
           cd /home/ubuntu/Projects/instapay
+          git add .
+          git commit -m "updates"
           git pull
           git merge origin/main
           sed -i '/"type": "module"/d' package.json
