@@ -22,7 +22,8 @@ jobs:
  
       - name: Test SSH Connection
         run: |
-         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.EC2_HOST }} "echo connected!"
+         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} "echo connected!"
+
 
 
       - name: Git global config for private repo access
