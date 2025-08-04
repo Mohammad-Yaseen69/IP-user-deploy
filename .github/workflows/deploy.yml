@@ -47,7 +47,7 @@ jobs:
           npm install --legacy-peer-deps
           npm run build
           sed -i '2i\  "type": "module",' package.json
-          sudo pm2 restart instapay-main 
+          sudo pm2 restart main
           EOF
 
     
