@@ -61,7 +61,7 @@ Sentry.init({
 
         if (isException || isMessage || isErrorLevel) {
             return event;
-        } else {
+        } else { 
             return null;
         }
     },
