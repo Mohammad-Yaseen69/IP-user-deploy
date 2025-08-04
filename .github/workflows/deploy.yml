@@ -13,20 +13,43 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Switch Nginx to blue
-        run: bash /home/ubuntu/switch-to-blue.sh
-
-      - name: Deploy
+      - name: Setup SSH
         run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.EC2_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+ 
+      - name: Test SSH Connection
+        run: |
+         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} "echo connected!"
+
+
+
+      - name: Git global config for private repo access
+        run: git config --global url."https://oauth2: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@github.com/".insteadOf "https://github.com/"
+
+      - name: Switch  Nginx port to Blue
+        run: ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} 'bash /home/ubuntu/switch-to-blue.sh'
+
+
+
+
+      - name: Deploy to EC2
+        run: |
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
           cd /home/ubuntu/Projects/instapay
-          git reset --hard
-          git clean -fd
+          git add .
+          git commit -m "updates"
           git pull origin main
+          git merge
           sed -i '/"type": "module"/d' package.json
           npm install --legacy-peer-deps
           npm run build
           sed -i '2i\  "type": "module",' package.json
-          pm2 restart main
+          sudo pm2 restart main
+          EOF
 
-      - name: Switch Nginx to main
-        run: bash /home/ubuntu/switch-to-main.sh
+    
+      - name: Switch Nginx port to Main
+        run: ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} 'bash /home/ubuntu/switch-to-main.sh'
