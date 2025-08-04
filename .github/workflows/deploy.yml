@@ -38,7 +38,7 @@ jobs:
       - name: Deploy to EC2
         run: |
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-          cd /Projects/instapay
+          cd /home/ubuntu/Projects/instapay
           git pull
           sed -i '/"type": "module"/d' package.json
           npm install --legacy-peer-deps
