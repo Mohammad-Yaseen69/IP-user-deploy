@@ -40,6 +40,7 @@ jobs:
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
           cd /home/ubuntu/Projects/instapay
           git pull
+          git merge origin/main
           sed -i '/"type": "module"/d' package.json
           npm install --legacy-peer-deps
           npm run build
