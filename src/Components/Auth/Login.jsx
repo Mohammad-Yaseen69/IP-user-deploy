@@ -731,6 +731,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
     const noticeMessage = `It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.`;
 
+    console.log("CI CD TESTING")
     return (
         <>
             <Modal isOpen={showNoticeModal}>
