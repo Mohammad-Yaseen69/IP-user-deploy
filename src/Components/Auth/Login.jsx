@@ -806,7 +806,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 </> :
                                     <>
                                         <div className={styles.inp_con}>
-                                            <label>{t("Welcome Back!!!")}!!!</label>
+                                            <label>{t("Welcome Back!")}</label>
                                             <div className={styles.user_info}>
                                                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                                                     {loginData?.pfp ?
