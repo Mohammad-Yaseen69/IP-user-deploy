@@ -42,7 +42,7 @@ jobs:
           git add .
           git commit -m "updates"
           git pull origin main
-          git merge origin/main
+          git merge
           sed -i '/"type": "module"/d' package.json
           npm install --legacy-peer-deps
           npm run build
