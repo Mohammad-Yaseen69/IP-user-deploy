@@ -41,7 +41,7 @@ jobs:
           cd /home/ubuntu/Projects/instapay
           git add .
           git commit -m "updates"
-          git pull
+          git pull origin main
           git merge origin/main
           sed -i '/"type": "module"/d' package.json
           npm install --legacy-peer-deps
