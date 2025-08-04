@@ -19,6 +19,11 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           echo "${{ secrets.EC2_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+ 
+      - name: Test SSH Connection
+        run: |
+         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.EC2_HOST }} "echo connected!"
+
 
       - name: Git global config for private repo access
         run: git config --global url."https://oauth2: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@github.com/".insteadOf "https://github.com/"
