@@ -26,7 +26,7 @@ jobs:
         run: |
           cd /home/ubuntu/Projects/instapay
           git reset --hard
-          git pull origin main
+          git pull --no-rebase
           sed -i '/"type": "module"/d' package.json
           npm install --legacy-peer-deps
           npm run build
