@@ -31,9 +31,12 @@ jobs:
          jq 'del(.type)' package.json > temp.json && mv temp.json package.json
          npm install --legacy-peer-deps
          npm run build
-         jq '. + {"type":"module"}' package.json > temp.json && mv temp.json package.json
-         pm2 restart main
 
+      - name: Restarting Server
+        run: |
+          cd /home/ubuntu/Projects/instapay
+          jq '. + {"type":"module"}' package.json > temp.json && mv temp.json package.json
+          pm2 restart main
 
       - name: Switch Nginx port to Main
         run: bash /home/ubuntu/switch-to-main.sh
