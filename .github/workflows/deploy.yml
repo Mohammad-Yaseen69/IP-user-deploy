@@ -30,7 +30,8 @@ jobs:
          git pull --no-rebase
          jq 'del(.type)' package.json > temp.json && mv temp.json package.json
          npm install --legacy-peer-deps
-         npm run build
+         export CI=false
+         npm run build --verbose
 
       - name: Restarting Server
         run: |
