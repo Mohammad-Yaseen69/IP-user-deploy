@@ -37,11 +37,14 @@ jobs:
         run: |
           cd /home/ubuntu/Projects/instapay
           jq '. + {"type":"module"}' package.json > temp.json && mv temp.json package.json
-          sudo pm2 restart main
+          sudo pm2 restart main --update-env
 
       - name: Switch Nginx port to Main
         run: bash /home/ubuntu/switch-to-main.sh
-        
+
+      - name: Mark blue repo as safe
+        run: git config --global --add safe.directory /home/ubuntu/Projects/instapay-blue
+
       - name: Deploy to blue server
         run: |
          sudo apt-get update && sudo apt-get install -y jq
@@ -57,4 +60,4 @@ jobs:
         run: |
           cd /home/ubuntu/Projects/instapay-blue
           jq '. + {"type":"module"}' package.json > temp.json && mv temp.json package.json
-          sudo pm2 restart blue   
+          sudo pm2 restart blue  --update-env
