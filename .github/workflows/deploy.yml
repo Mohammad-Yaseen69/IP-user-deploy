@@ -31,7 +31,7 @@ jobs:
          jq 'del(.type)' package.json > temp.json && mv temp.json package.json
          npm install --legacy-peer-deps
          npm run build
-         jq '. + {"type":"module"}' package.json > temp.json && mv temp.json package.json
+         sed -i '2i\  "type": "module",' package.json
          pm2 restart main
 
 
