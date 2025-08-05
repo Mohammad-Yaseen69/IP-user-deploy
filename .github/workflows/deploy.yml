@@ -19,6 +19,9 @@ jobs:
       - name: Switch Nginx port to Blue
         run: bash /home/ubuntu/switch-to-blue.sh
 
+      - name: Mark repo as safe
+        run: git config --global --add safe.directory /home/ubuntu/Projects/instapay
+
       - name: Deploy
         run: |
           cd /home/ubuntu/Projects/instapay
