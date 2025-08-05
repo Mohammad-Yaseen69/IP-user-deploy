@@ -37,7 +37,24 @@ jobs:
         run: |
           cd /home/ubuntu/Projects/instapay
           jq '. + {"type":"module"}' package.json > temp.json && mv temp.json package.json
-          pm2 restart main
+          sudo pm2 restart main
 
       - name: Switch Nginx port to Main
         run: bash /home/ubuntu/switch-to-main.sh
+        
+      - name: Deploy to blue server
+        run: |
+         sudo apt-get update && sudo apt-get install -y jq
+         cd /home/ubuntu/Projects/instapay-blue
+         git reset --hard
+         git pull --no-rebase
+         jq 'del(.type)' package.json > temp.json && mv temp.json package.json
+         npm install --legacy-peer-deps
+         export CI=false
+         npm run build --verbose  
+
+      - name: Restarting Blue Server
+        run: |
+          cd /home/ubuntu/Projects/instapay-blue
+          jq '. + {"type":"module"}' package.json > temp.json && mv temp.json package.json
+          sudo pm2 restart blue   
