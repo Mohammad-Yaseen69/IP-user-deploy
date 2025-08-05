@@ -1,6 +1,6 @@
 import { Modal, ModalBody } from "reactstrap"
 import styles from "./styles/ModalStyles.module.css"
-import { useLayoutEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { Check, ChevronRight } from "react-feather"
 import i from "../files/i.svg"
 import { useTranslation } from "react-i18next"
@@ -43,6 +43,13 @@ const ListModal = ({ isOpen, toggle, content, onSelectHandler, searchable = fals
         return () => clearTimeout(timeout);
     }, [])
 
+    useEffect(() => {
+        console.log("yes yes bro")
+        if(content.list?.length === 1){
+            console.log("yes bro")
+            setCurrent(content?.list[0])
+        }   
+    },[content])
     return (
         <Modal isOpen={isOpen} style={{ width: "96vw", maxWidth: "850px" }} contentClassName={styles.content}>
             <ModalBody className={styles.body}>

@@ -18,6 +18,7 @@ import { BsFillPlayFill } from "react-icons/bs"
 import crown from "./files/crown.svg"
 import { Link } from 'react-router-dom';
 import BusinessModal from '../BusinessModal';
+import { isSafari } from "react-device-detect"
 
 const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessModal }) => {
     const [activeDot, setActiveDot] = useState(0)
@@ -56,6 +57,8 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
         },
     ]), [userWallets])
 
+
+
     return (
         <div style={{
             display: "flex",
@@ -70,7 +73,7 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
             <div className={`${cardsStyle.container}`}>
                 <h4 className='d_r_head'>{t("My Wallets")}</h4>
                 <Swiper
-                    effect={"cards"}
+                    effect={isSafari ? "" : "cards"}
                     grabCursor={true}
                     modules={[EffectCards]}
                     cardsEffect={{
