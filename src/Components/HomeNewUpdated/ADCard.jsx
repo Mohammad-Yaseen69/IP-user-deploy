@@ -79,8 +79,8 @@ const ADCard = ({ data, isActive }) => {
                 data?.balance?.reserved
                     ?
                     <>
-                        <div className={`${r_styles.flex} ${r_styles.r_total}`}>
-                            <span style={{ fontSize: '14px', fontWeight: 600 }}>{t("Total Balance")}:</span>
+                        <div style={{ padding: '0px', background: "none" }} className={`${r_styles.flex} ${r_styles.r_total}`}>
+                            <span style={{ fontSize: '14px', fontWeight: 600 }}>{t("Total Balance").replace("Account", "")}:</span>
                             <h5>{data.currency?.code} {Number(data.balance.available + data.balance.reserved)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
                         </div>
                         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -95,7 +95,7 @@ const ADCard = ({ data, isActive }) => {
                         </div>
                         <div className={`${r_styles.flex} ${r_styles.r_wallet}`}>
                             <span style={{fontSize: "12px", fontWeight: 600}}>{t("Wallet ID")}:</span>
-                            <h5 style={{ fontSize: '14px' }}>
+                            <h5 style={{ fontSize: '10px' }}>
                                 {data?.wallet_id}
                                 {
                                     copied

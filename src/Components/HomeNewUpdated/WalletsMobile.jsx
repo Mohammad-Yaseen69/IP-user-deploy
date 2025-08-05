@@ -6,8 +6,10 @@ import per from "./files/per.svg"
 import { Link } from 'react-router-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import ADCard from './ADCard'
-import { EffectCards } from 'swiper'
+import { EffectCards, EffectFade } from 'swiper'
 import OtherBalance from './OtherBalance'
+import { isSafari } from "react-device-detect"
+
 
 const WalletsMobile = ({ setCurrentWallet }) => {
     const { t } = useTranslation()
@@ -65,9 +67,10 @@ const WalletsMobile = ({ setCurrentWallet }) => {
                 </div>
                 <div className={styles.cards}>
                     <Swiper
-                        effect={"cards"}
+                        effect={isSafari ? "fade" : "cards"}
                         grabCursor={true}
-                        modules={[EffectCards]}
+                        speed={isSafari && 1000}
+                        modules={[isSafari ? EffectFade : EffectCards]}
                         cardsEffect={{
                             rotate: false
                         }}

@@ -72,14 +72,10 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
             <div className={`${cardsStyle.container}`}>
                 <h4 className='d_r_head'>{t("My Wallets")}</h4>
                 <Swiper
-                    effect={!isSafari ? "fade" : "cards"}
+                    effect={isSafari ? "fade" : "cards"}
                     grabCursor={true}
-                    // fadeEffect={{
-                    //     crossFade: true,
-                    //      // smoother fade
-                    // }}
-                    speed={!isSafari && 1000} // increase transition duration
-                    modules={[!isSafari ? EffectFade : EffectCards]}
+                    speed={isSafari && 1000}
+                    modules={[isSafari ? EffectFade : EffectCards]}
                     cardsEffect={{
                         rotate: false
                     }}
