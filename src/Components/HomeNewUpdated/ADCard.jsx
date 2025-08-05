@@ -17,7 +17,6 @@ import { removeCommasAndCurrency } from "../WalletsNew/AccountLimits"
 const ADCard = ({ data, isActive }) => {
     const [copied, setCopied] = useState(false);
     const { t } = useTranslation()
-    const [isLoading, setIsLoading] = useState(false)
     const { userWallets, authHeader, userDetails } = useContext(UserContext)
 
     const copyToClipboard = () => {
@@ -80,23 +79,23 @@ const ADCard = ({ data, isActive }) => {
                 data?.balance?.reserved
                     ?
                     <>
-                        <div style={{ padding: '0px', background: "none" }} className={`${r_styles.flex} ${r_styles.r_total}`}>
-                            <span style={{ fontSize: '10px', fontWeight: 600 }}>{t("Total Balance")}:</span>
+                        <div className={`${r_styles.flex} ${r_styles.r_total}`}>
+                            <span style={{ fontSize: '14px', fontWeight: 600 }}>{t("Total Balance")}:</span>
                             <h5>{data.currency?.code} {Number(data.balance.available + data.balance.reserved)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
                         </div>
                         <div style={{ display: "flex", flexDirection: "column" }}>
                             <div style={{ padding: "0px", background: "none", flex: 1, justifyContent: "flex-start", gap: "4px" }} className={`${r_styles.flex} ${r_styles.r_blocked}`}>
-                                <span style={{ fontSize: '9px', fontWeight: 600 }}>{t("Available balance")}:</span>
+                                <span style={{ fontSize: '12px', fontWeight: 600 }}>{t("Available balance")}:</span>
                                 <h5>{data.currency?.code} {Number(data.balance.available)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
                             </div>
                             <div style={{ padding: "0px", background: "none", flex: 1, justifyContent: "flex-start", gap: "4px" }} className={`${r_styles.flex} ${r_styles.r_blocked}`} >
-                                <span style={{ fontSize: '9px', fontWeight: 600 }}>{t("Blocked balance")}:</span>
+                                <span style={{ fontSize: '12px', fontWeight: 600 }}>{t("Blocked balance")}:</span>
                                 <h5>{data.currency?.code} {Number(data.balance.reserved)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h5>
                             </div>
                         </div>
                         <div className={`${r_styles.flex} ${r_styles.r_wallet}`}>
-                            <span>{t("Wallet ID")}:</span>
-                            <h5 style={{ fontSize: '10px' }}>
+                            <span style={{fontSize: "12px", fontWeight: 600}}>{t("Wallet ID")}:</span>
+                            <h5 style={{ fontSize: '14px' }}>
                                 {data?.wallet_id}
                                 {
                                     copied
@@ -110,7 +109,7 @@ const ADCard = ({ data, isActive }) => {
                             </h5>
                         </div>
                         <div className={`${r_styles.flex} ${r_styles.r_bal}`} style={{ marginTop: ".5rem" }}>
-                            <span>{t("Monthly limit")}:</span>
+                            <span style={{fontSize: "12px", fontWeight: 600}}>{t("Monthly limit")}:</span>
                             <h5>{walletData?.balance_limits?.total} / {walletData?.balance_limits?.remaining}</h5>
                         </div>
                         <div className={r_styles.bb}>
@@ -188,7 +187,8 @@ const ADCard = ({ data, isActive }) => {
                         left: 0,
                         top: 0,
                         objectFit: "cover",
-                        zIndex: -1
+                        zIndex: -1,
+                        borderRadius:"10px"
                     }} />
                     :
                     <img alt="" src={card_bg_green} style={{
@@ -198,7 +198,8 @@ const ADCard = ({ data, isActive }) => {
                         left: 0,
                         top: 0,
                         objectFit: "cover",
-                        zIndex: -1
+                        zIndex: -1,
+                        borderRadius:"10px"
                     }} />
             }
         </div>

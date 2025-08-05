@@ -11,11 +11,10 @@ import CurConversion from './CurConversion';
 import "swiper/css";
 import "swiper/css/effect-cards";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectCards } from "swiper";
+import { EffectCards, EffectFade } from "swiper";
 import { useTranslation } from 'react-i18next';
 import { UserContext } from '../../Context/UserContext';
 import { BsFillPlayFill } from "react-icons/bs"
-import crown from "./files/crown.svg"
 import { Link } from 'react-router-dom';
 import BusinessModal from '../BusinessModal';
 import { isSafari } from "react-device-detect"
@@ -73,9 +72,14 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
             <div className={`${cardsStyle.container}`}>
                 <h4 className='d_r_head'>{t("My Wallets")}</h4>
                 <Swiper
-                    effect={isSafari ? "" : "cards"}
+                    effect={!isSafari ? "fade" : "cards"}
                     grabCursor={true}
-                    modules={[EffectCards]}
+                    // fadeEffect={{
+                    //     crossFade: true,
+                    //      // smoother fade
+                    // }}
+                    speed={!isSafari && 1000} // increase transition duration
+                    modules={[!isSafari ? EffectFade : EffectCards]}
                     cardsEffect={{
                         rotate: false
                     }}
