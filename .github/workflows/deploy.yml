@@ -24,14 +24,16 @@ jobs:
 
       - name: Deploy
         run: |
-          cd /home/ubuntu/Projects/instapay
-          git reset --hard
-          git pull --no-rebase
-          sed -i '/"type": "module"/d' package.json
-          npm install --legacy-peer-deps
-          npm run build
-          sed -i '2i\  "type": "module",' package.json
-          pm2 restart main
+         sudo apt-get update && sudo apt-get install -y jq
+         cd /home/ubuntu/Projects/instapay
+         git reset --hard
+         git pull --no-rebase
+         jq 'del(.type)' package.json > temp.json && mv temp.json package.json
+         npm install --legacy-peer-deps
+         npm run build
+         sed -i '2i\  "type": "module",' package.json
+         pm2 restart main
+
 
       - name: Switch Nginx port to Main
         run: bash /home/ubuntu/switch-to-main.sh
