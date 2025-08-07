@@ -10,7 +10,7 @@ import InstaPayLoader from "../../Loader"
 const StepOne = ({ data, dataHandler, allowed, wallet }) => {
     const payouts = [
         {
-            name: "Card Payment",
+            name: "Payment Card",
             value: "card",
             id: 5,
             coming_soon: false,

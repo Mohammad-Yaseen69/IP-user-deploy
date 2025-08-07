@@ -47,6 +47,10 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
 
 
     const badgeColor = useMemo(() => {
+        if (item?.parent_transaction) {
+            item.status = "reversed"
+        }
+
         switch (item?.status?.toLowerCase()) {
             case "initiated":
                 return "#ADD8E6"
@@ -146,6 +150,8 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
             return `${value}.00`
         }
     }
+
+    console.log(item)
     return (
         <div>
             <div className={styles.body_item} onClick={() => {
@@ -156,7 +162,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                     setActiveItem(0)
                 }
             }}>
-                <div style={{ minWidth: "155px", whiteSpace:'nowrap' }}>{new Date(item?.createdAt)?.toLocaleString()}</div>
+                <div style={{ minWidth: "155px", whiteSpace: 'nowrap' }}>{new Date(item?.createdAt)?.toLocaleString()}</div>
                 {vvc && <div>{item?.transactionId}</div>}
                 {vvc && <div>••{cardNo?.slice(-4)}</div>}
                 {vvc && <div>{item?.type}</div>}
@@ -218,7 +224,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                                                                         ?
                                                                         `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)
                                                                         :
-                                                                        `${internationalReceiver?.first_name ?? item?.account?.user?.first_name} ${internationalReceiver?.last_name ?? item?.account?.user?.last_name}`.slice(0, 20)
+                                                                        `${internationalReceiver?.first_name ?? item?.account?.user?.first_name } ${internationalReceiver?.last_name ?? item?.account?.user?.last_name }`.slice(0, 20)
                                                     }
                                                 </>
                                                 :
@@ -226,7 +232,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                                                     ?
                                                     `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)
                                                     :
-                                                    `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)
+                                                    `${item?.sender?.user?.first_name ?? item?.mastercard?.account?.first_name} ${item?.sender?.user?.last_name ?? item?.mastercard?.account?.last_name}`.slice(0, 20)
                             }
                         </div>
                         <div style={{ color: item?.transaction_type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234" }} >{item?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}{item?.payment_type?.toLowerCase() === "commission" && fromReferral ? "$" : item?.currency?.code} {item?.payment_type?.toLowerCase() === "commission" && fromReferral ? item?.replacement_currency?.value?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : item?.total?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
@@ -254,15 +260,15 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                 </div>
 
 
-               {true &&
-                <div style={{ maxWidth: "15px" }}>{
-                    activeItem === index + 1
-                        ?
-                        <ChevronDown />
-                        :
-                        <ChevronRight />
-                }
-                </div>}
+                {true &&
+                    <div style={{ maxWidth: "15px" }}>{
+                        activeItem === index + 1
+                            ?
+                            <ChevronDown />
+                            :
+                            <ChevronRight />
+                    }
+                    </div>}
 
             </div>
             {

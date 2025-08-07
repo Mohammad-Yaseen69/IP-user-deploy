@@ -76,15 +76,15 @@ const SuccessStep = ({
                     {addFunds && (
                         <>
                             <div className={styles.feeInfo}>
-                                <h3>{t("Entered Amount")}</h3>
+                                <h3>{t("Amount")}</h3>
                                 <h3>{cardDets?.currency}{feeDetails?.feeDetails?.amount}</h3>
                             </div>
                             <div className={styles.feeInfo}>
-                                <h3>{t("Fee")}</h3>
+                                <h3>{t("Fees")}</h3>
                                 <h3>{cardDets?.currency}{feeDetails?.feeDetails?.fee}</h3>
                             </div>
                             <div className={styles.feeInfo}>
-                                <h3>{t("Total Funds to be Added")}</h3>
+                                <h3>{t("Total Funds to be Added:")}</h3>
                                 <h3>{cardDets?.currency}{feeDetails?.feeDetails?.amountToTopup}</h3>
                             </div>
                             <div className={styles.feeInfo}>
@@ -92,7 +92,7 @@ const SuccessStep = ({
                                 <h3>{feeDetails?.feeDetails?.currency} {feeDetails?.feeDetails?.totalAmount}</h3>
                             </div>
                             <div className={styles.feeInfo}>
-                                <h3>{t("Exchage Rate")}</h3>
+                                <h3>{t("Exchange Rate")}</h3>
                                 <h3>{feeDetails?.feeDetails?.currency} {Number(feeDetails?.feeDetails?.exchangeRate?.replace(/[,]/g, ""))?.toFixed(2)}</h3>
                             </div>
                         </>

@@ -26,6 +26,8 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
         return str[0]?.toUpperCase() + str?.slice(1)?.toLowerCase()
     }
     const [showImgPreview, setShowImgPreview] = useState(false)
+
+    const reversedText = "The transaction has been reversed, and the funds have been added back to your CHF currency wallet."
     return (
         <div className={styles.container}>
             <div className={styles.left}>
@@ -104,7 +106,14 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                         ?
                         <div className={styles.er_item}>
                             <span>{t("Description")}</span>
-                            <p>{desc || t("The transaction has been reversed, and the funds have been added back to your CHF currency wallet.")?.replace("CHF", item?.currency?.code)}</p>
+                            <p>
+
+                                {desc && item.status?.toLowerCase() === "reversed" ?
+                                    desc + " " + t(reversedText)?.replace("CHF", item?.currency?.code)
+                                    :
+                                    desc ||  t(reversedText)?.replace("CHF", item?.currency?.code)
+                                }
+                            </p>
                         </div>
                         :
                         ""
