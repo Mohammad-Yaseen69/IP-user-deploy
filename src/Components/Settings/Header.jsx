@@ -331,7 +331,7 @@ const Header = () => {
                 </div>
                 <div className={styles.basic_dets}>
                     <div className={styles.badge}>{userDetails?.account_type === "individual" ? t("Personal Account") : t("Business Account")}</div>
-                    <h4 style={{ maxWidth: "25ch" }}>
+                    <h4 style={{ maxWidth: "25ch",whiteSpace: "normal" }}>
                         {
                             userDetails?.account_type?.toLowerCase() === "individual"
                                 ?
@@ -364,7 +364,7 @@ const Header = () => {
                                 }
                             </button>
                         </div>
-                        <div id="chart" className={styles.com_chart}>
+                        <div id="chart" style={{ flexShrink: 0 }} className={styles.com_chart}>
                             <ReactApexChart options={options} series={series} type="radialBar" height={150} />
                         </div>
                     </CardBody>
