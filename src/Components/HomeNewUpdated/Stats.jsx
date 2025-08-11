@@ -69,6 +69,8 @@ const Stats = ({ currentWallet }) => {
     };
     const chartRef = useRef(null);
     const chartRefMobile = useRef(null);
+    const chartInstanceRef = useRef(null);
+    const chartInstanceMobileRef = useRef(null);
     const { t, } = useTranslation()
     const { authHeader } = useContext(UserContext)
     const [isLoading, setIsLoading] = useState(true)
@@ -137,12 +139,10 @@ const Stats = ({ currentWallet }) => {
                 }
             } catch (err) {
             }
-            finally {
-                setIsLoading(false)
-            }
         });
 
         await Promise.all(requests);
+        setIsLoading(false)
     };
     useEffect(() => {
         if (currentWallet) {
@@ -152,6 +152,7 @@ const Stats = ({ currentWallet }) => {
 
 
     useEffect(() => {
+        if (isLoading) return;
         // Data for the chart
         const data = [
             {
@@ -161,13 +162,13 @@ const Stats = ({ currentWallet }) => {
                         return acc + item.amount
                     }
                     return acc
-                }, 0).toFixed(2),
+                }, 0),
                 moneyOut: months.firstMonth.reduce((acc, item) => {
                     if (item?.transaction_type === "debit") {
                         return acc + item.amount
                     }
                     return acc
-                }, 0).toFixed(2)
+                }, 0)
             },
             {
                 month: t(dateRanges[4].month_name),
@@ -176,13 +177,13 @@ const Stats = ({ currentWallet }) => {
                         return acc + item.amount
                     }
                     return acc
-                }, 0).toFixed(2),
+                }, 0),
                 moneyOut: months.secondMonth.reduce((acc, item) => {
                     if (item?.transaction_type === "debit") {
                         return acc + item.amount
                     }
                     return acc
-                }, 0).toFixed(2)
+                }, 0)
             },
             {
                 month: t(dateRanges[3].month_name),
@@ -191,13 +192,13 @@ const Stats = ({ currentWallet }) => {
                         return acc + item.amount
                     }
                     return acc
-                }, 0).toFixed(2),
+                }, 0),
                 moneyOut: months.thirdMonth.reduce((acc, item) => {
                     if (item?.transaction_type === "debit") {
                         return acc + item.amount
                     }
                     return acc
-                }, 0).toFixed(2)
+                }, 0)
             },
             {
                 month: t(dateRanges[2].month_name),
@@ -206,13 +207,13 @@ const Stats = ({ currentWallet }) => {
                         return acc + item.amount
                     }
                     return acc
-                }, 0).toFixed(2),
+                }, 0),
                 moneyOut: months.forthMonth.reduce((acc, item) => {
                     if (item?.transaction_type === "debit") {
                         return acc + item.amount
                     }
                     return acc
-                }, 0).toFixed(2)
+                }, 0)
             },
             {
                 month: t(dateRanges[1].month_name),
@@ -221,13 +222,13 @@ const Stats = ({ currentWallet }) => {
                         return acc + item.amount
                     }
                     return acc
-                }, 0).toFixed(2),
+                }, 0),
                 moneyOut: months.fifthMonth.reduce((acc, item) => {
                     if (item?.transaction_type === "debit") {
                         return acc + item.amount
                     }
                     return acc
-                }, 0).toFixed(2)
+                }, 0)
             },
             {
                 month: t(dateRanges[0].month_name),
@@ -236,20 +237,20 @@ const Stats = ({ currentWallet }) => {
                         return acc + item.amount
                     }
                     return acc
-                }, 0).toFixed(2),
+                }, 0),
                 moneyOut: months.sixthMonth.reduce((acc, item) => {
                     if (item?.transaction_type === "debit") {
                         return acc + item.amount
                     }
                     return acc
-                }, 0).toFixed(2)
+                }, 0)
             },
         ];
 
         // Prepare data for chart
         const categories = data.map((item) => item.month);
-        const moneyInSeries = data.map((item) => item.moneyIn);
-        const moneyOutSeries = data.map((item) => item.moneyOut);
+        const moneyInSeries = data.map((item) => Number(item.moneyIn));
+        const moneyOutSeries = data.map((item) => Number(item.moneyOut));
 
 
         // Chart configuration
@@ -259,6 +260,11 @@ const Stats = ({ currentWallet }) => {
                 height: '100%',
                 width: '100%',
                 stacked: true,
+                redrawOnWindowResize: true,
+                redrawOnParentResize: true,
+                animations: {
+                    enabled: false,
+                },
                 toolbar: {
                     show: false,
                 },
@@ -320,30 +326,61 @@ const Stats = ({ currentWallet }) => {
         };
 
 
-        let chart, chart2;
+        // Desktop chart: create once, then update
         if (chartRef.current) {
-            chart = new ApexCharts(chartRef.current, options);
-            chart.render().then(() => {
-                chartRef.current.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
-                chartRef.current.dispatchEvent(new MouseEvent('mouseout', { bubbles: true }));
-            });
+            if (!chartInstanceRef.current) {
+                chartInstanceRef.current = new ApexCharts(chartRef.current, options);
+                chartInstanceRef.current.render().then(() => {
+                    chartInstanceRef.current?.updateSeries([
+                        { name: options.series[0].name, data: moneyInSeries },
+                        { name: options.series[1].name, data: moneyOutSeries }
+                    ], true);
+                });
+            } else {
+                chartInstanceRef.current.updateOptions({
+                    xaxis: { categories }
+                }, false, false);
+                chartInstanceRef.current.updateSeries([
+                    { name: options.series[0].name, data: moneyInSeries },
+                    { name: options.series[1].name, data: moneyOutSeries }
+                ], true);
+            }
         }
+        // Mobile chart: create once, then update
         if (chartRefMobile.current) {
-            chart2 = new ApexCharts(chartRefMobile.current, options);
-            chart2.render().then(() => {
-                chartRefMobile.current.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
-                chartRefMobile.current.dispatchEvent(new MouseEvent('mouseout', { bubbles: true }));
-            });
+            if (!chartInstanceMobileRef.current) {
+                chartInstanceMobileRef.current = new ApexCharts(chartRefMobile.current, options);
+                chartInstanceMobileRef.current.render().then(() => {
+                    chartInstanceMobileRef.current?.updateSeries([
+                        { name: options.series[0].name, data: moneyInSeries },
+                        { name: options.series[1].name, data: moneyOutSeries }
+                    ], true);
+                });
+            } else {
+                chartInstanceMobileRef.current.updateOptions({
+                    xaxis: { categories }
+                }, false, false);
+                chartInstanceMobileRef.current.updateSeries([
+                    { name: options.series[0].name, data: moneyInSeries },
+                    { name: options.series[1].name, data: moneyOutSeries }
+                ], true);
+            }
         }
 
 
 
-        // Cleanup
+        return undefined;
+    }, [months, i18next.language, isLoading]);
+
+    // Cleanup on unmount only
+    useEffect(() => {
         return () => {
-            chart?.destroy();
-            chart2?.destroy();
+            chartInstanceRef.current?.destroy();
+            chartInstanceRef.current = null;
+            chartInstanceMobileRef.current?.destroy();
+            chartInstanceMobileRef.current = null;
         };
-    }, [months, i18next.language]);
+    }, []);
 
     const yearsToShow = useMemo(() => {
         const currentDate = new Date();
@@ -403,7 +440,7 @@ const Stats = ({ currentWallet }) => {
                             flex: 1,
                             width: '100%',
                             height: '100%',
-                            minHeight: 0,
+                            minHeight: '240px',
                         }}
                     />
                 </CardBody>
