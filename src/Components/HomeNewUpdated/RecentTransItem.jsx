@@ -97,7 +97,7 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
                                                                         ?
                                                                         `${transaction?.receiver?.user?.first_name} ${transaction?.receiver?.user?.last_name}`.slice(0, 20)?.[0]
                                                                         :
-                                                                        `${internationalReceiver?.first_name} ${internationalReceiver?.last_name}`.slice(0, 20)?.[0]
+                                                                        `${internationalReceiver?.first_name ?? transaction?.mastercard?.account?.first_name} ${internationalReceiver?.last_name ?? transaction?.mastercard?.account?.first_name}`.slice(0, 20)?.[0]
                                                     }
                                                 </>
                                                 :
@@ -105,7 +105,7 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
                                                     ?
                                                     `${transaction?.receiver?.user?.first_name} ${transaction?.receiver?.user?.last_name}`.slice(0, 20)?.[0]
                                                     :
-                                                    `${transaction?.sender?.user?.first_name} ${transaction?.sender?.user?.last_name}`.slice(0, 20)?.[0]
+                                                    `${transaction?.sender?.user?.first_name ?? transaction?.mastercard?.account?.first_name ?? transaction?.account?.user?.first_name} ${transaction?.sender?.user?.last_name ?? transaction?.mastercard?.account?.last_name}`.slice(0, 20)?.[0]
                             }
                         </span>
                     </div>
@@ -145,7 +145,7 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
                                                                         ?
                                                                         `${transaction?.receiver?.user?.first_name} ${transaction?.receiver?.user?.last_name}`.slice(0, 20)
                                                                         :
-                                                                        `${internationalReceiver?.first_name ?? transaction?.account?.user?.first_name} ${internationalReceiver?.last_name ?? transaction?.account?.user?.last_name}`.slice(0, 20)
+                                                                        `${internationalReceiver?.first_name ?? transaction?.account?.user?.first_name ?? transaction?.mastercard?.account?.first_name} ${internationalReceiver?.last_name ?? transaction?.account?.user?.last_name ?? transaction?.mastercard?.account?.last_name}`.slice(0, 20)
                                                     }
                                                 </>
                                                 :
@@ -153,7 +153,7 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
                                                     ?
                                                     `${transaction?.receiver?.user?.first_name} ${transaction?.receiver?.user?.last_name}`.slice(0, 20)
                                                     :
-                                                    `${transaction?.sender?.user?.first_name} ${transaction?.sender?.user?.last_name}`.slice(0, 20)
+                                                    `${transaction?.sender?.user?.first_name ?? transaction?.mastercard?.account?.first_name} ${transaction?.sender?.user?.last_name ?? transaction?.mastercard?.account?.last_name}`.slice(0, 20)
                             }
                         </h4>
                         <p className="text-muted" style={{ marginBottom: 0, color: "rgba(128,128,128,.7)", fontSize: ".6rem", display: "flex", gap: ".3rem", alignItems: "center", whiteSpace: "nowrap" }}>
