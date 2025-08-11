@@ -69,7 +69,7 @@ const Stats = ({ currentWallet }) => {
     };
     const chartRef = useRef(null);
     const chartRefMobile = useRef(null);
-    const { t,  } = useTranslation()
+    const { t, } = useTranslation()
     const { authHeader } = useContext(UserContext)
     const [isLoading, setIsLoading] = useState(true)
 
@@ -256,7 +256,8 @@ const Stats = ({ currentWallet }) => {
         const options = {
             chart: {
                 type: 'bar',
-                height: window.innerWidth > 1650 ? "auto" : "240px",
+                height: '100%',
+                width: '100%',
                 stacked: true,
                 toolbar: {
                     show: false,
@@ -319,16 +320,28 @@ const Stats = ({ currentWallet }) => {
         };
 
 
-        // Create chart
-        const chart = new ApexCharts(chartRef.current, options);
-        const chart2 = new ApexCharts(chartRefMobile.current, options);
-        chart.render();
-        chart2.render();
+        let chart, chart2;
+        if (chartRef.current) {
+            chart = new ApexCharts(chartRef.current, options);
+            chart.render().then(() => {
+                chartRef.current.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+                chartRef.current.dispatchEvent(new MouseEvent('mouseout', { bubbles: true }));
+            });
+        }
+        if (chartRefMobile.current) {
+            chart2 = new ApexCharts(chartRefMobile.current, options);
+            chart2.render().then(() => {
+                chartRefMobile.current.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+                chartRefMobile.current.dispatchEvent(new MouseEvent('mouseout', { bubbles: true }));
+            });
+        }
+
+
 
         // Cleanup
         return () => {
-            chart.destroy();
-            chart2.destroy();
+            chart?.destroy();
+            chart2?.destroy();
         };
     }, [months, i18next.language]);
 
@@ -351,7 +364,7 @@ const Stats = ({ currentWallet }) => {
                 <CardHeader className='c_h_pb' style={{ padding: window.innerWidth > 1540 ? "36px 36px 0px" : "1rem 1rem 0" }}>
                     <h4 style={{ margin: 0, letterSpacing: "" }} className='c_h_pb_h4'>{t("Payment Insights")} ({currentWallet?.currency?.code} )</h4>
                 </CardHeader>
-                <CardBody className='p_g_link'>
+                <CardBody className='p_g_link' style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
                     {
                         isLoading
                             ?
@@ -375,11 +388,24 @@ const Stats = ({ currentWallet }) => {
                                 }
                             </>
                     }
-                    <div ref={chartRef} style={{
-                        display: months.firstMonth.length < 1 && months.secondMonth.length < 1 && months.thirdMonth.length < 1 && months.forthMonth.length < 1 && months.fifthMonth.length < 1 && months.sixthMonth.length < 1 ? "none" : "inherit",
-                        height: "200px",
-                        minHeight: "none"
-                    }} />
+                    <div
+                        ref={chartRef}
+                        style={{
+                            display:
+                                months.firstMonth.length < 1 &&
+                                    months.secondMonth.length < 1 &&
+                                    months.thirdMonth.length < 1 &&
+                                    months.forthMonth.length < 1 &&
+                                    months.fifthMonth.length < 1 &&
+                                    months.sixthMonth.length < 1
+                                    ? 'none'
+                                    : 'inherit',
+                            flex: 1,
+                            width: '100%',
+                            height: '100%',
+                            minHeight: 0,
+                        }}
+                    />
                 </CardBody>
             </Card >
             <div className={styles.mobile}>
@@ -413,9 +439,23 @@ const Stats = ({ currentWallet }) => {
                                     }
                                 </>
                         }
-                        <div ref={chartRefMobile} style={{
-                            display: months.firstMonth.length < 1 && months.secondMonth.length < 1 && months.thirdMonth.length < 1 && months.forthMonth.length < 1 && months.fifthMonth.length < 1 && months.sixthMonth.length < 1 ? "none" : "inherit"
-                        }} />
+                        <div
+                            ref={chartRefMobile}
+                            style={{
+                                display:
+                                    months.firstMonth.length < 1 &&
+                                        months.secondMonth.length < 1 &&
+                                        months.thirdMonth.length < 1 &&
+                                        months.forthMonth.length < 1 &&
+                                        months.fifthMonth.length < 1 &&
+                                        months.sixthMonth.length < 1
+                                        ? 'none'
+                                        : 'inherit',
+                                width: '100%',
+                                height: '100%',
+                                minHeight: '240px',
+                            }}
+                        />
                     </div>
                 </Card>
             </div>
