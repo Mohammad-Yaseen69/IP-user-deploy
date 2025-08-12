@@ -63,6 +63,9 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
     const [debounceTimer, setDebounceTimer] = useState(null);
     const [isLoading, setIsLoading] = useState(true)
     const [transactions, setTransactions] = useState([])
+    const loaderRef = useRef()
+    const mobileLoaderRef = useRef()
+    const [stopLoader, setStopLoader] = useState(false)
 
     useEffect(() => {
         if (searchQuery !== debouncedSearchQuery) {
@@ -80,8 +83,10 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
 
     const getAllTransactions = () => {
         setActive("All")
-        setIsLoading(true)
-        setStopLoader(false)
+        if (page === 1) {
+            setIsLoading(true)
+        }
+        // axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-all-transactions-by-wallet/${currentWallet?.wallet_id}/${(page - 1) * 15}/15`, {
         axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-all-transactions-by-wallet/${currentWallet?.wallet_id}/${page}/15`, {
             headers: authHeader
         })
@@ -94,17 +99,19 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
             .catch(err => {
                 const decrypted = decryptData(err?.response?.data?.data)
                 setIsLoading(false)
-                setStopLoader(true)
                 if (decrypted.status === false && page !== 1) {
                     setMaxLimit(true)
+                    setStopLoader(true)
                 }
             })
     }
 
     const getTransactionsByQuery = () => {
         setActive("All")
-        setIsLoading(true)
-        setStopLoader(false)
+        if (page === 1) {
+            setIsLoading(true)
+        }
+        // axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-wallet-transactions/${currentWallet?.wallet_id}/${(page - 1) * 15}/15/${debouncedSearchQuery}`, {
         axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-wallet-transactions/${currentWallet?.wallet_id}/${page}/15/${debouncedSearchQuery}`, {
             headers: authHeader
         })
@@ -119,22 +126,25 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                 setIsLoading(false)
                 setFiltered([])
                 setTransactions([])
-                setStopLoader(true)
                 if (decrypted.status === false && page !== 1) {
                     setMaxLimit(true)
+                    setStopLoader(true)
                 }
             })
     }
 
     const getTransactionsByQueryAndDate = () => {
         setActive("All")
-        setIsLoading(true)
-        setStopLoader(false)
+        if (page === 1) {
+            setIsLoading(true)
+        }
         const data = {
             ...apiDates,
             query: debouncedSearchQuery
         }
         const encrypted = encryptData(data)
+
+        // axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-account-transactions-wallet-by-date/${currentWallet?.wallet_id}/${(page - 1) * 15}/15`,
         axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-account-transactions-wallet-by-date/${currentWallet?.wallet_id}/${page}/15`,
             {
                 data: encrypted
@@ -152,40 +162,34 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                 setIsLoading(false)
                 setFiltered([])
                 setTransactions([])
-                setStopLoader(true)
                 if (decrypted.status === false && page !== 1) {
                     setMaxLimit(true)
+                    setStopLoader(true)
                 }
             })
     }
 
     useEffect(() => {
-        if (currentTrxType === "all" && !maxLimit && userDetails) {
+        if (!currentWallet || !userDetails) return;
+        if (maxLimit) return;
+        if (currentTrxType === "all") {
             getAllTransactions()
         }
-        if (currentTrxType === "query" && !maxLimit && userDetails) {
+        if (currentTrxType === "query") {
             getTransactionsByQuery()
         }
-        if (currentTrxType === "date_and_query" && !maxLimit && userDetails) {
+        if (currentTrxType === "date_and_query") {
             getTransactionsByQueryAndDate()
         }
-    }, [page, currentTrxType, debouncedSearchQuery, apiDates])
+    }, [page, currentTrxType, debouncedSearchQuery, apiDates, currentWallet, userDetails, maxLimit])
 
     useEffect(() => {
         if (currentWallet) {
-            setPage(1)
+            setStopLoader(false)
+            setMaxLimit(false)
             setFiltered([])
             setTransactions([])
-            setStopLoader(false)
-            if (currentTrxType === "all" && !maxLimit && userDetails) {
-                getAllTransactions()
-            }
-            if (currentTrxType === "query" && !maxLimit && userDetails) {
-                getTransactionsByQuery()
-            }
-            if (currentTrxType === "date_and_query" && !maxLimit && userDetails) {
-                getTransactionsByQueryAndDate()
-            }
+            setPage(1)
         }
     }, [currentWallet])
 
@@ -263,32 +267,26 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
         },
     ]), [])
 
-    
-    // Add loader refs for intersection observer
-    const loaderRef = useRef();
-    const mobileLoaderRef = useRef();
-    const [stopLoader, setStopLoader] = useState(false);
+    const tableWrapperRef = useRef(null)
+    const tableWrapperRefMobile = useRef(null)
 
-    // Infinite scroll using IntersectionObserver
     useEffect(() => {
-        if (isLoading || stopLoader || maxLimit) return;
-
         const observer = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting) {
-                setPage(prev => prev + 1);
+                setPage(prev => prev + 1)
             }
-        }, { threshold: 0.1 });
+        }, { threshold: 0.1 })
 
-        const desktopTarget = loaderRef.current;
-        const mobileTarget = mobileLoaderRef.current;
-
-        if (desktopTarget) observer.observe(desktopTarget);
-        if (mobileTarget) observer.observe(mobileTarget);
+        if (loaderRef.current) observer.observe(loaderRef.current)
+        if (mobileLoaderRef.current) observer.observe(mobileLoaderRef.current)
 
         return () => {
-            observer.disconnect();
-        };
-    }, [isLoading, stopLoader, maxLimit]);
+            observer.disconnect()
+        }
+    }, [loaderRef.current, mobileLoaderRef.current])
+
+    
+
 
     
 
@@ -325,7 +323,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                                 boxShadow: active === item.name ? "0px 11.90068244934082px 8.655041694641113px rgba(89, 38, 240, 0.17)" : "none",
                                 color: active === item.name ? "white" : "#848484"
                             }} className={styles.menu_item} onClick={() => setActive(item.name)}>
-                                <img alt={item.name} src={active === item.name ? item.icon_white : item.icon_grey} style={{ width: "18px" }} />
+                                <img src={active === item.name ? item.icon_white : item.icon_grey} alt="menu" style={{ width: "18px" }} />
                                 <span>{t(item.name)}</span>
                                 {
                                     active === item.name
@@ -369,7 +367,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                     <div>{t("Status")}</div>
                     <div style={{ maxWidth: "15px" }}></div>
                 </div>
-                <div className={styles.table_body}>
+                <div className={styles.table_body} ref={tableWrapperRef}>
                     {
                         isLoading ?
                             <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
@@ -395,7 +393,6 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                                 }
                             </>
                     }
-                   
                     {(!isLoading && !stopLoader) &&
                         <div ref={loaderRef} style={{ display: 'flex', justifyContent: "center", width: "100%" }}>
                             <div style={{ width: "200px" }}>
@@ -404,7 +401,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                         </div>
                     }
                 </div>
-                <div className={styles.table_body_mobile} style={{ minHeight: "300px" }}>
+                <div className={styles.table_body_mobile} ref={tableWrapperRefMobile} style={{ minHeight: "300px" }}>
                     {
                         isLoading ?
                             <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
@@ -430,7 +427,6 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                                 }
                             </>
                     }
-                    {/* Loader for infinite scroll mobile */}
                     {(!isLoading && !stopLoader) &&
                         <div ref={mobileLoaderRef} style={{ display: 'flex', justifyContent: "space-between", width: "100%" }}>
                             <div style={{ width: "200px" }}>
