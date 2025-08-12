@@ -521,7 +521,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
             return dec?.exchangeRate?.exchanged_amount ?? 0;
         } catch (err) {
             const decrypted = decryptData(err.response.data.data)
-            dataHandler("error", "Something went wrong while getting exchange rate.")
+            dataHandler("error", "We cannot process your request at the moment, please try again later..")
             const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
             if (error) {
                 dataHandler("oerror", error)

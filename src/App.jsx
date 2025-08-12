@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import Routers from "./RouteNew"
 import CustomizerProvider from './Helper/Customizer/CustomizerProvider'
 import ProjectProvider from './Helper/Project/ProjectProvider'
@@ -63,6 +63,34 @@ const App = () => {
   }, [setShowOtherTabError]);
 
   // useEffect(() => {
+  //   // STEP 1: Check if we just refreshed
+  //   const isRefresh = sessionStorage.getItem("isRefresh") === "true";
+
+  //   if (isRefresh) {
+  //     // Restore data (token stays alive)
+  //     console.log("Page was refreshed – keeping token");
+  //     sessionStorage.removeItem("isRefresh"); // Clean up
+  //   } else {
+  //     // New tab or hard reload – clear token
+  //     console.log("New tab or closed – resetting token");
+  //     localStorage.removeItem("token");
+  //     localStorage.setItem("login", "false");
+  //   }
+
+  //   // STEP 2: Set refresh flag before unload (if it's a refresh)
+  //   const handleBeforeUnload = () => {
+  //     // Detect refresh (hacky but works)
+  //     const isHardRefresh = performance.navigation?.type === 1;
+  //     if (isHardRefresh) {
+  //       sessionStorage.setItem("isRefresh", "true");
+  //     } 
+  //   };
+
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
+  //   return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  // }, []);
+
+  // useEffect(() => {
   //   const handleBeforeUnload = (event) => {
   //     event.preventDefault();
   //     event.returnValue = "Closing or refreshing the page may logout your account, Are you sure you want to continue?";
@@ -83,6 +111,16 @@ const App = () => {
   //   };
   // }, []);
 
+  useEffect(() => {
+    if (process.env.NODE_ENV === "development") {
+      const interval = setInterval(() => {
+        const overlays = document.querySelectorAll('[id^="webpack-dev-server"]');
+        overlays.forEach(el => el.remove());
+      }, 1000);
+
+
+    }
+  }, []);
 
 
 

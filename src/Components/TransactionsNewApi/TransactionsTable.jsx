@@ -64,6 +64,9 @@ const TransactionsTable = () => {
     const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
     const [debounceTimer, setDebounceTimer] = useState(null);
     const [isLoading, setIsLoading] = useState(true)
+    const loaderRef = useRef()
+    const mobileLoaderRef = useRef()
+    const [stopLoader, setStopLoader] = useState(false)
 
     useEffect(() => {
         getUserBeneficiaries()
@@ -103,6 +106,7 @@ const TransactionsTable = () => {
             .catch(err => {
                 const decrypted = decryptData(err.response.data.data)
                 setIsLoading(false)
+                setStopLoader(true)
                 if (decrypted.status === false && page !== 1) {
                     setMaxLimit(true)
                 }
@@ -272,30 +276,23 @@ const TransactionsTable = () => {
         },
     ]
 
-    const tableWrapperRef = useRef(null)
-    const tableWrapperRefMobile = useRef(null)
 
-    const handleScroll = () => {
-        const wrapper = window.innerWidth > 1000 ? tableWrapperRef.current : tableWrapperRefMobile.current;
-        if (wrapper && active === "All") {
-            const isScrolledToBottom = wrapper.scrollHeight - wrapper.scrollTop === wrapper.clientHeight;
-            if (isScrolledToBottom) {
-                setPage(prev => prev + 1)
-            }
-        }
-    };
 
     useEffect(() => {
-        const wrapper = window.innerWidth > 1000 ? tableWrapperRef.current : tableWrapperRefMobile.current;
-        if (wrapper) {
-            wrapper.addEventListener('scroll', handleScroll);
-        }
-        return () => {
-            if (wrapper) {
-                wrapper.removeEventListener('scroll', handleScroll);
+        const observer = new IntersectionObserver((enteries) => {
+            if (enteries[0].isIntersecting) {
+                setPage(prev => prev + 1)
             }
-        };
-    }, []);
+        }, { threshold: 0.1 })
+
+
+        if (loaderRef.current) observer.observe(loaderRef.current)
+        if (mobileLoaderRef.current) observer.observe(mobileLoaderRef.current)
+
+        return () => {
+            observer.disconnect()
+        }
+    }, [loaderRef.current, mobileLoaderRef.current]);
 
     useEffect(() => {
         if (active === "All") {
@@ -337,7 +334,7 @@ const TransactionsTable = () => {
                                 background: active === item.name ? "linear-gradient(346deg, #E64067 0%, #5926F0 55.65%, #4828A0 100%), #D9D9D9" : "#f8f8f8",
                                 boxShadow: active === item.name ? "0px 11.90068244934082px 8.655041694641113px rgba(89, 38, 240, 0.17)" : "none",
                                 color: active === item.name ? "white" : "#848484",
-                                minWidth : "125px"
+                                minWidth: "125px"
                             }} className={styles.menu_item} onClick={() => setActive(item.name)}>
                                 <img src={active === item.name ? item.icon_white : item.icon_grey} style={{ width: "18px" }} />
                                 <span>{t(item.name)}</span>
@@ -378,7 +375,7 @@ const TransactionsTable = () => {
                     <div>{t("Status")}</div>
                     <div style={{ maxWidth: "15px" }}></div>
                 </div>
-                <div className={styles.table_body} ref={tableWrapperRef}>
+                <div className={styles.table_body} >
                     {
                         isLoading ?
                             <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
@@ -404,8 +401,16 @@ const TransactionsTable = () => {
                                 }
                             </>
                     }
+
+                    {(!isLoading && !stopLoader) &&
+                        <div ref={loaderRef} style={{ display: 'flex', justifyContent: "center", width: "100%" }}>
+                            <div style={{ width: "200px" }}>
+                                <InstaPayLoader />
+                            </div>
+                        </div>
+                    }
                 </div>
-                <div className={styles.table_body_mobile} ref={tableWrapperRefMobile}>
+                <div className={styles.table_body_mobile}>
                     {
                         isLoading ?
                             <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
@@ -431,8 +436,16 @@ const TransactionsTable = () => {
                                 }
                             </>
                     }
+
+                    {(!isLoading && !stopLoader) &&
+                        <div ref={mobileLoaderRef} style={{ display: 'flex', justifyContent: "space-between", width: "100%" }}>
+                            <div style={{ width: "200px" }}>
+                                <InstaPayLoader />
+                            </div>
+                        </div>}
                 </div>
             </div>
+
         </div>
     )
 }

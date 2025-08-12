@@ -1,48 +1,42 @@
 import { ChevronDown, ChevronRight } from "react-feather"
 import styles from "./TransactionItemMobile.module.css"
 import { useTranslation } from "react-i18next"
-import { service_name_formatter } from "../TransactionItem"
-import CatDown from "../CatDown"
-import { Badge, Button, Input } from "reactstrap"
 import { useContext, useEffect, useMemo, useState } from "react"
 import { UserContext } from "../../../Context/UserContext"
 import axios from "axios"
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption"
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
-import ImagePreviewModal from "../../ImagePreviewModal.jsx"
 import TransactionItemDetails from "../TransactionItemDetails.jsx"
 import statuses from "../files/thunesTransactionStatus.json"
-import CitiesData from "../../CitiesDropDown/CitiesData.json"
 import { capitalizeStatus } from "../../PendingNew/ItemMobile.jsx"
 
 const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromReferral = false, vvc = false }) => {
     const { t, i18n } = useTranslation()
     const [selectedCategory, setSelectedCategory] = useState([]);
-    const { userDetails, authHeader, beneficiaries } = useContext(UserContext)
+    const { authHeader, beneficiaries } = useContext(UserContext)
     const [note, setNote] = useState(item?.note)
     const [isSaving, setIsSaving] = useState(false)
     const [isEditMode, setIsEditMode] = useState(false)
     const [message, setMessage] = useState("")
-    const [currentImage, setCurrentImage] = useState("")
-    const [symbol, setSymbol] = useState("")
+
 
     useEffect(() => {
         setNote(item?.note)
         setIsEditMode(item?.note ? false : true)
     }, [item])
 
-    useEffect(() => {
-        if(vvc){
-            const data = CitiesData.find((d) => d.currency === item.currency)
-            setSymbol(data.currency_symbol)
-        }
-    },[item])
+    useEffect(() => { }, [item])
 
     const badgeColor = useMemo(() => {
+        if (item?.parent_transaction) {
+            item.status = "reversed"
+        }
+
         switch (item?.status?.toLowerCase()) {
             case "initiated":
                 return "#ADD8E6"
             case "completed":
+            case "success":
                 return "#28A745"
             case "rejected":
                 return "#DC3545"
@@ -57,6 +51,7 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
             case "reversed":
                 return "#FFC107"
             case "declined":
+            case "failed":
                 return "#C82333"
             default:
                 break;
@@ -79,7 +74,7 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
             headers: authHeader
         })
             .then(res => {
-                const decrypted = decryptData(res.data.data)
+                void decryptData(res.data.data)
                 // console.log(decrypted)
                 setIsSaving(false)
                 setIsEditMode(false)
@@ -90,7 +85,7 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
                 }, 3000);
             })
             .catch(err => {
-                const decrypted = decryptData(err.response.data.data)
+                void decryptData(err.response.data.data)
                 // console.log(decrypted)
                 setIsSaving(false)
                 setMessage("Something went wrong, try again.")
@@ -104,41 +99,76 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
     const internationalReceiver = useMemo(() => {
         if (!item?.beneficiary) return null;
         return beneficiaries.filter(benef => benef?._id === item?.beneficiary)?.[0]
-    }, [])
+    }, [beneficiaries, item])
 
     const externalStatusDescription = useMemo(() => {
         return statuses?.[item?.external_status?.split("_")?.[1]]?.[i18n.language]?.message ?? ""
     }, [item, i18n])
 
+    const displayName = useMemo(() => {
+        if (item?.service_type === "payment_address" && item?.guest_details) {
+            return item?.guest_details?.name ?? ""
+        }
+
+        if (item?.service_type === "airtime") {
+            return item?.airtime_number ?? ""
+        }
+
+        if (item?.payment_type === "conversion") {
+            return item?.wallet_id ?? ""
+        }
+
+        const isDebit = (item?.transaction_type ?? "")?.toLowerCase() === "debit"
+        if (isDebit) {
+            if (item?.service_type === "withdraw_by_admin") return "Admin"
+            if (item?.service_type === "kyc_verification") return "InstaPay"
+            if (item?.service_type === "withdrawal") {
+                const first = item?.sender?.user?.first_name
+                const last = item?.sender?.user?.last_name
+                return [first, last].filter(Boolean).join(" ")
+            }
+            if (item?.receiver?.user) {
+                const first = item?.receiver?.user?.first_name
+                const last = item?.receiver?.user?.last_name
+                return [first, last].filter(Boolean).join(" ")
+            }
+
+            const first = internationalReceiver?.first_name ?? item?.account?.user?.first_name
+            const last = internationalReceiver?.last_name ?? item?.account?.user?.last_name
+            return [first, last].filter(Boolean).join(" ")
+        }
+
+        if (item?.service_type === "topup") {
+            const first = item?.receiver?.user?.first_name
+            const last = item?.receiver?.user?.last_name
+            return [first, last].filter(Boolean).join(" ")
+        }
+
+        const first = item?.sender?.user?.first_name ?? item?.mastercard?.account?.first_name
+        const last = item?.sender?.user?.last_name ?? item?.mastercard?.account?.last_name
+        return [first, last].filter(Boolean).join(" ")
+    }, [item, internationalReceiver])
+
+    const displayInitial = useMemo(() => {
+        if (item?.service_type === "payment_address" && item?.guest_details) {
+            return item?.guest_details?.name?.[0]
+        }
+        if (item?.service_type === "airtime") {
+            return item?.airtime_number?.[1]
+        }
+        if (item?.payment_type === "conversion") {
+            return item?.wallet_id?.[0]
+        }
+        return displayName
+    }, [item, displayName])
+
 
     return (
-        <div className={styles.item} onClick={(() => console.log(item, (item?.service_type == "payment_address" && item?.guest_details)))}>
+        <div className={styles.item} onClick={(() => console.log(item, (item?.service_type === "payment_address" && item?.guest_details)))}>
             <div className={styles.top} onClick={() => setActiveItem(activeItem === index + 1 ? 0 : index + 1)}>
                 <div className={styles.left}>
                     <div className={styles.dp}>
-                        {
-                             !(item?.service_type == "payment_address" && item?.guest_details)
-                             ?
-                            item?.service_type === "airtime"
-                                ? item?.airtime_number?.[1]
-                                : item?.payment_type === "conversion"
-                                    ? item?.wallet_id?.[0]
-                                    : item?.transaction_type?.toLowerCase() === "debit"
-                                        ? item?.service_type === "withdraw_by_admin"
-                                            ? "Admin"?.[0]
-                                            : item?.service_type === "kyc_verification"
-                                                ? "InstaPay"?.[0]
-                                                : item?.service_type === "withdrawal"
-                                                    ? `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)?.[0]
-                                                    : item?.receiver
-                                                        ? `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)?.[0]
-                                                        : `${internationalReceiver?.first_name} ${internationalReceiver?.last_name}`.slice(0, 20)?.[0]
-                                        : item?.service_type === "topup"
-                                            ? `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)?.[0]
-                                            : `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)?.[0]
-                                :
-                                item?.guest_details?.name?.[0]
-                        }
+                        {displayInitial[0]}
                     </div>
                     <div className={styles.t_details}>
                         <h5
@@ -146,49 +176,7 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
                                 width: activeItem === index + 1 ? "fit-content" : "30vw"
                             }}
                         >
-                           {
-                                !(item?.service_type == "payment_address" && item?.guest_details)
-                                ?
-                                item?.service_type === "airtime"
-                                    ? item?.airtime_number
-                                    :
-                                    item?.payment_type === "conversion"
-                                        ?
-                                        item?.wallet_id
-                                        :
-                                        item?.transaction_type?.toLowerCase() === "debit"
-                                            ?
-                                            <>
-                                                {
-                                                    item?.service_type === "withdraw_by_admin"
-                                                        ?
-                                                        "Admin"
-                                                        :
-                                                        item?.service_type === "kyc_verification"
-                                                            ?
-                                                             "InstaPay"
-                                                            :
-                                                            item?.service_type === "withdrawal"
-                                                                ?
-                                                                `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)
-                                                                :
-                                                                item?.receiver
-                                                                    ?
-                                                                    `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)
-                                                                    :
-                                                                    `${internationalReceiver?.first_name} ${internationalReceiver?.last_name}`.slice(0, 20)
-                                                }
-                                            </>
-                                            :
-                                            item?.service_type === "topup"
-                                                ?
-                                                `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)
-                                                :
-                                                `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)
-                                        : 
-                                        item?.guest_details?.name
-                            }
-                            
+                            {displayInitial?.slice(0, 20)}
                         </h5>
                         <span>{new Date(item?.createdAt)?.toLocaleString()}</span>
                     </div>

@@ -56,6 +56,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     })
     const [isAmountLoading, setIsAmountLoading] = useState(false)
     const [isReceivingAmountLoading, setIsReceivingAmountLoading] = useState(false)
+    const [countriesLoading, setCountriesLoading] = useState(true)
     const toggleModalHandler = (key) => {
         setModals(prev => ({
             ...prev,
@@ -101,6 +102,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
         }
 
         const getCountries = async () => {
+            setCountriesLoading(true)
             try {
                 const res = await axios.get(`${process.env.REACT_APP_THUNES_API}/Countries`, { headers: authHeader })
                 const decrypted = decryptData(res.data.data)
@@ -122,7 +124,11 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                 setCountries(allowed?.sort((a, b) => String(a?.name)?.localeCompare(b?.name)))
             } catch (error) {
                 console.log(error)
+                dataHandler("error" ,"We had some trouble fetching countries, please refresh your page or clear browser cache for secure International Transfer.")
                 return null;
+            }
+            finally {
+                setCountriesLoading(false)
             }
         }
         getCountries()
@@ -535,7 +541,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                             isReceivingAmountLoading
                                 ?
                                 <div>
-                                    {countries.length === 0 ?
+                                    {countriesLoading ?
                                         <div style={{ width: "40px", height: "40px" }}>
                                             <InstaPayLoader />
                                         </div>
@@ -544,15 +550,15 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                                             {
                                                 !data?.country?.name ?
                                                     <span>{t("Select country to continue")}</span> :
-                                                !data?.payoutChannel?.name ?
-                                                    <span>{t("Select Receiving Method")}</span> :
-                                                !data?.payer?.name ?
-                                                    <span>{t("Select the Payer")}</span> :
+                                                    !data?.payoutChannel?.name ?
+                                                        <span>{t("Select Receiving Method")}</span> :
+                                                        !data?.payer?.name ?
+                                                            <span>{t("Select the Payer")}</span> :
 
 
-                                                    <div style={{ width: "40px", height: "40px" }}>
-                                                         <InstaPayLoader />
-                                                    </div>
+                                                            <div style={{ width: "40px", height: "40px" }}>
+                                                                <InstaPayLoader />
+                                                            </div>
                                             }
                                         </>
                                     }
@@ -587,7 +593,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                             <div className={data?.country?.file_url ? "" : styles.grad_icon}>
                                 <img src={data?.country?.file_url ?? country} alt="" />
                             </div>
-                            <span>{countries.length === 0 ? t("Loading Countries") + "..." : data?.country?.name ? t(data?.country?.name)?.slice(0, 30) : t("Destination Country")}</span>
+                            <span>{countriesLoading ? t("Loading Countries") + "..." : data?.country?.name ? t(data?.country?.name)?.slice(0, 30) : t("Destination Country")}</span>
                         </div>
                         <img src={chev_down} alt="" />
                     </div>

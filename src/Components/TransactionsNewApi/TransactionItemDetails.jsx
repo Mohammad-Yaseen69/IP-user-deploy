@@ -28,6 +28,68 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
     const [showImgPreview, setShowImgPreview] = useState(false)
 
     const reversedText = "The transaction has been reversed, and the funds have been added back to your CHF currency wallet."
+
+    const asLabel = useMemo(() => {
+        if (item?.service_type === "withdraw_by_admin" || item?.service_type === "deposite_by_admin") return "Admin Funds"
+        if (item?.payment_type?.includes("bank")) return "Bank Transfer"
+        if (item?.payment_type?.includes("mobile")) return "Mobile Money"
+        if (item?.payment_type?.toLowerCase() === "commission") return "Referral Commission"
+        return service_name_formatter(item?.payment_type) || service_name_formatter(item?.transaction_type)?.replace("Mastercard", "")
+    }, [item])
+
+    const recipientName = useMemo(() => {
+        if (item?.service_type === "payment_address" && item?.guest_details) return item?.guest_details?.name
+        if (item?.service_type === "airtime") return item?.airtime_number
+        if (item?.payment_type === "conversion" || item?.service_type === "withdrawal") return item?.wallet_id
+
+        const isDebit = (item?.transaction_type ?? "")?.toLowerCase() === "debit"
+        if (isDebit) {
+            if (item?.service_type === "kyc_verification") return "InstaPay"
+            if (item?.service_type === "withdrawal") {
+                return `${item?.sender?.user?.first_name ?? ""} ${item?.sender?.user?.last_name ?? ""}`.trim()
+            }
+            if (item?.receiver) {
+                return `${item?.receiver?.user?.first_name ?? ""} ${item?.receiver?.user?.last_name ?? ""}`.trim()
+            }
+            return `${internationalReceiver?.first_name ?? item.receiverCard?.account?.first_name ?? item?.account?.user?.first_name ?? ""} ${internationalReceiver?.last_name ?? item.receiverCard?.account?.first_name ?? item?.account?.user?.last_name ?? ""}`.trim()
+        }
+
+        if (item?.service_type === "topup") {
+            return `${item?.receiver?.user?.first_name ?? ""} ${item?.receiver?.user?.last_name ?? ""}`.trim()
+        }
+
+        return `${item?.sender?.user?.first_name ?? item?.senderCard?.account?.first_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.first_name ?? userDetails?.first_name ?? ""} ${item?.sender?.user?.last_name ?? item?.senderCard?.account?.last_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.last_name ?? userDetails?.last_name ?? ""}`.trim()
+    }, [item, internationalReceiver, userDetails])
+
+    const recipientInitial = useMemo(() => {
+        if (item?.service_type === "payment_address" && item?.guest_details) return item?.guest_details?.name?.[0]
+        if (item?.service_type === "airtime") return item?.airtime_number?.[1]
+        if (item?.payment_type === "conversion" || item?.service_type === "withdrawal") return item?.wallet_id?.[0]
+
+        const isDebit = (item?.transaction_type ?? "")?.toLowerCase() === "debit"
+        if (isDebit) {
+            if (item?.service_type === "withdraw_by_admin") return "A"
+            if (item?.service_type === "kyc_verification") return "I"
+            if (item?.service_type === "withdrawal") {
+                const name = `${item?.sender?.user?.first_name ?? ""} ${item?.sender?.user?.last_name ?? ""}`.trim()
+                return name?.slice(0, 1)
+            }
+            if (item?.receiver) {
+                const name = `${item?.receiver?.user?.first_name ?? ""} ${item?.receiver?.user?.last_name ?? ""}`.trim()
+                return name?.slice(0, 1)
+            }
+            const name = `${internationalReceiver?.first_name ?? item?.account?.user?.first_name ?? ""} ${internationalReceiver?.last_name ?? item?.account?.user?.last_name ?? ""}`.trim()
+            return name?.slice(0, 1)
+        }
+
+        if (item?.service_type === "topup") {
+            const name = `${item?.receiver?.user?.first_name ?? ""} ${item?.receiver?.user?.last_name ?? ""}`.trim()
+            return name?.slice(0, 1)
+        }
+
+        const name = `${item?.sender?.user?.first_name ?? item?.senderCard?.account?.first_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.first_name ?? userDetails?.first_name ?? ""} ${item?.sender?.user?.last_name ?? item?.senderCard?.account?.last_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.last_name ?? userDetails?.last_name ?? ""}`.trim()
+        return name?.slice(0, 1)
+    }, [item, internationalReceiver, userDetails])
     return (
         <div className={styles.container}>
             <div className={styles.left}>
@@ -126,99 +188,13 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                             <span>{item?.payment_type === "conversion" || item?.service_type === "withdrawal" ? t("Wallet ID") : t("Recipient")}: </span>
                             <div className={styles.recipient}>
                                 <div className={styles.dp}>
-                                    {
-                                        item?.service_type === "payment_address" && item?.guest_details
-                                            ?
-                                            item?.guest_details?.name?.[0]
-                                            :
-                                            item?.service_type === "airtime"
-                                                ?
-                                                item?.airtime_number?.[1]
-                                                :
-                                                item?.payment_type === "conversion" || item?.service_type === "withdrawal"
-                                                    ?
-                                                    item?.wallet_id?.[0]
-                                                    :
-                                                    item?.transaction_type?.toLowerCase() === "debit"
-                                                        ?
-                                                        <>
-                                                            {
-                                                                item?.service_type === "withdraw_by_admin"
-                                                                    ?
-                                                                    "Admin"?.[0]
-                                                                    :
-                                                                    item?.service_type === "kyc_verification"
-                                                                        ?
-                                                                        "InstaPay"?.[0]
-                                                                        :
-                                                                        item?.service_type === "withdrawal"
-                                                                            ?
-                                                                            `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)?.[0]
-                                                                            :
-                                                                            item?.receiver
-                                                                                ?
-                                                                                `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)?.[0]
-                                                                                :
-                                                                                `${internationalReceiver?.first_name ?? item?.account?.user?.first_name} ${internationalReceiver?.last_name ?? item?.account?.user?.last_name}`.slice(0, 20)?.[0]
-                                                            }
-                                                        </>
-                                                        :
-                                                        item?.service_type === "topup"
-                                                            ?
-                                                            `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)?.[0]
-                                                            :
-                                                            `${item?.sender?.user?.first_name ?? item?.senderCard?.account?.first_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.first_name ?? userDetails?.first_name} ${item?.sender?.user?.last_name ?? item?.senderCard?.account?.last_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.last_name ?? userDetails?.last_name ?? ""}`.slice(0, 20)?.[0]
-                                    }
+                                    {recipientInitial}
                                 </div>
                                 {
 
                                     <div className={styles.r_details}>
                                         <h5>
-                                            {
-                                                item?.service_type === "payment_address" && item?.guest_details
-                                                    ?
-                                                    item?.guest_details?.name
-                                                    :
-                                                    item?.service_type === "airtime"
-                                                        ?
-                                                        item?.airtime_number
-                                                        :
-                                                        item?.payment_type === "conversion" || item?.service_type === "withdrawal"
-                                                            ?
-                                                            item?.wallet_id
-                                                            :
-                                                            item?.transaction_type?.toLowerCase() === "debit"
-                                                                ?
-                                                                <>
-                                                                    {
-                                                                        item?.service_type === "kyc_verification"
-                                                                            ?
-                                                                            "InstaPay"
-                                                                            :
-                                                                            item?.service_type === "withdrawal"
-                                                                                ?
-                                                                                `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`
-                                                                                :
-                                                                                item?.receiver
-                                                                                    ?
-                                                                                    `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`
-                                                                                    :
-                                                                                    `${internationalReceiver?.first_name ?? item.receiverCard?.account?.first_name ?? item?.account?.user?.first_name} ${internationalReceiver?.last_name ?? item.receiverCard?.account?.first_name ?? item?.account?.user?.last_name}`
-
-                                                                        // (item?.receiverCard?.account?.first_name && item?.receiverCard?.account?.last_name) ?
-                                                                        //     (item?.receiverCard?.account?.first_name + " " + item?.receiverCard?.account?.last_name) :
-                                                                        //     (item?.receiverWallet?.account?.first_name && item?.receiverWallet?.account?.last_name) ?
-                                                                        //         (item?.receiverWallet?.account?.first_name + " " + item?.receiverWallet?.account?.last_name) :
-                                                                        //         (item?.merchantName) : ""
-                                                                    }
-                                                                </>
-                                                                :
-                                                                item?.service_type === "topup"
-                                                                    ?
-                                                                    `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`
-                                                                    :
-                                                                    `${item?.sender?.user?.first_name ?? item?.senderCard?.account?.first_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.first_name ?? userDetails?.first_name} ${item?.sender?.user?.last_name ?? item?.senderCard?.account?.last_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.last_name ?? userDetails?.last_name}`
-                                            }
+                                            {recipientName}
                                         </h5>
                                         {
                                             (item?.service_type === "payment_address" && item?.guest_details) || item?.cardNo
@@ -227,7 +203,9 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                                 :
                                                 <p>INSTA-{item?.wallet_id}</p>
                                         }
-                                        {item?.cardNo && <p>{t("Card Number")}: ••{cardNo?.slice(-4)} </p>}
+                                        {item?.cardNo && (
+                                            <p>{t("Card Number")}: {`••${cardNo?.slice(-4)}`}</p>
+                                        )}
                                     </div>
                                 }
                             </div>
@@ -245,25 +223,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                         }
                         <div className={styles.r_item}>
                             <span>{t("As")}: </span>
-                            <p className={styles.p_type}>{
-                                item?.service_type === "withdraw_by_admin" || item?.service_type === "deposite_by_admin"
-                                    ?
-                                    "Admin Funds"
-                                    :
-                                    item?.payment_type?.includes("bank")
-                                        ?
-                                        "Bank Transfer"
-                                        :
-                                        item?.payment_type?.includes("mobile")
-                                            ?
-                                            "Mobile Money"
-                                            :
-                                            item?.payment_type?.toLowerCase() === "commission"
-                                                ?
-                                                "Referral Commission"
-                                                :
-                                                service_name_formatter(item?.payment_type) || service_name_formatter(item?.transaction_type)?.replace("Mastercard", "")
-                            }</p>
+                            <p className={styles.p_type}>{asLabel}</p>
                         </div>
                     </div>
                     {
@@ -304,7 +264,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                             <span>{t("Attached Files")}</span>
                             <div className={styles.files_count}>
                                 <img src={file} alt="" />
-                                <span>{item?.attachments?.length} File</span>
+                                <span>{t("File", { count: item?.attachments?.length })}</span>
                             </div>
                             {
                                 item?.attachments && item?.attachments?.length > 0

@@ -160,7 +160,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
         } catch (err) {
           const dec = decryptData(err.response.data.data)
           console.log(dec)
-          toast.error(dec.message || "Something went wrong while getting exchange rate.")
+          toast.error(dec.message || "We cannot process your request at the moment, please try again later..")
         }
         finally {
           updateHandler("loading", false)

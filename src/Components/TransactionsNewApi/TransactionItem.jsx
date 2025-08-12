@@ -1,16 +1,13 @@
 // import { useSelector } from "react-redux"
 import styles from "./styles/index.module.scss"
-import { Check, ChevronDown, ChevronRight } from "react-feather"
+import { ChevronDown, ChevronRight } from "react-feather"
 import { useTranslation } from "react-i18next"
-import CategoriesDropdown from "./CategoriesDropdown"
-import { Button, Input, Label } from "reactstrap"
+import { } from "reactstrap"
 import { useContext, useEffect, useMemo, useState } from "react"
 import axios from "axios"
 import { UserContext } from "../../Context/UserContext"
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
-import CatDown from "./CatDown"
-import ImagePreviewModal from "../ImagePreviewModal.jsx"
 import statuses from "./files/thunesTransactionStatus.json"
 import TransactionItemDetails from "./TransactionItemDetails.jsx"
 import CitiesData from "../CitiesDropDown/CitiesData.json"
@@ -26,7 +23,7 @@ export const service_name_formatter = (itemName) => {
 const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral = false, vvc = false, cardNo }) => {
     const { t, i18n } = useTranslation()
     const [selectedCategory, setSelectedCategory] = useState([]);
-    const { userDetails, authHeader, beneficiaries } = useContext(UserContext)
+    const { authHeader, beneficiaries } = useContext(UserContext)
     const [note, setNote] = useState(item?.note)
     const [isSaving, setIsSaving] = useState(false)
     const [isEditMode, setIsEditMode] = useState(false)
@@ -93,7 +90,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
             headers: authHeader
         })
             .then(res => {
-                const decrypted = decryptData(res.data.data)
+                void decryptData(res.data.data)
                 // console.log(decrypted)
                 setIsSaving(false)
                 setIsEditMode(false)
@@ -104,7 +101,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                 }, 3000);
             })
             .catch(err => {
-                const decrypted = decryptData(err.response.data.data)
+                void decryptData(err.response.data.data)
                 // console.log(decrypted)
                 setIsSaving(false)
                 setMessage("Something went wrong, try again.")
@@ -151,6 +148,63 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
         }
     }
 
+    const displayAsText = useMemo(() => {
+        if (item?.service_type === "withdraw_by_admin" || item?.service_type === "deposite_by_admin") {
+            return "Admin Funds"
+        }
+        if (item?.payment_type?.includes("bank")) {
+            return "Bank Transfer"
+        }
+        if (item?.payment_type?.includes("mobile")) {
+            return "Mobile Money"
+        }
+        return service_name_formatter(item?.payment_type)
+    }, [item])
+
+    const displayName = useMemo(() => {
+        if (item?.service_type === "payment_address" && item?.guest_details) {
+            return item?.guest_details?.name ?? ""
+        }
+
+        if (item?.service_type === "airtime") {
+            return item?.airtime_number ?? ""
+        }
+
+        if (item?.payment_type === "conversion") {
+            return item?.wallet_id ?? ""
+        }
+
+        const isDebit = (item?.transaction_type ?? "")?.toLowerCase() === "debit"
+        if (isDebit) {
+            if (item?.service_type === "withdraw_by_admin") return "Admin"
+            if (item?.service_type === "kyc_verification") return "InstaPay"
+            if (item?.service_type === "withdrawal") {
+                const first = item?.sender?.user?.first_name
+                const last = item?.sender?.user?.last_name
+                return [first, last].filter(Boolean).join(" ")
+            }
+            if (item?.receiver?.user) {
+                const first = item?.receiver?.user?.first_name
+                const last = item?.receiver?.user?.last_name
+                return [first, last].filter(Boolean).join(" ")
+            }
+
+            const first = internationalReceiver?.first_name ?? item?.account?.user?.first_name
+            const last = internationalReceiver?.last_name ?? item?.account?.user?.last_name
+            return [first, last].filter(Boolean).join(" ")
+        }
+
+        if (item?.service_type === "topup") {
+            const first = item?.receiver?.user?.first_name
+            const last = item?.receiver?.user?.last_name
+            return [first, last].filter(Boolean).join(" ")
+        }
+
+        const first = item?.sender?.user?.first_name ?? item?.mastercard?.account?.first_name
+        const last = item?.sender?.user?.last_name ?? item?.mastercard?.account?.last_name
+        return [first, last].filter(Boolean).join(" ")
+    }, [item, internationalReceiver])
+
     console.log(item)
     return (
         <div>
@@ -173,68 +227,8 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                     <>
                         <div>{service_name_formatter(item?.service_type)}</div>
                         <div>{item?.reference_id}</div>
-                        <div>
-                            {
-                                item?.service_type === "withdraw_by_admin" || item?.service_type === "deposite_by_admin"
-                                    ?
-                                    "Admin Funds"
-                                    :
-                                    item?.payment_type?.includes("bank")
-                                        ?
-                                        "Bank Transfer"
-                                        :
-                                        item?.payment_type?.includes("mobile")
-                                            ?
-                                            "Mobile Money"
-                                            :
-                                            service_name_formatter(item?.payment_type)
-                            }
-                        </div>
-                        <div>
-                            {
-                                item?.service_type === "payment_address" && item?.guest_details
-                                    ?
-                                    item?.guest_details?.name
-                                    :
-                                    item?.service_type === "airtime"
-                                        ?
-                                        item?.airtime_number
-                                        :
-                                        item?.payment_type === "conversion" /*|| item?.service_type === "withdrawal"*/
-                                            ?
-                                            item?.wallet_id
-                                            :
-                                            item?.transaction_type?.toLowerCase() === "debit"
-                                                ?
-                                                <>
-                                                    {
-                                                        item?.service_type === "withdraw_by_admin"
-                                                            ?
-                                                            "Admin"
-                                                            :
-                                                            item?.service_type === "kyc_verification"
-                                                                ?
-                                                                "InstaPay"
-                                                                :
-                                                                item?.service_type === "withdrawal"
-                                                                    ?
-                                                                    `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)
-                                                                    :
-                                                                    item?.receiver
-                                                                        ?
-                                                                        `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)
-                                                                        :
-                                                                        `${internationalReceiver?.first_name ?? item?.account?.user?.first_name } ${internationalReceiver?.last_name ?? item?.account?.user?.last_name }`.slice(0, 20)
-                                                    }
-                                                </>
-                                                :
-                                                item?.service_type === "topup"
-                                                    ?
-                                                    `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)
-                                                    :
-                                                    `${item?.sender?.user?.first_name ?? item?.mastercard?.account?.first_name} ${item?.sender?.user?.last_name ?? item?.mastercard?.account?.last_name}`.slice(0, 20)
-                            }
-                        </div>
+                        <div>{displayAsText}</div>
+                        <div>{displayName?.slice(0, 20)}</div>
                         <div style={{ color: item?.transaction_type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234" }} >{item?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}{item?.payment_type?.toLowerCase() === "commission" && fromReferral ? "$" : item?.currency?.code} {item?.payment_type?.toLowerCase() === "commission" && fromReferral ? item?.replacement_currency?.value?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : item?.total?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                     </>
                 }

@@ -824,7 +824,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                             setShowQuickLogin(false)
                                                             setEmail("")
                                                         }}
-                                                        style={{ position: "relative", top: "0", left: "0px" }}
+                                                        style={{ position: "relative", top: "0", left: "0px", flexShrink: 0 }}
                                                     >
                                                         {t("Change Account")}
                                                     </div>

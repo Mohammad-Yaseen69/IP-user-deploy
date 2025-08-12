@@ -453,7 +453,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             return dec?.exchangeRate?.exchanged_amount ?? 0;
         } catch (error) {
             console.log(decryptData(error?.response?.data?.data))
-            dataHandler("error", "Something went wrong while getting exchange rate.")
+            dataHandler("error", "We cannot process your request at the moment, please try again later..")
             return 0;
         }
         finally {

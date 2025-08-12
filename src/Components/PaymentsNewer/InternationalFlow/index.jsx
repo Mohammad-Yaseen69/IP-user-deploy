@@ -487,7 +487,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             updateInternationalData("new_amount", dec?.exchangeRate?.exchanged_amount)
             return dec?.exchangeRate?.exchanged_amount ?? 0;
         } catch {
-            updateInternationalData("error", "Something went wrong while getting exchange rate.")
+            updateInternationalData("error", "We cannot process your request at the moment, please try again later..")
         }
         finally {
             setLoading(false)
@@ -547,7 +547,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             const getAmount = async () => {
                 let amount;
                 if (internationalData.payment_type?.value === "wallet" && internationalData?.wallet?.currency /*&& internationalData?.wallet?.currency?.code !== internationalData?.currency_wallet?.currency?.code*/) {
-                    amount = await getPlainExchangeRate(internationalData?.currency_wallet?.currency?.code, internationalData?.wallet?.currency?.code, +String(internationalData.amount)?.replaceAll(",", ""))
+                    amount = await getPlainExchangeRate(internationalData?.currency_wallet?.currency?.code, internationalData?.wallet?.currency?.code, Number(String(internationalData.amount)?.replaceAll(",", "")))
                 } else {
 
                     amount = +String(internationalData?.amount)?.replaceAll(",", "")
