@@ -22,7 +22,7 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import InstaPayLoader from "../Loader";
 import TransactionItemMobile from "../TransactionsNewApi/Mobile/TransactionItemMobile";
-import { useLocation } from "react-router";
+ 
 
 const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
     const { t } = useTranslation()
@@ -81,6 +81,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
     const getAllTransactions = () => {
         setActive("All")
         setIsLoading(true)
+        setStopLoader(false)
         axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-all-transactions-by-wallet/${currentWallet?.wallet_id}/${page}/15`, {
             headers: authHeader
         })
@@ -103,6 +104,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
     const getTransactionsByQuery = () => {
         setActive("All")
         setIsLoading(true)
+        setStopLoader(false)
         axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-wallet-transactions/${currentWallet?.wallet_id}/${page}/15/${debouncedSearchQuery}`, {
             headers: authHeader
         })
@@ -127,6 +129,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
     const getTransactionsByQueryAndDate = () => {
         setActive("All")
         setIsLoading(true)
+        setStopLoader(false)
         const data = {
             ...apiDates,
             query: debouncedSearchQuery
@@ -149,9 +152,9 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                 setIsLoading(false)
                 setFiltered([])
                 setTransactions([])
+                setStopLoader(true)
                 if (decrypted.status === false && page !== 1) {
                     setMaxLimit(true)
-                    setStopLoader(true)
                 }
             })
     }
@@ -173,6 +176,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
             setPage(1)
             setFiltered([])
             setTransactions([])
+            setStopLoader(false)
             if (currentTrxType === "all" && !maxLimit && userDetails) {
                 getAllTransactions()
             }
@@ -189,6 +193,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
         setTransactions([])
         setFiltered([])
         setMaxLimit(false)
+        setStopLoader(false)
         setPage(1)
         if (apiDates !== null) {
             setCurrentTrxType("date_and_query")
@@ -203,6 +208,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
         setTransactions([])
         setFiltered([])
         setMaxLimit(false)
+        setStopLoader(false)
         setPage(1)
     }, [currentTrxType])
 
@@ -257,39 +263,34 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
         },
     ]), [])
 
-    const tableWrapperRef = useRef(null)
-    const tableWrapperRefMobile = useRef(null)
+    
     // Add loader refs for intersection observer
     const loaderRef = useRef();
     const mobileLoaderRef = useRef();
     const [stopLoader, setStopLoader] = useState(false);
 
-    // Remove scroll event logic and use IntersectionObserver for infinite scroll
+    // Infinite scroll using IntersectionObserver
     useEffect(() => {
+        if (isLoading || stopLoader || maxLimit) return;
+
         const observer = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting) {
                 setPage(prev => prev + 1);
             }
         }, { threshold: 0.1 });
 
-        if (loaderRef.current) observer.observe(loaderRef.current);
-        if (mobileLoaderRef.current) observer.observe(mobileLoaderRef.current);
+        const desktopTarget = loaderRef.current;
+        const mobileTarget = mobileLoaderRef.current;
+
+        if (desktopTarget) observer.observe(desktopTarget);
+        if (mobileTarget) observer.observe(mobileTarget);
 
         return () => {
             observer.disconnect();
         };
-    }, [loaderRef.current, mobileLoaderRef.current]);
+    }, [isLoading, stopLoader, maxLimit]);
 
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-
-
-    useEffect(() => {
-        const resizeHandler = () => {
-            setWindowWidth(window.innerWidth)
-        }
-        window.addEventListener("resize", resizeHandler)
-        return () => window.removeEventListener("resize", resizeHandler)
-    }, [])
+    
 
     useEffect(() => {
         if (active === "All") {
@@ -324,7 +325,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                                 boxShadow: active === item.name ? "0px 11.90068244934082px 8.655041694641113px rgba(89, 38, 240, 0.17)" : "none",
                                 color: active === item.name ? "white" : "#848484"
                             }} className={styles.menu_item} onClick={() => setActive(item.name)}>
-                                <img src={active === item.name ? item.icon_white : item.icon_grey} style={{ width: "18px" }} />
+                                <img alt={item.name} src={active === item.name ? item.icon_white : item.icon_grey} style={{ width: "18px" }} />
                                 <span>{t(item.name)}</span>
                                 {
                                     active === item.name
@@ -394,7 +395,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                                 }
                             </>
                     }
-                    {/* Loader for infinite scroll */}
+                   
                     {(!isLoading && !stopLoader) &&
                         <div ref={loaderRef} style={{ display: 'flex', justifyContent: "center", width: "100%" }}>
                             <div style={{ width: "200px" }}>
