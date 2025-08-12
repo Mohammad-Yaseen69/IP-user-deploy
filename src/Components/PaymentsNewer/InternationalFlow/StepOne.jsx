@@ -104,7 +104,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
         const getCountries = async () => {
             setCountriesLoading(true)
             try {
-                const res = await axios.get(`${process.env.REACT_APP_THUNES_API}/Countries`, { headers: authHeader })
+                const res = await axios.get(`${process.env.REACT_APP_THUNES_API}/countries`, { headers: authHeader })
                 const decrypted = decryptData(res.data.data)
                 const countriesArray = allCountries.filter((item) => {
                     return decrypted.some(apiCountry => apiCountry.countryIsoCode === item?.alpha3)
