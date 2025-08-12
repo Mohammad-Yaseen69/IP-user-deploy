@@ -60,7 +60,7 @@ const CreatePinChatBot = lazy(() => import("../Components/Chatbot/Pin/CreatePin"
 const VerifyPinChatBot = lazy(() => import("../Components/Chatbot/Pin/VerifyPin"))
 const QuickQrPay = lazy(() => import("../Components/QuickQrPay"))
 const QrQuickerPay = lazy(() => import("../Components/QrQuickerPay"))
-
+const ReceiptInvoice = lazy(() => import("../Components/ReceiptInvoices"))
 
 export const routes = [
     { path: "/", component: <HomeNewUpdated /> },
@@ -102,7 +102,8 @@ export const routes = [
     { path: "/my-mastercard", component: <MyMasterCard /> },
     { path: "/create-pin", component: <CreatePin /> },
     { path: "/update-pin", component: <UpdatePin /> },
- 
+    { path: "/receipts", component: <ReceiptInvoice /> },
+
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const publicRoutes = [

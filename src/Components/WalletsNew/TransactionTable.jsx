@@ -81,7 +81,6 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
     const getAllTransactions = () => {
         setActive("All")
         setIsLoading(true)
-        // axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-all-transactions-by-wallet/${currentWallet?.wallet_id}/${(page - 1) * 15}/15`, {
         axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-all-transactions-by-wallet/${currentWallet?.wallet_id}/${page}/15`, {
             headers: authHeader
         })
@@ -94,6 +93,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
             .catch(err => {
                 const decrypted = decryptData(err?.response?.data?.data)
                 setIsLoading(false)
+                setStopLoader(true)
                 if (decrypted.status === false && page !== 1) {
                     setMaxLimit(true)
                 }
@@ -103,7 +103,6 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
     const getTransactionsByQuery = () => {
         setActive("All")
         setIsLoading(true)
-        // axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-wallet-transactions/${currentWallet?.wallet_id}/${(page - 1) * 15}/15/${debouncedSearchQuery}`, {
         axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-wallet-transactions/${currentWallet?.wallet_id}/${page}/15/${debouncedSearchQuery}`, {
             headers: authHeader
         })
@@ -118,6 +117,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                 setIsLoading(false)
                 setFiltered([])
                 setTransactions([])
+                setStopLoader(true)
                 if (decrypted.status === false && page !== 1) {
                     setMaxLimit(true)
                 }
@@ -132,8 +132,6 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
             query: debouncedSearchQuery
         }
         const encrypted = encryptData(data)
-
-        // axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-account-transactions-wallet-by-date/${currentWallet?.wallet_id}/${(page - 1) * 15}/15`,
         axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-account-transactions-wallet-by-date/${currentWallet?.wallet_id}/${page}/15`,
             {
                 data: encrypted
@@ -153,6 +151,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                 setTransactions([])
                 if (decrypted.status === false && page !== 1) {
                     setMaxLimit(true)
+                    setStopLoader(true)
                 }
             })
     }
@@ -260,28 +259,26 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
 
     const tableWrapperRef = useRef(null)
     const tableWrapperRefMobile = useRef(null)
+    // Add loader refs for intersection observer
+    const loaderRef = useRef();
+    const mobileLoaderRef = useRef();
+    const [stopLoader, setStopLoader] = useState(false);
 
-
+    // Remove scroll event logic and use IntersectionObserver for infinite scroll
     useEffect(() => {
-        const handleScroll = () => {
-            const wrapper = window.innerWidth > 1000 ? tableWrapperRef.current : tableWrapperRefMobile.current;
-            if (wrapper && active === "All") {
-                const isScrolledToBottom = wrapper.scrollHeight - wrapper.scrollTop === wrapper.clientHeight;
-                if (isScrolledToBottom) {
-                    setPage(prev => prev + 1)
-                }
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                setPage(prev => prev + 1);
             }
-        };
-        const wrapper = window.innerWidth > 1000 ? tableWrapperRef.current : tableWrapperRefMobile.current;
-        if (wrapper) {
-            wrapper.addEventListener('scroll', handleScroll);
-        }
+        }, { threshold: 0.1 });
+
+        if (loaderRef.current) observer.observe(loaderRef.current);
+        if (mobileLoaderRef.current) observer.observe(mobileLoaderRef.current);
+
         return () => {
-            if (wrapper) {
-                wrapper.removeEventListener('scroll', handleScroll);
-            }
+            observer.disconnect();
         };
-    }, []);
+    }, [loaderRef.current, mobileLoaderRef.current]);
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
@@ -371,7 +368,7 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                     <div>{t("Status")}</div>
                     <div style={{ maxWidth: "15px" }}></div>
                 </div>
-                <div className={styles.table_body} ref={tableWrapperRef}>
+                <div className={styles.table_body}>
                     {
                         isLoading ?
                             <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
@@ -397,8 +394,16 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                                 }
                             </>
                     }
+                    {/* Loader for infinite scroll */}
+                    {(!isLoading && !stopLoader) &&
+                        <div ref={loaderRef} style={{ display: 'flex', justifyContent: "center", width: "100%" }}>
+                            <div style={{ width: "200px" }}>
+                                <InstaPayLoader />
+                            </div>
+                        </div>
+                    }
                 </div>
-                <div className={styles.table_body_mobile} ref={tableWrapperRefMobile} style={{ minHeight: "300px" }}>
+                <div className={styles.table_body_mobile} style={{ minHeight: "300px" }}>
                     {
                         isLoading ?
                             <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
@@ -423,6 +428,14 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
                                         <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No Transactions")}</span>
                                 }
                             </>
+                    }
+                    {/* Loader for infinite scroll mobile */}
+                    {(!isLoading && !stopLoader) &&
+                        <div ref={mobileLoaderRef} style={{ display: 'flex', justifyContent: "space-between", width: "100%" }}>
+                            <div style={{ width: "200px" }}>
+                                <InstaPayLoader />
+                            </div>
+                        </div>
                     }
                 </div>
             </div>

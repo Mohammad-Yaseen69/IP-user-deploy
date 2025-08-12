@@ -46,6 +46,9 @@ import location from "./files/location.svg"
 import location_a from "./files/location_a.svg"
 import mastercard_a from "./files/master_card_a.svg"
 import mastercard from "./files/master_card.svg"
+import rec_a from "./files/rec_a.svg"
+import rec from "./files/rec.svg"
+
 
 export const MENU = [
     {
@@ -111,6 +114,13 @@ export const MENU = [
                 type: "link",
                 url: `${process.env.PUBLIC_URL}/referrals`,
             },
+            // {
+            //     title: "My Receipts",
+            //     icon: <img src={rec} style={{ marginRight: "12px" }} />,
+            //     activeIcon: <img src={rec_a} style={{ marginRight: "12px" }} />,
+            //     type: "link",
+            //     url: `${process.env.PUBLIC_URL}/receipts`,
+            // },
             {
                 title: "Quotations",
                 icon: <img src={quotations} style={{ marginRight: "12px" }} />,
