@@ -70,8 +70,6 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                 const cont = CitiesData.find(item => item.iso3?.toUpperCase() === userDetails?.country_iso_code?.toUpperCase())
                 return cont.currency
             }
-
-            console.log(localCurrency())
             const getWallet = () => {
                 const wallet = userWallets?.find(item => item?.currency?.code === localCurrency())
                 console.log(wallet)
@@ -101,30 +99,36 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
             }
         }
 
+
         const getCountries = async () => {
             setCountriesLoading(true)
             try {
-                const res = await axios.get(`${process.env.REACT_APP_THUNES_API}/countries`, { headers: authHeader })
+                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/countries/${userDetails?.country?.country_iso_code}`, { headers: authHeader })
                 const decrypted = decryptData(res.data.data)
+
                 const countriesArray = allCountries.filter((item) => {
-                    return decrypted.some(apiCountry => apiCountry.countryIsoCode === item?.alpha3)
+                    return decrypted.some(apiCountry => apiCountry.countryIso3 === item?.alpha3)
                 })
 
                 const allowedCountries = await getAllowedCountries()
                 const allowed = allowedCountries?.map(allowed => {
                     const coun = countriesArray?.find(item => item?.alpha3 === allowed?.country_iso_code)
                     const currency = currencies.find(item => item?.country_iso === coun?.alpha3)
+                    const vendor = decrypted?.find(item => item?.countryIso3 === coun?.alpha3)?.vendor
                     if (!coun) return null;
                     return {
                         ...coun,
                         id: allowed?._id,
-                        currency
+                        currency,
+                        vendor: vendor
                     }
                 })?.filter(item => item != null)
+
+                console.log(allowed)
                 setCountries(allowed?.sort((a, b) => String(a?.name)?.localeCompare(b?.name)))
             } catch (error) {
                 console.log(error)
-                dataHandler("error" ,"We had some trouble fetching countries, please refresh your page or clear browser cache for secure International Transfer.")
+                dataHandler("error", "We had some trouble fetching countries, please refresh your page or clear browser cache for secure International Transfer.")
                 return null;
             }
             finally {
@@ -149,7 +153,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     // services 
     const payoutChannelData = [
         userDetails?.level?.international_transfer?.bank ? {
-            name: "Bank Transfer",
+            name: "Bank Account",
             id: 2,
             icon: bd,
             active_icon: bd_a,
@@ -179,9 +183,10 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     ]
     const getServices = async (country) => {
         try {
-            const servicesResponse = await axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country || data?.country?.alpha3}`, { headers: authHeader })
+            const servicesResponse = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/services/${country || data?.country?.alpha3}/${userDetails?.country?.country_iso_code}`, { headers: authHeader })
             const decrypted = decryptData(servicesResponse.data.data)
-            dataHandler("services", decrypted?.map(item => ({ ...item, ...payoutChannelData?.find(it => it.id === item?.id) })));
+            console.log(decrypted)
+            dataHandler("services", decrypted?.services?.map(item => ({ ...item, ...payoutChannelData?.find(it => it?.name === item?.method?.split(" - ")[0]) })));
         } catch (error) {
             dataHandler("services", [])
         }
@@ -213,13 +218,34 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     useEffect(() => {
         const getPayers = async () => {
             try {
-                const dataa = { country: data?.country.alpha3, id: data?.payoutChannel?.id }
+                const dataa = { country: data?.country.alpha3, service: data?.payoutChannel?.name, vendor: data?.country?.vendor }
                 const encrypted = encryptData(dataa)
-                const res = await axios.post(`${process.env.REACT_APP_THUNES_API}/payerInfo`, {
-                    data: encrypted
-                }, { headers: authHeader })
+                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/payment/payers`, dataa, { headers: authHeader })
                 const dec = decryptData(res.data.data)
-                dataHandler("payers", dec?.map(item => ({ ...item, icon: data?.payoutChannel?.icon })));
+                console.log(dec)
+
+                if (Array.isArray(dec)) {
+                    dataHandler("payers", dec?.map(item => ({ ...item, icon: data?.payoutChannel?.icon })));
+                }
+                if (dec?.destinations) {
+                    const payers = dec?.destinations?.map(p => ({
+                        country_iso_code: p?.country,
+                        id: p?.destinationId,
+                        name: p?.destinationName,
+                        currency: p?.currencies[0],
+                        precision: p?.destinationType,
+                        icon: data?.payoutChannel?.icon
+                    }))
+
+                    console.log(payers)
+
+                    if (payers.length === 1) {
+                        dataHandler("payer", payers[0])
+                    }
+
+                    dataHandler("payers", payers);
+                }
+
                 if (dec.length === 1) {
                     dataHandler("payer", { ...dec?.[0], icon: data?.payoutChannel?.icon })
                 }
@@ -624,7 +650,9 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                                 <div className={styles.grad_icon}>
                                     <img src={data?.payoutChannel?.icon ?? channel} alt="" />
                                 </div>
-                                <span>{data?.payer?.name ?? t("Select the payer").replace("payer", data?.payoutChannel?.value === "mobile" ? "Mobile wallet" : data?.payoutChannel?.value === "cash" ? "Cash Partner" : "Bank")}</span>
+                                <span>{data?.payer?.name ??
+                                    t("Select the payer").replace("payer", data?.payoutChannel?.value === "mobile" ? "Mobile wallet" :
+                                        data?.payoutChannel?.value === "cash" ? "Cash Partner" : "Bank")}</span>
                             </div>
                             <img className={styles.chev} src={chev_down} alt="" />
                         </div>

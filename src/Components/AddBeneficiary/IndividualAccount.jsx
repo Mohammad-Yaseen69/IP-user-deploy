@@ -202,7 +202,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         if (fieldsInfo === null) return false;
         let isInThere = false;
 
-        if (fieldsInfo?.[service?.name]?.[field_name]?.some(item => item === sub_field_name)) {
+        if (fieldsInfo?.[service?.method?.split(" ")[0]]?.[field_name]?.some(item => item === sub_field_name)) {
             isInThere = true
         }
 
@@ -379,11 +379,11 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
 
     const addBenFunc = () => {
         const account_types = [
-            services.some(item => item?.name?.toLowerCase()?.includes("bank")) && completedBank ? "bank" : null,
-            services.some(item => item?.name?.toLowerCase()?.includes("card")) && completedCard ? "card" : null,
-            services.some(item => item?.name?.toLowerCase()?.includes("mobile")) && completedWallet ? "mobile" : null,
+            services.some(item => item?.method?.toLowerCase()?.includes("bank")) && completedBank ? "bank" : null,
+            services.some(item => item?.method?.toLowerCase()?.includes("card")) && completedCard ? "card" : null,
+            services.some(item => item?.method?.toLowerCase()?.includes("mobile")) && completedWallet ? "mobile" : null,
             completedCrypto ? "crypto" : null,
-            services.some(item => item?.name?.toLowerCase()?.includes("cash")) && cashPickupCompleted ? "cash" : null,
+            services.some(item => item?.method?.toLowerCase()?.includes("cash")) && cashPickupCompleted ? "cash" : null,
             instapayWallets.every(item => item.length !== 8) || walletError ? null : "wallet"
         ]
 
@@ -407,7 +407,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
             isUsaBank: false,
             wallet: walletIds,
             extras: { ...basicExtras, ...additionFields },
-            bank_details: services.some(item => item?.name?.toLowerCase()?.includes("bank")) && completedBank ? [
+            bank_details: services.some(item => item?.method?.toLowerCase()?.includes("bank")) && completedBank ? [
                 {
                     swift_code: accNumType === "Swift" ? ibanSwift : "",
                     iban: accNumType === "IBAN" ? ibanSwift : "",
@@ -422,7 +422,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                     extras: bankExtras
                 }
             ] : [],
-            mobile_wallet: services.some(item => item?.name?.toLowerCase()?.includes("mobile")) && completedWallet ? [
+            mobile_wallet: services.some(item => item?.method?.toLowerCase()?.includes("mobile")) && completedWallet ? [
                 {
                     money_provider: formData.mobile_wallet_provider,
                     wallet_name: formData.mobile_wallet_name,
@@ -436,14 +436,14 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                     wallet_address: formData.crypto_wallet_address,
                 }
             ] : [],
-            cash_pickup: services.some(item => item?.name?.toLowerCase()?.includes("cash")) && cashPickupCompleted ? [
+            cash_pickup: services.some(item => item?.method?.toLowerCase()?.includes("cash")) && cashPickupCompleted ? [
                 {
                     document_type: cashPickupType,
                     document_number: cashPickupNumber,
                     extras: cashExtras
                 }
             ] : [],
-            card: services.some(item => item?.name?.toLowerCase()?.includes("card")) && completedCard ? [
+            card: services.some(item => item?.method?.toLowerCase()?.includes("card")) && completedCard ? [
                 {
                     card_name: formData.card_holder_one,
                     card_number: formData.card_number_one,
@@ -520,6 +520,9 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                 addBenFunc();
             } catch {
                 setWalletMobileError("Incorrect phone number, please enter a valid number.");
+            }
+            finally{
+                setBenLoading(false)
             }
         } else {
             addBenFunc();
@@ -763,7 +766,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
     // bank details
     useEffect(() => {
         const fields = services?.find(item =>
-            item?.name?.toLowerCase()?.includes("bank")
+            item?.method?.toLowerCase()?.includes("bank")
         )
 
         const resultKeys = Object.keys(bankExtras)
@@ -783,7 +786,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
     }, [formData, bankExtras, services])
 
     useEffect(() => {
-        if (cashPickupType && cashPickupNumber && Object.keys(cashExtras).filter(item => serviceFieldInfoValidate(services?.find(item => item?.name?.toLowerCase()?.includes("cash")), "credit_party_identifiers_accepted", item)).every(item => cashExtras?.[item]?.length > 0)) {
+        if (cashPickupType && cashPickupNumber && Object.keys(cashExtras).filter(item => serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("cash")), "credit_party_identifiers_accepted", item)).every(item => cashExtras?.[item]?.length > 0)) {
             setCashPickupCompleted(true)
         } else {
             setCashPickupCompleted(false)
@@ -801,7 +804,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
 
     // card details
     useEffect(() => {
-        if (formData.card_holder_one && formData.card_number_one && Object.keys(cardExtras).filter(item => serviceFieldInfoValidate(services?.find(item => item?.name?.toLowerCase()?.includes("card")), "credit_party_identifiers_accepted", item)).every(item => cardExtras?.[item]?.length > 0)) {
+        if (formData.card_holder_one && formData.card_number_one && Object.keys(cardExtras).filter(item => serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("card")), "credit_party_identifiers_accepted", item)).every(item => cardExtras?.[item]?.length > 0)) {
             setCompletedCard(true)
         } else {
             setCompletedCard(false)
@@ -873,12 +876,12 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
 
     const getCountryFields = async (alpha3, service) => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/thunes/get-required-fields-by-country/${alpha3}/${service?.id}/C2C`, {
+            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/thunes/get-required-fields-by-country/${alpha3}/${service?.id}/C2C?destinationType=${service?.method?.toLowerCase()?.includes("neema") ? service.id : null}`, {
                 headers: authHeader
             });
 
             const dec = decryptData(res.data.data);
-            setFieldsInfo(prev => ({ ...prev, [service?.name?.split(" ")?.[0]]: dec?.data }))
+            setFieldsInfo(prev => ({ ...prev, [service?.method?.split(" ")?.[0]]: dec?.data }))
         } catch (error) {
             const dec = decryptData(error.response.data.data)
             if (dec?.message === "Unauthorize to access this route") {
@@ -904,18 +907,18 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
 
             const getChannels = async () => {
                 setFieldsInfo(null)
-                axios.get(`${process.env.REACT_APP_THUNES_API}/services/${countryIsoCode}`, { headers: authHeader })
+                axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/services/${countryIsoCode}/${userDetails?.country?.country_iso_code}`, { headers: authHeader })
                     .then(res => {
                         const decrypted = decryptData(res.data.data)
-                        setServices(decrypted)
-                        console.log(decrypted)
-                        if (decrypted?.length > 0) {
-                            for (const ser of decrypted) {
+                        setServices(decrypted?.services || [])
+                        console.log(decrypted?.services)
+                        if (decrypted?.services?.length > 0) {
+                            for (const ser of decrypted.services) {
                                 getCountryFields(countryIsoCode, ser)
                             }
                         }
 
-                        const mobile = decrypted?.find(item => item?.name?.toLowerCase()?.includes("mobile"))
+                        const mobile = decrypted?.services?.find(item => item?.method?.toLowerCase()?.includes("mobile"))
                         if (mobile) {
                             const data = { country: countryIsoCode, id: mobile.id }
                             const encrypted = encryptData(data)
@@ -944,7 +947,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
 
     useEffect(() => {
         if (bankCountryCode !== countryIsoCode) {
-            getCountryFields(bankCountryCode, services.find(service => service.name === "BankAccount"))
+            getCountryFields(bankCountryCode, services.find(service => service.method?.toLowerCase()?.includes("bank")))
         }
     }, [bankCountryCode])
 
@@ -1469,7 +1472,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                         }}>
                                             {
                                                 (
-                                                    services?.some(item => item?.name?.toLowerCase()?.includes("bank"))
+                                                    services?.some(item => item?.method?.toLowerCase()?.includes("bank"))
                                                     &&
                                                     userDetails?.level?.international_transfer?.bank
                                                     &&
@@ -1509,7 +1512,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                             }
                                             {
                                                 (
-                                                    services?.some(item => item?.name?.toLowerCase()?.includes("mobile"))
+                                                    services?.some(item => item?.method?.toLowerCase()?.includes("mobile"))
                                                     &&
                                                     userDetails?.level?.international_transfer?.mobile_money
                                                     &&
@@ -1549,7 +1552,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                             }
                                             {
                                                 (
-                                                    services?.some(item => item?.name?.toLowerCase()?.includes("card"))
+                                                    services?.some(item => item?.method?.toLowerCase()?.includes("card"))
                                                     &&
                                                     userDetails?.level?.international_transfer?.card_payment
                                                     &&
@@ -1653,7 +1656,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                             }
                                             {
                                                 (
-                                                    services?.some(item => item?.name?.toLowerCase()?.includes("cash"))
+                                                    services?.some(item => item?.method?.toLowerCase()?.includes("cash"))
                                                     &&
                                                     userDetails?.level?.international_transfer?.cash_pickup
                                                     &&
@@ -1774,7 +1777,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                 {
                                                     Object.keys(bankExtras).map(item => {
                                                         return (
-                                                            serviceFieldInfoValidate(services?.find(item => item?.name?.toLowerCase()?.includes("bank")), "credit_party_identifiers_accepted", item)
+                                                            serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("bank")), "credit_party_identifiers_accepted", item)
                                                             &&
                                                             <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                                 {((item !== 'iban' && item !== "swift_bic_code") || (item === "iban" && accNumType === "Swift") || (item === "swift_bic_code" && accNumType === "IBAN")) && <Label className="col-form-label">{t(service_name_formatter(item))}<span className="req_star">*</span></Label>}
@@ -1896,7 +1899,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                     </FormGroup>
                                                     {
                                                         Object.keys(cardExtras).map(item => (
-                                                            serviceFieldInfoValidate(services?.find(item => item?.name?.toLowerCase()?.includes("card")), "credit_party_identifiers_accepted", item)
+                                                            serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("card")), "credit_party_identifiers_accepted", item)
                                                             &&
                                                             <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                                 <Label className="col-form-label">{t(service_name_formatter(item))} <span className="req_star">*</span></Label>
@@ -2094,7 +2097,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                     </FormGroup>
                                                     {
                                                         Object.keys(cashExtras)?.map(item => (
-                                                            serviceFieldInfoValidate(services?.find(item => item?.name?.toLowerCase()?.includes("cash")), "credit_party_identifiers_accepted", item)
+                                                            serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("cash")), "credit_party_identifiers_accepted", item)
                                                             &&
                                                             <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                                 <Label className="col-form-label">{t(service_name_formatter(item))} <span className="req_star">*</span></Label>
