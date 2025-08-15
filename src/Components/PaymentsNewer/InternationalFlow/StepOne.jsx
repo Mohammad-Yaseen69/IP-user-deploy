@@ -110,19 +110,16 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                     return decrypted.some(apiCountry => apiCountry.countryIso3 === item?.alpha3)
                 })
 
-                const allowedCountries = await getAllowedCountries()
-                const allowed = allowedCountries?.map(allowed => {
-                    const coun = countriesArray?.find(item => item?.alpha3 === allowed?.country_iso_code)
+                const allowed = countriesArray?.map(coun => {
                     const currency = currencies.find(item => item?.country_iso === coun?.alpha3)
-                    const vendor = decrypted?.find(item => item?.countryIso3 === coun?.alpha3)?.vendor
-                    if (!coun) return null;
+                    const dbCont = decrypted?.find(item => item?.countryIso3 === coun?.alpha3)
                     return {
                         ...coun,
-                        id: allowed?._id,
+                        id: dbCont?._id,
                         currency,
-                        vendor: vendor
+                        vendor: dbCont?.vendor
                     }
-                })?.filter(item => item != null)
+                })
 
                 console.log(allowed)
                 setCountries(allowed?.sort((a, b) => String(a?.name)?.localeCompare(b?.name)))

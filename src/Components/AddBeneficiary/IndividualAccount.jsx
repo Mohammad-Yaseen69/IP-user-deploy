@@ -876,7 +876,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
 
     const getCountryFields = async (alpha3, service) => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/thunes/get-required-fields-by-country/${alpha3}/${service?.id}/C2C?destinationType=${service?.method?.toLowerCase()?.includes("neema") ? service.id : null}`, {
+            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/get-required-fields-by-country/${alpha3}/${service?.id}/C2C?destinationType=${service?.method?.toLowerCase()?.includes("neema") ? service.id : null}`, {
                 headers: authHeader
             });
 
