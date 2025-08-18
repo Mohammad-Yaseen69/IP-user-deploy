@@ -129,6 +129,16 @@ export const iso2Toiso3Convert = (iso2 = "") => {
 
 let debounceTimer;
 
+
+const neemaMethodIDs = {
+    cash: 1,
+    bank: 2,
+    mobile: 3,
+    // card: 4,
+    // upi: 5,
+    // pix: 6,
+}
+
 const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, toggleSuccess, filteringCountries }) => {
     const { t } = useTranslation()
     const [isValidIban, setIsValidIban] = useState(false)
@@ -876,7 +886,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
 
     const getCountryFields = async (alpha3, service) => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/get-required-fields/${alpha3}/${service?.id}/C2C?destinationType=${service?.method?.toLowerCase()?.includes("neema") ? service.id : null}`, {
+            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/get-required-fields/${alpha3}/${service?.id}/C2C?destinationType=${neemaMethodIDs[service?.method?.split(" ")?.[0]?.toLowerCase()] ?? service?.id}`, {
                 headers: authHeader
             });
 

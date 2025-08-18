@@ -393,11 +393,12 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 avoid_balance: avoid_balance,
                 avoid_top_up_fee: internationalData.payment_type?.value === "card",
                 payment_method: internationalData.payment_type?.value,
-                token: internationalData?.exchange_rate?.token
+                vendor: internationalData.country?.vendor,
+                token: internationalData?.exchange_rate?.token,
             }
             const encrypted = encryptData(dataa)
 
-            const res = await axios.post(`${process.env.REACT_APP_THUNES_API}/get-rates-new/${internationalData?.payer.id}`, {
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/payment/rates/${internationalData?.payer.id}`, {
                 data: encrypted
             }, {
                 headers: authHeader
