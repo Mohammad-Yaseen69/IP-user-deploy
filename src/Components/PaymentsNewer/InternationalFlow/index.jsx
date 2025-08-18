@@ -640,7 +640,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
     const createTransaction = async (codeType = "") => {
         setLoading(true)
         try {
-            const payload = {
+            let payload;
+            const transaction_data = {
                 additional_information: internationalData.comment,
                 purpose_of_remittance: internationalData.reason,
                 user_id: userDetails?.user?._id,
@@ -649,12 +650,28 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 transaction_type: internationalData.beneficiary?.beneficiary_type === "individual" ? "C2C" : "C2B",
                 wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
                 token: internationalData.quotation_details?.token,
-                type: codeType || internationalData.codeType
             }
-            internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank") ? payload.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id : payload.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id
-            const enc = encryptData(payload)
 
-            const res = await axios.post(`${process.env.REACT_APP_THUNES_API}/createTransaction/${internationalData.created_quotation?.QuotationID}`, {
+            if (internationalData.country?.vendor === "thunes") {
+                payload = {
+                    ...transaction_data,
+                    type: codeType || internationalData.codeType
+                }
+
+                internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank") ? payload.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id : payload.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id
+            } else {
+                payload = {
+                    data: {
+                        ...transaction_data
+                    },
+                    type: codeType || internationalData.codeType
+                }
+                internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank") ? payload.data.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id : payload.data.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id
+            }
+            const enc = encryptData(payload)
+            const url = internationalData.country?.vendor === "thunes" ? `${process.env.REACT_APP_THUNES_API}/createTransaction/${internationalData.created_quotation?.QuotationID}` : `${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`
+
+            const res = await axios.post(url, {
                 data: enc
             }, {
                 headers: authHeader
@@ -920,12 +937,20 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                     updateInternationalData("showCard", true)
                     // getTopupFees()
                     //     .then((res) => {
-                    createQuotation(+String(internationalData.amount)?.replaceAll(",", ""))
+                    if (internationalData.country?.vendor === "thunes") {
+                        createQuotation(+String(internationalData.amount)?.replaceAll(",", ""))
+                    } else {
+                        setSubStep(prev => prev + 1)
+                    }
                     //     }, 100)
                     // })
                 }
                 else if (internationalData.payment_type?.value === "paypal") {
-                    createQuotation(+String(internationalData.amount)?.replaceAll(",", ""))
+                    if (internationalData.country?.vendor === "thunes") {
+                        createQuotation(+String(internationalData.amount)?.replaceAll(",", ""))
+                    } else {
+                        setSubStep(prev => prev + 1)
+                    }
                 }
                 // })
                 else {
@@ -935,7 +960,11 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                 getExchangeRateNew(res, () => { }, internationalData.wallet?._id, internationalData?.wallet?.currency?.code, false, setLoading)
                                     .then(() => {
                                         setTimeout(() => {
-                                            createQuotation(res)
+                                            if (internationalData.country?.vendor === "thunes") {
+                                                createQuotation(res)
+                                            } else {
+                                                setSubStep(prev => prev + 1)
+                                            }
                                         }, 100)
                                     })
                             }
@@ -976,18 +1005,36 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
     const verifyOtp = async (otp) => {
         setLoading(true)
         try {
-            const data = new FormData()
-            data.append("token", internationalData.created_transaction?.token)
-            data.append("otp", otp)
-            Array.from(internationalData.files).forEach((image) => {
-                data.append("files", image);
-            });
-            data.append("type", internationalData.codeType)
-            data.append("description", internationalData.comment)
+            let data;
 
-            const res = await axios.post(`${process.env.REACT_APP_THUNES_API}/confirmTransaction`, data, {
-                headers: authHeader
-            })
+            if (internationalData.country?.vendor === "thunes") {
+                data = new FormData()
+                data.append("token", internationalData.created_transaction?.token)
+                data.append("otp", otp)
+                Array.from(internationalData.files).forEach((image) => {
+                    data.append("files", image);
+                });
+                data.append("type", internationalData.codeType)
+                data.append("description", internationalData.comment)
+            } else {
+                data = {
+                    token: internationalData.created_transaction?.token,
+                    otp: otp,
+                    type: internationalData.codeType,
+                }
+            }
+
+            let res;
+
+            if (internationalData.country?.vendor === "thunes") {
+                res = await axios.post(`${process.env.REACT_APP_THUNES_API}/confirmTransaction`, data, {
+                    headers: authHeader
+                })
+            } else {
+                res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/payment/confirm-transaction`, { data: encryptData(data) }, {
+                    headers: authHeader
+                })
+            }
             const decrypted = decryptData(res.data.data)
             console.log(decrypted)
             updateInternationalData("transaction_details", decrypted?.data ?? decrypted)

@@ -199,7 +199,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         if (fieldsInfo === null) return false;
         let isInThere = false;
         for (const service in fieldsInfo) {
-            if (fieldsInfo[service]?.[field_name]?.some(item => item === sub_field_name)) {
+            if (fieldsInfo[service]?.[field_name]?.some(item => item.name === sub_field_name)) {
                 isInThere = true
                 break
             }
@@ -212,7 +212,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         if (fieldsInfo === null) return false;
         let isInThere = false;
 
-        if (fieldsInfo?.[service?.method?.split(" ")[0]]?.[field_name]?.some(item => item === sub_field_name)) {
+        if (fieldsInfo?.[service?.method?.split(" ")[0]]?.[field_name]?.some(item => item.name === sub_field_name)) {
             isInThere = true
         }
 
