@@ -259,7 +259,9 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         middlename: "",
         id_type: "NATIONAL_ID",
         id_number: "",
-        province_state: ""
+        province_state: "",
+        houseNumber: "",
+        street: ""
     })
 
     const [showAdditional, setShowAdditional] = useState(false)
@@ -297,7 +299,6 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
     // bank extra fields
     const [bankExtras, setBankExtras] = useState({
         cbu: "",
-        iban: "",
         swift_bic_code: "",
         account_type: "",
         bsb_number: "",
@@ -633,7 +634,8 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                     bank_city: decrypted?.bicDetails?.structured_address?.town_name ?? "",
                                     bank_province: decrypted?.bicDetails?.structured_address?.country_subdivision_name ?? "",
                                     bank_postal_code: decrypted?.bicDetails?.structured_address?.post_code ?? "",
-                                    bank_account_number: decrypted?.ibanDetails?.account_number ?? ''
+                                    bank_account_number: decrypted?.ibanDetails?.account_number ?? '',
+
                                 }
                             })
                             for (const key in bankExtras) {
@@ -1099,8 +1101,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                     : ""
                                             }
                                             {
-                                                fieldInfoValidate("required_receiving_entity_fields", "province_state")
-                                                &&
+                                                (fieldInfoValidate("required_receiving_entity_fields", "province_state") || fieldInfoValidate("credit_party_identifiers_accepted", "province_state")) &&
                                                 <FormGroup style={{ flex: 1, margin: 0 }}>
                                                     <Label className="col-form-label" htmlFor="province_state">{t("Province/State")} <span className="req_star">*</span></Label>
                                                     <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="province_state" id="province_state" type="text" placeholder='Province/State' value={basicExtras.province_state} onChange={handleBasicExtraChange} />
@@ -1318,6 +1319,26 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                 :
                                                 ""
                                         }
+                                    </FormGroup>
+                                    <FormGroup className="mb-3">
+                                        <div style={{
+                                            display: "flex",
+                                            flexWrap: "wrap",
+                                            gap: "1rem"
+                                        }}>
+                                            {fieldInfoValidate("credit_party_identifiers_accepted", "houseNumber") &&
+                                                <FormGroup style={{ flex: 1, margin: 0 }}>
+                                                    <Label className="col-form-label" htmlFor="houseNumber">{t("House Number")} <span className="req_star">*</span></Label>
+                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="houseNumber" id="houseNumber" type="text" placeholder='House Number' value={basicExtras.houseNumber} onChange={handleBasicExtraChange} />
+                                                </FormGroup>
+                                            }
+                                            {fieldInfoValidate("credit_party_identifiers_accepted", "street") &&
+                                                <FormGroup style={{ flex: 1, margin: 0 }}>
+                                                    <Label className="col-form-label" htmlFor="street">{t("Street")} <span className="req_star">*</span></Label>
+                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="street" id="street" type="text" placeholder='Street' value={basicExtras.street} onChange={handleBasicExtraChange} />
+                                                </FormGroup>
+                                            }
+                                        </div>
                                     </FormGroup>
                                     <FormGroup className="mb-3">
                                         <div style={{
