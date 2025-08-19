@@ -10,7 +10,7 @@ import { UserContext } from '../../Context/UserContext'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { useTranslation } from 'react-i18next'
 import NestedDropdown from '../NestedDropdown'
-import { BeneficiaryRelation, friendsAndFamily } from '../AddBeneficiary/IndividualAccount'
+import { BeneficiaryRelation, friendsAndFamily } from '../../utils/Data'
 import africanCountries from "../../Data/AfricanCountries.json"
 import { toast } from 'react-toastify'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'

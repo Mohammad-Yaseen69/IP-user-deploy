@@ -7,7 +7,7 @@ import { decryptData } from '../../../Helper/EssentilaMethods/Decryption';
 import { countries } from 'country-list-json';
 import { toast } from 'react-toastify';
 import { service_name_formatter } from '../../TransactionsNewApi/TransactionItem';
-import { AccountTypeData } from '../../AddBeneficiary/IndividualAccount';
+import { AccountTypeData } from '../../../utils/Data';
 import InstaPayLoader from '../../Loader';
 
 let debounceTimer;
