@@ -19,6 +19,7 @@ import { serviceFieldInfoValidate } from "../../utils/Functions";
 import useBenCreateFunc from "../../hooks/BeneficiaryHooks/useBenCreateFunc";
 import { BeneficiaryRelation, friendsAndFamily, gendersData, idTypeData, occupations, beneficiaryInitialFormData, bankExtrasInitial } from "../../utils/Data";
 import PaymentChannelUI from "./PaymentChannelUI";
+import USA_STATES from "../../utils/Provices/usa.json"
 
 
 
@@ -83,7 +84,8 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         id_number: "",
         province_state: "",
         houseNumber: "",
-        street: ""
+        street: "",
+        state_name: ""
     })
 
     const [showAdditional, setShowAdditional] = useState(false)
@@ -204,9 +206,12 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
             item?.method?.toLowerCase()?.includes("bank")
         )
 
+        const bankCountryFields = fieldsInfo?.bank_country_fields
+
         const resultKeys = Object.keys(bankExtras)
             .filter(item =>
-                serviceFieldInfoValidate(fields, "credit_party_identifiers_accepted", item, fieldsInfo)
+                serviceFieldInfoValidate(fields, "credit_party_identifiers_accepted", item, fieldsInfo) ||
+                    bankCountryFields ? serviceFieldInfoValidate("bank_country_fields", "credit_party_identifiers_accepted", item, fieldsInfo) : false
             )
             .filter(item => {
                 if (item === "iban" && accNumType === "IBAN") return false
@@ -258,7 +263,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
 
     useEffect(() => {
         if (bankCountryCode !== countryIsoCode) {
-            getCountryFields(bankCountryCode, services.find(service => service.method?.toLowerCase()?.includes("bank")))
+            getCountryFields(countryIsoCode, services.find(service => service.method?.toLowerCase()?.includes("bank")), bankCountryCode)
         }
     }, [bankCountryCode])
 
@@ -370,7 +375,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                     : ""
                                             }
                                             {
-                                                (fieldInfoValidate("required_receiving_entity_fields", "province_state") || fieldInfoValidate("credit_party_identifiers_accepted", "province_state")) &&
+                                                (fieldInfoValidate("required_receiving_entity_fields", "province_state")) && countryIsoCode !== "USA" &&
                                                 <FormGroup style={{ flex: 1, margin: 0 }}>
                                                     <Label className="col-form-label" htmlFor="province_state">{t("Province/State")} <span className="req_star">*</span></Label>
                                                     <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="province_state" id="province_state" type="text" placeholder='Province/State' value={basicExtras.province_state} onChange={handleBasicExtraChange} />
@@ -604,6 +609,24 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                 <FormGroup style={{ flex: 1, margin: 0 }}>
                                                     <Label className="col-form-label" htmlFor="street">{t("Street")} <span className="req_star">*</span></Label>
                                                     <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="street" id="street" type="text" placeholder='Street' value={basicExtras.street} onChange={handleBasicExtraChange} />
+                                                </FormGroup>
+                                            }
+                                            {(fieldInfoValidate("credit_party_identifiers_accepted", "province_state") && countryIsoCode === "USA") &&
+                                                <FormGroup style={{ flex: 1, margin: 0 }}>
+                                                    <Label className="col-form-label" htmlFor="province_state">{t("Province State")} <span className="req_star">*</span></Label>
+
+                                                    <CitiesDropDown
+                                                        disabled={!country}
+                                                        country={country}
+                                                        userCity={basicExtras.state_name}
+                                                        setUserCity={(val, code) => setBasicExtras(prev => ({ ...prev, state_name: val, province_state: code }))}
+                                                        styles={{ flex: 1, minWidth: "250px" }}
+                                                        iso_3={countryIsoCode}
+                                                        isState={true}
+                                                        title="Select Provice"
+                                                        stateData={USA_STATES}
+                                                    />
+
                                                 </FormGroup>
                                             }
                                         </div>

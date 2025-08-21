@@ -13,7 +13,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
     const [isValidIban, setIsValidIban] = useState(true)
     const [ibanSwift, setIbanSwift] = useState("")
 
-    const getBankDetails = useCallback((e) => {
+    const getBankDetails = useCallback((e, isForEdit = false) => {
         setIbanSwift(e.target.value?.replace(/[^a-zA-Z0-9]/g, ''))
         setIsValidIban(false)
 
@@ -44,8 +44,10 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
 
                                 }
                             })
-                            for (const key in bankExtras) {
-                                handleBankExtraChange({ target: { name: key, value: "" } })
+                            if(!isForEdit){
+                                for (const key in bankExtras) {
+                                    handleBankExtraChange({ target: { name: key, value: "" } })
+                                }
                             }
                             setBankCountry(decrypted?.bicDetails?.structured_address?.country_name[0] + decrypted?.bicDetails?.structured_address?.country_name.slice(1).toLowerCase() ?? "")
                             setBankCountryCode(decrypted?.bicDetails?.structured_address?.country_code ?? "")
@@ -74,8 +76,10 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                                     bank_account_number: ""
                                 }
                             })
-                            for (const key in bankExtras) {
-                                handleBankExtraChange({ target: { name: key, value: "" } })
+                            if(!isForEdit){
+                                for (const key in bankExtras) {
+                                    handleBankExtraChange({ target: { name: key, value: "" } })
+                                }
                             }
                             setBankCountry("")
                             setBankCountryCode("")
@@ -94,8 +98,10 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                             bank_account_number: ""
                         }
                     })
-                    for (const key in bankExtras) {
-                        handleBankExtraChange({ target: { name: key, value: "" } })
+                    if(!isForEdit){
+                        for (const key in bankExtras) {
+                            handleBankExtraChange({ target: { name: key, value: "" } })
+                        }
                     }
                     setBankCountry("")
                     setBankCountryCode("")
@@ -120,10 +126,11 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                                     bank_postal_code: decrypted?.structured_address?.post_code ?? "",
                                 }
                             })
-                            for (const key in bankExtras) {
-                                handleBankExtraChange({ target: { name: key, value: "" } })
+                            if(!isForEdit){
+                                for (const key in bankExtras) {
+                                    handleBankExtraChange({ target: { name: key, value: "" } })
+                                }
                             }
-                            console.log(decrypted)
                             setBankCountry(decrypted?.structured_address?.country_name[0] + decrypted?.structured_address?.country_name.slice(1).toLowerCase() ?? "")
                             setBankCountryCode(decrypted?.structured_address?.country_code ?? "")
                             setBankDetailsError("")
@@ -151,8 +158,10 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                                     bank_account_number: ""
                                 }
                             })
-                            for (const key in bankExtras) {
-                                handleBankExtraChange({ target: { name: key, value: "" } })
+                            if(!isForEdit){
+                                for (const key in bankExtras) {
+                                    handleBankExtraChange({ target: { name: key, value: "" } })
+                                }
                             }
                             setBankCountry("")
                             setBankCountryCode("")
@@ -171,8 +180,10 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                             bank_account_number: ""
                         }
                     })
-                    for (const key in bankExtras) {
-                        handleBankExtraChange({ target: { name: key, value: "" } })
+                    if(!isForEdit){
+                        for (const key in bankExtras) {
+                            handleBankExtraChange({ target: { name: key, value: "" } })
+                        }
                     }
                     setBankCountry("")
                     setBankCountryCode("")

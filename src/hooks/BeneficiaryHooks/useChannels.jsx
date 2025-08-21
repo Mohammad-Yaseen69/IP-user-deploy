@@ -13,21 +13,26 @@ const neemaMethodIDs = {
     // upi: 5,
     // pix: 6,
 }
-const useChannels = ({setLoading, setActive, countryIsoCode, countryId}) => {
+const useChannels = ({ setLoading, setActive, countryIsoCode, countryId }) => {
     const { authHeader, userDetails } = useContext(UserContext)
     const [fieldsInfo, setFieldsInfo] = useState(null)
     const [services, setServices] = useState([])
     const [mobileProviders, setMobileProviders] = useState()
     const [selectedCountryDetails, setSelectedCountryDetails] = useState()
-    
-    const getCountryFields = async (alpha3, service) => {
+
+    const getCountryFields = async (alpha3, service, bankCountryIso) => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/get-required-fields/${alpha3}/${service?.id}/C2C?destinationType=${neemaMethodIDs[service?.method?.split(" ")?.[0]?.toLowerCase()] ?? service?.id}`, {
+            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/get-required-fields/${bankCountryIso ? bankCountryIso : alpha3}/${service?.id}/C2C?destinationType=${neemaMethodIDs[service?.method?.split(" ")?.[0]?.toLowerCase()] ?? service?.id}`, {
                 headers: authHeader
             });
 
             const dec = decryptData(res.data.data);
-            setFieldsInfo(prev => ({ ...prev, [service?.method?.split(" ")?.[0]]: dec?.data }))
+
+            if (bankCountryIso) {
+                setFieldsInfo(prev => ({ ...prev, bank_country_fields: dec?.data }))
+            } else {
+                setFieldsInfo(prev => ({ ...prev, [service?.method?.split(" ")?.[0]]: dec?.data }))
+            }
         } catch (error) {
             const dec = decryptData(error.response.data.data)
             if (dec?.message === "Unauthorize to access this route") {
@@ -113,7 +118,7 @@ const useChannels = ({setLoading, setActive, countryIsoCode, countryId}) => {
     }, [countryId])
 
 
-    return { fieldsInfo, services, mobileProviders, selectedCountryDetails,getCountryFields }
+    return { fieldsInfo, services, mobileProviders, selectedCountryDetails, getCountryFields }
 }
 
 export default useChannels

@@ -10,7 +10,6 @@ const WalletDetails = ({ wallet, authHeader, setWalletError, setWalletIds, setDu
 
     useEffect(() => {
         setDuplicateWallet(false)
-        console.log(wallet)
         if (wallet?.wallet_id ? wallet?.wallet_id?.length : wallet.length === 8) {
             axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-by-wallet-id/${wallet?.wallet_id ?? wallet}`, {
                 headers: authHeader
@@ -22,11 +21,9 @@ const WalletDetails = ({ wallet, authHeader, setWalletError, setWalletIds, setDu
                         setFirstName(decrypted.walletDetails.first_name)
                         setLastName(decrypted.walletDetails.last_name)
                     }
-                    console.log(decrypted.walletDetails)
                     setDetails(decrypted.walletDetails)
                     const filtered = walletIds.filter(item => item === decrypted?.walletDetails?._id)
                     setWalletIds(filtered.length === 0 ? [...walletIds, decrypted?.walletDetails?._id] : walletIds)
-                    console.log(filtered.length === 0, firstTime ? false : true)
                     // setDuplicateWallet(filtered.length === 0 || firstTime ? false : true)
                     setWalletError("")
                 })

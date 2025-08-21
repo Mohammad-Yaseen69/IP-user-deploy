@@ -3,7 +3,7 @@ import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap
 import { useTranslation } from 'react-i18next';
 import citiesData from "./CitiesData.json"
 
-const CitiesDropDown = ({ country, userCity, setUserCity, disabled = false, styles = {}, iso_3 = "" }) => {
+const CitiesDropDown = ({ country, userCity, setUserCity, disabled = false, styles = {}, iso_3 = "", isState, title = "Select City", stateData }) => {
     const { t } = useTranslation()
     const [isOpen, setIsOpen] = useState(false);
     const cityInputRef = useRef()
@@ -12,9 +12,9 @@ const CitiesDropDown = ({ country, userCity, setUserCity, disabled = false, styl
     const cities = useMemo(() => citiesData?.filter(city => city.iso3 === iso_3)?.[0]?.cities, [country])
 
     const filtered = useMemo(() => {
-        if (!searchTerm) return cities;
-        return cities?.filter(item => item?.name?.toLowerCase()?.includes(searchTerm?.toLowerCase()))
-    }, [searchTerm, cities])
+        if (!searchTerm) return isState ? stateData : cities;
+        return (isState ? stateData : cities)?.filter(item => item?.name?.toLowerCase()?.includes(searchTerm?.toLowerCase()))
+    }, [searchTerm, cities, stateData])
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -80,28 +80,19 @@ const CitiesDropDown = ({ country, userCity, setUserCity, disabled = false, styl
                                 <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
                                     <span style={{ fontWeight: 700 }}>{userCity}</span>
                                 </div>
-                            ) : <span style={{ color: "#a8a8a8" }}>{t("Select City")}</span>}
+                            ) : <span style={{ color: "#a8a8a8" }}>{t(title)}</span>}
                         </>
                 }
             </DropdownToggle>
             <DropdownMenu style={{ maxHeight: "350px", overflowY: "auto", overflowX: "auto", width: "100%" }}>
                 {
-                    filtered?.slice(0, renderCount)?.map((city) => (
-                        <DropdownItem key={city.code} onClick={() => {
-                            setUserCity(city?.name)
-                            setSearchTerm("")
-                        }} style={{ opacity: 1, color: "black" }}>
-                            <div key={city.name} style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "1rem",
-                                padding: ".5rem",
-                                cursor: "pointer",
-                                borderRadius: "10px"
-                            }}>
-                                <span style={{ fontWeight: 700 }}>{city?.name}</span>
-                            </div>
-                        </DropdownItem>
+                    !isState && filtered?.slice(0, renderCount)?.map((item) => (
+                        <DropdownRenderItem item={item} setItem={setUserCity} setSearchTerm={setSearchTerm} />
+                    ))
+                }
+                {
+                    isState && filtered?.map((item) => (
+                        <DropdownRenderItem item={item} setItem={setUserCity} isState={isState} setSearchTerm={setSearchTerm} />
                     ))
                 }
                 {!reachedEnd && <div ref={menuRef} style={{ height: "1px" }} />}
@@ -111,3 +102,28 @@ const CitiesDropDown = ({ country, userCity, setUserCity, disabled = false, styl
 };
 
 export default CitiesDropDown;
+
+
+const DropdownRenderItem = ({ item, setItem, setSearchTerm, isState }) => {
+    return (
+        <DropdownItem key={item.code} onClick={() => {
+            if (isState) {
+                setItem(item?.name, item?.code?.replace("US-", ""))
+            } else {
+                setItem(item?.name)
+            }
+            setSearchTerm("")
+        }} style={{ opacity: 1, color: "black" }}>
+            <div key={item.name} style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+                padding: ".5rem",
+                cursor: "pointer",
+                borderRadius: "10px"
+            }}>
+                <span style={{ fontWeight: 700 }}>{item?.name}</span>
+            </div>
+        </DropdownItem>
+    )
+}

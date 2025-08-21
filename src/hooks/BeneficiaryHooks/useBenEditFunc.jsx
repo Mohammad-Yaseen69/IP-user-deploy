@@ -53,8 +53,9 @@ const useBenEditFunc = ({
             services.some(item => item?.method?.toLowerCase()?.includes("mobile")) && completedWallet ? "mobile" : null,
             completedCrypto ? "crypto" : null,
             services.some(item => item?.method?.toLowerCase()?.includes("cash")) && cashPickupCompleted ? "cash" : null,
-            instapayWallets.every(item => item.length !== 8) || walletError ? null : "wallet"
+            instapayWallets.every(item => item?.wallet_id ? item?.wallet_id.length !== 8 : item?.length !== 8) || walletError ? null : "wallet"
         ]
+
         const data = {
             first_name: firstName ?? "",
             last_name: lastName ?? "",
@@ -204,7 +205,6 @@ const useBenEditFunc = ({
 
 
         setMissingFields(missing)
-        console.log(missing)
 
         // Focus on first missing field
         if (missing.length > 0) {

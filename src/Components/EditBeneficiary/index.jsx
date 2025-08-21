@@ -8,9 +8,8 @@ import { useLocation, useNavigate } from "react-router";
 import CountryDropDown from "../AddBeneficiary/CountryDropDown";
 import SuccessModal from "../AddBeneficiary/SuccessModal";
 import CitiesDropDown from "../CitiesDropDown";
-import ConfirmationModal from "../AddBeneficiary/ConfirmationModal";
 import { useTranslation } from "react-i18next";
-import { bankExtrasInitial, beneficiaryInitialFormData, BeneficiaryRelation, friendsAndFamily, gendersData, idTypeData, iso2Toiso3Convert, occupations } from "../../utils/Data";
+import { bankExtrasInitial, beneficiaryInitialFormData, BeneficiaryRelation, friendsAndFamily, gendersData, idTypeData, occupations } from "../../utils/Data";
 import NestedDropdown from "../NestedDropdown";
 import InstaPayLoader from "../Loader";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
@@ -24,6 +23,8 @@ import useBankDetails from "../../hooks/BeneficiaryHooks/useBankDetails";
 import useChannels from "../../hooks/BeneficiaryHooks/useChannels";
 import { getExtractedPhone, serviceFieldInfoValidate } from "../../utils/Functions";
 import useBenEditFunc from "../../hooks/BeneficiaryHooks/useBenEditFunc";
+import USA_STATES from "../../utils/Provices/usa.json"
+
 
 
 const EditBeneficiary = () => {
@@ -66,10 +67,8 @@ const EditBeneficiary = () => {
     const [duplicateWallet, setDuplicateWallet] = useState(false)
 
     // api bank details
-    const [bankCity, setBankCity] = useState("")
 
     // const show confirmation
-    const [showConfirmation, setShowConfirmation] = useState(false)
     const [loading, setLoading] = useState(false)
     const [isAddressRequired,] = useState(true)
     const [clicked, setClicked] = useState(false)
@@ -91,8 +90,8 @@ const EditBeneficiary = () => {
         }
     }
 
-    const { getBankDetails, bankCountry, bankCountryCode, bankDetailsError, isValidIban, ibanSwift, setIbanSwift, setBankCountryCode, setBankDetailsError, setBankCountry } = useBankDetails({ accNumType, setFormData, handleBankExtraChange, bankExtras })
-    const { fieldsInfo, services, mobileProviders, selectedCountryDetails } = useChannels({ setLoading, setActive, countryIsoCode, countryId })
+    const { getBankDetails, bankCountry, bankCountryCode, bankDetailsError, isValidIban, ibanSwift, setBankCountryCode } = useBankDetails({ accNumType, setFormData, handleBankExtraChange, bankExtras })
+    const { fieldsInfo, services, mobileProviders, selectedCountryDetails, getCountryFields } = useChannels({ setLoading, setActive, countryIsoCode, countryId })
 
 
 
@@ -118,7 +117,8 @@ const EditBeneficiary = () => {
         id_number: "",
         province_state: "",
         houseNumber: "",
-        street: ""
+        street: "",
+        state_name: ""
     })
     const [showAdditional, setShowAdditional] = useState(false)
     const [additionFields, setAdditionalFields] = useState({
@@ -225,31 +225,6 @@ const EditBeneficiary = () => {
         }
     }
 
-    const changeUserDetailsAsPerBankDetails = () => {
-        setFormData((prev) => {
-            return {
-                ...prev,
-                card_holder_one: "",
-                card_number_one: "",
-                card_expiry_one: "",
-                card_holder_two: "",
-                card_number_two: "",
-                card_expiry_two: "",
-                card_holder_three: "",
-                card_number_three: "",
-                card_expiry_three: "",
-                mobile_wallet_provider: "",
-                mobile_wallet_name: "",
-                mobile_wallet_account_number: ""
-            }
-        })
-        setCountry(bankCountry)
-        setCountryCode(bankCountryCode)
-        setCity(bankCity)
-        setShowConfirmation(false)
-        setMobileNumber("")
-        setCountryIsoCode(iso2Toiso3Convert(bankCountryCode))
-    }
 
     useEffect(() => {
         setFormData(prev => ({
@@ -266,40 +241,6 @@ const EditBeneficiary = () => {
     //     }))
     // }, [mobileNumber])
 
-    const onCancelHandler = () => {
-        setBankDetailsError("Invalid Details")
-        setFormData(prev => {
-            return {
-                ...prev,
-                bank_name: "",
-                branch_name: "",
-                bank_branch_street: "",
-                bank_city: "",
-                bank_province: "",
-                bank_postal_code: "",
-                bank_account_number: ""
-            }
-        })
-        for (const key in bankExtras) {
-            handleBankExtraChange({ target: { name: key, value: "" } })
-        }
-        setBankCountry("")
-        setBankCountryCode("")
-        setBankCity("")
-        setShowConfirmation(false)
-    }
-
-    useEffect(() => {
-        if (bankCountry && country && bankCountryCode && countryIsoCode && bankCountry.toLowerCase() !== country.toLowerCase() && bankCountryCode !== countryIsoCode) {
-            setShowConfirmation(true)
-        }
-    }, [bankCountry, country, bankCountryCode, countryIsoCode])
-
-    useEffect(() => {
-        if (bankCountryCode && countryCode && bankCountryCode !== countryCode) {
-            setShowConfirmation(true)
-        }
-    }, [bankCountryCode, countryCode])
 
 
 
@@ -309,9 +250,13 @@ const EditBeneficiary = () => {
             item?.method?.toLowerCase()?.includes("bank")
         )
 
+        const bankCountryFields = fieldsInfo?.bank_country_fields
+
+
         const resultKeys = Object.keys(bankExtras)
             .filter(item =>
-                serviceFieldInfoValidate(fields, "credit_party_identifiers_accepted", item, fieldsInfo)
+                serviceFieldInfoValidate(fields, "credit_party_identifiers_accepted", item, fieldsInfo) ||
+                    bankCountryFields ? serviceFieldInfoValidate("bank_country_fields", "credit_party_identifiers_accepted", item, fieldsInfo) : false
             )
             .filter(item => {
                 if (item === "iban" && accNumType === "IBAN") return false
@@ -410,10 +355,11 @@ const EditBeneficiary = () => {
 
             setInstapayWallets(user?.wallet?.length > 0 ? user?.wallet : [""])
             setApiWallets(user?.wallet?.length > 0 ? user?.wallet : [""])
-            setIbanSwift((user?.bank_details?.[0]?.iban || user?.bank_details?.[0]?.swift_code) ?? "")
+            if ((user?.bank_details?.[0]?.iban || user?.bank_details?.[0]?.swift_code)) {
+                getBankDetails({ target: { value: (user?.bank_details?.[0]?.iban || user?.bank_details?.[0]?.swift_code) } }, true)
+            }
             setMobileNumber(user?.phone)
             setCountryId(user?.country?._id ?? "")
-
             setCountry(user?.country_name)
             setCountryIsoCode(user?.country_iso_code)
             setCountryId(user?.country)
@@ -432,6 +378,7 @@ const EditBeneficiary = () => {
             })
             setBankExtras(prev => user?.bank_details?.[0]?.extras ?? prev)
             setCashxtras(prev => user?.cash_pickup?.[0]?.extras ?? prev)
+            setBankCountryCode(user?.bank_details?.[0]?.extras?.country_iso_code && "")
             setCardExtras(prev => user?.card?.[0]?.extras ?? prev)
             setAccNumType(user?.bank_details?.[0]?.iban ? "IBAN" : "Swift")
         }
@@ -494,6 +441,21 @@ const EditBeneficiary = () => {
         user
     })
 
+    useEffect(() => {
+        if (bankCountryCode) {
+            setBankExtras(prev => ({
+                ...prev,
+                country_iso_code: bankCountryCode
+            }));
+        }
+    }, [bankCountryCode]);
+
+    useEffect(() => {
+        if (bankCountryCode !== countryIsoCode) {
+            getCountryFields(countryIsoCode, services.find(service => service.method?.toLowerCase()?.includes("bank")), bankCountryCode)
+        }
+    }, [bankCountryCode])
+
 
     const handleDisable = () => {
         const extractWalletNum = getExtractedPhone(formData, countryIsoCode)
@@ -505,7 +467,7 @@ const EditBeneficiary = () => {
             return true
         }
 
-        if(!completedWallet && !completedBank && !completedCard && !completedCrypto){
+        if (!completedWallet && !completedBank && !completedCard && !completedCrypto && (!instapayWallets.filter(w => w !== "").length || walletError)) {
             return true
         }
         return false
@@ -637,7 +599,7 @@ const EditBeneficiary = () => {
                                                             : ""
                                                     }
                                                     {
-                                                        fieldInfoValidate("required_receiving_entity_fields", "province_state")
+                                                        fieldInfoValidate("required_receiving_entity_fields", "province_state") && countryCode !== "USA"
                                                         &&
                                                         <FormGroup style={{ flex: 1, margin: 0 }}>
                                                             <Label className="col-form-label" htmlFor="province_state">{t("Province/State")} <span className="req_star">*</span></Label>
@@ -695,13 +657,33 @@ const EditBeneficiary = () => {
                                                     {fieldInfoValidate("credit_party_identifiers_accepted", "houseNumber") &&
                                                         <FormGroup style={{ flex: 1, margin: 0 }}>
                                                             <Label className="col-form-label" htmlFor="houseNumber">{t("House Number")} <span className="req_star">*</span></Label>
-                                                            <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="houseNumber" id="houseNumber" type="text" placeholder='House Number' value={basicExtras.houseNumber} onChange={handleBasicExtraChange} />
+                                                            <Input
+                                                                disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="houseNumber" id="houseNumber" type="text" placeholder='House Number' value={basicExtras.houseNumber} onChange={handleBasicExtraChange} />
                                                         </FormGroup>
                                                     }
                                                     {fieldInfoValidate("credit_party_identifiers_accepted", "street") &&
                                                         <FormGroup style={{ flex: 1, margin: 0 }}>
                                                             <Label className="col-form-label" htmlFor="street">{t("Street")} <span className="req_star">*</span></Label>
-                                                            <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="street" id="street" type="text" placeholder='Street' value={basicExtras.street} onChange={handleBasicExtraChange} />
+                                                            <Input
+                                                                disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="street" id="street" type="text" placeholder='Street' value={basicExtras.street} onChange={handleBasicExtraChange} />
+                                                        </FormGroup>
+                                                    }
+                                                    {(fieldInfoValidate("credit_party_identifiers_accepted", "province_state") && countryIsoCode === "USA") &&
+                                                        <FormGroup style={{ flex: 1, margin: 0 }}>
+                                                            <Label className="col-form-label" htmlFor="province_state">{t("Province State")} <span className="req_star">*</span></Label>
+
+                                                            <CitiesDropDown
+                                                                disabled={!isEditMode}
+                                                                country={country}
+                                                                userCity={basicExtras.state_name}
+                                                                setUserCity={(val, code) => setBasicExtras(prev => ({ ...prev, state_name: val, province_state: code }))}
+                                                                styles={{ flex: 1, minWidth: "250px" }}
+                                                                iso_3={countryIsoCode}
+                                                                isState={true}
+                                                                title="Select Provice"
+                                                                stateData={USA_STATES}
+                                                            />
+
                                                         </FormGroup>
                                                     }
                                                 </div>
@@ -930,7 +912,6 @@ const EditBeneficiary = () => {
                                                     <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", marginTop: "2rem", gap: "2rem", alignItems: "center" }}>
                                                         <button onClick={() => {
                                                             setIsEditMode(false)
-                                                            console.log(apiWallets, instapayWallets)
                                                             setInstapayWallets([...apiWallets])
                                                         }} style={{ all: "unset", cursor: "pointer" }}>
                                                             {t("Cancel")}
@@ -965,7 +946,6 @@ const EditBeneficiary = () => {
                                                 ) : null
                                             }
 
-                                            <ConfirmationModal isOpen={showConfirmation} toggle={() => setShowConfirmation(!showConfirmation)} onConfirm={changeUserDetailsAsPerBankDetails} onCancel={onCancelHandler} />
                                         </CardBody>
                                 }
                             </Form>

@@ -99,6 +99,7 @@ const PaymentChannelUI = ({
         return item.length === 8;
     };
 
+
     return (
         <FormGroup className="mb-3">
             <h5>{t("Select Beneficiary Payment Channels")}: </h5>
@@ -427,7 +428,9 @@ const PaymentChannelUI = ({
                     {
                         Object.keys(bankExtras).map(item => {
                             return (
-                                serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("bank")), "credit_party_identifiers_accepted", item, fieldsInfo)
+                                (serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("bank")), "credit_party_identifiers_accepted", item, fieldsInfo) ||
+                                    serviceFieldInfoValidate("bank_country_fields", "credit_party_identifiers_accepted", item, fieldsInfo)
+                                )
                                 &&
                                 <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                     {((item !== 'iban' && item !== "swift_bic_code") || (item === "iban" && accNumType === "Swift") || (item === "swift_bic_code" && accNumType === "IBAN")) && <Label className="col-form-label">{t(service_name_formatter(item))}<span className="req_star">*</span></Label>}
