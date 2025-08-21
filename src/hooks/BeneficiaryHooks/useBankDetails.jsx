@@ -16,6 +16,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
     const getBankDetails = useCallback((e, isForEdit = false) => {
         setIbanSwift(e.target.value?.replace(/[^a-zA-Z0-9]/g, ''))
         setIsValidIban(false)
+        console.log(e.target.value, accNumType)
 
         if (debounceTimer) {
             clearTimeout(debounceTimer);
@@ -23,6 +24,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
 
         debounceTimer = setTimeout(() => {
             if (accNumType === "IBAN") {
+                console.log("shu")
                 if (e.target.value.length > 13) {
                     axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/get-details-by-iban/${e.target.value}`, {
                         headers: authHeader
@@ -44,7 +46,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
 
                                 }
                             })
-                            if(!isForEdit){
+                            if (!isForEdit) {
                                 for (const key in bankExtras) {
                                     handleBankExtraChange({ target: { name: key, value: "" } })
                                 }
@@ -76,7 +78,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                                     bank_account_number: ""
                                 }
                             })
-                            if(!isForEdit){
+                            if (!isForEdit) {
                                 for (const key in bankExtras) {
                                     handleBankExtraChange({ target: { name: key, value: "" } })
                                 }
@@ -98,7 +100,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                             bank_account_number: ""
                         }
                     })
-                    if(!isForEdit){
+                    if (!isForEdit) {
                         for (const key in bankExtras) {
                             handleBankExtraChange({ target: { name: key, value: "" } })
                         }
@@ -107,6 +109,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                     setBankCountryCode("")
                 }
             } else {
+                console.log(e.target.value.length >= 7)
                 if (e.target.value.length >= 7) {
                     axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/get-details-by-bic/${e.target.value}/abc`, {
                         headers: authHeader
@@ -126,7 +129,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                                     bank_postal_code: decrypted?.structured_address?.post_code ?? "",
                                 }
                             })
-                            if(!isForEdit){
+                            if (!isForEdit) {
                                 for (const key in bankExtras) {
                                     handleBankExtraChange({ target: { name: key, value: "" } })
                                 }
@@ -158,7 +161,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                                     bank_account_number: ""
                                 }
                             })
-                            if(!isForEdit){
+                            if (!isForEdit) {
                                 for (const key in bankExtras) {
                                     handleBankExtraChange({ target: { name: key, value: "" } })
                                 }
@@ -180,7 +183,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                             bank_account_number: ""
                         }
                     })
-                    if(!isForEdit){
+                    if (!isForEdit) {
                         for (const key in bankExtras) {
                             handleBankExtraChange({ target: { name: key, value: "" } })
                         }
@@ -190,7 +193,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                 }
             }
         }, 1500);
-    }, [])
+    }, [accNumType])
 
 
     return { getBankDetails, bankCountry, bankCountryCode, bankDetailsError, isValidIban, ibanSwift, setIbanSwift, setBankDetailsError, setBankCountryCode, setBankCountry }
