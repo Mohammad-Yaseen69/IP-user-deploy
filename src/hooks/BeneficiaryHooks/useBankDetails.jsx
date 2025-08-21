@@ -13,8 +13,6 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
     const [isValidIban, setIsValidIban] = useState(true)
     const [ibanSwift, setIbanSwift] = useState("")
 
-
-
     const getBankDetails = useCallback((e) => {
         setIbanSwift(e.target.value?.replace(/[^a-zA-Z0-9]/g, ''))
         setIsValidIban(false)
@@ -24,7 +22,6 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
         }
 
         debounceTimer = setTimeout(() => {
-
             if (accNumType === "IBAN") {
                 if (e.target.value.length > 13) {
                     axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/get-details-by-iban/${e.target.value}`, {

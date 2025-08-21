@@ -22,8 +22,7 @@ import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import PaymentChannelUI from "../AddBeneficiary/PaymentChannelUI";
 import useBankDetails from "../../hooks/BeneficiaryHooks/useBankDetails";
 import useChannels from "../../hooks/BeneficiaryHooks/useChannels";
-import { serviceFieldInfoValidate } from "../../utils/Functions";
-import useBenCreateFunc from "../../hooks/BeneficiaryHooks/useBenCreateFunc";
+import { getExtractedPhone, serviceFieldInfoValidate } from "../../utils/Functions";
 import useBenEditFunc from "../../hooks/BeneficiaryHooks/useBenEditFunc";
 
 
@@ -336,7 +335,9 @@ const EditBeneficiary = () => {
 
     // mobile wallet details
     useEffect(() => {
-        if (formData.mobile_wallet_name && formData.mobile_wallet_account_number && formData.mobile_wallet_provider) {
+        const extractWalletNum = getExtractedPhone(formData, countryIsoCode)
+
+        if (formData.mobile_wallet_name && extractWalletNum && formData.mobile_wallet_provider) {
             setCompletedWallet(true)
         } else {
             setCompletedWallet(false)
@@ -390,7 +391,7 @@ const EditBeneficiary = () => {
                 bank_postal_code: user?.bank_details?.[0]?.postal_code ?? "",
                 mobile_wallet_provider: user?.mobile_wallet?.[0]?.money_provider ?? "",
                 mobile_wallet_number: user?.mobile_wallet?.[0]?.wallet_number ?? "",
-                mobile_wallet_name: user?.mobile_wallet?.[0]?.wallet_name ?? "",
+                mobile_wallet_name: user?.mobile_wallet?.[0]?.wallet_name ?? `${user?.first_name ?? ""} ${user?.last_name ?? ""} `,
                 mobile_wallet_account_number: user?.mobile_wallet?.[0]?.wallet_account_number ?? "",
                 crypto_currency: user?.crypto?.[0]?.currency ?? "Bitcoin",
                 crypto_wallet_address: user?.crypto?.[0]?.wallet_address ?? "",
@@ -493,6 +494,22 @@ const EditBeneficiary = () => {
         user
     })
 
+
+    const handleDisable = () => {
+        const extractWalletNum = getExtractedPhone(formData, countryIsoCode)
+        if (ibanSwift && !completedBank) {
+            return true
+        }
+
+        if ((extractWalletNum || formData.mobile_wallet_provider) && !completedWallet) {
+            return true
+        }
+
+        if(!completedWallet && !completedBank && !completedCard && !completedCrypto){
+            return true
+        }
+        return false
+    }
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -908,7 +925,7 @@ const EditBeneficiary = () => {
                                             }}
                                             />
 
-                                            {   
+                                            {
                                                 isEditMode ? (
                                                     <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", marginTop: "2rem", gap: "2rem", alignItems: "center" }}>
                                                         <button onClick={() => {
@@ -919,13 +936,13 @@ const EditBeneficiary = () => {
                                                             {t("Cancel")}
                                                         </button>
                                                         {!saveloading &&
-                                                            <button type="button" onClick={editBeneficiaryHandler}
+                                                            <button disabled={handleDisable()} type="button" onClick={editBeneficiaryHandler}
                                                                 style={{
                                                                     all: "unset",
                                                                     padding: "1rem",
                                                                     boxShadow: "0 0 3px rgba(128,128,128,0.4)",
                                                                     textAlign: "center",
-                                                                    cursor: "pointer",
+                                                                    cursor: handleDisable() ? "not-allowed" : "pointer",
                                                                     borderRadius: "10px",
                                                                     background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                                                                     color: "white",
@@ -933,6 +950,7 @@ const EditBeneficiary = () => {
                                                                     alignItems: "center",
                                                                     gap: "1rem",
                                                                     justifyContent: "center",
+                                                                    opacity: handleDisable() && .5
                                                                 }}
                                                             >
                                                                 {t("Save")}

@@ -173,34 +173,34 @@ const useBenEditFunc = ({
             if (!formData[field]?.trim() && field !== 'city' && field !== 'phone' && field !== 'country' && field !== 'first_name' && field !== 'last_name') missing.push(field)
         })
 
-        switch (active) {
-            case 1: // Bank
-                requiredFields.bank.forEach(field => {
-                    if (!formData[field]) missing.push(field)
-                })
-                break;
-            case 2: // Mobile
-                requiredFields.mobile.forEach(field => {
-                    if (!formData[field]) missing.push(field)
-                })
-                break;
-            case 3: // Card
-                requiredFields.card.forEach(field => {
-                    if (!formData[field]) missing.push(field)
-                })
-                break;
-            case 4: // Crypto
-                requiredFields.crypto.forEach(field => {
-                    if (!formData[field]) missing.push(field)
-                })
-                break;
-            case 6: // Cash
-                if (!cashPickupType) missing.push("document_type")
-                if (!cashPickupNumber) missing.push("document_number")
-                break;
-            default:
-                break;
-        }
+        // switch (active) {
+        //     case 1: // Bank
+        //         requiredFields.bank.forEach(field => {
+        //             if (!formData[field]) missing.push(field)
+        //         })
+        //         break;
+        //     case 2: // Mobile
+        //         requiredFields.mobile.forEach(field => {
+        //             if (!formData[field]) missing.push(field)
+        //         })
+        //         break;
+        //     case 3: // Card
+        //         requiredFields.card.forEach(field => {
+        //             if (!formData[field]) missing.push(field)
+        //         })
+        //         break;
+        //     case 4: // Crypto
+        //         requiredFields.crypto.forEach(field => {
+        //             if (!formData[field]) missing.push(field)
+        //         })
+        //         break;
+        //     case 6: // Cash
+        //         if (!cashPickupType) missing.push("document_type")
+        //         if (!cashPickupNumber) missing.push("document_number")
+        //         break;
+        //     default:
+        //         break;
+        // }
 
 
         setMissingFields(missing)

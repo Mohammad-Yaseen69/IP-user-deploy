@@ -1,3 +1,4 @@
+import CountryBasedPhone from "../../Components/PhoneInput/PhoneNumberBasedOnCountry.json"
 export const handleMonthKeyPress = (event) => {
     const { key } = event;
     const monthValue = event.target.value + key;
@@ -28,4 +29,12 @@ export const serviceFieldInfoValidate = (service, field_name, sub_field_name, fi
     }
 
     return isInThere;
+}
+
+
+export const getExtractedPhone = (formData, countryIsoCode) => {
+    const dialCode = CountryBasedPhone[countryIsoCode]?.dial_code?.replace("+", "") ?? ""
+    const extractWalletNum = formData.mobile_wallet_account_number?.slice(dialCode.length)
+
+    return extractWalletNum
 }

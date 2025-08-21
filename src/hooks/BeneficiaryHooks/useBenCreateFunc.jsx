@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import axios from 'axios'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { UserContext } from '../../Context/UserContext'
+import { getExtractedPhone } from '../../utils/Functions'
 
 const useBenCreateFunc = ({
     services,
@@ -180,7 +181,8 @@ const useBenCreateFunc = ({
         setWalletMobileError("")
         e.preventDefault()
 
-        if (formData.mobile_wallet_account_number) {
+        const extractWalletNum = getExtractedPhone(formData, countryIsoCode)
+        if (extractWalletNum) {
             try {
                 setBenLoading(true)
                 await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
