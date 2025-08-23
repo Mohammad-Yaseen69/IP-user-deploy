@@ -4,6 +4,7 @@ import axios from 'axios'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { UserContext } from '../../Context/UserContext'
 import { getExtractedPhone } from '../../utils/Functions'
+import { trimObjectValues } from '../../utils/Data'
 
 const useBenCreateFunc = ({
     services,
@@ -57,6 +58,15 @@ const useBenCreateFunc = ({
             instapayWallets.every(item => item.length !== 8) || walletError ? null : "wallet"
         ]
 
+        let extras = { ...basicExtras, ...additionFields }
+
+        for (const key in extras) {
+            if (extras[key]) {
+                extras[key] = extras[key]?.toString()?.trim()
+            }
+        }
+
+
         const data = {
             first_name: firstName,
             last_name: lastName,
@@ -75,7 +85,7 @@ const useBenCreateFunc = ({
             account_type: account_types.filter(item => item !== null),
             isUsaBank: false,
             wallet: walletIds,
-            extras: { ...basicExtras, ...additionFields },
+            extras: extras,
             bank_details: services.some(item => item?.method?.toLowerCase()?.includes("bank")) && completedBank ? [
                 {
                     swift_code: accNumType === "Swift" ? ibanSwift : "",
@@ -140,7 +150,9 @@ const useBenCreateFunc = ({
             }
         }
 
-        const encrypted = encryptData(data)
+        const trimObj = trimObjectValues(data)
+
+        const encrypted = encryptData(trimObj)
         setBenLoading(true)
 
         axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {

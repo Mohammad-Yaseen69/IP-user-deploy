@@ -145,3 +145,17 @@ export const iso2Toiso3Convert = (iso2 = "") => {
     const alpha3 = countriesjson.find(item => item.name.toLowerCase() === country?.name?.toLowerCase() || item.name.toLowerCase().includes(country?.name?.toLowerCase()))?.alpha3
     return alpha3
 }
+
+
+export const trimObjectValues = (obj) => {
+    if (Array.isArray(obj)) {
+        return obj.map(item => trimObjectValues(item));
+    } else if (obj && typeof obj === 'object') {
+        return Object.fromEntries(
+            Object.entries(obj).map(([key, value]) => [key, trimObjectValues(value)])
+        );
+    } else if (typeof obj === 'string') {
+        return obj.trim();
+    }
+    return obj;
+};

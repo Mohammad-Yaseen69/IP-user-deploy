@@ -4,6 +4,7 @@ import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import axios from 'axios'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { requiredFields } from '../../Components/AddBeneficiary/requiredFields'
+import { trimObjectValues } from '../../utils/Data'
 
 const useBenEditFunc = ({
     services,
@@ -45,6 +46,13 @@ const useBenEditFunc = ({
     const [saveloading, setsaveloading] = useState(false)
 
 
+    let extras = { ...basicExtras, ...additionFields }
+
+    for (const key in extras) {
+        if (extras[key]) {
+            extras[key] = extras[key]?.toString()?.trim()
+        }
+    }
 
     const editBenFun = () => {
         const account_types = [
@@ -74,7 +82,7 @@ const useBenEditFunc = ({
             account_type: account_types.filter(item => item !== null) ?? "",
             isUsaBank: false ?? "",
             wallet: walletIds ?? "",
-            extras: { ...basicExtras, ...additionFields },
+            extras: extras,
             bank_details: services.some(item => item?.method?.toLowerCase()?.includes("bank")) && completedBank ? [
                 {
                     swift_code: accNumType === "Swift" ? ibanSwift : "",
@@ -139,8 +147,10 @@ const useBenEditFunc = ({
                 data.bank_details[0].iban = ""
             }
         }
-        const encrypted = encryptData(data)
 
+        const trimObj = trimObjectValues(data)
+        const encrypted = encryptData(trimObj)
+        
         axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/update-beneficiary/${user._id}`, {
             data: encrypted
         }, {

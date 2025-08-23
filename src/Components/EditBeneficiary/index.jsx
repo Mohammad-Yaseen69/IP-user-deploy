@@ -658,7 +658,7 @@ const EditBeneficiary = () => {
                                                         <FormGroup style={{ flex: 1, margin: 0 }}>
                                                             <Label className="col-form-label" htmlFor="houseNumber">{t("House Number")} <span className="req_star">*</span></Label>
                                                             <Input
-                                                                disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="houseNumber" id="houseNumber" type="text" placeholder='House Number' value={basicExtras.houseNumber} onChange={handleBasicExtraChange} />
+                                                                disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="houseNumber" id="houseNumber" type="number" placeholder='House Number' value={basicExtras.houseNumber} onChange={handleBasicExtraChange} />
                                                         </FormGroup>
                                                     }
                                                     {fieldInfoValidate("credit_party_identifiers_accepted", "street") &&
