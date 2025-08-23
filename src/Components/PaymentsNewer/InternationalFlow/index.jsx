@@ -116,7 +116,8 @@ const initialState = {
     ex_extra_error: "",
     conversion_in: "",
     payerRequiredFields: {},
-    thunesBalance: 0
+    thunesBalance: 0,
+    transactionStatus: false
 }
 
 const beneficiaryRequiredFields = [
@@ -814,7 +815,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             console.log(data)
             const enc = encryptData(data)
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/paypal/initiate-international-payment`,
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/paypal/initiate-international-${internationalData.country?.vendor === "thunes" ? "payment" : "payout"}`,
                 { data: enc },
                 { headers: authHeader }
             )
@@ -1038,6 +1039,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             const decrypted = decryptData(res.data.data)
             console.log(decrypted)
             updateInternationalData("transaction_details", decrypted?.data ?? decrypted)
+            updateInternationalData("transactionStatus", true)
             updateInternationalData("otpError", "")
             setSubStep(prev => prev + 1)
             updateInternationalData("showOtpModal", false)
@@ -1104,6 +1106,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
 
                 const dec = decryptData(res.data.data)
                 updateInternationalData("transaction_details", dec?.data ?? dec)
+                updateInternationalData("transactionStatus", true)
+
             } catch (error) {
                 updateInternationalData("error", "Something went wrong while completing the transactions, But don't worry your funds have been added to your InstaPay Wallet.")
             }
@@ -1153,15 +1157,13 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             {
                 <Modal isOpen={showBalanceModal} toggle={() => setShowBalanceModal(false)}>
                     <ModalHeader style={{ paddingBottom: "6px" }} toggle={() => setShowBalanceModal(false)}>
-                        <h2 style={{ fontSize: "24px" }}>Notice</h2>
+                        <h2 style={{ fontSize: "24px" }}>{("Notice")}</h2>
                     </ModalHeader>
                     <ModalBody>
                         <h3 style={{ fontSize: "18px", fontWeight: 600 }}>
-                            We understand that your remaining sending limit is up to {internationalData.exchange_rate?.limits_used?.daily_sending_limit_used.toFixed(2)} {internationalData.currency}. However, at this time, we can only process a maximum of {internationalData.thunesBalance} {internationalData.currency} .
-
-                            You may proceed with {internationalData.thunesBalance} {internationalData.currency} or try again later to be able to send {internationalData.amount} {internationalData.currency} .
-
-                            Thank you for your understanding.
+                            {(`We understand that your remaining sending limit is up to ${internationalData.exchange_rate?.limits_used?.daily_sending_limit_used.toFixed(2)} ${internationalData.currency}. However, at this time, we can only process a maximum of ${internationalData.thunesBalance} ${internationalData.currency} .
+                            You may proceed with ${internationalData.thunesBalance} ${internationalData.currency} or try again later to be able to send ${internationalData.amount} ${internationalData.currency} .
+                            Thank you for your understanding.`)}
                         </h3>
                     </ModalBody>
                 </Modal>
@@ -1272,7 +1274,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                         {
                             sendPaymentType === "international" &&
                             (
-                                internationalData?.transaction_details?.beneficiary || transaction_status
+                                internationalData?.transaction_details?.beneficiary || transaction_status || internationalData?.transactionStatus
                                     ?
                                     loading
                                         ?
@@ -1396,7 +1398,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                                                                     lineHeight: 1.3,
                                                                                     letterSpacing: '-0.28px'
                                                                                 }}>
-                                                                                    <strong>{internationalData?.exchange_rate?.paypal?.fee?.currency}</strong> is not supported by Paypal, <strong>USD</strong> will be used as the default currency.
+                                                                                    <strong>{internationalData?.exchange_rate?.paypal?.fee?.currency}</strong> {t("is not supported by Paypal,")} <strong>USD</strong> {t("will be used as the default currency.")}
                                                                                 </span>
                                                                             </div>
                                                                             <div style={{
@@ -1663,7 +1665,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                         </div>
                         <div className={styles.flow}>
                             {
-                                internationalData?.transaction_details?.beneficiary || transaction_status
+                                internationalData?.transaction_details?.beneficiary || transaction_status || internationalData?.transactionStatus
                                     ?
                                     loading
                                         ?
