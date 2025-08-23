@@ -2,7 +2,7 @@ import { CardBody, CardHeader, Form, FormGroup, Input, Label } from "reactstrap"
 import { countries } from "country-list-json";
 // import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { useLocation, useNavigate } from "react-router";
 import CountryDropDown from "../AddBeneficiary/CountryDropDown";
@@ -23,7 +23,9 @@ import useBankDetails from "../../hooks/BeneficiaryHooks/useBankDetails";
 import useChannels from "../../hooks/BeneficiaryHooks/useChannels";
 import { getExtractedPhone, serviceFieldInfoValidate } from "../../utils/Functions";
 import useBenEditFunc from "../../hooks/BeneficiaryHooks/useBenEditFunc";
-import USA_STATES from "../../utils/Provices/usa.json"
+import { State } from "country-state-city";
+import iso2 from '../AddFunds/WalletFund/countries_iso2.json'
+
 
 
 
@@ -473,6 +475,14 @@ const EditBeneficiary = () => {
         return false
     }
 
+    const stateData = useMemo(() => {
+        if (countryIsoCode) {
+            console.log(iso2[countryIsoCode?.toUpperCase()])
+            return State.getStatesOfCountry(iso2[countryIsoCode?.toUpperCase()])
+        }
+
+    }, [countryIsoCode])
+
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <div style={{ margin: "1rem 0 1rem 1rem" }}>
@@ -598,14 +608,6 @@ const EditBeneficiary = () => {
                                                             </>
                                                             : ""
                                                     }
-                                                    {
-                                                        fieldInfoValidate("required_receiving_entity_fields", "province_state") && countryCode !== "USA"
-                                                        &&
-                                                        <FormGroup style={{ flex: 1, margin: 0 }}>
-                                                            <Label className="col-form-label" htmlFor="province_state">{t("Province/State")} <span className="req_star">*</span></Label>
-                                                            <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="province_state" id="province_state" type="text" placeholder='Province/State' value={basicExtras.province_state} onChange={handleBasicExtraChange} />
-                                                        </FormGroup>
-                                                    }
                                                 </div>
                                             </FormGroup>
                                             <FormGroup className="mb-3">
@@ -668,7 +670,7 @@ const EditBeneficiary = () => {
                                                                 disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="street" id="street" type="text" placeholder='Street' value={basicExtras.street} onChange={handleBasicExtraChange} />
                                                         </FormGroup>
                                                     }
-                                                    {(fieldInfoValidate("credit_party_identifiers_accepted", "province_state") && countryIsoCode === "USA") &&
+                                                    {(fieldInfoValidate("credit_party_identifiers_accepted", "province_state") || fieldInfoValidate("required_receiving_entity_fields", "province_state")) &&
                                                         <FormGroup style={{ flex: 1, margin: 0 }}>
                                                             <Label className="col-form-label" htmlFor="province_state">{t("Province State")} <span className="req_star">*</span></Label>
 
@@ -681,7 +683,7 @@ const EditBeneficiary = () => {
                                                                 iso_3={countryIsoCode}
                                                                 isState={true}
                                                                 title="Select Provice"
-                                                                stateData={USA_STATES}
+                                                                stateData={stateData}
                                                             />
 
                                                         </FormGroup>
