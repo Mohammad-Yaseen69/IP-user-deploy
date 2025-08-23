@@ -1,7 +1,7 @@
 import { Button, CardBody, CardFooter, FormGroup, Input, Label, Form } from "reactstrap";
 import 'react-phone-input-2/lib/style.css'
 import "./req_star.css"
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import CountryDropDown from "./CountryDropDown";
 import CitiesDropDown from "../CitiesDropDown";
@@ -19,12 +19,13 @@ import { serviceFieldInfoValidate } from "../../utils/Functions";
 import useBenCreateFunc from "../../hooks/BeneficiaryHooks/useBenCreateFunc";
 import { BeneficiaryRelation, friendsAndFamily, gendersData, idTypeData, occupations, beneficiaryInitialFormData, bankExtrasInitial } from "../../utils/Data";
 import PaymentChannelUI from "./PaymentChannelUI";
-import USA_STATES from "../../utils/Provices/usa.json"
+import { State } from "country-state-city"
+import iso2 from '../AddFunds/WalletFund/countries_iso2.json'
 
 
 
 
-const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, toggleSuccess, filteringCountries }) => {
+const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filteringCountries }) => {
     const { t } = useTranslation()
     const [active, setActive] = useState(5)
     const [totalCards, setTotalCards] = useState(1)
@@ -57,6 +58,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
 
 
     const [formData, setFormData] = useState(beneficiaryInitialFormData)
+
 
 
 
@@ -267,6 +269,16 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
         }
     }, [bankCountryCode])
 
+
+    const stateData = useMemo(() => {
+        if (countryIsoCode) {
+            console.log(iso2[countryIsoCode?.toUpperCase()])
+            return State.getStatesOfCountry(iso2[countryIsoCode?.toUpperCase()])
+        }
+
+    }, [countryIsoCode])
+
+
     const {
         setIsCountryInFocus,
         addresses,
@@ -373,13 +385,6 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                         </FormGroup>
                                                     </>
                                                     : ""
-                                            }
-                                            {
-                                                (fieldInfoValidate("required_receiving_entity_fields", "province_state")) && countryIsoCode !== "USA" &&
-                                                <FormGroup style={{ flex: 1, margin: 0 }}>
-                                                    <Label className="col-form-label" htmlFor="province_state">{t("Province/State")} <span className="req_star">*</span></Label>
-                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="province_state" id="province_state" type="text" placeholder='Province/State' value={basicExtras.province_state} onChange={handleBasicExtraChange} />
-                                                </FormGroup>
                                             }
                                         </div>
                                     </FormGroup>
@@ -611,7 +616,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                     <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="street" id="street" type="text" placeholder='Street' value={basicExtras.street} onChange={handleBasicExtraChange} />
                                                 </FormGroup>
                                             }
-                                            {(fieldInfoValidate("credit_party_identifiers_accepted", "province_state") && countryIsoCode === "USA") &&
+                                            {(fieldInfoValidate("credit_party_identifiers_accepted", "province_state") || (fieldInfoValidate("required_receiving_entity_fields", "province_state"))) &&
                                                 <FormGroup style={{ flex: 1, margin: 0 }}>
                                                     <Label className="col-form-label" htmlFor="province_state">{t("Province State")} <span className="req_star">*</span></Label>
 
@@ -624,7 +629,7 @@ const IndividualAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, 
                                                         iso_3={countryIsoCode}
                                                         isState={true}
                                                         title="Select Provice"
-                                                        stateData={USA_STATES}
+                                                        stateData={stateData}
                                                     />
 
                                                 </FormGroup>

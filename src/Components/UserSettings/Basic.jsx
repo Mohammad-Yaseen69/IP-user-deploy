@@ -371,18 +371,7 @@ const Basic = ({ isCollapsed, setIsCollapsed }) => {
                             readOnly={!isEditMode}
                             className={`form-control ${styles.input}`}
                         >
-                            <option value="" disabled>--Select-City--</option>
-                            {
-                                cities.length > 0
-                                    &&
-                                    cities[0].cities.length > 0
-                                    ?
-                                    cities[0].cities.map(city => (
-                                        <option value={city.name} key={city.id}>{city.name}</option>
-                                    ))
-                                    :
-                                    ""
-                            }
+                           
                         </select>
                     </div>
 

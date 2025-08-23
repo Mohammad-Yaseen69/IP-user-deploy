@@ -88,18 +88,6 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     // country
     const [countries, setCountries] = useState([])
     useEffect(() => {
-
-        const getAllowedCountries = async () => {
-            try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/country/get-all-receiving-country`, { headers: authHeader })
-                const dec = decryptData(res.data.data)
-                return dec?.Countries
-            } catch (error) {
-                return []
-            }
-        }
-
-
         const getCountries = async () => {
             setCountriesLoading(true)
             try {

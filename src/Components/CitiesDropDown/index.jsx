@@ -1,7 +1,9 @@
 import React, { useMemo, useRef, useState, useCallback, useEffect } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { useTranslation } from 'react-i18next';
-import citiesData from "./CitiesData.json"
+import { City } from 'country-state-city'
+import iso2 from "../AddFunds/WalletFund/countries_iso2.json"
+
 
 const CitiesDropDown = ({ country, userCity, setUserCity, disabled = false, styles = {}, iso_3 = "", isState, title = "Select City", stateData }) => {
     const { t } = useTranslation()
@@ -9,8 +11,12 @@ const CitiesDropDown = ({ country, userCity, setUserCity, disabled = false, styl
     const cityInputRef = useRef()
     const [searchTerm, setSearchTerm] = useState('');
 
-    const cities = useMemo(() => citiesData?.filter(city => city.iso3 === iso_3)?.[0]?.cities, [country])
 
+    const cities = useMemo(() => {
+        if (iso_3) {
+            return City.getCitiesOfCountry(iso2[iso_3?.toUpperCase()])
+        }
+    }, [country])
     const filtered = useMemo(() => {
         if (!searchTerm) return isState ? stateData : cities;
         return (isState ? stateData : cities)?.filter(item => item?.name?.toLowerCase()?.includes(searchTerm?.toLowerCase()))
@@ -108,7 +114,7 @@ const DropdownRenderItem = ({ item, setItem, setSearchTerm, isState }) => {
     return (
         <DropdownItem key={item.code} onClick={() => {
             if (isState) {
-                setItem(item?.name, item?.code?.replace("US-", ""))
+                setItem(item?.name, item?.isoCode?.replace("US-", ""))
             } else {
                 setItem(item?.name)
             }

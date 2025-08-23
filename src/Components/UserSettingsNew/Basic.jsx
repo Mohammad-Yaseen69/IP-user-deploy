@@ -185,7 +185,6 @@ const Basic = () => {
         }
     }
 
-    const cities = citiesData.filter(city => city.name.toLowerCase() === country?.toLowerCase())
 
     return (
         <Card className={styles.container} id='basic'>
@@ -360,17 +359,7 @@ const Basic = () => {
                         className={`form-control ${styles.input}`}
                     >
                         <option value="" disabled>--Select-City--</option>
-                        {
-                            cities.length > 0
-                                &&
-                                cities[0].cities.length > 0
-                                ?
-                                cities[0].cities.map(city => (
-                                    <option value={city.name} key={city.id}>{city.name}</option>
-                                ))
-                                :
-                                ""
-                        }
+                   
                     </select>
                 </div>
 
