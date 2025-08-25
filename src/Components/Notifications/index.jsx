@@ -3,6 +3,7 @@ import notf from "../topRight/notf.svg"
 import { Col } from "reactstrap";
 import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
+import { FaBell } from "react-icons/fa6";
 import axios from "axios";
 import Notification from "./Notification";
 
@@ -68,7 +69,7 @@ const Notifications = () => {
                 cursor: "pointer",
                 position: "relative"
             }} onClick={() => setShowDropDown(!showDropDown)}>
-                <img src={notf} alt="n" />
+                <FaBell size={23}/>
                 {
                     notifications.some(item => item?.status === "unread")
                     &&
