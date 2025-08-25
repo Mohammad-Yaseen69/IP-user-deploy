@@ -250,7 +250,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
 
     const getCurrency = async () => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/get-payer-details?payerId=${internationalData.payer?.id}&vendor=${internationalData.country?.vendor} `, {
+            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/get-payer-details?payerId=${internationalData.payer?.id}&vendor=${internationalData.payoutChannel?.vendor} `, {
                 headers: authHeader
             })
             const dec = await decryptData(res.data.data)
@@ -394,7 +394,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 avoid_balance: avoid_balance,
                 avoid_top_up_fee: internationalData.payment_type?.value === "card",
                 payment_method: internationalData.payment_type?.value,
-                vendor: internationalData.country?.vendor,
+                vendor: internationalData.payoutChannel?.vendor,
                 token: internationalData?.exchange_rate?.token,
             }
             const encrypted = encryptData(dataa)
@@ -653,7 +653,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 token: internationalData.quotation_details?.token,
             }
 
-            if (internationalData.country?.vendor === "thunes") {
+            if (internationalData.payoutChannel?.vendor === "thunes") {
                 payload = {
                     ...transaction_data,
                     type: codeType || internationalData.codeType
@@ -670,7 +670,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank") ? payload.data.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id : payload.data.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id
             }
             const enc = encryptData(payload)
-            const url = internationalData.country?.vendor === "thunes" ? `${process.env.REACT_APP_THUNES_API}/createTransaction/${internationalData.created_quotation?.QuotationID}` : `${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`
+            const url = internationalData.payoutChannel?.vendor === "thunes" ? `${process.env.REACT_APP_THUNES_API}/createTransaction/${internationalData.created_quotation?.QuotationID}` : `${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`
 
             const res = await axios.post(url, {
                 data: enc
@@ -815,7 +815,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             console.log(data)
             const enc = encryptData(data)
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/paypal/initiate-international-${internationalData.country?.vendor === "thunes" ? "payment" : "payout"}`,
+            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/paypal/initiate-international-${internationalData.payoutChannel?.vendor === "thunes" ? "payment" : "payout"}`,
                 { data: enc },
                 { headers: authHeader }
             )
@@ -938,7 +938,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                     updateInternationalData("showCard", true)
                     // getTopupFees()
                     //     .then((res) => {
-                    if (internationalData.country?.vendor === "thunes") {
+                    if (internationalData.payoutChannel?.vendor === "thunes") {
                         createQuotation(+String(internationalData.amount)?.replaceAll(",", ""))
                     } else {
                         setSubStep(prev => prev + 1)
@@ -947,7 +947,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                     // })
                 }
                 else if (internationalData.payment_type?.value === "paypal") {
-                    if (internationalData.country?.vendor === "thunes") {
+                    if (internationalData.payoutChannel?.vendor === "thunes") {
                         createQuotation(+String(internationalData.amount)?.replaceAll(",", ""))
                     } else {
                         setSubStep(prev => prev + 1)
@@ -961,7 +961,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                 getExchangeRateNew(res, () => { }, internationalData.wallet?._id, internationalData?.wallet?.currency?.code, false, setLoading)
                                     .then(() => {
                                         setTimeout(() => {
-                                            if (internationalData.country?.vendor === "thunes") {
+                                            if (internationalData.payoutChannel?.vendor === "thunes") {
                                                 createQuotation(res)
                                             } else {
                                                 setSubStep(prev => prev + 1)
@@ -1008,7 +1008,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
         try {
             let data;
 
-            if (internationalData.country?.vendor === "thunes") {
+            if (internationalData.payoutChannel?.vendor === "thunes") {
                 data = new FormData()
                 data.append("token", internationalData.created_transaction?.token)
                 data.append("otp", otp)
@@ -1027,7 +1027,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
 
             let res;
 
-            if (internationalData.country?.vendor === "thunes") {
+            if (internationalData.payoutChannel?.vendor === "thunes") {
                 res = await axios.post(`${process.env.REACT_APP_THUNES_API}/confirmTransaction`, data, {
                     headers: authHeader
                 })

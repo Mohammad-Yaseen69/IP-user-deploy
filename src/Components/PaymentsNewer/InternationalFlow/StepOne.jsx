@@ -186,7 +186,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
             return data?.services.some(j => {
                 return j.id === i.id
             })
-        })
+        }).map((item) => ({ ...item, vendor: data?.services?.find(s => s.id === item.id)?.method?.split(" - ")?.[1]?.toLowerCase() }))
     }, [data?.services])
 
     useEffect(() => {

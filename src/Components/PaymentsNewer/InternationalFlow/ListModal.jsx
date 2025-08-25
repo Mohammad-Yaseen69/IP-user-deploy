@@ -44,9 +44,7 @@ const ListModal = ({ isOpen, toggle, content, onSelectHandler, searchable = fals
     }, [])
 
     useEffect(() => {
-        console.log("yes yes bro")
         if(content.list?.length === 1){
-            console.log("yes bro")
             setCurrent(content?.list[0])
         }   
     },[content])
