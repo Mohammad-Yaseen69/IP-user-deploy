@@ -167,7 +167,7 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
     //     }
     // }, [complete])
 
-    const [total, setTotal] = useState(0)
+    const [conversionFailed, setConversionFailed] = useState(false)
 
     const confirmConversion = () => {
         setSaving(true)
@@ -191,16 +191,16 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
                 })
                 .catch(err => {
                     const decrypted = decryptData(err.response.data.data)
-                    console.log(decrypted)
-                    if(decrypted.message.toLowerCase() === "feature not available!"){
-                        toast.error("Currency conversion not available in your country at the moment,  please try again later")
+                    setConversionFailed(true)
+                    if (decrypted.message.toLowerCase() === "feature_not_allowed") {
+                        toast.error("Currency conversion not available in your country at the moment,  please try again later")
                         return
                     }
                     const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
                     if (error) {
                         toast.error(error)
                     } else {
-                        toast.error("We cannot process your request at the moment, please try again later.")
+                        toast.error("We cannot process your request at the moment, please try again later.")
                     }
                 })
                 .finally(() => {
@@ -319,7 +319,7 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
                                 complete
                                 &&
                                 <p style={{ marginBottom: "0", fontSize: "1.1rem", fontWeight: 500, color: "white" }}>
-                                    {t("Conversion Confirmed")}
+                                    {saving ? t("Loading") + '...' : conversionFailed ? t("Conversion Failed") : t("Conversion Confirmed")}
                                 </p>
                             }
                         </div>

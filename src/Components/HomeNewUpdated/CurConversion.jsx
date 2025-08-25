@@ -7,7 +7,6 @@ import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import ConversionModal from "./ConversionModal";
 import { UserContext } from "../../Context/UserContext";
-import conversion from "./files/conv.svg"
 import styles from "./styles/CurConversion.module.css"
 import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
 import { formatCurrency } from "../../Helper/AmountFormat";
@@ -140,12 +139,12 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
         }
     }, [enteredCurrency, resultCurrency, userCurrency, exchangedCurrency])
 
-    const handleChangeNumber = (event) => {
-        const charCode = event.charCode;
-        if (!/\d/.test(String.fromCharCode(charCode))) {
-            event.preventDefault();
-        }
-    }
+    // const handleChangeNumber = (event) => {
+    //     const charCode = event.charCode;
+    //     if (!/\d/.test(String.fromCharCode(charCode))) {
+    //         event.preventDefault();
+    //     }
+    // }
 
     const filteredWallets = useMemo(() => {
         return userWallets
