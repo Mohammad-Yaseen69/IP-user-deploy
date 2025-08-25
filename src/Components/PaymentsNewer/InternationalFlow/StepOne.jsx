@@ -199,12 +199,11 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
         }
     }, [channels])
 
-
     // subservices
     useEffect(() => {
         const getPayers = async () => {
             try {
-                const dataa = { country: data?.country.alpha3, service: data?.payoutChannel?.name, vendor: data?.country?.vendor }
+                const dataa = { country: data?.country.alpha3, service: data?.payoutChannel?.name, vendor: data.payoutChannel?.vendor }
                 const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/payment/payers`, dataa, { headers: authHeader })
                 const dec = decryptData(res.data.data)
                 console.log(dec)
