@@ -102,7 +102,6 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                         ...coun,
                         id: dbCont?._id,
                         currency,
-                        vendor: dbCont?.vendor
                     }
                 })
 

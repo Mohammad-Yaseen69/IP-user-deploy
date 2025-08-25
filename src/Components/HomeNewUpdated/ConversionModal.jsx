@@ -1,18 +1,16 @@
-import { Button, Modal, ModalBody, ModalHeader, } from "reactstrap"
+import { Modal, ModalBody, ModalHeader, } from "reactstrap"
 import styles from "./styles/ConversionModal.module.css"
 import faded_lines from "../PaymentsNewer/files/faded_lines.png"
 import { useRef, useState, useEffect, useContext } from "react";
 import Draggable from "react-draggable";
 import { Check, ChevronRight } from "react-feather";
 import { useTranslation } from "react-i18next";
-import otp_icon from "../PaymentsNewer/files/otp_icon.png"
 import c_vid from "../PaymentsNewer/files/confirm.mp4"
 import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { InactivityContext } from "../../InactivityWrapper";
-import { toast } from "react-toastify";
 import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
 
 const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency, exchangeCurrency, exchangePrice, setEnteredCurrency, setResultCurrency, setUserCurrency, setExchangedCurrency, exchangeFee, fxDet }) => {
@@ -46,8 +44,8 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
     const [verified, setVerified] = useState(false);
     const [timer, setTimer] = useState(3);
     const [resendTimer, setResendTimer] = useState(90);
-    const [isAnyFieldEmpty, setIsAnyFieldEmpty] = useState(true);
     const [saving, setSaving] = useState(false)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setOTPValues(Array(numberOfFields).fill(''))
@@ -56,7 +54,6 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
         setResendTimer(0)
         setStep(1)
         setComplete(false)
-        setIsAnyFieldEmpty(true)
     }, [isOpen])
 
     useEffect(() => {
@@ -94,33 +91,33 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
         }
     }, [verified, resendTimer]);
 
-    const handleInputChange = (index, value) => {
-        let numericValue = value.replace(/[^0-9]/g, '');
-        if (numericValue.length > 1) {
-            numericValue = numericValue.slice(-1);
-        }
-        let newOTPValues = [...otpValues];
-        newOTPValues[index] = numericValue;
-        setOTPValues(newOTPValues);
-        if (numericValue && index < numberOfFields - 1) {
-            inputRefs.current[index + 1].focus();
-        }
-        const isEmpty = newOTPValues.some(val => val === '');
-        setIsAnyFieldEmpty(isEmpty);
-    };
+    // const handleInputChange = (index, value) => {
+    //     let numericValue = value.replace(/[^0-9]/g, '');
+    //     if (numericValue.length > 1) {
+    //         numericValue = numericValue.slice(-1);
+    //     }
+    //     let newOTPValues = [...otpValues];
+    //     newOTPValues[index] = numericValue;
+    //     setOTPValues(newOTPValues);
+    //     if (numericValue && index < numberOfFields - 1) {
+    //         inputRefs.current[index + 1].focus();
+    //     }
+    //     const isEmpty = newOTPValues.some(val => val === '');
+    //     setIsAnyFieldEmpty(isEmpty);
+    // };
 
-    const handleInputKeyDown = (index, event) => {
-        if (event.key === 'Backspace') {
-            if (otpValues[index] === '' && index > 0) {
-                inputRefs.current[index - 1].focus();
-            } else if (index > 0) {
-                const newOTPValues = [...otpValues];
-                newOTPValues[index] = '';
-                setOTPValues(newOTPValues);
-                setIsAnyFieldEmpty(true)
-            }
-        }
-    };
+    // const handleInputKeyDown = (index, event) => {
+    //     if (event.key === 'Backspace') {
+    //         if (otpValues[index] === '' && index > 0) {
+    //             inputRefs.current[index - 1].focus();
+    //         } else if (index > 0) {
+    //             const newOTPValues = [...otpValues];
+    //             newOTPValues[index] = '';
+    //             setOTPValues(newOTPValues);
+    //             setIsAnyFieldEmpty(true)
+    //         }
+    //     }
+    // };
 
     const handleDrag = (e, ui) => {
         const { x } = ui;
@@ -167,7 +164,6 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
     //     }
     // }, [complete])
 
-    const [conversionFailed, setConversionFailed] = useState(false)
 
     const confirmConversion = () => {
         setSaving(true)
@@ -191,23 +187,22 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
                 })
                 .catch(err => {
                     const decrypted = decryptData(err.response.data.data)
-                    setConversionFailed(true)
                     if (decrypted.message.toLowerCase() === "feature_not_allowed") {
-                        toast.error("Currency conversion not available in your country at the moment,  please try again later")
+                        setError("Currency conversion not available in your country at the moment,  please try again later")
                         return
                     }
                     const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
                     if (error) {
-                        toast.error(error)
+                        setError(error)
                     } else {
-                        toast.error("We cannot process your request at the moment, please try again later.")
+                        setError("We cannot process your request at the moment, please try again later.")
                     }
                 })
                 .finally(() => {
                     setSaving(false)
                 })
         } else {
-            toast.error(t("Insufficient Balance"))
+            setError(t("Insufficient Balance"))
         }
     }
 
@@ -220,8 +215,12 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
     return (
         <Modal isOpen={isOpen} toggle={() => {
             toggleModal()
+            setError(null)
         }} style={{ maxWidth: "500px", margin: "0 auto", height: "600px" }}>
-            {/* <ModalHeader toggle={toggleModal}>Currency Conversion</ModalHeader> */}
+            <ModalHeader toggle={() => {
+                toggleModal()
+                setError(null)
+            }}>{("Currency Conversion")}</ModalHeader>
             <ModalBody style={{ padding: step > 1 ? "0px" : "1rem", overflow: "hidden" }}>
                 {
                     step === 1
@@ -269,60 +268,63 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
                                 <p style={{ whiteSpace: "nowrap" }}>{Number(fxDet?.total)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {currency}</p>
                             </div>
                         </div>
-                        <div ref={divRef}
-                            style={{
-                                textAlign: "center",
-                                position: "relative",
-                                background: "linear-gradient(0deg, rgba(11, 13, 65, 0.16), rgba(11, 13, 65, 0.16)), radial-gradient(182.3% 794.57% at 91.57% -107.9%, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
-                                backgroundBlendMode: "color-burn,normal",
-                                boxShadow: "0px 6px 13px -5.4094px rgba(89, 38, 240, 0.17)",
-                                borderRadius: "16px",
-                                padding: "1rem",
-                                width: "100%",
-                                margin: "2rem auto 0",
-                                overflow: "hidden",
-                                pointerEvents: complete ? "none" : "all"
-                            }}
-                        >
-                            <img src={faded_lines} alt="faded" style={{ position: "absolute", left: "-130px", display: complete ? "none" : "inherit", width: "130px" }} ref={svgRef} />
-                            <Draggable axis="x" bounds="parent" onDrag={handleDrag}>
-                                <div
-                                    style={{
-                                        position: "absolute",
-                                        top: "10px",
-                                        left: "10px",
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        border: "3px solid white",
-                                        height: "40px",
-                                        width: "40px",
-                                        borderRadius: "16px",
-                                        cursor: "pointer",
-                                        zIndex: 1
-                                    }}
-                                    ref={chevRef}
-                                >
-                                    {
-                                        complete
-                                            ?
-                                            <Check color="white" size={30} />
-                                            :
-                                            <ChevronRight color="white" size={30} />
-                                    }
-                                </div>
-                            </Draggable>
-                            <p style={{ marginBottom: "0", fontSize: "1.1rem", fontWeight: 500, color: "white", display: complete ? "none" : "inherit" }} ref={pRef}>
-                                {t("Slide To Confirm")}
-                            </p>
-                            {
-                                complete
-                                &&
-                                <p style={{ marginBottom: "0", fontSize: "1.1rem", fontWeight: 500, color: "white" }}>
-                                    {saving ? t("Loading") + '...' : conversionFailed ? t("Conversion Failed") : t("Conversion Confirmed")}
+                        {error ?
+                            <p style={{ color: "red", fontWeight: 600, fontSize: "14px", textAlign: "center", marginBottom: "0px", marginTop: "20px" }}> {error} </p> :
+                            <div ref={divRef}
+                                style={{
+                                    textAlign: "center",
+                                    position: "relative",
+                                    background: "linear-gradient(0deg, rgba(11, 13, 65, 0.16), rgba(11, 13, 65, 0.16)), radial-gradient(182.3% 794.57% at 91.57% -107.9%, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
+                                    backgroundBlendMode: "color-burn,normal",
+                                    boxShadow: "0px 6px 13px -5.4094px rgba(89, 38, 240, 0.17)",
+                                    borderRadius: "16px",
+                                    padding: "1rem",
+                                    width: "100%",
+                                    margin: "2rem auto 0",
+                                    overflow: "hidden",
+                                    pointerEvents: complete ? "none" : "all"
+                                }}
+                            >
+                                <img src={faded_lines} alt="faded" style={{ position: "absolute", left: "-130px", display: complete ? "none" : "inherit", width: "130px" }} ref={svgRef} />
+                                <Draggable axis="x" bounds="parent" onDrag={handleDrag}>
+                                    <div
+                                        style={{
+                                            position: "absolute",
+                                            top: "10px",
+                                            left: "10px",
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            border: "3px solid white",
+                                            height: "40px",
+                                            width: "40px",
+                                            borderRadius: "16px",
+                                            cursor: "pointer",
+                                            zIndex: 1
+                                        }}
+                                        ref={chevRef}
+                                    >
+                                        {
+                                            complete
+                                                ?
+                                                <Check color="white" size={30} />
+                                                :
+                                                <ChevronRight color="white" size={30} />
+                                        }
+                                    </div>
+                                </Draggable>
+                                <p style={{ marginBottom: "0", fontSize: "1.1rem", fontWeight: 500, color: "white", display: complete ? "none" : "inherit" }} ref={pRef}>
+                                    {t("Slide To Confirm")}
                                 </p>
-                            }
-                        </div>
+                                {
+                                    complete
+                                    &&
+                                    <p style={{ marginBottom: "0", fontSize: "1.1rem", fontWeight: 500, color: "white" }}>
+                                        {saving ? t("Loading") + '...' : t("Conversion Confirmed")}
+                                    </p>
+                                }
+                            </div>
+                        }
                     </div>
                 }
 
