@@ -88,7 +88,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
         const getCountries = async () => {
             setCountriesLoading(true)
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/countries/${userDetails?.country?.country_iso_code}`, { headers: authHeader })
+                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/countries/${userDetails?.country?.country_iso_code}`, { headers: authHeader, timeout: 0 })
                 const decrypted = decryptData(res.data.data)
 
                 const countriesArray = allCountries.filter((item) => {
