@@ -16,7 +16,6 @@ import bd from "../files/bd.png"
 import cp from "../files/cp.png"
 import mw from "../files/mw.png"
 import pc from "../files/pc.png"
-import { encryptData } from "../../../Helper/EssentilaMethods/Encryption"
 import InstaPayLoader from "../../Loader"
 import allCurrencies from "./Currencies.json"
 import PaymentTypesModal from "./PaymentTypesModal"
@@ -27,7 +26,6 @@ import bd_a from "../../Settings/WithdrawalsNew/files/bd_a.png"
 import { useLocation } from "react-router"
 import { toast } from "react-toastify"
 import { possibleErrors } from "../OTPConfirmation"
-import CurrencyInput from 'react-currency-input-field';
 import { formatCurrency } from "../../../Helper/AmountFormat"
 import { countriesInDiffLangs } from "../../../Data/CountriesWithTranslations/countries"
 import CitiesData from "../../CitiesDropDown/CitiesData.json"
@@ -42,11 +40,10 @@ export const currencies = allCurrencies.map(item => {
     }
 })
 
-let timeout;
 let api_timeout;
 
 const StepOne = ({ data, dataHandler, getExchangeRate }) => {
-    const { authHeader, allowedCountries, userDetails, userWallets } = useContext(UserContext)
+    const { authHeader, userDetails, userWallets } = useContext(UserContext)
     const { t, i18n } = useTranslation()
     const [modals, setModals] = useState({
         country: false,
@@ -204,7 +201,6 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
         const getPayers = async () => {
             try {
                 const dataa = { country: data?.country.alpha3, service: data?.payoutChannel?.name, vendor: data?.country?.vendor }
-                const encrypted = encryptData(dataa)
                 const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/payment/payers`, dataa, { headers: authHeader })
                 const dec = decryptData(res.data.data)
                 console.log(dec)
@@ -318,7 +314,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
 
     useEffect(() => {
         if (service_id && channels.length > 0) {
-            const service = channels.find(item => item.id == service_id)
+            const service = channels.find(item => item.id === service_id)
             toast.success(service)
             dataHandler("payoutChannel", service)
         }
@@ -326,7 +322,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
 
     useEffect(() => {
         if (payer_id && data.payers?.length > 0) {
-            const payer = data.payers.find(item => item?.id == payer_id)
+            const payer = data.payers.find(item => item?.id === payer_id)
             dataHandler("payer", payer)
         }
     }, [data.payers, payer_id, data.payoutChannel])
@@ -456,22 +452,22 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                             // textAlign: "center"
                         }}>
                             {
-                                data?.exchange_rate_error == "zero"
+                                data?.exchange_rate_error === "zero"
                                 &&
                                 t(`Amount needs to be at least 1.00 ${data?.conversion_in}.`)
                             }
                             {
-                                data?.exchange_rate_error == "exceed send"
+                                data?.exchange_rate_error === "exceed send"
                                 &&
                                 t(`Amount needs to be maximum of ${data?.exchange_rate?.limits_used?.[`${limitType}_sending_limit_used`]?.toFixed(2)} ${data?.conversion_in}`)
                             }
                             {
-                                data?.exchange_rate_error == "exceed receive"
+                                data?.exchange_rate_error === "exceed receive"
                                 &&
                                 t(`Amount needs to be maximum of ${userDetails?.used_limits?.daily_receiving_limit} ${data.conversion_in}`)
                             }
                             {
-                                data?.exchange_rate_error == "Invalid Amount Fee"
+                                data?.exchange_rate_error === "Invalid Amount Fee"
                                 &&
                                 t(`Amount needs to be greater than ${data?.exchange_rate?.fee?.amount} ${data?.conversion_in}`)
                             }
@@ -512,7 +508,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                         :
                         <div className={styles.exchange_rate}>
                             {
-                                data?.exchange_rate?.receiver?.currency == data?.currency
+                                data?.exchange_rate?.receiver?.currency === data?.currency
                                     ?
                                     ""
                                     :
