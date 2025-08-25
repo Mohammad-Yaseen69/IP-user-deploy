@@ -85,7 +85,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     // country
     const [countries, setCountries] = useState([])
     useEffect(() => {
-        const getCountries = async () => {
+        const getCountries = async (call) => {
             setCountriesLoading(true)
             try {
                 const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/countries/${userDetails?.country?.country_iso_code}`, { headers: authHeader, timeout: 0 })
@@ -110,6 +110,10 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                 setCountries(allowed?.sort((a, b) => String(a?.name)?.localeCompare(b?.name)))
             } catch (error) {
                 console.log(error)
+                if (call === 1) {
+                    getCountries(2)
+                    return;
+                }
                 dataHandler("error", "We had some trouble fetching countries, please refresh your page or clear browser cache for secure International Transfer.")
                 return null;
             }
@@ -117,7 +121,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                 setCountriesLoading(false)
             }
         }
-        getCountries()
+        getCountries(1)
     }, [])
 
     useEffect(() => {
