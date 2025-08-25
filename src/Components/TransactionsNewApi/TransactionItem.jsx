@@ -225,7 +225,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
 
                 {!vvc &&
                     <>
-                        <div>{service_name_formatter(item?.service_type)}</div>
+                        <div>{item?.service_type === "topup" && "Wallet"} {service_name_formatter(item?.service_type)}</div>
                         <div>{item?.reference_id}</div>
                         <div>{displayAsText}</div>
                         <div>{displayName?.slice(0, 20)}</div>
