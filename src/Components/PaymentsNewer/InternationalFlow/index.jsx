@@ -269,7 +269,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             try {
                 const service_name = internationalData?.payoutChannel?.value === "bank" ? "international_bank_transfer" : internationalData?.payoutChannel?.value === "mobile" ? "international_mobile_wallet" : internationalData?.payoutChannel?.value === "card" ? "international_card_payment" : internationalData?.payoutChannel?.value === "cash" ? "international_cash_pickup" : ""
 
-                const url = `${process.env.REACT_APP_IP_DEV_API}/api/payment/markup-rates?from=${internationalData.currency_wallet?.currency?.code}&to=${destinationCurrency}&amount=${+String(amount)?.replaceAll(",", "")}&fromOrTo=${fromOrTo}&service_name=${service_name}&account_id=${userDetails?._id}&payer_id=${internationalData.payer?.id}&service_id=${internationalData.payoutChannel?.id}&vendor=${internationalData?.country?.vendor}`
+                const url = `${process.env.REACT_APP_IP_DEV_API}/api/payment/markup-rates?from=${internationalData.currency_wallet?.currency?.code}&to=${destinationCurrency}&amount=${+String(amount)?.replaceAll(",", "")}&fromOrTo=${fromOrTo}&service_name=${service_name}&account_id=${userDetails?._id}&payer_id=${internationalData.payer?.id}&service_id=${internationalData.payoutChannel?.id}&vendor=${internationalData.payoutChannel?.vendor}`
 
                 const res = await axios.get(url, { headers: authHeader })
 
