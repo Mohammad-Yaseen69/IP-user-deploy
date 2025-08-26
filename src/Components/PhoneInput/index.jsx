@@ -12,7 +12,7 @@ function extractNumber(value) {
 const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabled = false, phone = "", customStyles = {}, error, setError, inputStyles, disableDropdown }) => {
     const [selectedCountry, setSelectedCountry] = useState({})
     const [number, setNumber] = useState("")
-    const {t} = useTranslation()
+    const { t } = useTranslation()
 
     // useEffect(() => {
     //     if (!phone) {

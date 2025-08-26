@@ -276,7 +276,7 @@
         "dial_code": "+224"
     },
     "GNB": {
-        "maxLength": 7,
+        "maxLength": 9,
         "dial_code": "+245"
     },
     "GUY": {
