@@ -32,7 +32,7 @@
         "dial_code": "+374"
     },
     "AUS": {
-        "maxLength": 9,
+        "maxLength": 15,
         "dial_code": "+61"
     },
     "AUT": {
@@ -60,7 +60,7 @@
         "dial_code": "+1-246"
     },
     "BLR": {
-        "maxLength": 9,
+        "maxLength": 10,
         "dial_code": "+375"
     },
     "BEL": {
@@ -140,7 +140,7 @@
         "dial_code": "+56"
     },
     "CHN": {
-        "maxLength": 11,
+        "maxLength": 12,
         "dial_code": "+86"
     },
     "COL": {
@@ -160,7 +160,7 @@
         "dial_code": "+506"
     },
     "HRV": {
-        "maxLength": 9,
+        "maxLength": 12,
         "dial_code": "+385"
     },
     "CUB": {
@@ -168,11 +168,11 @@
         "dial_code": "+53"
     },
     "CYP": {
-        "maxLength": 8,
+        "maxLength": 11,
         "dial_code": "+357"
     },
     "CZE": {
-        "maxLength": 9,
+        "maxLength": 12,
         "dial_code": "+420"
     },
     "COD": {
@@ -232,7 +232,7 @@
         "dial_code": "+679"
     },
     "FIN": {
-        "maxLength": 10,
+        "maxLength": 12,
         "dial_code": "+358"
     },
     "FRA": {
@@ -252,7 +252,7 @@
         "dial_code": "+995"
     },
     "DEU": {
-        "maxLength": 11,
+        "maxLength": 13 ,
         "dial_code": "+49"
     },
     "GHA": {
@@ -316,7 +316,7 @@
         "dial_code": "+964"
     },
     "IRL": {
-        "maxLength": 9,
+        "maxLength": 11,
         "dial_code": "+353"
     },
     "ISR": {
@@ -324,7 +324,7 @@
         "dial_code": "+972"
     },
     "ITA": {
-        "maxLength": 10,
+        "maxLength": 	11,
         "dial_code": "+39"
     },
     "JAM": {
@@ -332,7 +332,7 @@
         "dial_code": "+1-876"
     },
     "JPN": {
-        "maxLength": 10,
+        "maxLength": 13,
         "dial_code": "+81"
     },
     "JOR": {
@@ -356,7 +356,7 @@
         "dial_code": "+850"
     },
     "KOR": {
-        "maxLength": 11,
+        "maxLength": 17,
         "dial_code": "+82"
     },
     "KWT": {
@@ -368,7 +368,7 @@
         "dial_code": "+996"
     },
     "LAO": {
-        "maxLength": 9,
+        "maxLength": 10,
         "dial_code": "+856"
     },
     "LVA": {
@@ -400,7 +400,7 @@
         "dial_code": "+370"
     },
     "LUX": {
-        "maxLength": 9,
+        "maxLength": 11,
         "dial_code": "+352"
     },
     "MDG": {
@@ -476,7 +476,7 @@
         "dial_code": "+31"
     },
     "NZL": {
-        "maxLength": 9,
+        "maxLength": 10,
         "dial_code": "+64"
     },
     "NIC": {
@@ -528,7 +528,7 @@
         "dial_code": "+48"
     },
     "PRT": {
-        "maxLength": 9,
+        "maxLength": 11,
         "dial_code": "+351"
     },
     "QAT": {
@@ -736,7 +736,7 @@
         "dial_code": "+260"
     },
     "ZWE": {
-        "maxLength": 9,
+        "maxLength": 10,
         "dial_code": "+263"
     },
     "ALA": {
@@ -816,7 +816,7 @@
         "dial_code": "+672"
     },
     "VAT": {
-        "maxLength": 6,
+        "maxLength": 11,
         "dial_code": "+379"
     },
     "HKG": {
@@ -916,7 +916,7 @@
         "dial_code": "+47"
     },
     "TKL": {
-        "maxLength": 4,
+        "maxLength": 5,
         "dial_code": "+690"
     },
     "TCA": {
