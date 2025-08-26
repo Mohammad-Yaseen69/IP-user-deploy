@@ -308,7 +308,7 @@
         "dial_code": "+62"
     },
     "IRN": {
-        "maxLength": 10,
+        "maxLength": 11,
         "dial_code": "+98"
     },
     "IRQ": {
