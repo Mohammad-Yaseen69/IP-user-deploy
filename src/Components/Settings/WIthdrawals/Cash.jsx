@@ -4,8 +4,9 @@ import { FormGroup, Input, Label } from 'reactstrap'
 import { service_name_formatter } from '../../TransactionsNewApi/TransactionItem'
 import InstaPayLoader from '../../Loader'
 import { UserContext } from '../../../Context/UserContext'
+import NeemaBenExtrasFields from '../../AddBeneficiary/NeemaBenExtrasFields'
 
-const Cash = ({ values, changeHandler, isEditMode, payers, cashExtras, serviceFieldInfoValidate, services, handleCashxtraChange, payerLoading, setBankError, bankError }) => {
+const Cash = ({ values, changeHandler, isEditMode, payers, cashExtras, serviceFieldInfoValidate, services, handleCashxtraChange, payerLoading, setBankError, bankError, basicExtras, fieldInfoValidate, setBasicExtras, handleBasicExtraChange, alpha3, country }) => {
     const { t } = useTranslation()
     useEffect(() => {
         if (payers.length === 1) {
@@ -91,7 +92,7 @@ const Cash = ({ values, changeHandler, isEditMode, payers, cashExtras, serviceFi
                                     </FormGroup>
                                     {
                                         Object.keys(cashExtras)?.map(item => (
-                                            serviceFieldInfoValidate(services?.find(item => item?.name?.toLowerCase()?.includes("cash")), "credit_party_identifiers_accepted", item)
+                                            serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("cash")), "credit_party_identifiers_accepted", item)
                                             &&
                                             <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                 <Label className="col-form-label">{t(service_name_formatter(item))} <span className="req_star">*</span></Label>
@@ -99,6 +100,15 @@ const Cash = ({ values, changeHandler, isEditMode, payers, cashExtras, serviceFi
                                             </FormGroup>
                                         ))
                                     }
+
+                                    <NeemaBenExtrasFields
+                                        basicExtras={basicExtras}
+                                        country={country}
+                                        countryIsoCode={alpha3}
+                                        fieldInfoValidate={fieldInfoValidate}
+                                        handleBasicExtraChange={handleBasicExtraChange}
+                                        setBasicExtras={setBasicExtras}
+                                    />
                                 </div>
                             }
                         </>

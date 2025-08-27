@@ -140,6 +140,40 @@ export const bankExtrasInitial = {
     country_iso_code: "",
 }
 
+
+export const basicExtrasInitial = {
+    middlename: "",
+    id_type: "NATIONAL_ID",
+    id_number: "",
+    province_state: "",
+    houseNumber: "",
+    street: "",
+    state_name: ""
+}
+
+
+export const withdrawlsFields = {
+    bank_iban: "",
+    bank_account_number: "",
+    bank_name: "",
+    bank_branch_name: "",
+    bank_branch_street: "",
+    bank_city: "",
+    bank_province: "",
+    bank_postal_code: "",
+    bank_payer: "",
+    mobile_money_provider: "",
+    mobile_wallet_name: "",
+    mobile_wallet_account_number: "",
+    mobile_payer: "",
+    crypto_currency: "",
+    crypto_wallet_address: "",
+    crypto_payer: "",
+    document_type: "",
+    document_number: "",
+    cash_payer: "",
+}
+
 export const iso2Toiso3Convert = (iso2 = "") => {
     const country = countries.find(item => item.code.toLowerCase() === iso2?.toLowerCase())
     const alpha3 = countriesjson.find(item => item.name.toLowerCase() === country?.name?.toLowerCase() || item.name.toLowerCase().includes(country?.name?.toLowerCase()))?.alpha3

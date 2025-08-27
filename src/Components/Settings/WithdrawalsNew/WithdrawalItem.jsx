@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from "react"
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
 import styles from "./styles/WithdrawalItem.module.css"
 import { useTranslation } from "react-i18next"
 import { UserContext } from "../../../Context/UserContext"
@@ -10,8 +10,7 @@ import bd_a from "./files/bd_a.png"
 import cp_a from "./files/cp_a.png"
 import mw_a from "./files/mw_a.png"
 import pc_a from "./files/pc_a.png"
-import { Check, MoreHorizontal, Plus, X } from "react-feather"
-import CountryDropDown from "../../AddBeneficiary/CountryDropDown"
+import { Check, MoreHorizontal, Plus } from "react-feather"
 import axios from "axios"
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import InstaPayLoader from "../../Loader"
@@ -28,84 +27,57 @@ import Switch from "../Switch"
 import SuccessModal from "../../AddBeneficiary/SuccessModal"
 import { useLocation, useNavigate } from "react-router"
 import CountryBasedPhone from "../../PhoneInput/PhoneNumberBasedOnCountry.json"
+import useChannels from "../../../hooks/BeneficiaryHooks/useChannels"
+import { bankExtrasInitial, basicExtrasInitial, withdrawlsFields } from "../../../utils/Data"
 
 
 const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdrawal, index }) => {
     const { t } = useTranslation()
     const { userDetails, authHeader, getWithdrawals, setMissingTabsData } = useContext(UserContext)
     const [country, setCountry] = useState(null)
-    const [services, setServices] = useState([])
     const [current, setCurrent] = useState(null)
     const [configured, setConfigured] = useState([])
     const [serviceLoading, setServiceLoading] = useState(false)
-    const [fieldsInfo, setFieldsInfo] = useState(null)
-
-    useEffect(() => {
-        setServiceLoading(true)
-        const getCountryFields = async (service) => {
-            try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/thunes/get-required-fields-by-country/${country?.alpha3}/${service?.id}/C2C`, {
-                    headers: authHeader
-                });
-
-                const dec = decryptData(res.data.data);
-                setFieldsInfo(prev => ({ ...prev, [service?.name?.split(" ")?.[0]]: dec?.data }))
-            } catch (error) {
-                const dec = decryptData(error.response.data.data)
-                console.log(dec)
-            }
-        }
-        const getServices = async () => {
-            setFieldsInfo(null)
-            try {
-                const servicesResponse = await axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country?.alpha3}`, { headers: authHeader })
-                const decrypted = decryptData(servicesResponse.data.data)
-                setServices(decrypted);
-                setCurrent(null)
-                if (decrypted?.length > 0) {
-                    for (const ser of decrypted) {
-                        getCountryFields(ser)
-                    }
-                }
-            } catch (error) {
-                setServices([])
-            }
-            finally {
-                setServiceLoading(false)
-            }
-        }
-        if (country) {
-            getServices()
-        }
-    }, [country])
-
+    const { fieldsInfo, services } = useChannels({ setLoading: setServiceLoading, countryIsoCode: country?.alpha3, setCurrent })
     const serviceFieldInfoValidate = (service, field_name, sub_field_name) => {
         if (fieldsInfo === null) return false;
         let isInThere = false;
 
-        if (fieldsInfo?.[service?.name]?.[field_name]?.some(item => item == sub_field_name)) {
+
+        if (fieldsInfo?.[service?.method?.split(" ")?.[0]]?.[field_name]?.some(item => item.name === sub_field_name)) {
             isInThere = true
+        }
+        return isInThere;
+    }
+
+    const fieldInfoValidate = (field_name, sub_field_name) => {
+        if (fieldsInfo === null) return false;
+        let isInThere = false;
+        for (const service in fieldsInfo) {
+            if (fieldsInfo[service]?.[field_name]?.some(item => item.name === sub_field_name)) {
+                isInThere = true
+                break
+            }
         }
 
         return isInThere;
     }
 
-    // bank extra fields
-    const [bankExtras, setBankExtras] = useState({
-        cbu: "",
-        account_type: "",
-        bsb_number: "",
-        branch_number: "",
-        swift_bic_code: "",
-        routing_code: "",
-        entity_tt_id: "",
-        ifs_code: "",
-        clabe: "",
-        msisdn: "",
-        sort_code: ""
-    })
+    const [bankExtras, setBankExtras] = useState(bankExtrasInitial)
 
-    // .replace(/[^a-zA-Z0-9]/g, '')
+    const [basicExtras, setBasicExtras] = useState(basicExtrasInitial)
+
+
+    const handleBasicExtraChange = (e) => {
+        const { value, name } = e.target;
+        setBasicExtras(prev => {
+            return {
+                ...prev,
+                [name]: value
+            }
+        })
+    }
+
     const handleBankExtraChange = (e) => {
         const { value, name } = e.target;
         setBankExtras(prev => {
@@ -115,10 +87,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             }
         })
     }
-    // bank extra fields
 
-
-    // mobile extra fields
     const [mobileExtras, setMobileExtras] = useState({
         msisdn: "",
         account_number: "",
@@ -128,16 +97,6 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
         iban: ""
     })
 
-    const handleMobileExtraChange = (e) => {
-        const { value, name } = e.target;
-        setMobileExtras(prev => {
-            return {
-                ...prev,
-                [name]: value
-            }
-        })
-    }
-    // mobile extra fields
 
 
     // card extra fields
@@ -205,11 +164,15 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
     ]), [userDetails])
 
     const channels = useMemo(() => {
-        return payoutChannelData.filter(i => {
-            return services.some(j => {
-                return j.id === i.id
-            })
-        })
+        if (services.length > 0) {
+            return payoutChannelData.filter(i => {
+                return services.some(j => {
+                    return j.id === i.id
+                })
+            }).map((item) => ({ ...item, vendor: services?.find(s => s.id === item.id)?.method?.split(" - ")?.[1]?.toLowerCase() }))
+        } else {
+            return []
+        }
     }, [services])
 
     const [accNumType, setAccNumType] = useState("IBAN")
@@ -226,29 +189,10 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
     const [cardCompleted, setCardCompleted] = useState(false)
     const [cryptoCompleted, setCryptoCompleted] = useState(false)
     const [bankError, setBankError] = useState("")
-    const [alpha3, setAlpha3] = useState("")
 
     const [bankMobCrypto, setbankMobCrypto] = useState({
-        bank_iban: "",
-        bank_account_number: "",
-        bank_name: "",
-        bank_branch_name: "",
-        bank_branch_street: "",
-        bank_city: "",
-        bank_province: "",
-        bank_postal_code: "",
+        ...withdrawlsFields,
         bank_account_holder_name: `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}`,
-        bank_payer: "",
-        mobile_money_provider: "",
-        mobile_wallet_name: "",
-        mobile_wallet_account_number: "",
-        mobile_payer: "",
-        crypto_currency: "",
-        crypto_wallet_address: "",
-        crypto_payer: "",
-        document_type: "",
-        document_number: "",
-        cash_payer: ""
     })
 
     const [card, setCard] = useState({
@@ -301,7 +245,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                 bankMobCrypto.bank_payer &&
                 Object.keys(bankExtras)
                     .filter(item => serviceFieldInfoValidate(
-                        services?.find(item => item?.name?.toLowerCase()?.includes("bank")),
+                        services?.find(item => item?.method?.toLowerCase()?.includes("bank")),
                         "credit_party_identifiers_accepted",
                         item
                     ))
@@ -316,12 +260,10 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
         if (bankMobCrypto.mobile_money_provider &&
             bankMobCrypto.mobile_wallet_name &&
             bankMobCrypto.mobile_wallet_account_number?.slice(CountryBasedPhone[country?.alpha3]?.dial_code?.replace("+", "").length) !== "" ? true : false) {
-            console.log("shurhu")
             setMobileCompleted(true)
         } else {
             setMobileCompleted(false)
         }
-        console.log(bankMobCrypto.mobile_wallet_account_number?.slice(CountryBasedPhone[country?.alpha3]?.dial_code?.replace("+", "").length) !== "" ? true : false, bankMobCrypto.mobile_wallet_account_number?.slice(CountryBasedPhone[country?.alpha3]?.dial_code?.replace("+", "").length))
     }, [bankMobCrypto, country])
 
     useEffect(() => {
@@ -334,7 +276,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
     useEffect(() => {
         if (bankMobCrypto.document_number &&
             bankMobCrypto.document_type &&
-            Object.keys(cashExtras).filter(item => serviceFieldInfoValidate(services?.find(item => item?.name?.toLowerCase()?.includes("cash")), "credit_party_identifiers_accepted", item)).every(item => cashExtras?.[item]?.length > 0)) {
+            Object.keys(cashExtras).filter(item => serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("cash")), "credit_party_identifiers_accepted", item)).every(item => cashExtras?.[item]?.length > 0)) {
             setCashCompleted(true)
         }
     }, [bankMobCrypto, cashExtras, services])
@@ -343,7 +285,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
         if (card.card_expiry_one &&
             card.card_number_one &&
             card.card_holder_one &&
-            Object.keys(cardExtras).filter(item => serviceFieldInfoValidate(services?.find(item => item?.name?.toLowerCase()?.includes("card")), "credit_party_identifiers_accepted", item)).every(item => cardExtras?.[item]?.length > 0)) {
+            Object.keys(cardExtras).filter(item => serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("card")), "credit_party_identifiers_accepted", item)).every(item => cardExtras?.[item]?.length > 0)) {
             setCardCompleted(true)
         }
     }, [card, cardExtras, services])
@@ -355,15 +297,12 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
         const getPayers = async () => {
             setPayerLoading(true)
             try {
-                const data = { country: country?.alpha3, id: current?.id }
-                console.log(data)
-                const encrypted = encryptData(data)
+                const data = { country: country?.alpha3, service: current?.name, vendor: current.vendor }
+                // const encrypted = encryptData(data)
 
-                const res = await axios.post(`${process.env.REACT_APP_THUNES_API}/payerInfo`, {
-                    data: encrypted
-                }, { headers: authHeader })
+                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/payment/payers`, data, { headers: authHeader })
                 const decrypted = decryptData(res.data.data)
-                setPayers(decrypted)
+                setPayers(decrypted.destinations || decrypted || [])
             } catch (err) {
                 // console.log(err)
             }
@@ -401,7 +340,6 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                 document_number: userWithdrawals?.cash_pickup?.[0]?.document_number ?? "",
                 cash_payer: userWithdrawals?.cash_pickup?.[0]?.payer_id
             }))
-
             setCard(prev => ({
                 ...prev,
                 card_payer: userWithdrawals?.card?.[0]?.payer_id,
@@ -423,6 +361,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             setIsEditMode(false)
             setAccNumType(userWithdrawals?.bank_details?.[0]?.iban ? "IBAN" : "Swift")
         }
+        console.log("withdrawawawa", userWithdrawals)
     }, [userWithdrawals])
 
     useEffect(() => {
@@ -456,6 +395,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             account: userDetails._id,
             withdrawal_type: userDetails?.account_type,
             account_type: account_types,
+            extras: { ...basicExtras },
             isUsaBank: false,
             relation: "xyz",
             wallet: [],
@@ -530,7 +470,6 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             ]
                 : []
         }
-        console.log(data)
         const encrypted = encryptData(data)
         axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/create-withdrawal`, {
             data: encrypted
@@ -538,7 +477,6 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             headers: authHeader
         })
             .then(res => {
-                const decrypted = decryptData(res.data.data)
                 getWithdrawals()
                 setShowSuccess(true)
                 setMissingTabsData(prev => prev.filter(item => item !== "withdrawls"))
@@ -546,7 +484,6 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                 setIsEditMode(false)
                 setIsSaving(false)
                 setNewWithdrawal(false)
-                console.log(ft)
                 if (ft) {
                     navigate("/settings?tab=verification")
                 }
@@ -585,6 +522,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             wallet: [],
             relation: "xyz",
             account_type: account_types,
+            extras: { ...basicExtras },
             bank_details: bankCompleted ? [
                 {
                     service_id: payoutChannelData.find(item => item.value === "bank").id,
@@ -664,7 +602,6 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             headers: authHeader
         })
             .then(res => {
-                const decrypted = decryptData(res.data.data)
                 getWithdrawals()
                 setIsEditMode(false)
                 setShowSuccess(true)
@@ -735,7 +672,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             // console.log(data)
             const encrypted = encryptData(data)
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/delete-channel-withdrawal`, {
+            await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/delete-channel-withdrawal`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -774,11 +711,10 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             }
             console.log(data, userWithdrawals)
             const encyrpted = encryptData(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/set-channel-default`, {
+            await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/set-channel-default`, {
                 data: encyrpted
             }, { headers: authHeader })
 
-            const dec = decryptData(res.data.data)
             toast.success("Withdrawal channel status updated successfully!")
             getWithdrawals()
             setCurrentDefault(prev => !prev)
@@ -793,6 +729,20 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
 
     const [showDel, setShowDel] = useState(false)
     const toggleDelModal = () => setShowDel(prev => !prev)
+
+
+
+    const handleBasicExtraDisable = useCallback(() => {
+        const currentRenderFields = ["street", "houseNumber", "province_state"];
+        for (const element of currentRenderFields) {
+            if (fieldInfoValidate("credit_party_identifiers_accepted", element)) {
+                if (!basicExtras[element] || basicExtras[element].trim() === "") {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }, [basicExtras, fieldInfoValidate]);
     return (
         <div className={styles.container}>
             {
@@ -831,7 +781,6 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                     <CountriesDropdown
                         onSelect={handleCountrySelect}
                         country={country}
-                        // filteringList={countries}
                         countries={countries}
                         disabled={userWithdrawals?._id}
                     />
@@ -855,13 +804,13 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                                 <InstaPayLoader />
                             </div>
                             :
-                            channels.length > 0
+                            channels?.length > 0
                                 ?
                                 <>
                                     <div className={styles.channel_details}>
                                         <div className={styles.left}>
                                             {
-                                                channels.map(item => (
+                                                channels?.map(item => (
                                                     <div className={`${styles.channel} ${current?.name === item?.name ? styles.active : ""}`}
                                                         onClick={() => {
                                                             setCurrent(item)
@@ -891,7 +840,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                                             }
                                         </div>
                                         <div className={styles.right}>
-                                            <span style={{ opacity: "0" }}>abc</span>
+                                            <span style={{ opacity: "0" }}>{t("abc")}</span>
                                             <img src={wd} alt="" />
                                         </div>
                                     </div>
@@ -915,6 +864,10 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                                                 handleBankExtraChange={handleBankExtraChange}
                                                 serviceFieldInfoValidate={serviceFieldInfoValidate}
                                                 services={services}
+                                                basicExtras={basicExtras}
+                                                fieldInfoValidate={fieldInfoValidate}
+                                                handleBasicExtraChange={handleBasicExtraChange}
+                                                setBasicExtras={setBasicExtras}
                                                 alpha3={countries.find(item => item.name.toLowerCase().includes(country?.name?.toLowerCase()))?.alpha3}
                                             />
                                         }
@@ -929,10 +882,15 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                                                 payers={payers}
                                                 index={index}
                                                 country={country}
-                                                setAlpha3={setAlpha3}
                                                 bankError={bankError}
                                                 setBankError={setBankError}
                                                 userWithdrawals={userWithdrawals}
+                                                basicExtras={basicExtras}
+                                                fieldInfoValidate={fieldInfoValidate}
+                                                handleBasicExtraChange={handleBasicExtraChange}
+                                                setBasicExtras={setBasicExtras}
+                                                alpha3={countries.find(item => item.name.toLowerCase().includes(country?.name?.toLowerCase()))?.alpha3}
+
                                             />
                                         }
                                         {
@@ -951,6 +909,12 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                                                 bankError={bankError}
                                                 setBankError={setBankError}
                                                 userWithdrawals={userWithdrawals}
+                                                basicExtras={basicExtras}
+                                                fieldInfoValidate={fieldInfoValidate}
+                                                handleBasicExtraChange={handleBasicExtraChange}
+                                                setBasicExtras={setBasicExtras}
+                                                alpha3={countries.find(item => item.name.toLowerCase().includes(country?.name?.toLowerCase()))?.alpha3}
+                                                country={country}
                                             />
                                         }
                                         {
@@ -969,6 +933,12 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                                                 bankError={bankError}
                                                 setBankError={setBankError}
                                                 userWithdrawals={userWithdrawals}
+                                                basicExtras={basicExtras}
+                                                fieldInfoValidate={fieldInfoValidate}
+                                                handleBasicExtraChange={handleBasicExtraChange}
+                                                setBasicExtras={setBasicExtras}
+                                                alpha3={countries.find(item => item.name.toLowerCase().includes(country?.name?.toLowerCase()))?.alpha3}
+                                                country={country}
                                             />
                                         }
                                     </div>
@@ -1033,7 +1003,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                                                                                 (current?.value === "mobile" && !mobileCompleted) ||
                                                                                 (current?.value === "cash" && !cashCompleted) ||
                                                                                 (current?.value === "card" && !cardCompleted) ||
-                                                                                bankError}
+                                                                                bankError || handleBasicExtraDisable()}
                                                                         >
                                                                             {isSaving ? t("Saving") : t("Save")}
                                                                         </Button>
@@ -1050,12 +1020,12 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                                                             }
                                                         </>
                                                         :
-                                                        <Button disabled={isSaving || (!bankCompleted && !mobileCompleted && !cryptoCompleted && !cashCompleted && !cardCompleted) || bankError} size='sm' style={{
+                                                        <Button disabled={isSaving || (!bankCompleted && !mobileCompleted && !cryptoCompleted && !cashCompleted && !cardCompleted) || bankError || handleBasicExtraDisable()} size='sm' style={{
                                                             background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                                                             border: "none",
                                                             outline: "none",
                                                             borderRadius: "5px"
-                                                        }} onClick={addWithDrawal}>Save</Button>
+                                                        }} onClick={addWithDrawal}>{t("Save")}</Button>
                                                 }
                                             </div>
                                         }

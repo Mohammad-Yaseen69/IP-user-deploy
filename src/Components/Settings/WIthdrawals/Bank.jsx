@@ -1,168 +1,31 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FormGroup, Input, Label } from 'reactstrap'
-import { UserContext } from '../../../Context/UserContext';
-import axios from 'axios';
-import { decryptData } from '../../../Helper/EssentilaMethods/Decryption';
-import { countries } from 'country-list-json';
-import { toast } from 'react-toastify';
 import { service_name_formatter } from '../../TransactionsNewApi/TransactionItem';
 import { AccountTypeData } from '../../../utils/Data';
 import InstaPayLoader from '../../Loader';
+import NeemaBenExtrasFields from '../../AddBeneficiary/NeemaBenExtrasFields';
+import useBankDetails from '../../../hooks/BeneficiaryHooks/useBankDetails';
 
-let debounceTimer;
 
-const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetails, setBankError, bankError, payers, bankExtras, serviceFieldInfoValidate, services, handleBankExtraChange, alpha3, payerLoading }) => {
+const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetails, setBankError, bankError, payers, bankExtras, serviceFieldInfoValidate, services, handleBankExtraChange, alpha3, payerLoading, basicExtras, fieldInfoValidate, setBasicExtras, handleBasicExtraChange }) => {
     const { t } = useTranslation()
-    const { authHeader } = useContext(UserContext)
 
 
     useEffect(() => {
         setBankError("")
     }, [])
-    const getBankDetails = (e) => {
-        setBankError("")
-        setBankDetails(prev => {
-            return {
-                ...prev,
-                [e.target.name]: e.target.value.replace(/[^a-zA-Z0-9]/g, '')
-            }
-        })
-
-        if (debounceTimer) {
-            clearTimeout(debounceTimer);
-        }
-
-        debounceTimer = setTimeout(() => {
-
-            if (states.accNumType === "IBAN") {
-                if (e.target.value.length > 13) {
-                    axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/get-details-by-iban/${e.target.value}`, {
-                        headers: authHeader
-                    })
-                        .then(res => {
-                            const decrypted = decryptData(res.data.data)
-                            console.log(decrypted)
-                            const isValidCountry = decrypted?.bicDetails?.structured_address?.country_code === alpha3 || country?.toLowerCase() == decrypted?.structured_address?.country_name?.toLowerCase() || countries.some(item => item.code === decrypted?.bicDetails?.structured_address?.country_code)
-                            if (!isValidCountry) {
-                                setBankError("IBAN must belong to your selected country!")
-                                toast.error("Invalid IBAN or IBAN doesn't belongs to your selected country!")
-                            } else {
-                                setBankError("")
-                                setBankDetails(prev => {
-                                    return {
-                                        ...prev,
-                                        bank_name: decrypted?.bicDetails?.name ?? "",
-                                        branch_name: `${decrypted?.ibanDetails?.branch_id ?? ""} ${decrypted?.bicDetails?.structured_address?.building_number ?? decrypted?.bicDetails?.structured_address?.building_name ?? ""}`,
-                                        bank_branch_street: decrypted?.bicDetails?.structured_address?.street_name ?? "",
-                                        bank_city: decrypted?.bicDetails?.structured_address?.town_name ?? "",
-                                        bank_province: decrypted?.bicDetails?.structured_address?.country_subdivision_name ?? "",
-                                        bank_postal_code: decrypted?.bicDetails?.structured_address?.post_code ?? "",
-                                        bank_account_number: decrypted?.ibanDetails?.account_number ?? '',
-                                    }
-                                })
-                            }
-                        })
-                        .catch(err => {
-                            const decrypted = decryptData(err.response.data.data)
-                            console.log(decrypted)
-                            setBankError("Invalid Details")
-                            setBankDetails(prev => {
-                                return {
-                                    ...prev,
-                                    bank_name: "",
-                                    branch_name: "",
-                                    bank_branch_street: "",
-                                    bank_city: "",
-                                    bank_province: "",
-                                    bank_postal_code: "",
-                                    bank_account_number: ""
-                                }
-                            })
-                        })
-                } else {
-                    setBankDetails(prev => {
-                        return {
-                            ...prev,
-                            bank_name: "",
-                            branch_name: "",
-                            bank_branch_street: "",
-                            bank_city: "",
-                            bank_province: "",
-                            bank_postal_code: "",
-                            bank_account_number: ""
-                        }
-                    })
-                }
-            } else {
-                if (e.target.value.length > 7) {
-                    axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/get-details-by-bic/${e.target.value}/abc`, {
-                        headers: authHeader
-                    })
-                        .then(res => {
-                            const decrypted = decryptData(res.data.data)?.bicDetails
-                            console.log(decrypted)
-                            toast.success(`${alpha3}, ${decrypted?.structured_address?.country_code}`)
-                            toast.success(`${country}, ${decrypted?.structured_address?.country_name}`)
-                            const isValidCountry = decrypted?.bicDetails?.structured_address?.country_code === alpha3 || country?.toLowerCase() == decrypted?.structured_address?.country_name?.toLowerCase() || countries.some(item => item.code === decrypted?.bicDetails?.structured_address?.country_code)
-                            if (!isValidCountry) {
-                                setBankError("IBAN must belong to your selected country!")
-                                toast.error("Invalid IBAN or IBAN doesn't belongs to your selected country!")
-                            } else {
-                                setBankDetails(prev => {
-                                    return {
-                                        ...prev,
-                                        bank_name: decrypted?.name ?? "",
-                                        branch_name: decrypted?.structured_address?.country_subdivision_name || "Main Branch",
-                                        bank_branch_street: decrypted?.structured_address?.street_name ?? "",
-                                        bank_city: decrypted?.structured_address?.town_name ?? "",
-                                        bank_province: decrypted?.structured_address?.town_name ?? "",
-                                        bank_postal_code: decrypted?.structured_address?.post_code ?? "",
-                                    }
-                                })
-                                setBankError("")
-                            }
-                        })
-                        .catch(err => {
-                            const decrypted = decryptData(err.response.data.data)
-                            setBankError("Invalid Details")
-                            console.log(decrypted)
-                            setBankDetails(prev => {
-                                return {
-                                    ...prev,
-                                    bank_name: "",
-                                    branch_name: "",
-                                    bank_branch_street: "",
-                                    bank_city: "",
-                                    bank_province: "",
-                                    bank_postal_code: "",
-                                    bank_account_number: ""
-                                }
-                            })
-                        })
-                } else {
-                    setBankDetails(prev => {
-                        return {
-                            ...prev,
-                            bank_name: "",
-                            branch_name: "",
-                            bank_branch_street: "",
-                            bank_city: "",
-                            bank_province: "",
-                            bank_postal_code: "",
-                            bank_account_number: ""
-                        }
-                    })
-                }
-            }
-        }, 2000);
-    }
-
-    // useEffect(() => {
-    //     if (values.bank_iban) {
-    //         getBankDetails({ target: { name: "bank_iban", value: values.bank_iban } })
-    //     }
-    // }, [states.accNumType])
+    const { getBankDetails } = useBankDetails({
+        accNumType: states.accNumType,
+        setFormData: setBankDetails,
+        handleBankExtraChange,
+        bankExtras,
+        setError: setBankError,
+        alpha3,
+        countryName: country,
+        fieldKeyOverrides: { branch_name: 'bank_branch_name' },
+        debounceMs: 2000
+    })
 
     useEffect(() => {
         if (payers.length === 1) {
@@ -185,7 +48,7 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
                             textAlign: "center",
                             fontSize: "1rem",
                             fontWeight: "500"
-                        }}>No payers for this withdrawal method!</div>
+                        }}>{t("No payers for this withdrawal method!")}</div>
                         :
                         <>
                             <FormGroup style={{ flex: 1, margin: 0, width: "100%", marginBottom: "1rem" }}>
@@ -194,7 +57,7 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
                                     <option value="">{t("Select your bank")}</option>
                                     {
                                         payers.map(item => (
-                                            <option value={item?.id}>{item?.name}</option>
+                                            <option value={item?.id || item.destinationId}>{item?.name || item?.destinationName}</option>
                                         ))
                                     }
                                 </Input>
@@ -214,7 +77,7 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
                                             getBankDetails({ target: { name: "bank_iban", value: "" } })
                                         }}>
                                             <option value="IBAN">IBAN</option>
-                                            <option value="Swift">Swift/BIC Code</option>
+                                            <option value="Swift">{t("Swift/BIC Code")}</option>
                                         </Input>
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0, position: "relative" }}>
@@ -229,7 +92,7 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
                                             name={"bank_iban"}
                                             value={values.bank_iban}
                                             id="bank_iban"
-                                            maxLength={34}
+                                            maxLength={34} 
                                             min={8}
                                             // onChange={changeHandler} 
                                             onChange={getBankDetails}
@@ -250,7 +113,7 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
                                         country?.toLowerCase() === "united states"
                                         &&
                                         <FormGroup style={{ flex: 1, margin: 0 }}>
-                                            <Label className="col-form-label" >Routing/ABA Number <span className="req_star">*</span></Label>
+                                            <Label className="col-form-label" >{t("Routing/ABA Number")} <span className="req_star">*</span></Label>
                                             <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" required />
                                         </FormGroup>
                                     }
@@ -274,7 +137,7 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
                                         <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="bank_branch_name" type="text" required onChange={changeHandler} value={values.bank_branch_name} />
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
-                                        <Label className="col-form-label" >{t("Branch Street")}t <span className="req_star">*</span></Label>
+                                        <Label className="col-form-label" >{t("Branch Street")} <span className="req_star">*</span></Label>
                                         <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" name="bank_branch_street" required onChange={changeHandler} value={values.bank_branch_street} />
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
@@ -295,15 +158,15 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
                                     {
                                         Object.keys(bankExtras).map(item => {
                                             return (
-                                                serviceFieldInfoValidate(services?.find(item => item?.name?.toLowerCase()?.includes("bank")), "credit_party_identifiers_accepted", item)
+                                                serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("bank")), "credit_party_identifiers_accepted", item)
                                                 &&
                                                 <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                     <Label className="col-form-label">{t(service_name_formatter(item))} <span className="req_star">*</span></Label>
                                                     {
-                                                        item?.toString()?.toLowerCase() == "account_type"
+                                                        item?.toString()?.toLowerCase() === "account_type"
                                                             ?
                                                             <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} disabled={!isEditMode} type="select" value={bankExtras[item]} name={item} onChange={handleBankExtraChange}>
-                                                                <option value="">Select Account Type</option>
+                                                                <option value="">{t("Select Account Type")}</option>
                                                                 {
                                                                     Object.keys(AccountTypeData).map(item => (
                                                                         <option value={item}>{AccountTypeData?.[item]}</option>
@@ -317,6 +180,15 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
                                             )
                                         })
                                     }
+
+                                    <NeemaBenExtrasFields
+                                        basicExtras={basicExtras}
+                                        country={country}
+                                        countryIsoCode={alpha3}
+                                        fieldInfoValidate={fieldInfoValidate}
+                                        handleBasicExtraChange={handleBasicExtraChange}
+                                        setBasicExtras={setBasicExtras}
+                                    />
                                 </div>
                             }
                         </>

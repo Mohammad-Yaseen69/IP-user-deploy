@@ -25,13 +25,13 @@ const WithdrawalsNew = () => {
     useEffect(() => {
         const getCountries = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_THUNES_API}/Countries`, { headers: authHeader })
+                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/countries/${userDetails?.country?.country_iso_code}`, { headers: authHeader, timeout: 0 })
                 const decrypted = decryptData(res.data.data)
                 const countriesArray = allCountries.filter((item) => {
-                    return decrypted.some(apiCountry => apiCountry.countryIsoCode === item?.alpha3)
+                    return decrypted.some(apiCountry => apiCountry.countryIso3 === item?.alpha3)
                 })
                 const allowed = allowedCountries?.map(allowed => {
-                    const coun = countriesArray?.find(item => item?.alpha3 == allowed?.country_iso_code)
+                    const coun = countriesArray?.find(item => item?.alpha3 === allowed?.country_iso_code)
                     if (!coun) return null;
                     return {
                         ...coun,
@@ -45,16 +45,6 @@ const WithdrawalsNew = () => {
         }
 
         getCountries()
-    }, [])
-
-    
-
-    const [showWithdrawalGuide, setShowWithdrawalGuide] = useState(true)
-    useLayoutEffect(() => {
-        const shown = sessionStorage.getItem("withdrawal_guide")
-        if (shown) {
-            setShowWithdrawalGuide(false)
-        }
     }, [])
 
     return (

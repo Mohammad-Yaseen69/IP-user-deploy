@@ -6,9 +6,10 @@ import { FormGroup, Input, Label } from 'reactstrap'
 import InstaPayLoader from '../../Loader'
 import { UserContext } from '../../../Context/UserContext'
 import CountryBasedPhone from "../../PhoneInput/PhoneNumberBasedOnCountry.json"
+import NeemaBenExtrasFields from '../../AddBeneficiary/NeemaBenExtrasFields'
 
 
-const Mobile = ({ values, changeHandler, isEditMode, payers, country, payerLoading, setBankError, bankError, index }) => {
+const Mobile = ({ values, changeHandler, isEditMode, payers, country, payerLoading, setBankError, bankError, index, basicExtras, fieldInfoValidate, setBasicExtras, handleBasicExtraChange, alpha3 }) => {
     const { t } = useTranslation()
 
 
@@ -142,6 +143,15 @@ const Mobile = ({ values, changeHandler, isEditMode, payers, country, payerLoadi
                                                 </FormGroup>
                                             ))
                                         } */}
+
+                                    <NeemaBenExtrasFields
+                                        basicExtras={basicExtras}
+                                        country={country}
+                                        countryIsoCode={alpha3}
+                                        fieldInfoValidate={fieldInfoValidate}
+                                        handleBasicExtraChange={handleBasicExtraChange}
+                                        setBasicExtras={setBasicExtras}
+                                    />
                                 </div>
                             }
                         </>

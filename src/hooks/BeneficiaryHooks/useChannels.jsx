@@ -13,7 +13,7 @@ const neemaMethodIDs = {
     // upi: 5,
     // pix: 6,
 }
-const useChannels = ({ setLoading, setActive, countryIsoCode, countryId }) => {
+const useChannels = ({ setLoading, setActive, countryIsoCode, countryId, setCurrent }) => {
     const { authHeader, userDetails } = useContext(UserContext)
     const [fieldsInfo, setFieldsInfo] = useState(null)
     const [services, setServices] = useState([])
@@ -47,7 +47,13 @@ const useChannels = ({ setLoading, setActive, countryIsoCode, countryId }) => {
 
     useEffect(() => {
         if (countryIsoCode) {
-            setActive(5)
+            if (setActive) {
+                setActive(5)
+            }
+
+            if (setCurrent) {
+                setCurrent(null)
+            }
             setLoading(true)
 
             const getChannels = async () => {
