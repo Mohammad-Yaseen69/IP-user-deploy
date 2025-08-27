@@ -358,10 +358,11 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             setCashxtras(prev => userWithdrawals?.cash_pickup?.[0]?.extras ?? prev)
             setCardExtras(prev => userWithdrawals?.card?.[0]?.extras ?? prev)
             setConfigured(userWithdrawals?.account_type)
+            const extras = userWithdrawals?.extras
+            setBasicExtras(extras ? { ...extras } : basicExtrasInitial)
             setIsEditMode(false)
             setAccNumType(userWithdrawals?.bank_details?.[0]?.iban ? "IBAN" : "Swift")
         }
-        console.log("withdrawawawa", userWithdrawals)
     }, [userWithdrawals])
 
     useEffect(() => {

@@ -53,19 +53,12 @@ Sentry.init({
     replaysSessionSampleRate: 0.1,
     replaysOnErrorSampleRate: 1.0,
     environment: process.env.NODE_ENV === "development" ? "development" : "production",
-    beforeSend(event, hint) {
-        if (process.env.NODE_ENV === 'development') return null;
-        const isException = event.exception && event.exception.values && event.exception.values.length > 0;
-        const isMessage = !!event.message;
-        const isErrorLevel = event.level === 'error';
-
-        if (isException || isMessage || isErrorLevel) {
-            return event;
-        } else { 
+    beforeSend(event) {
+        if (process.env.NODE_ENV === 'development') {
             return null;
         }
+        return event;
     },
-    defaultIntegrations: false,
     profilesSampleRate: 1.0
 });
 
