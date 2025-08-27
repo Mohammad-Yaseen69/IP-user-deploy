@@ -400,6 +400,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             isUsaBank: false,
             relation: "xyz",
             wallet: [],
+            vendor: current.vendor,
             bank_details: bankCompleted ? [
                 {
                     service_id: payoutChannelData.find(item => item.value === "bank").id,
@@ -414,7 +415,8 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                     province: bankMobCrypto.bank_province,
                     postal_code: bankMobCrypto.bank_postal_code,
                     account_holder_name: bankMobCrypto.bank_account_holder_name,
-                    extras: bankExtras
+                    extras: bankExtras,
+                    vendor: current.vendor,
                 }
             ] : [],
             mobile_wallet: mobileCompleted ? [
@@ -524,6 +526,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             relation: "xyz",
             account_type: account_types,
             extras: { ...basicExtras },
+            vendor: current.vendor,
             bank_details: bankCompleted ? [
                 {
                     service_id: payoutChannelData.find(item => item.value === "bank").id,
@@ -538,7 +541,8 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                     province: bankMobCrypto.bank_province,
                     postal_code: bankMobCrypto.bank_postal_code,
                     account_holder_name: bankMobCrypto.bank_account_holder_name,
-                    extras: bankExtras
+                    extras: bankExtras,
+                    vendor: current.vendor,
                 }
             ] : [],
             mobile_wallet: mobileCompleted ? [
