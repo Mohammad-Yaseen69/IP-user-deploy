@@ -1,7 +1,7 @@
 import { Button, CardBody, CardFooter, FormGroup, Input, Label, Form } from "reactstrap";
 import 'react-phone-input-2/lib/style.css'
 import "./req_star.css"
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import CountryDropDown from "./CountryDropDown";
 import CitiesDropDown from "../CitiesDropDown";
@@ -17,10 +17,9 @@ import useBankDetails from "../../hooks/BeneficiaryHooks/useBankDetails";
 import useAddress from "../../hooks/BeneficiaryHooks/useAddress";
 import { serviceFieldInfoValidate } from "../../utils/Functions";
 import useBenCreateFunc from "../../hooks/BeneficiaryHooks/useBenCreateFunc";
-import { BeneficiaryRelation, friendsAndFamily, gendersData, idTypeData, occupations, beneficiaryInitialFormData, bankExtrasInitial } from "../../utils/Data";
+import { BeneficiaryRelation, friendsAndFamily, gendersData, idTypeData, occupations, beneficiaryInitialFormData, bankExtrasInitial, basicExtrasInitial } from "../../utils/Data";
 import PaymentChannelUI from "./PaymentChannelUI";
-import { State } from "country-state-city"
-import iso2 from '../AddFunds/WalletFund/countries_iso2.json'
+import NeemaBenExtrasFields from "./NeemaBenExtrasFields";
 
 
 
@@ -80,15 +79,7 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
     const { authHeader } = useContext(UserContext)
 
     // basic extra fields
-    const [basicExtras, setBasicExtras] = useState({
-        middlename: "",
-        id_type: "NATIONAL_ID",
-        id_number: "",
-        province_state: "",
-        houseNumber: "",
-        street: "",
-        state_name: ""
-    })
+    const [basicExtras, setBasicExtras] = useState(basicExtrasInitial)
 
     const [showAdditional, setShowAdditional] = useState(false)
     const [additionFields, setAdditionalFields] = useState({
@@ -268,16 +259,6 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
             getCountryFields(countryIsoCode, services.find(service => service.method?.toLowerCase()?.includes("bank")), bankCountryCode)
         }
     }, [bankCountryCode])
-
-
-    const stateData = useMemo(() => {
-        if (countryIsoCode) {
-            console.log(iso2[countryIsoCode?.toUpperCase()])
-            return State.getStatesOfCountry(iso2[countryIsoCode?.toUpperCase()])
-        }
-
-    }, [countryIsoCode])
-
 
     const {
         setIsCountryInFocus,
@@ -598,44 +579,14 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
                                                 ""
                                         }
                                     </FormGroup>
-                                    <FormGroup className="mb-3">
-                                        <div style={{
-                                            display: "flex",
-                                            flexWrap: "wrap",
-                                            gap: "1rem"
-                                        }}>
-                                            {fieldInfoValidate("credit_party_identifiers_accepted", "houseNumber") &&
-                                                <FormGroup style={{ flex: 1, margin: 0 }}>
-                                                    <Label className="col-form-label" htmlFor="houseNumber">{t("House Number")} <span className="req_star">*</span></Label>
-                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="houseNumber" id="houseNumber" type="number" placeholder='House Number' value={basicExtras.houseNumber} onChange={handleBasicExtraChange} />
-                                                </FormGroup>
-                                            }
-                                            {fieldInfoValidate("credit_party_identifiers_accepted", "street") &&
-                                                <FormGroup style={{ flex: 1, margin: 0 }}>
-                                                    <Label className="col-form-label" htmlFor="street">{t("Street")} <span className="req_star">*</span></Label>
-                                                    <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="street" id="street" type="text" placeholder='Street' value={basicExtras.street} onChange={handleBasicExtraChange} />
-                                                </FormGroup>
-                                            }
-                                            {(fieldInfoValidate("credit_party_identifiers_accepted", "province_state") || (fieldInfoValidate("required_receiving_entity_fields", "province_state"))) &&
-                                                <FormGroup style={{ flex: 1, margin: 0 }}>
-                                                    <Label className="col-form-label" htmlFor="province_state">{t("Province State")} <span className="req_star">*</span></Label>
-
-                                                    <CitiesDropDown
-                                                        disabled={!country}
-                                                        country={country}
-                                                        userCity={basicExtras.state_name}
-                                                        setUserCity={(val, code) => setBasicExtras(prev => ({ ...prev, state_name: val, province_state: code }))}
-                                                        styles={{ flex: 1, minWidth: "250px" }}
-                                                        iso_3={countryIsoCode}
-                                                        isState={true}
-                                                        title="Select Provice"
-                                                        stateData={stateData}
-                                                    />
-
-                                                </FormGroup>
-                                            }
-                                        </div>
-                                    </FormGroup>
+                                    <NeemaBenExtrasFields
+                                        basicExtras={basicExtras}
+                                        country={country}
+                                        countryIsoCode={countryIsoCode}
+                                        fieldInfoValidate={fieldInfoValidate}
+                                        handleBasicExtraChange={handleBankExtraChange}
+                                        setBasicExtras={setBasicExtras}
+                                    />
                                     <FormGroup className="mb-3">
                                         <div style={{
                                             display: "flex",
