@@ -159,7 +159,7 @@ const OTPConfirmation = ({
 
             data.forEach(item => "a")
 
-            const url = vendor === "neema" ? `${process.env.REACT_APP_IP_DEV_API}  ` : `${process.env.REACT_APP_THUNES_API}/confirmTransaction`
+            const url = vendor === "neema" ? `${process.env.REACT_APP_IP_DEV_API}/api/payment/confirm-withdrawal-transaction` : `${process.env.REACT_APP_THUNES_API}/confirmTransaction`
             const neemaData = {
                 token: token || createdTransaction.token,
                 otp: otp ? otp.join("") : otpValues.join(""),
