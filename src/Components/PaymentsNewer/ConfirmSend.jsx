@@ -19,7 +19,7 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import InstaPayLoader from "../Loader";
 
-const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, paymentType, setConfirmed, setSubStep, scheduleDate, scheduleTime, recCycle, recStartDate, reason, quotationDetails, setCreatedTransaction, createdQuotation, setBeneficiary, comment, userWithdrawals = null }) => {
+const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, paymentType, setConfirmed, setSubStep, scheduleDate, scheduleTime, recCycle, recStartDate, reason, quotationDetails, setCreatedTransaction, createdQuotation, setBeneficiary, comment, userWithdrawals = null, vendor }) => {
     const { t } = useTranslation()
     const [complete, setComplete] = useState(false);
     const navigate = useNavigate()
@@ -83,8 +83,9 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, pa
                 wallet_id: userWallets?.filter(it => it?.currency?.code?.toLowerCase() === currency?.toLowerCase())[0]?._id,
                 "token": quotationDetails.token,
                 type: userDetails?.tfa ? "authenticator" : "sms",
-                withdrawal_id: userWithdrawals?._id
-                // },
+                withdrawal_id: userWithdrawals?._id,
+                vendor: vendor,
+                user_id: item?.user?._id,
             } : {
                 // data: {
                 additional_information: comment,
@@ -103,11 +104,27 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, pa
             } else {
                 payoutChannel?.value?.toLowerCase()?.includes("bank") ? data.bank_id = item?.bank_details?.[0]?._id : data.mobile_wallet_id = item?.mobile_wallet?.[0]?._id
             }
-            console.log(data)
 
-            const encrypted = encryptData(data)
 
-            axios.post(`${userWithdrawals ? `${process.env.REACT_APP_IP_DEV_API}/api/withdrawal` : process.env.REACT_APP_THUNES_API}/${userWithdrawals ? "create-transaction" : "createTransaction"}/${createdQuotation.QuotationID}`, {
+            
+            
+
+            const vendorSpecificData =
+                vendor === "neema"
+                    ?
+                    {
+                        data: { ...data },
+                        type: userDetails?.tfa ? "authenticator" : "sms",
+                    }
+                    :
+                    data
+
+            const encrypted = encryptData(vendorSpecificData)
+
+
+            const url = vendor === "neema" ? `${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp` : `${userWithdrawals ? `${process.env.REACT_APP_IP_DEV_API}/api/withdrawal` : process.env.REACT_APP_THUNES_API}/${userWithdrawals ? "create-transaction" : "createTransaction"}/${createdQuotation.QuotationID}`
+
+            axios.post(url, {
                 data: encrypted
             }, {
                 headers: authHeader

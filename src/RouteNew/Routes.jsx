@@ -1,7 +1,6 @@
 import React, { lazy } from 'react';
 import QrCode from '../Components/QrCode';
 import QRScan from '../Components/QrScan';
-import TempCountriesBankFields from '../Components/TempCountriesBankFields';
 import ChatbotQrCode from '../Components/ChatbotQrCode';
 import PanTransaction from '../Components/Chatbot/PanTransaction';
 import PanTransactionStatus from '../Components/Chatbot/PanTransactionStatus';

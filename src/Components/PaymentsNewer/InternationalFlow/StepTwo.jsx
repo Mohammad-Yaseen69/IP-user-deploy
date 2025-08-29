@@ -6,7 +6,7 @@ import { UserContext } from "../../../Context/UserContext"
 import { Link } from "react-router-dom"
 import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem"
 import { useTranslation } from "react-i18next"
-import i18next from "i18next"
+import i18next from "i18next"   
 
 function levenshteinDistance(a, b) {
     const dp = Array(a.length + 1)

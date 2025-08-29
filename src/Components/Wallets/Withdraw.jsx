@@ -222,26 +222,47 @@ const WithdrawOldFlow = ({
     const { t } = useTranslation()
     const navigate = useNavigate()
     const { userDetails, authHeader } = useContext(UserContext)
+
+    const getVendor = () => {
+        if (payoutChannel?.value === "bank") return currentWithdrawal?.bank_details?.[0]?.vendor || "thunes"
+        if (payoutChannel?.value === "mobile") return currentWithdrawal?.mobile_wallet?.[0]?.vendor || "thunes"
+        if (payoutChannel?.value === "card") return currentWithdrawal?.card?.[0]?.vendor || "thunes"
+        if (payoutChannel?.value === "cash") return currentWithdrawal?.cash_pickup?.[0]?.vendor || "thunes"
+        return ""
+    }
+
     useEffect(() => {
         if (payoutChannel) {
-            const data = { country: currentWithdrawal?.iso_code, id: payoutChannel?.id }
-            console.log(data)
-            const encrypted = encryptData(data)
-            axios.post(`${process.env.REACT_APP_THUNES_API}/payerInfo`, {
-                data: encrypted
-            }, { headers: authHeader })
+            const data = { country: currentWithdrawal?.iso_code, service: payoutChannel.name, vendor: getVendor() }
+            const url = `${process.env.REACT_APP_IP_DEV_API}/api/payment/payers`
+            axios.post(url, data, { headers: authHeader })
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
-                    console.log(decrypted, userWithdrawals?.[payoutChannel?.sub_value]?.[0]?.payer_id)
-                    const filtered = decrypted?.find(it => it.id.toString() === userWithdrawals?.[payoutChannel?.sub_value]?.[0]?.payer_id)
-                    console.log(filtered)
-                    setSubService(filtered)
+                    console.log(decrypted, userWithdrawals?.[payoutChannel?.sub_value]?.[0]?.payer_id, "hey")
+                    const filtered = (decrypted.destinations || decrypted)?.find(it => (it.destinationId || it.id).toString() === userWithdrawals?.[payoutChannel?.sub_value]?.[0]?.payer_id)
+                    let modifiedPayer = {}
+
+                    if (getVendor() === "neema") {
+                        modifiedPayer = {
+                            ...filtered,
+                            country_iso_code: filtered?.country,
+                            id: filtered?.destinationId,
+                            name: filtered?.destinationName,
+                            currency: filtered?.currencies[0],
+                            precision: filtered?.destinationType,
+                        }
+                    } else {
+                        modifiedPayer = filtered
+                    }
+                    setSubService(modifiedPayer)
                 })
                 .catch(err => {
                     // console.log(err)
                 })
         }
     }, [payoutChannel])
+
+
 
     const createQuotation = async () => {
         setIsLoading(true)
@@ -281,6 +302,7 @@ const WithdrawOldFlow = ({
         setIsLoading(false)
     }
 
+
     const clickHandler = async () => {
         switch (step) {
             case 1:
@@ -290,6 +312,10 @@ const WithdrawOldFlow = ({
 
             case 2:
                 if (amountError || !amount) break;
+                if (getVendor() === "neema") {
+                    setStep(prev => prev + 1)
+                    break;
+                }
                 createQuotation()
                 break;
 
@@ -342,6 +368,7 @@ const WithdrawOldFlow = ({
                         wallet={wallet}
                         setIsLoading={setIsLoading}
                         isloading={isLoading}
+                        vendor={getVendor()}
                     />
                 }
                 {
@@ -361,9 +388,9 @@ const WithdrawOldFlow = ({
                         quotationDetails={quotationDetails}
                         setCreatedTransaction={setCreatedTransaction}
                         createdQuotation={createdQuotation}
-                        setBeneficiary={() => "a"} // console.log("hehe")}
+                        setBeneficiary={() => "a"}
                         userWithdrawals={userWithdrawals}
-
+                        vendor={getVendor()}
                     />
                 }
                 {
@@ -383,8 +410,11 @@ const WithdrawOldFlow = ({
                             payer_id: payoutChannel?.value === "bank" ? +userWithdrawals?.bank_details?.[0]?.payer_id : payoutChannel?.value === "mobile" ? +userWithdrawals?.mobile_wallet?.[0]?.payer_id : payoutChannel?.value === "card" ? +userWithdrawals?.card?.[0]?.payer_id : payoutChannel?.value === "cash" ? +userWithdrawals?.cash_pickup?.[0]?.payer_id : "",
                             token: quotationDetails?.token,
                             payoutChannel,
+                            withdrawal_id: userWithdrawals?._id,
+                            currency: wallet?.currency?.code
                         }}
                         authType={codeType}
+                        vendor={getVendor()}
                         setAuthType={setCodeType}
                     />
                 }

@@ -40,7 +40,7 @@ export const reasons = [
 ]
 
 let timeout;
-const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQuotationDetails, payoutChannel, wallet, exchangeError, setExchangeError, setIsLoading, isloading }) => {
+const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQuotationDetails, payoutChannel, wallet, exchangeError, setExchangeError, setIsLoading, isloading, vendor }) => {
     const { t } = useTranslation()
     const [exchangeRate, setExchangeRate] = useState()
     const { authHeader, userWallets, userDetails } = useContext(UserContext)
@@ -95,17 +95,18 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
                         avoid_balance: false,
                         currency_code: currency,
                         service_id: payoutChannel?.id,
-                        account_id: userDetails?._id
+                        account_id: userDetails?._id,
+                        vendor: vendor
                     }
 
                     console.log(data)
 
                     const encrypted = encryptData(data)
 
-                    console.log(subService)
-                    axios.post(`${process.env.REACT_APP_THUNES_API}/get-withdrawal-rates/${subService?.id}`, {
+                    const url = vendor === "neema" ? `${process.env.REACT_APP_IP_DEV_API}/api/payment/withrdrawal-rates/${subService?.id}` : `${process.env.REACT_APP_THUNES_API}/get-withdrawal-rates/${subService?.id}`
+                    axios.post(url, {
                         data: encrypted
-                    }, { 
+                    }, {
                         headers: authHeader
                     })
                         .then(res => {
@@ -120,9 +121,9 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
                             }
                             if (amount <= data.fee.amount) {
                                 setExchangeError("Invalid Amount Fee")
-                            } 
+                            }
                             else if (wallet.balance.available < +String(formattedAmount)?.replaceAll(",", "")) {
-                                console.log(wallet.balance.available ,+String(formattedAmount)?.replaceAll(", ", ""))
+                                console.log(wallet.balance.available, +String(formattedAmount)?.replaceAll(", ", ""))
                                 setExchangeError("insufficient balance")
                             }
                             else {
@@ -150,7 +151,7 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
                                 setExchangeError("min payer")
                             }
                             else if (wallet.balance.available < +String(formattedAmount)?.replaceAll(",", "")) {
-                                console.log(wallet.balance.available ,+String(formattedAmount)?.replaceAll(", ", ""))
+                                console.log(wallet.balance.available, +String(formattedAmount)?.replaceAll(", ", ""))
                                 setExchangeError("insufficient balance")
                             }
                             else if (typeof dec?.message === "string" ? dec?.message?.toLowerCase()?.includes("payer is currently unavailable") : dec?.message?.[0]?.message?.toLowerCase()?.includes("payer is currently unavailable")) {
@@ -200,7 +201,7 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
         return () => {
             clearTimeout(timeout)
         }
-    }, [amount, balance, currency]) 
+    }, [amount, balance, currency, vendor])
 
     return (
         <CardBody style={{

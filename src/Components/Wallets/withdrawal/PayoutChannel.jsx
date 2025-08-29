@@ -22,11 +22,12 @@ const PayoutChannel = ({
         userWithdrawals?.bank_details?.length > 0
             ?
             {
-                name: "Bank Transfer",
+                name: "Bank Account",
                 id: 2,
                 icon: bd,
                 value: "bank",
-                sub_value: "bank_details"
+                sub_value: "bank_details",
+                neemaId: 2
             } : { id: 1000 },
         userWithdrawals?.cash_pickup?.length > 0
             ?
@@ -35,7 +36,8 @@ const PayoutChannel = ({
                 id: 3,
                 icon: cp,
                 value: "cash",
-                sub_value: "cash_pickup"
+                sub_value: "cash_pickup",
+                neemaId: 1
             } : { id: 1000 },
         userWithdrawals?.mobile_wallet?.length > 0
             ?
@@ -44,7 +46,8 @@ const PayoutChannel = ({
                 id: 1,
                 icon: mw,
                 value: "mobile",
-                sub_value: "mobile_wallet"
+                sub_value: "mobile_wallet",
+                neemaId: 3
             } : { id: 1000 },
         userWithdrawals?.payment_card?.length > 0
             ?
@@ -53,7 +56,8 @@ const PayoutChannel = ({
                 id: 5,
                 icon: pc,
                 value: "card",
-                sub_value: "payment_card"
+                sub_value: "payment_card",
+                neemaId: 4
             } : { id: 1000 },
     ].filter(item => item?.name)
 

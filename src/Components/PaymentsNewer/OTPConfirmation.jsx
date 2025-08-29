@@ -28,7 +28,7 @@ export const possibleErrors = {
     ryl400: "Receiver's Yearly Receiving Limit exceeded",
     rbl400: "Receiver's Balance Limit Reached.",
     "Feature not available!": "Feature not available!",
-    tpl400 : "Topup Amount Limit exceeded"
+    tpl400: "Topup Amount Limit exceeded"
 }
 
 export const LimitsErrorMessage = (message = "") => {
@@ -48,20 +48,14 @@ const OTPConfirmation = ({
     setSubStep,
     createdTransaction = "",
     setTransactionDetails,
-    type = "",
     paymentDetails = "",
-    requestObject = "",
-    quotationDetails = "",
-    airtimeDetails = "",
-    airtimeProduct = "",
     intFiles = [],
     intComment = "",
     intResend = {},
-    intSendType = "",
-    intCardPayment,
     authType = "authenticator",
     setAuthType = () => { },
     coords,
+    vendor
 }) => {
     const { t } = useTranslation()
     const numberOfFields = 6;
@@ -148,105 +142,46 @@ const OTPConfirmation = ({
         }
     };
 
-    const getExchangeRate = (data) => {
-        // console.log(decryptData(data))
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-request-exchange-rate`, {
-            data: data
-        }, {
-            headers: authHeader
-        })
-            .then(res => {
-                const decrypted = decryptData(res.data.data)
-                setIsSaving(false)
-                // console.log(decrypted)
-                if (decrypted.status) {
-                    requestObject.setExchangeRate(decrypted.exchangeRate)
-                }
-            })
-            .catch(err => {
-                setIsSaving(false)
-                // console.log(decryptData(err.response.data.data))
-            })
-    }
-
-    const completeTransaction = () => {
+    const completeTransaction = (otp) => {
         setOtpError("")
         setIsSaving(true)
-
-        // airtime
-        if (type === "airtime") {
-            const data = {
-                token: airtimeDetails?.token,
-                otp: otpValues.join(""),
-                type: authType
-            }
-            console.log(data)
-            const enc = encryptData(data)
-
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/${airtimeDetails?.path}`, {
-                data: enc
-            }, {
-                headers: authHeader
-            })
-                .then((res) => {
-                    const dec = decryptData(res.data.data)
-                    // console.log(dec)
-                    setVerified(true)
-                })
-                .catch(err => {
-                    const decrypted = decryptData(err.response.data.data)
-                    console.log(decrypted)
-                    const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-                    if (error) {
-                        setOtpError(t(error))
-                    } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-                        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
-                        const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
-                        setProfileLockTime(timeInSec)
-                        const coun = localStorage.getItem("ip_country")
-                        localStorage.clear()
-                        localStorage.setItem("ip_country", coun)
-                        navigate("/login")
-                    } else {
-                        setOtpError(decrypted?.message)
-                    }
-                })
-                .finally(() => {
-                    setIsSaving(false)
-                })
-        }
-
-        // crypto
-        if (type === "crypto") {
-            setVerified(true)
-            setIsSaving(false)
-        }
-
-        // quote money
-        if (type === "quoting" && quotationDetails) {
-            const formdata = new FormData()
-            Array.from(quotationDetails?.files).forEach((image) => {
-                formdata.append("files", image);
+        if (createdTransaction) {
+            const data = new FormData()
+            data.append("token", token || createdTransaction.token)
+            data.append("otp", otp ? otp.join("") : otpValues.join(""))
+            Array.from(intFiles).forEach((image) => {
+                data.append("files", image);
             });
-            formdata.append("otp", otpValues.join(""))
-            formdata.append("token", token || quotationDetails?.token)
-            formdata.append("type", authType)
-            formdata.forEach(item => {
-                // console.log(item)
-            })
+            data.append("type", authType)
+            data.append("description", intComment)
 
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/quotation/create-quotation`, formdata, {
+            // console.log(token, createdTransaction.token, intComment)
+
+            data.forEach(item => "a")
+
+            const url = vendor === "neema" ? `${process.env.REACT_APP_IP_DEV_API}  ` : `${process.env.REACT_APP_THUNES_API}/confirmTransaction`
+            const neemaData = {
+                token: token || createdTransaction.token,
+                otp: otp ? otp.join("") : otpValues.join(""),
+                type: authType,
+            }
+
+            const enc = encryptData(neemaData)
+            const body = { data: enc }
+            const vendorSpecificBody = vendor === "neema" ? body : data
+            axios.post(url, vendorSpecificBody, {
                 headers: authHeader
             })
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
-                    setIsSaving(false)
-                    setTransactionDetails(decrypted?.quotation)
-                    // console.log(decrypted?.quotation)
-                    setVerified(true)
+                    setTransactionDetails(decrypted)
+                    // console.log(decrypted)
+                    setSubStep(prev => prev + 1)
+                    if (decrypted.TransactionID) {
+                        setVerified(true)
+                    }
                 })
                 .catch(err => {
-                    setIsSaving(false)
                     const decrypted = decryptData(err.response.data.data)
                     const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
                     console.log(decrypted)
@@ -261,478 +196,11 @@ const OTPConfirmation = ({
                         localStorage.setItem("ip_country", coun)
                         navigate("/login")
                     } else {
-                        setOtpError("You have entered wrong OTP.")
+                        setOtpError(decrypted.message ?? "You have entered wrong OTP.")
                     }
                 })
-        }
+                .finally(() => setIsSaving(false))
 
-        // request money
-        if (type === "request" && requestObject) {
-            requestObject.beneficiary.forEach((ben) => {
-                if (requestObject.paymentType.value === "standard") {
-                    const data = new FormData()
-                    Array.from(requestObject?.files).forEach((image) => {
-                        data.append("files", image);
-                    });
-                    data.append("otp", otpValues.join(""))
-                    data.append("token", token || requestObject?.token)
-                    data.append("type", authType)
-                    data.forEach(item => {
-                        // console.log(item)
-                    })
-                    // console.log(requestObject)
-                    // console.log(data)
-                    // const encrypted = encryptData(data)
-                    axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/insta-payment-request-w2w`, data, {
-                        headers: authHeader
-                    })
-                        .then(res => {
-                            const decrypted = decryptData(res.data.data)
-                            setIsSaving(false)
-                            if (decrypted.status) {
-                                setVerified(true)
-                                requestObject?.setRequestDetails(decrypted.requestDetails)
-
-
-                                // exchange rate api
-                                const data = {
-                                    request_id: decrypted?.requestDetails?.reference_id,
-                                    currency: decrypted?.requestDetails?.currency?.code
-                                }
-                                const encrypted = encryptData(data)
-                                setTimeout(() => {
-                                    getExchangeRate(encrypted)
-                                }, 2000)
-                            }
-                        })
-                        .catch(err => {
-                            setIsSaving(false)
-                            const decrypted = decryptData(err.response.data.data)
-                            const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-                            if (error) {
-                                setOtpError(t(error))
-                            } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-                                const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
-                                const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
-                                setProfileLockTime(timeInSec)
-                                const coun = localStorage.getItem("ip_country")
-                                localStorage.clear()
-                                localStorage.setItem("ip_country", coun)
-                                navigate("/login")
-                            } else {
-                                setOtpError("You have entered wrong OTP.")
-                            }
-                        })
-                }
-                if (requestObject.paymentType.value === "subscription") {
-                    const data = new FormData()
-                    Array.from(requestObject?.files).forEach((image) => {
-                        data.append("files", image);
-                    });
-                    data.append("otp", otpValues.join(""))
-                    data.append("token", token || requestObject?.token)
-                    data.append("type", authType)
-                    data.forEach(item => {
-                        // console.log(item)
-                    })
-                    // console.log(requestObject)
-                    // console.log(data)
-                    const encrypted = encryptData(data)
-                    axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/subcribe-payment-request-w2w`, data, {
-                        headers: authHeader
-                    })
-                        .then(res => {
-                            const decrypted = decryptData(res.data.data)
-                            setIsSaving(false)
-                            // console.log(decrypted)
-                            if (decrypted.status) {
-                                setVerified(true)
-                                requestObject?.setRequestDetails(decrypted.subscribtionDetails)
-
-
-                                // exchange rate api
-                                const data = {
-                                    request_id: decrypted?.subscribtionDetails?._id,
-                                    currency: decrypted?.subscribtionDetails?.request_payment?.currency?.code
-                                }
-                                const encrypted = encryptData(data)
-                                setTimeout(() => {
-                                    getExchangeRate(encrypted)
-                                }, 2000)
-                            }
-                        })
-                        .catch(err => {
-                            setIsSaving(false)
-                            const decrypted = decryptData(err.response.data.data)
-                            const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-                            if (error) {
-                                setOtpError(t(error))
-                            } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-                                const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
-                                const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
-                                setProfileLockTime(timeInSec)
-                                const coun = localStorage.getItem("ip_country")
-                                localStorage.clear()
-                                localStorage.setItem("ip_country", coun)
-                                navigate("/login")
-                            } else {
-                                setOtpError("You have entered wrong OTP.")
-                            }
-                        })
-                }
-                if (requestObject.paymentType.value === "schedule") {
-                    const data = new FormData()
-                    Array.from(requestObject?.files).forEach((image) => {
-                        data.append("files", image);
-                    });
-                    data.append("type", authType)
-                    data.append("otp", otpValues.join(""))
-                    data.append("token", token || requestObject?.token)
-                    data.forEach(item => {
-                        // console.log(item)
-                    })
-                    // console.log(requestObject)
-                    // console.log(data)
-                    const encrypted = encryptData(data)
-                    axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/schedule-payment-request-w2w`, data, {
-                        headers: authHeader
-                    })
-                        .then(res => {
-                            const decrypted = decryptData(res.data.data)
-                            setIsSaving(false)
-                            // console.log(decrypted)
-                            if (decrypted.status) {
-                                setVerified(true)
-                                requestObject?.setRequestDetails(decrypted.subscribtionDetails)
-
-
-                                // exchange rate api
-                                const data = {
-                                    request_id: decrypted?.subscribtionDetails?._id,
-                                    currency: decrypted?.subscribtionDetails?.request_payment?.currency?.code
-                                }
-                                const encrypted = encryptData(data)
-                                setTimeout(() => {
-                                    getExchangeRate(encrypted)
-                                }, 2000)
-                            }
-                        })
-                        .catch(err => {
-                            setIsSaving(false)
-                            const decrypted = decryptData(err.response.data.data)
-                            const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-                            if (error) {
-                                setOtpError(t(error))
-                            } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-                                const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
-                                const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
-                                setProfileLockTime(timeInSec)
-                                const coun = localStorage.getItem("ip_country")
-                                localStorage.clear()
-                                localStorage.setItem("ip_country", coun)
-                                navigate("/login")
-                            } else {
-                                setOtpError("You have entered wrong OTP.")
-                            }
-                        })
-                }
-            })
-        }
-
-        // international transfer
-        if (createdTransaction) {
-            if (intSendType === "card") {
-                const data = {
-                    wallet_id: intCardPayment?.sender_wallet_id,
-                    amount: intCardPayment?.amount,
-                    payment_type: "card",
-                    type: authType,
-                    is_card_save: intCardPayment?.saveCard,
-                    w2w_data: {
-                        type: "international",
-                        body: {
-                            otp: otpValues.join(""),
-                            token: token || createdTransaction?.token
-                        }
-                    }
-                }
-                const enc = encryptData(data)
-
-                axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/initiat-w2w-transaction`, {
-                    data: enc
-                }, {
-                    headers: authHeader
-                })
-                    .then(res => {
-                        const decrypted = decryptData(res.data.data)
-                        console.log(decrypted)
-                        setIsSaving(false)
-                        setVerified(true)
-                        setTransactionDetails(decrypted.data)
-                        setOtpError("")
-                    })
-                    .catch(err => {
-                        setIsSaving(false)
-                        const decrypted = decryptData(err.response.data.data)
-                        console.log(decrypted)
-                        const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-                        const error2 = apiErrorMessage(decrypted?.message)
-
-                        if (error2) {
-                            setOtpError(t(error2))
-                        }
-                        else if (error) {
-                            setOtpError(t(error))
-                        } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-                            const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
-                            const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
-                            setProfileLockTime(timeInSec)
-                            const coun = localStorage.getItem("ip_country")
-                            localStorage.clear()
-                            localStorage.setItem("ip_country", coun)
-                            navigate("/login")
-                        } else {
-                            setOtpError("You have entered wrong OTP.")
-                        }
-                    })
-            } else {
-                const data = new FormData()
-                data.append("token", token || createdTransaction.token)
-                data.append("otp", otpValues.join(""))
-                Array.from(intFiles).forEach((image) => {
-                    data.append("files", image);
-                });
-                data.append("type", authType)
-                data.append("description", intComment)
-
-                // console.log(token, createdTransaction.token, intComment)
-
-                data.forEach(item => "a") // console.log(item))
-                axios.post(`${process.env.REACT_APP_THUNES_API}/confirmTransaction`, data, {
-                    headers: authHeader
-                })
-                    .then(res => {
-                        const decrypted = decryptData(res.data.data)
-                        setTransactionDetails(decrypted)
-                        // console.log(decrypted)
-                        setSubStep(prev => prev + 1)
-                        if (decrypted.TransactionID) {
-                            setVerified(true)
-                        }
-                    })
-                    .catch(err => {
-                        const decrypted = decryptData(err.response.data.data)
-                        const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-                        console.log(decrypted)
-                        if (error) {
-                            setOtpError(t(error))
-                        } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-                            const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
-                            const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
-                            setProfileLockTime(timeInSec)
-                            const coun = localStorage.getItem("ip_country")
-                            localStorage.clear()
-                            localStorage.setItem("ip_country", coun)
-                            navigate("/login")
-                        } else {
-                            setOtpError(decrypted.message ?? "You have entered wrong OTP.")
-                        }
-                    })
-                    .finally(() => setIsSaving(false))
-            }
-        }
-
-        // wallet send
-        else if (type === "wallet" && paymentDetails) {
-            if (paymentDetails.type === "instant") {
-                if (paymentDetails?.sendType === "card") {
-                    const data = {
-                        wallet_id: paymentDetails?.sender_wallet_id,
-                        amount: paymentDetails?.amount,
-                        payment_type: "card",
-                        type: authType,
-                        is_card_save: paymentDetails?.saveCard,
-                        w2w_data: {
-                            type: paymentDetails?.payment_type,
-                            body: {
-                                otp: otpValues.join(""),
-                                token: token || paymentDetails?.token
-                            }
-                        }
-                    }
-                    const enc = encryptData(data)
-
-                    axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/initiat-w2w-transaction`, {
-                        data: enc
-                    }, {
-                        headers: authHeader
-                    })
-                        .then(res => {
-                            const decrypted = decryptData(res.data.data)
-                            console.log(decrypted)
-                            setIsSaving(false)
-                            setVerified(true)
-                            setTransactionDetails(decrypted.data)
-                            setOtpError("")
-                        })
-                        .catch(err => {
-                            setIsSaving(false)
-                            const decrypted = decryptData(err.response.data.data)
-                            console.log(decrypted)
-                            const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-                            const error2 = apiErrorMessage(decrypted?.message)
-
-                            if (error2) {
-                                setOtpError(t(error2))
-                            }
-                            else if (error) {
-                                setOtpError(t(error))
-                            } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-                                const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
-                                const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
-                                setProfileLockTime(timeInSec)
-                                const coun = localStorage.getItem("ip_country")
-                                localStorage.clear()
-                                localStorage.setItem("ip_country", coun)
-                                navigate("/login")
-                            } else {
-                                setOtpError("You have entered wrong OTP.")
-                            }
-                        })
-                } else {
-                    const data = new FormData()
-                    Array.from(paymentDetails?.files).forEach((image) => {
-                        data.append("files", image);
-                    });
-                    data.append("type", authType)
-                    data.append("otp", otpValues.join(""))
-                    data.append("token", token || paymentDetails?.token)
-                    // console.log(paymentDetails)
-                    data.forEach(item => console.log(item))
-                    console.log("headers: ", authHeader)
-                    axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/insta-wallet-to-wallet`,
-                        data,
-                        {
-                            headers: authHeader
-                        }
-                    )
-                        .then(res => {
-                            const decrypted = decryptData(res.data.data)
-                            setIsSaving(false)
-                            if (decrypted.status === true) {
-                                setVerified(true)
-                                setTransactionDetails(decrypted.data)
-                                setOtpError("")
-                            }
-                        })
-                        .catch(err => {
-                            setIsSaving(false)
-                            const decrypted = decryptData(err.response.data.data)
-                            console.log(decrypted)
-                            const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-                            if (error) {
-                                setOtpError(t(error))
-                            } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-                                const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
-                                const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
-                                setProfileLockTime(timeInSec)
-                                const coun = localStorage.getItem("ip_country")
-                                localStorage.clear()
-                                localStorage.setItem("ip_country", coun)
-                                navigate("/login")
-                            } else {
-                                setOtpError("You have entered wrong OTP.")
-                            }
-                        })
-                }
-            }
-            if (paymentDetails.type === "subscription") {
-                const data = new FormData()
-                Array.from(paymentDetails?.files).forEach((image) => {
-                    data.append("files", image);
-                });
-                data.append("type", authType)
-                data.append("otp", otpValues.join(""))
-                data.append("token", token || paymentDetails?.token)
-
-                axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/subscribe-payment-w2w`,
-                    data, {
-                    headers: authHeader
-                }
-                )
-                    .then(res => {
-                        const decrypted = decryptData(res.data.data)
-                        setIsSaving(false)
-                        // console.log(decrypted)
-                        if (decrypted.status == "true") {
-                            setVerified(true)
-                            setTransactionDetails(decrypted.subscribtionDetails)
-                            setOtpError("")
-                        }
-                    })
-                    .catch(err => {
-                        setIsSaving(false)
-                        const decrypted = decryptData(err.response.data.data)
-                        const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-                        if (error) {
-                            setOtpError(t(error))
-                        } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-                            const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
-                            const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
-                            setProfileLockTime(timeInSec)
-                            const coun = localStorage.getItem("ip_country")
-                            localStorage.clear()
-                            localStorage.setItem("ip_country", coun)
-                            navigate("/login")
-                        } else {
-                            setOtpError("You have entered wrong OTP.")
-                        }
-                    })
-
-            }
-            if (paymentDetails.type === "schedule") {
-                const data = new FormData()
-                Array.from(paymentDetails?.files).forEach((image) => {
-                    data.append("files", image);
-                });
-                data.append("type", authType)
-                data.append("otp", otpValues.join(""))
-                data.append("token", token || paymentDetails?.token)
-                axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/schedule-payment-w2w`,
-                    data,
-                    {
-                        headers: authHeader
-                    }
-                )
-                    .then(res => {
-                        const decrypted = decryptData(res.data.data)
-                        setIsSaving(false)
-                        // console.log(decrypted)
-                        if (decrypted.status === "true") {
-                            setVerified(true)
-                            setTransactionDetails(decrypted.subscribtionDetails)
-                            setOtpError("")
-                        }
-                    })
-                    .catch(err => {
-                        setIsSaving(false)
-                        const decrypted = decryptData(err.response.data.data)
-                        const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-                        if (error) {
-                            setOtpError(t(error))
-                        } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
-                            const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
-                            const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
-                            setProfileLockTime(timeInSec)
-                            const coun = localStorage.getItem("ip_country")
-                            localStorage.clear()
-                            localStorage.setItem("ip_country", coun)
-                            navigate("/login")
-                        } else {
-                            setOtpError("You have entered wrong OTP.")
-                        }
-                    })
-            }
         }
     }
 
@@ -752,156 +220,68 @@ const OTPConfirmation = ({
         setIsAnyFieldEmpty(isEmpty);
         if (!isEmpty) {
             setTimeout(() => {
-                completeTransaction()
+                completeTransaction(newOTPValues)
             }, 100)
         }
     };
 
     const resendOTP = (typeOfAuth) => {
         let data;
-        if (type === "airtime") { }
-        if (type === "crypto") { }
-        if (type === "quoting" && quotationDetails) {
-            data = {
-                type: typeOfAuth ?? "",
-                data: {
-                    "account_id": quotationDetails?.account_id,
-                    "reciever_id": quotationDetails?.receiver_id,
-                    "title": quotationDetails?.title,
-                    "desc": quotationDetails?.desc,
-                    "amount": quotationDetails?.amount,
-                    "bargain": quotationDetails?.bargain,
-                    "sender_wallet_id": quotationDetails?.sender_wallet_id,
-                }
-            }
-        }
-        if (type === "request" && requestObject) {
-            if (requestObject?.paymentType?.value === "standard") {
-                data = {
-                    type: typeOfAuth ?? "",
-                    data: {
-                        "amount": + requestObject.amount,
-                        "wallet_id": userWallets.filter(item => item.currency.code === requestObject.currency)[0]?._id,
-                        "purpose": requestObject.reason || "FAMILY_SUPPORT",
-                        "sender": userDetails?._id,
-                        "receiver": requestObject?.beneficiary?.[0]._id,
-                        "description": requestObject.comment ?? "FAMILY_SUPPORT",
-                        "payment_type": "payment_request",
-                        lat: coords?.latitude,
-                        long: coords?.longitude
-                    }
-                }
-            }
-            if (requestObject?.paymentType?.value === "subscription") {
-                const date = new Date(requestObject.recStartDate).toISOString().split("T")[0].split("-").reverse().join("-")
-                data = {
-                    type: typeOfAuth ?? "",
-                    data: {
-                        "amount": +requestObject.amount,
-                        "wallet_id": userWallets.filter(item => item.currency.code === requestObject.currency)?.[0]?._id,
-                        "purpose": requestObject.reason ?? "family support",
-                        "sender": userDetails?._id,
-                        "receiver": requestObject?.beneficiary?.[0]._id,
-                        "cycles": requestObject.unlimited ? "unlimited" : +requestObject.recCycle,
-                        "date": date,
-                        "description": requestObject.comment,
-                        "payment_type": "payment_request",
-                        timezone: requestObject?.timezone,
-                        lat: coords?.latitude,
-                        long: coords?.longitude
-                    }
-                }
-            }
-            if (requestObject?.paymentType?.value === "schedule") {
-                const date = new Date(requestObject.scheduleDate).toISOString().split("T")[0].split("-").reverse().join("-")
-                data = {
-                    type: typeOfAuth ?? "",
-                    data: {
-                        "amount": +requestObject.amount,
-                        "wallet_id": userWallets.filter(item => item.currency.code === requestObject.currency)[0]?._id,
-                        "purpose": requestObject.reason ?? "family support",
-                        "sender": userDetails?._id,
-                        "receiver": requestObject?.beneficiary?.[0]._id,
-                        "time": requestObject.scheduleTime,
-                        "date": date,
-                        "description": requestObject.comment,
-                        "payment_type": "payment_request",
-                        timezone: requestObject?.timezone,
-                        lat: coords?.latitude,
-                        long: coords?.longitude
-                    }
-                }
-            }
-        }
         if (createdTransaction) {
             data = intResend?.userWithdrawals ? {
-                "additional_information": intResend?.comment,
-                "purpose_of_remittance": intResend?.reason,
-                "account_id": userDetails?._id,
-                "service_id": intResend?.service_id,
-                "payer_id": intResend?.payer_id,
-                "transaction_type": userDetails?.account_type === "individual" ? "C2C" : "C2B",
-                wallet_id: userWallets?.filter(it => it?.currency?.code?.toLowerCase() === intResend?.currency?.toLowerCase())[0]?._id,
-                "token": intResend.token
+                data: {
+                    "additional_information": intResend?.comment,
+                    "purpose_of_remittance": intResend?.reason,
+                    "account_id": userDetails?._id,
+                    "service_id": intResend?.service_id,
+                    "payer_id": intResend?.payer_id,
+                    "transaction_type": userDetails?.account_type === "individual" ? "C2C" : "C2B",
+                    wallet_id: userWallets?.filter(it => it?.currency?.code?.toLowerCase() === intResend?.currency?.toLowerCase())[0]?._id,
+                    "token": intResend.token,
+                    type: typeOfAuth ?? "",
+                    user_id: userDetails?.user?._id,
+                    vendor: vendor ?? "",
+                    withdrawal_id: intResend.withdrawal_id
+
+
+                    //     "additional_information": comment,
+                    // "purpose_of_remittance": reason,
+                    // "account_id": item?._id,
+                    // "service_id": payoutChannel?.id,
+                    // "payer_id": userWithdrawals?.[payoutChannel?.sub_value]?.[0]?.payer_id,
+                    // "transaction_type": item?.account_type === "individual" ? "C2C" : "C2B",
+                    // wallet_id: userWallets?.filter(it => it?.currency?.code?.toLowerCase() === currency?.toLowerCase())[0]?._id,
+                    // "token": quotationDetails.token,
+                    // type: userDetails?.tfa ? "authenticator" : "sms",
+                    // withdrawal_id: userWithdrawals?._id,
+                    // vendor: vendor,
+                    // user_id: item?.user?._id,
+                },
+                type: typeOfAuth ?? ""
             } : {
-                additional_information: intResend?.comment,
-                purpose_of_remittance: intResend?.reason,
-                user_id: userDetails?.user?._id,
-                beneficiary_id: intResend?.beneficiary?._id,
-                service: { id: intResend?.payoutChannel?.id },
-                transaction_type: intResend?.beneficiary?.beneficiary_type ? intResend?.beneficiary?.beneficiary_type === "individual" ? "C2C" : "C2B" : intResend?.beneficiary?.account_type === "individual" ? "C2C" : "C2B",
-                wallet_id: userWallets?.filter(it => it?.currency?.code?.toLowerCase() === intResend?.currency?.toLowerCase())[0]?._id,
-                token: intResend?.token,
+                data: {
+                    additional_information: intResend?.comment,
+                    purpose_of_remittance: intResend?.reason,
+                    user_id: userDetails?.user?._id,
+                    beneficiary_id: intResend?.beneficiary?._id,
+                    service: { id: intResend?.payoutChannel?.id },
+                    transaction_type: intResend?.beneficiary?.beneficiary_type ? intResend?.beneficiary?.beneficiary_type === "individual" ? "C2C" : "C2B" : intResend?.beneficiary?.account_type === "individual" ? "C2C" : "C2B",
+                    wallet_id: userWallets?.filter(it => it?.currency?.code?.toLowerCase() === intResend?.currency?.toLowerCase())[0]?._id,
+                    token: intResend?.token,
+                },
+                type: typeOfAuth ?? ""
             }
             if (intResend?.userWithdrawals) {
-                intResend?.payoutChannel?.value?.toLowerCase()?.includes("bank") ? data.bank_id = intResend?.userWithdrawals?.bank_details?.[0]?._id : data.mobile_wallet_id = intResend?.userWithdrawals?.mobile_wallet?.[0]?._id
+                intResend?.payoutChannel?.value?.toLowerCase()?.includes("bank") ? data.data.bank_id = intResend?.userWithdrawals?.bank_details?.[0]?._id : data.data.mobile_wallet_id = intResend?.userWithdrawals?.mobile_wallet?.[0]?._id
             } else {
-                intResend?.payoutChannel?.value?.toLowerCase()?.includes("bank") ? data.bank_id = intResend?.beneficiary?.bank_details?.[0]?._id : data.mobile_wallet_id = intResend?.beneficiary?.mobile_wallet?.[0]?._id
+                intResend?.payoutChannel?.value?.toLowerCase()?.includes("bank") ? data.data.bank_id = intResend?.beneficiary?.bank_details?.[0]?._id : data.data.mobile_wallet_id = intResend?.beneficiary?.mobile_wallet?.[0]?._id
             }
         }
-        if (type === "wallet" && paymentDetails) {
-            if (paymentDetails?.type === "instant") {
-                data = {
-                    "receiver_wallet_id": paymentDetails.receiver_wallet_id,
-                    "sender_wallet_id": paymentDetails.sender_wallet_id,
-                    "purpose": paymentDetails.purpose,
-                    "amount": paymentDetails.amount,
-                    "type": paymentDetails.type,
-                    "payment_type": paymentDetails.payment_type,
-                    'description': paymentDetails.comment,
-                }
-            }
-            if (paymentDetails?.type === "subscription") {
-                const date = new Date(paymentDetails.recStartDate).toISOString().split("T")[0].split("-").reverse().join("-")
-                data = {
-                    "receiver_wallet_id": paymentDetails.receiver_wallet_id,
-                    "sender_wallet_id": paymentDetails.sender_wallet_id,
-                    "purpose": paymentDetails.purpose,
-                    "amount": paymentDetails.amount,
-                    "cycles": paymentDetails.unlimited ? "unlimited" : +paymentDetails.recCycle,
-                    "date": date,
-                    'description': paymentDetails.comment,
-                    timezone: userDetails?.timezone
-                }
-            }
-            if (paymentDetails?.type === "schedule") {
-                const date = new Date(paymentDetails.scheduleDate).toISOString().split("T")[0].split("-").reverse().join("-")
-                data = {
-                    "receiver_wallet_id": paymentDetails.receiver_wallet_id,
-                    "sender_wallet_id": paymentDetails.sender_wallet_id,
-                    "purpose": paymentDetails.purpose,
-                    "amount": paymentDetails.amount,
-                    "time": paymentDetails.scheduleTime,
-                    "date": date,
-                    'description': paymentDetails.comment,
-                    timezone: userDetails?.timezone
-                }
-            }
-        }
-        console.log(data)
         resendHandler(data, setToken, () => { }, authHeader)
     }
 
+
+    console.log(otpValues)
     return (
         <form
             style={{
