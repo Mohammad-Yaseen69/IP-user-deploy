@@ -26,6 +26,7 @@ import FingerSuccess from "./a_items/finger/finger_success.svg"
 import FingerFailed from "./a_items/finger/finger_failed.svg"
 import "./styles/styles.css"
 import { ChevronDown } from 'react-feather';
+import sideImg from "./bio files/side-img.png"
 
 const TwoFactorAuth = () => {
     const { t } = useTranslation()
@@ -636,7 +637,7 @@ const TwoFactorAuth = () => {
                 <Modal className={styles.modal} isOpen={showBioModal} style={{ maxWidth: "841px", padding: "0", overflow: "hidden", margin: window.innerWidth < 1000 && "0 auto" }}>
                     <ModalBody style={{ padding: "0", display: "flex" }}>
                         {window.innerWidth > 1000 &&
-                            <div className={styles.modalLeftSide}>
+                            <div style={{background: `url(${sideImg})`}} className={styles.modalLeftSide}>
                                 <div>
 
                                 </div>
