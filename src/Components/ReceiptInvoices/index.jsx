@@ -15,56 +15,11 @@ const Toggle = ({ checked, onChange }) => (
 const ReceiptInvoice = () => {
     const { t } = useTranslation()
     // Dummy invoices data
-    const [invoices, setInvoices] = useState([
-        {
-            id: 'INV-001',
-            createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1).toISOString(),
-            title: 'Website Design Invoice',
-            description: 'Design and development services for corporate website with responsive layout.',
-            amount: 1200.5,
-            currency: 'USD',
-            status: 'Accepted',
-            recipient: 'john.doe@example.com',
-            recurring: false,
-        },
-        {
-            id: 'INV-002',
-            createdAt: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(),
-            title: 'SEO Monthly Retainer',
-            description: 'Monthly SEO services including on-page optimization and reporting.',
-            amount: 450.0,
-            currency: 'USD',
-            status: 'Requested',
-            recipient: 'marketing@acme.io',
-            recurring: true,
-        },
-        {
-            id: 'INV-003',
-            createdAt: new Date(Date.now() - 1000 * 60 * 60 * 72).toISOString(),
-            title: 'Mobile App Prototype',
-            description: 'Clickable prototype for the mobile app with core flows.',
-            amount: 800.0,
-            currency: 'EUR',
-            status: 'Declined',
-            recipient: 'pm@startup.ltd',
-            recurring: false,
-        },
-        {
-            id: 'INV-004',
-            createdAt: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-            title: 'Content Writing Package',
-            description: '10 blog posts with keyword research and formatting.',
-            amount: 300.0,
-            currency: 'USD',
-            status: 'Accepted',
-            recipient: 'editor@bloghouse.com',
-            recurring: true,
-        },
-    ])
+    const [invoices, setInvoices] = useState([])
     const [showModal, setShowModal] = useState(false)
     const [search, setSearch] = useState("")
-    const [expanded, setExpanded] = useState({}) // id -> boolean
-    const [menuOpenFor, setMenuOpenFor] = useState(null) // id | null
+    const [expanded, setExpanded] = useState({})
+    const [menuOpenFor, setMenuOpenFor] = useState(null)
 
     const toggleExpand = (id) => {
         setExpanded(prev => ({ ...prev, [id]: !prev[id] }))

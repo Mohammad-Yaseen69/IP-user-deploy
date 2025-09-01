@@ -16,7 +16,6 @@ import SocialModal from "../ShareBtn/SocialModal"
 import copy from "./copy.png"
 import InstructionsModal from "./InstructionModal"
 
-// https://www.figma.com/design/hvBAqk1nxaHWtP91SjQqau/InstaPay-Final-Screens?node-id=1-43333&m=dev
 const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh, authHeader, defaultWal, showTooltip, setShowTooltip, setCurrentWallet }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()

@@ -101,7 +101,7 @@ export const routes = [
     { path: "/my-mastercard", component: <MyMasterCard /> },
     { path: "/create-pin", component: <CreatePin /> },
     { path: "/update-pin", component: <UpdatePin /> },
-    { path: "/receipts", component: <ReceiptInvoice /> },
+    { path: "/invoices", component: <ReceiptInvoice /> },
 
     { path: "*", component: <NotFound type='Page' /> }
 ]
