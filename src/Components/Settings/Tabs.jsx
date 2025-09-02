@@ -240,7 +240,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                 </div>
             }
 
-            {missingTabsData.length > 0 && width < 1000
+            {missingTabsData.length > 0 && width < 1000 && profileCompleted
                 &&
                 <div className={styles.missingDiv}>
                     <div>

@@ -8,6 +8,12 @@ import auth_icon from "../PaymentsNewer/files/auth.png"
 import { useNavigate } from 'react-router';
 import { UserContext } from '../../Context/UserContext';
 
+
+const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+};
 const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", processing = false, resendHandler = () => { }, authType, setAuthType, hideTfaSwitch = false, showAuthToggle = true, otpTypeOnProfile }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
@@ -22,7 +28,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
     }, [])
 
     const [verified, setVerified] = useState(false);
-    const [resendTimer, setResendTimer] = useState(90);
+    const [resendTimer, setResendTimer] = useState();
     const [isAnyFieldEmpty, setIsAnyFieldEmpty] = useState(true);
     const [otpError, setOtpError] = useState("")
     const { setIsExtended } = useContext(InactivityContext)
@@ -31,6 +37,14 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
     useEffect(() => {
         setIsExtended(true)
     }, [])
+
+    useEffect(() => {
+        if (type === "email") {
+            setResendTimer(900)
+        } else {
+            setResendTimer(90)
+        }
+    }, [type])
 
     useEffect(() => {
         if (verified) {
@@ -207,7 +221,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                     (
                                         authType === "sms"
                                             ?
-                                            t(`A one-time verification code has been sent to your ${userDetails?.email ? "email address" : ""} and phone number.`).replace("phone", userDetails.phone?.slice(0, 3) === "971" ? "whatsapp" : "phone")
+                                            t(`A one-time verification code has been sent to your ${(userDetails?.email || type === "email") ? "email address" : ""} and phone number.`).replace("phone", userDetails.phone?.slice(0, 3) === "971" ? "whatsapp" : "phone")
                                             :
                                             t("Enter a code shown in the app to make sure everything works fine.")
                                     )
@@ -253,7 +267,11 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                         if (authType !== "sms") {
                                             inputRefs?.current?.[0]?.focus()
                                             setOTPValues(Array(numberOfFields).fill(''))
-                                            setResendTimer(120)
+                                            if (type === "email") {
+                                                setResendTimer(900)
+                                            } else {
+                                                setResendTimer(120)
+                                            }
                                             if (resendTimer == "0") {
                                                 resendHandler("sms")
                                             }
@@ -275,14 +293,18 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                 (
                                     resendTimer > 0
                                         ?
-                                        t("Resend available in ") + resendTimer + " " + t("seconds")
+                                        t("Resend available in ") + formatTime(resendTimer) + " "
                                         :
                                         <>
                                             {"Didn't receive OTP? "}
                                             <span style={{ color: "#5926f0", fontWeight: 800, cursor: "pointer" }} onClick={() => {
                                                 setOTPValues(Array(numberOfFields).fill(''))
                                                 resendHandler()
-                                                setResendTimer(90)
+                                                if (type === 'email') {
+                                                    setResendTimer(900)
+                                                } else {
+                                                    setResendTimer(90)
+                                                }
                                             }}>{t("Resend Now")}</span>
                                         </>
                                 )

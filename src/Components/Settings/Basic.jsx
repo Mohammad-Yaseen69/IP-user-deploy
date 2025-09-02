@@ -179,8 +179,8 @@ const Basic = ({ setCurrentTab }) => {
             setOtpToken(data?.token)
             setShowOtp(true)
         } catch (err) {
-            toast.error("Something went wrong while sending otp to your " + type)
-            // console.log(decryptData(err.response.data.data))
+            const error = decryptData(err.response.data.data)
+            toast.error(error.message ?? "Something went wrong while sending otp to your " + type)
         }
         setIsSaving(false)
     }

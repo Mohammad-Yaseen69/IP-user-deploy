@@ -84,23 +84,46 @@ export const GuideItem = ({ item, step, setStep, setShowGuide }) => {
                     </Button>
                 </div>
             </div>
-            <Swiper
-                loop={true}
-                autoplay={{
-                    delay: 2000,
-                    disableOnInteraction: false,
-                }}
-                modules={[Autoplay]}
-                className={styles.right}
-            >
-                {
-                    item?.images?.map(it => (
-                        <SwiperSlide className={styles.right_item}>
-                            <img src={it} key={item?.head} alt={item?.head} />
-                        </SwiperSlide>
-                    ))
-                }
-            </Swiper>
+            {window.innerWidth < 1000 ?
+
+                <div>
+                    <Swiper
+                        loop={true}
+                        autoplay={{
+                            delay: 2000,
+                            disableOnInteraction: false,
+                        }}
+                        modules={[Autoplay]}
+                        className={styles.right}
+                    >
+                        {
+                            item?.images?.map(it => (
+                                <SwiperSlide className={styles.right_item}>
+                                    <img src={it} key={item?.head} alt={item?.head} />
+                                </SwiperSlide>
+                            ))
+                        }
+                    </Swiper>
+                </div> :
+                
+                <Swiper
+                    loop={true}
+                    autoplay={{
+                        delay: 2000,
+                        disableOnInteraction: false,
+                    }}
+                    modules={[Autoplay]}
+                    className={styles.right}
+                >
+                    {
+                        item?.images?.map(it => (
+                            <SwiperSlide className={styles.right_item}>
+                                <img src={it} key={item?.head} alt={item?.head} />
+                            </SwiperSlide>
+                        ))
+                    }
+                </Swiper>
+            }
         </CardBody>
     )
 }

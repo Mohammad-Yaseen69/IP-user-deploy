@@ -462,13 +462,13 @@ const TwoFactorAuth = () => {
                             </td>
                             <td style={{ minWidth: window.innerWidth > 1000 && "400px" }} data-label={t("Finger Biometric")}>
 
-                                {devices.length > 0 ?
+                                {devices.length === 0 ?
                                     <ChevronDown onClick={() => setShowDevices(prev => !prev)} style={{ marginRight: '1rem', transition: "all .4s", transform: showDevices && "rotate(180deg)", cursor: "pointer" }} />
                                     :
-                                    <div className={styles.buttons} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                                        <button onClick={() => setShowBioModal(true)} className={styles.plus}>
+                                    <div className={styles.buttons} style={{ display: "flex", alignItems: "center", gap: "8px", margin: window.innerWidth < 600 && "0px" }}>
+                                        <button style={{minWidth: "200px"}} onClick={() => setShowBioModal(true)} className={styles.plus}>
                                             <img src={Plus} alt="" />
-                                            <p style={{ marginBottom: "0" }}>{t("Register Biometric Passkey")}</p>
+                                            <p style={{ marginBottom: "0", textAlign: "left" }}>{t("Register Biometric Passkey")}</p>
                                         </button>
                                     </div>
                                 }
@@ -637,7 +637,7 @@ const TwoFactorAuth = () => {
                 <Modal className={styles.modal} isOpen={showBioModal} style={{ maxWidth: "841px", padding: "0", overflow: "hidden", margin: window.innerWidth < 1000 && "0 auto" }}>
                     <ModalBody style={{ padding: "0", display: "flex" }}>
                         {window.innerWidth > 1000 &&
-                            <div style={{background: `url(${sideImg})`}} className={styles.modalLeftSide}>
+                            <div style={{ background: `url(${sideImg})` }} className={styles.modalLeftSide}>
                                 <div>
 
                                 </div>
