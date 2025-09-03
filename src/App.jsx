@@ -26,10 +26,12 @@ import { TimezonesProvider } from './Context/TimezoneContext'
 import ErrorBoundary from './ErrorBoundary'
 import BroadcastPage from './BroadcastPage'
 import { ToastContainer } from "react-toastify";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 
 const App = () => {
   const [showOtherTabError, setShowOtherTabError] = useState(false)
+  const client = new QueryClient()
 
   useLayoutEffect(() => {
     const bc = new BroadcastChannel("dcode");
@@ -134,48 +136,50 @@ const App = () => {
           <ErrorBoundary>
             <Suspense fallback={<InstaPayLoader opacity={1} fallback={true} />}>
               <TimezonesProvider>
-                <UserState>
-                  <InactivityWrapper>
-                    <CustomizerProvider>
-                      <WishListProvider>
-                        <FilterProvider>
-                          <CartProvider>
-                            <ProjectProvider>
-                              <ProductProvider>
-                                <ContactProvider>
-                                  <EmailProvider>
-                                    <ChatProvider>
-                                      <TaskProvider>
-                                        <TodoProvider>
-                                          <TableProvider>
-                                            <Leatning>
-                                              <FAQProvider>
-                                                <GoogleChartProvider>
-                                                  <ChartistProvider>
-                                                    <BookmarkProvider>
-                                                      <AnimationThemeProvider>
-                                                        {" "}
-                                                        <Routers />
-                                                      </AnimationThemeProvider>{" "}
-                                                    </BookmarkProvider>
-                                                  </ChartistProvider>
-                                                </GoogleChartProvider>
-                                              </FAQProvider>
-                                            </Leatning>
-                                          </TableProvider>
-                                        </TodoProvider>
-                                      </TaskProvider>
-                                    </ChatProvider>
-                                  </EmailProvider>
-                                </ContactProvider>
-                              </ProductProvider>
-                            </ProjectProvider>
-                          </CartProvider>
-                        </FilterProvider>
-                      </WishListProvider>
-                    </CustomizerProvider>
-                  </InactivityWrapper>
-                </UserState>
+                <QueryClientProvider client={client}>
+                  <UserState>
+                    <InactivityWrapper>
+                      <CustomizerProvider>
+                        <WishListProvider>
+                          <FilterProvider>
+                            <CartProvider>
+                              <ProjectProvider>
+                                <ProductProvider>
+                                  <ContactProvider>
+                                    <EmailProvider>
+                                      <ChatProvider>
+                                        <TaskProvider>
+                                          <TodoProvider>
+                                            <TableProvider>
+                                              <Leatning>
+                                                <FAQProvider>
+                                                  <GoogleChartProvider>
+                                                    <ChartistProvider>
+                                                      <BookmarkProvider>
+                                                        <AnimationThemeProvider>
+                                                          {" "}
+                                                          <Routers />
+                                                        </AnimationThemeProvider>{" "}
+                                                      </BookmarkProvider>
+                                                    </ChartistProvider>
+                                                  </GoogleChartProvider>
+                                                </FAQProvider>
+                                              </Leatning>
+                                            </TableProvider>
+                                          </TodoProvider>
+                                        </TaskProvider>
+                                      </ChatProvider>
+                                    </EmailProvider>
+                                  </ContactProvider>
+                                </ProductProvider>
+                              </ProjectProvider>
+                            </CartProvider>
+                          </FilterProvider>
+                        </WishListProvider>
+                      </CustomizerProvider>
+                    </InactivityWrapper>
+                  </UserState>
+                </QueryClientProvider>
               </TimezonesProvider>
             </Suspense>
           </ErrorBoundary>
