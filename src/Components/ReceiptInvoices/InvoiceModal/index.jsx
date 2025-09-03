@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import ContactBox from '../../MyMasterCard/PaymentModal/ContactBox'
 import Preview from './Preview'
 import Form from './Form'
-import { useMutation } from "@tanstack/react-query"
+import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query"
 import { addInvoice, uploadQR } from '../queries'
 import { UserContext } from '../../../Context/UserContext'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
@@ -42,7 +42,7 @@ const InvoiceModal = ({ isOpen, toggle }) => {
     const { t } = useTranslation()
     const [data, dispatch] = useReducer(reducer, initialData)
     const { userDetails } = useContext(UserContext)
-
+    const queryClient = useQueryClient()
 
     // handlers
 
@@ -80,7 +80,10 @@ const InvoiceModal = ({ isOpen, toggle }) => {
     })
 
     const { mutate, isPending: uploadPending, data: uploadData } = useMutation({
-        mutationFn: (formData) => uploadQR(formData)
+        mutationFn: (formData) => uploadQR(formData),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["GetInvoicesList"] })
+        }
     })
 
 

@@ -26,7 +26,6 @@ const ReceiptInvoice = () => {
     })
 
 
-
     const filteredInvoices = useMemo(() => {
         const term = search.trim().toLowerCase()
         if (!term) return data

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import styles from "./styles/index.module.scss"
 import { useTranslation } from "react-i18next"
 import InvoiceItem from "./InvoiceItem"
@@ -16,7 +16,7 @@ export const formatDateTime = (iso) => {
 
 const InvoiceTable = ({ filteredInvoices }) => {
     const { t } = useTranslation()
-   
+
     return (
         <div className={styles.tableWrapper}>
             <div className={styles.table}>
