@@ -426,7 +426,8 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                     money_provider: bankMobCrypto.mobile_money_provider,
                     wallet_name: bankMobCrypto.mobile_wallet_name,
                     wallet_account_number: bankMobCrypto.mobile_wallet_account_number,
-                    extras: mobileExtras
+                    extras: mobileExtras,
+                    vendor: current.vendor,
                 }
             ] : [],
             crypto: cryptoCompleted ? [
@@ -435,6 +436,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                     payer_id: bankMobCrypto.crypto_payer,
                     currency: bankMobCrypto.crypto_currency,
                     wallet_address: bankMobCrypto.crypto_wallet_address,
+                    vendor: current.vendor,
                 }
             ] : [],
             cash_pickup: cashCompleted ? [
@@ -443,8 +445,8 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                     payer_id: bankMobCrypto.cash_payer,
                     document_type: bankMobCrypto.document_type,
                     document_number: bankMobCrypto.document_number,
-                    extras: cashExtras
-
+                    extras: cashExtras,
+                    vendor: current.vendor,
                 }
             ] : [],
             card: cardCompleted ? [
@@ -454,21 +456,24 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                     card_name: card.card_holder_one,
                     card_number: card.card_number_one,
                     card_expiry: card.card_expiry_one,
-                    extras: cardExtras
+                    extras: cardExtras,
+                    vendor: current.vendor,
                 },
                 {
                     service_id: payoutChannelData.find(item => item.value === "card").id,
                     payer_id: card.card_payer,
                     card_name: card.card_holder_two,
                     card_number: card.card_number_two,
-                    card_expiry: card.card_expiry_two
+                    card_expiry: card.card_expiry_two,
+                    vendor: current.vendor,
                 },
                 {
                     service_id: payoutChannelData.find(item => item.value === "card").id,
                     payer_id: card.card_payer,
                     card_name: card.card_holder_three,
                     card_number: card.card_number_three,
-                    card_expiry: card.card_expiry_three
+                    card_expiry: card.card_expiry_three,
+                    vendor: current.vendor,
                 },
             ]
                 : []
@@ -552,7 +557,9 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                     money_provider: bankMobCrypto.mobile_money_provider,
                     wallet_name: bankMobCrypto.mobile_wallet_name,
                     wallet_account_number: bankMobCrypto.mobile_wallet_account_number,
-                    extras: mobileExtras
+                    extras: mobileExtras,
+                    vendor: current.vendor,
+
                 }
             ] : [],
             crypto: cryptoCompleted ? [
@@ -561,6 +568,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                     payer_id: bankMobCrypto.crypto_payer,
                     currency: bankMobCrypto.crypto_currency,
                     wallet_address: bankMobCrypto.crypto_wallet_address,
+                    vendor: current.vendor,
                 }
             ] : [],
             cash_pickup: cashCompleted ? [
@@ -569,8 +577,8 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                     payer_id: bankMobCrypto.cash_payer,
                     document_type: bankMobCrypto.document_type,
                     document_number: bankMobCrypto.document_number,
-                    extras: cashExtras
-
+                    extras: cashExtras,
+                    vendor: current.vendor,
                 }
             ] : [],
             card: cardCompleted ? [
@@ -580,21 +588,25 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                     card_name: card.card_holder_one,
                     card_number: card.card_number_one,
                     card_expiry: card.card_expiry_one,
-                    extras: cardExtras
+                    extras: cardExtras,
+                    vendor: current.vendor,
                 },
                 {
                     service_id: payoutChannelData.find(item => item.value === "card").id,
                     payer_id: card.card_payer,
                     card_name: card.card_holder_two,
                     card_number: card.card_number_two,
-                    card_expiry: card.card_expiry_two
+                    card_expiry: card.card_expiry_two,
+                    vendor: current.vendor,
                 },
                 {
                     service_id: payoutChannelData.find(item => item.value === "card").id,
                     payer_id: card.card_payer,
                     card_name: card.card_holder_three,
                     card_number: card.card_number_three,
-                    card_expiry: card.card_expiry_three
+                    card_expiry: card.card_expiry_three,
+                    vendor: current.vendor,
+
                 },
             ]
                 : []
