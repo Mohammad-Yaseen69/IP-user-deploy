@@ -48,7 +48,7 @@ const QrDetails = ({ wallet, amount, currency, currentWallet, address, user, use
     useEffect(() => {
         let url = ""
         if (inInvoice) {
-            url = `/giftcard/${invoiceId}`
+            url = `/pay/invoice/${invoiceId}`
         } else {
             url = `/payments?payment_action=send_money&payment_type=payment_address&send_type=wallet&wallet_id=${currentWallet?.wallet_id}&currency=${currency}&amount=${amount}`
         }
@@ -63,7 +63,7 @@ const QrDetails = ({ wallet, amount, currency, currentWallet, address, user, use
             reader.readAsDataURL(file);
         })
             .catch(err => console.log(err))
-    }, [amount]);
+    }, [amount, invoiceId]);
     return (
         <div style={{ flex: (address && window.innerWidth > 1400 && "none") }} className={styles.container}>
             <div style={{ flex: address && '0 0 auto', width: (address && (window.innerWidth > 1000)) && "150px", minWidth: (address && (window.innerWidth > 1000 && window.innerWidth < 1400)) && "150px", border: inInvoice && "none", boxShadow: inInvoice && "0 0.679px 13.503px 0 rgba(0, 0, 0, 0.09)" }} className={styles.qr}>
@@ -71,7 +71,7 @@ const QrDetails = ({ wallet, amount, currency, currentWallet, address, user, use
                     {/* <img src={wallet.qrCode?.url} /> */}
                     <img alt="" src={qrLink} style={{ height: (address && (window.innerWidth > 1000)) ? "150px" : inInvoice ? "" : "221px", padding: inInvoice && "10px" }} />
                     <img alt="" src={logo} style={{ position: "absolute", left: "50%", top: "36%", translate: "-50% -50%", width: window.innerWidth > 1000 ? "1.4rem" : "2.5rem", padding: ".3rem", background: "white", borderRadius: "10px" }} />
-                    <div className={styles.qr_id}>{wallet?.wallet_id}</div>
+                    <div className={styles.qr_id}>{wallet?.wallet_id ?? invoiceId}</div>
                     {
                         (user?.username || username)
                         &&

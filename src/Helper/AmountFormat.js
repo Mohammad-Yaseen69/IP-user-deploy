@@ -9,7 +9,7 @@ const formatNumber = (num, isDecimalPart = false) => {
 
 const getDecimalPointIndex = (val) => {
     if (val) {
-        const [_, decimals] = val?.toString()?.split(".");
+        const decimals = val?.toString()?.split(".")?.[1];
 
         if (decimals) {
             for (let idx = 0; idx < decimals.length; idx++) {
@@ -39,7 +39,8 @@ export const formatCurrency = (inputValue, blur, setValue = undefined, centeredI
         rightSide = formatNumber(rightSide.replace(".", ""), true);
 
         // Get number of decimal places based on value
-        const numDecimals = Number(inputVal) >= 0.01 ? 2 : getDecimalPointIndex(inputVal);
+        const rawNumberForDecimals = Number(inputVal.toString().replace(/,/g, ""));
+        const numDecimals = rawNumberForDecimals >= 0.01 ? 2 : getDecimalPointIndex(inputVal);
 
         // On blur, ensure proper decimal places
         if (blur) rightSide += "0".repeat(numDecimals);
@@ -55,7 +56,8 @@ export const formatCurrency = (inputValue, blur, setValue = undefined, centeredI
 
         // Final formatting on blur
         if (blur) {
-            const numDecimals = Number(inputVal) >= 0.01 ? 2 : getDecimalPointIndex(inputVal);
+            const rawNumberForDecimals = Number(inputVal.toString().replace(/,/g, ""));
+            const numDecimals = rawNumberForDecimals >= 0.01 ? 2 : getDecimalPointIndex(inputVal);
             inputVal += "." + "0".repeat(numDecimals);
         }
     }

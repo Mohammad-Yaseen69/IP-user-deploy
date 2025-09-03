@@ -33,7 +33,7 @@ const qrCode = new QRCodeStyling({
     backgroundOptions: { color: "#ffffff" },
 });
 
-const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, platform }) => {
+const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, platform, isInvoice, invoiceQrGenerateFn, invoiceUrl, invoiceId }) => {
     const ref = useRef(null);
     const [generated, setGenerated] = useState(0)
 
@@ -46,27 +46,30 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
         };
     }, []);
 
-
-    const uploadQR = async (item) => {
-        console.log(item)
-        setMessage("Generating Qr Code sticker.")
-        const url = `https://my.insta-pay.ch/q/${item?.wallet_id}`
-        console.log(url)
+    const preparingFormData = async (url) => {
         qrCode.update({ data: url, image: logo });
         const fileName = `qrcode.png`;
         const mimeType = `image/png`;
-
         console.log(qrCode)
-
-        // Get raw QR code data as a Blob
         const blob = await qrCode.getRawData("png");
 
-        // Convert Blob to File
         const file = new File([blob], fileName, { type: mimeType });
         const formData = new FormData();
-        formData.append('qrCode', file);
+        formData.append("qrCode", file)
+
+        return formData
+    }
+
+    const uploadQR = async (item) => {
+        setMessage("Generating Qr Code sticker.")
+
+        const url = `https://my.insta-pay.ch/q/${item?.wallet_id}`
+
+        const formData = await preparingFormData(url)
+
         formData.append("wallet_id", item?.wallet_id)
         formData.append("chatbot", chatbot)
+
         if (platform === "telegram") {
             formData.appent("platform", platform)
         }
@@ -87,6 +90,7 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
     }
 
     useLayoutEffect(() => {
+        if (isInvoice) return
         if (generated < wallets.length) {
             const generateQR = async () => {
                 if (wallets.length > 0) {
@@ -105,12 +109,19 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
                 clearTimeout(timeout)
             }
         }
-    }, [wallets, generated])
+    }, [wallets, generated, isInvoice])
 
 
-    // useEffect(() => {
-    //     uploadQR()
-    // }, [])
+    useEffect(() => {
+        const generateQr = async () => {
+            const formData = await preparingFormData(invoiceUrl)
+            formData.append("invoiceId", invoiceId)
+            invoiceQrGenerateFn(formData)
+        }
+        if (isInvoice && invoiceQrGenerateFn) {
+            generateQr()
+        }
+    }, [isInvoice])
 
     return (
         <div style={{ position: "absolute", top: "-1000vh", left: "-100vw" }}>
