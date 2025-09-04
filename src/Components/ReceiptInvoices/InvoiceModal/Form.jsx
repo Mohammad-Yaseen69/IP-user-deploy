@@ -17,6 +17,7 @@ const Form = ({ data, inputFieldChange, dataHandler }) => {
         }))
     }, [userWallets])
 
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <Field label={t('Title')} required>

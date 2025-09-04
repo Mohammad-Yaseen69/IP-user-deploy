@@ -14,7 +14,7 @@ export const formatDateTime = (iso) => {
 
 
 
-const InvoiceTable = ({ filteredInvoices }) => {
+const InvoiceTable = ({ filteredInvoices, setEditModal }) => {
     const { t } = useTranslation()
 
     return (
@@ -39,7 +39,7 @@ const InvoiceTable = ({ filteredInvoices }) => {
                             : styles.badgeRequested
 
                     return (
-                        <InvoiceItem sn={sn} badgeClass={badgeClass} inv={inv} idx={idx} />
+                        <InvoiceItem setEditModal={setEditModal} sn={sn} badgeClass={badgeClass} inv={inv} idx={idx} />
                     )
                 })}
             </div>

@@ -10,7 +10,7 @@ import { deleteInvoice } from "./queries"
 
 
 
-const InvoiceItem = ({ sn, inv, badgeClass }) => {
+const InvoiceItem = ({ sn, inv, badgeClass, setEditModal }) => {
     const [menuOpenFor, setMenuOpenFor] = useState(null)
     const [expanded, setExpanded] = useState({})
     const { t } = useTranslation()
@@ -57,8 +57,22 @@ const InvoiceItem = ({ sn, inv, badgeClass }) => {
 
                     {menuOpenFor === inv.invoiceId && (
                         <div className={styles.actionsMenu}>
-                            <div className={styles.menuItem} onClick={() => { setMenuOpenFor(null); toggleExpand(inv.invoiceId); }}>{t('View')}</div>
-                            <div className={styles.menuItem} onClick={() => { navigator.clipboard?.writeText(inv.invoiceId); setMenuOpenFor(null); }}>{t('Copy ID')}</div>
+                            <div
+                                className={styles.menuItem}
+                                onClick={() => { setMenuOpenFor(null); toggleExpand(inv.invoiceId); }}>
+                                {t('View')}
+                            </div>
+                            <div
+                                className={styles.menuItem}
+                                onClick={() => {
+                                    setEditModal({
+                                        open: true,
+                                        invoice: inv
+                                    })
+                                    setMenuOpenFor(null)
+                                }}>
+                                {t('Edit')}
+                            </div>
                             <div className={styles.menuItem}
                                 onClick={() => { }}
                             >

@@ -1,16 +1,17 @@
-import React, { useContext, useMemo, useReducer } from 'react'
+import React, { useContext, useEffect, useMemo, useReducer } from 'react'
 import { Modal, ModalBody, ModalHeader } from 'reactstrap'
 import icon from "../files/invoice-icon.png"
 import { useTranslation } from 'react-i18next'
 import ContactBox from '../../MyMasterCard/PaymentModal/ContactBox'
 import Preview from './Preview'
 import Form from './Form'
-import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query"
-import { addInvoice, uploadQR } from '../queries'
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { addInvoice, editInvoice, uploadQR } from '../queries'
 import { UserContext } from '../../../Context/UserContext'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { toast } from 'react-toastify'
 import { ButtonForRequests } from '../UI/FormElements'
+import { formatCurrency } from '../../../Helper/AmountFormat'
 
 const initialData = {
     amount: "",
@@ -38,7 +39,7 @@ function reducer(state, action) {
     }
 }
 
-const InvoiceModal = ({ isOpen, toggle }) => {
+const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
     const { t } = useTranslation()
     const [data, dispatch] = useReducer(reducer, initialData)
     const { userDetails } = useContext(UserContext)
@@ -58,14 +59,28 @@ const InvoiceModal = ({ isOpen, toggle }) => {
         dataHandler(field, value)
     }
 
+    useEffect(() => {
+        if (isEdit && inv) {
+            dataHandler("amount", formatCurrency(inv.amount, true))
+            dataHandler("description", inv.description)
+            dataHandler("title", inv.title)
+            dataHandler("currency", inv.currency)
+            dataHandler("wallet", inv.receivingWallet)
+            dataHandler("invoiceId", inv.invoiceId)
+            dataHandler("allowMultiple", inv.recurring)
+            dataHandler("allowShipping", inv.shippingAddress)
+        }
+    }, [isEdit, inv])
+
     const isInvalid = useMemo(() => {
         return !data.title?.trim() || !data.description?.trim() || !data.amount || Number(data.amount) <= 0 || !data.wallet || !data.currency
     }, [data])
 
 
+
     const onClose = () => {
-        dispatch({ type: "RESET" })
         toggle()
+        dispatch({ type: "RESET" })
     }
 
     const { mutateAsync, isPending, data: addedData } = useMutation({
@@ -78,6 +93,18 @@ const InvoiceModal = ({ isOpen, toggle }) => {
             dataHandler("mode", 'preview')
         }
     })
+    const { mutateAsync: editMutate, isPending: isEditing } = useMutation({
+        mutationFn: ({ invoiceId, payload }) => editInvoice(invoiceId, payload),
+        onError: (error) => {
+            const dec = error.response.data.data ? decryptData(error.response.data.data) : error.response.data
+            toast.error(dec.message || "We can't process your request at this moment please try again later.")
+        },
+        onSuccess: () => {
+            toast.success("Your Invoice is updated!")
+            queryClient.invalidateQueries({ queryKey: ["GetInvoicesList"] })
+            onClose()
+        }
+    })
 
     const { mutate, isPending: uploadPending, data: uploadData } = useMutation({
         mutationFn: (formData) => uploadQR(formData),
@@ -86,9 +113,8 @@ const InvoiceModal = ({ isOpen, toggle }) => {
         }
     })
 
-
-    const handleAddInvoice = async () => {
-        const payload = {
+    const getPayload = () => {
+        return {
             "account": userDetails?._id,
             "title": data.title,
             "description": data.description,
@@ -98,11 +124,18 @@ const InvoiceModal = ({ isOpen, toggle }) => {
             "amount": Number(data.amount.replace(",", "")),
             "currency": data.currency
         }
+    }
 
-        console.log(payload)
+
+    const handleAddInvoice = async () => {
+        const payload = getPayload()
         mutateAsync(payload)
     }
 
+    const handleEditInvoice = async () => {
+        const payload = getPayload()
+        editMutate({ invoiceId: data.invoiceId, payload })
+    }
 
 
     return (
@@ -135,14 +168,16 @@ const InvoiceModal = ({ isOpen, toggle }) => {
                     <ContactBox />
 
                     <ButtonForRequests
-                        isLoading={isInvalid || isPending || uploadPending}
+                        isLoading={isInvalid || isPending || uploadPending || isEditing}
                         onClick={() => {
                             if (data.mode === "form") {
-                                handleAddInvoice()
+                                isEdit ? handleEditInvoice() : handleAddInvoice()
+                            } else {
+                                onClose()
                             }
                         }}
                     >
-                        {data.mode === "preview" ? t('Close') : t('Generate New Invoice')}
+                        {data.mode === "preview" ? t('Close') : isEdit ? t('Edit Invoice') : t('Generate New Invoice')}
                     </ButtonForRequests>
                 </div>
             </ModalBody>

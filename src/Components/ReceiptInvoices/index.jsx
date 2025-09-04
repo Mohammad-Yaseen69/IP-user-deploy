@@ -18,6 +18,10 @@ const ReceiptInvoice = () => {
     const { t } = useTranslation()
     const [showModal, setShowModal] = useState(false)
     const [search, setSearch] = useState("")
+    const [editModal, setEditModal] = useState({
+        open: false,
+        invoice: null
+    })
     const { userDetails } = useContext(UserContext)
 
     const { isLoading, data } = useQuery({
@@ -37,6 +41,7 @@ const ReceiptInvoice = () => {
     }, [data, search])
 
 
+    console.log(editModal)
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -82,6 +87,7 @@ const ReceiptInvoice = () => {
                         </div>
 
                         <InvoiceTable
+                            setEditModal={setEditModal}
                             filteredInvoices={filteredInvoices}
                         />
 
@@ -90,6 +96,17 @@ const ReceiptInvoice = () => {
             </>}
 
             <InvoiceModal isOpen={showModal} toggle={() => setShowModal(false)} />
+            <InvoiceModal
+                isOpen={editModal.open}
+                toggle={() => {
+                    setEditModal({
+                        open: false,
+                        invoice: null
+                    })
+                }}
+                inv={editModal.invoice}
+                isEdit={true}
+            />
         </div>
     )
 }

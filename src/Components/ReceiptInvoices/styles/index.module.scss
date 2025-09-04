@@ -143,8 +143,7 @@
 
         .table {
             width: 100%;
-            display: grid;
-            grid-auto-rows: minmax(48px, auto);
+            min-height: 100vh;
         }
 
         .tr {
