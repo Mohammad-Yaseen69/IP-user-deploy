@@ -1,12 +1,14 @@
 import React, { useState } from "react"
 import styles from "./styles/index.module.scss"
 import { useTranslation } from "react-i18next"
-import { MoreHorizontal } from "react-feather"
-import { Toggle } from "../MyMasterCard/CardPurchased"
+import { MoreHorizontal, X } from "react-feather"
 import { formatDateTime } from "./InvoiceTable"
 import InvoiceItemDetails from "./UI/InvoiceItemDetails"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { deleteInvoice } from "./queries"
+import { SwipeableDrawer } from "@mui/material"
+import useWindowWidth from "../../utils/useWindowWidth"
+import { AnimatePresence, motion } from "framer-motion"
 
 
 
@@ -15,6 +17,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal }) => {
     const [expanded, setExpanded] = useState({})
     const { t } = useTranslation()
     const queryClient = useQueryClient()
+    const width = useWindowWidth()
 
     const toggleExpand = (invoiceId) => {
         setExpanded(prev => ({ ...prev, [invoiceId]: !prev[invoiceId] }))
@@ -36,17 +39,13 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal }) => {
                 }}
             >
                 <div style={{ textAlign: "justify" }} className={`${styles.td} ${styles.serial}`}>{sn}</div>
-                <div className={styles.td}>{formatDateTime(inv.createdAt)}</div>
+                {width > 700 && <div className={styles.td}>{formatDateTime(inv.createdAt)}</div>}
                 <div className={styles.td}>{inv.title}</div>
-                <div className={`${styles.td}`}>{inv.currency} {Number(inv.amount).toFixed(2)}</div>
-                <div className={styles.td}>
+                {width > 450 && <div className={`${styles.td}`}>{inv.currency} {Number(inv.amount).toFixed(2)}</div>}
+                {width > 700 && <div className={styles.td}>
                     <span className={`${styles.badge} ${badgeClass}`}>{t(inv.status)}</span>
-                </div>
-                <div className={styles.td} onClick={(e) => e.stopPropagation()}>
-                    <Toggle
-                        checked={!!inv.recurring}
-                    />
-                </div>
+                </div>}
+                {width > 700 && <div className={styles.td}>{inv.receivingWallet?.wallet_id}</div>}
                 <div className={`${styles.td} ${styles.actions}`} onClick={(e) => e.stopPropagation()}>
                     <button
                         className={styles.threeDotsBtn}
@@ -94,9 +93,34 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal }) => {
                 </div>
             </div>
 
-            {expanded[inv.invoiceId] && (
-                <InvoiceItemDetails inv={inv} />
-            )}
+            <AnimatePresence>
+                {expanded[inv.invoiceId] && (
+                    <SwipeableDrawer
+                        anchor={width < 600 ? "bottom" : "right"}
+                        onClose={() => toggleExpand(inv.invoiceId)}
+                        open={expanded[inv.invoiceId]}
+                        PaperProps={{
+                            component: motion.div,
+                            initial: { [width < 600 ? "y" : "x"]: "100%", filter: "blur(5px)" },
+                            animate: { [width < 600 ? "y" : "x"]: 0, filter: "blur(0px)" },
+                            exit: { [width < 600 ? "y" : "x"]: "100%", filter: "blur(5px)" },
+                            transition: { type: "spring", stiffness: 400, damping: 30 },
+                        }}
+                    >
+                        <div style={{ width: width < 600 ? "100%" : "400px", height: width < 600 && "80vh" }}>
+                            <div style={{ padding: "20px", display: "flex", justifyContent: "space-between", alignItems: "center", position: "sticky", top: "0px", left: "0px", background: "white", zIndex: 100 }}>
+                                <h4>
+                                    {t("Invoice Details")}
+                                </h4>
+                                <X onClick={() => toggleExpand(inv.invoiceId)} cursor={"pointer"} />
+                            </div>
+                            <InvoiceItemDetails inv={inv} />
+                        </div>
+                    </SwipeableDrawer>
+                )}
+            </AnimatePresence>
+
+
         </React.Fragment>
     )
 }

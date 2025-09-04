@@ -1,9 +1,12 @@
 import { Toggle as CardToggle } from "../../MyMasterCard/CardPurchased"
+import styles from "../styles/index.module.scss"
+import download from "../files/download.png"
+import { useTranslation } from "react-i18next"
 
 
 export const Field = ({ label, required, children, toggle }) => (
     <div style={{ display: 'flex', flexDirection: toggle ? "row" : 'column', gap: 3, marginBottom: 7, justifyContent: toggle && "space-between", padding: toggle && "12px", borderRadius: toggle && "8px", background: toggle && "#F9F9F9", alignItems: toggle && 'center' }}>
-        <label style={{ fontWeight: 600, fontSize: 13 }}>
+        <label style={{ fontWeight: 600, fontSize: 13, marginBottom: "0px" }}>
             {label} {required && <span style={{ color: '#e11d48' }}>*</span>}
         </label>
         {children}
@@ -88,5 +91,19 @@ export const ButtonForRequests = ({ isLoading, onClick, children }) => {
         >
             {children}
         </button>
+    )
+}
+
+export const DownloadButton = ({ url, style }) => {
+    const { t } = useTranslation()
+    return (
+        <div style={style} className={styles.downloadBtn}>
+            <img src={download} alt="" />
+            <a href={url} target="_blank" rel="noreferrer" style={{ whiteSpace: "nowrap" }}>
+                <span>
+                    {t("Download")}
+                </span>
+            </a>
+        </div>
     )
 }
