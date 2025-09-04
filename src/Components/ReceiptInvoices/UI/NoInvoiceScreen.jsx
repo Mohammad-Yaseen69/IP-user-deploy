@@ -2,11 +2,14 @@ import React from 'react'
 import styles from "../styles/index.module.scss"
 import { useTranslation } from 'react-i18next'
 import bg from "../files/creation-bg.png"
+import useWindowWidth from '../../../utils/useWindowWidth'
 
-const NoInvoiceScreen = ({setShowModal}) => {
+const NoInvoiceScreen = ({ setShowModal }) => {
     const { t } = useTranslation()
+    const width = useWindowWidth()
+
     return (
-        <div className={styles.noReceiptCont}>
+        <div style={{gridTemplateColumns: width < 800 && "1fr"}} className={styles.noReceiptCont}>
             <div className={styles.left}>
                 <div>
                     <h3>

@@ -11,6 +11,7 @@ import { getInvoiceList } from './queries'
 import { UserContext } from '../../Context/UserContext'
 import InstaPayLoader from '../Loader'
 import InvoiceTable from './InvoiceTable'
+import useWindowWidth from '../../utils/useWindowWidth'
 
 
 
@@ -18,6 +19,7 @@ const ReceiptInvoice = () => {
     const { t } = useTranslation()
     const [showModal, setShowModal] = useState(false)
     const [search, setSearch] = useState("")
+    const width = useWindowWidth()
     const [editModal, setEditModal] = useState({
         open: false,
         invoice: null
@@ -41,7 +43,6 @@ const ReceiptInvoice = () => {
     }, [data, search])
 
 
-    console.log(editModal)
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -49,7 +50,7 @@ const ReceiptInvoice = () => {
                     {t("My Receipts")}
                 </h1>
 
-                <TopRight />
+                {width > 1000 && <TopRight />}
             </div>
 
 
@@ -65,11 +66,11 @@ const ReceiptInvoice = () => {
                                 {t("My recent Invoices:")}
                             </h5>
 
-                            <button onClick={() => setShowModal(true)}>
-                                <span style={{ fontSize: '14px' }}>
+                            <button style={width < 500 ? { justifyContent: "center", alignItems: "center", display: "flex", width: "40px", height: "40px" } : {}} onClick={() => setShowModal(true)}>
+                                <span style={{ fontSize: width < 500 ? "24px" : '14px' }}>
                                     +
                                 </span>
-                                {t("Create New Invoice")}
+                                {width > 500 && t("Create New Invoice")}
                             </button>
                         </div>
 
@@ -107,7 +108,7 @@ const ReceiptInvoice = () => {
                 inv={editModal.invoice}
                 isEdit={true}
             />
-        </div>
+        </div >
     )
 }
 

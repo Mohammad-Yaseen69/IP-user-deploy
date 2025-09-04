@@ -12,6 +12,7 @@ import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { toast } from 'react-toastify'
 import { ButtonForRequests } from '../UI/FormElements'
 import { formatCurrency } from '../../../Helper/AmountFormat'
+import useWindowWidth from '../../../utils/useWindowWidth'
 
 const initialData = {
     amount: "",
@@ -44,7 +45,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
     const [data, dispatch] = useReducer(reducer, initialData)
     const { userDetails } = useContext(UserContext)
     const queryClient = useQueryClient()
-
+    const width = useWindowWidth()
     // handlers
 
     const dataHandler = (field, value) => {
@@ -65,7 +66,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
             dataHandler("description", inv.description)
             dataHandler("title", inv.title)
             dataHandler("currency", inv.currency)
-            dataHandler("wallet", inv.receivingWallet)
+            dataHandler("wallet", inv.receivingWallet?._id)
             dataHandler("invoiceId", inv.invoiceId)
             dataHandler("allowMultiple", inv.recurring)
             dataHandler("allowShipping", inv.shippingAddress)
@@ -139,7 +140,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
 
 
     return (
-        <Modal style={{ minWidth: 700 }} isOpen={isOpen} toggle={onClose}>
+        <Modal style={{ minWidth: width > 800 && 700 }} isOpen={isOpen} toggle={onClose}>
             <ModalHeader style={{ padding: "20px", border: "none" }} toggle={onClose}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <img src={icon} alt="" />
@@ -164,7 +165,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
                 )}
 
 
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: ".5rem" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: width > 600 ? "center" : "stretch", marginTop: ".5rem", flexDirection: width < 600 && "column-reverse", gap: "20px" }}>
                     <ContactBox />
 
                     <ButtonForRequests
