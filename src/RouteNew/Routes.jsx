@@ -60,6 +60,8 @@ const VerifyPinChatBot = lazy(() => import("../Components/Chatbot/Pin/VerifyPin"
 const QuickQrPay = lazy(() => import("../Components/QuickQrPay"))
 const QrQuickerPay = lazy(() => import("../Components/QrQuickerPay"))
 const ReceiptInvoice = lazy(() => import("../Components/ReceiptInvoices"))
+const InvoicePayment = lazy(() => import("../Components/ReceiptInvoices/InvoicePayment"))
+
 
 export const routes = [
     { path: "/", component: <HomeNewUpdated /> },
@@ -103,6 +105,7 @@ export const routes = [
     { path: "/update-pin", component: <UpdatePin /> },
     { path: "/invoices", component: <ReceiptInvoice /> },
 
+
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const publicRoutes = [
@@ -129,10 +132,11 @@ export const publicRoutes = [
     { path: "/chatbot/get-location", component: <GetLocation /> },
     { path: "/chatbot/payment-request", component: <ShowLocation /> },
     { path: "/create-password/:token", component: <CreatePassword /> },
-    { path: "/quick-qrpay", component: <QuickQrPay />},
+    { path: "/quick-qrpay", component: <QuickQrPay /> },
     { path: "/set-account-pin/:accountId/:platformType", component: <CreatePinChatBot /> },
-    { path: "/verify-bot-pin/:accountId/:platformType", component: <VerifyPinChatBot />},
-    { path: "/qr-quickerpay/:wallet_id", component:<QrQuickerPay />},
+    { path: "/verify-bot-pin/:accountId/:platformType", component: <VerifyPinChatBot /> },
+    { path: "/qr-quickerpay/:wallet_id", component: <QrQuickerPay /> },
+    { path: "/invoice/:username/:invoiceId", component: <InvoicePayment /> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const authRoutes = [
