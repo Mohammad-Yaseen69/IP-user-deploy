@@ -37,7 +37,7 @@ const qrCode = new QRCodeStyling({
     backgroundOptions: { color: "#ffffff" },
 });
 
-const QrDetails = ({ wallet, amount, currency, currentWallet, address, user, username, inInvoice, invoiceId, inInvoiceDetails }) => {
+const QrDetails = ({ wallet, amount, currency, currentWallet, address, user, username, inInvoice, invoiceId = undefined }) => {
     const { t } = useTranslation()
     const ref = useRef(null)
     const [qrLink, setQrLink] = useState("")
@@ -47,8 +47,8 @@ const QrDetails = ({ wallet, amount, currency, currentWallet, address, user, use
 
     useEffect(() => {
         let url = ""
-        if (inInvoice) {
-            url = `/pay/invoice/${invoiceId}`
+        if (invoiceId) {
+            url = `/invoice/qr/${username}/${invoiceId}`
         } else {
             url = `/payments?payment_action=send_money&payment_type=payment_address&send_type=wallet&wallet_id=${currentWallet?.wallet_id}&currency=${currency}&amount=${amount}`
         }
@@ -65,7 +65,7 @@ const QrDetails = ({ wallet, amount, currency, currentWallet, address, user, use
             .catch(err => console.log(err))
     }, [amount, invoiceId]);
     return (
-        <div style={{ flex: (address && window.innerWidth > 1400 && "none"), width: inInvoiceDetails && "50%", maxHeight: inInvoice && "fit-content" }} className={styles.container}>
+        <div style={{ flex: (address && window.innerWidth > 1400 && "none"), maxHeight: inInvoice && "fit-content" }} className={styles.container}>
             <div style={{ flex: address && '0 0 auto', width: (address && (window.innerWidth > 1000)) && "150px", minWidth: (address && (window.innerWidth > 1000 && window.innerWidth < 1400)) && "150px", border: inInvoice && "none", boxShadow: inInvoice && "0 0.679px 13.503px 0 rgba(0, 0, 0, 0.09)" }} className={styles.qr}>
                 <div className={styles.qrCode} style={{ position: "relative" }}>
                     {/* <img src={wallet.qrCode?.url} /> */}
@@ -112,7 +112,7 @@ const QrDetails = ({ wallet, amount, currency, currentWallet, address, user, use
                             <span>2. Send <strong>“Hi”</strong> to <strong>@instapay_swiss</strong> and select <strong>QR QuickPay</strong></span>
                         </li>
                         <li>
-                            <span>3. Enter the <strong>Alphanumeric code ({wallet?.wallet_id})</strong> or <strong>Scan the QR Code</strong></span>
+                            <span>3. Enter the <strong>Alphanumeric code ({wallet?.wallet_id ?? invoiceId})</strong> or <strong>Scan the QR Code</strong></span>
                         </li>
                         <li>
                             <span>4. Complete your payment.</span>

@@ -13,8 +13,6 @@ import InstaPayLoader from '../Loader'
 import InvoiceTable from './InvoiceTable'
 import useWindowWidth from '../../utils/useWindowWidth'
 
-
-
 const ReceiptInvoice = () => {
     const { t } = useTranslation()
     const [showModal, setShowModal] = useState(false)
@@ -28,10 +26,8 @@ const ReceiptInvoice = () => {
 
     const { isLoading, data } = useQuery({
         queryKey: ["GetInvoicesList"],
-        queryFn: () => getInvoiceList(userDetails?._id, 1, 20),
+        queryFn: () => getInvoiceList(userDetails?._id, 1, 100),
     })
-
-
     const filteredInvoices = useMemo(() => {
         const term = search.trim().toLowerCase()
         if (!term) return data
@@ -41,8 +37,6 @@ const ReceiptInvoice = () => {
             inv.status.toLowerCase().includes(term)
         )
     }, [data, search])
-
-
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -52,7 +46,6 @@ const ReceiptInvoice = () => {
 
                 {width > 1000 && <TopRight />}
             </div>
-
 
             {isLoading ? <div style={{ width: "70%", margin: "auto" }}><InstaPayLoader /></div> : <>
                 {data?.length < 1 &&
@@ -65,7 +58,6 @@ const ReceiptInvoice = () => {
                             <h5>
                                 {t("My recent Invoices:")}
                             </h5>
-
                             <button style={width < 500 ? { justifyContent: "center", alignItems: "center", display: "flex", width: "40px", height: "40px" } : {}} onClick={() => setShowModal(true)}>
                                 <span style={{ fontSize: width < 500 ? "24px" : '14px' }}>
                                     +
@@ -86,12 +78,10 @@ const ReceiptInvoice = () => {
                             </div>
                             <img src={date} style={{ cursor: "pointer", marginTop: "4px" }} alt="" />
                         </div>
-
                         <InvoiceTable
                             setEditModal={setEditModal}
                             filteredInvoices={filteredInvoices}
                         />
-
                     </div>
                 }
             </>}

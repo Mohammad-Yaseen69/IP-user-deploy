@@ -84,9 +84,10 @@ export const ButtonForRequests = ({ isLoading, onClick, children }) => {
                 padding: '10px 16px',
                 borderRadius: 8,
                 fontWeight: 700,
-                background: isLoading ? '#d1d5db' : '#5926F0',
+                background: '#5926F0',
                 color: '#fff',
-                cursor: isLoading ? 'not-allowed' : 'pointer'
+                cursor: isLoading ? 'not-allowed' : 'pointer',
+                opacity: isLoading && .5
             }}
         >
             {children}
@@ -104,6 +105,18 @@ export const DownloadButton = ({ url, style }) => {
                     {t("Download")}
                 </span>
             </a>
+        </div>
+    )
+}
+
+export const InfoItem = ({ label, children, style }) => {
+    const { t } = useTranslation()
+    return (
+        <div className={styles.expandItem} style={style}>
+            <span className={styles.itemHeading}> {t(label)}: </span>
+            <div style={{ marginTop: "10px", width: "100%" }}>
+                {children}
+            </div>
         </div>
     )
 }

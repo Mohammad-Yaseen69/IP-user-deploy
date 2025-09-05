@@ -9,12 +9,15 @@ import { deleteInvoice } from "./queries"
 import { SwipeableDrawer } from "@mui/material"
 import useWindowWidth from "../../utils/useWindowWidth"
 import { AnimatePresence, motion } from "framer-motion"
+import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap"
+import { ButtonForRequests } from "./UI/FormElements"
 
 
 
 const InvoiceItem = ({ sn, inv, badgeClass, setEditModal }) => {
     const [menuOpenFor, setMenuOpenFor] = useState(null)
     const [expanded, setExpanded] = useState({})
+    const [showConfirm, setShowConfirm] = useState(false)
     const { t } = useTranslation()
     const queryClient = useQueryClient()
     const width = useWindowWidth()
@@ -42,10 +45,11 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal }) => {
                 {width > 700 && <div className={styles.td}>{formatDateTime(inv.createdAt)}</div>}
                 <div className={styles.td}>{inv.title}</div>
                 {width > 450 && <div className={`${styles.td}`}>{inv.currency} {Number(inv.amount).toFixed(2)}</div>}
+                {width > 700 && <div className={styles.td}>{inv.receivingWallet?.wallet_id}</div>}
                 {width > 700 && <div className={styles.td}>
                     <span className={`${styles.badge} ${badgeClass}`}>{t(inv.status)}</span>
-                </div>}
-                {width > 700 && <div className={styles.td}>{inv.receivingWallet?.wallet_id}</div>}
+                </div>
+                }
                 <div className={`${styles.td} ${styles.actions}`} onClick={(e) => e.stopPropagation()}>
                     <button
                         className={styles.threeDotsBtn}
@@ -82,9 +86,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal }) => {
                                 onClick={() => {
                                     setMenuOpenFor(null)
                                     setExpanded(prev => ({ ...prev, [inv.invoiceId]: false }))
-                                    if (!isPending) {
-                                        mutate(inv.invoiceId)
-                                    }
+                                    setShowConfirm(true)
                                 }}>
                                 {t('Delete')}
                             </div>
@@ -93,24 +95,48 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal }) => {
                 </div>
             </div>
 
+            <Modal isOpen={showConfirm} toggle={() => setShowConfirm(false)}>
+                <ModalHeader toggle={() => setShowConfirm(false)}>
+                    {t('Confirm Deletion')}
+                </ModalHeader>
+                <ModalBody>
+                    {t('Are you sure you want to delete this invoice?')}
+                </ModalBody>
+                <ModalFooter>
+                    <button toggle={() => setShowConfirm(false)} style={{background: "none", border: "none", outline: "none", fontWeight: 600, fontSize: "14px"}}>
+                        {t("Cancel")}
+                    </button>
+                    <ButtonForRequests
+                        onClick={() => {
+                            if (!isPending) {
+                                mutate(inv.invoiceId)
+                            }
+                        }}
+                        isLoading={isPending}
+                    >
+                        {t("Delete")}
+                    </ButtonForRequests>
+                </ModalFooter>
+            </Modal>
+
             <AnimatePresence>
                 {expanded[inv.invoiceId] && (
                     <SwipeableDrawer
-                        anchor={width < 600 ? "bottom" : "right"}
+                        anchor={width < 750 ? "bottom" : "right"}
                         onClose={() => toggleExpand(inv.invoiceId)}
                         open={expanded[inv.invoiceId]}
                         PaperProps={{
                             component: motion.div,
-                            initial: { [width < 600 ? "y" : "x"]: "100%", filter: "blur(5px)" },
-                            animate: { [width < 600 ? "y" : "x"]: 0, filter: "blur(0px)" },
-                            exit: { [width < 600 ? "y" : "x"]: "100%", filter: "blur(5px)" },
+                            initial: { [width < 750 ? "y" : "x"]: "100%", filter: "blur(5px)" },
+                            animate: { [width < 750 ? "y" : "x"]: 0, filter: "blur(0px)" },
+                            exit: { [width < 750 ? "y" : "x"]: "100%", filter: "blur(5px)" },
                             transition: { type: "spring", stiffness: 400, damping: 30 },
                         }}
                     >
-                        <div style={{ width: width < 600 ? "100%" : "400px", height: width < 600 && "80vh" }}>
+                        <div style={{ width: width < 750 ? "100%" : "550px", height: width < 750 && "80vh" }}>
                             <div style={{ padding: "20px", display: "flex", justifyContent: "space-between", alignItems: "center", position: "sticky", top: "0px", left: "0px", background: "white", zIndex: 100 }}>
                                 <h4>
-                                    {t("Invoice Details")}
+                                    {inv.title}
                                 </h4>
                                 <X onClick={() => toggleExpand(inv.invoiceId)} cursor={"pointer"} />
                             </div>

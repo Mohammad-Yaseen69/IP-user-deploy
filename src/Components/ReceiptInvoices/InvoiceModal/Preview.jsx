@@ -14,9 +14,9 @@ const Preview = ({ invoiceId, data, isPending, uploadData, mutate }) => {
     const { userDetails } = useContext(UserContext)
 
 
-    const shareLink = useMemo(() => {
+    const qrCodeUrl = useMemo(() => {
         const base = 'https://my.insta-pay.ch'
-        return `${base}/pay/invoice/${invoiceId}`
+        return `${base}/invoice/qr/${userDetails?.username}/${invoiceId}`
     }, [invoiceId])
 
 
@@ -60,7 +60,7 @@ const Preview = ({ invoiceId, data, isPending, uploadData, mutate }) => {
                 invoiceQrGenerateFn={mutate}
                 invoiceId={invoiceId}
                 isInvoice={true}
-                invoiceUrl={shareLink}
+                invoiceUrl={qrCodeUrl}
             />
         </>
     )

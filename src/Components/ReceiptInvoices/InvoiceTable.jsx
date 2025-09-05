@@ -5,9 +5,16 @@ import InvoiceItem from "./InvoiceItem"
 import useWindowWidth from "../../utils/useWindowWidth"
 
 
-export const formatDateTime = (iso) => {
+export const formatDateTime = (iso, dateOrTime = "both") => {
     try {
-        return new Date(iso).toLocaleString()
+        if (dateOrTime === "time") {
+            return new Date(iso).toLocaleTimeString()
+        } else if (dateOrTime === "date") {
+            return new Date(iso).toLocaleDateString()
+        }
+        else {
+            return new Date(iso).toLocaleString()
+        }
     } catch (_) {
         return iso
     }
@@ -27,8 +34,8 @@ const InvoiceTable = ({ filteredInvoices, setEditModal }) => {
                     {width > 700 && < div className={styles.th}>{t('Date and Time')}</div>}
                     <div className={styles.th}>{t('Title')}</div>
                     {width > 450 && <div className={`${styles.th} ${styles.amount}`}>{t('Amount')}</div>}
-                    {width > 700 && <div className={styles.th}>{t('Status')}</div>}
                     {width > 700 && <div className={styles.th}>{t('Receiving Wallet')}</div>}
+                    {width > 700 && <div className={styles.th}>{t('Status')}</div>}
                     <div className={`${styles.th} ${styles.actions}`}>{t('Actions')}</div>
                 </div>
 
@@ -45,9 +52,6 @@ const InvoiceTable = ({ filteredInvoices, setEditModal }) => {
                     )
                 })}
             </div>
-
-
-            
         </div >
     )
 }

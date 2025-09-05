@@ -35,7 +35,7 @@ const getInvoiceUsingId = async (invoiceId) => {
     const response = await axios.get(`${path}/invoice/${invoiceId}`, {
         headers: authHeader
     })
-    return decryptData(response.data.data)
+    return decryptData(response.data.data)?.data
 }
 
 const editInvoice = async (invoiceId, payload) => {

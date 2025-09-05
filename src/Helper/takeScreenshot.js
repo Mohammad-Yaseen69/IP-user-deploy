@@ -1,9 +1,8 @@
 import html2canvas from "html2canvas"
-import { toast } from "react-toastify";
 
 export const takeScreenshot = (classname = "App", setLoading) => {
     setLoading(true)
-    // console.log("screenshot started")
+    
     html2canvas(document.querySelector(`.${classname}`)).then((canvas) => {
         const imgData = canvas.toDataURL("image/png");
         const aTag = document.createElement("a");
@@ -32,5 +31,5 @@ export const captureScreenShot = async (wallet_id) => {
                 setTimeout(() => window.close(), 4000);
             })
             .catch(error => console.log(error));
-    }, 1000); // Adjust the timeout as needed
+    }, 1000); 
 };

@@ -1,6 +1,6 @@
 import React from 'react'
 import load from "../../assets/load.gif"
-const InstaPayLoader = ({ opacity = 1, fallback = false }) => {
+const InstaPayLoader = ({ opacity = 1, fallback = false, transparent }) => {
     console.log(load)
     return fallback ? (<div
         style={{
@@ -9,7 +9,7 @@ const InstaPayLoader = ({ opacity = 1, fallback = false }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: "#fff",
+            backgroundColor: transparent ? "transparent" : "#fff",
             opacity,
             overflow: "hidden",
         }}
