@@ -224,7 +224,7 @@ const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHa
                             toggle()
                         }}>{t("Back")}</button>
                         <button disabled={isLoading || isAnyFieldEmpty} onClick={() => callback(otpValues.join(""))} ref={buttonRef}>
-                            {t("Verify")}
+                            {isLoading ? t("Verifying") : t("Verify")}
                             <ChevronRight size={18} color="white" />
                         </button>
                     </div>
