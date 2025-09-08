@@ -180,6 +180,21 @@
     padding: 6px 8px;
 }
 
+.paidInvoice {
+    width: 100%;
+    padding: 24px;
+    text-align: center;
+    background-color: #10a510;
+    margin: 2rem 0;
+
+    p {
+        font-size: 16px;
+        color: white;
+        margin-bottom: 0px;
+        font-weight: 600;
+    }
+}
+
 .container .sub_container .sc_body .top .left .basic_dets .country img {
     width: 18px;
     height: 12px;
@@ -390,7 +405,7 @@
 
 @media screen and (min-width: 1200px) {
     .sc_body {
-        display: grid !important;
+        display: grid;
         grid-template-columns: .4fr 1fr;
     }
 }
