@@ -43,7 +43,8 @@ const BottomNav = ({ setShowModal }) => {
             link: "/dashboard/default",
             type: "link",
             width: "29px",
-            height: "28px"
+            height: "28px",
+            otherLink: "/"
         },
         {
             icon: Card,
@@ -100,6 +101,15 @@ const BottomNav = ({ setShowModal }) => {
 
     const { t } = useTranslation()
     const [showFixed, setShowFixed] = useState(false)
+
+
+    useEffect(() => {
+        navData.forEach(item => {
+            new Image().src = item.icon;
+            if (item.icon_active) new Image().src = item.icon_active;
+        });
+    }, []);
+
     return !dontShow ? (
         <>
             <nav className={styles.bottom_nav} onClick={() => {
@@ -110,12 +120,31 @@ const BottomNav = ({ setShowModal }) => {
                 <ul className={styles.bn_list}>
                     {
                         navData.map(item => (
-                            <li key={item.icon} className={`${styles.bnl_item} ${window.location.pathname === item.link && styles.bnli_a}`}>
+                            <li
+                                key={item.icon}
+                                className={`${styles.bnl_item} ${(location.pathname === item.link ||
+                                    location.pathname === item.otherLink) && styles.bnli_a}`}
+                            >
                                 {
                                     item.type === "link"
                                         ?
                                         <Link to={item.link} onClick={verifyToken}>
-                                            <img src={window.location.pathname === item.link ? item.icon_active : item.icon} alt="icon" height={item.height} width={item.width} />
+                                            {(location.pathname === item.link || location.pathname === item.otherLink)
+                                                && <img
+                                                    src={item.icon_active}
+                                                    alt="icon"
+                                                    height={item.height}
+                                                    width={item.width}
+                                                />
+                                            }
+                                            {(location.pathname !== item.link && location.pathname !== item.otherLink)
+                                                && <img
+                                                    src={item.icon}
+                                                    alt="icon"
+                                                    height={item.height}
+                                                    width={item.width}
+                                                />
+                                            }
                                             <div></div>
                                         </Link>
                                         :
@@ -128,7 +157,7 @@ const BottomNav = ({ setShowModal }) => {
                                                 <img src={item.icon} alt="icon" style={{ transform: "translateX(1px)" }} />
                                             </button>
                                             :
-                                            <img src={window.location.pathname === item.link ? item.icon_active : item.icon} alt="icon" height={item.height} width={item.width} onClick={() => toggleSidebar()} />
+                                            <img src={(location.pathname === item.link || location.pathname === item.otherLink) ? item.icon_active : item.icon} alt="icon" height={item.height} width={item.width} onClick={() => toggleSidebar()} />
                                 }
                             </li>
                         ))
