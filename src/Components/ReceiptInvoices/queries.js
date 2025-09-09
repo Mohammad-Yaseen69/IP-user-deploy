@@ -3,8 +3,8 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import { authHeader } from "../../Context/UserContext"
 
-// const path = process.env.REACT_APP_IP_DEV_API
-const path = 'http://localhost:3004/api/invoice'
+const path = `${process.env.REACT_APP_IP_DEV_API}/api/invoice`
+// const path = 'http://localhost:3004/api/invoice'
 
 const addInvoice = async (payload) => {
     const enc = encryptData(payload)
