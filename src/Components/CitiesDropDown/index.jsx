@@ -5,7 +5,7 @@ import { City } from 'country-state-city'
 import iso2 from "../AddFunds/WalletFund/countries_iso2.json"
 
 
-const CitiesDropDown = ({ country, userCity, setUserCity, disabled = false, styles = {}, iso_3 = "", isState, title = "Select City", stateData }) => {
+const CitiesDropDown = ({ country, userCity, setUserCity, disabled = false, styles = {}, iso_3 = "", isState, title = "Select City", stateData, background = "#fff" }) => {
     const { t } = useTranslation()
     const [isOpen, setIsOpen] = useState(false);
     const cityInputRef = useRef()
@@ -75,11 +75,11 @@ const CitiesDropDown = ({ country, userCity, setUserCity, disabled = false, styl
 
     return (
         <Dropdown isOpen={isOpen} toggle={toggleDropdown}>
-            <DropdownToggle color='white' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", border: "1px solid rgba(0,0,0,.05)", borderRadius: "5px", padding: ".75rem", background: disabled ? "#eee" : "#fff" }} disabled={disabled}>
+            <DropdownToggle color='white' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", border: "1px solid rgba(0,0,0,.05)", borderRadius: "5px", padding: ".75rem", background: disabled ? "#eee" : background }} disabled={disabled}>
                 {
                     isOpen
                         ?
-                        <input style={{ border: "none", outline: "none", padding: 0, margin: 0, height: "100%", width: "100%", background: "transparent" }} placeholder='Search City' ref={cityInputRef} onClick={(e) => e.stopPropagation()} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+                        <input style={{ border: "none", outline: "none", padding: 0, margin: 0, height: "100%", width: "100%", background: "transparent" }} placeholder={`Search ${isState ? "State" : "City"} `} ref={cityInputRef} onClick={(e) => e.stopPropagation()} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
                         :
                         <>
                             {userCity ? (

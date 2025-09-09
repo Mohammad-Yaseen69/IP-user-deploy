@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import Fuse from 'fuse.js';
 import { countriesInDiffLangs } from '../../Data/CountriesWithTranslations/countries';
 
-const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = ".7rem .5rem", disabledColor = "#e9ecef", countryNameSize = {}, filteringList = [], setIsCountryInFocus = () => { } }) => {
+const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = ".7rem .5rem", disabledColor = "#e9ecef", countryNameSize = {}, filteringList = [], setIsCountryInFocus = () => { }, background = "#fff" }) => {
     const { t, i18n } = useTranslation()
     const [isOpen, setIsOpen] = useState(false);
     const [selectedCountry, setSelectedCountry] = useState("");
@@ -15,7 +15,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
     const [filteredCountries, setFilteredCountries] = useState(countries);
     const [searchTerm, setSearchTerm] = useState('');
     const [countriesLoaded, setCountriesLoaded] = useState(false);
-    const { allowedCountries, getAllActiveCountries, userDetails } = useContext(UserContext)
+    const { allowedCountries, getAllActiveCountries } = useContext(UserContext)
 
     useEffect(() => {
         getAllActiveCountries();
@@ -69,7 +69,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
             setSelectedCountry(filtered);
         }
         setFilteredCountries(countries)
-    }, [country, userDetails, countries, countriesLoaded]);
+    }, [country, countries, countriesLoaded]);
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -92,7 +92,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
     }, [isOpen])
     return (
         <Dropdown isOpen={isOpen} toggle={toggleDropdown}>
-            <DropdownToggle color='white' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", border: "1px solid rgba(0,0,0,.05)", borderRadius: "5px", padding: padding, background: disabled ? disabledColor : "#fff" }} disabled={disabled}>
+            <DropdownToggle color='white' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", border: "1px solid rgba(0,0,0,.05)", borderRadius: "5px", padding: padding, background: disabled ? disabledColor : background }} disabled={disabled}>
                 {
                     isOpen
                         ?

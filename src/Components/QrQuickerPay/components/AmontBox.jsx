@@ -4,7 +4,7 @@ import styles from "../styles/index.module.scss"
 import { formatCurrency } from '../../../Helper/AmountFormat'
 
 
-const AmontBox = ({ code, amount, setAmount }) => {
+const AmontBox = ({ code, amount, setAmount, isInvoice }) => {
     const { t } = useTranslation()
 
     const handleKeyUp = (e) => {
@@ -14,6 +14,7 @@ const AmontBox = ({ code, amount, setAmount }) => {
 
     const handleBlur = (e) => {
         formatCurrency(e.target.value, true, setAmount, true, e);
+        e.target.size = Math.max(e.target.value.length, 1);
     };
 
     const handleAmountChange = (e) => {
@@ -24,7 +25,7 @@ const AmontBox = ({ code, amount, setAmount }) => {
 
     return (
         <div className={styles.amountBox}>
-            <span>{t("Type Your Amount")}</span>
+            <span>{isInvoice ? t("Amount") : t("Type Your Amount")}</span>
             <div>
                 <p>{code}</p>
 
@@ -32,9 +33,10 @@ const AmontBox = ({ code, amount, setAmount }) => {
                     type="text"
                     value={amount}
                     // style={{ width }}
+                    readOnly={isInvoice}
                     onChange={handleAmountChange}
                     onKeyUp={handleKeyUp}
-                    size={"1"}
+                    size={Math.max(String(amount)?.length, 1)}
                     onBlur={handleBlur}
                 />
             </div>

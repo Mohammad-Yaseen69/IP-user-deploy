@@ -11,7 +11,7 @@ const QRScan = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if(loginFlow){
+        if (loginFlow) {
             if (userDetails) {
                 sessionStorage.setItem("path", `/payments?payment_action=send_money&send_type=qr_pay&wallet_id=${wallet_id?.toUpperCase()}`)
                 navigate(`/payments?payment_action=send_money&send_type=qr_pay&wallet_id=${wallet_id?.toUpperCase()}`)
@@ -20,7 +20,7 @@ const QRScan = () => {
                 navigate("/login")
             }
         }
-        else{
+        else {
             navigate(`/qr-quickerpay/${wallet_id}`)
         }
     }, [userDetails])

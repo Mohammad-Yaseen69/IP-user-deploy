@@ -5,13 +5,11 @@ import { paymentConfirmOptions } from "../MyMasterCard/PaymentModal/SuccessStep"
 import { useNavigate, useParams } from "react-router"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import { toast } from "react-toastify"
-import { startAuthentication } from "@simplewebauthn/browser"
 import { ArrowLeft } from "react-feather"
 import InstaPayLoader from "../Loader"
 import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation"
 import NotFound from "../NotFound";
 import { useTranslation } from "react-i18next";
-import localforage from "localforage"
 import ErrorModal from "./components/ErrorModal";
 import { useMutation } from "@tanstack/react-query"
 import StepThree from "./components/StepThree";
@@ -20,7 +18,9 @@ import AmontBox from "./components/AmontBox";
 import DetsModal from "./components/DetsModal";
 import useCountryLocation from "../../hooks/GeneralUse/useCountryLocation"
 import FeeScreen from "./components/FeeScreen"
-import { getWalletDetails, sendOtpSkip, confirmTransaction, getFeeDetails, biometricVerification1, biometricVerification2 } from "./queries"
+import { getWalletDetails, sendOtpSkip, confirmTransaction } from "./queries"
+import useBiometricVerifications from "../../hooks/GeneralUse/useBiometricVerfications"
+import useFXNew from "../../hooks/Payments/useFXNew"
 
 const initialData = {
   step: 1,
@@ -66,6 +66,10 @@ const QrQuickerPay = () => {
     dispatch({ type: "UPDATE_FIELD", field, value })
   }
 
+  // Custom hooks
+  const { handleGetFeeDetails, feeLoading } = useFXNew(data, dataHandler)
+  const { handleBiometricVerification } = useBiometricVerifications(data, dataHandler, handleGetFeeDetails)
+
   const { mutateAsync: getWalletDetailsMutation, isPending: walletLoading } = useMutation({
     mutationFn: (payload) => getWalletDetails(payload),
     onSuccess: (recipientDets) => {
@@ -91,67 +95,6 @@ const QrQuickerPay = () => {
   }, [wallet_id, getWalletDetailsMutation])
 
 
-  const { mutateAsync: getFeeDetailsMutation, isPending: feeLoading } = useMutation({
-    mutationFn: (payload) => getFeeDetails(payload)
-  });
-
-  const handleGetFeeDetails = async (sender_wallet_id, from, tokenApi, account_id, level) => {
-    dataHandler("feeData", {})
-    console.log(Number(data.amount?.replace(",", "")))
-
-    try {
-      const payload = {
-        sender_wallet_id,
-        from,
-        tokenApi,
-        account_id,
-        level,
-        amount: data.amount,
-        recipientDets: data.recipientDets,
-        userDetails: data.userDetails
-      }
-      const exchange_rate_details = await getFeeDetailsMutation(payload)
-      dataHandler("feeData", exchange_rate_details);
-    } catch (error) {
-      const dec = decryptData(error?.response?.data?.data);
-      if (typeof dec?.message === "object") {
-        if (dec?.message?.[0]?.code === "1003007") {
-          toast.error("Payer unavailable");
-          return;
-        }
-        toast.error("Something went wrong");
-        return;
-      }
-      const err = LimitsErrorMessage(dec.code)
-
-      if (err) {
-        dataHandler("error", err)
-        dataHandler("showModal", true)
-        return
-      }
-      if (dec?.message?.toLowerCase()?.includes("insufficient")) {
-        toast.error("Insufficient balance");
-        return;
-      }
-      if (
-        dec?.message?.toLowerCase()?.includes("exceeds max") ||
-        dec?.message?.toLowerCase()?.includes("above the max")
-      ) {
-        toast.error("Amount exceeds maximum allowed");
-        return;
-      }
-      if (
-        dec?.message?.toLowerCase()?.includes("below the min") ||
-        dec?.message?.toLowerCase()?.includes("below the max")
-      ) {
-        toast.error("Amount below minimum allowed");
-        return;
-      }
-      toast.error(dec?.message || "Something went wrong");
-      dataHandler("feeData", null);
-      return;
-    }
-  };
 
   const { mutateAsync: confirmTransactionMutation } = useMutation({
     mutationFn: ({ payload, apiHeaders }) => confirmTransaction(apiHeaders, payload)
@@ -228,82 +171,6 @@ const QrQuickerPay = () => {
   }
 
 
-  const { mutateAsync: biometricVerification1Mutation } = useMutation({
-    mutationFn: (payload) => biometricVerification1(payload)
-  })
-
-  const { mutateAsync: biometricVerification2Mutation } = useMutation({
-    mutationFn: (payload) => biometricVerification2(payload)
-  })
-
-  const handleBiometricVerification = async () => {
-    try {
-      dataHandler("isPressed", true)
-      const localPhone = await localforage.getItem("phone");
-      const loginPhone = await localforage.getItem("loginData")
-
-      const storedCredentials = localPhone || loginPhone?.credentials || null
-
-      const payload = {
-        qr_quicker_pay: true
-      }
-      if (data.phone && data.password) {
-        payload.phone = data.phone;
-        payload.password = data.password;
-      }
-      else if (storedCredentials) {
-        payload.phone = storedCredentials;
-        payload.localstorage = true;
-      }
-
-      const dec1 = await biometricVerification1Mutation(payload)
-      const credentials = await startAuthentication(dec1.options)
-      console.log(dec1)
-      const dec2 = await biometricVerification2Mutation(credentials)
-
-      console.log(dec2)
-
-      if (dec2.user?.username === data.recipientDets?.username) {
-        toast.error("You cannot send money to your own wallet")
-        dataHandler("isPressed", false)
-        return
-      } else {
-        dataHandler("step", data.step + 1)
-        handleGetFeeDetails(dec2?.user?.walletDetails?._id, dec2?.user?.walletDetails?.currency?.code, dec2?.token, dec2?.user?._id, dec2?.user?.level_id)
-        dataHandler("showDetsModal", false)
-        dataHandler("token", dec2.token)
-        dataHandler("userDetails", dec2.user)
-      }
-    } catch (error) {
-      dataHandler("isPressed", false)
-      console.log("Biometric verification error:", error)
-
-      const dec = error?.response?.data?.data ? decryptData(error?.response?.data?.data) : error.response?.data
-      console.log("Decrypted error:", dec)
-
-      if (dec?.message?.toLowerCase()?.includes("cookie")) {
-        dataHandler("showDetsModal", true)
-        return
-      }
-      if (dec?.message?.toLowerCase()?.includes("user not found")) {
-        return toast.error("You have entered wrong phone number/ password")
-      }
-      if (dec?.message?.toLowerCase()?.includes("password")) {
-        return toast.error("You have entered wrong phone number/ password")
-      }
-      if (dec?.message?.toLowerCase()?.includes("quickerqrpay is disabled")) {
-        dataHandler("error", "Quicker QR pay is inactive in your account, please enable it from settings/payment threshold for quick payments.")
-        dataHandler("showModal", true)
-        return
-      }
-
-      console.log(dec)
-      toast.error("Biometric verification failed");
-    }
-    finally {
-      dataHandler("isPressed", false)
-    }
-  };
   const { t } = useTranslation()
 
   return (
@@ -410,10 +277,19 @@ const QrQuickerPay = () => {
                   <button
                     disabled={data.isPressed || !data.amount || /^0+$/.test(data.amount.toString().replace(/\./g, '')) || feeLoading || sendOtpLoading}
                     style={{ opacity: (data.isPressed || !data.amount || /^0+$/.test(data.amount.toString().replace(/\./g, '')) || feeLoading || sendOtpLoading) && ".5" }}
-                    onClick={() => {
+                    onClick={async () => {
                       if (data.step === 1) {
                         if (!data.userDetails._id) {
-                          handleBiometricVerification()
+                          const result = await handleBiometricVerification()
+                          if (result) {
+                            handleGetFeeDetails(
+                              result?.user?.walletDetails?._id,
+                              result?.user?.walletDetails?.currency?.code,
+                              result?.token,
+                              result?.user?._id,
+                              result?.user?.level_id
+                            )
+                          }
                         }
                         else {
                           handleGetFeeDetails(

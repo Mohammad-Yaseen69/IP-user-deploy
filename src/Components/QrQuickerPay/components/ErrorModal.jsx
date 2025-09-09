@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
 
-const ErrorModal = ({ error, showModal, limitErrors, url, toggle }) => {
+const ErrorModal = ({ error, showModal, limitErrors, url, toggle, isInvoice, guestClick }) => {
     const windowWidth = useWindowWidth()
     const { t } = useTranslation()
     const navigate = useNavigate()
@@ -18,19 +18,31 @@ const ErrorModal = ({ error, showModal, limitErrors, url, toggle }) => {
                 </h2>
                 <p style={{ fontWeight: 600, fontSize: "15px", color: "#6f6f6f" }}>{t(error)}</p>
 
-                <div style={{ display: "flex", gap: "10px", flexDirection: windowWidth < 400 && "column", marginTop: "2rem" }}>
-                    {(limitErrors || error.toLowerCase()?.includes("amount exceeds") || error.toLowerCase()?.includes("limit")) &&
+                {isInvoice ?
+                    <div style={{ display: "flex", gap: "10px", flexDirection: windowWidth < 400 && "column", marginTop: "2rem" }}>
+                        <button onClick={() => navigate(url)} style={{ background: "#5926f0", color: "#fff", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600 }}>
+                            {t("Pay Via Instapay")}
+                        </button>
                         <button
-                            onClick={toggle} style={{ background: "#5926f0", color: "#fff", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600 }}>
-                            {t("Change Amount")}
+                            onClick={guestClick} style={{ background: "#e0e0e0", color: "black", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600 }}>
+                            {t("Pay as Guest")}
                         </button>
-                    }
-                    {error.toLowerCase()?.includes("amount exceeds") &&
-                        <button onClick={() => navigate(url)} style={{ background: "#ff4b4b", color: "#fff", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600 }}>
-                            {t("Login and Continue")}
-                        </button>
-                    }
-                </div>
+                    </div>
+
+                    :
+                    <div style={{ display: "flex", gap: "10px", flexDirection: windowWidth < 400 && "column", marginTop: "2rem" }}>
+                        {(limitErrors || error.toLowerCase()?.includes("amount exceeds") || error.toLowerCase()?.includes("limit")) &&
+                            <button
+                                onClick={toggle} style={{ background: "#5926f0", color: "#fff", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600 }}>
+                                {t("Change Amount")}
+                            </button>
+                        }
+                        {(error.toLowerCase()?.includes("amount exceeds") || error.toLowerCase()?.includes("inactive")) &&
+                            <button onClick={() => navigate(url)} style={{ background: "#ff4b4b", color: "#fff", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600 }}>
+                                {t("Login and Continue")}
+                            </button>
+                        }
+                    </div>}
             </ModalBody>
         </Modal>
     )
