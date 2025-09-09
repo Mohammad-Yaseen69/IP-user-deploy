@@ -8,12 +8,29 @@ import AmountContainer from '../../PaymentAddressPublic/AmountContainer'
 import { formatCurrency } from '../../../Helper/AmountFormat'
 import CitiesData from "../../CitiesDropDown/CitiesData.json"
 import CountriesData from "../../PaymentsNewer/CountriesData.json"
+import PayAsGuest from '../../PaymentAddressPublic/PayAsGuest'
 
 
-const PaymentUI = ({ data, dataHandler, user_name, invoiceId, state, url }) => {
+const PaymentUI = ({ data, dataHandler, user_name, invoiceId, state, url, toggleCreditModal }) => {
     const width = useWindowWidth()
+
+    console.log(data.account)
     return (
         <>
+            {
+                state.showCreditModal
+                &&
+                <PayAsGuest
+                    amount={formatCurrency(data.amount, true)}
+                    isOpen={state.showCreditModal}
+                    toggle={toggleCreditModal}
+                    user={data.account}
+                    wallet={data?.receivingWallet}
+                    username={user_name}
+                    isShipping={data.shippingAddress}
+                    invoiceId={data.invoiceId}
+                />
+            }
             <div style={{ flex: width > 1000 && .5, borderRadius: '16px', width: width < 1000 && "100%", overflow: width < 100 && 'hidden', alignSelf: width > 1000 && "stretch", display: width > 1000 && "grid", gap: '10px', background: width < 1000 && "white" }} className={styles.right}>
                 <UserDets
                     cover={data?.account?.coverImage?.url}
@@ -36,7 +53,7 @@ const PaymentUI = ({ data, dataHandler, user_name, invoiceId, state, url }) => {
                         currencySymbol: CitiesData?.find(c => c?.currency === data?.currency)?.currency_symbol
                     }}
                     url={url}
-                    toggleCreditModal={() => { }}
+                    toggleCreditModal={toggleCreditModal}
                 />
 
 

@@ -23,6 +23,7 @@ import NotFoundModal from "../../NotFound/NotFoundModal";
 import { minDate } from "../../Settings/Basic";
 import { toast } from "react-toastify";
 import logo from "../instapay_black.svg"
+import ShippingDetails from "../../ReceiptInvoices/InvoicePaymentQr/ShippingDetails";
 
 
 const initialState = {
@@ -44,7 +45,15 @@ const initialState = {
     paypal_fx: {},
     error: "",
     phone_error: "",
-    dob: ""
+    dob: "",
+    shippingDetails: {
+        houseNo: "",
+        street: "",
+        city: "",
+        state: "",
+        country: null,
+        zipCode: "",
+    }
 }
 
 function reducer(state, action) {
@@ -59,7 +68,7 @@ function reducer(state, action) {
     }
 }
 
-const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
+const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping }) => {
     const { t } = useTranslation()
     const [data, dispatch] = useReducer(reducer, initialState)
     const dataHandler = (field, value) => {
@@ -237,7 +246,9 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                 disabled = data.fullName.length < 3 ||
                     data.phone.length < 9 ||
                     !data.dob ||
-                    (data.email?.length > 0 ? !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(data.email) : false)
+                    (data.email?.length > 0 ? !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(data.email) : false) ||
+                    (isShipping ? !data.shippingDetails.country || !data.shippingDetails.city || !data.shippingDetails.houseNo || !data.shippingDetails.state || !data.shippingDetails.street || !data.shippingDetails.zipCode : false)
+
             }
             if (data.payment_type?.value === "card") {
                 const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
@@ -473,6 +484,8 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                         }
                                     </div>
                                 }
+
+
                             </div>
                             <div className={styles.right}>
                                 {
@@ -519,6 +532,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                                 <RecipientDetails
                                                     data={data}
                                                     dataHandler={dataHandler}
+                                                    isShipping={isShipping}
                                                 />
                                                 :
                                                 ""
@@ -543,6 +557,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                                 <RecipientDetails
                                                     data={data}
                                                     dataHandler={dataHandler}
+                                                    isShipping={isShipping}
                                                 />
                                                 :
                                                 ""
@@ -715,6 +730,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                                     <RecipientDetails
                                                         data={data}
                                                         dataHandler={dataHandler}
+                                                        isShipping={isShipping}
                                                     />
                                                     :
                                                     ""
@@ -835,6 +851,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
                                                     <RecipientDetails
                                                         data={data}
                                                         dataHandler={dataHandler}
+                                                        isShipping={isShipping}
                                                     />
                                                     :
                                                     ""
@@ -882,7 +899,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username }) => {
 
 export default PayAsGuest
 
-const RecipientDetails = ({ data, dataHandler }) => {
+const RecipientDetails = ({ data, dataHandler, isShipping }) => {
     const { t } = useTranslation()
     const handleDateChange = (e) => {
         const selected = new Date(e.target.value);
@@ -894,7 +911,7 @@ const RecipientDetails = ({ data, dataHandler }) => {
         }
     };
     return (
-        <div style={{ height: "100%" }}>
+        <div style={{ height: "100%", overflow: "auto" }}>
             <div className={styles.bot_top}>
                 <h5>{t("Personal Details")}</h5>
                 <span>{t("Please finalize your payment by entering the required personal information.")}</span>
@@ -956,6 +973,15 @@ const RecipientDetails = ({ data, dataHandler }) => {
                             ""
                     }
                 </div>
+
+                {isShipping &&
+                    <div className={styles.inpt_co}>
+                        <ShippingDetails
+                            data={data}
+                            dataHandler={dataHandler}
+                        />
+                    </div>}
+
             </div>
         </div>
     )

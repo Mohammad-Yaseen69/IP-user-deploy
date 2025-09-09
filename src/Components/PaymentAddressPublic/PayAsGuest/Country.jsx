@@ -37,6 +37,12 @@ const Country = ({ data, dataHandler }) => {
             localStorage.setItem("ip_country", filteredCountry)
             const coun = countries.find(item => item.alpha3 === filteredCountry)
             dataHandler("country", coun)
+            dataHandler("shippingDetails", {
+                ...data.shippingDetails, country: {
+                    name: coun.name,
+                    iso: coun.alpha3
+                }
+            })
             setIpCountry(coun)
         }
     }
@@ -46,6 +52,12 @@ const Country = ({ data, dataHandler }) => {
         if (alpha3) {
             const coun = countries.find(item => item.alpha3 === alpha3)
             dataHandler("country", coun)
+            dataHandler("shippingDetails", {
+                ...data.shippingDetails, country: {
+                    name: coun.name,
+                    iso: coun.alpha3
+                }
+            })
             setIpCountry(coun)
         } else {
             getCountry()

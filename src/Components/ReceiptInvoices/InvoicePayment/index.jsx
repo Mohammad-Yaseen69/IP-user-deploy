@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import styles from '../../PaymentAddressPublic/styles/PAC.module.scss'
 import background from "../../PaymentAddressPublic/vpa_bg.png"
 import { useParams } from 'react-router-dom'
@@ -12,13 +12,17 @@ import { formatCurrency } from '../../../Helper/AmountFormat'
 import CitiesData from "../../CitiesDropDown/CitiesData.json"
 import CountriesData from "../../PaymentsNewer/CountriesData.json"
 import { Card, CardBody } from 'reactstrap'
+import { toast } from 'react-toastify'
+import axios from 'axios'
+import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 
 const initialState = {
   showAboutModal: false,
   showCreditModal: false,
   guestPayError: "",
   showVerTT: false,
-  amount: ""
+  amount: "",
+  currentWallet: {}
 }
 
 function reducer(state, action) {
@@ -59,6 +63,40 @@ const InvoicePayment = () => {
   })
 
 
+  useEffect(() => {
+    const getLimits = () => {
+      axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/get-payment-address-public/${user_name}`).then(res => {
+        const dec = decryptData(res.data.data)
+        dataHandler("limits", dec?.limits)
+      })
+    }
+
+    if (user_name) {
+      getLimits()
+    }
+  }, [user_name])
+
+
+  const toggleCreditModal = () => {
+    if (data.amount < state.limits?.topup_min_amount) {
+      toast.error("Minimum amount for guest pay is " + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
+      dataHandler("guestPayError", "Minimum amount for guest pay is " + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
+      setTimeout(() => {
+        dataHandler("guestPayError", "")
+      }, 3000)
+    }
+    else if (data.amount > state.limits?.topup_max_amount) {
+      toast.error("Maximum amount for guest pay is " + formatCurrency(state.limits?.topup_max_amount, true) + " " + data?.currency)
+      dataHandler("guestPayError", "Maximum amount for guest pay is " + formatCurrency(state.limits?.topup_max_amount, true) + " " + data?.currency)
+      setTimeout(() => {
+        dataHandler("guestPayError", "")
+      }, 3000)
+    }
+    else {
+      dataHandler("showCreditModal", !state.showCreditModal);
+    }
+  }
+
   if (isLoading) {
     return (
       <div style={{ position: "relative", width: "100%", zIndex: 100 }}>
@@ -74,6 +112,7 @@ const InvoicePayment = () => {
       </Wrapper>
     )
   }
+
 
   const url = data ? `/payments?payment_action=send_money&payment_type=payment_address&send_type=wallet&wallet_id=${data.receivingWallet?.wallet_id}&currency=${data.currency}&amount=${data.amount}&invoiceId=${invoiceId}` : "/"
 
@@ -128,6 +167,7 @@ const InvoicePayment = () => {
         state={state}
         invoiceId={invoiceId}
         url={url}
+        toggleCreditModal={toggleCreditModal}
         user_name={user_name}
       />
     </Wrapper>
