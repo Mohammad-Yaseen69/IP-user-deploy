@@ -34,6 +34,7 @@ import { currencies } from "../InternationalFlow/StepOne"
 import errors from "../../AddFunds/TrustPaymentErrors.json"
 import { formatCurrency } from "../../../Helper/AmountFormat";
 import { apiErrorMessage } from "../InternationalFlow";
+import ShippingDetails from "../../ReceiptInvoices/InvoicePaymentQr/ShippingDetails";
 
 const leftSideContent = [
     "Choose the beneficiary!",
@@ -49,7 +50,7 @@ const initialState = {
     formatted_amount: 1.00,
     amount: 1.00,
     new_amoount: 0.00,
-    recipient_amount: 0.00,
+    recipient_amount: 0,
     currency: {},
     currency_wallet: {},
     beneficiary: {},
@@ -90,7 +91,21 @@ const initialState = {
     first_time: true,
     limitReached: false,
     ratesError: false,
-    reCallApi: ""
+    reCallApi: "",
+    fromNavigation: false,
+    isFromInvoice: false,
+    showShippingAddress: false,
+    shippingDetails: {
+        houseNo: "",
+        street: "",
+        city: "",
+        state: "",
+        country: {
+            iso: null,
+            name: null
+        },
+        zipCode: "",
+    }
 }
 
 function reducer(state, action) {
@@ -166,7 +181,15 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                 dataHandler("currency_wallet", wallet)
             }
         }
-    }, [data.wallet])
+    }, [data.wallet, userWallets])
+
+    const isShippingValid = useMemo(() => {
+        if (!data.showShippingAddress) return true
+        const s = data.shippingDetails || {}
+        return Boolean(
+            s?.houseNo && s?.street && s?.city && s?.state && s?.country?.iso && s?.zipCode
+        )
+    }, [data.showShippingAddress, data.shippingDetails])
 
     const disabledButton = useMemo(() => {
         switch (data.step) {
@@ -177,7 +200,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
             case 3:
                 return !data.reason
             case 4:
-                return !data.payment_type?.name || data.limitReached || data.payment_type?.value === "wallet" ? !data.wallet?._id : false || data?.payment_duration?.value === "subscription" ? !data.payment_duration?.recStartDate || (!data.payment_duration?.cycles && !data.payment_duration?.unlimited) : data?.payment_duration?.value === "schedule" ? !data.payment_duration?.scheduleDate || !data.payment_duration?.scheduleTime : false
+                return !data.payment_type?.name || data.limitReached || data.payment_type?.value === "wallet" ? !data.wallet?._id : false || data?.payment_duration?.value === "subscription" ? !data.payment_duration?.recStartDate || (!data.payment_duration?.cycles && !data.payment_duration?.unlimited) : data?.payment_duration?.value === "schedule" ? !data.payment_duration?.scheduleDate || !data.payment_duration?.scheduleTime : false || !isShippingValid
             case 5:
                 if (data.payment_type?.value === "card") {
                     const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
@@ -423,7 +446,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
             console.log(err)
             const decrypted = decryptData(err.response.data.data)
             console.log(decrypted)
-            if (decrypted?.message === "Invalid card.") {
+            if (decrypted?.message === "invalid_card_details") {
                 setShowCardModal(true)
             }
             else {
@@ -540,6 +563,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
         dataHandler("limitReached", false)
         dataHandler("ratesError", false)
         console.log(data)
+
         try {
             const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=${payment_type ?? "wallet_to_wallet"}&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${data.beneficiary_wallet?._id}&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}&preserved_amount=${Number(String(data.recipient_amount)?.replace(",", ""))}`
 
@@ -667,8 +691,6 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
 
                 const res = await axios.get(url, { headers: authHeader })
                 const decrypted = decryptData(res.data.data)
-                console.log(url)
-                console.log(decrypted)
                 const exchange_rate_details = {
                     exchange_rate: decrypted?.data?.exchanged_rate?.value,
                     receiver: { currency: decrypted?.data?.recipient?.currency, amount: decrypted?.data?.recipient?.value },
@@ -738,26 +760,25 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
 
     useEffect(() => {
         let timeout;
-        if (data.payment_type?.value) {
+        if (data.payment_type?.value && data.currency?._id && data.recipient_amount) {
             const getAmount = async () => {
                 let amount;
                 if (data.payment_type?.value === "wallet" && data?.wallet?.currency /*&& data?.wallet?.currency?.code !== data?.currency_wallet?.currency?.code*/) {
                     amount = await getPlainExchangeRate(data?.currency_wallet?.currency?.code, data?.wallet?.currency?.code, +String(data.amount)?.replaceAll(",", ""))
                 } else {
-
-                    amount = +String(data.amount)?.replaceAll(",", "")
+                    amount = String(data.amount)?.replaceAll(",", "")
                 }
                 return +amount
             }
             timeout = setTimeout(() => {
                 getAmount()
                     .then(res => {
-                        getExchangeRate(res, () => { }, "instant", data?.payment_type?.value !== "wallet" ? data?.currency_wallet?.currency?.code : data?.wallet?.currency?.code, e => dataHandler("loading", e))
+                        getExchangeRate(res, () => { }, "instant", data?.payment_type?.value !== "wallet" ? data?.currency?.currency?.code : data?.wallet?.currency?.code, e => dataHandler("loading", e))
                     })
             }, 100)
         }
         return () => clearTimeout(timeout)
-    }, [data.payment_type?.value, data.wallet?._id, data.payment_type, data.currency])
+    }, [data.payment_type?.value, data.wallet?._id, data.payment_type, data.currency?._id, data.amount, data.recipient_amount, userWallets])
 
     const verifyWallet = async () => {
         try {
@@ -785,23 +806,30 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                 dataHandler("step", 4)
                 break;
             case 4:
-                if (data.payment_type?.value === "mobile") {
+                if (invoiceId && isShipping && !data.showShippingAddress) {
+                    dataHandler("showShippingAddress", true)
+                }
+                else if (data.payment_type?.value === "mobile") {
                     console.log("")
                 }
                 else if (data.payment_type?.value === "wallet") {
-                    dataHandler("show_payment_type", true)
-                    if (data.show_payment_type) {
-                        // if (data.payment_duration?.value === "instant") {
+                    if (!invoiceId) {
+                        dataHandler("show_payment_type", true)
+                        if (data.show_payment_type) {
+                            dataHandler("step", 5)
+                        }
+                    } else {
+                        dataHandler("showShippingAddress", false)
                         dataHandler("step", 5)
-
-                        // }
                     }
                 }
                 else if (data.payment_type?.value === "paypal") {
+                    dataHandler("showShippingAddress", false)
                     dataHandler("step", 5)
                 }
                 else {
                     dataHandler("showCard", true)
+                    dataHandler("showShippingAddress", false)
                     dataHandler("step", 5)
                 }
                 break;
@@ -850,10 +878,11 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
 
     const currency = queryParams.get("currency")
     const amount = queryParams.get("amount")
+    const invoiceId = queryParams.get("invoiceId")
+    const isShipping = queryParams.get("isShipping")
 
     useEffect(() => {
         if (amount && currency && userWallets?.length > 0) {
-            console.log(amount)
             const wallet = userWallets?.[0]?.wallet_type === "insta" && !userWallets?.[0]?.blocked && !userWallets?.[0]?.admin_blocked && userWallets?.[0]?.status?.toLowerCase() === "active"
                 ?
                 userWallets?.[0]
@@ -861,12 +890,13 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                 userWallets?.find(item => item?.default)
             getPlainExchangeRate(currency, wallet?.currency?.code, amount)
                 .then(res => {
+                    console.log(Number(res)?.toFixed(2), "amount tracking 2")
                     dataHandler("amount", Number(res)?.toFixed(2))
+                    dataHandler("fromNavigation", true)
+                    if (invoiceId) {
+                        dataHandler("recipient_amount", amount)
+                    }
                 })
-            // getExchangeRate(amount, () => { }, "request")
-            //     .then(res => {
-            //         dataHandler("amount", Number(res?.total - res?.fee?.amount).toFixed(2))
-            //     })
         }
     }, [amount, currency, userWallets])
 
@@ -887,7 +917,44 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
     }, [transaction_status])
 
 
-    console.log(data.limitReached)
+    const handleBack = () => {
+        if (data.step === 4 && data.showShippingAddress) {
+            dataHandler("showShippingAddress", false)
+        }
+        if (data.step === 4 && data.payment_type?.value) {
+            dataHandler("payment_type", {})
+            dataHandler("payment_duration", {
+                name: "Instant Payment",
+                value: "instant",
+            })
+            dataHandler("show_payment_type", false)
+        }
+        else if (data.step === 2 && Object.keys(data.beneficiary).length > 0 && Object.keys(data.beneficiary_wallet)) {
+            dataHandler("beneficiary", {})
+            dataHandler("beneficiary_wallet", {})
+            dispatch({ type: "CLEAR_STEP_TWO_DATA" })
+            // dataHandler("amount", 1)
+            dataHandler("step", data.step - 1)
+        }
+        else if (data.step === 4 && data.payment_type?.value === "card") {
+            dataHandler("payment_type", {})
+            dataHandler("step", data.step - 1)
+            dataHandler("showCard", false)
+        }
+        else if (data.step === 5) {
+            dataHandler("showCard", false)
+            if (isShipping) {
+                dataHandler("showShippingAddress", true)
+            } 
+            dataHandler("step", data.step - 1)
+        }
+        else {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('wallet_id');
+            window.history.pushState(null, null, url);
+            dataHandler("step", data.step - 1)
+        }
+    }
 
     return (
         <>
@@ -986,7 +1053,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                         style={{
                                             width: sendPaymentType === "international" ? "100%" : "0px",
                                             transition: "500ms",
-                                            "--min-width": data.step === 4 && data.payment_type?.value === "wallet" && !data.show_payment_type ? "65vw" : "55vw"
+                                            "--min-width": data.step === 4 && data.payment_type?.value === "wallet" && !data.show_payment_type && !data.showShippingAddress ? "65vw" : "55vw"
                                         }}
                                     >
                                         <div className={styles.left}>
@@ -1120,6 +1187,13 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                         </div>
                                         <div className={styles.right} style={{ "--color-white": "#fafafa" }}>
                                             {
+                                                data.showShippingAddress &&
+                                                <ShippingDetails
+                                                    data={data}
+                                                    dataHandler={dataHandler}
+                                                />
+                                            }
+                                            {
                                                 data.step === 1
                                                 &&
                                                 <StepOne
@@ -1145,7 +1219,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                 />
                                             }
                                             {
-                                                data.step === 4
+                                                data.step === 4 && !data.showShippingAddress
                                                 &&
                                                 (
                                                     data.show_payment_type
@@ -1261,61 +1335,9 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                 </Link>
                                                 <div style={{ gap: data.step === 5 && "0.5rem" }} className={styles?.buttons}>
                                                     {
-                                                        data.step > 1
+                                                        (data.step > 1 && (invoiceId ? (data.step > 4 || data.showCard || data.showShippingAddress) : true))
                                                         &&
-                                                        <button className={styles.transparent} disabled={data.loading} onClick={() => {
-                                                            if (data.step === 4 && data.payment_type?.value) {
-                                                                dataHandler("payment_type", {})
-                                                                dataHandler("payment_duration", {
-                                                                    name: "Instant Payment",
-                                                                    value: "instant",
-                                                                })
-                                                                dataHandler("show_payment_type", false)
-                                                            }
-                                                            else if (data.step === 2 && Object.keys(data.beneficiary).length > 0 && Object.keys(data.beneficiary_wallet)) {
-                                                                dataHandler("beneficiary", {})
-                                                                dataHandler("beneficiary_wallet", {})
-                                                                dispatch({ type: "CLEAR_STEP_TWO_DATA" })
-                                                                // dataHandler("amount", 1)
-                                                                dataHandler("step", data.step - 1)
-                                                            }
-                                                            else if (data.step === 4 && data.payment_type?.value === "card") {
-                                                                dataHandler("payment_type", {})
-                                                                dataHandler("showCard", false)
-                                                                dataHandler("step", data.step - 1)
-                                                            }
-                                                            else if (data.step === 5) {
-                                                                dataHandler("showCard", false)
-                                                                dataHandler("step", data.step - 1)
-                                                            }
-                                                            else {
-                                                                const url = new URL(window.location.href);
-                                                                url.searchParams.delete('wallet_id');
-                                                                window.history.pushState(null, null, url);
-                                                                dataHandler("step", data.step - 1)
-                                                            }
-                                                            // if (data.step === 4 && data.payment_type?.value) {
-                                                            //     dataHandler("payment_type", {})
-                                                            //     dataHandler("payment_duration", {})
-                                                            //     dataHandler("show_payment_type", false)
-                                                            // }
-                                                            // else if (data.step === 4 && data.payment_type?.value === "card") {
-                                                            //     dataHandler("payment_type", {})
-                                                            //     dataHandler("showCard", false)
-                                                            //     dataHandler("step", data.step - 1)
-                                                            // }
-                                                            // else if (data.step === 5) {
-                                                            //     dataHandler("payment_type", {})
-                                                            //     dataHandler("payment_duration", {})
-                                                            //     dataHandler("show_payment_type", false)
-                                                            //     dataHandler("step", data.step - 1)
-                                                            //     dataHandler("showCard", false)
-                                                            //     dataHandler("wallet", {})
-                                                            // }
-                                                            // else {
-                                                            //     dataHandler("step", data.step - 1)
-                                                            // }
-                                                        }}>{t("Back")}</button>
+                                                        <button className={styles.transparent} disabled={data.loading} onClick={handleBack}>{t("Back")}</button>
                                                     }
                                                     <button disabled={disabledButton || data.loading} onClick={handleClick}>
                                                         {
@@ -1336,7 +1358,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                             </div>
                                         </div>
                                         {
-                                            data.step === 4 && data.payment_type?.value === "wallet" && !data.show_payment_type
+                                            data.step === 4 && data.payment_type?.value === "wallet" && !data.show_payment_type && !data.showShippingAddress
                                                 ?
                                                 <WalletsComponent
                                                     loading={data.loading}

@@ -23,6 +23,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
 
 
 
+
     const handleSearch = async (e) => {
         e.preventDefault();
         setExpandRecent(false)
@@ -36,7 +37,6 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
             });
             const dec = decryptData(res.data.data);
             const users = dec?.users?.filter(item => item?._id !== userDetails?._id);
-            console.log(users);
 
             setSearchedUsers(users);
             dataHandler("beneficiary", users?.[0] ?? {});
@@ -61,6 +61,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const wallet_id = queryParams.get("wallet_id")
+    const invoiceId = queryParams.get("invoiceId")
 
     useEffect(() => {
         let timeout;
@@ -73,7 +74,12 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
                     .then(() => {
                         if (!error && data.first_time) {
                             dataHandler("first_time", false)
-                            dataHandler("step", data.step + 1)
+                            if (invoiceId) {
+                                dataHandler("step", data.step + 3)
+                            }
+                            else {
+                                dataHandler("step", data.step + 1)
+                            }
                         }
                     })
             }, 100);
@@ -83,6 +89,15 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
             clearTimeout(timeout)
         }
     }, [wallet_id, search, data.first_time])
+
+
+    if (invoiceId) {
+        return (
+            <div style={{ width: "80%", margin: "auto" }}>
+                <InstaPayLoader />
+            </div>
+        )
+    }
 
     return (
         <div style={{ padding: cardToWallet && "0px", margin: cardToWallet && "15px 0", ...style }} className={styles.container}>
