@@ -43,7 +43,7 @@ const RequestMoney = ({ setAction, setStep }) => {
     const [completed, setCompleted] = useState(false)
     const [extra, setExtra] = useState("")
     const [notInstant, setNotInstant] = useState(false)
-    
+
 
 
     // recursive payment
@@ -182,7 +182,7 @@ const RequestMoney = ({ setAction, setStep }) => {
                 }))
             }
         } catch (error) {
-            
+
             console.log(error.response.data)
         } finally {
             SetIsPreferencesCheck(true)
@@ -192,11 +192,11 @@ const RequestMoney = ({ setAction, setStep }) => {
     }
 
     const NoAccessWarning = () => (
-        <Modal 
-            isOpen={isPreferencesCheck && (preferences.live || preferences.origin)} 
-            backdrop="static" 
+        <Modal
+            isOpen={isPreferencesCheck && (preferences.live || preferences.origin)}
+            backdrop="static"
             keyboard={false}
-            className="modal-dialog-centered" 
+            className="modal-dialog-centered"
             style={{
                 maxWidth: '600px',  // Increased from default
                 width: '95%',
@@ -214,16 +214,16 @@ const RequestMoney = ({ setAction, setStep }) => {
                 borderRadius: "8px",  // Added border radius
                 boxShadow: "0 5px 15px rgba(0,0,0,0.2)"  // Added shadow
             }}>
-                <img src={Icon} style={{width: "70px", marginBottom: "7px"}} alt="" />
-                <h4 style={{ 
-                    color: "#D92D20", 
+                <img src={Icon} style={{ width: "70px", marginBottom: "7px" }} alt="" />
+                <h4 style={{
+                    color: "#D92D20",
                     fontSize: "22px",  // Increased font size
                     fontWeight: "600",
                     marginBottom: "0"
                 }}>
                     {t("Unsupported Recipient")}
                 </h4>
-                <p style={{ 
+                <p style={{
                     color: "#667085",
                     fontSize: "16px",  // Increased font size
                     lineHeight: "1.5",  // Added line height
@@ -231,7 +231,7 @@ const RequestMoney = ({ setAction, setStep }) => {
                 }}>
                     {t(`It looks like ${beneficiary?.[0]?.username || beneficiary?.[0]?.user?.name || "this recipient"} has chosen to receive payments only from certain countries and locations, and your account's country or location isn't on the list. You may want to check with them to proceed with the payment request.`)}
                 </p>
-                <button 
+                <button
                     onClick={() => navigate("/payments?payment_action=req_money")}
                     style={{
                         background: "#D92D20",
@@ -562,7 +562,7 @@ const RequestMoney = ({ setAction, setStep }) => {
                                                 files,
                                                 comment,
                                                 token,
-                                                timezone
+                                                timezone,
                                             }}
                                             authType={codeType}
                                             setAuthType={setCodeType}
