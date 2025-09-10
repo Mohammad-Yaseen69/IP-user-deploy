@@ -135,7 +135,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
         }
         catch (error) {
             const dec = decryptData(error?.response?.data?.data);
-            if (dec?.message === "Invalid card.") {
+            if (dec?.message === "invalid_card_details") {
                 setShowCardModal(true)
             }
             dataHandler("error", dec?.message ?? "We cannot process your request at the moment, please try again later.")

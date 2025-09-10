@@ -357,7 +357,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             console.log(err)
             const decrypted = decryptData(err.response.data.data)
             console.log(decrypted)
-            if (decrypted?.message === "Invalid card.") {
+            if (decrypted?.message === "invalid_card_details") {
                 setShowCardModal(true)
             }
             else {

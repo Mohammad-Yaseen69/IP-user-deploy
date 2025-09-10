@@ -178,7 +178,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
         } catch (err) {
             console.log(err)
             const decrypted = decryptData(err.response.data.data)
-            if (decrypted?.message === "Invalid card.") {
+            if (decrypted?.message === "invalid_card_details") {
                 setShowCardModal(true)
             }
             else {

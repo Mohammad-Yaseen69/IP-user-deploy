@@ -94,7 +94,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                         localStorage.setItem("ip_country", coun)
                         window.location.pathname = "/login";
                     }
-                    if (dec?.message === "Invalid card.") {
+                    if (dec?.message === "invalid_card_details") {
                         setShowCardModal(true)
                     } else {
                         setShowCardModal(false)
