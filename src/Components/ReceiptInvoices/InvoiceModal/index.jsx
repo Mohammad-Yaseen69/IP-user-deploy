@@ -22,7 +22,6 @@ const initialData = {
     allowShipping: false,
     mode: "form",
     wallet: "",
-    currency: "",
     invoiceId: ""
 }
 
@@ -46,6 +45,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
     const { userDetails } = useContext(UserContext)
     const queryClient = useQueryClient()
     const width = useWindowWidth()
+    const { userWallets } = useContext(UserContext)
     // handlers
 
     const dataHandler = (field, value) => {
@@ -65,7 +65,6 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
             dataHandler("amount", formatCurrency(inv.amount, true))
             dataHandler("description", inv.description)
             dataHandler("title", inv.title)
-            dataHandler("currency", inv.currency)
             dataHandler("wallet", inv.receivingWallet?._id)
             dataHandler("invoiceId", inv.invoiceId)
             dataHandler("allowMultiple", inv.recurring)
@@ -74,7 +73,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
     }, [isEdit, inv])
 
     const isInvalid = useMemo(() => {
-        return !data.title?.trim() || !data.description?.trim() || !data.amount || Number(data.amount) <= 0 || !data.wallet || !data.currency
+        return !data.title?.trim() || !data.description?.trim() || !data.amount || Number(data.amount) <= 0 || !data.wallet
     }, [data])
 
 
@@ -123,7 +122,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
             "recurring": data.allowMultiple,
             "shippingAddress": data.allowShipping,
             "amount": Number(data.amount.replace(",", "")),
-            "currency": data.currency
+            "currency": userWallets?.find(w => w._id === data.wallet)?.currency?.code
         }
     }
 

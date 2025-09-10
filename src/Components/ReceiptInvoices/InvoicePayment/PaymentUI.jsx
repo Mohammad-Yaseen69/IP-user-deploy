@@ -14,7 +14,6 @@ import PayAsGuest from '../../PaymentAddressPublic/PayAsGuest'
 const PaymentUI = ({ data, dataHandler, user_name, invoiceId, state, url, toggleCreditModal }) => {
     const width = useWindowWidth()
 
-    console.log(data.account)
     return (
         <>
             {
@@ -48,7 +47,7 @@ const PaymentUI = ({ data, dataHandler, user_name, invoiceId, state, url, toggle
                 <AmountContainer
                     isEditable={false}
                     state={{
-                        amount: formatCurrency(data.amount, true),
+                        amount: data.amount,
                         currencyCode: data.currency,
                         currencySymbol: CitiesData?.find(c => c?.currency === data?.currency)?.currency_symbol
                     }}

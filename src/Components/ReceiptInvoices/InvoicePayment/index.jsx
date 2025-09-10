@@ -77,6 +77,7 @@ const InvoicePayment = () => {
   }, [user_name])
 
 
+
   const toggleCreditModal = () => {
     if (data.amount < state.limits?.topup_min_amount) {
       toast.error("Minimum amount for guest pay is " + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
@@ -97,6 +98,7 @@ const InvoicePayment = () => {
     }
   }
 
+
   if (isLoading) {
     return (
       <div style={{ position: "relative", width: "100%", zIndex: 100 }}>
@@ -114,7 +116,9 @@ const InvoicePayment = () => {
   }
 
 
-  const url = data ? `/payments?payment_action=send_money&payment_type=payment_address&send_type=wallet&wallet_id=${data.receivingWallet?.wallet_id}&currency=${data.currency}&amount=${data.amount}&invoiceId=${invoiceId}` : "/"
+
+
+  const url = data ? `/payments?payment_action=send_money&payment_type=payment_address&send_type=wallet&wallet_id=${data.receivingWallet?.wallet_id}&currency=${data.currency}&amount=${data.amount}&invoiceId=${invoiceId}&isShipping=${data.shippingAddress}` : "/"
 
   if (data.paid) {
     return (

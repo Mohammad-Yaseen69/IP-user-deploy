@@ -44,10 +44,6 @@ const Form = ({ data, inputFieldChange, dataHandler }) => {
                 <Select value={data.wallet} onChange={inputFieldChange('wallet')} options={walletOptions} placeholder={t('Select wallet')} />
             </Field>
 
-            <Field label={t('Currency')} required>
-                <Select value={data.currency} onChange={inputFieldChange('currency')} options={currencies.map(c => ({ value: c.currency.code, label: c.currency.code }))} placeholder={t('Select Currency')} />
-            </Field>
-
             <Field toggle={true} label={t('Allow multiple payments for this invoice')}>
                 <Toggle checked={data.allowMultiple} onChange={() => dataHandler('allowMultiple', !data.allowMultiple)} />
             </Field>

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import vpa_styles from "./styles/VPA.module.css"
 import addFunds from "../HomeNewUpdated/files/AddFunds.png"
 import logo from "../../assets/images/logo/logo.png"
+import { formatCurrency } from '../../Helper/AmountFormat'
 
 
 
@@ -29,7 +30,7 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
 
                             {isEditable ? <input
                                 type="text"
-                                value={state.amount}
+                                value={state.formattedAmount}
                                 maxLength={12}
                                 onChange={(e) => dataHandler("formattedAmount", e.target.value)}
                                 onKeyUp={handleKeyUp}
@@ -43,7 +44,7 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                     width: "100%",
                                     textAlign: width < 1000 ? "center" : "left"
                                 }}
-                            /> : <span style={{ textAlign: 'left' }} >{state.amount} </span>}
+                            /> : <span style={{ textAlign: 'left' }} >{formatCurrency(state.amount, true)} </span>}
 
                         </div>
                     </div>
