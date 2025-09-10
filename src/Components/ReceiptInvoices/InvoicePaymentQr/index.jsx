@@ -205,7 +205,7 @@ const InvoicePaymentQr = () => {
 
 
     const url = useMemo(() => {
-        return `/payments?payment_action=send_money&payment_type=payment_address&send_type=wallet&wallet_id=${data.recipientDets?.wallet_id}&currency=${data.recipientDets?.currency?.code}&amount=${data.amount}&invoiceId=${invoiceId}`
+        return `/payments?payment_action=send_money&payment_type=payment_address&send_type=wallet&wallet_id=${data.receivingWallet?.wallet_id}&currency=${data.currency}&amount=${data.amount}&invoiceId=${invoiceId}&isShipping=${data.shippingAddress}`
     }, [invoice, data])
 
     const isShippingValid = useMemo(() => {
