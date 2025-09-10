@@ -137,8 +137,9 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
             const dec = decryptData(error?.response?.data?.data);
             if (dec?.message === "invalid_card_details") {
                 setShowCardModal(true)
+            } else {
+                dataHandler("error", dec?.message ?? "We cannot process your request at the moment, please try again later.")
             }
-            dataHandler("error", dec?.message ?? "We cannot process your request at the moment, please try again later.")
             dataHandler("loading", false)
         }
         finally {
@@ -365,7 +366,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
                     buttonText="Close"
                     messages={[
                         `Oops! It looks like the card you entered isn’t recognized as being issued in ${data.country?.name}.`,
-                        `For security and compatibility, we currently accept only cards issued in the same country as your InstaPay account. Please use a card issued in ${data.country?.name} to complete your transaction.`,
+                        `For security and compatibility, we currently accept only cards issued in the same country that you selected on first step. Please use a card issued in ${data.country?.name} to complete your transaction.`,
                         `Thank you for your understanding!`
                     ]}
                     title="Payment Failed"
