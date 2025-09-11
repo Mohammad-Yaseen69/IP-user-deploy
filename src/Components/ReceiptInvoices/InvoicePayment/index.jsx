@@ -118,7 +118,7 @@ const InvoicePayment = () => {
 
 
 
-  const url = data ? `/payments?payment_action=send_money&payment_type=payment_address&send_type=wallet&wallet_id=${data.receivingWallet?.wallet_id}&currency=${data.currency}&amount=${data.amount}&invoiceId=${invoiceId}&isShipping=${data.shippingAddress}` : "/"
+  const url = data ? `/payments?payment_action=send_money&send_type=wallet&wallet_id=${data.receivingWallet?.wallet_id}&currency=${data.currency}&amount=${data.amount}&invoiceId=${invoiceId}&isShipping=${data.shippingAddress}&payment_type=invoice` : "/"
 
   if (data.paid) {
     return (

@@ -287,8 +287,12 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             const decrypted = decryptData(err.response.data.data)
             console.log(decrypted)
             const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-            dataHandler("otpError", decrypted?.message ?? "You have entered wrong OTP.")
-            if (error) {
+            const error2 = apiErrorMessage(decrypted?.message)
+
+            if (error2) {
+                dataHandler("otpError", error2)
+            }
+            else if (error) {
                 dataHandler("otpError", error)
             } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                 const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
@@ -298,6 +302,8 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                 localStorage.clear()
                 localStorage.setItem("ip_country", coun)
                 navigate("/login")
+            } else {
+                dataHandler("otpError", decrypted?.message ?? "You have entered wrong OTP.")
             }
         } finally {
             dataHandler("loading", false)

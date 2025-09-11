@@ -14,7 +14,6 @@ const ShippingDetails = ({ data, dataHandler }) => {
     }, [data.shippingDetails?.country?.iso])
 
 
-    console.log(data.shippingDetails, stateData)
     return (
         <form action="">
             <div style={{ display: "grid", gap: "12px", width: "100%" }}>

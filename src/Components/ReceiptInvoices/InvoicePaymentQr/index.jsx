@@ -27,6 +27,7 @@ import { formatCurrency } from "../../../Helper/AmountFormat"
 import localforage from "localforage"
 import { UserContext } from "../../../Context/UserContext"
 import ShippingDetails from "./ShippingDetails"
+import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow"
 
 const initialData = {
     step: 1,
@@ -82,7 +83,7 @@ const InvoicePaymentQr = () => {
         dispatch({ type: "UPDATE_FIELD", field, value })
     }
 
-    const { mutateAsync: getInvoiceDetails, isPending: invoiceLoading, data: invoice } = useMutation({
+    const { mutateAsync: getInvoiceDetails, isPending: invoiceLoading, data: invoice, isError } = useMutation({
         mutationFn: () => getInvoiceUsingId(invoiceId),
         onSuccess: (dets) => {
             const country = countriesData.find(c => c.alpha3 === dets?.account?.country?.country_iso_code)
@@ -165,15 +166,23 @@ const InvoicePaymentQr = () => {
                     "purpose": "OTHERS",
                     "amount": Number(data.amount?.toString()?.replaceAll(",", "")),
                     "type": "instant",
-                    "payment_type": "qr_pay",
+                    "payment_type": "invoice",
                     "description": "",
-                    "token": data.feeData?.token
+                    "token": data.feeData?.token,
+                    "invoice_id": invoiceId,
                 },
                 "type": "authenticator",
                 "auth_type": "biometric"
             }
 
-            console.log(payload)
+
+            if (data.shippingAddress) {
+                payload.data.shippingDetails = {
+                    ...data.shippingDetails,
+                    country: data.shippingDetails.country.name
+                }
+            }
+
             const dec = await sendOtpSkipMutation({ token: data.token, ...payload })
             await handleConfirmTransaction(dec.token, apiHeaders)
             console.log(dec)
@@ -181,7 +190,12 @@ const InvoicePaymentQr = () => {
             console.log(error)
             const dec = decryptData(error.response.data.data)
             const err = LimitsErrorMessage(dec.message)
+            const err2 = apiErrorMessage(dec?.message)
 
+            if (err2) {
+                dataHandler("error", err2)
+                dataHandler("showModal", true)
+            }
             if (err) {
                 dataHandler("error", err)
                 dataHandler("limitErrors", true)
@@ -205,7 +219,7 @@ const InvoicePaymentQr = () => {
 
 
     const url = useMemo(() => {
-        return `/payments?payment_action=send_money&payment_type=payment_address&send_type=wallet&wallet_id=${data.receivingWallet?.wallet_id}&currency=${data.currency}&amount=${data.amount}&invoiceId=${invoiceId}&isShipping=${data.shippingAddress}`
+        return `/payments?payment_action=send_money&send_type=wallet&wallet_id=${invoice?.receivingWallet?.wallet_id}&currency=${invoice?.currency}&amount=${invoice?.amount}&invoiceId=${invoiceId}&isShipping=${invoice?.shippingAddress}&payment_type=invoice`
     }, [invoice, data])
 
     const isShippingValid = useMemo(() => {
@@ -249,7 +263,7 @@ const InvoicePaymentQr = () => {
 
                 {invoiceLoading ? <InstaPayLoader /> :
                     <>
-                        {data.notFound ? <NotFound key={"User"} /> :
+                        {isError ? <NotFound key={"Invoice"} /> :
                             <>
                                 <ErrorModal
                                     toggle={() => {
