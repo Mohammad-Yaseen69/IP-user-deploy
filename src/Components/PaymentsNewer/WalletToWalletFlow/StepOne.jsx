@@ -24,19 +24,26 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
 
 
 
-    const handleSearch = async (e) => {
-        e.preventDefault();
+    const performSearch = async (query) => {
         setExpandRecent(false)
         dataHandler("loading", true);
         dataHandler("beneficiary_wallet", {});
         dataHandler("beneficiary", {});
         setError("");
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-user-wallets/${search.startsWith("@") ? search.slice(1).toLowerCase() : search.toLowerCase()}`, {
-                headers: authHeader
-            });
+            const normalized = query.startsWith("@") ? query.slice(1).toLowerCase() : query.toLowerCase();
+            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-user-wallets/${normalized}`,
+                { headers: authHeader }
+            );
             const dec = decryptData(res.data.data);
+            const isOwn = dec?.users?.find(item => item?._id === userDetails?._id);
             const users = dec?.users?.filter(item => item?._id !== userDetails?._id);
+
+
+            if (isOwn && (invoiceId || payment_type === "payment_address")) {
+                dataHandler("error", "You can't send money to yourself.")
+                throw new Error("Failed")
+            }
 
             setSearchedUsers(users);
             dataHandler("beneficiary", users?.[0] ?? {});
@@ -55,6 +62,11 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
         }
     };
 
+    const handleSearch = async (e) => {
+        e.preventDefault();
+        performSearch(search);
+    };
+
 
 
 
@@ -62,6 +74,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
     const queryParams = new URLSearchParams(location.search)
     const wallet_id = queryParams.get("wallet_id")
     const invoiceId = queryParams.get("invoiceId")
+    const payment_type = queryParams.get("payment_type")
 
     useEffect(() => {
         let timeout;
@@ -69,29 +82,30 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
             if (search !== wallet_id) {
                 setSearch(wallet_id)
             }
-            timeout = setTimeout(() => {
-                handleSearch({ preventDefault: () => { } })
-                    .then(() => {
-                        if (!error && data.first_time) {
-                            dataHandler("first_time", false)
-                            if (invoiceId) {
-                                dataHandler("step", data.step + 3)
-                            }
-                            else {
-                                dataHandler("step", data.step + 1)
-                            }
+            performSearch(wallet_id)
+                .then(() => {
+                    if (!error && data.first_time) {
+                        dataHandler("first_time", false)
+                        if (payment_type === "payment_address") {
+                            dataHandler("step", data.step + 2)
                         }
-                    })
-            }, 100);
+                        else if (invoiceId) {
+                            dataHandler("step", data.step + 3)
+                        }
+                        else {
+                            dataHandler("step", data.step + 1)
+                        }
+                    }
+                })
         }
 
         return () => {
             clearTimeout(timeout)
         }
-    }, [wallet_id, search, data.first_time])
+    }, [wallet_id, search, data.first_time, invoiceId, payment_type])
 
 
-    if (invoiceId) {
+    if ((invoiceId || payment_type === "payment_address") && !error) {
         return (
             <div style={{ width: "80%", margin: "auto" }}>
                 <InstaPayLoader />
