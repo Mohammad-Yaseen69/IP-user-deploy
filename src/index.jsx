@@ -54,10 +54,15 @@ Sentry.init({
     replaysOnErrorSampleRate: 1.0,
     environment: process.env.NODE_ENV === "development" ? "development" : "production",
     beforeSend(event) {
+        console.log(event, "Sentry Event")
         if (process.env.NODE_ENV === 'development') {
             return null;
         }
-        return event;
+        if (event.tags?.fromErrorBoundary) {
+            return event;
+        }
+
+        return null;
     },
     profilesSampleRate: 1.0
 });

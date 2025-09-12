@@ -68,7 +68,7 @@ function reducer(state, action) {
     }
 }
 
-const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping }) => {
+const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping, invoiceId }) => {
     const { t } = useTranslation()
     const [data, dispatch] = useReducer(reducer, initialState)
     const dataHandler = (field, value) => {
@@ -84,15 +84,29 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
             formattedDob = `${dd}-${mm}-${yyyy}`;
         }
         try {
-            const payload = encryptData({
+            const payload = {
                 token: data.exchange_rate?.paypal_token,
                 name: data.fullName,
                 email: data.email,
                 phone: data.phone,
-                dob: formattedDob
-            })
+                dob: formattedDob,
+            }
+
+            if (invoiceId) {
+                payload.invoice_id = invoiceId
+                payload.payment_type = "invoice"
+                if (isShipping) {
+                    payload.shipping_details = {
+                        ...data.shippingDetails,
+                        country: data.shippingDetails?.country?.name
+                    }
+                }
+            }
+
+            const enc = encryptData(payload)
+
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/guest-pay/initiate-paypal`, {
-                data: payload
+                data: enc
             })
 
             const dec = decryptData(res.data.data)
@@ -116,7 +130,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
         }
 
         try {
-            const payload = encryptData({
+            const payload = {
                 se_shambey: createShambeToken(data),
                 token: data.exchange_rate?.token,
                 name: data.fullName,
@@ -124,9 +138,24 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
                 phone: data.phone,
                 iso_code: data.country?.alpha3,
                 dob: formattedDob
-            })
+            }
+
+            if (invoiceId) {
+                payload.invoice_id = invoiceId
+                payload.payment_type = "invoice"
+                if (isShipping) {
+                    payload.shipping_details = {
+                        ...data.shippingDetails,
+                        country: data.shippingDetails?.country?.name
+                    }
+                }
+            }
+
+            const enc = encryptData(payload)
+
+
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/guest-pay/initiate-card-payment`, {
-                data: payload
+                data: enc
             })
 
             const dec = decryptData(res.data.data)
@@ -161,7 +190,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
             callback()
         }
         catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             console.log(dec)
             dataHandler("phone_error", "Incorrect phone number, please enter a valid number.")
         }
@@ -273,7 +302,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
     const getFeesPaypal = async () => {
         dataHandler("loading", true)
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/guest-pay/paypal-fee/${wallet?.wallet_id}/${amount}`)
+            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/guest-pay/paypal-fee/${wallet?.wallet_id}/${amount}?payment_type=${invoiceId && "invoice"}`)
             const dec = decryptData(res.data.data)
             console.log(dec)
             dataHandler("exchange_rate", {
@@ -301,7 +330,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
     const getFeesCard = async () => {
         dataHandler("loading", true)
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/guest-pay/card-fee/${wallet?.wallet_id}/${amount}`)
+            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/guest-pay/card-fee/${wallet?.wallet_id}/${amount}?payment_type=${invoiceId && "invoice"}`)
             const dec = decryptData(res.data.data)
             console.log(dec)
             dataHandler("exchange_rate", {
@@ -339,7 +368,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
                 setAllowed(dec?.data ?? [])
             }
             catch (error) {
-                const dec = decryptData(error.response.data.data)
+                const dec = decryptData(error?.response?.data?.data)
                 dataHandler("error", dec?.message)
             }
             finally {

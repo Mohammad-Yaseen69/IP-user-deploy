@@ -17,6 +17,7 @@ class ErrorBoundary extends Component {
     componentDidCatch(error, errorInfo) {
         const eventId = Sentry.captureException(error, {
             extra: { errorInfo },
+            tags: { fromErrorBoundary: true }
         });
 
 

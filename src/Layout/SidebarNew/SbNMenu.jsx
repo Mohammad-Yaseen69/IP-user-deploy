@@ -93,13 +93,13 @@ export const MENU = [
                 type: "link",
                 url: `${process.env.PUBLIC_URL}/other-transactions`,
             },
-            // {
-            //     title: "My Invoices",
-            //     icon: <img src={rec} style={{ marginRight: "12px" }} />,
-            //     activeIcon: <img src={rec_a} style={{ marginRight: "12px" }} />,
-            //     type: "link",
-            //     url: `${process.env.PUBLIC_URL}/invoices`,
-            // },
+            {
+                title: "My Invoices",
+                icon: <img src={rec} style={{ marginRight: "12px" }} />,
+                activeIcon: <img src={rec_a} style={{ marginRight: "12px" }} />,
+                type: "link",
+                url: `${process.env.PUBLIC_URL}/invoices`,
+            },
             {
                 title: "Payments",
                 icon: <img src={paym} style={{ marginRight: "12px" }} />,
