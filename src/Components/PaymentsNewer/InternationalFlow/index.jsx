@@ -33,7 +33,7 @@ import { createShambeToken } from "../../../Helper/CreateToken"
 import NotFoundModal from "../../NotFound/NotFoundModal"
 import errors from "../../AddFunds/TrustPaymentErrors.json"
 import AddBeneficiaryRequiredFields from "../../AddBeneficiaryRequiredFields"
-import { Modal, ModalBody, ModalHeader } from "reactstrap"
+import { Modal, ModalBody, ModalHeader, Button } from "reactstrap"
 import AddBeneficiaryAddressModal from "../../AddBeneficiaryAddressModal"
 
 const leftSideContent = [
@@ -119,6 +119,8 @@ const initialState = {
     conversion_in: "",
     payerRequiredFields: {},
     thunesBalance: 0,
+    thunesBalanceLoading: false,
+    thunesBalanceError: "",
     transactionStatus: false
 }
 
@@ -574,33 +576,47 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
 
 
     useEffect(() => {
-        const data = { currency: internationalData?.currency }
-        const enc = encryptData(data)
-        const getThunesBalance = async () => {
+        const getThunesBalance = async (retryCount = 0) => {
+            if (!internationalData?.currency) return;
+
+            const data = { currency: internationalData.currency }
+            const enc = encryptData(data)
+
+            updateInternationalData("thunesBalanceLoading", true)
+            updateInternationalData("thunesBalanceError", "")
+
             try {
                 const res = await axios.post(
                     `${process.env.REACT_APP_THUNES_API}/get-balance`,
                     { data: enc },
                     {
                         headers: authHeader,
-                        data: enc
+                        data: enc,
                     }
                 );
 
                 const dec = decryptData(res.data.data)
                 updateInternationalData("thunesBalance", dec.data.balance)
-
-
-
-                console.log(dec.data.balance)
-
+                updateInternationalData("thunesBalanceError", "")
             } catch (error) {
+                let errorMessage = "Unable to retrieve balance information"
                 const dec = decryptData(error?.response?.data?.data)
-                console.log(dec, error)
+                errorMessage = dec?.message || "Balance service temporarily unavailable"
+
+                if (retryCount < 2) {
+                    setTimeout(() => {
+                        getThunesBalance(retryCount + 1)
+                    }, 1000 * (retryCount + 1))
+                    return
+                }
+
+                updateInternationalData("error", `Balance check failed: ${errorMessage}. Please try refreshing the page.`)
+                updateInternationalData("thunesBalanceError", errorMessage)
+            } finally {
+                updateInternationalData("thunesBalanceLoading", false)
             }
-
-
         }
+
         getThunesBalance()
     }, [internationalData.currency])
 
@@ -869,9 +885,27 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
 
 
     const handleClick = () => {
+        console.log(+String(internationalData.amount)?.replaceAll(",", ""), internationalData.thunesBalance)
         switch (subStep) {
             case 1:
-                userDetails.user?.kyc_status === "approved" ? +String(internationalData.amount)?.replaceAll(",", "") <= internationalData.thunesBalance ? setSubStep(prev => prev + 1) : setShowBalanceModal(true) : navigate("/settings?tab=verification")
+                if (userDetails.user?.kyc_status !== "approved") {
+                    navigate("/settings?tab=verification")
+                    return
+                }
+
+                if (internationalData.thunesBalanceLoading) {
+                    return
+                }
+                if (internationalData.thunesBalanceError) {
+                    updateInternationalData("error", internationalData.thunesBalanceError)
+                    return
+                }
+                const amount = +String(internationalData.amount)?.replaceAll(",", "")
+                if (amount <= internationalData.thunesBalance) {
+                    setSubStep(prev => prev + 1)
+                } else {
+                    setShowBalanceModal(true)
+                }
                 break;
             case 2:
                 console.log(internationalData.payerRequiredFields, internationalData?.payoutChannel.value, internationalData?.beneficiary)
@@ -1136,6 +1170,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
         }
     }, [transaction_status, code])
 
+
     return (
         <>
             {
@@ -1163,9 +1198,13 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                     </ModalHeader>
                     <ModalBody>
                         <h3 style={{ fontSize: "18px", fontWeight: 600 }}>
-                            {(`We understand that your remaining sending limit is up to ${internationalData.exchange_rate?.limits_used?.daily_sending_limit_used.toFixed(2)} ${internationalData.currency}. However, at this time, we can only process a maximum of ${internationalData.thunesBalance} ${internationalData.currency} .
-                            You may proceed with ${internationalData.thunesBalance} ${internationalData.currency} or try again later to be able to send ${internationalData.amount} ${internationalData.currency} .
-                            Thank you for your understanding.`)}
+                            {internationalData.thunesBalance === 0 ? (
+                                `We're currently unable to process transfers in ${internationalData.currency}. Please try again later or contact support for assistance.`
+                            ) : (
+                                `We understand that your remaining sending limit is up to ${internationalData.exchange_rate?.limits_used?.daily_sending_limit_used?.toFixed(2) || 'N/A'} ${internationalData.currency}. However, at this time, we can only process a maximum of ${internationalData.thunesBalance} ${internationalData.currency}.
+                                    You may proceed with ${internationalData.thunesBalance} ${internationalData.currency} or try again later to be able to send ${internationalData.amount} ${internationalData.currency}.
+                                    Thank you for your understanding.`
+                            )}
                         </h3>
                     </ModalBody>
                 </Modal>
