@@ -31,7 +31,7 @@ const StepTwo = ({ data, dataHandler, dataHandlerE }) => {
                 setPlansData(dec.data)
                 console.log(dec)
             } catch (error) {
-                const dec = decryptData(error.response.data.data)
+                const dec = decryptData(error?.response?.data?.data)
                 console.log(dec)
             }
             finally{

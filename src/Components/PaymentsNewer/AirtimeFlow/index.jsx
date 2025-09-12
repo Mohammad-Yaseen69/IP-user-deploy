@@ -276,7 +276,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             console.log("otpshow", "transactioncreated")
             updateDataHandler("show_otp", true)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             console.log(dec)
             updateDataHandler("error", dec?.message ?? "Something went wrong while confirming the transaction.")
 

@@ -31,7 +31,7 @@ const DeclineQuotation = ({ item, isOpen, toggle }) => {
             const decrypted = decryptData(response.data.data)
             setStep(2)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
         }
         finally {

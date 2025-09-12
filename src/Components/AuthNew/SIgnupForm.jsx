@@ -50,7 +50,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                 const dec = decryptData(res.data.data)
                 setAllowedCountries(dec?.Countries)
             } catch (error) {
-                const dec = decryptData(error.response.data.data)
+                const dec = decryptData(error?.response?.data?.data)
                 // console.log(dec)
             }
         }
@@ -331,7 +331,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                 }
             })
             .catch(error => {
-                const decrypted = decryptData(error.response.data.data)
+                const decrypted = decryptData(error?.response?.data?.data)
                 setPhoneError("Phone number/Email already in use.")
                 if (decrypted.message === "Account not found!") {
                     setEmailError("")
@@ -363,7 +363,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                 }
             })
             .catch(error => {
-                const decrypted = decryptData(error.response.data.data)
+                const decrypted = decryptData(error?.response?.data?.data)
                 setPhoneError("Phone number/Email already in use.")
                 if (decrypted.message === "Account not found!") {
                     setPhoneError("")
@@ -409,7 +409,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                     }
                 })
                 .catch(error => {
-                    const decrypted = decryptData(error.response.data.data)
+                    const decrypted = decryptData(error?.response?.data?.data)
                     // console.log(decrypted)
                     setIsPressed(false)
                     setSignupError("Something went wrong while creating your account. Please try again later.")
@@ -453,7 +453,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                 .catch(error => {
                     setIsPressed(false)
                     setSignupError("Something went wrong while creating your account. Please try again later.")
-                    const decrypted = decryptData(error.response.data.data)
+                    const decrypted = decryptData(error?.response?.data?.data)
                     console.log(decrypted)
                     if (decrypted.message === "Invalid referral code!") {
                         setSignupError("The referral code you've entered doesn't belongs to any account. Please try with a valid referral code.")

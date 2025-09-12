@@ -52,7 +52,7 @@ const Socials = () => {
 
                 setSocialData(arr)
             } catch (error) {
-                const dec = decryptData(error.response.data.data)
+                const dec = decryptData(error?.response?.data?.data)
                 console.log(dec)
             }
         }

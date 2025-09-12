@@ -67,7 +67,7 @@ const LoginForm = ({ setIsLoginForm, setIsForgot, country }) => {
                     }
                 })
                 .catch(error => {
-                    const decrypted = decryptData(error.response.data.data)
+                    const decrypted = decryptData(error?.response?.data?.data)
                     console.log(decrypted)
                     setIsPressed(false)
                     if (decrypted.message === "Account not found!" || decrypted.message === "Incorrect Password!" || decrypted.message?.toLowerCase()?.includes("incorrect") || decrypted.message === "User not found!") {

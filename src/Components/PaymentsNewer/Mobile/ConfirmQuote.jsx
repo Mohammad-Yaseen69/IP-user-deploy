@@ -71,7 +71,7 @@ const ConfirmRequest = ({ beneficiary, amount, currency, setConfirmed, setSubSte
                 setToken(dec?.token)
             } catch (error) {
                 toast.error("Something went wrong while confirming the transaction!")
-                // console.log(decryptData(error.response.data.data))
+                // console.log(decryptData(error?.response?.data?.data))
             }
         }
         if (complete) {

@@ -90,7 +90,7 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
             setTitle("")
             setDescription("")
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             toast.error(dec?.message)
         }
         finally {
@@ -153,7 +153,7 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
                 setIsSaving(false)
             }
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             toast.error(dec?.message)
             setIsSaving(false)
         }

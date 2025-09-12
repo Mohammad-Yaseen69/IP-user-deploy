@@ -548,7 +548,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
     //         const dec = decryptData(res.data.data)
     //         return +String(data.amount)?.replaceAll(",", "") - Number(dec?.feeDetails)
     //     } catch (error) {
-    //         const dec = decryptData(error.response.data.data)
+    //         const dec = decryptData(error?.response?.data?.data)
     //         dataHandler("error", typeof dec === "string" ? dec : dec?.message ?? "We cannot process your request at the moment, please try again later.!")
     //     } finally {
     //         dataHandler("loading", false)
@@ -812,7 +812,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
             });
             dataHandler("step", 2)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             console.log(dec)
             if (dec.status === false) {
                 dataHandler("error", "The wallet that you have selected is disabled please select another wallet.")

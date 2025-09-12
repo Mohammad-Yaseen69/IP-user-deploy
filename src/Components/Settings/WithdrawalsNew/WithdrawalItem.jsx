@@ -649,7 +649,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             updateWithdrawalFunc()
             console.log(dec)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             if (dec.toLowerCase().includes("invalid")) {
                 setBankError("Invalid phone number")
             }
@@ -736,7 +736,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             getWithdrawals()
             setCurrentDefault(prev => !prev)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             toast.error(dec?.message ?? "Something went wrong while changing status")
         }
         finally {
@@ -1104,7 +1104,7 @@ export const MoreMenu = ({ withdrawal_id }) => {
             toggleDelModal()
         } catch (error) {
             toggleDelModal()
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             toast.error(dec?.message ?? "We cannot process your request at the moment, please try again later.")
         }
     }

@@ -33,7 +33,7 @@ const AddKYBPartner = ({ setPartners }) => {
                 setUsers(data?.users);
                 setIsLoading(false)
             } catch (error) {
-                // console.log(decryptData(error.response.data.data));
+                // console.log(decryptData(error?.response?.data?.data));
                 setIsLoading(false)
             }
         };

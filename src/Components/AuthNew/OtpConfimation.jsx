@@ -181,7 +181,7 @@ const OtpConfimation = ({ email, password, token, isEmail, setServiceError, rese
                     })
             })
             .catch(error => {
-                const decrypted = decryptData(error.response.data.data)
+                const decrypted = decryptData(error?.response?.data?.data)
                 console.log(decrypted)
                 setIsPressed(false)
                 if (decrypted.message?.toLowerCase()?.includes("account is locked")) {

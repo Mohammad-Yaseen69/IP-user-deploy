@@ -122,7 +122,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
             setToken(dec?.data?.token)
 
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             toast.error(dec?.message || "An error occurred while fetching fee details")
         }
         finally {
@@ -152,7 +152,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
             setOtpToken(dec?.token)
             setshowotp(true)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             toast.error(dec?.message)
         }
         finally {
@@ -185,7 +185,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
             }))
             console.log(dec)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             const error2 = apiErrorMessage(dec?.message);
             if (error2) {
                 setOtpError(error2);

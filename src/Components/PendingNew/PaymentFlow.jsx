@@ -112,7 +112,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
             setShowOtp(true)
             setToken(dec?.token)
         } catch (error) {
-            // console.log(decryptData(error.response.data.data))
+            // console.log(decryptData(error?.response?.data?.data))
         }
         finally {
             setSending(false)

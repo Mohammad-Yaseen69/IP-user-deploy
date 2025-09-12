@@ -115,7 +115,7 @@ const InvoicePaymentQr = () => {
                 await getInvoiceDetails()
             } catch (error) {
                 console.log(error)
-                const dec = decryptData(error.response.data.data)
+                const dec = decryptData(error?.response?.data?.data)
                 if (dec.message.toLowerCase().includes("not found")) {
                     dataHandler("notFound", true)
                 }
@@ -188,7 +188,7 @@ const InvoicePaymentQr = () => {
             console.log(dec)
         } catch (error) {
             console.log(error)
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             const err = LimitsErrorMessage(dec.message)
             const err2 = apiErrorMessage(dec?.message)
 

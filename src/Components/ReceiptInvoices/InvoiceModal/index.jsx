@@ -86,7 +86,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
     const { mutateAsync, isPending, data: addedData } = useMutation({
         mutationFn: (payload) => addInvoice(payload),
         onError: (error) => {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             toast.error(dec.message || "We can't process your request at this moment please try again later.")
         },
         onSuccess: () => {
@@ -96,7 +96,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
     const { mutateAsync: editMutate, isPending: isEditing } = useMutation({
         mutationFn: ({ invoiceId, payload }) => editInvoice(invoiceId, payload),
         onError: (error) => {
-            const dec = error.response.data.data ? decryptData(error.response.data.data) : error.response.data
+            const dec = error?.response?.data?.data ? decryptData(error?.response?.data?.data) : error.response.data
             toast.error(dec.message || "We can't process your request at this moment please try again later.")
         },
         onSuccess: () => {

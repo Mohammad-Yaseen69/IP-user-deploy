@@ -72,7 +72,7 @@ const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurr
             setToken(dec?.token)
         } catch (error) {
             toast.error("Something went wrong while confirming the transaction!")
-            console.log(decryptData(error.response.data.data))
+            console.log(decryptData(error?.response?.data?.data))
         }
     }
 
@@ -132,7 +132,7 @@ const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurr
                 setFx(dec?.data)
             }
             catch (error) {
-                const err = decryptData(error.response.data.data)
+                const err = decryptData(error?.response?.data?.data)
                 setFxError(err?.message ?? "Something went wrong while getting rates.")
                 const er = LimitsErrorMessage(err?.code ?? err?.message)
                 if (er) {

@@ -141,7 +141,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
             toggle()
         } catch (error) {
             toast.error("Something went wrong while confirming the transaction!")
-            // console.log(decryptData(error.response.data.data))
+            // console.log(decryptData(error?.response?.data?.data))
         }
         finally {
             setSaving(false)
@@ -166,7 +166,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
             // console.log(dec)
             setter(true)
         } catch (err) {
-            // console.log(decryptData(error.response.data.data))
+            // console.log(decryptData(error?.response?.data?.data))
             const decrypted = decryptData(err.response.data.data);
             setOtpError(decrypted?.message ?? "Something went wrong while verifying the code.")
             if (decrypted.message?.toLowerCase()?.includes("account is locked")) {

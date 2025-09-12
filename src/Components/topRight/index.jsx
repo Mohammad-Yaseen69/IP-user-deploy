@@ -5,9 +5,13 @@ import { UserContext } from "../../Context/UserContext"
 import LanguagePicker from "../LanguagePicker"
 import Notifications from "../Notifications"
 
-const TopRight = ({position = "absolute"}) => {
+const TopRight = ({ position = "absolute" }) => {
     const { userDetails, croppedImages } = useContext(UserContext)
 
+
+    const renderName = () => {
+        return `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}`.length >= 25 ? `${userDetails?.user?.first_name}` : `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}`
+    }
     return (
         <div className="d-flex justify-content-between mb-4" style={{
             // maxWidth: "350px",
@@ -41,7 +45,7 @@ const TopRight = ({position = "absolute"}) => {
                         {
                             userDetails?.account_type?.toLowerCase() === "individual"
                                 ?
-                                `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}`
+                                renderName()
                                 :
                                 userDetails?.company?.company_name
                         }

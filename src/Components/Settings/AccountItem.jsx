@@ -62,7 +62,7 @@ const AccountItem = ({ data }) => {
             setToken(dec?.token)
             setShowOtp(true)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             toast.error(dec?.message)
         }
         finally {
@@ -87,7 +87,7 @@ const AccountItem = ({ data }) => {
                 toast.success(`${data.name.toLowerCase().includes("insta") ? "Instagram" : "Telegram"} account unlinked successfully!`)
             })
             .catch(error => {
-                const dec = decryptData(error.response.data.data)
+                const dec = decryptData(error?.response?.data?.data)
                 console.log(dec)
                 setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
                 toast.error(dec?.message ?? "We cannot process your request at the moment, please try again later.")

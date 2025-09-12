@@ -49,7 +49,7 @@ const Threshold = ({ userDetails, authHeader }) => {
                 console.log(dec)
                 setter(dec?.exchangeRate?.exchanged_amount.toFixed(2))
             } catch (error) {
-                const dec = decryptData(error.response.data.data)
+                const dec = decryptData(error?.response?.data?.data)
                 console.log(dec)
             }
         }
@@ -95,7 +95,7 @@ const Threshold = ({ userDetails, authHeader }) => {
 
             toast.success("Threshold updated successfully")
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             console.log(dec)
         }
     }
@@ -137,7 +137,7 @@ const Threshold = ({ userDetails, authHeader }) => {
             const decrypted = decryptData(res.data.data)
             console.log(decrypted)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             console.log(dec)
         }
     }

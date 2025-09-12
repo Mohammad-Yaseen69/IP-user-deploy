@@ -23,7 +23,7 @@ axios.defaults.withCredentials = true
 //         if (error.message === "Server Timeout." && error?.config?.url?.toLowerCase()?.includes("fontawesomev23")) {
 //             toast.error("Request timed out. Please try again!");
 //         }
-//         const message = decryptData(error.response.data.data)
+//         const message = decryptData(error?.response?.data?.data)
 //         if (error.response.status === 401 && message.message === "Unauthorize to access this route.") {
 //             window.history.replaceState(null, null, `?show_logout_modal=unauthorized`)
 //             showLogoutModal = true
@@ -88,7 +88,7 @@ const UserState = ({ children }) => {
                 })
                 return decryptData(res.data.data).status
             } catch (error) {
-                return decryptData(error.response.data.data).status
+                return decryptData(error?.response?.data?.data).status
             }
         }
     }
@@ -107,7 +107,7 @@ const UserState = ({ children }) => {
                 return { status: false, existType: undefined }
 
             } catch (error) {
-                const dec = decryptData(error.response.data.data)
+                const dec = decryptData(error?.response?.data?.data)
 
                 if (dec?.foundVia === "email" && email) {
                     return { status: true, existType: "email" }
@@ -171,7 +171,7 @@ const UserState = ({ children }) => {
             (error) => {
                 if (
                     error.response?.status === 401 &&
-                    decryptData(error.response.data.data).message === "Unauthorize to access this route."
+                    decryptData(error?.response?.data?.data).message === "Unauthorize to access this route."
                 ) {
                     window.history.replaceState(null, null, `?show_logout_modal=unauthorized`);
                     setShowModalState(true);
@@ -644,7 +644,7 @@ const UserState = ({ children }) => {
             setTotalReferralAmount(data?.availableCommission ?? 0)
             // console.log(data)
         } catch (error) {
-            // console.log(decryptData(error.response.data.data));
+            // console.log(decryptData(error?.response?.data?.data));
         }
     }
 

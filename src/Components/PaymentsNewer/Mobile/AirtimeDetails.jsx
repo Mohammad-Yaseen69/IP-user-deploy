@@ -36,7 +36,7 @@ const AirtimeDetails = ({ setSubStep, service, providers, serviceType, setServic
             setProviders(...data)
             setShowBelowPhone(true)
         } catch (error) {
-            // console.log(decryptData(error.response.data.data))
+            // console.log(decryptData(error?.response?.data?.data))
             toast.error("Invalid phone number!")
         } finally {
             setIsLoading(false)
@@ -79,7 +79,7 @@ const AirtimeDetails = ({ setSubStep, service, providers, serviceType, setServic
                 }
             })
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             setExchangeError(dec?.message)
         } finally {
             setLoader(false)
@@ -94,7 +94,7 @@ const AirtimeDetails = ({ setSubStep, service, providers, serviceType, setServic
                 // console.log(data)
                 setSubServices(data)
             } catch (error) {
-                // console.log(decryptData(error.response.data.data))
+                // console.log(decryptData(error?.response?.data?.data))
                 toast.error("Something went wrong while getting details!")
             } finally {
                 setIsLoading(false)
@@ -124,7 +124,7 @@ const AirtimeDetails = ({ setSubStep, service, providers, serviceType, setServic
             setSubServicesProvider(dec?.products)
             // console.log(dec?.products)
         } catch (error) {
-            // console.log(decryptData(error.response.data.data))
+            // console.log(decryptData(error?.response?.data?.data))
             toast.error("Something went wrong while getting details!")
         } finally {
             setServiceLoading(false)
@@ -272,7 +272,7 @@ const AirtimeDetails = ({ setSubStep, service, providers, serviceType, setServic
                 } catch (error) {
                     setSlided(false)
                     toast.error("Something went wrong while creating transactions!")
-                    // console.log(decryptData(error.response.data.data))
+                    // console.log(decryptData(error?.response?.data?.data))
                 }
             } else {
                 try {
@@ -295,7 +295,7 @@ const AirtimeDetails = ({ setSubStep, service, providers, serviceType, setServic
                     setSubStep(4)
                 } catch (error) {
                     toast.error("Something went wrong while creating transaction!")
-                    const decrypted = decryptData(error.response.data.data);
+                    const decrypted = decryptData(error?.response?.data?.data);
                     // console.log(decrypted)
                     setSlided(false)
                 }

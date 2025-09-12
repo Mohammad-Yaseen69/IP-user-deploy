@@ -21,7 +21,7 @@ const DeleteBeneficiary = ({ isOpen, toggle, benef }) => {
             setBeneficiaries(prev => prev.filter(i => i._id !== benef._id))
             toggle()
         } catch (error) {
-            // console.log(decryptData(error.response.data.data))
+            // console.log(decryptData(error?.response?.data?.data))
             toast.error("Something went wrong while deleting the beneficiary!")
         } finally {
             getUserBeneficiaries()

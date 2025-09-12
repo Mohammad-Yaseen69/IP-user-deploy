@@ -80,7 +80,7 @@ const LoginForm = ({ silf }) => {
                     })
             })
             .catch(error => {
-                const decrypted = decryptData(error.response.data.data)
+                const decrypted = decryptData(error?.response?.data?.data)
                 if (decrypted.message === "Account not found!" || decrypted.message === "Incorrect Password!") {
                     setCredentialsError("Invalid Email or Password.")
                 }

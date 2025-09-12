@@ -70,7 +70,7 @@ const SecurityQuestions = () => {
                 setShowOtp(true)
             } catch (error) {
                 toast.error("Something went wrong while sending otp!")
-                // console.log(decryptData(error.response.data.data))
+                // console.log(decryptData(error?.response?.data?.data))
             }
             finally {
                 setSaving(false)

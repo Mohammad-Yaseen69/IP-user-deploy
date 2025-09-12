@@ -494,14 +494,14 @@ const BusinessAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, to
 
                     setSelectedCountryDetails(decrypted?.data)
                 } catch (error) {
-                    const dec = decryptData(error.response.data.data)
+                    const dec = decryptData(error?.response?.data?.data)
                     if (dec?.message === "Unauthorize to access this route") {
                         const coun = localStorage.getItem("ip_country")
                         localStorage.clear()
                         localStorage.setItem("ip_country", coun)
                         window.location.pathname = "/login";
                     }
-                    // console.log(decryptData(error.response.data.data))
+                    // console.log(decryptData(error?.response?.data?.data))
                 }
             }
 

@@ -69,7 +69,7 @@ const MyMasterCard = () => {
 
 
       } catch (error) {
-        const dec = decryptData(error.response.data.data)
+        const dec = decryptData(error?.response?.data?.data)
         setCardPurchased(false)
         console.log(dec)
       }
@@ -95,7 +95,7 @@ const MyMasterCard = () => {
         setTransactions(dec.data)
 
       } catch (error) {
-        const dec = decryptData(error.response.data.data)
+        const dec = decryptData(error?.response?.data?.data)
         console.log(dec)
       }
     }

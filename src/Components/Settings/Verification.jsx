@@ -97,7 +97,7 @@ const Verification = () => {
         } catch (error) {
             toast.error("We cannot process your request at the moment, please try again later.")
             // console.log("try ran in error", error);
-            // console.log(decryptData(error.response.data.data));
+            // console.log(decryptData(error?.response?.data?.data));
         }
         finally {
             setLoading(false)

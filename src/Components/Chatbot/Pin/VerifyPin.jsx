@@ -156,7 +156,7 @@ const CreatePin = () => {
 
         }
         catch (error) {
-            const dec = decryptData(error.response.data?.data)
+            const dec = decryptData(error?.response?.data?.data)
             setPinFields(prev => ({
                 ...prev,
                 data: ["", "", "", ""],

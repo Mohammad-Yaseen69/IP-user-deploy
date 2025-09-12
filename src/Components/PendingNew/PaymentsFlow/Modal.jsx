@@ -118,7 +118,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
             dataHandler("show_otp", true)
             dataHandler("payment_token", dec?.token)
         } catch (error) {
-            const err = decryptData(error.response.data.data)
+            const err = decryptData(error?.response?.data?.data)
             toast.error(err.message ?? "We cannot process your request at the moment, please try again later.")
         }
         finally {

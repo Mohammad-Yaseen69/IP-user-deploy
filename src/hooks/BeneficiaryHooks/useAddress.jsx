@@ -37,7 +37,7 @@ const useAddress = ({ countryIsoCode, formData }) => {
                 setPosition(dec?.position)
                 setCoordApiCountry(dec?.country?.name)
             } catch (error) {
-                const dec = decryptData(error.response.data.data)
+                const dec = decryptData(error?.response?.data?.data)
                 console.log(dec)
             }
         }
@@ -55,7 +55,7 @@ const useAddress = ({ countryIsoCode, formData }) => {
                 console.log(dec);
                 setAddresses(dec?.addresses ?? []);
             } catch (error) {
-                const dec = decryptData(error.response.data.data);
+                const dec = decryptData(error?.response?.data?.data);
                 console.log(dec);
                 setAddresses([]);
             }

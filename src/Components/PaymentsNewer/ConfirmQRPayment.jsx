@@ -100,7 +100,7 @@ const ConfirmQRPayment = ({ amount, currency, setConfirmed, setSubStep, wallet, 
                 setToken(dec?.token)
             } catch (error) {
                 toast.error("Something went wrong while confirming the transaction!")
-                // console.log(decryptData(error.response.data.data))
+                // console.log(decryptData(error?.response?.data?.data))
             }
         }
         if (complete) {

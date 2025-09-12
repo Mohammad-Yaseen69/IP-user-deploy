@@ -167,7 +167,7 @@ const FinancialInfo = () => {
             console.log(dec)
 
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             toast.error(dec?.message || "We couldn't edit your financial info at the moment please try again later.")
         }
         finally {

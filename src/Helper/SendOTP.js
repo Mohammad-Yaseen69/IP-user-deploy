@@ -18,6 +18,6 @@ export const resendHandler = async (data, setToken, setter, authHeader) => {
         setToken(dec?.token)
     } catch (error) {
         toast.error("Something went wrong while confirming the transaction!")
-        // console.log(decryptData(error.response.data.data))
+        // console.log(decryptData(error?.response?.data?.data))
     }
 }

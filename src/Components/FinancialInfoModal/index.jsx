@@ -252,7 +252,7 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
 
             setQuestions(prev => prev.filter(q => q.type !== activeStep))
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             toast.error(dec?.message || t("Something went wrong while adding your answer"))
         }
         finally {

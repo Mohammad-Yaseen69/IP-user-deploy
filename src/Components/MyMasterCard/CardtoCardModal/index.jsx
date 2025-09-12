@@ -251,7 +251,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
       updateHandler("showOtpModal", true)
       updateHandler("token", dec?.token)
     } catch (error) {
-      const dec = decryptData(error.response.data.data)
+      const dec = decryptData(error?.response?.data?.data)
 
       toast.error(dec.message || "Something went wrong while creating your virtual card! please try again.")
     }
@@ -342,7 +342,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
       updateHandler("step", 6)
 
     } catch (error) {
-      const dec = decryptData(error.response.data.data)
+      const dec = decryptData(error?.response?.data?.data)
       const error2 = apiErrorMessage(dec?.message);
       if (error2) {
         updateHandler("otpError", error2);

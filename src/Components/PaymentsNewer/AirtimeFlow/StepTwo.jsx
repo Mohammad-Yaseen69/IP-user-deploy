@@ -70,7 +70,7 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
             console.log("providers", dec)
             dataHandler("providers", dec)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             dataHandler("error", "Make sure you have entered a correct Phone Number.")
         }
         finally {

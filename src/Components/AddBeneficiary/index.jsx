@@ -59,7 +59,7 @@ const AddBeneficiary = () => {
     //             const decrypted = decryptData(res.data.data)
     //             setFilteringCountries(decrypted?.Countries)
     //         } catch (error) {
-    //             // console.log(decryptData(error.response.data.data))
+    //             // console.log(decryptData(error?.response?.data?.data))
     //         }
     //     }
 

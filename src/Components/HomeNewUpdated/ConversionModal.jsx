@@ -156,7 +156,7 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
     //             setStep(prev => prev + 1)
     //         } catch (error) {
     //             toast.error("Something went wrong while confirming the transaction!")
-    //             // console.log(decryptData(error.response.data.data))
+    //             // console.log(decryptData(error?.response?.data?.data))
     //         }
     //     }
     //     if (complete) {

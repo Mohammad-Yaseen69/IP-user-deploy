@@ -145,7 +145,7 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
                 setToken(dec?.token)
             } catch (error) {
                 toast.error("Something went wrong while confirming the transaction!")
-                // console.log(decryptData(error.response.data.data))
+                // console.log(decryptData(error?.response?.data?.data))
             }
         })
     }

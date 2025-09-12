@@ -253,7 +253,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             }
             dataHandler("otp_token", dec?.token)
         } catch (error) {
-            const decrypted = decryptData(error.response.data.data)
+            const decrypted = decryptData(error?.response?.data?.data)
             dataHandler("error", decrypted?.message ?? "Something went wrong while sending the OTP!")
         } finally {
             dataHandler("loading", false)
@@ -442,7 +442,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             const dec = decryptData(res.data.data)
             return data.amount - Number(dec?.feeDetails)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             dataHandler("error", typeof dec === "string" ? dec : dec?.message ?? "We cannot process your request at the moment, please try again later.!")
         } finally {
             dataHandler("loading", false)

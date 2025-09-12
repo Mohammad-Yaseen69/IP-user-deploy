@@ -54,7 +54,7 @@ const CardDetails = ({ setSubStep, cardNumber, setCardNumber, expiry, setExpiry,
         }))
 
       } catch (error) {
-        const dec = decryptData(error.response.data.data)
+        const dec = decryptData(error?.response?.data?.data)
         if (dec?.message === "Unauthorize to access this route") {
           const coun = localStorage.getItem("ip_country")
           localStorage.clear()
@@ -82,7 +82,7 @@ const CardDetails = ({ setSubStep, cardNumber, setCardNumber, expiry, setExpiry,
       toast.success("Deleted card successfully!")
       toggleDeleteModal()
     } catch (error) {
-      const dec = decryptData(error.response.data.data)
+      const dec = decryptData(error?.response?.data?.data)
       // console.log(dec)
     }
     finally {
@@ -109,7 +109,7 @@ const CardDetails = ({ setSubStep, cardNumber, setCardNumber, expiry, setExpiry,
         toast.error(dec.message)
       }
     } catch (error) {
-      const dec = decryptData(error.response.data.data)
+      const dec = decryptData(error?.response?.data?.data)
       console.log(dec)
     }
   }

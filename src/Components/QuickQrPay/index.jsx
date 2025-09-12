@@ -89,7 +89,7 @@ const QuickQrPay = () => {
             setStep(2)
             console.log(dec)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             console.log(dec)
             setError(dec.message || t("Invalid QR Code"))
         }
@@ -145,7 +145,7 @@ const QuickQrPay = () => {
             setStep(3)
             console.log(dec)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             console.log(dec)
         }
     }

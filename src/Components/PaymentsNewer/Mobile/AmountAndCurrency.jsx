@@ -62,7 +62,7 @@ const AmountAndCurrency = ({ setStep, amount, setAmount, currency, setCurrency, 
                 setSavedCards(dec?.panList)
 
             } catch (error) {
-                const dec = decryptData(error.response.data.data)
+                const dec = decryptData(error?.response?.data?.data)
                 // console.log(dec)
             }
         }

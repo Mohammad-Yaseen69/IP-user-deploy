@@ -94,7 +94,7 @@ const ConfirmQuote = ({ beneficiary, amount, currency, setConfirmed, setSubStep,
                 setToken(dec?.token)
             } catch (error) {
                 toast.error("Something went wrong while confirming the transaction!")
-                // console.log(decryptData(error.response.data.data))
+                // console.log(decryptData(error?.response?.data?.data))
             }
         }
         if (complete) {

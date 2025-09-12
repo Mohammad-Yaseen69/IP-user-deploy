@@ -95,7 +95,7 @@ const MainContent = () => {
         } catch (error) {
             setErrorCount(prev => prev + 1)
             status = false;
-            console.error(decryptData(error.response.data.data), email);
+            console.error(decryptData(error?.response?.data?.data), email);
         } finally {
             setProcessedUsers(prev => [...prev, { ...data, status: status }])
             if (index + 1 === csvData.length) {

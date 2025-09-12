@@ -21,7 +21,7 @@ const AirtimeDetails = ({ setSubStep, services, service, setService, phone, setP
             setProviders(...data)
             setSubStep(prev => prev + 1);
         } catch (error) {
-            // console.log(decryptData(error.response.data.data))
+            // console.log(decryptData(error?.response?.data?.data))
             toast.error("Invalid phone number!")
         } finally {
             setIsLoading(false)

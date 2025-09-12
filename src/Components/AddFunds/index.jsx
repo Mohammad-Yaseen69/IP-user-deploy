@@ -53,7 +53,7 @@ const AddFunds = () => {
                     console.log(dec)
                     setStatus(dec?.transactioStatus)
                 } catch (error) {
-                    const err = decryptData(error.response.data.data)
+                    const err = decryptData(error?.response?.data?.data)
                     if (err?.message === "Unauthorize to access this route") {
                         const coun = localStorage.getItem("ip_country")
                         localStorage.clear()
@@ -96,7 +96,7 @@ const AddFunds = () => {
                         const dec = decryptData(res.data.data)
                         console.log(dec)
                     } catch (error) {
-                        const err = decryptData(error.response.data.data)
+                        const err = decryptData(error?.response?.data?.data)
                         if (err?.message === "Unauthorize to access this route") {
                             const coun = localStorage.getItem("ip_country")
                             localStorage.clear()

@@ -81,7 +81,7 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
             console.log("set url = ", qrCode._options.data)
             setMessage("QR Code sticker generated successfully!")
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             setMessage(dec?.message ?? "Something went wrong while generating QR Code sticker.")
             console.log(dec)
         } finally {

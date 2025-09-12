@@ -595,7 +595,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                 console.log(dec.data.balance)
 
             } catch (error) {
-                const dec = decryptData(error.response.data.data)
+                const dec = decryptData(error?.response?.data?.data)
                 console.log(dec, error)
             }
 
@@ -631,7 +631,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             setSubStep(prev => prev + 1)
         }
         catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             toast.error(internationalData)
             updateInternationalData("error", typeof dec === "string" ? dec : dec?.message ?? "We cannot process your request at the moment, please try again later.!")
         }
@@ -685,7 +685,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             updateInternationalData("created_transaction", dec)
             updateInternationalData("showOtpModal", true)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             console.log(dec)
             const error2 = apiErrorMessage(dec?.message)
 
@@ -737,7 +737,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
             console.log(dec)
             window.location.href = dec?.external_link
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             updateInternationalData("error", typeof dec === "string" ? dec : dec?.message ?? "We cannot process your request at the moment, please try again later.!")
         }
         finally {
@@ -860,7 +860,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
     //         const dec = decryptData(res.data.data)
     //         return +String(internationalData.amount)?.replaceAll(",", "") - Number(dec?.feeDetails)
     //     } catch (error) {
-    //         const dec = decryptData(error.response.data.data)
+    //         const dec = decryptData(error?.response?.data?.data)
     //         updateInternationalData("error", typeof dec === "string" ? dec : dec?.message ?? "We cannot process your request at the moment, please try again later.!")
     //     } finally {
     //         setLoading(false)

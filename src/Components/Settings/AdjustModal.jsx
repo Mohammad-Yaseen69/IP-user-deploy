@@ -47,7 +47,7 @@ const AdjustModal = ({ isOpen, toggle, imageUrl, accountId, authHeader, type, na
             console.log(dec)
             toggle()
         } catch (error) {
-            const decrypted = decryptData(error.response.data.data)
+            const decrypted = decryptData(error?.response?.data?.data)
             console.log(decrypted)
         }
     }

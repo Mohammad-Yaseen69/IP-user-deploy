@@ -148,13 +148,13 @@ const SignupForm = ({ silf }) => {
                                 }
                             })
                             .catch(error => {
-                                const decrypted = decryptData(error.response.data.data)
+                                const decrypted = decryptData(error?.response?.data?.data)
                                 // console.log(decrypted)
                             })
                     }
                 })
                 .catch(error => {
-                    const decrypted = decryptData(error.response.data.data)
+                    const decrypted = decryptData(error?.response?.data?.data)
                     // console.log(decrypted)
                 })
         } else {
@@ -179,7 +179,7 @@ const SignupForm = ({ silf }) => {
                         }
                     })
                     .catch(error => {
-                        const decrypted = decryptData(error.response.data.data)
+                        const decrypted = decryptData(error?.response?.data?.data)
                         if (decrypted.message === "Email already exist!") {
                             setEmailError("Email Taken.")
                         }
@@ -206,7 +206,7 @@ const SignupForm = ({ silf }) => {
                         }
                     })
                     .catch(error => {
-                        const decrypted = decryptData(error.response.data.data)
+                        const decrypted = decryptData(error?.response?.data?.data)
                         if (decrypted.message === "Email already exist!") {
                             setCurrentFields(0)
                             setEmailError("Email Taken.")
@@ -231,7 +231,7 @@ const SignupForm = ({ silf }) => {
                 }
             })
             .catch(error => {
-                const decrypted = decryptData(error.response.data.data)
+                const decrypted = decryptData(error?.response?.data?.data)
                 if (decrypted.message === "Email already exist!") {
                     setEmailError("Email already exist!")
                     setEmailAvailable(false)
@@ -257,7 +257,7 @@ const SignupForm = ({ silf }) => {
                 }
             })
             .catch(error => {
-                const decrypted = decryptData(error.response.data.data)
+                const decrypted = decryptData(error?.response?.data?.data)
                 if (decrypted.message === "Phone number already exist!") {
                     setPhoneError("Phone number is in use.")
                     setPhoneAvailable(false)

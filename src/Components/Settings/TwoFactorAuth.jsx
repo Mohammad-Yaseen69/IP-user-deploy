@@ -139,7 +139,7 @@ const TwoFactorAuth = () => {
                 setShowAuth(true)
                 setGuideModal(false)
             } catch (error) {
-                const dec = decryptData(error.response.data.data)
+                const dec = decryptData(error?.response?.data?.data)
                 toast.error(dec?.message ?? "Something went wrong while enabling authenticator.")
             }
             finally {
@@ -162,7 +162,7 @@ const TwoFactorAuth = () => {
                 console.log(dec)
             }
             catch (error) {
-                const dec = decryptData(error.response.data.data)
+                const dec = decryptData(error?.response?.data?.data)
                 console.log(dec)
             }
         }

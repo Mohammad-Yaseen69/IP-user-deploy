@@ -67,7 +67,7 @@ const UploadAdditionalKYB = ({ isOpen, toggle, files, user_id, type = "kyb", par
             toggle()
             checkAuth()
         } catch (error) {
-            const decrypted = decryptData(error.response.data.data);
+            const decrypted = decryptData(error?.response?.data?.data);
             // console.log(decrypted);
         } finally {
             setIsUploading(false);

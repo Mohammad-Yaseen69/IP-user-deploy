@@ -58,11 +58,7 @@ Sentry.init({
         if (process.env.NODE_ENV === 'development') {
             return null;
         }
-        if (event.tags?.fromErrorBoundary) {
-            return event;
-        }
-
-        return null;
+        return event
     },
     profilesSampleRate: 1.0
 });

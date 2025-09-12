@@ -82,7 +82,7 @@ const QrQuickerPay = () => {
       try {
         await getWalletDetailsMutation({ wallet_id })
       } catch (error) {
-        const dec = decryptData(error.response.data.data)
+        const dec = decryptData(error?.response?.data?.data)
         if (dec.message.toLowerCase().includes("not found")) {
           dataHandler("notFound", true)
         }
@@ -149,7 +149,7 @@ const QrQuickerPay = () => {
       console.log(dec)
     } catch (error) {
       console.log(error)
-      const dec = decryptData(error.response.data.data)
+      const dec = decryptData(error?.response?.data?.data)
       const err = LimitsErrorMessage(dec.message)
 
       if (err) {

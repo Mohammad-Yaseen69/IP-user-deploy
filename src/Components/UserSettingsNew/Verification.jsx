@@ -48,7 +48,7 @@ const Verification = () => {
             // console.log("try ran in handlesend");
         } catch (error) {
             // console.log("try ran in error", error);
-            // console.log(decryptData(error.response.data.data));
+            // console.log(decryptData(error?.response?.data?.data));
         }
     };
 

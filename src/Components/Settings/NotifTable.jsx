@@ -82,7 +82,7 @@ const NotifTable = () => {
                 setSqTelegram(n?.login?.telegram ?? false)
                 setRefTelegram(n?.referrals?.telegram ?? false)
             } catch (error) {
-                // console.log(decryptData(error.response.data.data))
+                // console.log(decryptData(error?.response?.data?.data))
             } finally {
                 setIsLoading(false)
             }
@@ -162,7 +162,7 @@ const NotifTable = () => {
             }, 2000);
         } catch (error) {
             // console.log(error)
-            // console.log(decryptData(error.response.data.data))
+            // console.log(decryptData(error?.response?.data?.data))
         } finally {
             setIsSaving(false)
         }

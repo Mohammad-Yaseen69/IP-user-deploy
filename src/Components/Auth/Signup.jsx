@@ -111,7 +111,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
             return true
         }
         catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             dataHandler("phone_error", "Incorrect phone number, please enter a valid number.")
             // dataHandler("error", typeof dec === "string" ? dec : dec?.message ?? "Something went wrong while verifying details.")
             return false
@@ -137,7 +137,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                     dataHandler("step", data.step + 1)
                 }
             } catch (error) {
-                const dec = decryptData(error.response.data.data)
+                const dec = decryptData(error?.response?.data?.data)
                 dataHandler("error", dec?.message ?? "Something went wrong while verifying details.")
             } finally {
                 dataHandler("loading", false)
@@ -178,7 +178,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
             dataHandler("signup_token", dec?.token)
             dataHandler("show_otp", true)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             dataHandler("error", dec?.message ?? "Something went wrong while sending OTP.")
         } finally {
             dataHandler("loading", false)
@@ -238,7 +238,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
         } catch (error) {
             setOtp(Array(numberOfFields).fill(""))
             console.log(error)
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             dataHandler("error", dec?.message ?? "Something went wrong while sending OTP.")
         } finally {
             dataHandler("loading", false)
@@ -275,7 +275,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
         } catch (error) {
             console.log(error)
             setOtp(Array(numberOfFields).fill(""))
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             dataHandler("error", dec?.message ?? "Something went wrong while sending OTP.")
         } finally {
             dataHandler("loading", false)

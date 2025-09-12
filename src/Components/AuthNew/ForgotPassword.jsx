@@ -128,7 +128,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
             setOtpToken(dec?.token)
             setEmailVerified(true)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             console.log(dec)
             toast.error("Invalid Email / Phone number").replace("Phone", email?.slice(0, 3) === "971" ? "Whatsapp" : "Phone")
         } finally {
@@ -153,7 +153,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
             setOtpToken(dec?.token)
             setStep(2)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             setTimeout(() => {
                 setOTPValues(Array(numberOfFields).fill(''))
                 inputRefs.current[0]?.focus()
@@ -182,7 +182,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
             setOtpToken(dec?.token)
             setStep(3)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             console.log(dec)
             toast.error("Invalid Email / Phone number".replace("Phone", email?.slice(0, 3) === "971" ? "Whatsapp" : "Phone"))
         } finally {

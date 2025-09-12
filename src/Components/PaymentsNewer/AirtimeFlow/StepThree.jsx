@@ -29,7 +29,7 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                 dataHandler("service_types", dec)
                 dataHandler("service_type", dec?.[0])
             } catch (error) {
-                const dec = decryptData(error.response.data.data)
+                const dec = decryptData(error?.response?.data?.data)
                 dataHandler("error", dec?.message ?? "Something went wrong while getting services.")
                 dataHandler("service_types", [])
             } finally {
@@ -61,7 +61,7 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                     dataHandler("package", packageVar)
                     dataHandler("airtime_amount", packageVar?.baseAmount?.min)
                 } catch (error) {
-                    const dec = decryptData(error.response.data.data)
+                    const dec = decryptData(error?.response?.data?.data)
                     dataHandler("packages", [])
                     dataHandler("error", dec?.message ?? "Something went wrong while getting services.")
                 } finally {

@@ -138,7 +138,7 @@ const CreatePin = () => {
 
         }
         catch (error) {
-            const dec = decryptData(error.response.data?.data)
+            const dec = decryptData(error?.response?.data?.data)
             if (dec.message === "PIN already set!") {
                 toast.error("PIN already set!")
             }

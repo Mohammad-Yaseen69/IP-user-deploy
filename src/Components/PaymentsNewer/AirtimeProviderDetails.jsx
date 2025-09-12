@@ -46,7 +46,7 @@ const AirtimeProviderDetails = ({ setSubStep, service, providers, serviceType, s
                 }
             })
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             setExchangeError(dec?.message)
         } finally {
             setLoader(false)
@@ -61,7 +61,7 @@ const AirtimeProviderDetails = ({ setSubStep, service, providers, serviceType, s
                 // console.log(data)
                 setSubServices(data)
             } catch (error) {
-                // console.log(decryptData(error.response.data.data))
+                // console.log(decryptData(error?.response?.data?.data))
                 toast.error("Something went wrong while getting details!")
             } finally {
                 setIsLoading(false)
@@ -91,7 +91,7 @@ const AirtimeProviderDetails = ({ setSubStep, service, providers, serviceType, s
             setSubServicesProvider(dec?.products)
             // console.log(dec?.products)
         } catch (error) {
-            // console.log(decryptData(error.response.data.data))
+            // console.log(decryptData(error?.response?.data?.data))
             toast.error("Something went wrong while getting details!")
         } finally {
             setServiceLoading(false)
@@ -242,7 +242,7 @@ const AirtimeProviderDetails = ({ setSubStep, service, providers, serviceType, s
                 } catch (error) {
                     setSlided(false)
                     toast.error("Something went wrong while creating transactions!")
-                    // console.log(decryptData(error.response.data.data))
+                    // console.log(decryptData(error?.response?.data?.data))
                 }
             } else {
                 try {
@@ -265,7 +265,7 @@ const AirtimeProviderDetails = ({ setSubStep, service, providers, serviceType, s
                     setSubStep(4)
                 } catch (error) {
                     toast.error("Something went wrong while creating transaction!")
-                    const decrypted = decryptData(error.response.data.data);
+                    const decrypted = decryptData(error?.response?.data?.data);
                     // console.log(decrypted)
                     setSlided(false)
                 }

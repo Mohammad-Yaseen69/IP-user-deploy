@@ -173,7 +173,7 @@ const CreatePin = () => {
             setToken(dec?.token)
             setShowOtpModal(true)
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             toast.error(dec.message ?? "We cannot process your request at the moment, please try again later.")
         }
         finally {

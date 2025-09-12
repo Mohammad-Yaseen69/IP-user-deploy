@@ -61,7 +61,7 @@ const PaymentStep = (
                 toast.error(dec.message)
             }
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             console.log(dec)
         }
     }

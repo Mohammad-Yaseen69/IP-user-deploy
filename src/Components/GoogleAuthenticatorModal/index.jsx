@@ -105,7 +105,7 @@ const GoogleAuthenticatorModal = ({
             }
 
         } catch (error) {
-            const dec = decryptData(error.response.data?.data)
+            const dec = decryptData(error?.response?.data?.data)
             console.log(dec)
             toast.error(dec?.message ?? "Something went wrong while verifying password.")
         }
@@ -138,7 +138,7 @@ const GoogleAuthenticatorModal = ({
                 setEditMode(false)
             }
         } catch (error) {
-            const dec = decryptData(error.response.data.data)
+            const dec = decryptData(error?.response?.data?.data)
             console.log(dec)
             toast.error(dec?.message ?? "Something went wrong while enabling authenticator.")
         }

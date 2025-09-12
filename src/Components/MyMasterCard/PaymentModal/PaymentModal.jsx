@@ -212,7 +212,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
       setToken(dec?.token)
       setshowOtpModal(true)
     } catch (error) {
-      const dec = decryptData(error.response.data.data)
+      const dec = decryptData(error?.response?.data?.data)
       console.log(dec)
       toast.error("Something went wrong while creating your virtual card! please try again.")
     }
@@ -312,7 +312,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
         console.log(dec)
         setFeeDetails(dec.data)
       } catch (error) {
-        const dec = decryptData(error.response.data.data)
+        const dec = decryptData(error?.response?.data?.data)
         console.log(dec)
       }
 

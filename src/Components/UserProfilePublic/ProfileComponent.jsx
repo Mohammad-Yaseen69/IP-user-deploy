@@ -113,7 +113,7 @@ const ProfileComponent = () => {
                 })
                 setSocialData(data)
             } catch (error) {
-                const dec = decryptData(error.response.data.data)
+                const dec = decryptData(error?.response?.data?.data)
                 console.log(dec)
             }
         }
@@ -215,7 +215,7 @@ const ProfileComponent = () => {
                 const data = decryptData(res.data.data)
                 setReported(data?.isReported)
             } catch (error) {
-                const decrypted = decryptData(error.response.data.data)
+                const decrypted = decryptData(error?.response?.data?.data)
                 // console.log(decrypted)
             }
         }

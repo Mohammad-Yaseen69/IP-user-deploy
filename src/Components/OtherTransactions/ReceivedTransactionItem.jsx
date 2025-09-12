@@ -23,7 +23,7 @@ export const cancelSubscriptionOrSchedulePayment = async (item, authHeader, refe
         toast.success(dec?.message)
         refetchMethod()
     } catch (error) {
-        const decrypted = decryptData(error.response.data.data)
+        const decrypted = decryptData(error?.response?.data?.data)
         // console.log(decrypted)
         toast.error(decrypted?.message)
     }

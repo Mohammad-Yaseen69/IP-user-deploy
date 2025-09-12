@@ -24,7 +24,7 @@ const StepFour = ({ data, dataHandler, dataHandlerE }) => {
       dataHandler("step", data.step + 1)
       console.log(dec)
     } catch (error) {
-      const dec = decryptData(error.response.data.data)
+      const dec = decryptData(error?.response?.data?.data)
       if (dec.toLowerCase().includes("invalid")) {
         setShowError("Invalid phone number")
       }
