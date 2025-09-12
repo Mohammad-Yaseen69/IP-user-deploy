@@ -122,7 +122,8 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
             "recurring": data.allowMultiple,
             "shippingAddress": data.allowShipping,
             "amount": Number(data.amount.replace(",", "")),
-            "currency": userWallets?.find(w => w._id === data.wallet)?.currency?.code
+            "currency": userWallets?.find(w => w._id === data.wallet)?.currency?.code,
+            "active": true
         }
     }
 

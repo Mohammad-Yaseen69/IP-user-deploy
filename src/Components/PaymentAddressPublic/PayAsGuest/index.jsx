@@ -24,6 +24,8 @@ import { minDate } from "../../Settings/Basic";
 import { toast } from "react-toastify";
 import logo from "../instapay_black.svg"
 import ShippingDetails from "../../ReceiptInvoices/InvoicePaymentQr/ShippingDetails";
+import { LimitsErrorMessage } from "../../PaymentsNewer/OTPConfirmation";
+import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow";
 
 
 const initialState = {
@@ -114,7 +116,16 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
         }
         catch (error) {
             const dec = decryptData(error?.response?.data?.data);
-            dataHandler("error", dec?.message ?? "We cannot process your request at the moment, please try again later.")
+            const err1 = LimitsErrorMessage(dec.code)
+            const err2 = apiErrorMessage(dec.message)
+
+            if (err1) {
+                dataHandler("error", err1)
+            } else if (err2) {
+                dataHandler("error", err2)
+            } else {
+                dataHandler("error", dec?.message ?? "We cannot process your request at the moment, please try again later.")
+            }
             dataHandler("loading", false)
         }
         finally {
@@ -164,8 +175,15 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
         }
         catch (error) {
             const dec = decryptData(error?.response?.data?.data);
+            const err1 = LimitsErrorMessage(dec.code)
+            const err2 = apiErrorMessage(dec.message)
+
             if (dec?.message === "invalid_card_details") {
                 setShowCardModal(true)
+            } else if (err1) {
+                dataHandler("error", err1)
+            } else if (err2) {
+                dataHandler("error", err2)
             } else {
                 dataHandler("error", dec?.message ?? "We cannot process your request at the moment, please try again later.")
             }
