@@ -170,15 +170,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
         console.log(credentials)
 
-        if (!isAuth && credentials.platform === "instagram") {
-            setLastOtpSentTo("insta")
-        }
-        else if (!isAuth && credentials.platform === "whatsapp") {
-            setLastOtpSentTo("wp")
-        }
-        else if (!isAuth && credentials.platform === "") {
-            setLastOtpSentTo("sms")
-        }
+
 
         axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/send-login-otp`, {
             data: encrypted
@@ -204,7 +196,15 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     }
                 }));
 
-                console.log(methods)
+                if (decrypted?.message === "instagram") {
+                    setLastOtpSentTo("insta")
+                }
+                else if (decrypted?.message === "whatsapp") {
+                    setLastOtpSentTo("wp")
+                }
+                else if (decrypted?.message === "otp") {
+                    setLastOtpSentTo("sms")
+                }
 
                 const handleMethods = () => {
                     if (method === undefined) {
