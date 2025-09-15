@@ -8,11 +8,13 @@ import ShareableLink from './ShareableLink'
 import { formatDateTime } from '../InvoiceTable'
 import { Toggle } from '../../MyMasterCard/CardPurchased'
 import { ChevronDown } from 'react-feather'
+import useWindowWidth from '../../../utils/useWindowWidth'
 
 const InvoiceItemDetails = ({ inv }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
     const [openRecipientIds, setOpenRecipientIds] = useState(new Set())
+    const width = useWindowWidth()
 
     const toggleRecipient = (id) => {
         setOpenRecipientIds(prev => {
@@ -47,7 +49,7 @@ const InvoiceItemDetails = ({ inv }) => {
             </InfoItem>
 
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: width > 420 ? "1fr 1fr" : "1fr", gap: "10px" }}>
                 <InfoItem label="QR Code">
                     <div style={{ display: "flex", gap: "15px", flexDirection: "column" }}>
                         <QrDetails inInvoiceDetails={true} inInvoice={true} invoiceId={inv.invoiceId} username={userDetails.username} />
@@ -117,7 +119,7 @@ const InvoiceItemDetails = ({ inv }) => {
                     const s = r?.shippingDetails
                     return (
                         <InfoItem key={id} label={r?.userInfo?.name}>
-                            <div style={{ justifyContent: "space-between" }} className={styles.recipient}>
+                            <div style={{ justifyContent: "space-between", flexDirection: width < 500 && "column" }} className={styles.recipient}>
                                 <div style={{ flexDirection: "row", gap: "10px", alignItems: "center" }}>
                                     {r?.userInfo?.profileImage?.url && <img src={r?.userInfo?.profileImage?.url} alt="" />}
                                     {!r?.userInfo?.profileImage?.url && <span className={styles.pfpPlace}>{r?.userInfo?.name?.[0]}</span>}
