@@ -103,7 +103,7 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
 
                     const encrypted = encryptData(data)
 
-                    const url = vendor === "neema" ? `${process.env.REACT_APP_IP_DEV_API}/api/payment/withrdrawal-rates/${subService?.id}` : `${process.env.REACT_APP_THUNES_API}/get-withdrawal-rates/${subService?.id}`
+                    const url = `${process.env.REACT_APP_IP_DEV_API}/api/payment/withrdrawal-rates/${subService?.id}`
                     axios.post(url, {
                         data: encrypted
                     }, {
