@@ -1,7 +1,11 @@
 import axios from "axios"
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
-import { authHeader } from "../../Context/UserContext"
+
+const getAuthHeader = () => ({
+    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+    "source": "user"
+})
 
 const path = `${process.env.REACT_APP_IP_DEV_API}/api/invoice`
 // const path = 'http://localhost:3004/api/invoice'
@@ -9,7 +13,7 @@ const path = `${process.env.REACT_APP_IP_DEV_API}/api/invoice`
 const addInvoice = async (payload) => {
     const enc = encryptData(payload)
     const response = await axios.post(`${path}/create-invoice`, { data: enc }, {
-        headers: authHeader
+        headers: getAuthHeader()
     })
     return decryptData(response.data.data)?.data
 }
@@ -17,7 +21,7 @@ const addInvoice = async (payload) => {
 const uploadQR = async (formData) => {
     const response = await axios.post(`${path}/upload-qr`, formData, {
         headers: {
-            ...authHeader,
+            ...getAuthHeader(),
             'Content-Type': 'multipart/form-data'
         }
     })
@@ -26,14 +30,14 @@ const uploadQR = async (formData) => {
 
 const getInvoiceList = async (accountId, skip = 0, limit = 10) => {
     const response = await axios.get(`${path}/get-invoices-list/${accountId}/${skip}/${limit}`, {
-        headers: authHeader
+        headers: getAuthHeader()
     })
     return decryptData(response.data.data)?.data
 }
 
 const getInvoiceUsingId = async (invoiceId) => {
     const response = await axios.get(`${path}/invoice/${invoiceId}`, {
-        headers: authHeader
+        headers: getAuthHeader()
     })
     return decryptData(response.data.data)?.data
 }
@@ -41,14 +45,14 @@ const getInvoiceUsingId = async (invoiceId) => {
 const editInvoice = async (invoiceId, payload) => {
     const enc = encryptData(payload)
     const response = await axios.put(`${path}/edit-invoice/${invoiceId}`, { data: enc }, {
-        headers: authHeader
+        headers: getAuthHeader()
     })
     return decryptData(response.data.data)
 }
 
 const deleteInvoice = async (invoiceId) => {
     const response = await axios.delete(`${path}/delete-invoice/${invoiceId}`, {
-        headers: authHeader
+        headers: getAuthHeader()
     })
     return decryptData(response.data.data)
 }
