@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import styles from "../styles/index.module.scss"
 import { useTranslation } from 'react-i18next'
 import QrDetails from '../../PaymentAddressPublic/QrDetails'
@@ -7,10 +7,20 @@ import { DownloadButton, InfoItem } from './FormElements'
 import ShareableLink from './ShareableLink'
 import { formatDateTime } from '../InvoiceTable'
 import { Toggle } from '../../MyMasterCard/CardPurchased'
+import { ChevronDown } from 'react-feather'
 
 const InvoiceItemDetails = ({ inv }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
+    const [openRecipientIds, setOpenRecipientIds] = useState(new Set())
+
+    const toggleRecipient = (id) => {
+        setOpenRecipientIds(prev => {
+            const next = new Set(prev)
+            if (next.has(id)) next.delete(id); else next.add(id)
+            return next
+        })
+    }
 
     return (
         <div className={`${styles.expandRow}`}>
@@ -97,19 +107,75 @@ const InvoiceItemDetails = ({ inv }) => {
             </div>
 
             <div className={styles.expandContent}>
-                <InfoItem label="Recipient">
-                    <div className={styles.recipient}>
-                        <img src="https://thispersondoesnotexist.com" alt="" />
-                        <div>
-                            <h4>
-                                {inv.recipient}
-                            </h4>
-                            <span className={styles.label}>
-                                {t("IBAN")} : {"13123131"}
-                            </span>
-                        </div>
-                    </div>
-                </InfoItem>
+                <h3 style={{ marginTop: "15px" }}>
+                    {t("Recipients")}:
+                </h3>
+                {inv.recipients.length === 0 && <h5>{t("No Recipients!")}</h5>}
+                {inv.recipients?.map(r => {
+                    const id = r?._id || r?.userInfo?._id || r?.userInfo?.phone
+                    const isOpen = id ? openRecipientIds.has(id) : false
+                    const s = r?.shippingDetails
+                    return (
+                        <InfoItem key={id} label={r?.userInfo?.name}>
+                            <div style={{ justifyContent: "space-between" }} className={styles.recipient}>
+                                <div style={{ flexDirection: "row", gap: "10px", alignItems: "center" }}>
+                                    {r?.userInfo?.profileImage?.url && <img src={r?.userInfo?.profileImage?.url} alt="" />}
+                                    {!r?.userInfo?.profileImage?.url && <span className={styles.pfpPlace}>{r?.userInfo?.name?.[0]}</span>}
+
+                                    <div>
+                                        <span className={styles.label}>
+                                            {t("Phone")} : {r?.userInfo?.phone}
+                                        </span>
+                                        <span className={styles.label}>
+                                            {t("Payment Method")} : {r.paymentInfo?.paymentMethod}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    onClick={() => toggleRecipient(id)}
+                                    aria-expanded={isOpen}
+                                    aria-label="Toggle shipping details"
+                                    style={{
+                                        background: "transparent",
+                                        border: 0,
+                                        padding: 0,
+                                        cursor: "pointer",
+                                        display: "flex",
+                                        alignItems: "center"
+                                    }}
+                                >
+                                    <ChevronDown style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s ease" }} />
+                                </button>
+                            </div>
+
+                            {isOpen && (
+                                <div style={{ marginTop: "10px", padding: "12px", borderRadius: "8px", background: "#f7f7f8" }}>
+                                    <h5 style={{ marginBottom: "15px", fontSize: "16px" }}>{t("Shipping Details")}:</h5>
+                                    {s ? (
+                                        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "8px 16px" }}>
+                                            <span className={styles.label}>{t("House No")}:</span>
+                                            <h5>{s?.houseNo ?? "-"}</h5>
+                                            <span className={styles.label}>{t("Street")}:</span>
+                                            <h5>{s?.street ?? "-"}</h5>
+                                            <span className={styles.label}>{t("City")}:</span>
+                                            <h5>{s?.city ?? "-"}</h5>
+                                            <span className={styles.label}>{t("State")}:</span>
+                                            <h5>{s?.state ?? "-"}</h5>
+                                            <span className={styles.label}>{t("Country")}:</span>
+                                            <h5>{s?.country ?? "-"}</h5>
+                                            <span className={styles.label}>{t("Zip Code")}:</span>
+                                            <h5>{s?.zipCode ?? "-"}</h5>
+                                        </div>
+                                    ) : (
+                                        <h5>{t("This beneficiary doesn't have shipping details")}</h5>
+                                    )}
+                                </div>
+                            )}
+                        </InfoItem>
+                    )
+                })}
             </div>
         </div>
     )

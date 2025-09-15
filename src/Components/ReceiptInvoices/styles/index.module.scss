@@ -378,6 +378,20 @@
             border-radius: 8px;
         }
 
+        .pfpPlace {
+            width: 44.266px;
+            height: 45.704px;
+            box-shadow: 0 2.602px 20.813px 0 rgba(109, 41, 220, 0.17);
+            border-radius: 8px;
+            background: linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 25px;
+            font-weight: 700;
+        }
+
         div {
             display: flex;
             flex-direction: column;
