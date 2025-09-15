@@ -60,23 +60,23 @@ const InvoiceItemDetails = ({ inv }) => {
                 <div style={{ display: "grid", gap: "10px" }}>
                     <InfoItem label="Extra Details">
                         <div>
-                            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "space-between", }}>
                                 <span style={{ fontSize: "14px" }} className={styles.label}> {t("Shipping")}: </span>
                                 <Toggle checked={inv?.shippingAddress} />
                             </div>
-                            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "10px" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "space-between", marginTop: "10px" }}>
                                 <span style={{ fontSize: "14px" }} className={styles.label}> {t("Recurring")}: </span>
                                 <Toggle checked={inv?.recurring} />
                             </div>
-                            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "10px" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "space-between", marginTop: "10px" }}>
                                 <span className={styles.label} style={{ fontSize: "14px" }}> {t("Date")}: </span>
-                                <h5>
+                                <h5 style={{ textAlign: "right" }}>
                                     {formatDateTime(inv.createdAt, "date")}
                                 </h5>
                             </div>
-                            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "10px" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "space-between", marginTop: "10px" }}>
                                 <span className={styles.label} style={{ fontSize: "14px" }}> {t("Time")}: </span>
-                                <h5>
+                                <h5 style={{ textAlign: "right" }}>
                                     {formatDateTime(inv.createdAt, "time")}
                                 </h5>
                             </div>
@@ -85,15 +85,15 @@ const InvoiceItemDetails = ({ inv }) => {
 
                     <InfoItem label="Receiving Wallet">
                         <div>
-                            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "space-between" }}>
                                 <span style={{ fontSize: "14px" }} className={styles.label}> {t("Currency")}: </span>
-                                <h5>
+                                <h5 style={{ textAlign: "right" }}>
                                     {inv.receivingWallet?.currency?.code}
                                 </h5>
                             </div>
-                            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "space-between" }}>
                                 <span style={{ fontSize: "14px" }} className={styles.label}> {t("Wallet Id")}: </span>
-                                <h5>
+                                <h5 style={{ textAlign: "right" }}>
                                     {inv.receivingWallet?.wallet_id}
                                 </h5>
                             </div>
