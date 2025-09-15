@@ -33,7 +33,7 @@ import { createShambeToken } from "../../../Helper/CreateToken"
 import NotFoundModal from "../../NotFound/NotFoundModal"
 import errors from "../../AddFunds/TrustPaymentErrors.json"
 import AddBeneficiaryRequiredFields from "../../AddBeneficiaryRequiredFields"
-import { Modal, ModalBody, ModalHeader, Button } from "reactstrap"
+import { Modal, ModalBody, ModalHeader } from "reactstrap"
 import AddBeneficiaryAddressModal from "../../AddBeneficiaryAddressModal"
 
 const leftSideContent = [

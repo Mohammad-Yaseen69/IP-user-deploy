@@ -158,7 +158,7 @@ const TwoFactorAuth = () => {
                 const dec = decryptData(res.data.data)
 
                 setDevices(dec.devices ?? [])
-                setFingerBioActive(dec.devices?.length > 0 && (dec.devices?.every(device => device.enabled) || false))
+                setFingerBioActive(dec.devices?.length > 0)
                 console.log(dec)
             }
             catch (error) {
@@ -333,8 +333,7 @@ const TwoFactorAuth = () => {
     }
     useEffect(() => {
         if (devices.length > 0) {
-            const anyEnabled = devices.some(device => device.enabled);
-            setFingerBioActive(anyEnabled);
+            setFingerBioActive(true);
         } else {
             setFingerBioActive(false);
         }
@@ -462,11 +461,11 @@ const TwoFactorAuth = () => {
                             </td>
                             <td style={{ minWidth: window.innerWidth > 1000 && "400px" }} data-label={t("Finger Biometric")}>
 
-                                {devices.length === 0 ?
+                                {devices.length !== 0 ?
                                     <ChevronDown onClick={() => setShowDevices(prev => !prev)} style={{ marginRight: '1rem', transition: "all .4s", transform: showDevices && "rotate(180deg)", cursor: "pointer" }} />
                                     :
                                     <div className={styles.buttons} style={{ display: "flex", alignItems: "center", gap: "8px", margin: window.innerWidth < 600 && "0px" }}>
-                                        <button style={{minWidth: "200px"}} onClick={() => setShowBioModal(true)} className={styles.plus}>
+                                        <button style={{ minWidth: "200px" }} onClick={() => setShowBioModal(true)} className={styles.plus}>
                                             <img src={Plus} alt="" />
                                             <p style={{ marginBottom: "0", textAlign: "left" }}>{t("Register Biometric Passkey")}</p>
                                         </button>
