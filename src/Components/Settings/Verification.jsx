@@ -90,11 +90,17 @@ const Verification = () => {
                 const verificationLink = decryptData(
                     response.data.data
                 )?.tokenized_link;
-                window.open(verificationLink, "_blank");
+                const newWindow = window.open(verificationLink, "_blank");
+
+                // If blocked, redirect in same window
+                if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+                    window.location.href = verificationLink;
+                }
             }
 
             // console.log("try ran in handlesend");
         } catch (error) {
+
             toast.error("We cannot process your request at the moment, please try again later.")
             // console.log("try ran in error", error);
             // console.log(decryptData(error?.response?.data?.data));
@@ -189,7 +195,7 @@ const Verification = () => {
                         {
                             processing === "processing" ?
                                 <h5 className='modal-title' style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '2rem' }}>
-                                    <AiOutlineClockCircle  size={64} className="text-warning" />
+                                    <AiOutlineClockCircle size={64} className="text-warning" />
                                     {t("Payment is in Processing!")}
                                 </h5>
                                 :
