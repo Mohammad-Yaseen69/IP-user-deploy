@@ -39,6 +39,8 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                         data.exchange_rate?.exchange_rate
                         &&
                         (data.wallet?.currency?.code ?? data.currency_wallet?.currency?.code) !== (data?.beneficiary_wallet?.currency?.code ?? data.recipient_currency)
+                        &&
+                        data.exchange_rate?.sending?.currency !== (data.exchange_rate?.exchange_rate_currency ?? data.exchange_rate?.receiver?.currency)
                         ?
                         <div className={styles.item}>
                             <span>{t(exchangeRateLabel)}</span>

@@ -80,7 +80,8 @@ const PaymentChannelUI = ({
     // New prop to distinguish edit mode
     isEdit = false,
     walletNumberError,
-    isEditMode = true
+    isEditMode = true,
+    completedCrypto
 }) => {
     const { userDetails } = useContext(UserContext)
     const { t } = useTranslation()
@@ -237,36 +238,36 @@ const PaymentChannelUI = ({
                         }
                     </button>
                 }
-                {/* <button style={{
-                                                all: "unset",
-                                                padding: mobileView ? ".25rem" : "1rem",
-                                                boxShadow: "0 0 3px rgba(128,128,128,0.4)",
-                                                flex: 1,
-                                                textAlign: "center",
-                                                cursor: "pointer",
-                                                type: "button",
-                                                borderRadius: "10px",
-                                                background: active === 4 ? "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)" : "transparent",
-                                                color: active === 4 ? "white" : "inherit",
-                                                display: "flex",
-                                                alignItems: "center",
-                                                gap: "1rem",
-                                                justifyContent: "center",
-                                                padding: "1rem"
-                                            }}
-                                                onClick={(e) => {
-                                                    e.preventDefault()
-                                                    setActive(4)
-                                                }}>
-                                                <p style={{ padding: 0, margin: 0, whiteSpace: "nowrap" }}>{t("Crypto Wallet")}</p>
-                                                {
-                                                    !mobileView
-                                                    &&
-                                                    <>
-                                                        {!completedCrypto ? <Circle /> : <CheckCircle />}
-                                                    </>
-                                                }
-                                            </button> */}
+                <button style={{
+                    all: "unset",
+                    padding: mobileView ? ".25rem" : "1rem",
+                    boxShadow: "0 0 3px rgba(128,128,128,0.4)",
+                    flex: 1,
+                    textAlign: "center",
+                    cursor: "pointer",
+                    type: "button",
+                    borderRadius: "10px",
+                    background: active === 4 ? "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)" : "transparent",
+                    color: active === 4 ? "white" : "inherit",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
+                    justifyContent: "center",
+                    padding: "1rem"
+                }}
+                    onClick={(e) => {
+                        e.preventDefault()
+                        setActive(4)
+                    }}>
+                    <p style={{ padding: 0, margin: 0, whiteSpace: "nowrap" }}>{t("Crypto Wallet")}</p>
+                    {
+                        !mobileView
+                        &&
+                        <>
+                            {!completedCrypto ? <Circle /> : <CheckCircle />}
+                        </>
+                    }
+                </button>
                 {
                     userDetails?.level?.wallet_to_wallet?.send
                     &&

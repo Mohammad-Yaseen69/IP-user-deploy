@@ -431,7 +431,7 @@ const WithdrawOldFlow = ({
                         setShowStatus={() => "a"} // console.log("er")}
                         setIsInternational={() => "a"}// console.log("er")}
                         transactionDetails={transactionDetails}
-                        type='withdrawing'
+                        type='withdrawn'
                     />
                 }
             </ModalBody>

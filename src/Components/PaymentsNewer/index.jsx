@@ -302,25 +302,25 @@ const PaymentsNewer = () => {
                                                 <img src={a_m_i} alt="" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
                                                 <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", maxWidth: "8ch" }}>{t("Mobile Airtime")}</span>
                                             </button>
-                                            {/* {
-                                                        (
-                                                            userDetails?.account_type === "individual"
-                                                                ?
-                                                                userDetails?.level?.wallet_to_wallet?.crypto_to_fiat
-                                                                :
-                                                                userDetails?.level?.wallet_to_wallet?.crypto_to_fiat
-                                                        )
-                                                        &&
-                                                        <button dataAction="send_crypto" onClick={() => {
-                                                            setActionType("send_crypto")
-                                                            setCurrentFlow("send_crypto")
-                                                        }}>
-                                                            <img src={sc} alt="payment types" />
-                                                        </button>
-                                                    } */}
-                                            {/* <button className={styles.disabled} disabled>
+                                            {
+                                                (
+                                                    userDetails?.account_type === "individual"
+                                                        ?
+                                                        userDetails?.level?.wallet_to_wallet?.crypto_to_fiat
+                                                        :
+                                                        userDetails?.level?.wallet_to_wallet?.crypto_to_fiat
+                                                )
+                                                &&
+                                                <button dataAction="send_crypto" onClick={() => {
+                                                    setActionType("send_crypto")
+                                                    setCurrentFlow("send_crypto")
+                                                }}>
+                                                    <img src={sc} alt="payment types" />
+                                                </button>
+                                            }
+                                            <button className={styles.disabled} disabled>
                                                 <img src={rq} alt="payment types" />
-                                            </button> */}
+                                            </button>
                                         </>
                                     }
                                     {
@@ -390,7 +390,7 @@ const PaymentsNewer = () => {
                                                         <img src={qr_ic} alt="" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
                                                         <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", maxWidth: "8ch" }}>{t("QR Code Payment")}</span>
                                                     </button>
-                                                       }
+                                                }
                                             </>
                                             :
                                             ""

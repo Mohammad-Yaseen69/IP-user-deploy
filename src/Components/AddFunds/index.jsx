@@ -196,27 +196,28 @@ const AddFunds = () => {
                                 <img src={money} alt="money" style={{ maxHeight: is_big ? "541px" : "430px" }} draggable="false" />
                             </div>
                             {/* <div style={{ cursor: "pointer", position: "relative" }} onClick={() => setAction("crypto")}> */}
-                            {/* <div style={{ cursor: "not-allowed", position: "relative" }}>
-                                <div style={{
-                                    position: "absolute",
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    bottom: 0,
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    fontSize: "2rem",
-                                    fontWeight: 700,
-                                    zIndex: 10,
-                                    background: "#1111118e",
-                                    color: "white",
-                                    borderRadius: "16px"
-                                }}>
-                                    {t("Coming Soon")}
+                                <div style={{ cursor: "not-allowed", position: "relative" }}>
+                                    <div style={{
+                                        position: "absolute",
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        fontSize: "2rem",
+                                        fontWeight: 700,
+                                        zIndex: 10,
+                                        background: "#1111118e",
+                                        color: "white",
+                                        borderRadius: "16px"
+                                    }}>
+                                        {t("Coming Soon")}
+                                    </div>
+                                    <img src={crypto} alt="crypto" style={{ maxHeight: is_big ? "541px" : "430px" }} draggable="false" />
                                 </div>
-                                <img src={crypto} alt="crypto" style={{ maxHeight: is_big ? "541px" : "430px" }} draggable="false" />
-                            </div> */}
+                            {/* </div> */}
                             {/* <Button style={{
                             border: "none",
                             outline: "none",
@@ -292,9 +293,9 @@ const AddFunds = () => {
                             <div style={{ cursor: "pointer", borderRadius: "16px", width: "100%", overflow: "hidden" }} onClick={() => setAction("money")}>
                                 <img src={money} alt="money" style={{ height: "100%", width: "100%", objectFit: "cover" }} draggable="false" />
                             </div>
-                            {/* <div style={{ cursor: "pointer", borderRadius: "16px", width: "100%", overflow: "hidden" }} onClick={() => setAction("crypto")}>
+                            <div style={{ cursor: "pointer", borderRadius: "16px", width: "100%", overflow: "hidden" }} onClick={() => setAction("crypto")}>
                                 <img src={crypto} alt="crypto" style={{ height: "100%", width: "100%", objectFit: "cover" }} draggable="false" />
-                            </div> */}
+                            </div>
                         </div>
                     }
                     {

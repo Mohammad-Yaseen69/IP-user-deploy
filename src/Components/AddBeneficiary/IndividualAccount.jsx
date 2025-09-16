@@ -788,7 +788,8 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
                                         cashPickupNumber,
                                         setCashPickupNumber,
                                         cashExtras,
-                                        handleCashxtraChange
+                                        handleCashxtraChange,
+                                        completedCrypto
                                     }}
                                     />
                                 </CardBody >

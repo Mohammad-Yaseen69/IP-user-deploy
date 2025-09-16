@@ -54,7 +54,8 @@ export const apiErrors = {
     "feature_not_allowed": "This feature is currently disabled for your account. Contact support for assistance.",
     "beneficiary_details_missing": "It appears that some required beneficiary details are either missing or incorrect. Please review and update the beneficiary information, ensuring all fields are properly filled, and try again.",
     "insufficient_funds": "You don't have enough funds for this transaction.",
-    "invoice_not_found_or_inactive": "The invoice you're trying to pay is either inactive or the invoice id is not correct!"
+    "invoice_not_found_or_inactive": "The invoice you're trying to pay is either inactive or the invoice id is not correct!",
+    "invoice_not_found": "The invoice you're trying to pay is either inactive or the invoice id is not correct!",
 }
 
 
