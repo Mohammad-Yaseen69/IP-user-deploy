@@ -60,11 +60,11 @@ const TimelineChooseMethod = ({ method, setMethod, mobileView, setStepNumber }) 
                                 &&
                                 "Payment Card."
                             }
-                            {/* {
+                            {
                                 method == "Crypto"
                                 &&
                                 "Crypto Wallet."
-                            } */}
+                            }
                         </p>
                         <span style={{
                             cursor: "pointer",

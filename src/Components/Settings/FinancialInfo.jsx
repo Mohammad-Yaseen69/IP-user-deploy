@@ -191,17 +191,20 @@ const FinancialInfo = () => {
                                     </span>
                                 </div>
                                 :
-                                // Use native select for single-option fields
-                                <select
-                                    value={question.answers || ""}
-                                    onChange={e => updateData(question.question_key, e.target.value)}
-                                    style={{ width: '100%', fontWeight: 600, padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-                                >
-                                    <option value="" disabled>{t('Select an option')}</option>
-                                    {selectOptions[question.question_key]?.map(opt => (
-                                        <option key={opt.value} value={opt.value}>{t(opt.label)}</option>
-                                    ))}
-                                </select>
+                                (Select &&
+                                    <Select
+                                        options={selectOptions[question.question_key]}
+                                        value={
+                                            selectOptions[question.question_key]?.find(opt => opt.value === question.answers) ||
+                                            (question.answers && typeof question.answers === 'string' && selectOptions[question.question_key]?.some(opt => opt.value === question.answers) === false ? { label: question.answers, value: question.answers } : null)
+                                        }
+                                        styles={{
+                                            container: (base) => ({ ...base, width: '100%', outline: "none" }),
+                                            control: (base) => ({ ...base, fontWeight: 600 }),
+                                        }}
+                                        onChange={option => updateData(question.question_key, option ? option.value : "")}
+                                    />
+                                )
                         )
                     }
                     {question?.question_key === "keeps_busy" &&

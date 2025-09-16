@@ -184,16 +184,16 @@ const PaymentsNewer = () => {
                     &&
                     <SendQuotation setAction={setAction} setStep={setStep} />
                 }
-                {/* {
+                {
                     (step === 2 && action === "send_crypto")
                     &&
                     <SendCrypto />
-                } */}
-                {/* {
+                }
+                {
                     (step === 2 && action === "crypto_fiat")
                     &&
                     <CryptoFiat />
-                } */}
+                }
 
             </div>
             <div className={styles.mobile}>
@@ -422,11 +422,11 @@ const PaymentsNewer = () => {
                                 &&
                                 <SendQuote step={step} setStep={setStep} setCurrentFlow={setCurrentFlow} setAction={setAction} />
                             }
-                            {/* {
+                            {
                                 action === "send_crypto"
                                 &&
                                 <CryptoFiatMobile step={step} setStep={setStep} setCurrentFlow={setCurrentFlow} setAction={setAction} />
-                            } */}
+                            }
                             {
                                 action === "airtime"
                                 &&
