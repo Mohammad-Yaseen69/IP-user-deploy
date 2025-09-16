@@ -16,12 +16,12 @@ const qrCode = new QRCodeStyling({
         mode: "Byte",
         errorCorrectionLevel: "Q",
     },
-    // image: logo,
-    // imageOptions: {
-    //     hideBackgroundDots: true,
-    //     imageSize: 0.2,
-    //     margin: 10,
-    // },
+    image: logo,
+    imageOptions: {
+        hideBackgroundDots: true,
+        imageSize: 0.2,
+        margin: 10,
+    },
     dotsOptions: {
         type: "extra-rounded",
         color: "#6a1a4c",
@@ -70,7 +70,7 @@ const QrDetails = ({ wallet, amount, currency, currentWallet, address, user, use
                 <div className={styles.qrCode} style={{ position: "relative" }}>
                     {/* <img src={wallet.qrCode?.url} /> */}
                     <img alt="" src={qrLink} style={{ height: (address && (window.innerWidth > 1000)) ? "150px" : inInvoice ? "" : "221px", padding: inInvoice && "10px" }} />
-                    <img alt="" src={logo} style={{ position: "absolute", left: "50%", top: "36%", translate: "-50% -50%", width: window.innerWidth > 1000 ? "1.4rem" : "2.5rem", padding: ".3rem", background: "white", borderRadius: "10px" }} />
+                    {/* <img alt="" src={logo} style={{ position: "absolute", left: "50%", top: "36%", translate: "-50% -50%", width: window.innerWidth > 1000 ? "1.4rem" : "2.5rem", padding: ".3rem", background: "white", borderRadius: "10px" }} /> */}
                     <div className={styles.qr_id}>{wallet?.wallet_id ?? invoiceId}</div>
                     {
                         (user?.username || username)

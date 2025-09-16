@@ -4,54 +4,93 @@ import axios from 'axios';
 import logo from "../../assets/images/logo/logo.png"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 
-const qrCode = new QRCodeStyling({
-    width: 300,
-    height: 300,
-    qrOptions: {
-        typeNumber: "0",
-        mode: "Byte",
-        errorCorrectionLevel: "Q",
-    },
-    image: logo,
-    imageOptions: {
-        hideBackgroundDots: true,
-        imageSize: 0.2,
-        margin: 10,
-    },
-    dotsOptions: {
-        type: "extra-rounded",
-        color: "#6a1a4c",
-        gradient: {
-            type: "linear",
-            rotation: 0.3141592653589793,
-            colorStops: [
-                { offset: 0, color: "#4b1135" },
-                { offset: 1, color: "#3c087d" },
-            ],
-        },
-    },
-    backgroundOptions: { color: "#ffffff" },
-});
+// Use a per-component instance to avoid shared canvas and race conditions
 
 const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, platform, isInvoice, invoiceQrGenerateFn, invoiceUrl, invoiceId }) => {
     const ref = useRef(null);
+    const qrRef = useRef(null);
+    const [isReady, setIsReady] = useState(false);
     const [generated, setGenerated] = useState(0)
 
     useEffect(() => {
-        const img = new window.Image();
-        img.src = logo;
-        img.onload = () => {
-            qrCode.update({ image: logo });
-            qrCode.append(ref.current);
+        qrRef.current = new QRCodeStyling({
+            width: 300,
+            height: 300,
+            qrOptions: {
+                typeNumber: "0",
+                mode: "Byte",
+                errorCorrectionLevel: "Q",
+            },
+            image: logo,
+            imageOptions: {
+                hideBackgroundDots: true,
+                imageSize: 0.2,
+                margin: 10,
+            },
+            dotsOptions: {
+                type: "extra-rounded",
+                color: "#6a1a4c",
+                gradient: {
+                    type: "linear",
+                    rotation: 0.3141592653589793,
+                    colorStops: [
+                        { offset: 0, color: "#4b1135" },
+                        { offset: 1, color: "#3c087d" },
+                    ],
+                },
+            },
+            backgroundOptions: { color: "#ffffff" },
+        });
+
+        const setup = async () => {
+            try {
+                const img = new window.Image();
+                img.crossOrigin = 'anonymous';
+                img.src = logo;
+                if (typeof img.decode === 'function') {
+                    await img.decode();
+                } else {
+                    await new Promise((resolve, reject) => {
+                        img.onload = resolve;
+                        img.onerror = reject;
+                    });
+                }
+                qrRef.current && qrRef.current.update({ image: logo });
+                if (ref.current) {
+                    qrRef.current && qrRef.current.append(ref.current);
+                }
+                setIsReady(true);
+            } catch (_) {
+                if (ref.current) {
+                    qrRef.current && qrRef.current.append(ref.current);
+                }
+                setIsReady(true);
+            }
+        };
+        setup();
+
+        return () => {
+            if (ref.current) ref.current.innerHTML = "";
         };
     }, []);
 
+    const waitForReady = async (timeoutMs = 3000) => {
+        const start = Date.now();
+        while ((!qrRef.current || !isReady) && Date.now() - start < timeoutMs) {
+            await new Promise(r => setTimeout(r, 50));
+        }
+    };
+
     const preparingFormData = async (url) => {
-        qrCode.update({ data: url, image: logo });
+        await waitForReady();
+        if (!qrRef.current) throw new Error("QR generator not ready");
+
+        qrRef.current.update({ data: url, image: logo });
+        await new Promise(resolve => requestAnimationFrame(resolve));
+
         const fileName = `qrcode.png`;
         const mimeType = `image/png`;
-        console.log(qrCode)
-        const blob = await qrCode.getRawData("png");
+        const blob = await qrRef.current.getRawData("png");
 
         const file = new File([blob], fileName, { type: mimeType });
         const formData = new FormData();
@@ -71,14 +110,14 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
         formData.append("chatbot", chatbot)
 
         if (platform === "telegram") {
-            formData.appent("platform", platform)
+            formData.append("platform", platform)
         }
         try {
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/upload-qrcode`, formData)
             const dec = decryptData(res.data.data)
             console.log("wallet_res = ", dec)
             console.log("url = ", url)
-            console.log("set url = ", qrCode._options.data)
+            console.log("set url = ", qrRef.current?._options?.data)
             setMessage("QR Code sticker generated successfully!")
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
