@@ -59,7 +59,7 @@ const ReceiptInvoice = () => {
                                 {t("My recent Invoices:")}
                             </h5>
                             <button style={width < 500 ? { justifyContent: "center", alignItems: "center", display: "flex", width: "40px", height: "40px" } : {}} onClick={() => setShowModal(true)}>
-                                <span style={{ fontSize: width < 500 ? "24px" : '14px' }}>
+                                <span style={{ fontSize: width < 500 ? "24px" : '14px', marginLeft: width < 500 && "5px" }}>
                                     +
                                 </span>
                                 {width > 500 && t("Create New Invoice")}
@@ -76,7 +76,6 @@ const ReceiptInvoice = () => {
                                     placeholder={t('Search for Invoice')}
                                 />
                             </div>
-                            <img src={date} style={{ cursor: "pointer", marginTop: "4px" }} alt="" />
                         </div>
                         <InvoiceTable
                             setEditModal={setEditModal}

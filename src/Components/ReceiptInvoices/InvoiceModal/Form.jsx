@@ -21,10 +21,20 @@ const Form = ({ data, inputFieldChange, dataHandler }) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <Field label={t('Title')} required>
-                <TextInput value={data.title} onChange={inputFieldChange('title')} placeholder={t('Enter title')} />
+                <div style={{ width: '100%' }}>
+                    <TextInput value={data.title} onChange={inputFieldChange('title')} placeholder={t('Enter title')} maxLength={100} />
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 4 }}>
+                        <span style={{ fontSize: 12, color: '#6b7280' }}>{(data?.title?.length ?? 0)}/100</span>
+                    </div>
+                </div>
             </Field>
             <Field label={t('Description')} required>
-                <TextArea value={data.description} onChange={inputFieldChange('description')} placeholder={t('Enter description')} rows={5} />
+                <div style={{ width: '100%' }}>
+                    <TextArea value={data.description} onChange={inputFieldChange('description')} placeholder={t('Enter description')} rows={5} maxLength={500} />
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 4 }}>
+                        <span style={{ fontSize: 12, color: '#6b7280' }}>{(data?.description?.length ?? 0)}/500</span>
+                    </div>
+                </div>
             </Field>
             <Field label={t('Amount')} required>
                 <TextInput

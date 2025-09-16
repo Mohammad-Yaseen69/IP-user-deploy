@@ -30,7 +30,7 @@ export const TextInput = ({ value, onChange, placeholder, onBlur, ...props }) =>
     />
 )
 
-export const TextArea = ({ value, onChange, placeholder, rows = 4 }) => (
+export const TextArea = ({ value, onChange, placeholder, rows = 4, ...props }) => (
     <textarea
         value={value}
         onChange={onChange}
@@ -44,6 +44,7 @@ export const TextArea = ({ value, onChange, placeholder, rows = 4 }) => (
             outline: 'none',
             resize: 'vertical'
         }}
+        {...props}
     />
 )
 

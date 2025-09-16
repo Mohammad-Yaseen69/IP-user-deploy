@@ -30,13 +30,14 @@ const InvoiceTable = ({ filteredInvoices, setEditModal }) => {
         <div className={styles.tableWrapper}>
             <div className={styles.table}>
                 <div className={`${styles.tr} ${styles.thead}`}>
-                    <div style={{ textAlign: "justify" }} className={`${styles.th} ${styles.serial}`}>{t('S.No')}</div>
-                    {width > 700 && < div className={styles.th}>{t('Date and Time')}</div>}
-                    <div className={styles.th}>{t('Title')}</div>
-                    {width > 450 && <div className={`${styles.th} ${styles.amount}`}>{t('Amount')}</div>}
-                    {width > 700 && <div className={styles.th}>{t('Receiving Wallet')}</div>}
-                    {width > 700 && <div className={styles.th}>{t('Status')}</div>}
-                    <div className={`${styles.th} ${styles.actions}`}>{t('Actions')}</div>
+                    {width > 700 && <div style={{ textAlign: "justify", flex: .050 }} className={`${styles.th} ${styles.serial}`}>{t('S.No')}</div>}
+                    <div style={{ flex: width <= 700 ? .28 : .18 }} className={styles.th}>{t('Date and Time')}</div>
+                    <div style={{ flex: width <= 700 ? .62 : .24 }} className={styles.th}>{t('Title')}</div>
+                    {width > 700 && <div style={{ flex: .26 }} className={styles.th}>{t('Description')}</div>}
+                    {width > 700 && <div style={{ flex: .12 }} className={`${styles.th} ${styles.amount}`}>{t('Amount')}</div>}
+                    {width > 700 && <div style={{ flex: .17 }} className={styles.th}>{t('Receiving Wallet')}</div>}
+                    {width > 700 && <div style={{ flex: .13 }} className={styles.th}>{t('Status')}</div>}
+                    <div style={{ flex: .1 }} className={`${styles.th} ${styles.actions}`}>{t('Actions')}</div>
                 </div>
 
                 {filteredInvoices.map((inv, idx) => {

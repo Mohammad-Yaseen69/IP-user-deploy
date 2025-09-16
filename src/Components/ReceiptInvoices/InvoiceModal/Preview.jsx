@@ -8,6 +8,7 @@ import InstaPayLoader from "../../Loader"
 import { DownloadButton } from "../UI/FormElements"
 import ShareableLink from "../UI/ShareableLink"
 import useWindowWidth from "../../../utils/useWindowWidth"
+import { formatCurrency } from "../../../Helper/AmountFormat"
 
 const Preview = ({ invoiceId, data, isPending, uploadData, mutate }) => {
     const { t } = useTranslation()
@@ -40,7 +41,7 @@ const Preview = ({ invoiceId, data, isPending, uploadData, mutate }) => {
                             </div>
                             <div style={{ marginBottom: 8 }}>
                                 <div style={{ color: "#8E8E8E", fontSize: "12px" }}>{t('Amount')}:</div>
-                                <div style={{ whiteSpace: 'pre-wrap', fontSize: "14px", marginTop: "5px" }}>{data.amount}</div>
+                                <div style={{ whiteSpace: 'pre-wrap', fontSize: "14px", marginTop: "5px" }}>{data.currency} {formatCurrency(data.amount, true)}</div>
                             </div>
                         </div>
 

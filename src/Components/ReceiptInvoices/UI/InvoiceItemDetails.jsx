@@ -43,7 +43,7 @@ const InvoiceItemDetails = ({ inv }) => {
             </InfoItem>
 
             <InfoItem label="Description">
-                <h5>
+                <h5 style={{wordBreak: "break-all"}}>
                     {inv.description}
                 </h5>
             </InfoItem>

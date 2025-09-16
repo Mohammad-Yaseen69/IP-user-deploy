@@ -22,7 +22,8 @@ const initialData = {
     allowShipping: false,
     mode: "form",
     wallet: "",
-    invoiceId: ""
+    invoiceId: "",
+    generatingQr: true
 }
 
 function reducer(state, action) {
@@ -109,6 +110,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
     const { mutate, isPending: uploadPending, data: uploadData } = useMutation({
         mutationFn: (formData) => uploadQR(formData),
         onSuccess: () => {
+            dataHandler("generatingQr", false)
             queryClient.invalidateQueries({ queryKey: ["GetInvoicesList"] })
         }
     })
@@ -160,7 +162,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
                         data={addedData}
                         uploadData={uploadData}
                         mutate={mutate}
-                        isPending={uploadPending}
+                        isPending={data.generatingQr}
                     />
                 )}
 
@@ -178,7 +180,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
                             }
                         }}
                     >
-                        {data.mode === "preview" ? t('Close') : isEdit ? t('Edit Invoice') : t('Generate New Invoice')}
+                        {data.mode === "preview" ? t('Close') : isEdit ? t('Save') : t('Generate New Invoice')}
                     </ButtonForRequests>
                 </div>
             </ModalBody>

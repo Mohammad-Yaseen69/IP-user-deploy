@@ -26,12 +26,18 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal }) => {
         setExpanded(prev => ({ ...prev, [invoiceId]: !prev[invoiceId] }))
     }
 
-    const { isPending, mutate } = useMutation({
+    const { isPending, mutateAsync } = useMutation({
         mutationFn: (invoiceId) => deleteInvoice(invoiceId),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["GetInvoicesList"] })
         }
     })
+    const truncate = (text, max) => {
+        if (!text) return "";
+        return text.length > max ? `${text.slice(0, max)}...` : text;
+    }
+    const ellipsisStyle = { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" };
+    const isPhone = width <= 700;
     return (
         <React.Fragment key={inv.invoiceId}>
             <div
@@ -41,18 +47,20 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal }) => {
                     toggleExpand(inv.invoiceId)
                 }}
             >
-                <div style={{ textAlign: "justify" }} className={`${styles.td} ${styles.serial}`}>{sn}</div>
-                {width > 700 && <div className={styles.td}>{formatDateTime(inv.createdAt)}</div>}
-                <div className={styles.td}>{inv.title}</div>
-                {width > 450 && <div className={`${styles.td}`}>{inv.currency} {Number(inv.amount).toFixed(2)}</div>}
-                {width > 700 && <div className={styles.td}>{inv.receivingWallet?.wallet_id}</div>}
-                {width > 700 && <div className={styles.td}>
+                {width > 700 && <div style={{ textAlign: "justify", flex: .050 }} className={`${styles.td} ${styles.serial}`}>{sn}</div>}
+                <div style={{ flex: isPhone ? .28 : .18 }} className={styles.td}>{formatDateTime(inv.createdAt)}</div>
+                <div style={{ flex: isPhone ? .62 : .24, ...ellipsisStyle }} className={styles.td}>{truncate(inv.title, 50)}</div>
+                {width > 700 && <div style={{ flex: .26, ...ellipsisStyle }} className={styles.td}>{truncate(inv.description, 30)}</div>}
+                {width > 700 && <div style={{ flex: .12 }} className={`${styles.td}`}>{inv.currency} {Number(inv.amount).toFixed(2)}</div>}
+                {width > 700 && <div style={{ flex: .17, ...ellipsisStyle }} className={styles.td}>{inv.receivingWallet?.wallet_id}</div>}
+                {width > 700 && <div style={{ flex: .13 }} className={styles.td}>
                     <span className={`${styles.badge} ${badgeClass}`}>{t(inv.status)}</span>
                 </div>
                 }
-                <div className={`${styles.td} ${styles.actions}`} onClick={(e) => e.stopPropagation()}>
+                <div style={{ flex: .1, display: "flex", justifyContent: "flex-end" }} className={`${styles.td} ${styles.actions}`} onClick={(e) => e.stopPropagation()}>
                     <button
                         className={styles.threeDotsBtn}
+                        style={{ display: "flex", justifySelf: "flex-end", justifyContent: "center", alignItems: "center" }}
                         onClick={() => setMenuOpenFor(menuOpenFor === inv.invoiceId ? null : inv.invoiceId)}
                     >
                         <MoreHorizontal size={18} />
@@ -103,13 +111,15 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal }) => {
                     {t('Are you sure you want to delete this invoice?')}
                 </ModalBody>
                 <ModalFooter>
-                    <button toggle={() => setShowConfirm(false)} style={{background: "none", border: "none", outline: "none", fontWeight: 600, fontSize: "14px"}}>
+                    <button toggle={() => setShowConfirm(false)} style={{ background: "none", border: "none", outline: "none", fontWeight: 600, fontSize: "14px" }}>
                         {t("Cancel")}
                     </button>
                     <ButtonForRequests
                         onClick={() => {
                             if (!isPending) {
-                                mutate(inv.invoiceId)
+                                mutateAsync(inv.invoiceId).finally(() => {
+                                    setShowConfirm(false)
+                                })
                             }
                         }}
                         isLoading={isPending}
@@ -135,7 +145,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal }) => {
                     >
                         <div style={{ width: width < 750 ? "100%" : "550px", height: width < 750 && "80vh" }}>
                             <div style={{ padding: "20px", display: "flex", justifyContent: "space-between", alignItems: "center", position: "sticky", top: "0px", left: "0px", background: "white", zIndex: 100 }}>
-                                <h4>
+                                <h4 style={{ width: "90%", wordWrap: "break-word" }}>
                                     {inv.title}
                                 </h4>
                                 <X onClick={() => toggleExpand(inv.invoiceId)} cursor={"pointer"} />

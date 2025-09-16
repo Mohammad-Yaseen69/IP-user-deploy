@@ -24,7 +24,7 @@ const ShareableLink = ({ invoiceId, style, hideHeader = false }) => {
                 </div>
             }
             <div className={styles.link}>
-                <input readOnly value={shareLink} style={{ border: "none", outline: "none", fontSize: "12px", padding: "0px", width: "100%" }} />
+                <input readOnly value={shareLink} style={{ border: "none", outline: "none", fontSize: "12px", padding: "0px", width: "80%" }} />
                 <svg onClick={() => {
                     navigator.clipboard?.writeText(shareLink)
                     toast.success("Link copied to clipboard.")
