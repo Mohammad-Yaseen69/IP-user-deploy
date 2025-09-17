@@ -171,21 +171,29 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
 
 
     const getImage = async (img, c) => {
-        const imageUrl = await getCroppedImg(img, c)
-        const image = URL.createObjectURL(imageUrl)
-        return image
+        try {
+            const imageUrl = await getCroppedImg(img, c)
+            const image = URL.createObjectURL(imageUrl)
+            return image
+        } catch (e) {
+            return null
+        }
     }
     useEffect(() => {
+        let isMounted = true
+        const controller = new AbortController()
+
         if (userDetails?.country_name) {
             const normalize = normalizeText(userDetails?.country_name)
             const filteredCountry = countries.find(item => item.name.toLowerCase().includes(normalize.toLowerCase()));
-            dataHandler("userCountry", filteredCountry);
+            if (isMounted) dataHandler("userCountry", filteredCountry);
         }
         if (user_name) {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/get-payment-address-public/${user_name}`)
-                .then(async res => {
+            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/get-payment-address-public/${user_name}`, { signal: controller.signal })
+                .then(res => {
                     const decrypted = decryptData(res.data.data)
-                    console.log(decrypted)
+                    if (!isMounted) return
+
                     dataHandler("paymentAddressDetails", decrypted?.paymentAddressDetails)
                     dataHandler("title", decrypted?.paymentAddressDetails?.title)
                     dataHandler("currency", decrypted?.paymentAddressDetails?.currency)
@@ -195,31 +203,37 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                     dataHandler("currentWallet", decrypted?.wallet)
                     dataHandler("limits", decrypted?.limits)
 
-
-                    if (decrypted?.paymentAddressDetails?.coverImage?.url) {
-                        const cropped = await getImage(
+                    // Kick off image crops in parallel without blocking initial render
+                    const coverPromise = decrypted?.paymentAddressDetails?.coverImage?.url
+                        ? getImage(
                             decrypted?.paymentAddressDetails?.coverImage?.url,
                             decrypted?.paymentAddressDetails?.coverImage?.coordinates
-                        );
-                        dataHandler("croppedCover", cropped);
-                    }
-                    if (decrypted?.paymentAddressDetails?.profileImage?.url) {
-                        const cropped = await getImage(
+                          ).then((img) => { if (isMounted && img) dataHandler("croppedCover", img) })
+                        : Promise.resolve()
+
+                    const dpPromise = decrypted?.paymentAddressDetails?.profileImage?.url
+                        ? getImage(
                             decrypted?.paymentAddressDetails?.profileImage?.url,
                             decrypted?.paymentAddressDetails?.profileImage?.coordinates
-                        );
-                        dataHandler("croppedDp", cropped);
-                    }
+                          ).then((img) => { if (isMounted && img) dataHandler("croppedDp", img) })
+                        : Promise.resolve()
+
+                    Promise.allSettled([coverPromise, dpPromise])
+                        .catch(() => {})
                 })
                 .catch(err => {
-                    console.log(decryptData(err.response.data.data))
+                    try { console.log(decryptData(err?.response?.data?.data)) } catch (_) { /* noop */ }
                 })
                 .finally(() => {
-                    dataHandler("loading", false)
+                    if (isMounted) dataHandler("loading", false)
                 })
         }
 
-    }, [userDetails])
+        return () => {
+            isMounted = false
+            controller.abort()
+        }
+    }, [userDetails, user_name])
 
     // const copyHandler = () => {
     //     navigator.clipboard.writeText(pa_link)
