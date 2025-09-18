@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
 import styles from "./styles/index.module.scss"
 import { useTranslation } from 'react-i18next'
@@ -9,11 +9,16 @@ import clockSvg from './clock.svg'
 import copy from "./copy.svg"
 import qr from "./qr.png"
 import { toast } from "react-toastify"
+import axios from 'axios'
+import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
+import { formatCurrency } from '../../../Helper/AmountFormat'
 
 const PayWithCrypto = ({ user, data, dataHandler }) => {
     const { t } = useTranslation()
     const [step, setStep] = useState(1)
     const [secondsLeft, setSecondsLeft] = useState(30 * 60)
+    const [usdtAmount, setUsdtAmount] = useState(null)
+    const [amtLoading, setAmtLoading] = useState(false)
 
     useEffect(() => {
         if (step !== 2) return;
@@ -28,6 +33,31 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
         return `${String(m).padStart(2, '0')}:${String(ss).padStart(2, '0')}`
     }
 
+
+
+
+
+    useEffect(() => {
+        let cancelled = false
+        const fetchAmount = async () => {
+            try {
+                setAmtLoading(true)
+                const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${data.currentWallet?.currency?.code || data.currencyCode}&to=${"USD"}&amount=${data?.amount}`
+                const res = await axios.get(url)
+                const dec = decryptData(res?.data?.data)
+                if (!cancelled) setUsdtAmount(dec?.exchangeRate?.exchanged_amount ?? 0)
+            } catch (_) {
+                if (!cancelled) setUsdtAmount(0)
+            } finally {
+                if (!cancelled) setAmtLoading(false)
+            }
+        }
+        if (data?.amount && (data.currentWallet?.currency?.code || data.currencyCode)) {
+            fetchAmount()
+        }
+        return () => { cancelled = true }
+    }, [data.currentWallet?.currency?.code, data.currencyCode, data.amount])
+
     return (
         <Modal isOpen={data.showCryptoModal} style={{ minWidth: "800px" }} toggle={() => dataHandler("showCryptoModal", false)} >
             <ModalBody>
@@ -37,7 +67,11 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                             {t("Pay as Crypto")}
                         </h3>
                         <span>
-                            {t("By sending a payment. You agree to InstaPay: Terms and conditions.")}
+                            {t("By sending a payment. You agree to InstaPay:")}
+                            {" "}
+                            <a href="https://insta-pay.ch/terms-and-conditions" target="_blank" rel="noreferrer">
+                                {t("Terms and conditions")}
+                            </a>.
                         </span>
                     </div>
                     <div className={styles.right}>
@@ -109,7 +143,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
 
                         {step === 2 && (
                             <div style={{ width: "100%" }}>
-                                
+
                                 <div className={styles.timer}>
                                     <img src={clockSvg} alt="clock" width={16} height={16} />
                                     {formatTime(secondsLeft)} {t("Left")}
@@ -119,7 +153,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                                     <div style={{ padding: "0px" }} className={styles.left}>
                                         <span>{t("Total amount to pay")}</span>
                                         <div>
-                                            <h2>300.00</h2>
+                                            <h2>{amtLoading ? "..." : (formatCurrency(usdtAmount) ?? 0)}</h2>
                                             <span>USDT(TRC20)</span>
                                         </div>
                                     </div>
