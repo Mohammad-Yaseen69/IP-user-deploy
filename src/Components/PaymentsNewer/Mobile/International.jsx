@@ -1,69 +1,18 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/International.module.css"
-import { useContext, useEffect, useState } from "react";
-import { ChevronLeft } from "react-feather";
-import Country from "./Country";
-import TopIcon from "./files/Top";
-import PayoutChannel from "./PayoutChannel";
-import AvailableServices from "./AvailableServices";
-import AmountAndCurrency from "./AmountAndCurrency";
-import PaymentsBeneficiary from "../Beneficiary";
-import ConfirmSend from "./ConfirmSend";
-import OTPConfirmation from "../OTPConfirmation";
-import Receipt from "../InternationalReceipt";
+import { useState } from "react";
+import { ChevronLeft, X } from "react-feather";
 import { useNavigate } from "react-router";
-import PWizard from "../PWizard";
-import { UserContext } from "../../../Context/UserContext";
 import InternationFlow from "../InternationalFlow";
 // import ConfirmSend from "../ConfirmSend";
 import recent from "./files/recent.svg"
 
 const International = ({ step, setStep, setCurrentFlow, setSendPaymentType, sendPaymentType, setAction }) => {
     const { t } = useTranslation()
-    const [country, setCountry] = useState(null);
-    const [payoutChannel, setPayoutChannel] = useState(null);
-    const [services, setServices] = useState([])
-    const [subServices, setSubServices] = useState([])
-    const [subService, setSubService] = useState(null)
-    const [currency, setCurrency] = useState("USD")
-    const [amount, setAmount] = useState("100.00")
-    const [reason, setReason] = useState("")
-    const [comment, setComment] = useState("")
-    const [files, setFiles] = useState([])
-    const [beneficiary, setBeneficiary] = useState([])
-
-    const [quotationDetails, setQuotationDetails] = useState("")
-    const [createdQuotation, setCreatedQuotation] = useState(null)
     const [confirmed, setConfirmed] = useState(false)
-    const [createdTransaction, setCreatedTransaction] = useState("")
-    const [transactionDetails, setTransactionDetails] = useState("")
-
     const navigate = useNavigate()
+    const [showRecent, setShowRecent] = useState(false)
 
-    useEffect(() => {
-        setCountry("")
-        setPayoutChannel("")
-        setCurrency("USD")
-        setAmount("100.00")
-        setReason("")
-        setComment("")
-        setFiles([])
-        setBeneficiary([])
-        setConfirmed("")
-    }, [sendPaymentType])
-
-    const [cardNumber, setCardNumber] = useState('');
-    const [expiry, setExpiry] = useState('');
-    const [cvc, setCVC] = useState('');
-    const [cardHolderName, setCardHolderName] = useState('');
-    const [saveCard, setSaveCard] = useState(false)
-    const [sendType, setSendType] = useState("wallet")
-    const { userDetails } = useContext(UserContext)
-    const [codeType, setCodeType] = useState("sms")
-
-    useEffect(() => {
-        setCodeType(userDetails?.tfa ? "authenticator" : "sms")
-    }, [userDetails])
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -85,9 +34,8 @@ const International = ({ step, setStep, setCurrentFlow, setSendPaymentType, send
                     <ChevronLeft />
                 </button>
                 <h5>{t("International Transfer")}</h5>
-                <div>
-                    <img src={recent} alt="" style={{ width: "30px", height: "30px", objectFit: "contain" }} />
-                    {/* <TopIcon fill={step > 3 ? "#5926f0" : "black"} /> */}
+                <div onClick={() => setShowRecent(prev => !prev)}>
+                    {showRecent ? <X /> : <img style={{ width: "20px" }} src={recent} alt="" />}
                 </div>
             </div>
             {/* {
@@ -215,6 +163,8 @@ const International = ({ step, setStep, setCurrentFlow, setSendPaymentType, send
                 setIsInternational={() => { }}
                 setSendPaymentType={setSendPaymentType}
                 setStep={setStep}
+                showRecent={showRecent}
+                setShowRecent={setShowRecent}
             />
         </div>
     )

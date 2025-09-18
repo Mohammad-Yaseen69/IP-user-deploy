@@ -7,7 +7,7 @@ import InstaPayLoader from "../../Loader";
 import Receipt from "../InternationalFlow/Receipt";
 import styles from "../InternationalFlow/styles/index.module.css"
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ChevronLeft, ChevronRight, HelpCircle, Info } from "react-feather";
+import { ChevronLeft, ChevronRight, HelpCircle, Info, X } from "react-feather";
 import { useTranslation } from "react-i18next";
 import StepOne from "./StepOne";
 import { UserContext } from "../../../Context/UserContext";
@@ -36,6 +36,9 @@ import { formatCurrency } from "../../../Helper/AmountFormat";
 import { apiErrorMessage } from "../InternationalFlow";
 import ShippingDetails from "../../ReceiptInvoices/InvoicePaymentQr/ShippingDetails";
 import { getDecimalPointIndex } from "../../../Helper/getDecimalIndex";
+import RecentTransactions from "./RecentTransactions";
+import { SwipeableDrawer } from "@mui/material";
+import { AnimatePresence, motion } from "framer-motion";
 
 
 
@@ -100,7 +103,8 @@ const initialState = {
             name: null
         },
         zipCode: "",
-    }
+    },
+    showRecentMobile: false,
 }
 
 function reducer(state, action) {
@@ -129,7 +133,7 @@ function reducer(state, action) {
     }
 }
 
-const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) => {
+const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRecent, setShowRecent }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const { userDetails, authHeader, setProfileLockTime, userWallets } = useContext(UserContext)
@@ -206,7 +210,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
             case 3:
                 return !data.reason
             case 4:
-                return !data.payment_type?.name || data.limitReached || data.payment_type?.value === "wallet" ?  !data.wallet?._id || !isShippingValid : false || data?.payment_duration?.value === "subscription" ? !data.payment_duration?.recStartDate || (!data.payment_duration?.cycles && !data.payment_duration?.unlimited) : data?.payment_duration?.value === "schedule" ? !data.payment_duration?.scheduleDate || !data.payment_duration?.scheduleTime : false || !isShippingValid
+                return !data.payment_type?.name || data.limitReached || data.payment_type?.value === "wallet" ? !data.wallet?._id || !isShippingValid : false || data?.payment_duration?.value === "subscription" ? !data.payment_duration?.recStartDate || (!data.payment_duration?.cycles && !data.payment_duration?.unlimited) : data?.payment_duration?.value === "schedule" ? !data.payment_duration?.scheduleDate || !data.payment_duration?.scheduleTime : false || !isShippingValid
             case 5:
                 if (data.payment_type?.value === "card") {
                     const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
@@ -328,7 +332,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                         "time": data.payment_duration?.scheduleTime,
                         "date": date,
                         "timezone": data?.timezone,
-                        "token": data.payment_type?.value === "paypal" ? data.exchange_rate?.token : "",
+                        "token": data.exchange_rate?.token ? data.exchange_rate?.token : "",
                         "preserved_amount": Number(String(data.recipient_amount)?.replace(",", ""))
                     },
                     type: codeType || data.codeType
@@ -561,7 +565,6 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
             const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`
             const res = await axios.get(url, { headers: authHeader });
             const dec = decryptData(res?.data?.data);
-            console.log(dec)
             dataHandler("new_amoount", dec?.exchangeRate?.exchanged_amount)
             return dec?.exchangeRate?.exchanged_amount ?? 0;
         } catch (err) {
@@ -588,7 +591,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
         console.log(data)
 
         try {
-            const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=${payment_type ?? "wallet_to_wallet"}&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${data.beneficiary_wallet?._id}&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}&preserved_amount=${Number(String(data.recipient_amount)?.replace(",", ""))}`
+            const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from}&to=${data.beneficiary_wallet?.currency?.code}&amount=${amount}&type=${payment_type ?? "wallet_to_wallet"}&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${data.beneficiary_wallet?._id}&sender_wallet_id=${data.wallet?._id ?? data.currency?._id}&payment_method=${payment_method}${data.recipient_amount ? `&preserved_amount=${Number(String(data.recipient_amount)?.replace(",", ""))}` : ""}`
 
             const res = await axios.get(url, { headers: authHeader })
             const decrypted = decryptData(res.data.data)
@@ -784,7 +787,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
 
     useEffect(() => {
         let timeout;
-        if (data.payment_type?.value && data.currency?._id && data.recipient_amount && data.beneficiary_wallet?.wallet_id) {
+        if (data.payment_type?.value && data.currency?._id && (data.recipient_amount || data.recipient_amount === null) && data.beneficiary_wallet?.wallet_id) {
             const getAmount = async () => {
                 let amount;
                 if (data.payment_type?.value === "wallet" && data?.wallet?.currency /*&& data?.wallet?.currency?.code !== data?.currency_wallet?.currency?.code*/) {
@@ -1088,6 +1091,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                                                 <h1>{t("Send Money")}</h1>
                                                 <h2>{data.step === 5 && data.showCard ? t("Select Or Add Payment Card") : t(leftSideContent?.[data.step - 1])}</h2>
                                             </div>
+                                            {data.step === 1 && !payment_type && <RecentTransactions dataHandler={dataHandler} type={"wallet_to_wallet"} />}
                                             {
                                                 (data.step === 4 && !data.limitReached)
                                                 &&
@@ -1411,226 +1415,234 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, setI
                     :
 
                     <div className={styles.mobile}>
-                        <div className={styles.m_top}>
-                            <h1>{t("SEND MONEY")}</h1>
-                            <h2>{data.payment_type?.value === "card" ? t("Select Or Add Payment Card") : t(leftSideContent?.[data.step - 1])}</h2>
-                        </div>
-                        <div className={styles.flow}>
-                            {
-                                data?.transaction_details || transaction_status
-                                    ?
-                                    data.loading
-                                        ?
-                                        <div style={{ height: "300px", width: "300px", margin: "1rem auto" }}>
-                                            <InstaPayLoader />
-                                        </div>
-                                        :
-                                        <Receipt
-                                            data={data}
-                                        />
-                                    :
-                                    <>
-                                        <div className={styles.flow_com} style={{ minHeight: "50vh" }}>
-                                            {
-                                                data.step === 4 && !data.show_payment_type && (data.payment_type?.value === "wallet" || data.payment_type?.sub_name) && !data.showShippingAddress
-                                                    ?
-                                                    (
-                                                        data.payment_type?.value === "wallet"
+                        {(showRecent && data.step === 1) ? <RecentTransactions setShowRecent={setShowRecent} type={"wallet_to_wallet"} dataHandler={dataHandler} />
+                            :
+                            <>
+                                <div className={styles.m_top}>
+                                    <h1>{t("SEND MONEY")}</h1>
+                                    <h2>{data.payment_type?.value === "card" ? t("Select Or Add Payment Card") : t(leftSideContent?.[data.step - 1])}</h2>
+                                </div>
+
+                                <div className={styles.flow}>
+                                    {
+                                        data?.transaction_details || transaction_status
+                                            ?
+                                            data.loading
+                                                ?
+                                                <div style={{ height: "300px", width: "300px", margin: "1rem auto" }}>
+                                                    <InstaPayLoader />
+                                                </div>
+                                                :
+                                                <Receipt
+                                                    data={data}
+                                                />
+                                            :
+                                            <>
+                                                <div className={styles.flow_com} style={{ minHeight: "50vh" }}>
+                                                    {
+                                                        data.step === 4 && !data.show_payment_type && (data.payment_type?.value === "wallet" || data.payment_type?.sub_name) && !data.showShippingAddress
                                                             ?
-                                                            <WalletsComponent
-                                                                data={data}
-                                                                dataHandler={dataHandler}
-                                                            />
-                                                            :
-                                                            data.payment_type?.sub_name
-                                                                ?
-                                                                <MobileWalletServices
-                                                                    loading={data.loading}
-                                                                    data={data}
-                                                                    dataHandler={dataHandler}
-                                                                />
-                                                                : ""
-                                                    )
-                                                    :
-                                                    <>
-                                                        {
-                                                            data.showShippingAddress &&
-                                                            <ShippingDetails
-                                                                data={data}
-                                                                dataHandler={dataHandler}
-                                                            />
-                                                        }
-                                                        {
-                                                            data.step === 1
-                                                            &&
-                                                            <StepOne
-                                                                data={data}
-                                                                dataHandler={dataHandler}
-                                                            />
-                                                        }
-                                                        {
-                                                            data.step === 2
-                                                            &&
-                                                            <StepTwo
-                                                                data={data}
-                                                                dataHandler={dataHandler}
-                                                                getExchangeRate={getExchangeRateConversion}
-                                                            />
-                                                        }
-                                                        {
-                                                            data.step === 3
-                                                            &&
-                                                            <StepThree
-                                                                data={data}
-                                                                dataHandler={dataHandler}
-                                                            />
-                                                        }
-                                                        {
-                                                            data.step === 4 && !data.showShippingAddress
-                                                            &&
                                                             (
-                                                                data.show_payment_type
+                                                                data.payment_type?.value === "wallet"
                                                                     ?
-                                                                    data.payment_duration?.value === "subscription"
-                                                                        ?
-                                                                        <Recursive
-                                                                            showBottom={false}
-                                                                            recCycle={data.payment_duration?.cycles}
-                                                                            recStartDate={data.payment_duration?.recStartDate}
-                                                                            setRecCycle={(e) => dataHandler("payment_duration", { ...data.payment_duration, cycles: e })}
-                                                                            setRecStartDate={(e) => dataHandler("payment_duration", { ...data.payment_duration, recStartDate: e })}
-                                                                            setSubStep={() => { }}
-                                                                            setUnlimited={(e) => dataHandler("payment_duration", { ...data.payment_duration, unlimited: e })}
-                                                                            unlimited={data.payment_duration?.unlimited}
-                                                                            decrementHandler={() => dataHandler("payment_duration", { ...data.payment_duration, cycles: (data.payment_duration?.cycles ?? 1) - 1 })}
-                                                                            incrementHandler={() => dataHandler("payment_duration", { ...data.payment_duration, cycles: (data.payment_duration?.cycles ?? 1) + 1 })}
-                                                                            timezone={data.timezone}
-                                                                            setTimezone={e => dataHandler("timezone", e)}
-                                                                        />
-                                                                        :
-                                                                        data.payment_duration?.value === "schedule"
-                                                                            ?
-                                                                            <SchedulePayment
-                                                                                showBottom={false}
-                                                                                scheduleDate={data.payment_duration?.scheduleDate}
-                                                                                scheduleTime={data.payment_duration?.scheduleTime}
-                                                                                setScheduleDate={(e) => dataHandler("payment_duration", { ...data.payment_duration, scheduleDate: e })}
-                                                                                setScheduleTime={(e) => dataHandler("payment_duration", { ...data.payment_duration, scheduleTime: e })}
-                                                                                setSubStep={() => { }}
-                                                                                timezone={data.timezone}
-                                                                                setTimezone={e => dataHandler("timezone", e)}
-                                                                            />
-                                                                            :
-                                                                            <PaymentType
-                                                                                data={data}
-                                                                                dataHandler={dataHandler}
-                                                                            />
-                                                                    :
-                                                                    <StepFour
+                                                                    <WalletsComponent
                                                                         data={data}
                                                                         dataHandler={dataHandler}
                                                                     />
+                                                                    :
+                                                                    data.payment_type?.sub_name
+                                                                        ?
+                                                                        <MobileWalletServices
+                                                                            loading={data.loading}
+                                                                            data={data}
+                                                                            dataHandler={dataHandler}
+                                                                        />
+                                                                        : ""
                                                             )
-                                                        }
-                                                        {
-                                                            data.step === 5
-                                                            &&
-                                                            (
-                                                                <>
-                                                                    {
-                                                                        !data.showCard
+                                                            :
+                                                            <>
+                                                                {
+                                                                    data.showShippingAddress &&
+                                                                    <ShippingDetails
+                                                                        data={data}
+                                                                        dataHandler={dataHandler}
+                                                                    />
+                                                                }
+                                                                {
+                                                                    data.step === 1
+                                                                    &&
+                                                                    <StepOne
+                                                                        data={data}
+                                                                        dataHandler={dataHandler}
+                                                                    />
+                                                                }
+                                                                {
+                                                                    data.step === 2
+                                                                    &&
+                                                                    <StepTwo
+                                                                        data={data}
+                                                                        dataHandler={dataHandler}
+                                                                        getExchangeRate={getExchangeRateConversion}
+                                                                    />
+                                                                }
+                                                                {
+                                                                    data.step === 3
+                                                                    &&
+                                                                    <StepThree
+                                                                        data={data}
+                                                                        dataHandler={dataHandler}
+                                                                    />
+                                                                }
+                                                                {
+                                                                    data.step === 4 && !data.showShippingAddress
+                                                                    &&
+                                                                    (
+                                                                        data.show_payment_type
                                                                             ?
-                                                                            <StepFive
-                                                                                data={data}
-                                                                            />
+                                                                            data.payment_duration?.value === "subscription"
+                                                                                ?
+                                                                                <Recursive
+                                                                                    showBottom={false}
+                                                                                    recCycle={data.payment_duration?.cycles}
+                                                                                    recStartDate={data.payment_duration?.recStartDate}
+                                                                                    setRecCycle={(e) => dataHandler("payment_duration", { ...data.payment_duration, cycles: e })}
+                                                                                    setRecStartDate={(e) => dataHandler("payment_duration", { ...data.payment_duration, recStartDate: e })}
+                                                                                    setSubStep={() => { }}
+                                                                                    setUnlimited={(e) => dataHandler("payment_duration", { ...data.payment_duration, unlimited: e })}
+                                                                                    unlimited={data.payment_duration?.unlimited}
+                                                                                    decrementHandler={() => dataHandler("payment_duration", { ...data.payment_duration, cycles: (data.payment_duration?.cycles ?? 1) - 1 })}
+                                                                                    incrementHandler={() => dataHandler("payment_duration", { ...data.payment_duration, cycles: (data.payment_duration?.cycles ?? 1) + 1 })}
+                                                                                    timezone={data.timezone}
+                                                                                    setTimezone={e => dataHandler("timezone", e)}
+                                                                                />
+                                                                                :
+                                                                                data.payment_duration?.value === "schedule"
+                                                                                    ?
+                                                                                    <SchedulePayment
+                                                                                        showBottom={false}
+                                                                                        scheduleDate={data.payment_duration?.scheduleDate}
+                                                                                        scheduleTime={data.payment_duration?.scheduleTime}
+                                                                                        setScheduleDate={(e) => dataHandler("payment_duration", { ...data.payment_duration, scheduleDate: e })}
+                                                                                        setScheduleTime={(e) => dataHandler("payment_duration", { ...data.payment_duration, scheduleTime: e })}
+                                                                                        setSubStep={() => { }}
+                                                                                        timezone={data.timezone}
+                                                                                        setTimezone={e => dataHandler("timezone", e)}
+                                                                                    />
+                                                                                    :
+                                                                                    <PaymentType
+                                                                                        data={data}
+                                                                                        dataHandler={dataHandler}
+                                                                                    />
                                                                             :
-                                                                            <CreditCard
-                                                                                url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
-                                                                                tokenUrl={(t) => `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                                                                            <StepFour
                                                                                 data={data}
                                                                                 dataHandler={dataHandler}
                                                                             />
-                                                                    }
-                                                                </>
-                                                            )
-                                                        }
+                                                                    )
+                                                                }
+                                                                {
+                                                                    data.step === 5
+                                                                    &&
+                                                                    (
+                                                                        <>
+                                                                            {
+                                                                                !data.showCard
+                                                                                    ?
+                                                                                    <StepFive
+                                                                                        data={data}
+                                                                                    />
+                                                                                    :
+                                                                                    <CreditCard
+                                                                                        url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                                                                                        tokenUrl={(t) => `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                                                                                        data={data}
+                                                                                        dataHandler={dataHandler}
+                                                                                    />
+                                                                            }
+                                                                        </>
+                                                                    )
+                                                                }
 
-                                                        {data.step === 6
-                                                            &&
-                                                            (
-                                                                <div>
-                                                                    <div className={styles.noticeDiv}>
-                                                                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="49" height="48" viewBox="0 0 49 48" fill="none">
-                                                                                <path d="M24.1519 18V26M24.1519 34H24.1719M21.3825 7.78342L4.93272 36.1967C4.02031 37.7726 3.5641 38.5606 3.63153 39.2074C3.69034 39.7715 3.98588 40.2841 4.4446 40.6176C4.97051 41 5.88104 41 7.70209 41H40.6016C42.4227 41 43.3332 41 43.8591 40.6176C44.3178 40.2841 44.6134 39.7715 44.6722 39.2074C44.7396 38.5606 44.2834 37.7726 43.371 36.1967L26.9212 7.78341C26.0121 6.21309 25.5575 5.42793 24.9645 5.16422C24.4471 4.93419 23.8566 4.93419 23.3393 5.16422C22.7462 5.42793 22.2916 6.21309 21.3825 7.78342Z" stroke="#6039CD" stroke-width="4" stroke-linecap="round" />
-                                                                            </svg>
-                                                                            <span className={styles.noticeHead}>{t("Notice!")}</span>
-                                                                        </div>
-
+                                                                {data.step === 6
+                                                                    &&
+                                                                    (
                                                                         <div>
-                                                                            <p>{t("By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.")}</p>
-                                                                            <p style={{ marginTop: "8px" }}>{t("I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.")}</p>
+                                                                            <div className={styles.noticeDiv}>
+                                                                                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="49" height="48" viewBox="0 0 49 48" fill="none">
+                                                                                        <path d="M24.1519 18V26M24.1519 34H24.1719M21.3825 7.78342L4.93272 36.1967C4.02031 37.7726 3.5641 38.5606 3.63153 39.2074C3.69034 39.7715 3.98588 40.2841 4.4446 40.6176C4.97051 41 5.88104 41 7.70209 41H40.6016C42.4227 41 43.3332 41 43.8591 40.6176C44.3178 40.2841 44.6134 39.7715 44.6722 39.2074C44.7396 38.5606 44.2834 37.7726 43.371 36.1967L26.9212 7.78341C26.0121 6.21309 25.5575 5.42793 24.9645 5.16422C24.4471 4.93419 23.8566 4.93419 23.3393 5.16422C22.7462 5.42793 22.2916 6.21309 21.3825 7.78342Z" stroke="#6039CD" stroke-width="4" stroke-linecap="round" />
+                                                                                    </svg>
+                                                                                    <span className={styles.noticeHead}>{t("Notice!")}</span>
+                                                                                </div>
+
+                                                                                <div>
+                                                                                    <p>{t("By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.")}</p>
+                                                                                    <p style={{ marginTop: "8px" }}>{t("I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.")}</p>
+                                                                                </div>
+                                                                            </div>
+
+
+                                                                            {
+                                                                                data.showOtpModal
+                                                                                &&
+                                                                                <OtpConfirmation
+                                                                                    callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : verifyOtp}
+                                                                                    data={data}
+                                                                                    dataHandler={dataHandler}
+                                                                                    isLoading={data.loading}
+                                                                                    isOpen={data.showOtpModal}
+                                                                                    toggle={() => {
+                                                                                        dataHandler("showOtpModal", false)
+                                                                                    }}
+                                                                                    resendHandler={sendOtp}
+                                                                                    error={data.otpError}
+                                                                                />
+                                                                            }
+
                                                                         </div>
-                                                                    </div>
-
-
-                                                                    {
-                                                                        data.showOtpModal
-                                                                        &&
-                                                                        <OtpConfirmation
-                                                                            callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : verifyOtp}
-                                                                            data={data}
-                                                                            dataHandler={dataHandler}
-                                                                            isLoading={data.loading}
-                                                                            isOpen={data.showOtpModal}
-                                                                            toggle={() => {
-                                                                                dataHandler("showOtpModal", false)
-                                                                            }}
-                                                                            resendHandler={sendOtp}
-                                                                            error={data.otpError}
-                                                                        />
-                                                                    }
-
-                                                                </div>
-                                                            )
-                                                        }
-                                                    </>
-                                            }
-                                        </div>
-                                        <div className={styles.bottom}>
-                                            <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
-                                                <HelpCircle size={16} />
-                                                {t("Trouble Sending Money")}
-                                            </Link>
-                                            <div className={styles.buttons}>
-                                                {
-                                                    data.step > 1
-                                                    &&
-                                                    <button
-                                                        disabled={data.loading}
-                                                        onClick={handleBack}
-                                                    >
-                                                        <ChevronLeft />
-                                                    </button>
-                                                }
-                                                <button className={styles.full} disabled={disabledButton || data.loading} onClick={handleClick}>
-                                                    {
-                                                        data.step === 5
-                                                            ?
-                                                            t("Confirm")
-                                                            :
-                                                            data.step === 6
-                                                                ?
-                                                                t("Confirm and Proceed")
-                                                                :
-                                                                t("Next")
+                                                                    )
+                                                                }
+                                                            </>
                                                     }
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </>
-                            }
-                        </div>
+                                                </div>
+                                                <div className={styles.bottom}>
+                                                    <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
+                                                        <HelpCircle size={16} />
+                                                        {t("Trouble Sending Money")}
+                                                    </Link>
+                                                    <div className={styles.buttons}>
+                                                        {
+                                                            data.step > 1
+                                                            &&
+                                                            <button
+                                                                disabled={data.loading}
+                                                                onClick={handleBack}
+                                                            >
+                                                                <ChevronLeft />
+                                                            </button>
+                                                        }
+                                                        <button className={styles.full} disabled={disabledButton || data.loading} onClick={handleClick}>
+                                                            {
+                                                                data.step === 5
+                                                                    ?
+                                                                    t("Confirm")
+                                                                    :
+                                                                    data.step === 6
+                                                                        ?
+                                                                        t("Confirm and Proceed")
+                                                                        :
+                                                                        t("Next")
+                                                            }
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </>
+                                    }
+                                </div>
+                            </>
+                        }
+
+
                     </div>
             }
         </>

@@ -35,6 +35,7 @@ import errors from "../../AddFunds/TrustPaymentErrors.json"
 import AddBeneficiaryRequiredFields from "../../AddBeneficiaryRequiredFields"
 import { Modal, ModalBody, ModalHeader } from "reactstrap"
 import AddBeneficiaryAddressModal from "../../AddBeneficiaryAddressModal"
+import RecentTransactions from "../WalletToWalletFlow/RecentTransactions"
 
 const leftSideContent = [
     "Enter The Amount",
@@ -183,7 +184,7 @@ function reducer(state, action) {
     }
 }
 
-const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsInternational }) => {
+const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRecent, setShowRecent }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const { userDetails, authHeader, setProfileLockTime, getUserBeneficiaries } = useContext(UserContext)
@@ -1341,6 +1342,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                             <div className={styles.l_top}>
                                                 <h1>{t("Send Money")}</h1>
                                                 <h2>{subStep === 5 && internationalData.showCard ? t("Select Or Add Payment Card") : t(leftSideContent?.[subStep - 1])}</h2>
+                                                {subStep === 1 && <RecentTransactions dataHandler={updateInternationalData} setSubStep={setSubStep} type={"international"} />}
                                             </div>
                                             {
                                                 subStep !== 4
@@ -1701,215 +1703,220 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsIn
                                 message={internationalData.error}
                             />
                         }
-                        <div className={styles.m_top}>
-                            <h1>{t("SEND MONEY")}</h1>
-                            <h2>{internationalData.payment_type?.value === "card" ? t("Select Or Add Payment Card") : t(leftSideContent?.[subStep - 1])}</h2>
-                        </div>
-                        <div className={styles.flow}>
-                            {
-                                internationalData?.transaction_details?.beneficiary || transaction_status || internationalData?.transactionStatus
-                                    ?
-                                    loading
-                                        ?
-                                        <div style={{ height: "300px", width: "300px", margin: "1rem auto" }}>
-                                            <InstaPayLoader />
-                                        </div>
-                                        :
-                                        <Receipt
-                                            data={internationalData}
-                                        />
-                                    :
-                                    <>
-                                        <div className={styles.flow_com} style={{ minHeight: "50vh" }}>
-                                            {
-                                                subStep === 4 && (internationalData.payment_type?.value === "wallet" || internationalData.payment_type?.sub_name)
-                                                    ?
-                                                    (
-                                                        internationalData.payment_type?.value === "wallet"
-                                                            ?
-                                                            <WalletsComponent
-                                                                loading={loading}
-                                                                data={internationalData}
-                                                                dataHandler={updateInternationalData}
-                                                            />
-                                                            :
-                                                            internationalData.payment_type?.sub_name
-                                                                ?
-                                                                <MobileWalletServices
-                                                                    loading={loading}
-                                                                    data={internationalData}
-                                                                    error={internationalData.ex_extra_error}
-                                                                    dataHandler={updateInternationalData}
-                                                                />
-                                                                :
-                                                                ""
-                                                    )
-                                                    :
-
-                                                    <>
-                                                        {
-                                                            subStep === 1
-                                                            &&
-                                                            <StepOne
-                                                                data={internationalData}
-                                                                dataHandler={updateInternationalData}
-                                                                // getExchangeRate={getExchangeRate}
-                                                                getExchangeRate={getConversionRate}
-                                                            />
-                                                        }
-                                                        {
-                                                            subStep === 2
-                                                            &&
-                                                            <StepTwo
-                                                                data={internationalData}
-                                                                dataHandler={updateInternationalData}
-                                                            />
-                                                        }
-                                                        {
-                                                            subStep === 3
-                                                            &&
-                                                            <StepThree
-                                                                data={internationalData}
-                                                                dataHandler={updateInternationalData}
-                                                            />
-                                                        }
-                                                        {
-                                                            subStep === 4
-                                                            &&
-                                                            <StepFour
-                                                                error={internationalData.ex_extra_error}
-                                                                loading={loading}
-                                                                data={internationalData}
-                                                                dataHandler={updateInternationalData}
-                                                            />
-                                                        }
-                                                        {
-                                                            subStep === 5
-                                                            &&
-                                                            (
-                                                                <>
-                                                                    {
-                                                                        !internationalData.showCard
-                                                                            ?
-                                                                            <StepFive
-                                                                                data={internationalData}
-                                                                                dataHandler={updateInternationalData}
-                                                                            />
-                                                                            :
-                                                                            <CreditCard
-                                                                                url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`}
-                                                                                tokenUrl={() => `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`}
-                                                                                data={internationalData}
-                                                                                dataHandler={updateInternationalData}
-                                                                            />
-                                                                    }
-                                                                </>
-                                                            )
-                                                        }
-
-                                                        {
-                                                            subStep === 6
-                                                            &&
-                                                            (
-                                                                <div>
-                                                                    <div className={styles.noticeDiv}>
-                                                                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="49" height="48" viewBox="0 0 49 48" fill="none">
-                                                                                <path d="M24.1519 18V26M24.1519 34H24.1719M21.3825 7.78342L4.93272 36.1967C4.02031 37.7726 3.5641 38.5606 3.63153 39.2074C3.69034 39.7715 3.98588 40.2841 4.4446 40.6176C4.97051 41 5.88104 41 7.70209 41H40.6016C42.4227 41 43.3332 41 43.8591 40.6176C44.3178 40.2841 44.6134 39.7715 44.6722 39.2074C44.7396 38.5606 44.2834 37.7726 43.371 36.1967L26.9212 7.78341C26.0121 6.21309 25.5575 5.42793 24.9645 5.16422C24.4471 4.93419 23.8566 4.93419 23.3393 5.16422C22.7462 5.42793 22.2916 6.21309 21.3825 7.78342Z" stroke="#6039CD" stroke-width="4" stroke-linecap="round" />
-                                                                            </svg>
-                                                                            <span className={styles.noticeHead}>{t("Notice!")}</span>
-                                                                        </div>
-
-                                                                        <div>
-                                                                            <p>{t("By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.")}</p>
-                                                                            <p style={{ marginTop: "8px" }}>{t("I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.")}</p>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    {
-                                                                        internationalData.showOtpModal
-                                                                        &&
-                                                                        <OtpConfirmation
-                                                                            callback={internationalData.payment_type?.value === "card" ? initiateCardPayment : internationalData.payment_type?.value === "paypal" ? initiatePaypalPayment : verifyOtp}
-                                                                            data={internationalData}
-                                                                            dataHandler={updateInternationalData}
-                                                                            isLoading={loading}
-                                                                            isOpen={internationalData.showOtpModal}
-                                                                            toggle={() => {
-                                                                                updateInternationalData("showOtpModal", false)
-                                                                            }}
-                                                                            resendHandler={createTransaction}
-                                                                            error={international.otpError}
-                                                                        />
-                                                                    }
-                                                                </div>
-                                                            )
-                                                        }
-                                                    </>
-                                            }
-                                        </div>
-                                        <div className={styles.bottom}>
-                                            <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
-                                                <HelpCircle size={16} />
-                                                {t("Trouble Sending Money")}
-                                            </Link>
-                                            <div className={styles?.buttons}>
-                                                {
-                                                    subStep > 1
-                                                    &&
-                                                    <button disabled={loading} onClick={() => {
-                                                        if (subStep === 4 && internationalData.payment_type?.value) {
-                                                            updateInternationalData("payment_type", {})
-                                                        }
-                                                        else if (subStep === 4 && internationalData.payment_type?.value === "card") {
-                                                            updateInternationalData("payment_type", {})
-                                                            updateInternationalData("showCard", false)
-                                                            setSubStep(prev => prev - 1)
-                                                        }
-                                                        else if (subStep === 5 && internationalData.payment_type?.value === "card" && !internationalData.showCard) {
-                                                            updateInternationalData("showCard", true)
-                                                        }
-                                                        else {
-                                                            setSubStep(prev => prev - 1)
-                                                        }
-                                                    }}>
-                                                        <ChevronLeft />
-                                                    </button>
-                                                }
-                                                <button disabled={disabledButton || loading} className={styles.full} onClick={handleClick}>
-                                                    {
-                                                        userDetails?.user?.kyc_status === "approved"
-                                                            ?
-                                                            (
-                                                                subStep === 5
-                                                                    ?
-                                                                    t("Confirm")
-                                                                    :
-                                                                    subStep === 6 ?
-                                                                        t("Confirm and Proceed")
-                                                                        :
-                                                                        t("Continue")
-                                                            )
-                                                            :
-                                                            t("Identify verification required")
-                                                    }
-                                                </button>
-                                            </div>
-                                        </div>
-                                        {
-                                            sendPaymentType === "international"
+                        {(showRecent && subStep === 1) ? <RecentTransactions setShowRecent={setShowRecent} type={"international"} dataHandler={updateInternationalData} setSubStep={setSubStep} />
+                            :
+                            <>
+                                <div className={styles.m_top}>
+                                    <h1>{t("SEND MONEY")}</h1>
+                                    <h2>{internationalData.payment_type?.value === "card" ? t("Select Or Add Payment Card") : t(leftSideContent?.[subStep - 1])}</h2>
+                                </div>
+                                <div className={styles.flow}>
+                                    {
+                                        internationalData?.transaction_details?.beneficiary || transaction_status || internationalData?.transactionStatus
+                                            ?
+                                            loading
                                                 ?
-                                                // internationalData.payer?.id
-                                                // &&
-                                                <ServiceDetails
+                                                <div style={{ height: "300px", width: "300px", margin: "1rem auto" }}>
+                                                    <InstaPayLoader />
+                                                </div>
+                                                :
+                                                <Receipt
                                                     data={internationalData}
                                                 />
-                                                :
-                                                ""
-                                        }
-                                    </>
-                            }
-                        </div>
+                                            :
+                                            <>
+                                                <div className={styles.flow_com} style={{ minHeight: "50vh" }}>
+                                                    {
+                                                        subStep === 4 && (internationalData.payment_type?.value === "wallet" || internationalData.payment_type?.sub_name)
+                                                            ?
+                                                            (
+                                                                internationalData.payment_type?.value === "wallet"
+                                                                    ?
+                                                                    <WalletsComponent
+                                                                        loading={loading}
+                                                                        data={internationalData}
+                                                                        dataHandler={updateInternationalData}
+                                                                    />
+                                                                    :
+                                                                    internationalData.payment_type?.sub_name
+                                                                        ?
+                                                                        <MobileWalletServices
+                                                                            loading={loading}
+                                                                            data={internationalData}
+                                                                            error={internationalData.ex_extra_error}
+                                                                            dataHandler={updateInternationalData}
+                                                                        />
+                                                                        :
+                                                                        ""
+                                                            )
+                                                            :
+
+                                                            <>
+                                                                {
+                                                                    subStep === 1
+                                                                    &&
+                                                                    <StepOne
+                                                                        data={internationalData}
+                                                                        dataHandler={updateInternationalData}
+                                                                        // getExchangeRate={getExchangeRate}
+                                                                        getExchangeRate={getConversionRate}
+                                                                    />
+                                                                }
+                                                                {
+                                                                    subStep === 2
+                                                                    &&
+                                                                    <StepTwo
+                                                                        data={internationalData}
+                                                                        dataHandler={updateInternationalData}
+                                                                    />
+                                                                }
+                                                                {
+                                                                    subStep === 3
+                                                                    &&
+                                                                    <StepThree
+                                                                        data={internationalData}
+                                                                        dataHandler={updateInternationalData}
+                                                                    />
+                                                                }
+                                                                {
+                                                                    subStep === 4
+                                                                    &&
+                                                                    <StepFour
+                                                                        error={internationalData.ex_extra_error}
+                                                                        loading={loading}
+                                                                        data={internationalData}
+                                                                        dataHandler={updateInternationalData}
+                                                                    />
+                                                                }
+                                                                {
+                                                                    subStep === 5
+                                                                    &&
+                                                                    (
+                                                                        <>
+                                                                            {
+                                                                                !internationalData.showCard
+                                                                                    ?
+                                                                                    <StepFive
+                                                                                        data={internationalData}
+                                                                                        dataHandler={updateInternationalData}
+                                                                                    />
+                                                                                    :
+                                                                                    <CreditCard
+                                                                                        url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`}
+                                                                                        tokenUrl={() => `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`}
+                                                                                        data={internationalData}
+                                                                                        dataHandler={updateInternationalData}
+                                                                                    />
+                                                                            }
+                                                                        </>
+                                                                    )
+                                                                }
+
+                                                                {
+                                                                    subStep === 6
+                                                                    &&
+                                                                    (
+                                                                        <div>
+                                                                            <div className={styles.noticeDiv}>
+                                                                                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="49" height="48" viewBox="0 0 49 48" fill="none">
+                                                                                        <path d="M24.1519 18V26M24.1519 34H24.1719M21.3825 7.78342L4.93272 36.1967C4.02031 37.7726 3.5641 38.5606 3.63153 39.2074C3.69034 39.7715 3.98588 40.2841 4.4446 40.6176C4.97051 41 5.88104 41 7.70209 41H40.6016C42.4227 41 43.3332 41 43.8591 40.6176C44.3178 40.2841 44.6134 39.7715 44.6722 39.2074C44.7396 38.5606 44.2834 37.7726 43.371 36.1967L26.9212 7.78341C26.0121 6.21309 25.5575 5.42793 24.9645 5.16422C24.4471 4.93419 23.8566 4.93419 23.3393 5.16422C22.7462 5.42793 22.2916 6.21309 21.3825 7.78342Z" stroke="#6039CD" stroke-width="4" stroke-linecap="round" />
+                                                                                    </svg>
+                                                                                    <span className={styles.noticeHead}>{t("Notice!")}</span>
+                                                                                </div>
+
+                                                                                <div>
+                                                                                    <p>{t("By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.")}</p>
+                                                                                    <p style={{ marginTop: "8px" }}>{t("I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.")}</p>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            {
+                                                                                internationalData.showOtpModal
+                                                                                &&
+                                                                                <OtpConfirmation
+                                                                                    callback={internationalData.payment_type?.value === "card" ? initiateCardPayment : internationalData.payment_type?.value === "paypal" ? initiatePaypalPayment : verifyOtp}
+                                                                                    data={internationalData}
+                                                                                    dataHandler={updateInternationalData}
+                                                                                    isLoading={loading}
+                                                                                    isOpen={internationalData.showOtpModal}
+                                                                                    toggle={() => {
+                                                                                        updateInternationalData("showOtpModal", false)
+                                                                                    }}
+                                                                                    resendHandler={createTransaction}
+                                                                                    error={international.otpError}
+                                                                                />
+                                                                            }
+                                                                        </div>
+                                                                    )
+                                                                }
+                                                            </>
+                                                    }
+                                                </div>
+                                                <div className={styles.bottom}>
+                                                    <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
+                                                        <HelpCircle size={16} />
+                                                        {t("Trouble Sending Money")}
+                                                    </Link>
+                                                    <div className={styles?.buttons}>
+                                                        {
+                                                            subStep > 1
+                                                            &&
+                                                            <button disabled={loading} onClick={() => {
+                                                                if (subStep === 4 && internationalData.payment_type?.value) {
+                                                                    updateInternationalData("payment_type", {})
+                                                                }
+                                                                else if (subStep === 4 && internationalData.payment_type?.value === "card") {
+                                                                    updateInternationalData("payment_type", {})
+                                                                    updateInternationalData("showCard", false)
+                                                                    setSubStep(prev => prev - 1)
+                                                                }
+                                                                else if (subStep === 5 && internationalData.payment_type?.value === "card" && !internationalData.showCard) {
+                                                                    updateInternationalData("showCard", true)
+                                                                }
+                                                                else {
+                                                                    setSubStep(prev => prev - 1)
+                                                                }
+                                                            }}>
+                                                                <ChevronLeft />
+                                                            </button>
+                                                        }
+                                                        <button disabled={disabledButton || loading} className={styles.full} onClick={handleClick}>
+                                                            {
+                                                                userDetails?.user?.kyc_status === "approved"
+                                                                    ?
+                                                                    (
+                                                                        subStep === 5
+                                                                            ?
+                                                                            t("Confirm")
+                                                                            :
+                                                                            subStep === 6 ?
+                                                                                t("Confirm and Proceed")
+                                                                                :
+                                                                                t("Continue")
+                                                                    )
+                                                                    :
+                                                                    t("Identify verification required")
+                                                            }
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                {
+                                                    sendPaymentType === "international"
+                                                        ?
+                                                        // internationalData.payer?.id
+                                                        // &&
+                                                        <ServiceDetails
+                                                            data={internationalData}
+                                                        />
+                                                        :
+                                                        ""
+                                                }
+                                            </>
+                                    }
+                                </div>
+                            </>
+                        }
                     </div>
             }
 

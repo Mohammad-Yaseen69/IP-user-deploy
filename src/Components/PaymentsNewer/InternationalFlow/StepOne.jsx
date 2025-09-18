@@ -42,6 +42,40 @@ export const currencies = allCurrencies.map(item => {
 
 let api_timeout;
 
+
+export const usePayoutChannel = (userDetails) => {
+    return [
+        userDetails?.level?.international_transfer?.bank ? {
+            name: "Bank Account",
+            id: 2,
+            icon: bd,
+            active_icon: bd_a,
+            value: "bank",
+        } : { id: 100 },
+        userDetails?.level?.international_transfer?.cash_pickup ? {
+            name: "Cash Pickup",
+            id: 3,
+            icon: cp,
+            active_icon: cp_a,
+            value: "cash",
+        } : { id: 100 },
+        userDetails?.level?.international_transfer?.mobile_money ? {
+            name: "Mobile Wallet",
+            id: 1,
+            icon: mw,
+            active_icon: mw_a,
+            value: "mobile",
+        } : { id: 100 },
+        userDetails?.level?.international_transfer?.card_payment ? {
+            name: "Payment Card",
+            id: 4,
+            icon: pc,
+            active_icon: pc_a,
+            value: "card",
+        } : { id: 100 },
+    ]
+}
+
 const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     const { authHeader, userDetails, userWallets } = useContext(UserContext)
     const { t, i18n } = useTranslation()
@@ -60,7 +94,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
             [key]: !prev[key]
         }))
     }
-
+    const payoutChannelData = usePayoutChannel(userDetails)
     useEffect(() => {
         if (userWallets.length > 0) {
             const localCurrency = () => {
@@ -136,36 +170,6 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
 
 
     // services 
-    const payoutChannelData = [
-        userDetails?.level?.international_transfer?.bank ? {
-            name: "Bank Account",
-            id: 2,
-            icon: bd,
-            active_icon: bd_a,
-            value: "bank",
-        } : { id: 100 },
-        userDetails?.level?.international_transfer?.cash_pickup ? {
-            name: "Cash Pickup",
-            id: 3,
-            icon: cp,
-            active_icon: cp_a,
-            value: "cash",
-        } : { id: 100 },
-        userDetails?.level?.international_transfer?.mobile_money ? {
-            name: "Mobile Wallet",
-            id: 1,
-            icon: mw,
-            active_icon: mw_a,
-            value: "mobile",
-        } : { id: 100 },
-        userDetails?.level?.international_transfer?.card_payment ? {
-            name: "Payment Card",
-            id: 4,
-            icon: pc,
-            active_icon: pc_a,
-            value: "card",
-        } : { id: 100 },
-    ]
     const getServices = async (country) => {
         try {
             const servicesResponse = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/services/${country || data?.country?.alpha3}/${userDetails?.country?.country_iso_code}`, { headers: authHeader })
