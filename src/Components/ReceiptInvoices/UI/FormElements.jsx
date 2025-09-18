@@ -13,7 +13,7 @@ export const Field = ({ label, required, children, toggle }) => (
     </div>
 )
 
-export const TextInput = ({ value, onChange, placeholder, onBlur, ...props }) => (
+export const TextInput = ({ value, onChange, placeholder, onBlur, styles, ...props }) => (
     <input
         value={value}
         onChange={onChange}
@@ -23,7 +23,8 @@ export const TextInput = ({ value, onChange, placeholder, onBlur, ...props }) =>
             padding: '10px 12px',
             borderRadius: 8,
             border: '1px solid #e5e7eb',
-            outline: 'none'
+            outline: 'none',
+            ...styles
         }}
         onBlur={onBlur}
         {...props}
@@ -48,7 +49,7 @@ export const TextArea = ({ value, onChange, placeholder, rows = 4, ...props }) =
     />
 )
 
-export const Select = ({ value, onChange, options, placeholder = 'Select' }) => (
+export const Select = ({ value, onChange, options, placeholder = 'Select', style }) => (
     <select
         value={value}
         onChange={onChange}
@@ -57,7 +58,8 @@ export const Select = ({ value, onChange, options, placeholder = 'Select' }) => 
             padding: '10px 12px',
             borderRadius: 8,
             border: '1px solid #e5e7eb',
-            outline: 'none'
+            outline: 'none',
+            ...style
         }}
     >
         <option value="">{placeholder}</option>
@@ -72,7 +74,7 @@ export const Toggle = ({ checked, onChange }) => (
 )
 
 
-export const ButtonForRequests = ({ isLoading, onClick, children }) => {
+export const ButtonForRequests = ({ isLoading, onClick, children, style }) => {
 
     return (
         <button
@@ -88,7 +90,8 @@ export const ButtonForRequests = ({ isLoading, onClick, children }) => {
                 background: '#5926F0',
                 color: '#fff',
                 cursor: isLoading ? 'not-allowed' : 'pointer',
-                opacity: isLoading && .5
+                opacity: isLoading && .5,
+                ...style
             }}
         >
             {children}

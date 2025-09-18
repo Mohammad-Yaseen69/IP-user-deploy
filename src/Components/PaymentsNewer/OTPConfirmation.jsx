@@ -57,7 +57,8 @@ const OTPConfirmation = ({
     coords,
     vendor,
     type,
-    requestObject
+    requestObject,
+    quotationDetails
 }) => {
     const { t } = useTranslation()
     const numberOfFields = 6;
@@ -175,7 +176,7 @@ const OTPConfirmation = ({
                 Array.from(requestObject?.files).forEach((image) => {
                     data.append("files", image);
                 });
-                data.append("otp", otpValues.join(""))
+                data.append("otp", otp ? otp.join("") : otpValues.join(""))
                 data.append("token", token || requestObject?.token)
                 data.append("type", authType)
                 axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/insta-payment-request-w2w`, data, {
@@ -332,6 +333,49 @@ const OTPConfirmation = ({
                     })
             }
         }
+        if (type === "quoting" && quotationDetails) {
+            const formdata = new FormData()
+            Array.from(quotationDetails?.files).forEach((image) => {
+                formdata.append("files", image);
+            });
+            formdata.append("otp", otp ? otp.join("") : otpValues.join(""))
+            formdata.append("token", token || quotationDetails?.token)
+            formdata.append("type", authType)
+            formdata.forEach(item => {
+                // console.log(item)
+            })
+
+            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/quotation/create-quotation`, formdata, {
+                headers: authHeader
+            })          
+                .then(res => {
+                    const decrypted = decryptData(res.data.data)
+                    setIsSaving(false)
+                    setTransactionDetails(decrypted?.quotation)
+                    // console.log(decrypted?.quotation)
+                    setVerified(true)
+                })
+                .catch(err => {
+                    setIsSaving(false)
+                    const decrypted = decryptData(err.response.data.data)
+                    const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
+                    console.log(decrypted)
+                    if (error) {
+                        setOtpError(error)
+                    } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+                        const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
+                        const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
+                        setProfileLockTime(timeInSec)
+                        const coun = localStorage.getItem("ip_country")
+                        localStorage.clear()
+                        localStorage.setItem("ip_country", coun)
+                        navigate("/login")
+                    } else {
+                        setOtpError("You have entered wrong OTP.")
+                    }
+                })
+        }
+
         if (createdTransaction) {
             const data = new FormData()
             data.append("token", token || createdTransaction.token)
@@ -471,6 +515,20 @@ const OTPConfirmation = ({
                         lat: coords?.latitude,
                         long: coords?.longitude
                     }
+                }
+            }
+        }
+        if (type === "quoting" && quotationDetails) {
+            data = {
+                type: typeOfAuth ?? "",
+                data: {
+                    "account_id": quotationDetails?.account_id,
+                    "reciever_id": quotationDetails?.receiver_id,
+                    "title": quotationDetails?.title,
+                    "desc": quotationDetails?.desc,
+                    "amount": quotationDetails?.amount,
+                    "bargain": quotationDetails?.bargain,
+                    "sender_wallet_id": quotationDetails?.sender_wallet_id,
                 }
             }
         }

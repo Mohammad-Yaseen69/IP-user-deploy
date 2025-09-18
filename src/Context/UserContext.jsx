@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { publicRoutes } from "../RouteNew/Routes";
 import questionsData from "../Components/Settings/questions.json"
 import Modal from "../Components/SessionExpireModal"
-import { AiOutlineConsoleSql } from "react-icons/ai";
+// removed unused AiOutlineConsoleSql import
 
 axios.defaults.timeout = 10000;
 axios.defaults.timeoutErrorMessage = "Server Timeout."
@@ -35,8 +35,9 @@ axios.defaults.withCredentials = true
 const createImage = (url) =>
     new Promise((resolve, reject) => {
         const image = new Image()
+        image.crossOrigin = 'anonymous'
+        image.referrerPolicy = 'no-referrer'
         image.addEventListener('load', () => resolve(image))
-        image.crossOrigin = url
         image.addEventListener('error', (error) => reject(error))
         image.src = url
     })
