@@ -62,7 +62,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor="">{t("Phone Number with country code")}{t("*:")}</label>
+                                    <label htmlFor="">{t("Phone Number with country code")}{"*:"}</label>
                                     <PhoneInput
                                         phone={data?.cryptoDetails?.phone}
                                         setPhone={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, phone: e })}
@@ -77,7 +77,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor="email">{t("Email (Optional)")}{t("*:")}</label>
+                                    <label htmlFor="email">{t("Email (Optional)")}</label>
                                     <TextInput
                                         styles={{ background: "#f7f7f7" }}
                                         id='email'
@@ -88,7 +88,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                                 </div>
 
                                 <div>
-                                    <label htmlFor="email">{t("Payment Purpose")}{t("*:")}</label>
+                                    <label htmlFor="email">{t("Payment Purpose")}{"*:"}</label>
                                     <Select
                                         placeholder={t("Select Purpose of Payment")}
                                         value={data?.cryptoDetails?.reason}
@@ -109,9 +109,6 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
 
                         {step === 2 && (
                             <div style={{ width: "100%" }}>
-                                {(() => { /* hardcoded wallet address for copy */ })()}
-                                {/**/}
-                                {/**/}
                                 
                                 <div className={styles.timer}>
                                     <img src={clockSvg} alt="clock" width={16} height={16} />
