@@ -12,6 +12,8 @@ import { toast } from "react-toastify"
 import axios from 'axios'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { formatCurrency } from '../../../Helper/AmountFormat'
+import useWindowWidth from '../../../utils/useWindowWidth'
+import "./styles/modal.css"
 
 const PayWithCrypto = ({ user, data, dataHandler }) => {
     const { t } = useTranslation()
@@ -19,6 +21,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
     const [secondsLeft, setSecondsLeft] = useState(30 * 60)
     const [usdtAmount, setUsdtAmount] = useState(null)
     const [amtLoading, setAmtLoading] = useState(false)
+    const width = useWindowWidth()
 
     useEffect(() => {
         if (step !== 2) return;
@@ -59,21 +62,23 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
     }, [data.currentWallet?.currency?.code, data.currencyCode, data.amount])
 
     return (
-        <Modal isOpen={data.showCryptoModal} style={{ minWidth: "800px" }} toggle={() => dataHandler("showCryptoModal", false)} >
-            <ModalBody>
-                <div className={styles.container}>
-                    <div className={styles.left}>
-                        <h3>
-                            {t("Pay as Crypto")}
-                        </h3>
-                        <span>
-                            {t("By sending a payment. You agree to InstaPay:")}
-                            {" "}
-                            <a href="https://insta-pay.ch/terms-and-conditions" target="_blank" rel="noreferrer">
-                                {t("Terms and conditions")}
-                            </a>.
-                        </span>
-                    </div>
+        <Modal isOpen={data.showCryptoModal} style={{ minWidth: window.innerWidth > 850 && "800px", overflow: "hidden" }} toggle={() => dataHandler("showCryptoModal", false)} >
+            <ModalBody style={{ minHeight: width < 850 && "100vh", background: width < 850 && "#fafafafa" }}>
+                <div style={{ height: '100vh' }} className={styles.container}>
+                    {width > 850 &&
+                        <div className={styles.left}>
+                            <h3>
+                                {t("Pay as Crypto")}
+                            </h3>
+                            <span>
+                                {t("By sending a payment. You agree to InstaPay:")}
+                                {" "}
+                                <a href="https://insta-pay.ch/terms-and-conditions" target="_blank" rel="noreferrer">
+                                    {t("Terms and conditions")}
+                                </a>.
+                            </span>
+                        </div>
+                    }
                     <div className={styles.right}>
                         {
                             step === 1 &&
@@ -194,7 +199,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                         )}
 
 
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px", width: "100%" }}>
+                        <div style={{ display: width > 840 ? "grid" : "flex", gridTemplateColumns: "1fr 1fr", gap: "15px", width: "100%", flexDirection: "column-reverse" }}>
                             <button
                                 style={{
                                     width: "100%",
