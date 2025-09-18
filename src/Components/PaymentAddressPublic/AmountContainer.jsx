@@ -4,12 +4,13 @@ import useWindowWidth from '../../utils/useWindowWidth'
 import { useTranslation } from 'react-i18next'
 import vpa_styles from "./styles/VPA.module.css"
 import addFunds from "../HomeNewUpdated/files/AddFunds.png"
+import CryptoPay from "../HomeNewUpdated/files/CryptoPay.svg"
 import logo from "../../assets/images/logo/logo.png"
 import { formatCurrency } from '../../Helper/AmountFormat'
 
 
 
-const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlur, handleKeyUp, isEditable, paidInvoice = false }) => {
+const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlur, handleKeyUp, isEditable, paidInvoice = false, toggleCryptoModal = () => { } }) => {
     const width = useWindowWidth()
     const { t } = useTranslation()
     return (
@@ -51,7 +52,7 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                     {!paidInvoice &&
                         <>
                             <div style={{ margin: '0' }} className={vpa_styles.buttons}>
-                                <Link to={"#"} onClick={toggleCreditModal} className={vpa_styles.button}
+                                <Link to={"#"} onClick={toggleCreditModal} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
                                     style={{
                                         opacity: state.amount <= 0 ? .7 : 1,
                                         pointerEvents: state.amount <= 0 ? "none" : "all",
@@ -83,6 +84,20 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                         </div>
                                     }
                                 </Link>
+
+                                <Link to={"#"} onClick={toggleCryptoModal} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
+                                    style={{
+                                        opacity: state.amount <= 0 ? .7 : 1,
+                                        pointerEvents: state.amount <= 0 ? "none" : "all",
+                                        position: "relative"
+                                    }}
+                                >
+                                    <div>
+                                        <img src={CryptoPay} alt="A" />
+                                    </div>
+                                    <span>Pay with Crypto</span>
+                                </Link>
+
                                 <Link onClick={(e) => {
                                     if (state.amount > 0) {
                                         const path = url
@@ -91,7 +106,7 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                     else {
                                         e.preventDefault()
                                     }
-                                }} to={state.amount > 0 ? url : ""} className={vpa_styles.button}
+                                }} to={state.amount > 0 ? url : ""} className={`${vpa_styles.button} ${vpa_styles.ipBtn}`}
                                     style={{
                                         opacity: state.amount <= 0 ? .7 : 1,
                                         pointerEvents: state.amount <= 0 ? "none" : "all",
@@ -100,7 +115,7 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                     <div>
                                         <img src={logo} alt="A" />
                                     </div>
-                                    <span>Pay With InstaPay</span>
+                                    <span style={{color:"white"}}>Pay With InstaPay</span>
                                 </Link>
                             </div>
                         </>}

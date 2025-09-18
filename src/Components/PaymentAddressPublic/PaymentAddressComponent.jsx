@@ -22,6 +22,7 @@ import ip from "./instapay_black.svg"
 import { getCroppedImg } from '../../Context/UserContext'
 import UserDets from "./UserDets"
 import AmountContainer from './AmountContainer'
+import PayWithCrypto from './PayWithCrypto'
 
 // Initial state
 const initialState = {
@@ -43,7 +44,14 @@ const initialState = {
     showAboutModal: false,
     showCreditModal: false,
     guestPayError: "",
-    showVerTT: false
+    showVerTT: false,
+    showCryptoModal: false,
+    cryptoDetails: {
+        name: "",
+        phone: "",
+        reason: "",
+        email: ""
+    }
 }
 
 // Simple reducer function
@@ -208,18 +216,18 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                         ? getImage(
                             decrypted?.paymentAddressDetails?.coverImage?.url,
                             decrypted?.paymentAddressDetails?.coverImage?.coordinates
-                          ).then((img) => { if (isMounted && img) dataHandler("croppedCover", img) })
+                        ).then((img) => { if (isMounted && img) dataHandler("croppedCover", img) })
                         : Promise.resolve()
 
                     const dpPromise = decrypted?.paymentAddressDetails?.profileImage?.url
                         ? getImage(
                             decrypted?.paymentAddressDetails?.profileImage?.url,
                             decrypted?.paymentAddressDetails?.profileImage?.coordinates
-                          ).then((img) => { if (isMounted && img) dataHandler("croppedDp", img) })
+                        ).then((img) => { if (isMounted && img) dataHandler("croppedDp", img) })
                         : Promise.resolve()
 
                     Promise.allSettled([coverPromise, dpPromise])
-                        .catch(() => {})
+                        .catch(() => { })
                 })
                 .catch(err => {
                     try { console.log(decryptData(err?.response?.data?.data)) } catch (_) { /* noop */ }
@@ -294,6 +302,18 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                     />
                                 }
 
+                                {
+                                    state.showCryptoModal
+                                    &&
+                                    <PayWithCrypto
+                                        user={userDetails}
+                                        data={state}
+                                        dataHandler={dataHandler}
+                                    />
+                                }
+
+
+
                                 <Card style={{ marginBottom: "0", boxShadow: "unset", width: '100%' }} className={styles.sub_container}>
                                     <CardBody className={styles.sc_body}>
 
@@ -318,6 +338,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                                                 state={state}
                                                 toggleCreditModal={toggleCreditModal}
                                                 url={url}
+                                                toggleCryptoModal={() => dataHandler("showCryptoModal", true)}
                                             />
 
 

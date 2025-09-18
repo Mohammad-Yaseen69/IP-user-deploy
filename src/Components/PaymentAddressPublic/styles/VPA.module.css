@@ -172,7 +172,7 @@
     align-items: center;
 }
 
-.button:nth-child(1) {
+.guestBtn {
     border-radius: 10.391px;
     background: rgba(255, 255, 255, 0.55);
     box-shadow: 0px 3.978px 32.819px 0px rgba(0, 0, 0, 0.09);
@@ -184,7 +184,7 @@
     letter-spacing: -0.225px;
 }
 
-.button:nth-child(2) {
+.ipBtn {
     border-radius: 10.391px;
     background: #5926F0;
     box-shadow: 0px 3.978px 32.819px 0px rgba(0, 0, 0, 0.09);
