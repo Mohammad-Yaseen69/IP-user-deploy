@@ -66,7 +66,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                                     <PhoneInput
                                         phone={data?.cryptoDetails?.phone}
                                         setPhone={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, phone: e })}
-                                        country={localStorage.getItem("ip_country")}
+                                        country={localStorage.getItem("ip_country") ?? "USA"}
                                         setCountry={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, country: e })}
                                         customStyles={{
                                             background: "#f7f7f7",
