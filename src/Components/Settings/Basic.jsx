@@ -14,6 +14,8 @@ import OTPConfirmation from '../UserSettingsNew/OTPConfirmation';
 import { useLocation, useNavigate } from 'react-router';
 import QrGenerate from './QrGenerate';
 import NextStepModal from './NextStepModal';
+import DateMomentUtils from '@date-io/moment';
+import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 
 // dates
 export const currentDate = new Date();
@@ -56,13 +58,16 @@ const Basic = ({ setCurrentTab }) => {
     const isVerified = useMemo(() => userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "verified", [userDetails])
 
 
-    const handleDateChange = (e) => {
-        const selected = new Date(e.target.value);
-
-        if (selected <= minDate) {
-            setDateOfBirth(e.target.value);
+    const handleDateChange = (date) => {
+        if (date) {
+            const selected = new Date(date);
+            if (selected <= minDate) {
+                setDateOfBirth(date.format("YYYY-MM-DD"));
+            } else {
+                toast.error('Please select a date at least 15 years ago or earlier.');
+            }
         } else {
-            toast.error('Please select a date at least 15 years ago or earlier.');
+            setDateOfBirth("");
         }
     };
 
@@ -347,176 +352,177 @@ const Basic = ({ setCurrentTab }) => {
         }
     }
     return (
-        <Card>
-            {
-                userDetails?.username
-                    ?
-                    <QrGenerate
-                        wallets={userWallets?.filter(item => !item?.qrCode?.url)}
-                    />
-                    :
-                    ""
-            }
-            <SuccessModal
-                isOpen={showSuccess}
-                message={"Profile Updated"}
-                subMessage={"Profile has been updated successfully!"}
-                toggle={() => {
-                    setShowSuccess(false)
-                    if (missingTabsData.length > 0) {
-                        setShowNextStepModal(true)
-                    }
-                }}
-            />
-            <NextStepModal
-                isOpen={showNextStepModal}
-                toggle={() => setShowNextStepModal(false)}
-                setCurrentTab={setCurrentTab}
-            />
-            <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-                <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
-                <ModalBody>
-                    <OTPConfirmation type={userDetails?.account_type === "individual" ? "email" : "phone"} callback={verifyOTP} setter={setShowSuccess} setterValue={true} hideOtp={() => setShowOtp(false)} processing={isSaving} resendHandler={sendOtp} authType={codeType} setAuthType={setCodeType} showAuthToggle={false} hideTfaSwitch={true} otpTypeOnProfile={otpType} />
-                </ModalBody>
-            </Modal>
-            <CardHeader style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "2rem" }}>
-                <h4 style={{ width: "50%" }}>{t("Basic Info")}</h4>
-            </CardHeader>
-            <CardBody>
+        <MuiPickersUtilsProvider utils={DateMomentUtils}>
+            <Card>
                 {
-                    userDetails?.account_type === "individual"
+                    userDetails?.username
                         ?
-                        <>
-                            <FormGroup style={{ position: "relative" }}>
-                                {
-                                    !firstName
-                                    &&
-                                    <div style={{
-                                        height: "9px",
-                                        width: "9px",
-                                        borderRadius: "9px",
-                                        background: "red",
-                                        position: "absolute",
-                                        bottom: "20px",
-                                        right: "-17px"
-                                    }}></div>
-                                }
-                                <Label>
-                                    {t("First Name")}
-                                    {!firstName && <span style={{ color: "red" }}>{t("(Required)")}</span>}
-                                </Label>
-                                <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={firstName} onChange={e => setFirstName(e.target.value)} />
-                            </FormGroup>
-                            <FormGroup style={{ position: "relative" }}>
-                                {
-                                    !lastName
-                                    &&
-                                    <div style={{
-                                        height: "9px",
-                                        width: "9px",
-                                        borderRadius: "9px",
-                                        background: "red",
-                                        position: "absolute",
-                                        bottom: "20px",
-                                        right: "-17px"
-                                    }}></div>
-                                }
-                                <Label>
-                                    {t("Last Name")}
-                                    {!lastName && <span style={{ color: "red" }}>{t("(Required)")}</span>}
-                                </Label>
-                                <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={lastName} onChange={e => setLastName(e.target.value)} />
-                            </FormGroup>
-                        </>
+                        <QrGenerate
+                            wallets={userWallets?.filter(item => !item?.qrCode?.url)}
+                        />
                         :
-                        <FormGroup style={{ position: "relative" }}>
-                            {
-                                !company
-                                &&
-                                <div style={{
-                                    height: "9px",
-                                    width: "9px",
-                                    borderRadius: "9px",
-                                    background: "red",
-                                    position: "absolute",
-                                    bottom: "20px",
-                                    right: "-17px"
-                                }}></div>
-                            }
-                            <Label>
-                                {t("Company Name")}
-                                {!company && <span style={{ color: "red" }}>{t("(Required)")}</span>}
-                            </Label>
-                            <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={company} onChange={e => setCompany(e.target.value)} />
-                        </FormGroup>
+                        ""
                 }
-                <FormGroup style={{ position: "relative" }}>
+                <SuccessModal
+                    isOpen={showSuccess}
+                    message={"Profile Updated"}
+                    subMessage={"Profile has been updated successfully!"}
+                    toggle={() => {
+                        setShowSuccess(false)
+                        if (missingTabsData.length > 0) {
+                            setShowNextStepModal(true)
+                        }
+                    }}
+                />
+                <NextStepModal
+                    isOpen={showNextStepModal}
+                    toggle={() => setShowNextStepModal(false)}
+                    setCurrentTab={setCurrentTab}
+                />
+                <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
+                    <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
+                    <ModalBody>
+                        <OTPConfirmation type={userDetails?.account_type === "individual" ? "email" : "phone"} callback={verifyOTP} setter={setShowSuccess} setterValue={true} hideOtp={() => setShowOtp(false)} processing={isSaving} resendHandler={sendOtp} authType={codeType} setAuthType={setCodeType} showAuthToggle={false} hideTfaSwitch={true} otpTypeOnProfile={otpType} />
+                    </ModalBody>
+                </Modal>
+                <CardHeader style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "2rem" }}>
+                    <h4 style={{ width: "50%" }}>{t("Basic Info")}</h4>
+                </CardHeader>
+                <CardBody>
                     {
-                        !username
-                        &&
-                        <div style={{
-                            height: "9px",
-                            width: "9px",
-                            borderRadius: "9px",
-                            background: "red",
-                            position: "absolute",
-                            top: "30px",
-                            right: "-17px"
-                        }}></div>
+                        userDetails?.account_type === "individual"
+                            ?
+                            <>
+                                <FormGroup style={{ position: "relative" }}>
+                                    {
+                                        !firstName
+                                        &&
+                                        <div style={{
+                                            height: "9px",
+                                            width: "9px",
+                                            borderRadius: "9px",
+                                            background: "red",
+                                            position: "absolute",
+                                            bottom: "20px",
+                                            right: "-17px"
+                                        }}></div>
+                                    }
+                                    <Label>
+                                        {t("First Name")}
+                                        {!firstName && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                                    </Label>
+                                    <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={firstName} onChange={e => setFirstName(e.target.value)} />
+                                </FormGroup>
+                                <FormGroup style={{ position: "relative" }}>
+                                    {
+                                        !lastName
+                                        &&
+                                        <div style={{
+                                            height: "9px",
+                                            width: "9px",
+                                            borderRadius: "9px",
+                                            background: "red",
+                                            position: "absolute",
+                                            bottom: "20px",
+                                            right: "-17px"
+                                        }}></div>
+                                    }
+                                    <Label>
+                                        {t("Last Name")}
+                                        {!lastName && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                                    </Label>
+                                    <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={lastName} onChange={e => setLastName(e.target.value)} />
+                                </FormGroup>
+                            </>
+                            :
+                            <FormGroup style={{ position: "relative" }}>
+                                {
+                                    !company
+                                    &&
+                                    <div style={{
+                                        height: "9px",
+                                        width: "9px",
+                                        borderRadius: "9px",
+                                        background: "red",
+                                        position: "absolute",
+                                        bottom: "20px",
+                                        right: "-17px"
+                                    }}></div>
+                                }
+                                <Label>
+                                    {t("Company Name")}
+                                    {!company && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                                </Label>
+                                <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={company} onChange={e => setCompany(e.target.value)} />
+                            </FormGroup>
                     }
-                    {
-                        isEditMode
-                        &&
-                        <div style={{
-                            position: "absolute",
-                            top: "0px",
-                            right: "5px",
-                            fontSize: ".8rem",
-                            fontWeight: 600
-                        }}>
-                            {username?.length ?? 0}/30 Chars
-                        </div>
-                    }
-                    <Label>
-                        {t("Username")}
-                        {!username && <span style={{ color: "red" }}>{t("(Required)")}</span>}
-                    </Label>
-                    <div style={{ position: "relative" }}>
-                        <Input disabled={!isEditMode} readOnly={!isEditMode} style={{
-                            borderColor: !isEditMode ? "#eeeeee" : usernameValid ? "green" : "red",
-                        }} value={username} onChange={handleUsernameChange} onFocus={() => setShowUsernameGuide(true)} onBlur={() => setShowUsernameGuide(false)} />
-
-
-                        {loading &&
-                            <div style={{ position: "absolute", right: "7px", top: "7px" }}>
-                                <div class="d-flex justify-content-center">
-                                    <div class="spinner-border" color='primary' role="status">
-                                        <span class="sr-only">Loading...</span>
-                                    </div>
-                                </div>
+                    <FormGroup style={{ position: "relative" }}>
+                        {
+                            !username
+                            &&
+                            <div style={{
+                                height: "9px",
+                                width: "9px",
+                                borderRadius: "9px",
+                                background: "red",
+                                position: "absolute",
+                                top: "30px",
+                                right: "-17px"
+                            }}></div>
+                        }
+                        {
+                            isEditMode
+                            &&
+                            <div style={{
+                                position: "absolute",
+                                top: "0px",
+                                right: "5px",
+                                fontSize: ".8rem",
+                                fontWeight: 600
+                            }}>
+                                {username?.length ?? 0}/30 Chars
                             </div>
                         }
-                    </div>
-                    {
-                        (username && usernameError) &&
-                        <div style={{ fontSize: ".8rem", fontWeight: 600, color: "red", marginTop: "5px" }}>{usernameError}</div>
-                    }
-                    {
-                        showUsernameGuide
-                        &&
-                        <div style={{
-                            padding: "1rem",
-                            borderRadius: "10px",
-                            background: "#5926f0f3",
-                            color: "white",
-                            marginTop: "1rem"
-                        }}>
-                            Username may includes only alphabets, numbers and _ (underscores).
+                        <Label>
+                            {t("Username")}
+                            {!username && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                        </Label>
+                        <div style={{ position: "relative" }}>
+                            <Input disabled={!isEditMode} readOnly={!isEditMode} style={{
+                                borderColor: !isEditMode ? "#eeeeee" : usernameValid ? "green" : "red",
+                            }} value={username} onChange={handleUsernameChange} onFocus={() => setShowUsernameGuide(true)} onBlur={() => setShowUsernameGuide(false)} />
+
+
+                            {loading &&
+                                <div style={{ position: "absolute", right: "7px", top: "7px" }}>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="spinner-border" color='primary' role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
                         </div>
-                    }
-                </FormGroup>
-                <FormGroup style={{ position: "relative" }}>
-                    {/* {
+                        {
+                            (username && usernameError) &&
+                            <div style={{ fontSize: ".8rem", fontWeight: 600, color: "red", marginTop: "5px" }}>{usernameError}</div>
+                        }
+                        {
+                            showUsernameGuide
+                            &&
+                            <div style={{
+                                padding: "1rem",
+                                borderRadius: "10px",
+                                background: "#5926f0f3",
+                                color: "white",
+                                marginTop: "1rem"
+                            }}>
+                                Username may includes only alphabets, numbers and _ (underscores).
+                            </div>
+                        }
+                    </FormGroup>
+                    <FormGroup style={{ position: "relative" }}>
+                        {/* {
                         !aboutMe
                         &&
                         <div style={{
@@ -529,43 +535,111 @@ const Basic = ({ setCurrentTab }) => {
                             right: "-17px"
                         }}></div>
                     } */}
-                    <Label>{t("About Me")}</Label>
-                    <Input disabled={!isEditMode} readOnly={!isEditMode} type='textarea' value={aboutMe} onChange={e => setAboutMe(e.target.value)} />
-                </FormGroup>
-                {
-                    userDetails?.gender
-                    &&
-                    <FormGroup style={{ position: "relative" }}>
-                        {
-                            !gender
-                            &&
-                            <div style={{
-                                height: "9px",
-                                width: "9px",
-                                borderRadius: "9px",
-                                background: "red",
-                                position: "absolute",
-                                bottom: "20px",
-                                right: "-17px"
-                            }}></div>
-                        }
-                        <Label>
-                            {t("Gender")}
-                            {!gender && <span style={{ color: "red" }}>{t("(Required)")}</span>}
-                        </Label>
-                        <Input disabled={true} readOnly={true} value={gender} onChange={e => setGender(e.target.value)} />
-                        {/* <Input type='select' disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={gender} onChange={e => setGender(e.target.value)}>
+                        <Label>{t("About Me")}</Label>
+                        <Input disabled={!isEditMode} readOnly={!isEditMode} type='textarea' value={aboutMe} onChange={e => setAboutMe(e.target.value)} />
+                    </FormGroup>
+                    {
+                        userDetails?.gender
+                        &&
+                        <FormGroup style={{ position: "relative" }}>
+                            {
+                                !gender
+                                &&
+                                <div style={{
+                                    height: "9px",
+                                    width: "9px",
+                                    borderRadius: "9px",
+                                    background: "red",
+                                    position: "absolute",
+                                    bottom: "20px",
+                                    right: "-17px"
+                                }}></div>
+                            }
+                            <Label>
+                                {t("Gender")}
+                                {!gender && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                            </Label>
+                            <Input disabled={true} readOnly={true} value={gender} onChange={e => setGender(e.target.value)} />
+                            {/* <Input type='select' disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={gender} onChange={e => setGender(e.target.value)}>
                             <option value="">{t("--Select-Gender--")}</option>
                             <option value="male">{t("Male")}</option>
                             <option value="female">{t("Female")}</option>
                             <option value="other">{t("Other")}</option>
                         </Input> */}
-                    </FormGroup>
-                }
-                {
+                        </FormGroup>
+                    }
+                    {
+                        <FormGroup style={{ position: "relative" }}>
+                            {
+                                !dateOfBirth
+                                &&
+                                <div style={{
+                                    height: "9px",
+                                    width: "9px",
+                                    borderRadius: "9px",
+                                    background: "red",
+                                    position: "absolute",
+                                    bottom: "20px",
+                                    right: "-17px"
+                                }}></div>
+                            }
+                            <Label>
+                                {t("Date Of Birth")}
+                                {!dateOfBirth && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                            </Label>
+                            {
+                                !isEditMode
+                                    ?
+                                    <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={dateOfBirth} />
+                                    :
+                                    <DatePicker
+                                        format="YYYY/MM/DD"
+                                        className="form-control custom-datepicker"
+                                        style={{
+                                            background: "#fff",
+                                            border: "1px solid #e9e9e9",
+                                            borderRadius: "6px",
+                                            boxShadow: "none",
+                                            padding: "0px",
+                                            display: 'flex',
+                                            justifyContent: "center",
+                                            position: "static"
+                                        }}
+                                        value={dateOfBirth || null}
+                                        onChange={handleDateChange}
+                                        placeholder="YYYY/MM/DD"
+                                        maxDate={minDate}
+                                        disabled={!isEditMode || isVerified}
+                                        InputProps={{
+                                            disableUnderline: true,
+                                            style: {
+                                                background: isVerified ? "#e9ecef" : '#fff',
+                                                border: 'none',
+                                                boxShadow: 'none',
+                                                padding: '0 10px',
+                                                minHeight: '40px',
+                                                fontWeight: 500,
+
+                                            }
+                                        }}
+                                        inputProps={{
+                                            style: {
+                                                background: isVerified ? "#e9ecef" : '#fff',
+                                                border: 'none',
+                                                boxShadow: 'none',
+                                                padding: '2px 0px',
+                                                minHeight: '40px',
+                                            }
+                                        }}
+                                        clearable
+                                        autoOk
+                                    />
+                            }
+                        </FormGroup>
+                    }
                     <FormGroup style={{ position: "relative" }}>
                         {
-                            !dateOfBirth
+                            (!email && userDetails?.account_type !== "individual")
                             &&
                             <div style={{
                                 height: "9px",
@@ -577,224 +651,198 @@ const Basic = ({ setCurrentTab }) => {
                                 right: "-17px"
                             }}></div>
                         }
-                        <Label>
-                            {t("Date Of Birth")}
-                            {!dateOfBirth && <span style={{ color: "red" }}>{t("(Required)")}</span>}
-                        </Label>
-                        {
-                            !isEditMode
-                                ?
-                                <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={dateOfBirth} />
-                                :
-                                <Input type='date' disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={dateOfBirth} onChange={handleDateChange} max={minDate.toISOString().split("T")[0]} />
-                        }
-                    </FormGroup>
-                }
-                <FormGroup style={{ position: "relative" }}>
-                    {
-                        (!email && userDetails?.account_type !== "individual")
-                        &&
-                        <div style={{
-                            height: "9px",
-                            width: "9px",
-                            borderRadius: "9px",
-                            background: "red",
-                            position: "absolute",
-                            bottom: "20px",
-                            right: "-17px"
-                        }}></div>
-                    }
-                    <Label>{t("Email Address")}  {
-                        (!email && userDetails?.account_type !== "individual")
-                        && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
-                    <Input disabled={userDetails?.email || isVerified || !isEditMode} readOnly={userDetails?.email || isVerified || !isEditMode} value={email} onChange={e => setEmail(e.target.value)} />
-                </FormGroup>
-                <FormGroup style={{ position: "relative" }}>
-                    {
-                        (!phone && userDetails?.account_type !== "business")
-                        &&
-                        <div style={{
-                            height: "9px",
-                            width: "9px",
-                            borderRadius: "9px",
-                            background: "red",
-                            position: "absolute",
-                            bottom: "20px",
-                            right: "-17px"
-                        }}></div>
-                    }
-                    <Label>{t("Phone Number")} {
-                        (!phone && userDetails?.account_type !== "business")
-                        && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
-                    <PhoneInput
-                        // country={countries.filter(item => userDetails?.country_name?.toLowerCase().includes(item.name?.toLowerCase())?.[0]?.code ?? "pk")}
-                        value={phone}
-                        onChange={e => setPhone(e)}
-                        disableDropdown={true}
-                        disabled={userDetails?.phone || isVerified}
-                        inputStyle={{
-                            width: "100%",
-                            background: userDetails?.phone ? "#e9ecef" : "white",
-                            height: "47px"
-                        }}
-                    />
-                    {/* <Input disabled={1 + 1 === 2} readOnly={1 + 1 === 2} value={phone} onChange={e => setPhone(e.target.value)} /> */}
-                </FormGroup>
-                {
-                    userDetails?.address
-                    &&
-                    <FormGroup style={{ position: "relative" }}>
-                        {
-                            !address
-                            &&
-                            <div style={{
-                                height: "9px",
-                                width: "9px",
-                                borderRadius: "9px",
-                                background: "red",
-                                position: "absolute",
-                                bottom: "20px",
-                                right: "-17px"
-                            }}></div>
-                        }
-                        <Label>{t("Address")}  {
-                            !address
+                        <Label>{t("Email Address")}  {
+                            (!email && userDetails?.account_type !== "individual")
                             && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
-                        <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={address} onChange={e => setAddress(e.target.value)} />
+                        <Input disabled={userDetails?.email || isVerified || !isEditMode} readOnly={userDetails?.email || isVerified || !isEditMode} value={email} onChange={e => setEmail(e.target.value)} />
                     </FormGroup>
-                }
-                <FormGroup style={{ position: "relative" }}>
+                    <FormGroup style={{ position: "relative" }}>
+                        {
+                            (!phone && userDetails?.account_type !== "business")
+                            &&
+                            <div style={{
+                                height: "9px",
+                                width: "9px",
+                                borderRadius: "9px",
+                                background: "red",
+                                position: "absolute",
+                                bottom: "20px",
+                                right: "-17px"
+                            }}></div>
+                        }
+                        <Label>{t("Phone Number")} {
+                            (!phone && userDetails?.account_type !== "business")
+                            && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
+                        <PhoneInput
+                            // country={countries.filter(item => userDetails?.country_name?.toLowerCase().includes(item.name?.toLowerCase())?.[0]?.code ?? "pk")}
+                            value={phone}
+                            onChange={e => setPhone(e)}
+                            disableDropdown={true}
+                            disabled={userDetails?.phone || isVerified}
+                            inputStyle={{
+                                width: "100%",
+                                background: userDetails?.phone ? "#e9ecef" : "white",
+                                height: "47px"
+                            }}
+                        />
+                        {/* <Input disabled={1 + 1 === 2} readOnly={1 + 1 === 2} value={phone} onChange={e => setPhone(e.target.value)} /> */}
+                    </FormGroup>
                     {
-                        !city
+                        userDetails?.address
                         &&
-                        <div style={{
-                            height: "9px",
-                            width: "9px",
-                            borderRadius: "9px",
-                            background: "red",
-                            position: "absolute",
-                            bottom: "20px",
-                            right: "-17px"
-                        }}></div>
+                        <FormGroup style={{ position: "relative" }}>
+                            {
+                                !address
+                                &&
+                                <div style={{
+                                    height: "9px",
+                                    width: "9px",
+                                    borderRadius: "9px",
+                                    background: "red",
+                                    position: "absolute",
+                                    bottom: "20px",
+                                    right: "-17px"
+                                }}></div>
+                            }
+                            <Label>{t("Address")}  {
+                                !address
+                                && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
+                            <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={address} onChange={e => setAddress(e.target.value)} />
+                        </FormGroup>
                     }
-                    <Label>{t("City")}   {
-                        !city
-                        && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
-                    <CitiesDropDown country={country === "Cabo Verde" ? "Cape Verde" : country} setUserCity={setCity} userCity={city} disabled={!isEditMode || isVerified} iso_3={userDetails?.country_iso_code} />
-                </FormGroup>
-                <FormGroup style={{ position: "relative" }}>
-                    {
-                        !country
-                        &&
-                        <div style={{
-                            height: "9px",
-                            width: "9px",
-                            borderRadius: "9px",
-                            background: "red",
-                            position: "absolute",
-                            bottom: "20px",
-                            right: "-17px"
-                        }}></div>
-                    }
-                    <Label>{t("Country")}   {
-                        !country
-                        && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
-                    <Input disabled={1 + 1 === 2 || isVerified} readOnly={1 + 1 === 2 || isVerified} value={country} onChange={e => setCountry(e.target.value)} />
-                </FormGroup>
-                <FormGroup style={{ position: "relative" }}>
-                    {
-                        !timezone
-                        &&
-                        <div style={{
-                            height: "9px",
-                            width: "9px",
-                            borderRadius: "9px",
-                            background: "red",
-                            position: "absolute",
-                            bottom: "20px",
-                            right: "-17px"
-                        }}></div>
-                    }
-                    <Label>{t("Timezone")}  {
-                        !timezone
-                        && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
-                    {/* {
+                    <FormGroup style={{ position: "relative" }}>
+                        {
+                            !city
+                            &&
+                            <div style={{
+                                height: "9px",
+                                width: "9px",
+                                borderRadius: "9px",
+                                background: "red",
+                                position: "absolute",
+                                bottom: "20px",
+                                right: "-17px"
+                            }}></div>
+                        }
+                        <Label>{t("City")}   {
+                            !city
+                            && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
+                        <CitiesDropDown country={country === "Cabo Verde" ? "Cape Verde" : country} setUserCity={setCity} userCity={city} disabled={!isEditMode || isVerified} iso_3={userDetails?.country_iso_code} />
+                    </FormGroup>
+                    <FormGroup style={{ position: "relative" }}>
+                        {
+                            !country
+                            &&
+                            <div style={{
+                                height: "9px",
+                                width: "9px",
+                                borderRadius: "9px",
+                                background: "red",
+                                position: "absolute",
+                                bottom: "20px",
+                                right: "-17px"
+                            }}></div>
+                        }
+                        <Label>{t("Country")}   {
+                            !country
+                            && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
+                        <Input disabled={1 + 1 === 2 || isVerified} readOnly={1 + 1 === 2 || isVerified} value={country} onChange={e => setCountry(e.target.value)} />
+                    </FormGroup>
+                    <FormGroup style={{ position: "relative" }}>
+                        {
+                            !timezone
+                            &&
+                            <div style={{
+                                height: "9px",
+                                width: "9px",
+                                borderRadius: "9px",
+                                background: "red",
+                                position: "absolute",
+                                bottom: "20px",
+                                right: "-17px"
+                            }}></div>
+                        }
+                        <Label>{t("Timezone")}  {
+                            !timezone
+                            && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
+                        {/* {
                         isEditMode
                             ? */}
-                    <Input disabled={!isEditMode || isVerified} value={timezone} onChange={e => setTimezone(e.target.value)} type='select'>
-                        <option value="">--Select-Your-Timezone--</option>
-                        {
-                            availableTimezones.map(i => (
-                                <option value={i?.split(" GMT")?.[0]}>{i}</option>
-                            ))
-                        }
-                    </Input>
-                    {/* :
+                        <Input disabled={!isEditMode || isVerified} value={timezone} onChange={e => setTimezone(e.target.value)} type='select'>
+                            <option value="">--Select-Your-Timezone--</option>
+                            {
+                                availableTimezones.map(i => (
+                                    <option value={i?.split(" GMT")?.[0]}>{i}</option>
+                                ))
+                            }
+                        </Input>
+                        {/* :
                             <Input disabled={1 + 1 === 2} readOnly={1 + 1 === 2} value={timezone} />
                     } */}
-                </FormGroup>
-                {
-                    userDetails?.postalCode
-                    &&
-                    <FormGroup style={{ position: "relative" }}>
-                        {
-                            !postalCode
-                            &&
-                            <div style={{
-                                height: "9px",
-                                width: "9px",
-                                borderRadius: "9px",
-                                background: "red",
-                                position: "absolute",
-                                bottom: "20px",
-                                right: "-17px"
-                            }}></div>
-                        }
-                        <Label>{t("Postal Code")}  {
-                            !postalCode
-                            && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
-                        <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={postalCode} onChange={e => setPostalCode(e.target.value)} />
                     </FormGroup>
-                }
-            </CardBody>
-            <CardFooter style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-                {
-                    isEditMode
-                        ?
-                        <>
+                    {
+                        userDetails?.postalCode
+                        &&
+                        <FormGroup style={{ position: "relative" }}>
+                            {
+                                !postalCode
+                                &&
+                                <div style={{
+                                    height: "9px",
+                                    width: "9px",
+                                    borderRadius: "9px",
+                                    background: "red",
+                                    position: "absolute",
+                                    bottom: "20px",
+                                    right: "-17px"
+                                }}></div>
+                            }
+                            <Label>{t("Postal Code")}  {
+                                !postalCode
+                                && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
+                            <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={postalCode} onChange={e => setPostalCode(e.target.value)} />
+                        </FormGroup>
+                    }
+                </CardBody>
+                <CardFooter style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+                    {
+                        isEditMode
+                            ?
+                            <>
+                                <Button style={{
+                                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                    border: "none",
+                                    outline: "none",
+                                    borderRadius: "10px"
+                                }} onClick={() => setIsEditMode(false)} disabled={isSaving}>{t("Cancel")}</Button>
+                                <Button style={{
+                                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                    border: "none",
+                                    outline: "none",
+                                    borderRadius: "10px"
+                                }} onClick={handleSaveClick}
+                                    // (userDetails?.account_type === "individual" ? !firstName || !lastName : !company) || !address || !city || !country || !email || !phone || !postalCode || !timezone || !username || !usernameValid || phone.length < 8
+                                    disabled={isSaving || usernameError || !usernameValid || !city || !username}>
+                                    {
+                                        isSaving
+                                            ?
+                                            t("Saving")
+                                            :
+                                            t("Save")
+                                    }
+                                </Button>
+                            </>
+                            :
                             <Button style={{
                                 background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                                 border: "none",
                                 outline: "none",
                                 borderRadius: "10px"
-                            }} onClick={() => setIsEditMode(false)} disabled={isSaving}>{t("Cancel")}</Button>
-                            <Button style={{
-                                background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                                border: "none",
-                                outline: "none",
-                                borderRadius: "10px"
-                            }} onClick={handleSaveClick}
-                                // (userDetails?.account_type === "individual" ? !firstName || !lastName : !company) || !address || !city || !country || !email || !phone || !postalCode || !timezone || !username || !usernameValid || phone.length < 8
-                                disabled={isSaving || usernameError || !usernameValid || !city || !username}>
-                                {
-                                    isSaving
-                                        ?
-                                        t("Saving")
-                                        :
-                                        t("Save")
-                                }
-                            </Button>
-                        </>
-                        :
-                        <Button style={{
-                            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                            border: "none",
-                            outline: "none",
-                            borderRadius: "10px"
-                        }} onClick={() => setIsEditMode(true)}>{t("Edit Profile")}</Button>
-                }
-            </CardFooter>
-        </Card>
+                            }} onClick={() => setIsEditMode(true)}>{t("Edit Profile")}</Button>
+                    }
+                </CardFooter>
+            </Card>
+        </MuiPickersUtilsProvider>
     )
 }
 
