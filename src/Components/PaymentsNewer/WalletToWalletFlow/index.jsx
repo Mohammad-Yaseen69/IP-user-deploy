@@ -69,7 +69,7 @@ const initialState = {
     cardError: "",
     selectedSavedCard: {},
     cardTransactionDetails: {},
-    codeType: "authenticator",
+    codeType: "sms",
     exchange_rate: {},
     exchange_rate_error: "",
     error: "",
@@ -164,10 +164,16 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
 
     useEffect(() => {
         if (userDetails?._id) {
+            console.log("TFA Debug:", {
+                tfa: userDetails?.tfa,
+                tfaType: typeof userDetails?.tfa,
+                isTruthy: !!userDetails?.tfa
+            })
             if (userDetails?.tfa) {
                 console.log("authcode-auth", userDetails?.tfa)
                 dataHandler("codeType", "authenticator")
             } else {
+                console.log("Setting codeType to SMS")
                 dataHandler("codeType", "sms")
             }
             dataHandler("timezone", userDetails?.timezone)
@@ -236,7 +242,6 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
             })
             const dec = decryptData(res.data.data)
             dataHandler("c", dec?.data?.services ?? [])
-            dataHandler("mobile_wallet_merchant", dec?.data?.merchant_id ?? "")
         } catch {
             // dataHandler("error", "Something went wrong while getting mobile wallet channels.")
         }
@@ -273,6 +278,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
         }
     }, [data.payment_type])
 
+    console.log(data.codeType, "code-type")
     const sendOtp = async (codeType = "") => {
         dataHandler("loading", true)
         try {
@@ -349,7 +355,12 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                 payload.data.purpose = "OTHERS"
             }
 
-            console.log(payload, data.payment_duration)
+            console.log("SendOTP Debug:", {
+                payload,
+                codeType,
+                dataCodeType: data.codeType,
+                finalType: codeType || data.codeType
+            })
             const encrypted = encryptData(payload)
             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
                 data: encrypted

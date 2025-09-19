@@ -29,7 +29,7 @@ const GoogleAuthenticatorModal = ({
     thresholdFunc
 }) => {
     const { t } = useTranslation()
-    const { userDetails, authHeader, setMissingTabsData } = useContext(UserContext)
+    const { userDetails, authHeader, setMissingTabsData, setUserDetails } = useContext(UserContext)
     const [step, setStep] = useState(1)
     const [password, setPassword] = useState("")
     const [showPassword, setShowPassword] = useState(false)
@@ -130,6 +130,7 @@ const GoogleAuthenticatorModal = ({
             if (dec?.status) {
                 if (sideText === "Google Authenticator") {
                     setMissingTabsData(prev => prev.filter(item => item !== "tfa"))
+                    setUserDetails(prev => ({ ...prev, tfa: true }))
                 }
                 setAuthenticatorActive(true)
                 setStep(prev => prev + 1)
