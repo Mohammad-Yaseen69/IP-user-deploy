@@ -5,19 +5,10 @@ import cover_2 from "./files/cover_2.png"
 import cover_3 from "./files/cover_3.png"
 import styles from "./styles/index.module.scss"
 import countries from "../PaymentsNewer/CountriesData.json"
-import ig from "./files/ig.svg"
-import wa from "./files/wa.svg"
-import x from "./files/x.svg"
-import more from "./files/more.svg"
-// import QRCode from 'qrcode.react';
 import copy from "./files/copy.svg"
 import download from "./files/download.svg"
 import Rating from "react-rating"
 import { useContext, useEffect, useState } from "react"
-import { Heart, MoreHorizontal, Share2 } from "react-feather"
-import init from "./files/init.svg"
-import req from "./files/req.svg"
-import report from "./files/report.svg"
 import axios from "axios"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import { useParams } from "react-router"
@@ -32,6 +23,9 @@ import { service_name_formatter } from "../TransactionsNewApi/TransactionItem"
 import verified from "../../assets/verified.png"
 import PortfolioItem from "../Profile/PortfolioItem"
 import NotFound from "../NotFound"
+import Linkify from "linkify-react"
+import linkify from "linkifyjs";
+import "linkify-plugin-hashtag";
 
 export const reviews = [
     {
@@ -124,7 +118,7 @@ const ProfileComponent = () => {
             axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-cover/${user_name?.toLowerCase()}`)
                 .then(async (res) => {
                     const decrypted = decryptData(res.data.data)
-                    
+
                     const img = await getCroppedImg(decrypted?.coverPicture?.coverImage, decrypted?.coverPicture?.coordinates)
                     const imageUrl = URL.createObjectURL(img)
                     setCroppedCover(imageUrl)
@@ -306,7 +300,19 @@ const ProfileComponent = () => {
                                                         <ModalHeader toggle={() => setShowAboutModal(!showAboutModal)}>
                                                             {t("About")}
                                                         </ModalHeader>
-                                                        <ModalBody>{userDetails?.about_me}</ModalBody>
+                                                        <ModalBody>
+                                                            <Linkify
+                                                                options={{
+                                                                    target: "_blank",
+                                                                    formatHref: {
+                                                                        hashtag: (href) => `https://www.google.com/search?q=${encodeURIComponent(href?.replace("#", ""))}`,
+                                                                    },
+                                                                }}
+                                                                as={"p"}
+                                                            >
+                                                                {userDetails?.about_me} yaseenyaseenali69@gmail.com
+                                                            </Linkify>
+                                                        </ModalBody>
                                                     </Modal>
                                                 </div>
                                             }
