@@ -17,10 +17,7 @@ import "./styles/modal.css"
 // import { sdk } from '../../..'
 
 const cryptoReasons = {
-    CRYPTO_PURCHASE: "Cryptocurrency Purchase (BTC/ETH/USDT/USDC)",
-    UTILITY: "Utility Token Access / Token Purchase",
-    ASSETS: "Digital Asset Services",
-    NOTARIFY: "NotarifyCoin"
+    
 }
 
 const PayWithCrypto = ({ user, data, dataHandler }) => {
@@ -162,7 +159,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                                         placeholder={t("Select Purpose of Payment")}
                                         value={data?.cryptoDetails?.reason}
                                         onChange={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, reason: e.target.value })}
-                                        options={Object.keys({ ...reasons, ...cryptoReasons }).map(i => (
+                                        options={Object.keys(reasons).map(i => (
                                             {
                                                 value: i,
                                                 label: t(reasons[i])

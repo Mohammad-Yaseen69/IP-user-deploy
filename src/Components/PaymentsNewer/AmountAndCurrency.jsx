@@ -50,6 +50,10 @@ export const reasons = {
     REWARD_PAYMENT: "Payment of rewards",
     INFLUENCER_PAYMENT: "Payment of Influencer",
     OTHER_FEES: "Broker, commitment, guarantee and other fees",
+    CRYPTO_PURCHASE: "Cryptocurrency Purchase (BTC/ETH/USDT/USDC)",
+    UTILITY: "Utility Token Access / Token Purchase",
+    ASSETS: "Digital Asset Services",
+    NOTARIFY: "NotarifyCoin",
     OTHER: "Other purposes"
 };
 
