@@ -4,11 +4,9 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import { useContext } from "react"
 import { UserContext } from "../../../Context/UserContext"
 import styles from "./styles/recentTrans.module.scss"
-import mwIcon from "../files/mw.png"
 import { useTranslation } from "react-i18next"
 import { currencies, usePayoutChannel } from "../InternationalFlow/StepOne"
 import { toast } from "react-toastify"
-import { LimitsErrorMessage } from "../OTPConfirmation"
 import useWindowWidth from "../../../utils/useWindowWidth"
 import countriesData from "../CountriesData.json"
 
@@ -74,8 +72,15 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
         if (type === "international") {
             const country = countriesData.find(item => item.name === t?.beneficiary?.country_name)
             const beneficiary = beneficiaries?.find(ben => ben?._id === t?.beneficiary?._id)
-            const channelName = t?.payer?.type?.toLowerCase()?.includes("bank") ? "bank" : t?.payer?.type?.toLowerCase()?.includes("mobile") ? "mobile" : "cash"
-            const channel = payoutChannelData.find(item => item.name?.toLowerCase()?.includes(channelName))
+            const channelValue = (() => {
+                const typeStr = t?.payer?.type?.toLowerCase() || "";
+                if (typeStr.includes("bank")) return "bank";
+                if (typeStr.includes("mobile")) return "mobile";
+                if (typeStr.includes("card")) return "card";
+                if (typeStr.includes("cash")) return "cash";
+                return "cash";
+            })()
+            const channel = payoutChannelData.find(item => item?.value === channelValue)
 
             dataHandler("amount", t?.amount?.toFixed(2))
             dataHandler("country", country)
@@ -98,8 +103,25 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
 
         }
     }
+
+    const canRepeat = (tx) => {
+        const sendingWallet = userWallets?.find(w => w?.wallet_id === tx?.wallet_id)
+        if (!sendingWallet) return false
+
+        if (type === "international") {
+            const hasCountry = Boolean(countriesData.find(item => item.name === tx?.beneficiary?.country_name))
+            const hasBeneficiary = Boolean(beneficiaries?.find(ben => ben?._id === tx?.beneficiary?._id))
+            const typeStr = tx?.payer?.type?.toLowerCase() || ""
+            const channelValue = typeStr.includes("bank") ? "bank" : typeStr.includes("mobile") ? "mobile" : typeStr.includes("card") ? "card" : typeStr.includes("cash") ? "cash" : ""
+            const hasChannel = Boolean(payoutChannelData.find(item => item?.value === channelValue))
+            return hasCountry && hasBeneficiary && hasChannel && tx?.payer?.id && tx?.payer?.id !== "N/A" && tx?.payer?.vendor
+        }
+
+        const hasReceiver = Boolean(tx?.receiver?._id && tx?.receiver?.currency)
+        return hasReceiver
+    }
     return (
-        <div className={styles.container}>
+        <div style={{ minWidth: width < 1000 && "100%" }} className={styles.container}>
             <div style={{ justifyContent: width < 1000 && "center" }} className={styles.top}>
                 <h4>{t("RECENT TRANSFERS")}</h4>
                 {width > 1000 && <span>{t("See all")}</span>}
@@ -109,9 +131,9 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
                 {data?.map((tx) => {
                     const receiverName = `${tx?.beneficiary?.first_name || tx?.receiver?.first_name || ""} ${tx?.receiver?.last_name || tx?.beneficiary?.last_name || ""}`.trim()
                     const country = tx?.receiver?.country_name || tx?.beneficiary?.country_name || ""
-                    const paymentTypeLabel = tx?.paid_via_details?.type === "ip_wallet" ? "Mobile Wallet" : (tx?.paid_via_details?.type || "")
+                    // const paymentTypeLabel = tx?.paid_via_details?.type === "ip_wallet" ? "Mobile Wallet" : (tx?.paid_via_details?.type || "")
                     const createdAt = tx?.created_at ? new Date(tx.created_at).toLocaleString("en-US", { month: "short", day: "numeric" }) : ""
-                    return (
+                    return canRepeat(tx) ? (
                         <div key={tx?._id} className={styles.trans}>
                             <div className={styles.top}>
                                 <div>
@@ -137,10 +159,9 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
                                 </h4>
                             </div>
 
-                            {width < 1300 && <button className={styles.send} onClick={() => setTransaction(tx)} type="button">{t("Send Again")}</button>}
-
+                            {width < 1300 && canRepeat(tx) && <button className={styles.send} onClick={() => setTransaction(tx)} type="button">{t("Send Again")}</button>}
                         </div>
-                    )
+                    ) : <></>
                 })}
             </div>
         </div>

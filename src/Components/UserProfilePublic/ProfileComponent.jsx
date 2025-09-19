@@ -118,11 +118,11 @@ const ProfileComponent = () => {
             axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-cover/${user_name?.toLowerCase()}`)
                 .then(async (res) => {
                     const decrypted = decryptData(res.data.data)
-
+                    console.log(decrypted, "cover-picture")
+                    setUserCover(decrypted?.coverPicture?.coverImage ?? covers[Math.trunc(Math.random() * 3)])
                     const img = await getCroppedImg(decrypted?.coverPicture?.coverImage, decrypted?.coverPicture?.coordinates)
                     const imageUrl = URL.createObjectURL(img)
                     setCroppedCover(imageUrl)
-                    setUserCover(decrypted?.coverPicture?.coverImage ?? covers[Math.trunc(Math.random() * 3)])
                 })
                 .catch(err => {
                 })
@@ -130,11 +130,11 @@ const ProfileComponent = () => {
             axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-profile/${user_name?.toLowerCase()}`)
                 .then(async (res) => {
                     const decrypted = decryptData(res.data.data)
-                    console.log(decrypted.profilePicture)
+                    console.log(decrypted.profilePicture, "profile-picture")
+                    setUserDp(decrypted?.profilePicture?.profileImage ?? "")
                     const img = await getCroppedImg(decrypted?.profilePicture?.profileImage, decrypted?.profilePicture?.coordinates)
                     const imageUrl = URL.createObjectURL(img)
                     setCroppedDp(imageUrl)
-                    setUserDp(decrypted?.profilePicture?.profileImage ?? "")
                 })
                 .catch(err => {
                 })
@@ -192,6 +192,8 @@ const ProfileComponent = () => {
 
         }
     }, [user_name])
+
+    console.log(userDp , "  adfaf", userCover, "niglet ")
 
     const [showAboutModal, setShowAboutModal] = useState(false)
 
@@ -310,7 +312,7 @@ const ProfileComponent = () => {
                                                                 }}
                                                                 as={"p"}
                                                             >
-                                                                {userDetails?.about_me} yaseenyaseenali69@gmail.com
+                                                                {userDetails?.about_me}
                                                             </Linkify>
                                                         </ModalBody>
                                                     </Modal>

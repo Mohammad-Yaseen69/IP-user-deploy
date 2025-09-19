@@ -14,6 +14,14 @@ import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { formatCurrency } from '../../../Helper/AmountFormat'
 import useWindowWidth from '../../../utils/useWindowWidth'
 import "./styles/modal.css"
+// import { sdk } from '../../..'
+
+const cryptoReasons = {
+    CRYPTO_PURCHASE: "Cryptocurrency Purchase (BTC/ETH/USDT/USDC)",
+    UTILITY: "Utility Token Access / Token Purchase",
+    ASSETS: "Digital Asset Services",
+    NOTARIFY: "NotarifyCoin"
+}
 
 const PayWithCrypto = ({ user, data, dataHandler }) => {
     const { t } = useTranslation()
@@ -61,6 +69,28 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
         return () => { cancelled = true }
     }, [data.currentWallet?.currency?.code, data.currencyCode, data.amount])
 
+
+    const clickHandler = () => {
+        if (step === 1) {
+            setStep(2)
+        } else {
+            const paymentConfig = {
+                amount: usdtAmount,
+                orderId: 'order_123456',
+                paymentPurpose: data.cryptoDetails?.reason,
+                currency: 'USDT_TRC20',
+            };
+
+
+            // const paymentStatus = sdk.init(paymentConfig);
+
+            // paymentStatus.then(status => {
+            //     if (status === 'success') {
+            //         console.log('Payment success');
+            //     }
+            // });
+        }
+    }
     return (
         <Modal isOpen={data.showCryptoModal} style={{ minWidth: window.innerWidth > 850 && "800px", overflow: "hidden" }} toggle={() => dataHandler("showCryptoModal", false)} >
             <ModalBody style={{ minHeight: width < 850 && "100vh", background: width < 850 && "#fafafafa" }}>
@@ -68,7 +98,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                     {width > 850 &&
                         <div className={styles.left}>
                             <h3>
-                                {t("Pay as Crypto")}
+                                {t("Pay with Crypto")}
                             </h3>
                             <span>
                                 {t("By sending a payment. You agree to InstaPay:")}
@@ -132,7 +162,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                                         placeholder={t("Select Purpose of Payment")}
                                         value={data?.cryptoDetails?.reason}
                                         onChange={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, reason: e.target.value })}
-                                        options={Object.keys(reasons).map(i => (
+                                        options={Object.keys({ ...reasons, ...cryptoReasons }).map(i => (
                                             {
                                                 value: i,
                                                 label: t(reasons[i])
@@ -213,17 +243,11 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                             >
                                 {step === 2 ? t("Back") : t("Cancel")}
                             </button>
-                            {
-                                step === 1 ? (
-                                    <ButtonForRequests style={{ borderRadius: "4px" }} onClick={() => setStep(2)} isLoading={!data.cryptoDetails?.reason || !data.cryptoDetails?.phone || !data.cryptoDetails?.name}>
-                                        {t("Next")}
-                                    </ButtonForRequests>
-                                ) : (
-                                    <ButtonForRequests style={{ borderRadius: "4px" }} onClick={() => dataHandler("showCryptoModal", false)}>
-                                        {t("Next")}
-                                    </ButtonForRequests>
-                                )
-                            }
+
+                            <ButtonForRequests style={{ borderRadius: "4px" }} onClick={clickHandler} isLoading={!data.cryptoDetails?.reason || !data.cryptoDetails?.phone || !data.cryptoDetails?.name}>
+                                {t("Next")}
+                            </ButtonForRequests>
+
                         </div>
                     </div>
                 </div>
