@@ -21,7 +21,7 @@ import * as Sentry from "@sentry/react";
 
 
 window.addEventListener("error", (e) => {
-    if (
+    if ( 
         e?.message?.includes("Loading chunk") ||
         e?.message?.includes("ChunkLoadError") ||
         e?.message?.includes("Loading CSS chunk")
@@ -62,6 +62,11 @@ Sentry.init({
     },
     profilesSampleRate: 1.0
 });
+
+// export const sdk = new WidgetSDK({
+//     integrationId: process.env.REACT_APP_KEABANK_INTEGRATION_ID,
+//     merchantId: process.env.REACT_APP_KEABANK_MERCHANT_ID,
+// })
 
 
 ReactDOM.render(

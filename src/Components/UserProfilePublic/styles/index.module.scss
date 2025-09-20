@@ -1186,8 +1186,8 @@
                     }
 
                     .posts {
-                        display: grid !important;
-                        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+                        display: flex !important;
+                        overflow-x: auto;
 
                         .add_item {
                             height: 100% !important;
