@@ -1188,6 +1188,7 @@
                     .posts {
                         display: flex !important;
                         overflow-x: auto;
+                        flex-direction: column !important;
 
                         .add_item {
                             height: 100% !important;

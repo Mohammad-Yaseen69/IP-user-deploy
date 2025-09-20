@@ -26,6 +26,10 @@ import NotFound from "../NotFound"
 import Linkify from "linkify-react"
 import linkify from "linkifyjs";
 import "linkify-plugin-hashtag";
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Pagination } from 'swiper'
+import 'swiper/css'
+import 'swiper/css/pagination'
 
 export const reviews = [
     {
@@ -90,6 +94,7 @@ const ProfileComponent = () => {
     const [loading, setLoading] = useState(true)
     const [croppedDp, setCroppedDp] = useState("")
     const [croppedCover, setCroppedCover] = useState("")
+    const [portfolioSwiper, setPortfolioSwiper] = useState(null)
 
     useEffect(() => {
         const getFollowers = async () => {
@@ -193,7 +198,7 @@ const ProfileComponent = () => {
         }
     }, [user_name])
 
-    console.log(userDp , "  adfaf", userCover, "niglet ")
+    console.log(userDp, "  adfaf", userCover, "niglet ")
 
     const [showAboutModal, setShowAboutModal] = useState(false)
 
@@ -432,15 +437,36 @@ const ProfileComponent = () => {
                                         <div className={styles.feed}>
                                             <h5>{t("Portfolio")}:</h5>
                                             <div className={styles.posts}>
-                                                {
-                                                    userPortfolio && userPortfolio.length > 0
-                                                        ?
-                                                        userPortfolio?.filter(item => item?.file_type?.includes("video") ? item?.jw_media?.status === "ready" : item).map((item, ind) => (
+                                                {winWidth < 600 ? (
+                                                    <>
+                                                        <Swiper
+                                                            modules={[Pagination]}
+                                                            pagination={{ clickable: true, el: '.portfolio-swiper-pagination' }}
+                                                            spaceBetween={10}
+                                                            slidesPerView={1}
+                                                            style={{ width: '100%' }}
+                                                            onSwiper={setPortfolioSwiper}
+                                                        >
+                                                            {userPortfolio && userPortfolio.length > 0 ?
+                                                                userPortfolio.filter(item => item?.file_type?.includes("video") ? item?.jw_media?.status === "ready" : item).map((item, ind) => (
+                                                                    <SwiperSlide key={ind}>
+                                                                        <PortfolioItem item={item} />
+                                                                    </SwiperSlide>
+                                                                ))
+                                                                :
+                                                                <div className="text-center my-4 align-self-center" style={{ flex: 1 }}>{t("No Portfolio Items")}</div>
+                                                            }
+                                                        </Swiper>
+                                                        <div className="portfolio-swiper-pagination" style={{ marginTop: 12, textAlign: 'center' }} />
+                                                    </>
+                                                ) : (
+                                                    userPortfolio && userPortfolio.length > 0 ?
+                                                        userPortfolio.filter(item => item?.file_type?.includes("video") ? item?.jw_media?.status === "ready" : item).map((item, ind) => (
                                                             <PortfolioItem item={item} key={ind} />
                                                         ))
                                                         :
                                                         <div className="text-center my-4 align-self-center" style={{ flex: 1 }}>{t("No Portfolio Items")}</div>
-                                                }
+                                                )}
                                             </div>
                                             <div className={styles.see_more}>
                                                 {t("See More")} {">"}
