@@ -70,7 +70,6 @@
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
-    "node-sass": "^9.0.0",
     "npm": "^11.4.1",
     "papaparse": "^5.4.1",
     "path": "^0.12.7",
