@@ -1,22 +1,34 @@
 import React, { useMemo, useRef, useState, useCallback, useEffect } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { useTranslation } from 'react-i18next';
-import { City } from 'country-state-city'
 import iso2 from "../AddFunds/WalletFund/countries_iso2.json"
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 
+const getCities = async (iso2) => {
+    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/country/get-cities/${iso2}`);
+    return res.data.data; 
+}
 
 const CitiesDropDown = ({ country, userCity, setUserCity, disabled = false, styles = {}, iso_3 = "", isState, title = "Select City", stateData, background = "#fff" }) => {
     const { t } = useTranslation()
     const [isOpen, setIsOpen] = useState(false);
     const cityInputRef = useRef()
     const [searchTerm, setSearchTerm] = useState('');
+    const iso2Value = useMemo(() => {
+        return iso2[iso_3?.toUpperCase()]
+    }, [iso2, iso_3])
+
+    const { data: cities } = useQuery({
+        queryKey: ["GetCities", iso2Value],
+        queryFn: () => getCities(iso2Value),
+        staleTime: Infinity,
+        cacheTime: Infinity,
+        enabled: !!iso2Value,
+    })
 
 
-    const cities = useMemo(() => {
-        if (iso_3) {
-            return City.getCitiesOfCountry(iso2[iso_3?.toUpperCase()])
-        }
-    }, [country])
+    console.log(cities)
     const filtered = useMemo(() => {
         if (!searchTerm) return isState ? stateData : cities;
         return (isState ? stateData : cities)?.filter(item => item?.name?.toLowerCase()?.includes(searchTerm?.toLowerCase()))

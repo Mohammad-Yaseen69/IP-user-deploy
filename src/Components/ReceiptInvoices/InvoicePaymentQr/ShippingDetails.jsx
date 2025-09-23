@@ -1,17 +1,27 @@
 import React, { useMemo } from 'react'
 import CountryDropDown from '../../AddBeneficiary/CountryDropDown'
 import CitiesDropDown from '../../CitiesDropDown'
-import { State } from 'country-state-city'
 import iso2 from "../../AddFunds/WalletFund/countries_iso2.json"
+import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
+
+const getStates = async (iso2) => {
+    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/country/get-states/${iso2}`)
+    return res?.data?.data
+}
 
 const ShippingDetails = ({ data, dataHandler }) => {
-    const stateData = useMemo(() => {
-        if (data.shippingDetails?.country?.iso) {
-            return State.getStatesOfCountry(iso2[data.shippingDetails?.country?.iso?.toUpperCase()])
-        }
+    const iso2Value = useMemo(() => {
+        return iso2[data.shippingDetails?.country?.iso?.toUpperCase()]
+    }, [iso2, data.shippingDetails?.country?.iso?.toUpperCase()])
 
-
-    }, [data.shippingDetails?.country?.iso])
+    const { data: stateData } = useQuery({
+        queryKey: ["GetStates", iso2Value],
+        queryFn: () => getStates(iso2Value),
+        staleTime: Infinity,
+        cacheTime: Infinity,
+        enabled: !!iso2Value,
+    })
 
 
     return (

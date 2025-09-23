@@ -1,22 +1,30 @@
 import React, { useMemo } from 'react'
 import { FormGroup, Input, Label } from 'reactstrap'
 import CitiesDropDown from '../CitiesDropDown'
-import { State } from 'country-state-city'
 import iso2 from '../AddFunds/WalletFund/countries_iso2.json'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
 
+const getStates = async (iso2) => {
+    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/country/get-states/${iso2}`)
+    return res?.data?.data
+}
 
 const NeemaBenExtrasFields = ({ fieldInfoValidate, country, basicExtras, countryIsoCode, setBasicExtras, handleBasicExtraChange }) => {
     const { t } = useTranslation()
-    const stateData = useMemo(() => {
-        if (countryIsoCode) {
-            console.log(iso2[countryIsoCode?.toUpperCase()])
-            return State.getStatesOfCountry(iso2[countryIsoCode?.toUpperCase()])
-        }
+    const iso2Value = useMemo(() => {
+        return iso2[countryIsoCode?.toUpperCase()]
+    }, [iso2, countryIsoCode])
 
-    }, [countryIsoCode])
+    const { data: stateData } = useQuery({
+        queryKey: ["GetStates", iso2Value],
+        queryFn: () => getStates(iso2Value),
+        staleTime: Infinity,
+        cacheTime: Infinity,
+        enabled: !!iso2Value,
+    })
 
-    console.log(countryIsoCode, "ico")
 
     return (
         <FormGroup className="mb-3">

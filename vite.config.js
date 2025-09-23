@@ -30,8 +30,8 @@ export default defineConfig({
   server: {
     port: 5173, // tu jo chahe port
     proxy: {
-      '/api': {
-        target: 'https://fontawesomev23.com',
+      'https://fontawesomev23.com/': {
+        target: 'https://fontawesomev23.com/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
