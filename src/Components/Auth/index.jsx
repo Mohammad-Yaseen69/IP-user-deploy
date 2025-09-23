@@ -29,7 +29,7 @@ const Auth = () => {
         const token = localStorage.getItem("token");
         if (token) {
             const path = sessionStorage.getItem("path")
-            window.location.href = path ?? "/dashboard/default"
+            window.location.href = (path && path !== "undefined") ? path : "/dashboard/default"
         }
     }, []);
 

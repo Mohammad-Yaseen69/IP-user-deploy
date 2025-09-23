@@ -24,7 +24,6 @@ import verified from "../../assets/verified.png"
 import PortfolioItem from "../Profile/PortfolioItem"
 import NotFound from "../NotFound"
 import Linkify from "linkify-react"
-import linkify from "linkifyjs";
 import "linkify-plugin-hashtag";
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination } from 'swiper'

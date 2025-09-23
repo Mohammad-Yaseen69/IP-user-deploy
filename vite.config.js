@@ -36,5 +36,17 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          mui: ['@mui/material', '@mui/x-date-pickers'],
+          charts: ['apexcharts', 'react-apexcharts'],
+          pdf: ['jspdf', 'jspdf-autotable'],
+          excel: ['xlsx'],
+        }
+      }
+    }
   }
 })
