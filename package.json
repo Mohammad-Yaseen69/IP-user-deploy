@@ -138,6 +138,6 @@
     "source-map-explorer": "^2.5.3"
   },
   "engines": {
-    "node": "18.19.1"
+    "node": "20.x"
   }
 }
