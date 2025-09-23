@@ -9,7 +9,7 @@ import help from "./files/help.svg"
 import { useState } from "react"
 import SocialModal from "../../ShareBtn/SocialModal"
 import { useLocation, useNavigate } from "react-router"
-import fail from "./files/fail.lottie"
+import fail from "./files/fail.json"
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 const Receipt = ({ data, showBack = false, backHandler = () => { }, showTrxBtn = true, transactionStatus }) => {

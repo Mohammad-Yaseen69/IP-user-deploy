@@ -358,7 +358,7 @@ const Basic = ({ setCurrentTab }) => {
                     userDetails?.username
                         ?
                         <QrGenerate
-                            wallets={userWallets?.filter(item => true)}
+                            wallets={userWallets?.filter(item => !item?.qrCode?.url)}
                         />
                         :
                         ""
