@@ -174,7 +174,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
         dataHandler("exchange_rate_error", "")
         dataHandler("exchange_rate", {})
         try {
-            const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${data.payment_type?.value !== "wallet" ? data.currency_wallet?.currency?.code : data.wallet?.currency?.code}&to=${item?.amount_reciever_currency?.currency?.code}&amount=${item?.status?.toLowerCase()?.includes("accepted") ? item?.revised_amount : item?.amount}&type=quotation&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${item?.amount_reciever_currency?._id}&sender_wallet_id=${data.payment_type?.value !== "wallet" ? data.currency_wallet?._id : data.wallet?._id}&payment_method=request`
+            const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${data.payment_type?.value !== "wallet" ? data.currency_wallet?.currency?.code : data.wallet?.currency?.code}&to=${item?.amount_reciever_currency?.currency?.code}&amount=${item?.status?.toLowerCase()?.includes("accepted") ? item?.revised_amount : item?.amount}&type=quotation&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${item?.amount_reciever_currency?._id}&sender_wallet_id=${data.payment_type?.value !== "wallet" ? data.currency_wallet?._id : data.wallet?._id}&payment_method=request`
             const res = await axios.get(url, { headers: authHeader })
 
             const decrypted = decryptData(res.data.data)
@@ -266,7 +266,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
     const getMobileWalletChannels = async () => {
         dataHandler("loading", true)
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/collection/get-services/${userDetails?.country_iso_code}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/collection/get-services/${userDetails?.country_iso_code}`, {
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
@@ -283,7 +283,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
     const getMobileWalletServices = async (service_name = data.payment_type?.sub_name) => {
         dataHandler("loading", true)
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/collection/get-payers/${userDetails?.country_iso_code}/${service_name}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/collection/get-payers/${userDetails?.country_iso_code}/${service_name}`, {
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
@@ -326,7 +326,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                 type: codeType || data.codeType
             }
             const encrypted = encryptData(payload)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -388,7 +388,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
             console.log(payload)
             const enc = encryptData(payload)
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/initiat-w2w${data.selectedSavedCard?._id ? "-pan" : ""}-transaction`,
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiat-w2w${data.selectedSavedCard?._id ? "-pan" : ""}-transaction`,
                 { data: enc },
                 { headers: authHeader }
             )
@@ -438,7 +438,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
             console.log(data)
             const enc = encryptData(payload)
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/paypal/initiate-w2w-payment`,
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-w2w-payment`,
                 { data: enc },
                 { headers: authHeader }
             )
@@ -474,7 +474,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
             formdata.append("token", data.payment_token)
             formdata.append("otp", otp)
             formdata.append("type", data.codeType)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/quotation/quotation-wallet-to-wallet`, formdata, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/quotation/quotation-wallet-to-wallet`, formdata, {
                 headers: authHeader
             })
 
@@ -571,8 +571,8 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                         currency={data.currency_wallet?.currency?.code}
                         transaction={data.cardTransactionDetails}
                         paymentWithSavedCard={data.selectedSavedCard?._id ? true : false}
-                        url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
-                        tokenUrl={(t) => `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                        url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                        tokenUrl={(t) => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
                     />
                     :
                     <></>
@@ -766,8 +766,8 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                                                 data.step === 2 && data.show_cards
                                                     ?
                                                     <CreditCard
-                                                        url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
-                                                        tokenUrl={(t) => `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                                                        url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                                                        tokenUrl={(t) => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
                                                         data={data}
                                                         dataHandler={dataHandler}
                                                     />
@@ -950,8 +950,8 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                                                         data.step === 2 && data.show_cards
                                                             ?
                                                             <CreditCard
-                                                                url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
-                                                                tokenUrl={(t) => `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                                                                url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                                                                tokenUrl={(t) => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
                                                                 data={data}
                                                                 dataHandler={dataHandler}
                                                             />

@@ -36,7 +36,7 @@ const BroadcastVerify = () => {
             password
         }
         try {
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/set-password`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/set-password`, {
                 data: encryptData(data)
             })
 

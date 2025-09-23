@@ -38,7 +38,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
 
     useEffect(() => {
         if (isOpen) {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-request-reviews/${item?._id}`, {
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-request-reviews/${item?._id}`, {
                 headers: authHeader
             })
                 .then(res => {
@@ -82,7 +82,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
         }
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/add-buyer-to-seller-review`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/add-buyer-to-seller-review`, {
             data: encrypted
         }, {
             headers: authHeader
@@ -112,7 +112,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
         }
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/add-seller-to-buyer-review`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/add-seller-to-buyer-review`, {
             data: encrypted
         }, {
             headers: authHeader
@@ -140,7 +140,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
         }
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/reply-to-buyer`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/reply-to-buyer`, {
             data: encrypted
         }, {
             headers: authHeader

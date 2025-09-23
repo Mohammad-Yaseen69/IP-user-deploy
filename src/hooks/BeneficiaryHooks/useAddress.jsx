@@ -32,7 +32,7 @@ const useAddress = ({ countryIsoCode, formData }) => {
     useEffect(() => {
         const getPosition = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/get-coordinates/${countryIsoCode}`, { headers: authHeader })
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/get-coordinates/${countryIsoCode}`, { headers: authHeader })
                 const dec = decryptData(res.data.data)
                 setPosition(dec?.position)
                 setCoordApiCountry(dec?.country?.name)
@@ -50,7 +50,7 @@ const useAddress = ({ countryIsoCode, formData }) => {
     useEffect(() => {
         const getAddresses = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/get-autocomplete-address?lat=${position.lat}&long=${position.lng}&countryIso=${countryIsoCode}&query=${debouncedAddress}&countryName=${coordApiCountry}`, { headers: authHeader });
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/get-autocomplete-address?lat=${position.lat}&long=${position.lng}&countryIso=${countryIsoCode}&query=${debouncedAddress}&countryName=${coordApiCountry}`, { headers: authHeader });
                 const dec = decryptData(res.data.data);
                 console.log(dec);
                 setAddresses(dec?.addresses ?? []);

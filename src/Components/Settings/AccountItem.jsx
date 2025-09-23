@@ -54,7 +54,7 @@ const AccountItem = ({ data }) => {
         }
         const enc = encryptData(data)
         try {
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, { data: enc }, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, { data: enc }, {
                 headers: authHeader
             })
 
@@ -78,7 +78,7 @@ const AccountItem = ({ data }) => {
             otp,
             type: codeType
         }
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/${socialType}-unlink/${userDetails?._id}`, { data: encryptData(requestData) }, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/instagram/${socialType}-unlink/${userDetails?._id}`, { data: encryptData(requestData) }, {
             headers: authHeader
         })
             .then(res => {

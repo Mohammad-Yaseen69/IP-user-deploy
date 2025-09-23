@@ -29,7 +29,7 @@ const KYB = () => {
         const getCompanyPartners = async () => {
             setIsLoading(true);
             try {
-                const response = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/company/get-partners/${userDetails?._id}`, {
+                const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/company/get-partners/${userDetails?._id}`, {
                     cancelToken: new axios.CancelToken((c) => (cancelRequest = c)),
                 });
 
@@ -80,7 +80,7 @@ const KYB = () => {
                 account_id: userDetails?._id
             }
             const encrypted = encryptData(payload)
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/company/add-partner`, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/company/add-partner`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -130,7 +130,7 @@ const KYB = () => {
             });
             compnanyFileNames.forEach(item => formdata.append("file_names[]", item))
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/company/upload-kyb-files`, formdata, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/company/upload-kyb-files`, formdata, {
                 headers: authHeader
             })
 

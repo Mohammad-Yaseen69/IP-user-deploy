@@ -47,19 +47,19 @@ export const MENU = [
         title: "Dashboards",
         icon: <Home />,
         type: "link",
-        url: `${process.env.PUBLIC_URL}/dashboard/default`,
+        url: `${window.location.origin}/dashboard/default`,
         // class: "lan-3",
         // removed sub menu
         // menu: [
         //   {
         //     title: "Default",
-        //     url: `${process.env.PUBLIC_URL}/dashboard/default`,
+        //     url: `${window.location.origin}/dashboard/default`,
         //     class: "lan-4",
         //     type: "link",
         //   },
         //   {
         //     title: "Ecommerce",
-        //     url: `${process.env.PUBLIC_URL}/dashboard/ecommerce`,
+        //     url: `${window.location.origin}/dashboard/ecommerce`,
         //     type: "link",
         //     class: "lan-5",
         //   },
@@ -71,12 +71,12 @@ export const MENU = [
       //   class: "lan-6",
       //   menu: [
       //     {
-      //       url: `${process.env.PUBLIC_URL}/widgets/general`,
+      //       url: `${window.location.origin}/widgets/general`,
       //       type: "link",
       //       title: "General",
       //     },
       //     {
-      //       url: `${process.env.PUBLIC_URL}/widgets/chart`,
+      //       url: `${window.location.origin}/widgets/chart`,
       //       type: "link",
       //       title: "Chart",
       //     },
@@ -86,61 +86,61 @@ export const MENU = [
       //   title: "Ecommerce",
       //   icon: <ShoppingBag />,
       //   type: "link",
-      //   url: `${process.env.PUBLIC_URL}/dashboard/ecommerce`,
+      //   url: `${window.location.origin}/dashboard/ecommerce`,
       // type: "sub",
       // menu: [
       //   {
-      //     url: `${process.env.PUBLIC_URL}/ecommerce/product`,
+      //     url: `${window.location.origin}/ecommerce/product`,
       //     title: "Product",
       //     type: "link",
       //   },
       //   {
-      //     url: `${process.env.PUBLIC_URL}/ecommerce/product-page/1`,
+      //     url: `${window.location.origin}/ecommerce/product-page/1`,
       //     title: "Product Page",
       //     type: "link",
       //   },
       //   {
-      //     url: `${process.env.PUBLIC_URL}/ecommerce/product-list`,
+      //     url: `${window.location.origin}/ecommerce/product-list`,
       //     title: "Product List",
       //     type: "link",
       //   },
       //   {
-      //     url: `${process.env.PUBLIC_URL}/ecommerce/Add-product`,
+      //     url: `${window.location.origin}/ecommerce/Add-product`,
       //     title: "Add Product",
       //     type: "link",
       //   },
       //   {
-      //     url: `${process.env.PUBLIC_URL}/ecommerce/payment-details`,
+      //     url: `${window.location.origin}/ecommerce/payment-details`,
       //     title: "Payment Detail",
       //     type: "link",
       //   },
       //   {
-      //     url: `${process.env.PUBLIC_URL}/ecommerce/orderhistory`,
+      //     url: `${window.location.origin}/ecommerce/orderhistory`,
       //     title: "Order History",
       //     type: "link",
       //   },
       //   {
-      //     url: `${process.env.PUBLIC_URL}/ecommerce/pricing`,
+      //     url: `${window.location.origin}/ecommerce/pricing`,
       //     title: "Pricing",
       //     type: "link",
       //   },
       //   {
-      //     url: `${process.env.PUBLIC_URL}/ecommerce/invoice`,
+      //     url: `${window.location.origin}/ecommerce/invoice`,
       //     title: "Invoice",
       //     type: "link",
       //   },
       //   {
-      //     url: `${process.env.PUBLIC_URL}/ecommerce/cart`,
+      //     url: `${window.location.origin}/ecommerce/cart`,
       //     title: "Cart",
       //     type: "link",
       //   },
       //   {
-      //     url: `${process.env.PUBLIC_URL}/ecommerce/checkout`,
+      //     url: `${window.location.origin}/ecommerce/checkout`,
       //     title: "Checkout",
       //     type: "link",
       //   },
       //   {
-      //     url: `${process.env.PUBLIC_URL}/ecommerce/whishlist`,
+      //     url: `${window.location.origin}/ecommerce/whishlist`,
       //     title: "Wishlist",
       //     type: "link",
       //   },
@@ -150,68 +150,68 @@ export const MENU = [
         title: "Transactions",
         icon: <CreditCard />,
         type: "link",
-        url: `${process.env.PUBLIC_URL}/transactions`,
+        url: `${window.location.origin}/transactions`,
       },
       {
         title: "Payments",
         icon: <DollarSign />,
         type: "link",
-        url: `${process.env.PUBLIC_URL}/payments`,
+        url: `${window.location.origin}/payments`,
       },
       {
         title: "Beneficiaries",
         icon: <UserCheck />,
         type: "link",
-        url: `${process.env.PUBLIC_URL}/beneficiaries`,
+        url: `${window.location.origin}/beneficiaries`,
       },
       // {
       //   title: "Referrals",
       //   icon: <User />,
       //   type: "link",
-      //   url: `${process.env.PUBLIC_URL}/users/userCards`,
+      //   url: `${window.location.origin}/users/userCards`,
       // },
       {
         title: "Referrals",
         icon: <User />,
         type: "link",
-        url: `${process.env.PUBLIC_URL}/referrals`,
+        url: `${window.location.origin}/referrals`,
       },
       // {
       //   title: "Requests",
       //   icon: <img src={RequestIcon} style={{ marginRight: "12px" }} />,
       //   type: "link",
-      //   url: `${process.env.PUBLIC_URL}/requests`,
+      //   url: `${window.location.origin}/requests`,
       // },
       // {
       //   title: "Quotations",
       //   icon: <img src={QuoteIcon} style={{ marginRight: "12px" }} />,
       //   type: "link",
-      //   url: `${process.env.PUBLIC_URL}/quotations`,
+      //   url: `${window.location.origin}/quotations`,
       // },
       {
         title: "Payment Requests",
         icon: <img src={RequestIcon} style={{ marginRight: "12px" }} />,
         type: "link",
-        url: `${process.env.PUBLIC_URL}/payment-requests`,
+        url: `${window.location.origin}/payment-requests`,
       },
       {
         title: "Chips In",
         // icon: <img src={RequestIcon} style={{ marginRight: "12px" }} />,
         icon: <FaDonate size={24} />,
         type: "link",
-        url: `${process.env.PUBLIC_URL}/chips-in`,
+        url: `${window.location.origin}/chips-in`,
       },
       // {
       //   title: "Profile Settings",
       //   icon: <Settings />,
       //   type: "link",
-      //   url: `${process.env.PUBLIC_URL}/users/userEdit`,
+      //   url: `${window.location.origin}/users/userEdit`,
       // },
       // {
       //   title: "Logout",
       //   icon: <LogIn />,
       //   type: "link",
-      //   url: `${process.env.PUBLIC_URL}/Login`,
+      //   url: `${window.location.origin}/Login`,
       // }
     ],
   },
@@ -223,12 +223,12 @@ export const MENU = [
   //       icon: <MessageCircle />,
   //       menu: [
   //         {
-  //           url: `${process.env.PUBLIC_URL}/chat-app`,
+  //           url: `${window.location.origin}/chat-app`,
   //           type: "link",
   //           title: "Chat App",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/video-chat-app`,
+  //           url: `${window.location.origin}/video-chat-app`,
   //           type: "link",
   //           title: "Video App",
   //         },
@@ -239,56 +239,56 @@ export const MENU = [
   //       icon: <Mail />,
   //       menu: [
   //         {
-  //           url: `${process.env.PUBLIC_URL}/email-app`,
+  //           url: `${window.location.origin}/email-app`,
   //           type: "link",
   //           title: "Mail Inbox",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/email/readmail`,
+  //           url: `${window.location.origin}/email/readmail`,
   //           type: "link",
   //           title: "Read Mail",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/email-app/compose`,
+  //           url: `${window.location.origin}/email-app/compose`,
   //           type: "link",
   //           title: "Compose",
   //         },
   //       ],
   //     },
   //     {
-  //       url: `${process.env.PUBLIC_URL}/file-manager`,
+  //       url: `${window.location.origin}/file-manager`,
   //       icon: <GitPullRequest />,
   //       title: "File Manager",
   //       type: "link",
   //       bookmark: true,
   //     },
   //     {
-  //       url: `${process.env.PUBLIC_URL}/kanban-board`,
+  //       url: `${window.location.origin}/kanban-board`,
   //       icon: <Monitor />,
   //       type: "link",
   //       title: "Kanban Board",
   //     },
   //     {
-  //       url: `${process.env.PUBLIC_URL}/bookmark`,
+  //       url: `${window.location.origin}/bookmark`,
   //       icon: <Heart />,
   //       bookmark: true,
   //       type: "link",
   //       title: "Bookmark",
   //     },
   //     {
-  //       url: `${process.env.PUBLIC_URL}/contact`,
+  //       url: `${window.location.origin}/contact`,
   //       icon: <List />,
   //       type: "link",
   //       title: "Contacts",
   //     },
   //     {
-  //       url: `${process.env.PUBLIC_URL}/task`,
+  //       url: `${window.location.origin}/task`,
   //       icon: <CheckSquare />,
   //       type: "link",
   //       title: "Task",
   //     },
   //     {
-  //       url: `${process.env.PUBLIC_URL}/social-app`,
+  //       url: `${window.location.origin}/social-app`,
   //       icon: <Zap />,
   //       title: "Social App",
   //       type: "link",
@@ -296,7 +296,7 @@ export const MENU = [
   //     },
 
   //     {
-  //       url: `${process.env.PUBLIC_URL}/todo-app/todo`,
+  //       url: `${window.location.origin}/todo-app/todo`,
   //       icon: <Clock />,
   //       type: "link",
   //       title: "To-Do",
@@ -316,27 +316,27 @@ export const MENU = [
   //             {
   //               title: "Form Validation",
   //               type: "link",
-  //               url: `${process.env.PUBLIC_URL}/forms/form-validation`,
+  //               url: `${window.location.origin}/forms/form-validation`,
   //             },
   //             {
   //               title: "Basic Input",
   //               type: "link",
-  //               url: `${process.env.PUBLIC_URL}/forms/baseInput`,
+  //               url: `${window.location.origin}/forms/baseInput`,
   //             },
   //             {
   //               title: "Checkbox & Radio",
   //               type: "link",
-  //               url: `${process.env.PUBLIC_URL}/forms/radio-checkbox`,
+  //               url: `${window.location.origin}/forms/radio-checkbox`,
   //             },
   //             {
   //               title: "Input Groups",
   //               type: "link",
-  //               url: `${process.env.PUBLIC_URL}/forms/inputGroup`,
+  //               url: `${window.location.origin}/forms/inputGroup`,
   //             },
   //             {
   //               title: "Mega Option",
   //               type: "link",
-  //               url: `${process.env.PUBLIC_URL}/forms/megaOptions`,
+  //               url: `${window.location.origin}/forms/megaOptions`,
   //             },
   //           ],
   //         },
@@ -347,43 +347,43 @@ export const MENU = [
   //               title: "Datepicker",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/form-widget/datepicker`,
+  //               url: `${window.location.origin}/form-widget/datepicker`,
   //             },
   //             {
   //               title: "Typeahead",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/form-widget/typeahead`,
+  //               url: `${window.location.origin}/form-widget/typeahead`,
   //             },
   //             {
   //               title: "Rangepicker",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/form-widget/rangepicker`,
+  //               url: `${window.location.origin}/form-widget/rangepicker`,
   //             },
   //             {
   //               title: "Touchspin",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/form-widget/touchspin`,
+  //               url: `${window.location.origin}/form-widget/touchspin`,
   //             },
   //             {
   //               title: "Select2",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/form-widget/select`,
+  //               url: `${window.location.origin}/form-widget/select`,
   //             },
   //             {
   //               title: "Switch",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/form-widget/switch`,
+  //               url: `${window.location.origin}/form-widget/switch`,
   //             },
   //             {
   //               title: "Clipboard",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/form-widget/clipboard`,
+  //               url: `${window.location.origin}/form-widget/clipboard`,
   //             },
   //           ],
   //         },
@@ -391,12 +391,12 @@ export const MENU = [
   //           title: "Form Layout",
   //           menu: [
   //             {
-  //               url: `${process.env.PUBLIC_URL}/form-layout/formDefault`,
+  //               url: `${window.location.origin}/form-layout/formDefault`,
   //               type: "link",
   //               title: "Form Default",
   //             },
   //             {
-  //               url: `${process.env.PUBLIC_URL}/form-layout/formWizard`,
+  //               url: `${window.location.origin}/form-layout/formWizard`,
   //               type: "link",
   //               title: "Form Wizard",
   //             },
@@ -410,13 +410,13 @@ export const MENU = [
   //       menu: [
   //         {
   //           title: "React Strap Table",
-  //           url: `${process.env.PUBLIC_URL}/table/reactstraptable`,
+  //           url: `${window.location.origin}/table/reactstraptable`,
   //           type: "link",
   //         },
   //         {
   //           title: "Data Tables",
   //           type: "link",
-  //           url: `${process.env.PUBLIC_URL}/table/datatable`,
+  //           url: `${window.location.origin}/table/datatable`,
   //         },
   //       ],
   //     },
@@ -430,67 +430,67 @@ export const MENU = [
   //       icon: <Box />,
   //       menu: [
   //         {
-  //           url: `${process.env.PUBLIC_URL}/ui-kits/typography`,
+  //           url: `${window.location.origin}/ui-kits/typography`,
   //           title: "Typography",
   //           type: "link",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/ui-kits/avatar`,
+  //           url: `${window.location.origin}/ui-kits/avatar`,
   //           title: "Avatars",
   //           type: "link",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/ui-kits/helperclass`,
+  //           url: `${window.location.origin}/ui-kits/helperclass`,
   //           title: "Helper-Classes",
   //           type: "link",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/ui-kits/grid`,
+  //           url: `${window.location.origin}/ui-kits/grid`,
   //           title: "Grid",
   //           type: "link",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/ui-kits/tagsandpills`,
+  //           url: `${window.location.origin}/ui-kits/tagsandpills`,
   //           title: "Tag & Pills",
   //           type: "link",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/ui-kits/progress-bar`,
+  //           url: `${window.location.origin}/ui-kits/progress-bar`,
   //           title: "Progress",
   //           type: "link",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/ui-kits/modal`,
+  //           url: `${window.location.origin}/ui-kits/modal`,
   //           title: "Modal",
   //           type: "link",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/ui-kits/alert`,
+  //           url: `${window.location.origin}/ui-kits/alert`,
   //           title: "Alert",
   //           type: "link",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/ui-kits/popover`,
+  //           url: `${window.location.origin}/ui-kits/popover`,
   //           title: "Popover",
   //           type: "link",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/ui-kits/tooltips`,
+  //           url: `${window.location.origin}/ui-kits/tooltips`,
   //           title: "Tooltip",
   //           type: "link",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/ui-kits/spinner`,
+  //           url: `${window.location.origin}/ui-kits/spinner`,
   //           title: "Spinners",
   //           type: "link",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/ui-kits/dropdown`,
+  //           url: `${window.location.origin}/ui-kits/dropdown`,
   //           title: "Dropdown",
   //           type: "link",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/ui-kits/accordion`,
+  //           url: `${window.location.origin}/ui-kits/accordion`,
   //           title: "Accordion",
   //           type: "link",
   //         },
@@ -501,22 +501,22 @@ export const MENU = [
   //             {
   //               title: "Bootstrap Tabs",
   //               type: "link",
-  //               url: `${process.env.PUBLIC_URL}/ui-kits/tab-bootstrap`,
+  //               url: `${window.location.origin}/ui-kits/tab-bootstrap`,
   //             },
   //             {
   //               title: "Line Tabs",
   //               type: "link",
-  //               url: `${process.env.PUBLIC_URL}/ui-kits/tab-line`,
+  //               url: `${window.location.origin}/ui-kits/tab-line`,
   //             },
   //           ],
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/ui-kits/shadow`,
+  //           url: `${window.location.origin}/ui-kits/shadow`,
   //           title: "Shadow",
   //           type: "link",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/ui-kits/list`,
+  //           url: `${window.location.origin}/ui-kits/list`,
   //           title: "List",
   //           type: "link",
   //         },
@@ -528,87 +528,87 @@ export const MENU = [
   //       icon: <FolderPlus />,
   //       menu: [
   //         {
-  //           url: `${process.env.PUBLIC_URL}/bonus-ui/scrollable`,
+  //           url: `${window.location.origin}/bonus-ui/scrollable`,
   //           type: "link",
   //           title: "Scrollable",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/bonus-ui/treeview`,
+  //           url: `${window.location.origin}/bonus-ui/treeview`,
   //           type: "link",
   //           title: "Tree",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/bonus-ui/rating`,
+  //           url: `${window.location.origin}/bonus-ui/rating`,
   //           type: "link",
   //           title: "Rating",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/bonus-ui/dropzone`,
+  //           url: `${window.location.origin}/bonus-ui/dropzone`,
   //           type: "link",
   //           title: "Dropzone",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/bonus-ui/tourComponent`,
+  //           url: `${window.location.origin}/bonus-ui/tourComponent`,
   //           type: "link",
   //           title: "Tour",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/bonus-ui/sweetAlert`,
+  //           url: `${window.location.origin}/bonus-ui/sweetAlert`,
   //           type: "link",
   //           title: "SweetAlert",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/bonus-ui/ribbons`,
+  //           url: `${window.location.origin}/bonus-ui/ribbons`,
   //           type: "link",
   //           title: "Ribbons",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/bonus-ui/pagination`,
+  //           url: `${window.location.origin}/bonus-ui/pagination`,
   //           type: "link",
   //           title: "Pagination",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/bonus-ui/breadcrumb`,
+  //           url: `${window.location.origin}/bonus-ui/breadcrumb`,
   //           type: "link",
   //           title: "Breadcrumb",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/bonus-ui/rangeSlider`,
+  //           url: `${window.location.origin}/bonus-ui/rangeSlider`,
   //           type: "link",
   //           title: "Range Slider",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/bonus-ui/imageCropper`,
+  //           url: `${window.location.origin}/bonus-ui/imageCropper`,
   //           type: "link",
   //           title: "Image Cropper",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/bonus-ui/stickyNotes`,
+  //           url: `${window.location.origin}/bonus-ui/stickyNotes`,
   //           type: "link",
   //           title: "Sticky",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/bonus-ui/dragNDropComp`,
+  //           url: `${window.location.origin}/bonus-ui/dragNDropComp`,
   //           type: "link",
   //           title: "Drag and Drop",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/bonus-ui/image-upload`,
+  //           url: `${window.location.origin}/bonus-ui/image-upload`,
   //           type: "link",
   //           title: "Upload",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/bonus-ui/card/basicCards`,
+  //           url: `${window.location.origin}/bonus-ui/card/basicCards`,
   //           type: "link",
   //           title: "Basic Card",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/bonus-ui/card/draggingCards`,
+  //           url: `${window.location.origin}/bonus-ui/card/draggingCards`,
   //           type: "link",
   //           title: "Draggable Card",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/bonus-ui/timelines/timeline1`,
+  //           url: `${window.location.origin}/bonus-ui/timelines/timeline1`,
   //           type: "link",
   //           title: "Timeline",
   //         },
@@ -620,32 +620,32 @@ export const MENU = [
   //       type: "sub",
   //       menu: [
   //         {
-  //           url: `${process.env.PUBLIC_URL}/icons/flagIcons`,
+  //           url: `${window.location.origin}/icons/flagIcons`,
   //           type: "link",
   //           title: "Flag Icon",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/icons/fontAwsomeIcon`,
+  //           url: `${window.location.origin}/icons/fontAwsomeIcon`,
   //           type: "link",
   //           title: "Font awesome Icon",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/icons/icoIcons`,
+  //           url: `${window.location.origin}/icons/icoIcons`,
   //           type: "link",
   //           title: "Ico Icon",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/icons/themifyIcons`,
+  //           url: `${window.location.origin}/icons/themifyIcons`,
   //           type: "link",
   //           title: "Themify Icon",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/icons/featherIcons`,
+  //           url: `${window.location.origin}/icons/featherIcons`,
   //           type: "link",
   //           title: "Feather Icon",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/icons/weatherIcons`,
+  //           url: `${window.location.origin}/icons/weatherIcons`,
   //           type: "link",
   //           title: "Whether Icon",
   //         },
@@ -657,12 +657,12 @@ export const MENU = [
   //       type: "sub",
   //       menu: [
   //         {
-  //           url: `${process.env.PUBLIC_URL}/buttons/default-btn`,
+  //           url: `${window.location.origin}/buttons/default-btn`,
   //           type: "link",
   //           title: "Default Style",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/buttons/groupBtn`,
+  //           url: `${window.location.origin}/buttons/groupBtn`,
   //           type: "link",
   //           title: "Button Group",
   //         },
@@ -674,22 +674,22 @@ export const MENU = [
   //       type: "sub",
   //       menu: [
   //         {
-  //           url: `${process.env.PUBLIC_URL}/charts/apexCharts`,
+  //           url: `${window.location.origin}/charts/apexCharts`,
   //           type: "link",
   //           title: "Apex Chart",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/charts/googleChart`,
+  //           url: `${window.location.origin}/charts/googleChart`,
   //           type: "link",
   //           title: "Google Chart",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/charts/chartJs`,
+  //           url: `${window.location.origin}/charts/chartJs`,
   //           type: "link",
   //           title: "Chartjs",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/charts/chartistComponent`,
+  //           url: `${window.location.origin}/charts/chartistComponent`,
   //           type: "link",
   //           title: "Chartist",
   //         },
@@ -701,7 +701,7 @@ export const MENU = [
   //   className: "menu-box",
   //   menu: [
   //     {
-  //       url: `${process.env.PUBLIC_URL}/samplepage`,
+  //       url: `${window.location.origin}/samplepage`,
   //       icon: <Layers />,
   //       title: "Sample Page",
   //       type: "sub",
@@ -718,27 +718,27 @@ export const MENU = [
   //             {
   //               title: "Error Page 1",
   //               type: "link",
-  //               url: `${process.env.PUBLIC_URL}/error/error-page1`,
+  //               url: `${window.location.origin}/error/error-page1`,
   //             },
   //             {
   //               title: "Error Page 2",
   //               type: "link",
-  //               url: `${process.env.PUBLIC_URL}/error/error-page2`,
+  //               url: `${window.location.origin}/error/error-page2`,
   //             },
   //             {
   //               title: "Error Page 3",
   //               type: "link",
-  //               url: `${process.env.PUBLIC_URL}/error/error-page3`,
+  //               url: `${window.location.origin}/error/error-page3`,
   //             },
   //             {
   //               title: "Error Page 4",
   //               type: "link",
-  //               url: `${process.env.PUBLIC_URL}/error/error-page4`,
+  //               url: `${window.location.origin}/error/error-page4`,
   //             },
   //             {
   //               title: "Error Page 5",
   //               type: "link",
-  //               url: `${process.env.PUBLIC_URL}/error/error-page5`,
+  //               url: `${window.location.origin}/error/error-page5`,
   //             },
   //           ],
   //         },
@@ -750,17 +750,17 @@ export const MENU = [
   //             {
   //               title: "Coming Sample",
   //               type: "link",
-  //               url: `${process.env.PUBLIC_URL}/coming/comingsimple`,
+  //               url: `${window.location.origin}/coming/comingsimple`,
   //             },
   //             {
   //               title: "Coming with Bg-video",
   //               type: "link",
-  //               url: `${process.env.PUBLIC_URL}/coming/comingbgvideo`,
+  //               url: `${window.location.origin}/coming/comingbgvideo`,
   //             },
   //             {
   //               title: "Coming with Bg-Image",
   //               type: "link",
-  //               url: `${process.env.PUBLIC_URL}/coming/comingbgimage`,
+  //               url: `${window.location.origin}/coming/comingbgimage`,
   //             },
   //           ],
   //         },
@@ -773,79 +773,79 @@ export const MENU = [
   //               title: "Login Simple",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/authentication/login-simple`,
+  //               url: `${window.location.origin}/authentication/login-simple`,
   //             },
   //             {
   //               title: "Login With bg image",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/authentication/login-img`,
+  //               url: `${window.location.origin}/authentication/login-img`,
   //             },
   //             {
   //               title: "Login with image two",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/authentication/login-bg-img`,
+  //               url: `${window.location.origin}/authentication/login-bg-img`,
   //             },
   //             {
   //               title: "Login with validation",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/authentication/login-validation`,
+  //               url: `${window.location.origin}/authentication/login-validation`,
   //             },
   //             {
   //               title: "Login with tooltip",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/authentication/login-tooltip`,
+  //               url: `${window.location.origin}/authentication/login-tooltip`,
   //             },
   //             {
   //               title: "Login with sweetaleart",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/authentication/login-sweetalert`,
+  //               url: `${window.location.origin}/authentication/login-sweetalert`,
   //             },
   //             {
   //               type: "link",
   //               title: "Register Simple",
 
-  //               url: `${process.env.PUBLIC_URL}/authentication/register-simpleimg`,
+  //               url: `${window.location.origin}/authentication/register-simpleimg`,
   //             },
   //             {
   //               title: "Register with Bg image",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/authentication/register-bg-img`,
+  //               url: `${window.location.origin}/authentication/register-bg-img`,
   //             },
   //             {
   //               title: "Register with Bg Video",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/authentication/register-video`,
+  //               url: `${window.location.origin}/authentication/register-video`,
   //             },
   //             {
   //               title: "Unlock User",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/authentication/unlock-user`,
+  //               url: `${window.location.origin}/authentication/unlock-user`,
   //             },
   //             {
   //               title: "Forgot Password",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/authentication/forget-pwd`,
+  //               url: `${window.location.origin}/authentication/forget-pwd`,
   //             },
   //             {
   //               title: "Create Passward",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/authentication/create-pwd`,
+  //               url: `${window.location.origin}/authentication/create-pwd`,
   //             },
   //             {
   //               title: "Maintenance",
   //               type: "link",
 
-  //               url: `${process.env.PUBLIC_URL}/authentication/maintenance`,
+  //               url: `${window.location.origin}/authentication/maintenance`,
   //             },
   //           ],
   //         },
@@ -863,27 +863,27 @@ export const MENU = [
   //       type: "sub",
   //       menu: [
   //         {
-  //           url: `${process.env.PUBLIC_URL}/gallery/imageGallery`,
+  //           url: `${window.location.origin}/gallery/imageGallery`,
   //           title: "Gallery Grid",
   //           type: "link",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/gallery/imageWithDesc`,
+  //           url: `${window.location.origin}/gallery/imageWithDesc`,
   //           type: "link",
   //           title: "Gallery Grid  Desc",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/gallery/mesonryGallery`,
+  //           url: `${window.location.origin}/gallery/mesonryGallery`,
   //           type: "link",
   //           title: "Masonry Gallery",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/gallery/mesonryDesc`,
+  //           url: `${window.location.origin}/gallery/mesonryDesc`,
   //           type: "link",
   //           title: "Masonry With Desc",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/gallery/imageHover`,
+  //           url: `${window.location.origin}/gallery/imageHover`,
   //           type: "link",
   //           title: "Hover Effect",
   //         },
@@ -895,17 +895,17 @@ export const MENU = [
   //       type: "sub",
   //       menu: [
   //         {
-  //           url: `${process.env.PUBLIC_URL}/blog/blogDetail`,
+  //           url: `${window.location.origin}/blog/blogDetail`,
   //           type: "link",
   //           title: "Blog Details",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/blog/blogSingle`,
+  //           url: `${window.location.origin}/blog/blogSingle`,
   //           type: "link",
   //           title: "Blog Single",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/blog/blogPost`,
+  //           url: `${window.location.origin}/blog/blogPost`,
   //           type: "link",
   //           title: "Add Post",
   //         },
@@ -917,22 +917,22 @@ export const MENU = [
   //       type: "sub",
   //       menu: [
   //         {
-  //           url: `${process.env.PUBLIC_URL}/jobSearch/cardView`,
+  //           url: `${window.location.origin}/jobSearch/cardView`,
   //           type: "link",
   //           title: "Cards View",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/jobSearch/job-list`,
+  //           url: `${window.location.origin}/jobSearch/job-list`,
   //           type: "link",
   //           title: "List View",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/jobSearch/job-detail`,
+  //           url: `${window.location.origin}/jobSearch/job-detail`,
   //           type: "link",
   //           title: "Job Details",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/jobSearch/job-apply`,
+  //           url: `${window.location.origin}/jobSearch/job-apply`,
   //           type: "link",
   //           title: "Apply",
   //         },
@@ -944,12 +944,12 @@ export const MENU = [
   //       type: "sub",
   //       menu: [
   //         {
-  //           url: `${process.env.PUBLIC_URL}/learning/learning-list`,
+  //           url: `${window.location.origin}/learning/learning-list`,
   //           type: "link",
   //           title: "Learning List",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/learning/learning-detail`,
+  //           url: `${window.location.origin}/learning/learning-detail`,
   //           type: "link",
   //           title: "Detail Course",
   //         },
@@ -961,12 +961,12 @@ export const MENU = [
   //       type: "sub",
   //       menu: [
   //         {
-  //           url: `${process.env.PUBLIC_URL}/map/googleMap`,
+  //           url: `${window.location.origin}/map/googleMap`,
   //           type: "link",
   //           title: "Google Maps",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/map/pigeonMap`,
+  //           url: `${window.location.origin}/map/pigeonMap`,
   //           type: "link",
   //           title: "Pigeon Maps",
   //         },
@@ -978,24 +978,24 @@ export const MENU = [
   //       type: "sub",
   //       menu: [
   //         {
-  //           url: `${process.env.PUBLIC_URL}/editor/ckEditor`,
+  //           url: `${window.location.origin}/editor/ckEditor`,
   //           type: "link",
   //           title: "CK  Editor",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/editor/mdeEditor`,
+  //           url: `${window.location.origin}/editor/mdeEditor`,
   //           type: "link",
   //           title: "MDE Editor",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/editor/acecodeeditor`,
+  //           url: `${window.location.origin}/editor/acecodeeditor`,
   //           type: "link",
   //           title: "ACE code editor",
   //         },
   //       ],
   //     },
   //     {
-  //       url: `${process.env.PUBLIC_URL}/faq`,
+  //       url: `${window.location.origin}/faq`,
   //       icon: <HelpCircle />,
   //       title: "FAQ",
   //       type: "link",
@@ -1006,24 +1006,24 @@ export const MENU = [
   //       type: "sub",
   //       menu: [
   //         {
-  //           url: `${process.env.PUBLIC_URL}/knowledgebase/knowledgebase`,
+  //           url: `${window.location.origin}/knowledgebase/knowledgebase`,
   //           type: "link",
   //           title: "knowledgebase",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/knowledgebase/KnowledgeCategory`,
+  //           url: `${window.location.origin}/knowledgebase/KnowledgeCategory`,
   //           type: "link",
   //           title: "KnowledgeCategory",
   //         },
   //         {
-  //           url: `${process.env.PUBLIC_URL}/knowledgebase/KnowledgeDetailContain`,
+  //           url: `${window.location.origin}/knowledgebase/KnowledgeDetailContain`,
   //           type: "link",
   //           title: "KnowledgeDetail",
   //         },
   //       ],
   //     },
   //     {
-  //       url: `${process.env.PUBLIC_URL}/support-ticket`,
+  //       url: `${window.location.origin}/support-ticket`,
   //       icon: <Users />,
   //       type: "link",
   //       title: "Support Ticket",
@@ -1039,25 +1039,25 @@ export const SEARCHMENU = [
         title: "Dashboards",
         icon: <Home />,
         type: "link",
-        url: `${process.env.PUBLIC_URL}/dashboard/default`,
+        url: `${window.location.origin}/dashboard/default`,
       },
       {
         title: "Transactions",
         icon: <CreditCard />,
         type: "link",
-        url: `${process.env.PUBLIC_URL}/transactions`,
+        url: `${window.location.origin}/transactions`,
       },
       {
         title: "Payments",
         icon: <DollarSign />,
         type: "link",
-        url: `${process.env.PUBLIC_URL}/ecommerce/payment-details`,
+        url: `${window.location.origin}/ecommerce/payment-details`,
       },
       {
         title: "Referrals",
         icon: <User />,
         type: "link",
-        url: `${process.env.PUBLIC_URL}/users/userCards`,
+        url: `${window.location.origin}/users/userCards`,
       },
       //     {
       //       title: "Dashboards",
@@ -1066,13 +1066,13 @@ export const SEARCHMENU = [
       //       menu: [
       //         {
       //           title: "Default",
-      //           url: `${process.env.PUBLIC_URL}/dashboard/default`,
+      //           url: `${window.location.origin}/dashboard/default`,
       //           class: "lan-4",
       //           type: "link",
       //         },
       //         {
       //           title: "Ecommerce",
-      //           url: `${process.env.PUBLIC_URL}/dashboard/ecommerce`,
+      //           url: `${window.location.origin}/dashboard/ecommerce`,
       //           type: "link",
       //           class: "lan-5",
       //         },
@@ -1084,13 +1084,13 @@ export const SEARCHMENU = [
       //       class: "lan-6",
       //       menu: [
       //         {
-      //           url: `${process.env.PUBLIC_URL}/widgets/general`,
+      //           url: `${window.location.origin}/widgets/general`,
       //           type: "link",
       //           title: "General",
       //           bookmark: true,
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/widgets/chart`,
+      //           url: `${window.location.origin}/widgets/chart`,
       //           type: "link",
       //           title: "Chart",
       //         },
@@ -1102,58 +1102,58 @@ export const SEARCHMENU = [
       //       type: "sub",
       //       menu: [
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ecommerce/product`,
+      //           url: `${window.location.origin}/ecommerce/product`,
       //           title: "Product",
       //           type: "link",
       //           bookmark: true,
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ecommerce/product-page/1`,
+      //           url: `${window.location.origin}/ecommerce/product-page/1`,
       //           title: "Product Page",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ecommerce/product-list`,
+      //           url: `${window.location.origin}/ecommerce/product-list`,
       //           title: "Product List",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ecommerce/Add-product`,
+      //           url: `${window.location.origin}/ecommerce/Add-product`,
       //           title: "Add Product",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ecommerce/payment-details`,
+      //           url: `${window.location.origin}/ecommerce/payment-details`,
       //           title: "Payment Detail",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ecommerce/orderhistory`,
+      //           url: `${window.location.origin}/ecommerce/orderhistory`,
       //           title: "Order History",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ecommerce/pricing`,
+      //           url: `${window.location.origin}/ecommerce/pricing`,
       //           title: "Pricing",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ecommerce/invoice`,
+      //           url: `${window.location.origin}/ecommerce/invoice`,
       //           title: "Invoice",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ecommerce/cart`,
+      //           url: `${window.location.origin}/ecommerce/cart`,
       //           title: "Cart",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ecommerce/checkout`,
+      //           url: `${window.location.origin}/ecommerce/checkout`,
       //           title: "Checkout",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ecommerce/whishlist`,
+      //           url: `${window.location.origin}/ecommerce/whishlist`,
       //           title: "Wishlist",
       //           type: "link",
       //         },
@@ -1169,12 +1169,12 @@ export const SEARCHMENU = [
       //       icon: <MessageCircle />,
       //       menu: [
       //         {
-      //           url: `${process.env.PUBLIC_URL}/chat-app`,
+      //           url: `${window.location.origin}/chat-app`,
       //           type: "link",
       //           title: "Chat App",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/video-chat-app`,
+      //           url: `${window.location.origin}/video-chat-app`,
       //           type: "link",
       //           title: "Video App",
       //         },
@@ -1185,56 +1185,56 @@ export const SEARCHMENU = [
       //       icon: <Mail />,
       //       menu: [
       //         {
-      //           url: `${process.env.PUBLIC_URL}/email-app`,
+      //           url: `${window.location.origin}/email-app`,
       //           type: "link",
       //           title: "Mail Inbox",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/email/readmail`,
+      //           url: `${window.location.origin}/email/readmail`,
       //           type: "link",
       //           title: "Read Mail",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/email-app/compose`,
+      //           url: `${window.location.origin}/email-app/compose`,
       //           type: "link",
       //           title: "Compose",
       //         },
       //       ],
       //     },
       //     {
-      //       url: `${process.env.PUBLIC_URL}/file-manager`,
+      //       url: `${window.location.origin}/file-manager`,
       //       icon: <GitPullRequest />,
       //       title: "File Manager",
       //       type: "link",
       //       bookmark: true,
       //     },
       //     {
-      //       url: `${process.env.PUBLIC_URL}/kanban-board`,
+      //       url: `${window.location.origin}/kanban-board`,
       //       icon: <Monitor />,
       //       type: "link",
       //       title: "Kanban Board",
       //     },
       //     {
-      //       url: `${process.env.PUBLIC_URL}/bookmark`,
+      //       url: `${window.location.origin}/bookmark`,
       //       icon: <Heart />,
       //       bookmark: true,
       //       type: "link",
       //       title: "Bookmark",
       //     },
       //     {
-      //       url: `${process.env.PUBLIC_URL}/contact`,
+      //       url: `${window.location.origin}/contact`,
       //       icon: <List />,
       //       type: "link",
       //       title: "Contacts",
       //     },
       //     {
-      //       url: `${process.env.PUBLIC_URL}/task`,
+      //       url: `${window.location.origin}/task`,
       //       icon: <CheckSquare />,
       //       type: "link",
       //       title: "Task",
       //     },
       //     {
-      //       url: `${process.env.PUBLIC_URL}/social-app`,
+      //       url: `${window.location.origin}/social-app`,
       //       icon: <Zap />,
       //       title: "Social App",
       //       type: "link",
@@ -1242,7 +1242,7 @@ export const SEARCHMENU = [
       //     },
 
       //     {
-      //       url: `${process.env.PUBLIC_URL}/todo-app/todo`,
+      //       url: `${window.location.origin}/todo-app/todo`,
       //       icon: <Clock />,
       //       type: "link",
       //       title: "To-Do",
@@ -1262,27 +1262,27 @@ export const SEARCHMENU = [
       //             {
       //               title: "Form Validation",
       //               type: "link",
-      //               url: `${process.env.PUBLIC_URL}/forms/form-validation`,
+      //               url: `${window.location.origin}/forms/form-validation`,
       //             },
       //             {
       //               title: "Basic Input",
       //               type: "link",
-      //               url: `${process.env.PUBLIC_URL}/forms/baseInput`,
+      //               url: `${window.location.origin}/forms/baseInput`,
       //             },
       //             {
       //               title: "Checkbox & Radio",
       //               type: "link",
-      //               url: `${process.env.PUBLIC_URL}/forms/radio-checkbox`,
+      //               url: `${window.location.origin}/forms/radio-checkbox`,
       //             },
       //             {
       //               title: "Input Groups",
       //               type: "link",
-      //               url: `${process.env.PUBLIC_URL}/forms/inputGroup`,
+      //               url: `${window.location.origin}/forms/inputGroup`,
       //             },
       //             {
       //               title: "Mega Option",
       //               type: "link",
-      //               url: `${process.env.PUBLIC_URL}/forms/megaOptions`,
+      //               url: `${window.location.origin}/forms/megaOptions`,
       //             },
       //           ],
       //         },
@@ -1293,43 +1293,43 @@ export const SEARCHMENU = [
       //               title: "Datepicker",
       //               type: "link",
       //               bookmark: true,
-      //               url: `${process.env.PUBLIC_URL}/form-widget/datepicker`,
+      //               url: `${window.location.origin}/form-widget/datepicker`,
       //             },
       //             {
       //               title: "Typeahead",
       //               type: "link",
 
-      //               url: `${process.env.PUBLIC_URL}/form-widget/typeahead`,
+      //               url: `${window.location.origin}/form-widget/typeahead`,
       //             },
       //             {
       //               title: "Rangepicker",
       //               type: "link",
 
-      //               url: `${process.env.PUBLIC_URL}/form-widget/rangepicker`,
+      //               url: `${window.location.origin}/form-widget/rangepicker`,
       //             },
       //             {
       //               title: "Touchspin",
       //               type: "link",
 
-      //               url: `${process.env.PUBLIC_URL}/form-widget/touchspin`,
+      //               url: `${window.location.origin}/form-widget/touchspin`,
       //             },
       //             {
       //               title: "Select2",
       //               type: "link",
 
-      //               url: `${process.env.PUBLIC_URL}/form-widget/select`,
+      //               url: `${window.location.origin}/form-widget/select`,
       //             },
       //             {
       //               title: "Switch",
       //               type: "link",
 
-      //               url: `${process.env.PUBLIC_URL}/form-widget/switch`,
+      //               url: `${window.location.origin}/form-widget/switch`,
       //             },
       //             {
       //               title: "Clipboard",
       //               type: "link",
 
-      //               url: `${process.env.PUBLIC_URL}/form-widget/clipboard`,
+      //               url: `${window.location.origin}/form-widget/clipboard`,
       //             },
       //           ],
       //         },
@@ -1337,12 +1337,12 @@ export const SEARCHMENU = [
       //           title: "Form Layout",
       //           menu: [
       //             {
-      //               url: `${process.env.PUBLIC_URL}/form-layout/formDefault`,
+      //               url: `${window.location.origin}/form-layout/formDefault`,
       //               type: "link",
       //               title: "Form Default",
       //             },
       //             {
-      //               url: `${process.env.PUBLIC_URL}/form-layout/formWizard`,
+      //               url: `${window.location.origin}/form-layout/formWizard`,
       //               type: "link",
       //               title: "Form Wizard",
       //             },
@@ -1356,13 +1356,13 @@ export const SEARCHMENU = [
       //       menu: [
       //         {
       //           title: "React Strap Table",
-      //           url: `${process.env.PUBLIC_URL}/table/reactstraptable`,
+      //           url: `${window.location.origin}/table/reactstraptable`,
       //           type: "link",
       //         },
       //         {
       //           title: "Data Tables",
       //           type: "link",
-      //           url: `${process.env.PUBLIC_URL}/table/datatable`,
+      //           url: `${window.location.origin}/table/datatable`,
       //         },
       //       ],
       //     },
@@ -1376,67 +1376,67 @@ export const SEARCHMENU = [
       //       icon: <Box />,
       //       menu: [
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ui-kits/typography`,
+      //           url: `${window.location.origin}/ui-kits/typography`,
       //           title: "Typography",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ui-kits/avatar`,
+      //           url: `${window.location.origin}/ui-kits/avatar`,
       //           title: "Avatars",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ui-kits/helperclass`,
+      //           url: `${window.location.origin}/ui-kits/helperclass`,
       //           title: "Helper-Classes",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ui-kits/grid`,
+      //           url: `${window.location.origin}/ui-kits/grid`,
       //           title: "Grid",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ui-kits/tagsandpills`,
+      //           url: `${window.location.origin}/ui-kits/tagsandpills`,
       //           title: "Tag & Pills",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ui-kits/progress-bar`,
+      //           url: `${window.location.origin}/ui-kits/progress-bar`,
       //           title: "Progress",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ui-kits/modal`,
+      //           url: `${window.location.origin}/ui-kits/modal`,
       //           title: "Modal",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ui-kits/alert`,
+      //           url: `${window.location.origin}/ui-kits/alert`,
       //           title: "Alert",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ui-kits/popover`,
+      //           url: `${window.location.origin}/ui-kits/popover`,
       //           title: "Popover",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ui-kits/tooltips`,
+      //           url: `${window.location.origin}/ui-kits/tooltips`,
       //           title: "Tooltip",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ui-kits/spinner`,
+      //           url: `${window.location.origin}/ui-kits/spinner`,
       //           title: "Spinners",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ui-kits/dropdown`,
+      //           url: `${window.location.origin}/ui-kits/dropdown`,
       //           title: "Dropdown",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ui-kits/accordion`,
+      //           url: `${window.location.origin}/ui-kits/accordion`,
       //           title: "Accordion",
       //           type: "link",
       //         },
@@ -1447,22 +1447,22 @@ export const SEARCHMENU = [
       //             {
       //               title: "Bootstrap Tabs",
       //               type: "link",
-      //               url: `${process.env.PUBLIC_URL}/ui-kits/tab-bootstrap`,
+      //               url: `${window.location.origin}/ui-kits/tab-bootstrap`,
       //             },
       //             {
       //               title: "Line Tabs",
       //               type: "link",
-      //               url: `${process.env.PUBLIC_URL}/ui-kits/tab-line`,
+      //               url: `${window.location.origin}/ui-kits/tab-line`,
       //             },
       //           ],
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ui-kits/shadow`,
+      //           url: `${window.location.origin}/ui-kits/shadow`,
       //           title: "Shadow",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/ui-kits/list`,
+      //           url: `${window.location.origin}/ui-kits/list`,
       //           title: "List",
       //           type: "link",
       //         },
@@ -1474,87 +1474,87 @@ export const SEARCHMENU = [
       //       icon: <FolderPlus />,
       //       menu: [
       //         {
-      //           url: `${process.env.PUBLIC_URL}/bonus-ui/scrollable`,
+      //           url: `${window.location.origin}/bonus-ui/scrollable`,
       //           type: "link",
       //           title: "Scrollable",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/bonus-ui/treeview`,
+      //           url: `${window.location.origin}/bonus-ui/treeview`,
       //           type: "link",
       //           title: "Tree",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/bonus-ui/rating`,
+      //           url: `${window.location.origin}/bonus-ui/rating`,
       //           type: "link",
       //           title: "Rating",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/bonus-ui/dropzone`,
+      //           url: `${window.location.origin}/bonus-ui/dropzone`,
       //           type: "link",
       //           title: "Dropzone",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/bonus-ui/tourComponent`,
+      //           url: `${window.location.origin}/bonus-ui/tourComponent`,
       //           type: "link",
       //           title: "Tour",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/bonus-ui/sweetAlert`,
+      //           url: `${window.location.origin}/bonus-ui/sweetAlert`,
       //           type: "link",
       //           title: "SweetAlert",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/bonus-ui/ribbons`,
+      //           url: `${window.location.origin}/bonus-ui/ribbons`,
       //           type: "link",
       //           title: "Ribbons",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/bonus-ui/pagination`,
+      //           url: `${window.location.origin}/bonus-ui/pagination`,
       //           type: "link",
       //           title: "Pagination",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/bonus-ui/breadcrumb`,
+      //           url: `${window.location.origin}/bonus-ui/breadcrumb`,
       //           type: "link",
       //           title: "Breadcrumb",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/bonus-ui/rangeSlider`,
+      //           url: `${window.location.origin}/bonus-ui/rangeSlider`,
       //           type: "link",
       //           title: "Range Slider",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/bonus-ui/imageCropper`,
+      //           url: `${window.location.origin}/bonus-ui/imageCropper`,
       //           type: "link",
       //           title: "Image Cropper",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/bonus-ui/stickyNotes`,
+      //           url: `${window.location.origin}/bonus-ui/stickyNotes`,
       //           type: "link",
       //           title: "Sticky",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/bonus-ui/dragNDropComp`,
+      //           url: `${window.location.origin}/bonus-ui/dragNDropComp`,
       //           type: "link",
       //           title: "Drag and Drop",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/bonus-ui/image-upload`,
+      //           url: `${window.location.origin}/bonus-ui/image-upload`,
       //           type: "link",
       //           title: "Upload",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/bonus-ui/card/basicCards`,
+      //           url: `${window.location.origin}/bonus-ui/card/basicCards`,
       //           type: "link",
       //           title: "Basic Card",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/bonus-ui/card/draggingCards`,
+      //           url: `${window.location.origin}/bonus-ui/card/draggingCards`,
       //           type: "link",
       //           title: "Draggable Card",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/bonus-ui/timelines/timeline1`,
+      //           url: `${window.location.origin}/bonus-ui/timelines/timeline1`,
       //           type: "link",
       //           title: "Timeline",
       //         },
@@ -1566,32 +1566,32 @@ export const SEARCHMENU = [
       //       type: "sub",
       //       menu: [
       //         {
-      //           url: `${process.env.PUBLIC_URL}/icons/flagIcons`,
+      //           url: `${window.location.origin}/icons/flagIcons`,
       //           type: "link",
       //           title: "Flag Icon",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/icons/fontAwsomeIcon`,
+      //           url: `${window.location.origin}/icons/fontAwsomeIcon`,
       //           type: "link",
       //           title: "Font awesome Icon",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/icons/icoIcons`,
+      //           url: `${window.location.origin}/icons/icoIcons`,
       //           type: "link",
       //           title: "Ico Icon",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/icons/themifyIcons`,
+      //           url: `${window.location.origin}/icons/themifyIcons`,
       //           type: "link",
       //           title: "Themify Icon",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/icons/featherIcons`,
+      //           url: `${window.location.origin}/icons/featherIcons`,
       //           type: "link",
       //           title: "Feather Icon",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/icons/weatherIcons`,
+      //           url: `${window.location.origin}/icons/weatherIcons`,
       //           type: "link",
       //           title: "Whether Icon",
       //         },
@@ -1603,12 +1603,12 @@ export const SEARCHMENU = [
       //       type: "sub",
       //       menu: [
       //         {
-      //           url: `${process.env.PUBLIC_URL}/buttons/default-btn`,
+      //           url: `${window.location.origin}/buttons/default-btn`,
       //           type: "link",
       //           title: "Default Style",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/buttons/groupBtn`,
+      //           url: `${window.location.origin}/buttons/groupBtn`,
       //           type: "link",
       //           title: "Button Group",
       //         },
@@ -1620,24 +1620,24 @@ export const SEARCHMENU = [
       //       type: "sub",
       //       menu: [
       //         {
-      //           url: `${process.env.PUBLIC_URL}/charts/apexCharts`,
+      //           url: `${window.location.origin}/charts/apexCharts`,
       //           type: "link",
       //           title: "Apex Chart",
       //           bookmark: true,
 
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/charts/googleChart`,
+      //           url: `${window.location.origin}/charts/googleChart`,
       //           type: "link",
       //           title: "Google Chart",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/charts/chartJs`,
+      //           url: `${window.location.origin}/charts/chartJs`,
       //           type: "link",
       //           title: "Chartjs",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/charts/chartistComponent`,
+      //           url: `${window.location.origin}/charts/chartistComponent`,
       //           type: "link",
       //           title: "Chartist",
       //         },
@@ -1649,7 +1649,7 @@ export const SEARCHMENU = [
       //   className: "menu-box",
       //   menu: [
       //     {
-      //       url: `${process.env.PUBLIC_URL}/samplepage`,
+      //       url: `${window.location.origin}/samplepage`,
       //       icon: <Layers />,
       //       title: "Sample Page",
       //       type: "sub",
@@ -1666,27 +1666,27 @@ export const SEARCHMENU = [
       //             {
       //               title: "Error Page 1",
       //               type: "link",
-      //               url: `${process.env.PUBLIC_URL}/error/error-page1`,
+      //               url: `${window.location.origin}/error/error-page1`,
       //             },
       //             {
       //               title: "Error Page 2",
       //               type: "link",
-      //               url: `${process.env.PUBLIC_URL}/error/error-page2`,
+      //               url: `${window.location.origin}/error/error-page2`,
       //             },
       //             {
       //               title: "Error Page 3",
       //               type: "link",
-      //               url: `${process.env.PUBLIC_URL}/error/error-page3`,
+      //               url: `${window.location.origin}/error/error-page3`,
       //             },
       //             {
       //               title: "Error Page 4",
       //               type: "link",
-      //               url: `${process.env.PUBLIC_URL}/error/error-page4`,
+      //               url: `${window.location.origin}/error/error-page4`,
       //             },
       //             {
       //               title: "Error Page 5",
       //               type: "link",
-      //               url: `${process.env.PUBLIC_URL}/error/error-page5`,
+      //               url: `${window.location.origin}/error/error-page5`,
       //             },
       //           ],
       //         },
@@ -1698,17 +1698,17 @@ export const SEARCHMENU = [
       //             {
       //               title: "Coming Sample",
       //               type: "link",
-      //               url: `${process.env.PUBLIC_URL}/coming/comingsimple`,
+      //               url: `${window.location.origin}/coming/comingsimple`,
       //             },
       //             {
       //               title: "Coming with Bg-video",
       //               type: "link",
-      //               url: `${process.env.PUBLIC_URL}/coming/comingbgvideo`,
+      //               url: `${window.location.origin}/coming/comingbgvideo`,
       //             },
       //             {
       //               title: "Coming with Bg-Image",
       //               type: "link",
-      //               url: `${process.env.PUBLIC_URL}/coming/comingbgimage`,
+      //               url: `${window.location.origin}/coming/comingbgimage`,
       //             },
       //           ],
       //         },
@@ -1721,79 +1721,79 @@ export const SEARCHMENU = [
       //               title: "Login Simple",
       //               type: "link",
 
-      //               url: `${process.env.PUBLIC_URL}/authentication/login-simple`,
+      //               url: `${window.location.origin}/authentication/login-simple`,
       //             },
       //             {
       //               title: "Login With bg image",
       //               type: "link",
 
-      //               url: `${process.env.PUBLIC_URL}/authentication/login-img`,
+      //               url: `${window.location.origin}/authentication/login-img`,
       //             },
       //             {
       //               title: "Login with image two",
       //               type: "link",
 
-      //               url: `${process.env.PUBLIC_URL}/authentication/login-bg-img`,
+      //               url: `${window.location.origin}/authentication/login-bg-img`,
       //             },
       //             {
       //               title: "Login with validation",
       //               type: "link",
 
-      //               url: `${process.env.PUBLIC_URL}/authentication/login-validation`,
+      //               url: `${window.location.origin}/authentication/login-validation`,
       //             },
       //             {
       //               title: "Login with tooltip",
       //               type: "link",
 
-      //               url: `${process.env.PUBLIC_URL}/authentication/login-tooltip`,
+      //               url: `${window.location.origin}/authentication/login-tooltip`,
       //             },
       //             {
       //               title: "Login with sweetaleart",
       //               type: "link",
 
-      //               url: `${process.env.PUBLIC_URL}/authentication/login-sweetalert`,
+      //               url: `${window.location.origin}/authentication/login-sweetalert`,
       //             },
       //             {
       //               type: "link",
       //               title: "Register Simple",
 
-      //               url: `${process.env.PUBLIC_URL}/authentication/register-simpleimg`,
+      //               url: `${window.location.origin}/authentication/register-simpleimg`,
       //             },
       //             {
       //               title: "Register with Bg image",
       //               type: "link",
 
-      //               url: `${process.env.PUBLIC_URL}/authentication/register-bg-img`,
+      //               url: `${window.location.origin}/authentication/register-bg-img`,
       //             },
       //             {
       //               title: "Register with Bg Video",
       //               type: "link",
 
-      //               url: `${process.env.PUBLIC_URL}/authentication/register-video`,
+      //               url: `${window.location.origin}/authentication/register-video`,
       //             },
       //             {
       //               title: "Unlock User",
       //               type: "link",
 
-      //               url: `${process.env.PUBLIC_URL}/authentication/unlock-user`,
+      //               url: `${window.location.origin}/authentication/unlock-user`,
       //             },
       //             {
       //               title: "Forgot Password",
       //               type: "link",
 
-      //               url: `${process.env.PUBLIC_URL}/authentication/forget-pwd`,
+      //               url: `${window.location.origin}/authentication/forget-pwd`,
       //             },
       //             {
       //               title: "Create Passward",
       //               type: "link",
 
-      //               url: `${process.env.PUBLIC_URL}/authentication/create-pwd`,
+      //               url: `${window.location.origin}/authentication/create-pwd`,
       //             },
       //             {
       //               title: "Maintenance",
       //               type: "link",
 
-      //               url: `${process.env.PUBLIC_URL}/authentication/maintenance`,
+      //               url: `${window.location.origin}/authentication/maintenance`,
       //             },
       //           ],
       //         },
@@ -1811,27 +1811,27 @@ export const SEARCHMENU = [
       //       type: "sub",
       //       menu: [
       //         {
-      //           url: `${process.env.PUBLIC_URL}/gallery/imageGallery`,
+      //           url: `${window.location.origin}/gallery/imageGallery`,
       //           title: "Gallery Grid",
       //           type: "link",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/gallery/imageWithDesc`,
+      //           url: `${window.location.origin}/gallery/imageWithDesc`,
       //           type: "link",
       //           title: "Gallery Grid  Desc",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/gallery/mesonryGallery`,
+      //           url: `${window.location.origin}/gallery/mesonryGallery`,
       //           type: "link",
       //           title: "Masonry Gallery",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/gallery/mesonryDesc`,
+      //           url: `${window.location.origin}/gallery/mesonryDesc`,
       //           type: "link",
       //           title: "Masonry With Desc",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/gallery/imageHover`,
+      //           url: `${window.location.origin}/gallery/imageHover`,
       //           type: "link",
       //           title: "Hover Effect",
       //         },
@@ -1843,17 +1843,17 @@ export const SEARCHMENU = [
       //       type: "sub",
       //       menu: [
       //         {
-      //           url: `${process.env.PUBLIC_URL}/blog/blogDetail`,
+      //           url: `${window.location.origin}/blog/blogDetail`,
       //           type: "link",
       //           title: "Blog Details",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/blog/blogSingle`,
+      //           url: `${window.location.origin}/blog/blogSingle`,
       //           type: "link",
       //           title: "Blog Single",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/blog/blogPost`,
+      //           url: `${window.location.origin}/blog/blogPost`,
       //           type: "link",
       //           title: "Add Post",
       //         },
@@ -1865,22 +1865,22 @@ export const SEARCHMENU = [
       //       type: "sub",
       //       menu: [
       //         {
-      //           url: `${process.env.PUBLIC_URL}/jobSearch/cardView`,
+      //           url: `${window.location.origin}/jobSearch/cardView`,
       //           type: "link",
       //           title: "Cards View",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/jobSearch/job-list`,
+      //           url: `${window.location.origin}/jobSearch/job-list`,
       //           type: "link",
       //           title: "List View",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/jobSearch/job-detail`,
+      //           url: `${window.location.origin}/jobSearch/job-detail`,
       //           type: "link",
       //           title: "Job Details",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/jobSearch/job-apply`,
+      //           url: `${window.location.origin}/jobSearch/job-apply`,
       //           type: "link",
       //           title: "Apply",
       //         },
@@ -1892,12 +1892,12 @@ export const SEARCHMENU = [
       //       type: "sub",
       //       menu: [
       //         {
-      //           url: `${process.env.PUBLIC_URL}/learning/learning-list`,
+      //           url: `${window.location.origin}/learning/learning-list`,
       //           type: "link",
       //           title: "Learning List",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/learning/learning-detail`,
+      //           url: `${window.location.origin}/learning/learning-detail`,
       //           type: "link",
       //           title: "Detail Course",
       //         },
@@ -1909,12 +1909,12 @@ export const SEARCHMENU = [
       //       type: "sub",
       //       menu: [
       //         {
-      //           url: `${process.env.PUBLIC_URL}/map/googleMap`,
+      //           url: `${window.location.origin}/map/googleMap`,
       //           type: "link",
       //           title: "Google Maps",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/map/pigeonMap`,
+      //           url: `${window.location.origin}/map/pigeonMap`,
       //           type: "link",
       //           title: "Pigeon Maps",
       //         },
@@ -1926,24 +1926,24 @@ export const SEARCHMENU = [
       //       type: "sub",
       //       menu: [
       //         {
-      //           url: `${process.env.PUBLIC_URL}/editor/ckEditor`,
+      //           url: `${window.location.origin}/editor/ckEditor`,
       //           type: "link",
       //           title: "CK  Editor",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/editor/mdeEditor`,
+      //           url: `${window.location.origin}/editor/mdeEditor`,
       //           type: "link",
       //           title: "MDE Editor",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/editor/acecodeeditor`,
+      //           url: `${window.location.origin}/editor/acecodeeditor`,
       //           type: "link",
       //           title: "ACE code editor",
       //         },
       //       ],
       //     },
       //     {
-      //       url: `${process.env.PUBLIC_URL}/faq`,
+      //       url: `${window.location.origin}/faq`,
       //       icon: <HelpCircle />,
       //       title: "FAQ",
       //       type: "link",
@@ -1954,24 +1954,24 @@ export const SEARCHMENU = [
       //       type: "sub",
       //       menu: [
       //         {
-      //           url: `${process.env.PUBLIC_URL}/knowledgebase/knowledgebase`,
+      //           url: `${window.location.origin}/knowledgebase/knowledgebase`,
       //           type: "link",
       //           title: "knowledgebase",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/knowledgebase/KnowledgeCategory`,
+      //           url: `${window.location.origin}/knowledgebase/KnowledgeCategory`,
       //           type: "link",
       //           title: "KnowledgeCategory",
       //         },
       //         {
-      //           url: `${process.env.PUBLIC_URL}/knowledgebase/KnowledgeDetailContain`,
+      //           url: `${window.location.origin}/knowledgebase/KnowledgeDetailContain`,
       //           type: "link",
       //           title: "KnowledgeDetail",
       //         },
       //       ],
       //     },
       //     {
-      //       url: `${process.env.PUBLIC_URL}/support-ticket`,
+      //       url: `${window.location.origin}/support-ticket`,
       //       icon: <Users />,
       //       type: "link",
       //       title: "Support Ticket",

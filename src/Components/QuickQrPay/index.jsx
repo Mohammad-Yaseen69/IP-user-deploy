@@ -83,7 +83,7 @@ const QuickQrPay = () => {
             console.log(data)
 
             const enc = encryptData(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-wallet-details-public`, { data: enc })
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-wallet-details-public`, { data: enc })
             const dec = decryptData(res.data.data)
             setWalletDetails(dec?.walletDetails)
             setStep(2)
@@ -117,7 +117,7 @@ const QuickQrPay = () => {
         const formData = new FormData()
         formData.append("file", selectedFile)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-qr-details`,
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-qr-details`,
             formData)
             .then(res => {
                 const decrypted = decryptData(res.data.data)
@@ -140,7 +140,7 @@ const QuickQrPay = () => {
             }
 
             const enc = encryptData(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/set-qrpay-wallet`, { data: enc })
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/instagram/set-qrpay-wallet`, { data: enc })
             const dec = decryptData(res.data.data)
             setStep(3)
             console.log(dec)

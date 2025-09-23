@@ -46,7 +46,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
     useEffect(() => {
         const getRegistrationCountries = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/country/get-${selectedAccountType}-registration-countries`)
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/country/get-${selectedAccountType}-registration-countries`)
                 const dec = decryptData(res.data.data)
                 setAllowedCountries(dec?.Countries)
             } catch (error) {
@@ -127,7 +127,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
             }
 
             debounceTimeout = setTimeout(() => {
-                axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/invitation/check-referral-code/${referralCode}`)
+                axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/invitation/check-referral-code/${referralCode}`)
                     .then(res => {
                         const decrypted = decryptData(res.data.data);
                         setReferralError("")
@@ -228,7 +228,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
         if (allCountries.length > 0) {
             const getIPAddress = async () => {
                 try {
-                    const res = await axios.get(`https://ipinfo.io?token=${process.env.REACT_APP_IP_INFO_TOKEN}`)
+                    const res = await axios.get(`https://ipinfo.io?token=${import.meta.env.VITE_IP_INFO_TOKEN}`)
                     const location = res.data;
                     if (location) {
                         const filteredCountry = allCountries.filter(item => item?.alpha2 === location?.country)?.[0]
@@ -320,7 +320,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
         const data = { email }
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/account-check/business`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/account-check/business`, {
             data: encrypted
         })
             .then(res => {
@@ -351,7 +351,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
         // console.log(data)
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/account-check/individual`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/account-check/individual`, {
             data: encrypted
         })
             .then(res => {
@@ -397,7 +397,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
 
             const encrypted = encryptData(credentials)
 
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/registration/business`, {
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/registration/business`, {
                 data: encrypted
             })
                 .then(res => {
@@ -439,7 +439,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
             }
             const encrypted = encryptData(credentials)
 
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/registration/individual`, {
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/registration/individual`, {
                 data: encrypted
             })
                 .then(res => {
@@ -508,7 +508,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
     useEffect(() => {
         const getCategories = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account-settings/get-business-categories`)
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account-settings/get-business-categories`)
                 const data = decryptData(res.data.data)
                 setCategories(data?.categoryList)
                 // console.log(data?.categoryList)
@@ -524,7 +524,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
         try {
             const formData = new FormData()
             formData.append("file", dpFile);
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/upload-profile-image/${dec?.accountData?._id}`, formData)
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/upload-profile-image/${dec?.accountData?._id}`, formData)
             const decrypted = decryptData(res.data.data)
             setVerified(true)
         }
@@ -555,7 +555,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
 
             const enc = encryptData(data);
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/verify-registration/${selectedAccountType}`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/verify-registration/${selectedAccountType}`, {
                 data: enc
             })
             const dec = decryptData(res.data.data)
@@ -587,7 +587,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
 
             const enc = encryptData(data);
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/verify-email-registration/${selectedAccountType}`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/verify-email-registration/${selectedAccountType}`, {
                 data: enc
             })
             const dec = decryptData(res.data.data)

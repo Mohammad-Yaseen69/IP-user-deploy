@@ -44,7 +44,7 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
         }
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/update-qr-details`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/update-qr-details`, {
             data: encrypted
         }, {
             headers: authHeader

@@ -60,7 +60,7 @@ const AuthNew = () => {
         const getCountryDetails = async () => {
 
             try {
-                const res = await axios.get(`https://ipinfo.io?token=${process.env.REACT_APP_IP_INFO_TOKEN}`)
+                const res = await axios.get(`https://ipinfo.io?token=${import.meta.env.VITE_IP_INFO_TOKEN}`)
                 const location = res.data;
 
                 if (location) {

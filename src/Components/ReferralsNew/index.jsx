@@ -58,7 +58,7 @@ const ReferralsNew = () => {
 
     const getReferrals = () => {
         if (userDetails?.account_type === "individual") {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/invitation/get-referral/${userDetails?._id}`, {
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/invitation/get-referral/${userDetails?._id}`, {
                 headers: authHeader
             })
                 .then(res => {
@@ -83,7 +83,7 @@ const ReferralsNew = () => {
                     setIsLoading(false)
                 })
         } else {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/invitation/get-company-referral/${userDetails?._id}`, {
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/invitation/get-company-referral/${userDetails?._id}`, {
                 headers: authHeader
             })
                 .then(res => {
@@ -135,7 +135,7 @@ const ReferralsNew = () => {
             setIsLoading(true)
 
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-service-transactions/commission/${userDetails?._id}/0/200`)
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-service-transactions/commission/${userDetails?._id}/0/200`)
                 const dec = decryptData(res.data.data)
                 console.log(dec)
                 setTransactions(dec?.transactionList ?? [])

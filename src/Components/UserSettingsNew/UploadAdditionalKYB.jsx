@@ -53,8 +53,8 @@ const UploadAdditionalKYB = ({ isOpen, toggle, files, user_id, type = "kyb", par
                 const res = await axios.post(
                     type === "kyb"
                         ?
-                        `${process.env.REACT_APP_IP_DEV_API}/api/company/upload-additional-file-kyb/${user_id}`
-                        : `${process.env.REACT_APP_IP_DEV_API}/api/company/upload-additional-file-partner/${user_id}/${partner_id}`,
+                        `${import.meta.env.VITE_IP_DEV_API}/api/company/upload-additional-file-kyb/${user_id}`
+                        : `${import.meta.env.VITE_IP_DEV_API}/api/company/upload-additional-file-partner/${user_id}/${partner_id}`,
                     formdata,
                     { headers: authHeader }
                 );

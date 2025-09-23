@@ -99,7 +99,7 @@ const ProfileComponent = () => {
     useEffect(() => {
         const getFollowers = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-social-media-details-public/${user_name?.toLowerCase()}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/get-social-media-details-public/${user_name?.toLowerCase()}`, {
                     headers: authHeader
                 })
                 const dec = decryptData(res.data.data)
@@ -120,7 +120,7 @@ const ProfileComponent = () => {
 
             getFollowers()
 
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-cover/${user_name?.toLowerCase()}`)
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-user-cover/${user_name?.toLowerCase()}`)
                 .then(async (res) => {
                     const decrypted = decryptData(res.data.data)
                     console.log(decrypted, "cover-picture")
@@ -132,7 +132,7 @@ const ProfileComponent = () => {
                 .catch(err => {
                 })
 
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-profile/${user_name?.toLowerCase()}`)
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-user-profile/${user_name?.toLowerCase()}`)
                 .then(async (res) => {
                     const decrypted = decryptData(res.data.data)
                     console.log(decrypted.profilePicture, "profile-picture")
@@ -144,7 +144,7 @@ const ProfileComponent = () => {
                 .catch(err => {
                 })
 
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-details/${user_name?.toLowerCase()}`)
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-user-details/${user_name?.toLowerCase()}`)
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     setUserDetails(decrypted?.userProfileInfo)
@@ -155,7 +155,7 @@ const ProfileComponent = () => {
                 })
                 .finally(() => setLoading(false))
 
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-default-wallet/${user_name?.toLowerCase()}`)
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-default-wallet/${user_name?.toLowerCase()}`)
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     setUserWallet(decrypted.defaultWallet)
@@ -165,7 +165,7 @@ const ProfileComponent = () => {
 
             // reviews
             // seller
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-reviews/${user_name?.toLowerCase()}/seller/0/0`)
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-user-reviews/${user_name?.toLowerCase()}/seller/0/0`)
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     setUserReviewsAsSeller(decrypted?.userReviews?.reviews)
@@ -176,7 +176,7 @@ const ProfileComponent = () => {
                 })
 
             // buyer
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-reviews/${user_name?.toLowerCase()}/buyer/0/0`)
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-user-reviews/${user_name?.toLowerCase()}/buyer/0/0`)
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     setUserReviewsAsBuyer(decrypted?.userReviews?.reviews)
@@ -187,7 +187,7 @@ const ProfileComponent = () => {
                 })
 
             // portfolio
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-documents/${user_name?.toLowerCase()}/0/0/portfolio`)
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-user-documents/${user_name?.toLowerCase()}/0/0/portfolio`)
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     setUserPortfolio(decrypted?.result)
@@ -210,7 +210,7 @@ const ProfileComponent = () => {
     useEffect(() => {
         const getReportStatus = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/report/get-report-status/${loggedInUser?._id}/${user_name?.toLowerCase()}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/report/get-report-status/${loggedInUser?._id}/${user_name?.toLowerCase()}`, {
                     headers: authHeader
                 })
                 const data = decryptData(res.data.data)

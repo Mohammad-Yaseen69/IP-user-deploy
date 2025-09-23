@@ -7,7 +7,7 @@ const getAuthHeader = () => ({
     "source": "user"
 })
 
-const path = `${process.env.REACT_APP_IP_DEV_API}/api/invoice`
+const path = `${import.meta.env.VITE_IP_DEV_API}/api/invoice`
 // const path = 'http://localhost:3004/api/invoice'
 
 const addInvoice = async (payload) => {

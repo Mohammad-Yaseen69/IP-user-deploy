@@ -33,7 +33,7 @@ const BeneficiaryCard = ({ user, isBulk, setBeneficiary, selectedUser, payoutCha
             setBeneficiary([])
             if (type === "Requesting" || type === "Quoting") {
                 setLoading(true)
-                axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/search-account/${user?.phone}`, {
+                axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/instagram/search-account/${user?.phone}`, {
                     headers: authHeader
                 })
                     .then(res => {
@@ -41,7 +41,7 @@ const BeneficiaryCard = ({ user, isBulk, setBeneficiary, selectedUser, payoutCha
                     })
                     .catch(err => {
                         // console.log(err)
-                        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/search-account/${user.email}`, {
+                        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/instagram/search-account/${user.email}`, {
                             headers: authHeader
                         })
                             .then(res => {

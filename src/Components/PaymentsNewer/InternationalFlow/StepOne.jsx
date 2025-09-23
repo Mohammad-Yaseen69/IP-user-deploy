@@ -122,7 +122,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
         const getCountries = async (call) => {
             setCountriesLoading(true)
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/countries/${userDetails?.country?.country_iso_code}`, { headers: authHeader, timeout: 0 })
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment/countries/${userDetails?.country?.country_iso_code}`, { headers: authHeader, timeout: 0 })
                 const decrypted = decryptData(res.data.data)
 
                 const countriesArray = allCountries.filter((item) => {
@@ -172,7 +172,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     // services 
     const getServices = async (country) => {
         try {
-            const servicesResponse = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/services/${country || data?.country?.alpha3}/${userDetails?.country?.country_iso_code}`, { headers: authHeader })
+            const servicesResponse = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment/services/${country || data?.country?.alpha3}/${userDetails?.country?.country_iso_code}`, { headers: authHeader })
             const decrypted = decryptData(servicesResponse.data.data)
             console.log(decrypted)
             dataHandler("services", decrypted?.services?.map(item => ({ ...item, ...payoutChannelData?.find(it => it?.name === item?.method?.split(" - ")[0]) })));
@@ -207,7 +207,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
         const getPayers = async () => {
             try {
                 const dataa = { country: data?.country.alpha3, service: data?.payoutChannel?.name, vendor: data.payoutChannel?.vendor }
-                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/payment/payers`, dataa, { headers: authHeader })
+                const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/payment/payers`, dataa, { headers: authHeader })
                 const dec = decryptData(res.data.data)
                 console.log(dec)
 

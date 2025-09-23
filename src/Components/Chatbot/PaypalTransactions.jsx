@@ -36,7 +36,7 @@ const PaypalTransactions = () => {
                     "method": "paypal"
                 }
 
-                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/paypal/send-bot-notification`, {
+                const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/paypal/send-bot-notification`, {
                     data: encryptData(data)
                 })
 
@@ -58,7 +58,7 @@ const PaypalTransactions = () => {
                     "method": "paypal"
                 }
 
-                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/paypal/send-bot-notification-telegram`, {
+                const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/paypal/send-bot-notification-telegram`, {
                     data: encryptData(data)
                 })
 

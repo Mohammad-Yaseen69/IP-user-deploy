@@ -32,7 +32,7 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
             }
             // console.log(payload)
             const encrypted = encryptData(payload)
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/company/edit-partner`, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/company/edit-partner`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -60,7 +60,7 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
     const deletePartnerHandler = async () => {
         setUpdating(true)
         try {
-            const response = await axios.delete(`${process.env.REACT_APP_IP_DEV_API}/api/company/delete-partner/${userDetails?._id}/${partner?._id}`, {
+            const response = await axios.delete(`${import.meta.env.VITE_IP_DEV_API}/api/company/delete-partner/${userDetails?._id}/${partner?._id}`, {
                 headers: authHeader
             })
             const data = await decryptData(response.data.data)
@@ -87,7 +87,7 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
             }
             const encrypted = encryptData(payload)
             // console.log(encrypted)
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/company/verification/partner_${partner?._id}`, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/company/verification/partner_${partner?._id}`, {
                 data: encrypted
             }, {
                 headers: authHeader

@@ -90,7 +90,7 @@ const Quotations = () => {
         const getReceivedQuotations = async () => {
             setIsLoading(true)
             try {
-                const response = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/quotation/get-quotation-by-reciever/${userDetails?._id}`, {
+                const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/quotation/get-quotation-by-reciever/${userDetails?._id}`, {
                     headers: authHeader
                 })
                 const decrypted = await decryptData(response.data.data)
@@ -114,7 +114,7 @@ const Quotations = () => {
         const getSentQuotations = async () => {
             setIsLoading(true)
             try {
-                const response = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/quotation/get-quotation-by-sender/${userDetails?._id}`, {
+                const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/quotation/get-quotation-by-sender/${userDetails?._id}`, {
                     headers: authHeader
                 })
                 const decrypted = await decryptData(response.data.data)

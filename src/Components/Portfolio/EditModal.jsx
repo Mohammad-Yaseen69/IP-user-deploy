@@ -34,7 +34,7 @@ const EditModal = ({ isOpen, toggle, item, pAddress }) => {
         });
 
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-portfolio/${item?._id}`,
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-portfolio/${item?._id}`,
             formData,
             {
                 headers: authHeader

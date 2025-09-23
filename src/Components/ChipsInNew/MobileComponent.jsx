@@ -62,7 +62,7 @@ const MobileComponent = ({ wallet, current }) => {
 
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/wallet-qrcode/${wallet?.wallet_id}`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/wallet-qrcode/${wallet?.wallet_id}`, {
             data: encrypted
         }, {
             headers: authHeader

@@ -85,7 +85,7 @@ const Basic = ({ setCurrentTab }) => {
 
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/username-check`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/username-check`, {
             data: encrypted
         }, {
             headers: authHeader
@@ -135,7 +135,7 @@ const Basic = ({ setCurrentTab }) => {
 
             const encrypted = encryptData(data)
 
-            axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-username/${userDetails?._id}`, {
+            axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-username/${userDetails?._id}`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -173,7 +173,7 @@ const Basic = ({ setCurrentTab }) => {
             }
             // console.log(body)
             const encrypted = encryptData(body)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/set-${type}-otp`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/set-${type}-otp`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -212,7 +212,7 @@ const Basic = ({ setCurrentTab }) => {
 
             const encrypted = encryptData(data)
 
-            axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-individual/${userDetails?._id}`, {
+            axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-individual/${userDetails?._id}`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -244,7 +244,7 @@ const Basic = ({ setCurrentTab }) => {
 
             const encrypted = encryptData(data)
 
-            axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-business/${userDetails?._id}`, {
+            axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-business/${userDetails?._id}`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -269,7 +269,7 @@ const Basic = ({ setCurrentTab }) => {
         if (userDetails?.country_iso_code) {
             const getCountryTimezones = async () => {
                 try {
-                    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-timezones/${userDetails?.country_iso_code}`, {
+                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/get-timezones/${userDetails?.country_iso_code}`, {
                         headers: authHeader
                     })
                     const data = decryptData(res.data.data)
@@ -294,7 +294,7 @@ const Basic = ({ setCurrentTab }) => {
                 account_id: userDetails?._id
             }
             // console.log(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/verify-${type}-otp`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/verify-${type}-otp`, {
                 data: encryptData(data)
             }, {
                 headers: authHeader
@@ -358,7 +358,7 @@ const Basic = ({ setCurrentTab }) => {
                     userDetails?.username
                         ?
                         <QrGenerate
-                            wallets={userWallets?.filter(item => !item?.qrCode?.url)}
+                            wallets={userWallets?.filter(item => true)}
                         />
                         :
                         ""

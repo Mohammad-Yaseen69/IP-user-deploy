@@ -38,10 +38,10 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                 setCommision("")
                 setTotal("")
                 // console.log(currentWallet)
-                // axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-exchange-rate?from=${currentWallet?.currency?.code}&to=${item?.currency?.code}&amount=${item?.amount}&type=payment_request&level_id=${userDetails.level?._id}&payment_type=conversion&account_id=${userDetails?._id}&receiver_wallet_id=${item?.wallet}`, {
+                // axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-exchange-rate?from=${currentWallet?.currency?.code}&to=${item?.currency?.code}&amount=${item?.amount}&type=payment_request&level_id=${userDetails.level?._id}&payment_type=conversion&account_id=${userDetails?._id}&receiver_wallet_id=${item?.wallet}`, {
                 //     headers: authHeader
                 // })
-                const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${currentWallet?.currency?.code}&to=${item?.currency?.code}&amount=${item?.amount}&type=payment_request&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${"wallet"}&receiver_wallet_id=${item?.wallet}&sender_wallet_id=${currentWallet?._id}&payment_method=request`
+                const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${currentWallet?.currency?.code}&to=${item?.currency?.code}&amount=${item?.amount}&type=payment_request&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${"wallet"}&receiver_wallet_id=${item?.wallet}&sender_wallet_id=${currentWallet?._id}&payment_method=request`
                 axios.get(url, { headers: authHeader })
                     .then(res => {
                         const decrypted = decryptData(res.data.data)
@@ -101,7 +101,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                 type: codeType
             }
             const encrypted = encryptData(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -127,7 +127,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
         data.append("type", codeType)
 
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/accept-payment-request`, data, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/accept-payment-request`, data, {
             headers: authHeader
         })
             .then(res => {

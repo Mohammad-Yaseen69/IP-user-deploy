@@ -83,7 +83,7 @@ const GoogleAuthenticatorModal = ({
                 account_id: userDetails?._id,
                 password
             }
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/user-verification`, { data: encryptData(data) }, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/user-verification`, { data: encryptData(data) }, {
                 headers: authHeader
             })
             const dec = decryptData(response.data.data)
@@ -123,7 +123,7 @@ const GoogleAuthenticatorModal = ({
                 code: otpValues.join("")
             }
             console.log(data)
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/verify-2fa`, { data: encryptData(data) }, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/verify-2fa`, { data: encryptData(data) }, {
                 headers: authHeader
             })
             const dec = decryptData(response.data.data)

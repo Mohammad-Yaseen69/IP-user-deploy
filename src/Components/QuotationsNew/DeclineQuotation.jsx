@@ -24,7 +24,7 @@ const DeclineQuotation = ({ item, isOpen, toggle }) => {
     const declineQuotation = async () => {
         setIsDeleting(true)
         try {
-            const response = await axios.delete(`${process.env.REACT_APP_IP_DEV_API}/api/quotation/decline-quotation/${item?._id}`, {
+            const response = await axios.delete(`${import.meta.env.VITE_IP_DEV_API}/api/quotation/decline-quotation/${item?._id}`, {
                 headers: authHeader
             })
 

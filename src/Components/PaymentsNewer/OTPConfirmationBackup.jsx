@@ -151,7 +151,7 @@ const OTPConfirmation = ({
 
     const getExchangeRate = (data) => {
         // console.log(decryptData(data))
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-request-exchange-rate`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-request-exchange-rate`, {
             data: data
         }, {
             headers: authHeader
@@ -184,7 +184,7 @@ const OTPConfirmation = ({
             console.log(data)
             const enc = encryptData(data)
 
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/${airtimeDetails?.path}`, {
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/${airtimeDetails?.path}`, {
                 data: enc
             }, {
                 headers: authHeader
@@ -236,7 +236,7 @@ const OTPConfirmation = ({
                 // console.log(item)
             })
 
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/quotation/create-quotation`, formdata, {
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/quotation/create-quotation`, formdata, {
                 headers: authHeader
             })
                 .then(res => {
@@ -284,7 +284,7 @@ const OTPConfirmation = ({
                     // console.log(requestObject)
                     // console.log(data)
                     // const encrypted = encryptData(data)
-                    axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/insta-payment-request-w2w`, data, {
+                    axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/insta-payment-request-w2w`, data, {
                         headers: authHeader
                     })
                         .then(res => {
@@ -339,7 +339,7 @@ const OTPConfirmation = ({
                     // console.log(requestObject)
                     // console.log(data)
                     const encrypted = encryptData(data)
-                    axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/subcribe-payment-request-w2w`, data, {
+                    axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/subcribe-payment-request-w2w`, data, {
                         headers: authHeader
                     })
                         .then(res => {
@@ -395,7 +395,7 @@ const OTPConfirmation = ({
                     // console.log(requestObject)
                     // console.log(data)
                     const encrypted = encryptData(data)
-                    axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/schedule-payment-request-w2w`, data, {
+                    axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/schedule-payment-request-w2w`, data, {
                         headers: authHeader
                     })
                         .then(res => {
@@ -459,7 +459,7 @@ const OTPConfirmation = ({
                 }
                 const enc = encryptData(data)
 
-                axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/initiat-w2w-transaction`, {
+                axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiat-w2w-transaction`, {
                     data: enc
                 }, {
                     headers: authHeader
@@ -510,7 +510,7 @@ const OTPConfirmation = ({
 
                 data.forEach(item => "a")
 
-                const url = vendor === "neema" ? `${process.env.REACT_APP_IP_DEV_API}/api/payment/confirm-withdrawal-transaction` : `${process.env.REACT_APP_THUNES_API}/confirmTransaction`
+                const url = vendor === "neema" ? `${import.meta.env.VITE_IP_DEV_API}/api/payment/confirm-withdrawal-transaction` : `${import.meta.env.VITE_THUNES_API}/confirmTransaction`
                 const neemaData = {
                     token: token || createdTransaction.token,
                     otp: otp ? otp.join("") : otpValues.join(""),
@@ -574,7 +574,7 @@ const OTPConfirmation = ({
                     }
                     const enc = encryptData(data)
 
-                    axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/initiat-w2w-transaction`, {
+                    axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiat-w2w-transaction`, {
                         data: enc
                     }, {
                         headers: authHeader
@@ -622,7 +622,7 @@ const OTPConfirmation = ({
                     // console.log(paymentDetails)
                     data.forEach(item => console.log(item))
                     console.log("headers: ", authHeader)
-                    axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/insta-wallet-to-wallet`,
+                    axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/insta-wallet-to-wallet`,
                         data,
                         {
                             headers: authHeader
@@ -667,7 +667,7 @@ const OTPConfirmation = ({
                 data.append("otp", otpValues.join(""))
                 data.append("token", token || paymentDetails?.token)
 
-                axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/subscribe-payment-w2w`,
+                axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/subscribe-payment-w2w`,
                     data, {
                     headers: authHeader
                 }
@@ -710,7 +710,7 @@ const OTPConfirmation = ({
                 data.append("type", authType)
                 data.append("otp", otpValues.join(""))
                 data.append("token", token || paymentDetails?.token)
-                axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/schedule-payment-w2w`,
+                axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/schedule-payment-w2w`,
                     data,
                     {
                         headers: authHeader
@@ -968,7 +968,7 @@ const OTPConfirmation = ({
                         card_number={paymentDetails?.cardNumber}
                         currency={paymentDetails?.currency}
                         transaction={paymentDetails?.transactionDetails}
-                        url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/w2w-payment-confirmation/${paymentDetails?.transactionDetails?.transaction_id}/${token || paymentDetails?.token}`}
+                        url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w-payment-confirmation/${paymentDetails?.transactionDetails?.transaction_id}/${token || paymentDetails?.token}`}
                     />
                     : ""
             }

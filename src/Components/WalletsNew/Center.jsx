@@ -46,7 +46,7 @@ const CenterContainer = ({ categories, setCategories, currentType, setCurrentTyp
             const fetchData = async () => {
                 try {
                     const res = await axios.get(
-                        `${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-all-user-categories/${userDetails?._id}`,
+                        `${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-all-user-categories/${userDetails?._id}`,
                         {
                             headers: authHeader,
                         }
@@ -157,7 +157,7 @@ const CenterContainer = ({ categories, setCategories, currentType, setCurrentTyp
     //         const encrypted = encryptData(data);
 
     //         axios.post(
-    //             `${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-account-transactions-by-date/${userDetails?._id}/0/300`,
+    //             `${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-by-date/${userDetails?._id}/0/300`,
     //             {
     //                 data: encrypted
     //             },

@@ -78,7 +78,7 @@ const TwoFactorAuth = () => {
                 whatsapp_verification: whatsapp
             }
             const encrypted = encryptData(data)
-            const response = await axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/tfa-settings/${userDetails?._id}`, {
+            const response = await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/tfa-settings/${userDetails?._id}`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -107,7 +107,7 @@ const TwoFactorAuth = () => {
                     tfa: false
                 }
                 const encrypted = encryptData(data)
-                const res = await axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-individual/${userDetails?._id}`, {
+                const res = await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-individual/${userDetails?._id}`, {
                     data: encrypted
                 }, {
                     headers: authHeader
@@ -130,7 +130,7 @@ const TwoFactorAuth = () => {
         }
         else {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/enable-2fa/${userDetails?._id}`, {
+                const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/enable-2fa/${userDetails?._id}`, {
                     headers: authHeader
                 })
                 const dec = decryptData(response.data.data)
@@ -151,7 +151,7 @@ const TwoFactorAuth = () => {
     useEffect(() => {
         const getDevices = async () => {
             try {
-                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-biometric-devices`, { data: encryptData({ account_id: userDetails?._id }) }, {
+                const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/get-biometric-devices`, { data: encryptData({ account_id: userDetails?._id }) }, {
                     headers: authHeader
                 })
 
@@ -180,7 +180,7 @@ const TwoFactorAuth = () => {
             }
 
             console.log(data)
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/register-challenge`, { data: encryptData(data) }, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/register-challenge`, { data: encryptData(data) }, {
                 headers: authHeader
             })
 
@@ -206,7 +206,7 @@ const TwoFactorAuth = () => {
             }
 
             console.log(data2)
-            const response2 = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/register-verify`, {
+            const response2 = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/register-verify`, {
                 data: encryptData(data2)
             }, { headers: authHeader })
 
@@ -269,7 +269,7 @@ const TwoFactorAuth = () => {
                 type: codeType
             }
             const encrypted = encryptData(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -297,7 +297,7 @@ const TwoFactorAuth = () => {
                 enable: !device.enabled
             }
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/enable-biometric-device`, { data: encryptData(data) }, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/enable-biometric-device`, { data: encryptData(data) }, {
                 headers: authHeader
             })
 
@@ -316,7 +316,7 @@ const TwoFactorAuth = () => {
                 credentialId: deleteState.deviceToDelete.credentialId
             }
 
-            await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/delete-biometric-device`, { data: encryptData(data) }, {
+            await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/delete-biometric-device`, { data: encryptData(data) }, {
                 headers: authHeader
             })
 

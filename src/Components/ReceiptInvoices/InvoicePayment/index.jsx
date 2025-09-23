@@ -65,7 +65,7 @@ const InvoicePayment = () => {
 
   useEffect(() => {
     const getLimits = () => {
-      axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/get-payment-address-public/${user_name}`).then(res => {
+      axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/get-payment-address-public/${user_name}`).then(res => {
         const dec = decryptData(res.data.data)
         dataHandler("limits", dec?.limits)
       })

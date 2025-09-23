@@ -47,7 +47,7 @@ const SendQuotation = ({ setAction, setStep }) => {
         if (userWallets?.length > 0 && currency && userDetails?.user?.kyc_status !== "approved") {
             const getExchangedAmounts = async (from, to, amount) => {
                 try {
-                    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
+                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
                         headers: authHeader
                     });
                     const dec = decryptData(res?.data?.data);

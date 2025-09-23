@@ -33,7 +33,7 @@ const AddCurrencyModal = ({ isOpen, toggle, setSavedWalelt }) => {
                     desc
                 }
                 const encrypted = encryptData(data)
-                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/currency/request-currency-user/${currentCurrency?._id}`, {
+                const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/currency/request-currency-user/${currentCurrency?._id}`, {
                     data: encrypted
                 }, {
                     headers: authHeader
@@ -60,7 +60,7 @@ const AddCurrencyModal = ({ isOpen, toggle, setSavedWalelt }) => {
     useEffect(() => {
         const getCurrencies = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/currency/get-currencies`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/currency/get-currencies`, {
                     headers: authHeader
                 })
                 const data = await decryptData(res?.data?.data)

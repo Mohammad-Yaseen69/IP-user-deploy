@@ -28,7 +28,7 @@ const Card = ({ wallet, current, index }) => {
     const getExchangedAmounts = async (from, to, amount) => {
         setIsLoading(true);
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
                 headers: authHeader
             });
             const dec = decryptData(res?.data?.data);

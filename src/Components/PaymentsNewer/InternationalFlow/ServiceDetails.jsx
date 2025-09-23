@@ -137,7 +137,7 @@ const ServiceDetails = ({ data }) => {
     useEffect(() => {
         const getNotes = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction-notes/get-notes?from=${data?.currency_wallet?.country_iso}&to=${data?.country?.alpha3}&method=${data?.payoutChannel?.value}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction-notes/get-notes?from=${data?.currency_wallet?.country_iso}&to=${data?.country?.alpha3}&method=${data?.payoutChannel?.value}`, {
                     headers: authHeader
                 })
                 const dec = decryptData(res.data.data)

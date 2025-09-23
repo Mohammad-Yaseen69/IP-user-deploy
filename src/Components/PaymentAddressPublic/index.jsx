@@ -30,7 +30,7 @@ const PaymentAddressPublic = () => {
 
         const getVideos = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-documents/${user_name}/0/0/address`)
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-user-documents/${user_name}/0/0/address`)
                 const dec = decryptData(res.data.data)
                 console.log(dec)
                 setUserVideos(dec.result)
@@ -41,7 +41,7 @@ const PaymentAddressPublic = () => {
         }
 
         const getUserDetails = () => {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-details/${user_name}`)
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-user-details/${user_name}`)
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     setUserDetails(decrypted?.userProfileInfo)

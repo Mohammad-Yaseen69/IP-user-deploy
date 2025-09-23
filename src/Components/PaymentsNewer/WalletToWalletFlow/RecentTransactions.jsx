@@ -12,7 +12,7 @@ import countriesData from "../CountriesData.json"
 
 
 const getRecentTransaction = async (authHeader, account, type) => {
-    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-last-transactions/${account}/${type}?limit=5`, {
+    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-last-transactions/${account}/${type}?limit=5`, {
         headers: authHeader
     })
 
@@ -21,7 +21,7 @@ const getRecentTransaction = async (authHeader, account, type) => {
 }
 
 const getWallet = async (authHeader, id, currency,) => {
-    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-user-wallet/${id}`, { headers: authHeader })
+    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallet/${id}`, { headers: authHeader })
     const decrypted = decryptData(res.data.data)
 
     return decrypted?.walletList?.find(item => item?.currency?.code === currency)
@@ -104,7 +104,7 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
         }
     }
 
-    const canRepeat = (tx) => {
+    const canRepeat = async (tx) => {
         const sendingWallet = userWallets?.find(w => w?.wallet_id === tx?.wallet_id)
         if (!sendingWallet) return false
 
@@ -116,9 +116,6 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
             const hasChannel = Boolean(payoutChannelData.find(item => item?.value === channelValue))
             return hasCountry && hasBeneficiary && hasChannel && tx?.payer?.id && tx?.payer?.id !== "N/A" && tx?.payer?.vendor
         }
-
-        const hasReceiver = Boolean(tx?.receiver?._id && tx?.receiver?.currency)
-        return hasReceiver
     }
     return (
         <div style={{ minWidth: width < 1000 && "100%" }} className={styles.container}>
@@ -126,7 +123,7 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
                 <h4>{t("RECENT TRANSFERS")}</h4>
                 {width > 1000 && <span>{t("See all")}</span>}
             </div>
-
+        
             <div className={styles.transCont}>
                 {data?.map((tx) => {
                     const receiverName = `${tx?.beneficiary?.first_name || tx?.receiver?.first_name || ""} ${tx?.receiver?.last_name || tx?.beneficiary?.last_name || ""}`.trim()

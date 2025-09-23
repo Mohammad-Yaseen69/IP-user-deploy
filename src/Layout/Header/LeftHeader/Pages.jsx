@@ -7,10 +7,10 @@ const Pages = () => {
       <span className="f-w-600">More pages</span>
       <span><ChevronDown className="middle" /></span>
       <UL attrUL={{ className: "onhover-show-div left-dropdown" }}>
-        <LI><Link to={`${process.env.PUBLIC_URL}/samplepage`}>Sample Page</Link></LI>
-        <LI><Link to={`${process.env.PUBLIC_URL}/bookmark`}>Bookmark</Link></LI>
-        <LI><Link to={`${process.env.PUBLIC_URL}/todo-app/todo`}>To-do</Link></LI>
-        <LI><Link to={`${process.env.PUBLIC_URL}/faq`}>Faq</Link></LI>
+        <LI><Link to={`${window.location.origin}/samplepage`}>Sample Page</Link></LI>
+        <LI><Link to={`${window.location.origin}/bookmark`}>Bookmark</Link></LI>
+        <LI><Link to={`${window.location.origin}/todo-app/todo`}>To-do</Link></LI>
+        <LI><Link to={`${window.location.origin}/faq`}>Faq</Link></LI>
       </UL>
     </LI>
   );

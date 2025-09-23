@@ -145,7 +145,7 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
     //             }
     //             // console.log(data)
     //             const encrypted = encryptData(data)
-    //             const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+    //             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
     //                 data: encrypted
     //             }, {
     //                 headers: authHeader
@@ -175,7 +175,7 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
             }
             console.log(data)
             const encrpted = encryptData(data)
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/insta-wallet-conversion`, { data: encrpted }, {
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/insta-wallet-conversion`, { data: encrpted }, {
                 headers: authHeader
             })
                 .then(res => {

@@ -43,7 +43,7 @@ const UploadAdditional = ({ isOpen, toggle, files, user_id }) => {
                 formdata.append("file_id", item?._id);
 
                 const res = await axios.post(
-                    `${process.env.REACT_APP_IP_DEV_API}/api/user/upload-additional-file/${user_id}`,
+                    `${import.meta.env.VITE_IP_DEV_API}/api/user/upload-additional-file/${user_id}`,
                     formdata,
                     { headers: authHeader }
                 );

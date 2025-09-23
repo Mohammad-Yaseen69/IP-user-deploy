@@ -32,7 +32,7 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
         setLoadingCountries(true)
         const getCountries = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/countries`, { headers: authHeader })
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/dt/countries`, { headers: authHeader })
                 const decrypted = decryptData(res.data.data)
                 const countriesArray = allCountries.filter((item) => {
                     return decrypted.some(apiCountry => apiCountry.iso_code === item?.alpha3)
@@ -65,7 +65,7 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
         dataHandler("loading", true)
         dataHandler("providers", [])
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-airtime/+${data.recipient}`, { headers: authHeader })
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-airtime/+${data.recipient}`, { headers: authHeader })
             const dec = await decryptData(res.data.data)
             console.log("providers", dec)
             dataHandler("providers", dec)

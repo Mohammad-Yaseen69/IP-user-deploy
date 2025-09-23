@@ -141,7 +141,7 @@ export const WalletCard = ({
 
     const getExchangedAmounts = async (from, to, amount) => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
                 headers: authHeader
             });
             const dec = decryptData(res?.data?.data);
@@ -155,7 +155,7 @@ export const WalletCard = ({
     const getFee = async () => {
         if (!addFunds) {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-vvc-fee/${wallet?.wallet_id}/${cardType}/wallet`, {
+                const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/get-vvc-fee/${wallet?.wallet_id}/${cardType}/wallet`, {
                     headers: authHeader
                 })
 
@@ -181,7 +181,7 @@ export const WalletCard = ({
             const enc = encryptData(data)
             try {
 
-                const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-topup-fee`, { data: enc }, {
+                const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/get-card-topup-fee`, { data: enc }, {
                     headers: authHeader
                 })
 

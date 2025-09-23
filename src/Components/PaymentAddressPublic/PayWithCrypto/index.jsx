@@ -50,7 +50,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
         const fetchAmount = async () => {
             try {
                 setAmtLoading(true)
-                const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${data.currentWallet?.currency?.code || data.currencyCode}&to=${"USD"}&amount=${data?.amount}`
+                const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${data.currentWallet?.currency?.code || data.currencyCode}&to=${"USD"}&amount=${data?.amount}`
                 const res = await axios.get(url)
                 const dec = decryptData(res?.data?.data)
                 if (!cancelled) setUsdtAmount(dec?.exchangeRate?.exchanged_amount ?? 0)

@@ -256,7 +256,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
     const getCurrency = async () => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/get-payer-details?payerId=${internationalData.payer?.id}&vendor=${internationalData.payoutChannel?.vendor} `, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment/get-payer-details?payerId=${internationalData.payer?.id}&vendor=${internationalData.payoutChannel?.vendor} `, {
                 headers: authHeader
             })
             const dec = await decryptData(res.data.data)
@@ -275,7 +275,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             try {
                 const service_name = internationalData?.payoutChannel?.value === "bank" ? "international_bank_transfer" : internationalData?.payoutChannel?.value === "mobile" ? "international_mobile_wallet" : internationalData?.payoutChannel?.value === "card" ? "international_card_payment" : internationalData?.payoutChannel?.value === "cash" ? "international_cash_pickup" : ""
 
-                const url = `${process.env.REACT_APP_IP_DEV_API}/api/payment/markup-rates?from=${internationalData.currency_wallet?.currency?.code}&to=${destinationCurrency}&amount=${+String(amount)?.replaceAll(",", "")}&fromOrTo=${fromOrTo}&service_name=${service_name}&account_id=${userDetails?._id}&payer_id=${internationalData.payer?.id}&service_id=${internationalData.payoutChannel?.id}&vendor=${internationalData.payoutChannel?.vendor}`
+                const url = `${import.meta.env.VITE_IP_DEV_API}/api/payment/markup-rates?from=${internationalData.currency_wallet?.currency?.code}&to=${destinationCurrency}&amount=${+String(amount)?.replaceAll(",", "")}&fromOrTo=${fromOrTo}&service_name=${service_name}&account_id=${userDetails?._id}&payer_id=${internationalData.payer?.id}&service_id=${internationalData.payoutChannel?.id}&vendor=${internationalData.payoutChannel?.vendor}`
 
                 const res = await axios.get(url, { headers: authHeader })
 
@@ -405,7 +405,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             }
             const encrypted = encryptData(dataa)
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/payment/rates/${internationalData?.payer.id}`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/payment/rates/${internationalData?.payer.id}`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -488,7 +488,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const getPlainExchangeRate = async (from, to, amount) => {
         setLoading(true)
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
                 headers: authHeader
             });
             const dec = decryptData(res?.data?.data);
@@ -505,7 +505,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const getMobileWalletChannels = async () => {
         setLoading(true)
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/collection/get-services/${userDetails?.country_iso_code}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/collection/get-services/${userDetails?.country_iso_code}`, {
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
@@ -522,7 +522,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const getMobileWalletServices = async (service_name = internationalData.payment_type?.sub_name) => {
         setLoading(true)
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/collection/get-payers/${userDetails?.country_iso_code}/${service_name}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/collection/get-payers/${userDetails?.country_iso_code}/${service_name}`, {
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
@@ -589,7 +589,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
             try {
                 const res = await axios.post(
-                    `${process.env.REACT_APP_THUNES_API}/get-balance`,
+                    `${import.meta.env.VITE_THUNES_API}/get-balance`,
                     { data: enc },
                     {
                         headers: authHeader,
@@ -636,7 +636,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             console.log(data)
             const encrypted = encryptData(data)
 
-            const res = await axios.post(`${process.env.REACT_APP_THUNES_API}/create-quotation`, {
+            const res = await axios.post(`${import.meta.env.VITE_THUNES_API}/create-quotation`, {
                 data: encrypted
             },
                 {
@@ -690,7 +690,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank") ? payload.data.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id : payload.data.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id
             }
             const enc = encryptData(payload)
-            const url = internationalData.payoutChannel?.vendor === "thunes" ? `${process.env.REACT_APP_THUNES_API}/createTransaction/${internationalData.created_quotation?.QuotationID}` : `${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`
+            const url = internationalData.payoutChannel?.vendor === "thunes" ? `${import.meta.env.VITE_THUNES_API}/createTransaction/${internationalData.created_quotation?.QuotationID}` : `${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`
 
             const res = await axios.post(url, {
                 data: enc
@@ -743,7 +743,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             console.log(data)
             const enc = encryptData(data)
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/collection/create-payment-thunes-accept`,
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/collection/create-payment-thunes-accept`,
                 {
                     data: enc
                 },
@@ -785,7 +785,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             console.log(data)
             const enc = encryptData(data)
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/initiat-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction`,
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiat-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction`,
                 { data: enc },
                 { headers: authHeader }
             )
@@ -835,7 +835,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             console.log(data)
             const enc = encryptData(data)
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/paypal/initiate-international-${internationalData.payoutChannel?.vendor === "thunes" ? "payment" : "payout"}`,
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-international-${internationalData.payoutChannel?.vendor === "thunes" ? "payment" : "payout"}`,
                 { data: enc },
                 { headers: authHeader }
             )
@@ -872,7 +872,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     // const getTopupFees = async () => {
     //     setLoading(true)
     //     try {
-    //         const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/get-tbc-fee/${internationalData.currency_wallet?._id}/${internationalData.amount?.toString()?.split(".")?.[0]?.replaceAll(",", "")}`, {
+    //         const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-tbc-fee/${internationalData.currency_wallet?._id}/${internationalData.amount?.toString()?.split(".")?.[0]?.replaceAll(",", "")}`, {
     //             headers: authHeader
     //         })
     //         const dec = decryptData(res.data.data)
@@ -1066,11 +1066,11 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             let res;
 
             if (internationalData.payoutChannel?.vendor === "thunes") {
-                res = await axios.post(`${process.env.REACT_APP_THUNES_API}/confirmTransaction`, data, {
+                res = await axios.post(`${import.meta.env.VITE_THUNES_API}/confirmTransaction`, data, {
                     headers: authHeader
                 })
             } else {
-                res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/payment/confirm-transaction`, { data: encryptData(data) }, {
+                res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/payment/confirm-transaction`, { data: encryptData(data) }, {
                     headers: authHeader
                 })
             }
@@ -1133,7 +1133,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 const payload = {
                     token: transaction_token
                 }
-                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/thunes/confirm-transaction-topup`,
+                const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/thunes/confirm-transaction-topup`,
                     {
                         data: payload
                     },
@@ -1246,8 +1246,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                         currency={internationalData.currency_wallet?.currency?.code}
                         transaction={internationalData.cardTransactionDetails}
                         paymentWithSavedCard={internationalData.selectedSavedCard?._id ? true : false}
-                        url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`}
-                        tokenUrl={() => `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`}
+                        url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`}
+                        tokenUrl={() => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`}
                     />
                     :
                     <></>
@@ -1565,8 +1565,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                 />
                                                                 :
                                                                 <CreditCard
-                                                                    url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`}
-                                                                    tokenUrl={() => `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`}
+                                                                    url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`}
+                                                                    tokenUrl={() => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`}
                                                                     data={internationalData}
                                                                     dataHandler={updateInternationalData}
                                                                 />
@@ -1802,8 +1802,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                                     />
                                                                                     :
                                                                                     <CreditCard
-                                                                                        url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`}
-                                                                                        tokenUrl={() => `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`}
+                                                                                        url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`}
+                                                                                        tokenUrl={() => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${internationalData.selectedSavedCard?._id ? "-pan" : ""}-transaction/${internationalData.cardTransactionDetails?.transaction_id}/${internationalData.cardTransactionDetails?.intlToken}`}
                                                                                         data={internationalData}
                                                                                         dataHandler={updateInternationalData}
                                                                                     />

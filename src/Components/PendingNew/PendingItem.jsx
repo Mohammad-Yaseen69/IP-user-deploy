@@ -45,7 +45,7 @@ const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "re
 
     const rejectRequest = () => {
         verifyToken()
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/decline-payment-request/${item.reference_id}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/decline-payment-request/${item.reference_id}`, {
             headers: authHeader
         })
             .then(res => {
@@ -69,7 +69,7 @@ const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "re
 
     useEffect(() => {
         if (activeItem === index + 1) {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-seller-reviews/${item?.sender?._id}/0/0`, {
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-seller-reviews/${item?.sender?._id}/0/0`, {
                 headers: authHeader
             })
                 .then(res => {

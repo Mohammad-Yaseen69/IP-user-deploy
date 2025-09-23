@@ -28,9 +28,9 @@ const WalletDetails = ({ setWallet, setStep, wallet }) => {
     const getUserWallets = (id = "") => {
         setSearching(true)
         setWalletError("")
-        // axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-by-wallet-id/${searchQuery}`, {
+        // axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-by-wallet-id/${searchQuery}`, {
         const query = searchQuery.startsWith("@") ? searchQuery.slice(1).toLowerCase() : searchQuery.toLowerCase()
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-user-wallets/${id || query}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallets/${id || query}`, {
             headers: authHeader
         })
             .then(res => {

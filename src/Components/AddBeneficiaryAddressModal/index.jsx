@@ -37,7 +37,7 @@ const AddBeneficiaryAddressModal = ({ isOpen, toggle, beneficiaries = [], close,
         setIsLoading(true)
         try {
             const encrypted = encryptData({ ...beneficiary, address: addresses?.[beneficiary?._id] })
-            const res = await axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/update-beneficiary/${beneficiary?._id}`, {
+            const res = await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/update-beneficiary/${beneficiary?._id}`, {
                 data: encrypted
             }, {
                 headers: authHeader

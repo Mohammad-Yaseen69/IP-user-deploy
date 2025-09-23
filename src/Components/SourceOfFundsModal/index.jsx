@@ -22,7 +22,7 @@ const SourceOfFunds = ({ isOpen, toggle }) => {
                 source_of_funds: source
             })
             const res = await axios.put(
-                `${process.env.REACT_APP_IP_DEV_API}/api/user/add-source-of-funds`,
+                `${import.meta.env.VITE_IP_DEV_API}/api/user/add-source-of-funds`,
                 {
                     data: enc
                 },

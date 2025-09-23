@@ -27,8 +27,8 @@ const PortfolioItemModal = ({ showModal, setShowModal, item }) => {
                                     style={{ aspectRatio: "16/9" }}
                                 >
                                     <ReactJWPlayer
-                                        playerId={process.env.REACT_APP_JW_PLAYER_ID}
-                                        playerScript={process.env.REACT_APP_JW_PLAYER_URL}
+                                        playerId={import.meta.env.VITE_JW_PLAYER_ID}
+                                        playerScript={import.meta.env.VITE_JW_PLAYER_URL}
                                         controls={true}
                                         playlist={`https://cdn.jwplayer.com/v2/media/${item?.jw_media?.mediaId}`}
                                     />
@@ -42,8 +42,8 @@ const PortfolioItemModal = ({ showModal, setShowModal, item }) => {
                                         style={{ aspectRatio: "16/9" }}
                                     >
                                         <ReactJWPlayer
-                                            playerId={process.env.REACT_APP_JW_PLAYER_ID}
-                                            playerScript={process.env.REACT_APP_JW_PLAYER_URL}
+                                            playerId={import.meta.env.VITE_JW_PLAYER_ID}
+                                            playerScript={import.meta.env.VITE_JW_PLAYER_URL}
                                             controls={true}
                                             playlist={`https://cdn.jwplayer.com/v2/media/${item?.jw_media?.mediaId}`}
                                         />

@@ -71,7 +71,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
         }
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-account-transactions-wallet-by-date/${wallet?.wallet_id}/0/0`,
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-wallet-by-date/${wallet?.wallet_id}/0/0`,
             {
                 data: encrypted
             }, {

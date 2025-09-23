@@ -48,7 +48,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
                 type: codeType
             }
             const encrypted = encryptData(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -85,7 +85,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
         data.append("otp", otp)
         data.append("type", codeType)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/accept-payment-request`, data, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/accept-payment-request`, data, {
             headers: authHeader
         })
             .then(res => {
@@ -124,8 +124,8 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
                 setExchangeRate(null)
                 setCommision(null)
                 setTotal(null)
-                const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${wallet?.currency?.code}&to=${item?.currency?.code}&amount=${item?.amount}&type=payment_request&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${"wallet"}&receiver_wallet_id=${item?.wallet}&sender_wallet_id=${wallet?._id}&payment_method=request`
-                // axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-exchange-rate?from=${wallet?.currency?.code}&to=${item?.currency?.code}&amount=${item?.amount}&type=wallet_to_wallet&level_id=${userDetails.level?._id}&payment_type=conversion&account_id=${userDetails?._id}&receiver_wallet_id=${item?.wallet}`, {
+                const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${wallet?.currency?.code}&to=${item?.currency?.code}&amount=${item?.amount}&type=payment_request&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${"wallet"}&receiver_wallet_id=${item?.wallet}&sender_wallet_id=${wallet?._id}&payment_method=request`
+                // axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-exchange-rate?from=${wallet?.currency?.code}&to=${item?.currency?.code}&amount=${item?.amount}&type=wallet_to_wallet&level_id=${userDetails.level?._id}&payment_type=conversion&account_id=${userDetails?._id}&receiver_wallet_id=${item?.wallet}`, {
                 //     headers: authHeader
                 // })
                 axios.get(url, { headers: authHeader })

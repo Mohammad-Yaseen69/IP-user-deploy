@@ -63,7 +63,7 @@ const Basic = ({ isCollapsed, setIsCollapsed }) => {
 
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/username-check`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/username-check`, {
             data: encrypted
         }, {
             headers: authHeader
@@ -102,7 +102,7 @@ const Basic = ({ isCollapsed, setIsCollapsed }) => {
 
             const encrypted = encryptData(data)
 
-            axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-username/${userDetails?._id}`, {
+            axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-username/${userDetails?._id}`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -137,7 +137,7 @@ const Basic = ({ isCollapsed, setIsCollapsed }) => {
             }
             const encrypted = encryptData(data)
 
-            axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-individual/${userDetails?._id}`, {
+            axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-individual/${userDetails?._id}`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -168,7 +168,7 @@ const Basic = ({ isCollapsed, setIsCollapsed }) => {
 
             const encrypted = encryptData(data)
 
-            axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-business/${userDetails?._id}`, {
+            axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-business/${userDetails?._id}`, {
                 data: encrypted
             }, {
                 headers: authHeader

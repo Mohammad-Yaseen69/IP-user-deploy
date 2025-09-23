@@ -85,7 +85,7 @@ const Header = () => {
             // console.log(blob)
             const formData = new FormData();
             formData.append("file", blob, `profile_image_${Date.now()}.png`);
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/upload-profile-image/${userDetails._id}`,
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/upload-profile-image/${userDetails._id}`,
                 formData, {
                 headers: authHeader
             })

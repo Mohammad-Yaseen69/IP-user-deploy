@@ -24,7 +24,7 @@ const CreditCard = ({ data, dataHandler, url, tokenUrl, showCards = true, showSa
         const getSavedCards = async () => {
             try {
 
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/get-user-pan-list/${userDetails?._id}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-user-pan-list/${userDetails?._id}`, {
                     headers: authHeader
                 })
                 const dec = decryptData(res.data.data)
@@ -42,7 +42,7 @@ const CreditCard = ({ data, dataHandler, url, tokenUrl, showCards = true, showSa
     }, [userDetails])
     const expiryCheck = async (item) => {
         try {
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/check-card-expiry`, { data: encryptData({ card_id: item._id }) }, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/check-card-expiry`, { data: encryptData({ card_id: item._id }) }, {
                 headers: authHeader
             })
 
@@ -149,7 +149,7 @@ const CreditCard = ({ data, dataHandler, url, tokenUrl, showCards = true, showSa
                             transaction={data.cardTransactionDetails}
                             paymentWithSavedCard={data.selectedSavedCard?._id ? true : false}
                             url={url}
-                            // tokenUrl={(token) => `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-international-transaction/${data.cardTransactionDetails?.transaction_id}/${token}`}
+                            // tokenUrl={(token) => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international-transaction/${data.cardTransactionDetails?.transaction_id}/${token}`}
                             tokenUrl={tokenUrl}
                         />
                         :

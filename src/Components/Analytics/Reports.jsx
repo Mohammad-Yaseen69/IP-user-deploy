@@ -42,7 +42,7 @@ const Reports = () => {
                 const encrypted = encryptData({
                     ...apiDates
                 })
-                const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-account-transactions-by-date-type/${userDetails?._id}/0/0`, {
+                const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-by-date-type/${userDetails?._id}/0/0`, {
                     data: encrypted
                 }, {
                     headers: authHeader
@@ -67,7 +67,7 @@ const Reports = () => {
                     ...apiDates,
                     account_id: userDetails?._id
                 })
-                const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-transactions-report-user/0/0`, {
+                const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-transactions-report-user/0/0`, {
                     data: encrypted
                 }, {
                     headers: authHeader

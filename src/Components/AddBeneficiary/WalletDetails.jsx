@@ -11,7 +11,7 @@ const WalletDetails = ({ wallet, authHeader, setWalletError, setWalletIds, setDu
     useEffect(() => {
         setDuplicateWallet(false)
         if (wallet?.wallet_id ? wallet?.wallet_id?.length : wallet.length === 8) {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-by-wallet-id/${wallet?.wallet_id ?? wallet}`, {
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-by-wallet-id/${wallet?.wallet_id ?? wallet}`, {
                 headers: authHeader
             })
                 .then(res => {

@@ -17,7 +17,7 @@ const ReportModal = ({ user, isOpen, toggle, setReported }) => {
             note: details,
             reason
         })
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/report/add-report/${userDetails?._id}/${user?._id}`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/report/add-report/${userDetails?._id}/${user?._id}`, {
             data
         }, {
             headers: authHeader

@@ -33,7 +33,7 @@ const RecentTrans = ({ currentWallet }) => {
             try {
                 if (currentWallet) {
                     const res = await axios.get(
-                        `${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-all-transactions-by-wallet/${currentWallet?.wallet_id}/0/10`,
+                        `${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-all-transactions-by-wallet/${currentWallet?.wallet_id}/0/10`,
                         {
                             headers: authHeader,
                         }

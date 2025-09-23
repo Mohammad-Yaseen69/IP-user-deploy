@@ -122,7 +122,7 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, pa
             const encrypted = encryptData(vendorSpecificData)
 
 
-            const url = vendor === "neema" ? `${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp` : `${userWithdrawals ? `${process.env.REACT_APP_IP_DEV_API}/api/withdrawal` : process.env.REACT_APP_THUNES_API}/${userWithdrawals ? "create-transaction" : "createTransaction"}/${createdQuotation.QuotationID}`
+            const url = vendor === "neema" ? `${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp` : `${userWithdrawals ? `${import.meta.env.VITE_IP_DEV_API}/api/withdrawal` : import.meta.env.VITE_THUNES_API}/${userWithdrawals ? "create-transaction" : "createTransaction"}/${createdQuotation.QuotationID}`
 
             axios.post(url, {
                 data: encrypted

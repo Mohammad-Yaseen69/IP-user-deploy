@@ -116,7 +116,7 @@ const PaymentsFlow = ({ item }) => {
         updateData("exchange_rate_error", "")
         updateData("exchange_rate", {})
         try {
-            const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${data.payment_type?.value !== "wallet" ? data.currency_wallet?.currency?.code : data.wallet?.currency?.code}&to=${item?.currency?.code}&amount=${item?.amount}&type=payment_request&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${item?.wallet}&sender_wallet_id=${data.payment_type?.value !== "wallet" ? data.currency_wallet?._id : data.wallet?._id}&payment_method=request`
+            const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${data.payment_type?.value !== "wallet" ? data.currency_wallet?.currency?.code : data.wallet?.currency?.code}&to=${item?.currency?.code}&amount=${item?.amount}&type=payment_request&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=${data.payment_type?.value ?? "wallet"}&receiver_wallet_id=${item?.wallet}&sender_wallet_id=${data.payment_type?.value !== "wallet" ? data.currency_wallet?._id : data.wallet?._id}&payment_method=request`
             console.log(url)
             const res = await axios.get(url, { headers: authHeader })
 
@@ -209,7 +209,7 @@ const PaymentsFlow = ({ item }) => {
     const getMobileWalletChannels = async () => {
         updateData("loading", true)
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/collection/get-services/${userDetails?.country_iso_code}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/collection/get-services/${userDetails?.country_iso_code}`, {
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
@@ -226,7 +226,7 @@ const PaymentsFlow = ({ item }) => {
     const getMobileWalletServices = async (service_name = data.payment_type?.sub_name) => {
         updateData("loading", true)
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/collection/get-payers/${userDetails?.country_iso_code}/${service_name}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/collection/get-payers/${userDetails?.country_iso_code}/${service_name}`, {
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)

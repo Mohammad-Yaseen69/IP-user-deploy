@@ -231,7 +231,7 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
 
 
             console.log(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/user/add-financial-answer`, { data: encryptData(data) }, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/user/add-financial-answer`, { data: encryptData(data) }, {
                 headers: authHeader
             })
 

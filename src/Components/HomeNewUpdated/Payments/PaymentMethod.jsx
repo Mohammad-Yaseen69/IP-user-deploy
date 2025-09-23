@@ -32,7 +32,7 @@ const PaymentMethod = ({ setPaymentMethod, item, setStep }) => {
     })
 
     const getCurrency = async (channelId) => {
-        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/thunes/get-payer-details?payerId=${item?.mobile_wallet?.[0]?.money_provider}`, {
+        const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/thunes/get-payer-details?payerId=${item?.mobile_wallet?.[0]?.money_provider}`, {
             headers: authHeader
         })
         const dec = await decryptData(res.data.data)
@@ -56,7 +56,7 @@ const PaymentMethod = ({ setPaymentMethod, item, setStep }) => {
     const getConversionRate = async (channel) => {
         const destinationCurrency = await getCurrency()
         try {
-            const url = `${process.env.REACT_APP_IP_DEV_API}/api/thunes/get-markup-conversion-rates?from=${getWallet()?.currency?.code}&to=${destinationCurrency}&amount=${"1.00"}&fromOrTo=${"from"}&service_name=${"international_mobile_wallet"}&account_id=${userDetails?._id}&payer_id=${item?.mobile_wallet?.[0]?.money_provider}&service_id=${channel?.id}`
+            const url = `${import.meta.env.VITE_IP_DEV_API}/api/thunes/get-markup-conversion-rates?from=${getWallet()?.currency?.code}&to=${destinationCurrency}&amount=${"1.00"}&fromOrTo=${"from"}&service_name=${"international_mobile_wallet"}&account_id=${userDetails?._id}&payer_id=${item?.mobile_wallet?.[0]?.money_provider}&service_id=${channel?.id}`
             const res = await axios.get(url, {
                 headers: authHeader
             })

@@ -22,7 +22,7 @@ const useChannels = ({ setLoading, setActive, countryIsoCode, countryId, setCurr
 
     const getCountryFields = async (alpha3, service, bankCountryIso) => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/get-required-fields/${bankCountryIso ? bankCountryIso : alpha3}/${service?.id}/C2C?destinationType=${neemaMethodIDs[service?.method?.split(" ")?.[0]?.toLowerCase()] ?? service?.id}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment/get-required-fields/${bankCountryIso ? bankCountryIso : alpha3}/${service?.id}/C2C?destinationType=${neemaMethodIDs[service?.method?.split(" ")?.[0]?.toLowerCase()] ?? service?.id}`, {
                 headers: authHeader
             });
 
@@ -58,7 +58,7 @@ const useChannels = ({ setLoading, setActive, countryIsoCode, countryId, setCurr
 
             const getChannels = async () => {
                 setFieldsInfo(null)
-                axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/services/${countryIsoCode}/${userDetails?.country?.country_iso_code}`, { headers: authHeader })
+                axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment/services/${countryIsoCode}/${userDetails?.country?.country_iso_code}`, { headers: authHeader })
                     .then(res => {
                         const decrypted = decryptData(res.data.data)
                         setServices(decrypted?.services || [])
@@ -73,7 +73,7 @@ const useChannels = ({ setLoading, setActive, countryIsoCode, countryId, setCurr
                         if (mobile) {
                             const data = { country: countryIsoCode, id: mobile.id }
                             const encrypted = encryptData(data)
-                            axios.post(`${process.env.REACT_APP_THUNES_API}/payerInfo`, {
+                            axios.post(`${import.meta.env.VITE_THUNES_API}/payerInfo`, {
                                 data: encrypted
                             }, { headers: authHeader })
                                 .then(res => {
@@ -100,7 +100,7 @@ const useChannels = ({ setLoading, setActive, countryIsoCode, countryId, setCurr
         if (countryId) {
             const getChannels = async () => {
                 try {
-                    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/country/get-specific-country-details/${countryId}`, {
+                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/country/get-specific-country-details/${countryId}`, {
                         headers: authHeader
                     })
                     const decrypted = decryptData(res.data.data)

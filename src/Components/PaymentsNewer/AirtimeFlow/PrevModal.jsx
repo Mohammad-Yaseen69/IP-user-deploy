@@ -25,7 +25,7 @@ const PrevModal = ({ isOpen, toggle }) => {
         setIsLoading(true)
         try {
             const response = await axios.get(
-                `${process.env.REACT_APP_IP_DEV_API}/api/user/esims/${userDetails._id}?skip=0&limit=1111111111110`,
+                `${import.meta.env.VITE_IP_DEV_API}/api/user/esims/${userDetails._id}?skip=0&limit=1111111111110`,
                 { headers: authHeader }
             )
             const data = decryptData(response.data.data)

@@ -27,7 +27,7 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
 
     useEffect(() => {
         if (result && result?.length === 8) {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-user-wallets/${result}`, {
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallets/${result}`, {
                 headers: authHeader
             })
                 .then(res => {
@@ -72,7 +72,7 @@ const QRCodeScan = ({ setSubStep, dataHandler }) => {
         formData.append("file", selectedFile)
 
         setLoading(true)
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-qr-details`,
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-qr-details`,
             formData, {
             headers: authHeader
         })

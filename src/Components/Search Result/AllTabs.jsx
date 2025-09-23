@@ -8,7 +8,7 @@ import axios from 'axios';
 const AllTabs = () => {
   const [tabsData, setTabsData] = useState();
   useEffect(() => {
-    axios.get(`${process.env.PUBLIC_URL}/api/searchAllTabs.json`).then((resp) => {
+    axios.get(`${window.location.origin}/api/searchAllTabs.json`).then((resp) => {
       setTabsData(resp.data);
     });
   }, []);

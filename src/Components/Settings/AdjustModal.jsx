@@ -40,7 +40,7 @@ const AdjustModal = ({ isOpen, toggle, imageUrl, accountId, authHeader, type, na
             }
             updateCoordinates(type, name, modalPixels)
 
-            const res = await axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/user/update-image-coordinates`, { data: encryptData(data) }, {
+            const res = await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/user/update-image-coordinates`, { data: encryptData(data) }, {
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)

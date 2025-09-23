@@ -21,7 +21,7 @@ const Notification = ({ active, setActive }) => {
             </div>
             <div className="flex-grow-1">
               <P>
-                <Link to={`${process.env.PUBLIC_URL}/ecommerce/orderhistory `}>Delivery processing</Link>
+                <Link to={`${window.location.origin}/ecommerce/orderhistory `}>Delivery processing</Link>
                 <span className="pull-right">6 hr</span>
               </P>
             </div>
@@ -34,7 +34,7 @@ const Notification = ({ active, setActive }) => {
             </div>
             <div className="flex-grow-1">
               <P>
-                <Link to={`${process.env.PUBLIC_URL}/ecommerce/cart `}>Order Complete</Link>
+                <Link to={`${window.location.origin}/ecommerce/cart `}>Order Complete</Link>
                 <span className="pull-right">3 hr</span>
               </P>
             </div>
@@ -47,7 +47,7 @@ const Notification = ({ active, setActive }) => {
             </div>
             <div className="flex-grow-1">
               <P>
-                <Link to={`${process.env.PUBLIC_URL}/ecommerce/invoice `}>Tickets Generated</Link>
+                <Link to={`${window.location.origin}/ecommerce/invoice `}>Tickets Generated</Link>
                 <span className="pull-right">1 hr</span>
               </P>
             </div>
@@ -60,14 +60,14 @@ const Notification = ({ active, setActive }) => {
             </div>
             <div className="flex-grow-1">
               <P>
-                <Link to={`${process.env.PUBLIC_URL}/email-app `}>Delivery Complete</Link>
+                <Link to={`${window.location.origin}/email-app `}>Delivery Complete</Link>
                 <span className="pull-right">45 min</span>
               </P>
             </div>
           </div>
         </LI>
         <LI>
-          <Link className="btn btn-primary" /*to={`${process.env.PUBLIC_URL}/email-app `}*/>Check all notification</Link>
+          <Link className="btn btn-primary" /*to={`${window.location.origin}/email-app `}*/>Check all notification</Link>
         </LI>
       </ul>
     </LI>

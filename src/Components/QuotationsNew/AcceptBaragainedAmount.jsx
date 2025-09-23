@@ -35,7 +35,7 @@ const AcceptBargainedAmount = ({ item, isOpen, toggle, type = "bargain", badgeCo
                 quotation_id: item?._id
             }
             const encrypted = encryptData(data)
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/quotation/accept-bargain`, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/quotation/accept-bargain`, {
                 data: encrypted
             }, {
                 headers: authHeader

@@ -81,7 +81,7 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, se
 
             const encrypted = encryptData(data)
 
-            axios.post(`${process.env.REACT_APP_THUNES_API}/createTransaction/${createdQuotation.QuotationID}`, {
+            axios.post(`${import.meta.env.VITE_THUNES_API}/createTransaction/${createdQuotation.QuotationID}`, {
                 data: encrypted
             }, {
                 headers: authHeader

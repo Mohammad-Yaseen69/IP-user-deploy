@@ -30,7 +30,7 @@ const AirtimeProviderDetails = ({ setSubStep, service, providers, serviceType, s
         setExchangeError("")
         setLoader(true)
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-exchange-rate?from=${currency}&to=${exchangeCurrency}&amount=${amount}&type=wallet_to_wallet&level_id=${userDetails.level?._id}&account_id=${userDetails?._id}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-exchange-rate?from=${currency}&to=${exchangeCurrency}&amount=${amount}&type=wallet_to_wallet&level_id=${userDetails.level?._id}&account_id=${userDetails?._id}`, {
                 headers: authHeader
             })
 
@@ -56,7 +56,7 @@ const AirtimeProviderDetails = ({ setSubStep, service, providers, serviceType, s
     useEffect(() => {
         const getSubServices = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/sub-services-in-country/${country?.alpha3}/${providers?.id}/${service}`)
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/dt/sub-services-in-country/${country?.alpha3}/${providers?.id}/${service}`)
                 const data = decryptData(res.data.data)
                 // console.log(data)
                 setSubServices(data)
@@ -84,7 +84,7 @@ const AirtimeProviderDetails = ({ setSubStep, service, providers, serviceType, s
                 amount
             }
             // console.log(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/products/${country?.alpha3}/${providers?.id}/${service}/${serviceType}`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/products/${country?.alpha3}/${providers?.id}/${service}/${serviceType}`, {
                 data: encryptData(data)
             })
             const dec = await decryptData(res.data.data)
@@ -177,7 +177,7 @@ const AirtimeProviderDetails = ({ setSubStep, service, providers, serviceType, s
             }
             // console.log(data)
             const enc = encryptData(data);
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/products/${packages}`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/products/${packages}`, {
                 data: enc
             }, {
                 headers: authHeader
@@ -229,7 +229,7 @@ const AirtimeProviderDetails = ({ setSubStep, service, providers, serviceType, s
                     }
                     console.log(data)
                     console.log(authHeader)
-                    const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/create-airtime-transaction`, {
+                    const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/create-airtime-transaction`, {
                         data: encryptData(data)
                     }, {
                         headers: authHeader
@@ -253,7 +253,7 @@ const AirtimeProviderDetails = ({ setSubStep, service, providers, serviceType, s
                         amount: +amount
                     }
                     // console.log(ctData)
-                    const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/create-transaction`, {
+                    const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/create-transaction`, {
                         data: encryptData(ctData)
                     }, {
                         headers: authHeader

@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import MainContent from "./MainContent";
 
 const BroadcastSignup = () => {
-    const SECRET_KEY = process.env.REACT_APP_SECRET_KEY_FOR_BULK
+    const SECRET_KEY = import.meta.env.VITE_SECRET_KEY_FOR_BULK
     const { t } = useTranslation()
     const [pass, setPass] = useState("")
     const [showModal, setShowModal] = useState(true)

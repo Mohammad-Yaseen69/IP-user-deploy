@@ -11,7 +11,7 @@ const FundsHistory = ({ isOpen, toggle }) => {
     useEffect(() => {
         const getFunds = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/collection/get-user-funds/${userDetails?._id}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/collection/get-user-funds/${userDetails?._id}`, {
                     headers: authHeader,
                 });
                 const data = await decryptData(res.data.data);

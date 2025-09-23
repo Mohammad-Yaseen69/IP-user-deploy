@@ -7,7 +7,7 @@ import localforage from "localforage"
 
 
 export const confirmTransaction = async (apiHeaders, payload) => {
-    const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/insta-wallet-to-wallet`, { data: encryptData(payload) }, {
+    const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/insta-wallet-to-wallet`, { data: encryptData(payload) }, {
         headers: apiHeaders
     })
 
@@ -22,7 +22,7 @@ export const getWalletDetails = async ({ wallet_id }) => {
         wallet_id: wallet_id,
     }
 
-    const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-details-wallet-public`, { data: encryptData(requestData) })
+    const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-details-wallet-public`, { data: encryptData(requestData) })
     const dec = decryptData(res.data.data)
     const file = countriesData.find(item => item.name.toLowerCase() === dec?.walletDetails?.country?.toLowerCase())?.file_url
     return { ...dec.walletDetails, file }
@@ -35,7 +35,7 @@ export const sendOtpSkip = async (token, payload) => {
         "source": "user"
     }
     const encrypted = encryptData(payload)
-    const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+    const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
         data: encrypted
     }, {
         headers: apiHeaders
@@ -56,7 +56,7 @@ export const getFeeDetails = async (payload) => {
         "source": "user"
     }
 
-    const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from || userDetails?.walletDetails?.currency?.code}&to=${recipientDets?.currency?.code}&amount=${Number(amount?.toString()?.replaceAll(",", ""))}&payment_method=request&account_id=${account_id || userDetails?._id}&type=qr_pay&receiver_wallet_id=${recipientDets._id}&sender_wallet_id=${sender_wallet_id || userDetails?.walletDetails?._id}&payment_type=wallet&level_id=${level || userDetails?.level_id}`;
+    const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${from || userDetails?.walletDetails?.currency?.code}&to=${recipientDets?.currency?.code}&amount=${Number(amount?.toString()?.replaceAll(",", ""))}&payment_method=request&account_id=${account_id || userDetails?._id}&type=qr_pay&receiver_wallet_id=${recipientDets._id}&sender_wallet_id=${sender_wallet_id || userDetails?.walletDetails?._id}&payment_type=wallet&level_id=${level || userDetails?.level_id}`;
     const res = await axios.get(url, { headers: apiHeaders });
     const dec = decryptData(res.data.data);
 
@@ -81,7 +81,7 @@ export const getFeeDetails = async (payload) => {
 export const biometricVerification1 = async (payload) => {
     console.log("biometricVerification1 payload:", payload)
     
-    const response1 = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/login-biometric-challenge`, {
+    const response1 = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/login-biometric-challenge`, {
         data: encryptData(payload)
     })
 
@@ -90,7 +90,7 @@ export const biometricVerification1 = async (payload) => {
 }
 
 export const biometricVerification2 = async (payload) => {
-    const getDetails = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-biometric-details`, { data: encryptData({ credentials: payload }) })
+    const getDetails = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/get-biometric-details`, { data: encryptData({ credentials: payload }) })
     const dec2 = decryptData(getDetails.data.data)
     return dec2
 }

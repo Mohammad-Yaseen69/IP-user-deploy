@@ -55,7 +55,7 @@ const SecurityQuestions = ({ isCollapsed, setIsCollapsed }) => {
 
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/user/set-security-question/${userDetails._id}`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/user/set-security-question/${userDetails._id}`, {
             data: encrypted
         }, {
             headers: authHeader

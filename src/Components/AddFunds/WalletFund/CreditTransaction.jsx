@@ -5,7 +5,7 @@ import CryptoJS from 'crypto-js';
 const TrustpaymentPage = ({ amount, currency, card_number, card_expiry, card_cvc, transaction, type = "add_fund", url, paymentWithSavedCard = false, tokenUrl = undefined, guestUserName, guestWallet, guestUser, guestDetails, compareToken = true }) => {
   const [token, setToken] = useState(null);
 
-  const webhook_url = url ?? (paymentWithSavedCard ? `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-pan-transaction/${transaction?.transaction_id}` : `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/payment${type === "add_fund" ? "" : "-kyc"}-confirmation/${transaction?.transaction_id}`)
+  const webhook_url = url ?? (paymentWithSavedCard ? `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-pan-transaction/${transaction?.transaction_id}` : `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/payment${type === "add_fund" ? "" : "-kyc"}-confirmation/${transaction?.transaction_id}`)
 
 
   useEffect(() => {

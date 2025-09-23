@@ -10,7 +10,7 @@ const PartnerVerificationPage = () => {
     useEffect(() => {
         const authenticate = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/company/verify-token/${token}`)
+                const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/company/verify-token/${token}`)
                 const data = await decryptData(response.data.data)
                 // console.log(data)
 

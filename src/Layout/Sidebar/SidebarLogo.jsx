@@ -9,7 +9,7 @@ const SidebarLogo = () => {
 
   return (
     <>
-      <Link to={`${process.env.PUBLIC_URL}/dashboard/default`} style={{ display: "flex", alignItems: "center", gap: ".6rem", paddingTop: ".8rem" }}>
+      <Link to={`${window.location.origin}/dashboard/default`} style={{ display: "flex", alignItems: "center", gap: ".6rem", paddingTop: ".8rem" }}>
         <Image attrImage={{ className: "img-fluid for-light", src: cubaimg, alt: "", style: { height: "40px" } }} />
         <span style={{ color: "white", fontSize: "1.2rem" }}>InstaPay</span>
       </Link>

@@ -8,7 +8,7 @@ import { H4, H6, LI, UL, Image } from '../../../AbstractElements';
 const AllCards = () => {
   const [cards, setCards] = useState([]);
   useEffect(() => {
-    axios.get(`${process.env.PUBLIC_URL}/api/usercard.json`).then(res => setCards(res.data));
+    axios.get(`${window.location.origin}/api/usercard.json`).then(res => setCards(res.data));
   }, []);
   var images = require.context('../../../assets/images', true);
   const dynamicImage = (image) => {
@@ -28,7 +28,7 @@ const AllCards = () => {
                   <Image attrImage={{ src: `${dynamicImage(item.avatar)}`, className: 'rounded-circle', alt: '' }} />
                 </div>
                 <div className="text-center profile-details">
-                  <Link to={`${process.env.PUBLIC_URL}/users/userprofile`}>
+                  <Link to={`${window.location.origin}/users/userprofile`}>
                     <H4>{item.name}</H4>
                   </Link>
                   <H6>{item.post}</H6>

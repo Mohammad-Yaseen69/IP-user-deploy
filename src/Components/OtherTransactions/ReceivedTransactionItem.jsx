@@ -15,7 +15,7 @@ export const cancelSubscriptionOrSchedulePayment = async (item, authHeader, refe
     //     toast.info("Still in development.")
     // } else {
     try {
-        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/cancel-schedule/${item?._id}`, {
+        const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user/cancel-schedule/${item?._id}`, {
             headers: authHeader
         })
         const dec = decryptData(res.data.data)

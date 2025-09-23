@@ -68,7 +68,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
 
         const getPosition = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/get-coordinates/${countryIsoCode}`, { headers: authHeader })
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/get-coordinates/${countryIsoCode}`, { headers: authHeader })
                 const dec = decryptData(res.data.data)
                 setPosition(dec?.position)
                 setCoordApiCountry(dec?.country?.name)
@@ -92,7 +92,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
     useEffect(() => {
         const getAddresses = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/get-autocomplete-address?lat=${position.lat}&long=${position.lng}&countryIso=${countryIsoCode}&query=${debouncedAddress}&countryName=${coordApiCountry}`, { headers: authHeader });
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/get-autocomplete-address?lat=${position.lat}&long=${position.lng}&countryIso=${countryIsoCode}&query=${debouncedAddress}&countryName=${coordApiCountry}`, { headers: authHeader });
                 const dec = decryptData(res.data.data);
                 console.log(dec);
                 setAddresses(dec?.addresses ?? []);
@@ -123,7 +123,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
         formData.append('relationship', relationship);
         formData.append('contact', contact);
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/nominee/add-nominee/${userDetails?._id}`,
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/nominee/add-nominee/${userDetails?._id}`,
             formData,
             {
                 headers: authHeader
@@ -145,7 +145,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
 
     const NumberValidation = async () => {
         try {
-            await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
+            await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`, {
                 data: encryptData({ number: `+${contact}` })
             });
             addNomineeHandler()

@@ -22,7 +22,7 @@ const DeleteModal = ({ showDeleteModal, setShowDeleteModal, item, categories, se
         // console.log(data)
         const encrypted = encryptData(data)
         // console.log(encrypted)
-        axios.delete(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/delete-category`, {
+        axios.delete(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/delete-category`, {
             data: { data: encrypted }
         }, {
             headers: authHeader

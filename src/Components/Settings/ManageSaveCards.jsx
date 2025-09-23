@@ -26,7 +26,7 @@ const ManageSaveCards = () => {
         const getSavedCards = async () => {
             try {
 
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/get-user-pan-list/${userDetails?._id}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-user-pan-list/${userDetails?._id}`, {
                     headers: authHeader
                 })
                 const dec = decryptData(res.data.data)
@@ -43,7 +43,7 @@ const ManageSaveCards = () => {
     const deleteCard = async () => {
         setIsDeleting(true)
         try {
-            const res = await axios.delete(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/delete-user-pan/${deleteData.current?._id}`)
+            const res = await axios.delete(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/delete-user-pan/${deleteData.current?._id}`)
             await decryptData(res.data.data)
             toast.success("Deleted card successfully!")
             setCards(prev => prev.filter(item => item?._id !== deleteData.current?._id))

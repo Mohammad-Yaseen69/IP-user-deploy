@@ -73,7 +73,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                     const enc = encryptData(data)
 
                     // api
-                    const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/initiat${type === "add_fund" ? "" : "-kyc"}${paymentWithSavedCard ? "-pan" : ""}-transaction`, {
+                    const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiat${type === "add_fund" ? "" : "-kyc"}${paymentWithSavedCard ? "-pan" : ""}-transaction`, {
                         data: enc
                     }, {
                         headers: authHeader
@@ -126,7 +126,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
 
                 console.log(data)
                 try {
-                    const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/paypal/initiate-payment`, {
+                    const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-payment`, {
                         data: encryptData(data)
                     }, {
                         headers: authHeader,
@@ -171,7 +171,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
 
                 console.log(data)
                 try {
-                    const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/collection/create-payment-order`, {
+                    const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/collection/create-payment-order`, {
                         data: encryptData(data)
                     }, {
                         headers: authHeader

@@ -26,38 +26,38 @@ import AuthComponent from '../Components/AuthComponent';
 import AuthNew from '../Components/AuthNew';
 
 export const authRoutes = [
-  // { path: `${process.env.PUBLIC_URL}/auth/login`, Components: <AuthComponent /> },
-  { path: `${process.env.PUBLIC_URL}/login`, Components: <AuthNew /> },
-  { path: `${process.env.PUBLIC_URL}/signup`, Components: <AuthNew /> },
-  { path: `${process.env.PUBLIC_URL}/signup/:code`, Components: <AuthNew /> },
-  // { path: `${process.env.PUBLIC_URL}/login`, Components: <AuthComponent /> },
-  { path: `${process.env.PUBLIC_URL}/authentication/login-simple`, Components: <LoginSample /> },
-  { path: `${process.env.PUBLIC_URL}/authentication/login-img`, Components: <LoginOne /> },
-  { path: `${process.env.PUBLIC_URL}/authentication/login-bg-img`, Components: <LoginTwo /> },
-  { path: `${process.env.PUBLIC_URL}/authentication/login-validation`, Components: <LoginValidation /> },
-  { path: `${process.env.PUBLIC_URL}/authentication/login-tooltip`, Components: <LoginTooltip /> },
-  { path: `${process.env.PUBLIC_URL}/authentication/login-sweetalert`, Components: <LoginSweetalert /> },
-  { path: `${process.env.PUBLIC_URL}/authentication/register-simpleimg`, Components: <RegisterSimple /> },
-  { path: `${process.env.PUBLIC_URL}/authentication/register-bg-img`, Components: <RegisterBgImg /> },
-  { path: `${process.env.PUBLIC_URL}/authentication/register-video`, Components: <RegisterVideo /> },
-  { path: `${process.env.PUBLIC_URL}/authentication/unlock-user`, Components: <UnlockUser /> },
-  { path: `${process.env.PUBLIC_URL}/authentication/forget-pwd`, Components: <ForgetPwd /> },
-  { path: `${process.env.PUBLIC_URL}/authentication/create-pwd`, Components: <CreatePwd /> },
-  { path: `${process.env.PUBLIC_URL}/authentication/maintenance`, Components: <Maintenance /> },
+  // { path: `${window.location.origin}/auth/login`, Components: <AuthComponent /> },
+  { path: `${window.location.origin}/login`, Components: <AuthNew /> },
+  { path: `${window.location.origin}/signup`, Components: <AuthNew /> },
+  { path: `${window.location.origin}/signup/:code`, Components: <AuthNew /> },
+  // { path: `${window.location.origin}/login`, Components: <AuthComponent /> },
+  { path: `${window.location.origin}/authentication/login-simple`, Components: <LoginSample /> },
+  { path: `${window.location.origin}/authentication/login-img`, Components: <LoginOne /> },
+  { path: `${window.location.origin}/authentication/login-bg-img`, Components: <LoginTwo /> },
+  { path: `${window.location.origin}/authentication/login-validation`, Components: <LoginValidation /> },
+  { path: `${window.location.origin}/authentication/login-tooltip`, Components: <LoginTooltip /> },
+  { path: `${window.location.origin}/authentication/login-sweetalert`, Components: <LoginSweetalert /> },
+  { path: `${window.location.origin}/authentication/register-simpleimg`, Components: <RegisterSimple /> },
+  { path: `${window.location.origin}/authentication/register-bg-img`, Components: <RegisterBgImg /> },
+  { path: `${window.location.origin}/authentication/register-video`, Components: <RegisterVideo /> },
+  { path: `${window.location.origin}/authentication/unlock-user`, Components: <UnlockUser /> },
+  { path: `${window.location.origin}/authentication/forget-pwd`, Components: <ForgetPwd /> },
+  { path: `${window.location.origin}/authentication/create-pwd`, Components: <CreatePwd /> },
+  { path: `${window.location.origin}/authentication/maintenance`, Components: <Maintenance /> },
 
   //Coming soon
   {
-    path: `${process.env.PUBLIC_URL}/coming/comingbgvideo`, Components: <ComingsoonVideo />,
+    path: `${window.location.origin}/coming/comingbgvideo`, Components: <ComingsoonVideo />,
   },
-  { path: `${process.env.PUBLIC_URL}/coming/comingsimple`, Components: <ComingSimple /> },
+  { path: `${window.location.origin}/coming/comingsimple`, Components: <ComingSimple /> },
   {
-    path: `${process.env.PUBLIC_URL}/coming/comingbgimage`, Components: <ComingBgImg />
+    path: `${window.location.origin}/coming/comingbgimage`, Components: <ComingBgImg />
   },
 
   //Error Page
-  { path: `${process.env.PUBLIC_URL}/error/error-page1`, Components: <ErrorPage1 /> },
-  { path: `${process.env.PUBLIC_URL}/error/error-page2`, Components: <ErrorPage2 /> },
-  { path: `${process.env.PUBLIC_URL}/error/error-page3`, Components: <ErrorPage3 /> },
-  { path: `${process.env.PUBLIC_URL}/error/error-page4`, Components: <ErrorPage4 /> },
-  { path: `${process.env.PUBLIC_URL}/error/error-page5`, Components: <ErrorPage5 /> },
+  { path: `${window.location.origin}/error/error-page1`, Components: <ErrorPage1 /> },
+  { path: `${window.location.origin}/error/error-page2`, Components: <ErrorPage2 /> },
+  { path: `${window.location.origin}/error/error-page3`, Components: <ErrorPage3 /> },
+  { path: `${window.location.origin}/error/error-page4`, Components: <ErrorPage4 /> },
+  { path: `${window.location.origin}/error/error-page5`, Components: <ErrorPage5 /> },
 ];

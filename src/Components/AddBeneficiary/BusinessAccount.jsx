@@ -182,7 +182,7 @@ const BusinessAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, to
 
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/add-beneficiary`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/add-beneficiary`, {
             data: encrypted
         }, {
             headers: authHeader
@@ -281,7 +281,7 @@ const BusinessAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, to
             if (e.target.value.length > 11) {
                 setAccNumType("IBAN")
                 if (e.target.value.length > 15) {
-                    axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/get-details-by-iban/${e.target.value}`, {
+                    axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/get-details-by-iban/${e.target.value}`, {
                         headers: authHeader
                     })
                         .then(res => {
@@ -352,7 +352,7 @@ const BusinessAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, to
             } else {
                 setAccNumType("Swift")
                 if (e.target.value.length > 7) {
-                    axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/get-details-by-bic/${e.target.value}/abc`, {
+                    axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/get-details-by-bic/${e.target.value}/abc`, {
                         headers: authHeader
                     })
                         .then(res => {
@@ -487,7 +487,7 @@ const BusinessAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, to
         if (countryId) {
             const getChannels = async () => {
                 try {
-                    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/country/get-specific-country-details/${countryId}`, {
+                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/country/get-specific-country-details/${countryId}`, {
                         headers: authHeader
                     })
                     const decrypted = decryptData(res.data.data)
@@ -514,7 +514,7 @@ const BusinessAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, to
     useEffect(() => {
         if (countryIsoCode) {
             const getChannels = async () => {
-                axios.get(`${process.env.REACT_APP_THUNES_API}/services/${countryIsoCode}`, { headers: authHeader })
+                axios.get(`${import.meta.env.VITE_THUNES_API}/services/${countryIsoCode}`, { headers: authHeader })
                     .then(res => {
                         // console.log(decryptData(res.data.data))
                         const decrypted = decryptData(res.data.data)
@@ -524,7 +524,7 @@ const BusinessAccount = ({ mobileView, handleChangeAlpha, handleChangeNumber, to
                         if (mobile) {
                             const data = { country: countryIsoCode, id: mobile.id }
                             const encrypted = encryptData(data)
-                            axios.post(`${process.env.REACT_APP_THUNES_API}/payerInfo`, {
+                            axios.post(`${import.meta.env.VITE_THUNES_API}/payerInfo`, {
                                 data: encrypted
                             }, { headers: authHeader })
                                 .then(res => {

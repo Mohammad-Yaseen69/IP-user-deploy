@@ -27,7 +27,7 @@ const SearchComponent = ({ showS = false, showOthers = true }) => {
             const query = search.startsWith("@") ? search.slice(1) : search
             try {
                 const response = await axios.get(
-                    `${process.env.REACT_APP_IP_DEV_API}/api/account/search-users/${query}`,
+                    `${import.meta.env.VITE_IP_DEV_API}/api/account/search-users/${query}`,
                     {
                         headers: authHeader,
                     }

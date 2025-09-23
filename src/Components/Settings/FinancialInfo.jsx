@@ -157,7 +157,7 @@ const FinancialInfo = () => {
 
 
             console.log(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/user/update-financial-answers`, { data: encryptData(data) }, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/user/update-financial-answers`, { data: encryptData(data) }, {
                 headers: authHeader
             })
 

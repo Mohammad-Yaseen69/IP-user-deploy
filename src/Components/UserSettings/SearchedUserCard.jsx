@@ -12,7 +12,7 @@ const SearchedUserCard = ({ user, userDetails, setPartners, setSearchInFocus, au
         setAdding(true)
         try {
             const encrypted = encryptData(payload)
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/company/add-partner`, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/company/add-partner`, {
                 data: encrypted
             }, {
                 headers: authHeader

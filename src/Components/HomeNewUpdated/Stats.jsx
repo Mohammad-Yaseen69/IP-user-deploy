@@ -102,7 +102,7 @@ const Stats = ({ currentWallet }) => {
 
             try {
                 const res = await axios.post(
-                    `${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-account-transactions-wallet-by-date/${currentWallet?.wallet_id}/0/0`,
+                    `${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-wallet-by-date/${currentWallet?.wallet_id}/0/0`,
                     {
                         data: encrypted,
                     },

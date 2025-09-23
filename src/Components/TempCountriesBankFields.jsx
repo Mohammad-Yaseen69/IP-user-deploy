@@ -15,7 +15,7 @@ const TempCountriesBankFields = () => {
 
     const getData = async (country) => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/thunes/get-required-fields-by-country/${country?.alpha3}/${service}/C2C`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/thunes/get-required-fields-by-country/${country?.alpha3}/${service}/C2C`, {
                 headers: authHeader
             });
 

@@ -123,7 +123,7 @@ const CreatePin = () => {
 
             const enc = encryptData(data)
 
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/set-account-pin`, { data: enc }, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/set-account-pin`, { data: enc }, {
                 headers: authHeader
             })
 

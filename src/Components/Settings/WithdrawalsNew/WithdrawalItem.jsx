@@ -300,7 +300,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                 const data = { country: country?.alpha3, service: current?.name, vendor: current.vendor }
                 // const encrypted = encryptData(data)
 
-                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/payment/payers`, data, { headers: authHeader })
+                const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/payment/payers`, data, { headers: authHeader })
                 const decrypted = decryptData(res.data.data)
                 setPayers(decrypted.destinations || decrypted || [])
             } catch (err) {
@@ -479,7 +479,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                 : []
         }
         const encrypted = encryptData(data)
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/create-withdrawal`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/withdrawal/create-withdrawal`, {
             data: encrypted
         }, {
             headers: authHeader
@@ -613,7 +613,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
         }
         console.log(data)
         const encrypted = encryptData(data)
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/update-withdrawal/${userWithdrawals?._id}`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/withdrawal/update-withdrawal/${userWithdrawals?._id}`, {
             data: encrypted
         }, {
             headers: authHeader
@@ -641,7 +641,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
     const verifyNumber = async () => {
         setIsSaving(true)
         try {
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`, {
                 data: encryptData({ number: `+${bankMobCrypto.mobile_wallet_account_number}` })
             })
 
@@ -689,7 +689,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             // console.log(data)
             const encrypted = encryptData(data)
 
-            await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/delete-channel-withdrawal`, {
+            await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/withdrawal/delete-channel-withdrawal`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -728,7 +728,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             }
             console.log(data, userWithdrawals)
             const encyrpted = encryptData(data)
-            await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/set-channel-default`, {
+            await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/withdrawal/set-channel-default`, {
                 data: encyrpted
             }, { headers: authHeader })
 
@@ -1097,7 +1097,7 @@ export const MoreMenu = ({ withdrawal_id }) => {
     const deleteWithdrawals = async () => {
         setIsDeleting(true)
         try {
-            await axios.delete(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/delete-withdrawal/${withdrawal_id}`, {
+            await axios.delete(`${import.meta.env.VITE_IP_DEV_API}/api/withdrawal/delete-withdrawal/${withdrawal_id}`, {
                 headers: authHeader
             })
             getWithdrawals()

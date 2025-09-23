@@ -32,7 +32,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
         setError("");
         try {
             const normalized = query.startsWith("@") ? query.slice(1).toLowerCase() : query.toLowerCase();
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-user-wallets/${normalized}`,
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallets/${normalized}`,
                 { headers: authHeader }
             );
             const dec = decryptData(res.data.data);
@@ -211,7 +211,7 @@ export const BeneficiaryCard = ({ data, dataHandler, item, type, setBenWalletsFo
 
     const findWallets = async (search) => {
         setLoading(true)
-        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-user-wallets/${search}`, {
+        const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallets/${search}`, {
             headers: authHeader
         });
         const dec = decryptData(res.data.data);

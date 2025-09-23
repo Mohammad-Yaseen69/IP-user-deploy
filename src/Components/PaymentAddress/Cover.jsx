@@ -54,7 +54,7 @@ const Cover = ({ cover, setCover, dets }) => {
         // formData.append("file", blob, `cover_image_${Date.now()}.png`);
         formData.append("file", file);
         // formData.forEach(item => "a") // console.log(item))
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/add-payment-address-cover/${userDetails?.username}`,
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/add-payment-address-cover/${userDetails?.username}`,
             formData, {
             headers: authHeader,
         })
@@ -78,7 +78,7 @@ const Cover = ({ cover, setCover, dets }) => {
         setIsSaving(true);
         setDeleting(true)
 
-        axios.delete(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/delete-cover-picture/${userDetails?._id}`, {
+        axios.delete(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/delete-cover-picture/${userDetails?._id}`, {
             headers: authHeader
         })
             .then(res => {

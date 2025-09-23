@@ -151,7 +151,7 @@ const useBenEditFunc = ({
         const trimObj = trimObjectValues(data)
         const encrypted = encryptData(trimObj)
         
-        axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/update-beneficiary/${user._id}`, {
+        axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/update-beneficiary/${user._id}`, {
             data: encrypted
         }, {
             headers: authHeader
@@ -229,7 +229,7 @@ const useBenEditFunc = ({
         setsaveloading(true)
         try {
             if (formData.mobile_wallet_account_number) {
-                await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
+                await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`, {
                     data: encryptData({ number: `+${formData.mobile_wallet_account_number}` })
                 })
             }

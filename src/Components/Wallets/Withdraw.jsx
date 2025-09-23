@@ -234,7 +234,7 @@ const WithdrawOldFlow = ({
     useEffect(() => {
         if (payoutChannel) {
             const data = { country: currentWithdrawal?.iso_code, service: payoutChannel.name, vendor: getVendor() }
-            const url = `${process.env.REACT_APP_IP_DEV_API}/api/payment/payers`
+            const url = `${import.meta.env.VITE_IP_DEV_API}/api/payment/payers`
             axios.post(url, data, { headers: authHeader })
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
@@ -284,7 +284,7 @@ const WithdrawOldFlow = ({
             // console.log(data)
             const encrypted = encryptData(data)
 
-            const res = await axios.post(`${process.env.REACT_APP_THUNES_API}/create-quotation`, {
+            const res = await axios.post(`${import.meta.env.VITE_THUNES_API}/create-quotation`, {
                 data: encrypted
             },
                 {

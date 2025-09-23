@@ -38,7 +38,7 @@ const Notifications = () => {
     useEffect(() => {
         const getNotifcations = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/notification/get-notifications/${userDetails?._id}`, {
+                const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/notification/get-notifications/${userDetails?._id}`, {
                     headers: authHeader
                 })
 

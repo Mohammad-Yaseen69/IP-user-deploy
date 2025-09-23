@@ -107,7 +107,7 @@ const RequestMoney = ({ setAction, setStep }) => {
         if (userWallets?.length > 0 && currency && userDetails?.user?.kyc_status !== "approved") {
             const getExchangedAmounts = async (from, to, amount) => {
                 try {
-                    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
+                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
                         headers: authHeader
                     });
                     const dec = decryptData(res?.data?.data);
@@ -146,7 +146,7 @@ const RequestMoney = ({ setAction, setStep }) => {
         try {
 
             if (userDetails.country.country_iso_code == liveCountry?.iso3) {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user-preferences/get-preferences/${userId}/${userDetails.country.country_iso_code}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user-preferences/get-preferences/${userId}/${userDetails.country.country_iso_code}`, {
                     headers: authHeader
                 });
 
@@ -158,7 +158,7 @@ const RequestMoney = ({ setAction, setStep }) => {
                     origin: dec.data[0].reason.includes("payment_request_origin"),
                 })
             } else {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user-preferences/get-preferences/${userId}/${userDetails.country.country_iso_code}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user-preferences/get-preferences/${userId}/${userDetails.country.country_iso_code}`, {
                     headers: authHeader
                 });
 
@@ -170,7 +170,7 @@ const RequestMoney = ({ setAction, setStep }) => {
                     origin: dec.data[0].reason.includes("payment_request_origin"),
                 }))
 
-                const res2 = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user-preferences/get-preferences/${userId}/${liveCountry?.iso3}`, {
+                const res2 = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user-preferences/get-preferences/${userId}/${liveCountry?.iso3}`, {
                     headers: authHeader
                 });
 

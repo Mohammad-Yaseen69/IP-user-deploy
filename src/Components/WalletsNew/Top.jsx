@@ -83,7 +83,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
 
     const handleChangeStatus = () => {
         if (currentActive) {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/deactivate-wallet/${currentWallet?._id}`, {
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/deactivate-wallet/${currentWallet?._id}`, {
                 headers: authHeader
             })
                 .then(res => {
@@ -94,7 +94,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     toast.error("We cannot process your request at the moment, please try again later.")
                 })
         } else {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/activate-wallet/${currentWallet?._id}`, {
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/activate-wallet/${currentWallet?._id}`, {
                 headers: authHeader
             })
                 .then(res => {
@@ -109,7 +109,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
     const handleBlockWallet = () => {
         setBlocking(true)
         if (blocked) {
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/unblock-wallet-user/${currentWallet?._id}`, {
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/unblock-wallet-user/${currentWallet?._id}`, {
                 headers: authHeader
             })
                 .then(res => {
@@ -122,7 +122,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                     setBlocking(false)
                 })
         } else {
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/block-wallet-user/${currentWallet?._id}`, {
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/block-wallet-user/${currentWallet?._id}`, {
                 headers: authHeader
             })
                 .then(res => {

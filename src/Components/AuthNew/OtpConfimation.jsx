@@ -78,7 +78,7 @@ const OtpConfimation = ({ email, password, token, isEmail, setServiceError, rese
 
     const getUserInfo = async () => {
         try {
-            const res = await axios.get(`https://ipinfo.io?token=${process.env.REACT_APP_IP_INFO_TOKEN}`)
+            const res = await axios.get(`https://ipinfo.io?token=${import.meta.env.VITE_IP_INFO_TOKEN}`)
             const location = res.data;
             if (location) {
                 const country_name = countries.find(item => item?.code === location?.country)?.name
@@ -126,14 +126,14 @@ const OtpConfimation = ({ email, password, token, isEmail, setServiceError, rese
 
         const encrypted = encryptData(credentials)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/verify-login-otp`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/verify-login-otp`, {
             data: encrypted
         })
             .then(async (res) => {
                 const decrypted = decryptData(res.data.data)
                 // console.log(decrypted)
                 const token = decrypted?.token
-                axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/auth/${decrypted?.token}`)
+                axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${decrypted?.token}`)
                     .then(async res => {
                         const decrypted = decryptData(res.data.data)
                         const data = await getUserInfo()
@@ -143,14 +143,14 @@ const OtpConfimation = ({ email, password, token, isEmail, setServiceError, rese
                                 ...data
                             }
                         )
-                        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/login/create-login-history`, {
+                        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/login/create-login-history`, {
                             data: encrypted
                         })
                             .then(res => {
                                 const decrypted = decryptData(res.data.data)
 
                                 if (decrypted?.status) {
-                                    axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/auth/${token}`)
+                                    axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${token}`)
                                         .then(res => {
                                             const dec = decryptData(res.data.data)
                                             if (dec?.country?.status) {

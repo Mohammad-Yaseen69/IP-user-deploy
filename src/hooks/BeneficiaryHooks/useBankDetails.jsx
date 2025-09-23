@@ -41,7 +41,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             if (accNumType === "IBAN") {
                 console.log("shu")
                 if (e.target.value.length > 13) {
-                    axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/get-details-by-iban/${e.target.value}`, {
+                    axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/get-details-by-iban/${e.target.value}`, {
                         headers: authHeader
                     })
                         .then(res => {
@@ -162,7 +162,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             } else {
                 console.log(e.target.value.length >= 7)
                 if (e.target.value.length >= 7) {
-                    axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/get-details-by-bic/${e.target.value}/abc`, {
+                    axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/get-details-by-bic/${e.target.value}/abc`, {
                         headers: authHeader
                     })
                         .then(res => {

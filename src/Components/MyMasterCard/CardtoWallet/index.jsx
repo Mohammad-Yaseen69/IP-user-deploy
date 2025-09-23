@@ -111,7 +111,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
                 walletId: (userWallet?._id || recipient?.wallet?._id),
             }
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/card-to-wallet-fee`, { data: encryptData(data) }, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/card-to-wallet-fee`, { data: encryptData(data) }, {
                 headers: authHeader
             })
 
@@ -144,7 +144,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
 
             console.log(data)
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, { data: encryptData(data) }, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, { data: encryptData(data) }, {
                 headers: authHeader
             })
 
@@ -171,7 +171,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
 
             console.log(data)
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/card-to-wallet-transfer`, { data: encryptData(data) }, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/card-to-wallet-transfer`, { data: encryptData(data) }, {
                 headers: authHeader
             })
 

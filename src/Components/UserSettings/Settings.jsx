@@ -66,7 +66,7 @@ const Settings = () => {
             const formData = new FormData();
             formData.append("file", blob, `cover_image_${Date.now()}.png`);
             formData.forEach(item => "a") // console.log(item))
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/upload-cover-image/${userDetails._id}`,
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/upload-cover-image/${userDetails._id}`,
                 formData, {
                 headers: authHeader,
             })

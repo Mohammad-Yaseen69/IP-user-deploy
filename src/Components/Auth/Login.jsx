@@ -172,7 +172,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
 
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/send-login-otp`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/send-login-otp`, {
             data: encrypted
         })
             .then(async (res) => {
@@ -311,7 +311,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
     const getUserInfo = async () => {
         try {
-            const res = await fetch(`https://iplocate.io/api/lookup?apikey=${process.env.REACT_APP_IP_LOCATE_API_KEY}`)
+            const res = await fetch(`https://iplocate.io/api/lookup?apikey=${import.meta.env.VITE_IP_LOCATE_API_KEY}`)
             const location = await res.json()
 
             console.log("locate api", location)
@@ -415,7 +415,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
         const encrypted = encryptData(credentials)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/verify-login-${currentOtpMethod === "auth" ? "auth" : "otp"}`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/verify-login-${currentOtpMethod === "auth" ? "auth" : "otp"}`, {
             data: encrypted
         })
             .then(async (res) => {
@@ -423,7 +423,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 console.log(decrypted)
                 const token = decrypted?.token
                 setIsOtpCorrect(true)
-                axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/auth/${decrypted?.token}`)
+                axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${decrypted?.token}`)
                     .then(async res => {
                         const decrypted = decryptData(res.data.data)
                         const dec = decryptData(res.data.data)
@@ -466,7 +466,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     loginMethod: loginMethod,
                                     credential: email,
                                 })
-                                axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/login/create-login-history`, {
+                                axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/login/create-login-history`, {
                                     data: encrypted
                                 })
                                     .then(res => {
@@ -574,7 +574,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 { email: email } :
                 { phone: email }
 
-            const response1 = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/login-biometric-challenge`, {
+            const response1 = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/login-biometric-challenge`, {
                 data: encryptData(emailOrPhone)
             })
 
@@ -590,14 +590,14 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
 
 
-            const response2 = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/login-biometric-verify`, {
+            const response2 = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/login-biometric-verify`, {
                 data: encryptData(verificationData)
             })
 
             const dec2 = await decryptData(response2.data.data)
 
             const token = dec2?.token
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/auth/${token}`)
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${token}`)
                 .then(async res => {
                     const decrypted = decryptData(res.data.data)
                     const dec = decryptData(res.data.data)
@@ -640,7 +640,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 loginMethod: loginMethod,
                                 credential: email,
                             })
-                            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/login/create-login-history`, {
+                            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/login/create-login-history`, {
                                 data: encrypted
                             })
                                 .then(res => {

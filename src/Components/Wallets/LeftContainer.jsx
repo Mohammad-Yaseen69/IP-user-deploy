@@ -90,7 +90,7 @@ const LeftContainer = ({ wallet, setCurrent, authHeader, userWallets, userDetail
 
     const handleChangeStatus = () => {
         if (active) {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/deactivate-wallet/${wallet._id}`, {
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/deactivate-wallet/${wallet._id}`, {
                 headers: authHeader
             })
                 .then(res => {
@@ -103,7 +103,7 @@ const LeftContainer = ({ wallet, setCurrent, authHeader, userWallets, userDetail
                     // console.log(decryptData(err.response.data.data))
                 })
         } else {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/activate-wallet/${wallet._id}`, {
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/activate-wallet/${wallet._id}`, {
                 headers: authHeader
             })
                 .then(res => {
@@ -120,7 +120,7 @@ const LeftContainer = ({ wallet, setCurrent, authHeader, userWallets, userDetail
     const handleBlockWallet = () => {
         setBlocking(true)
         if (blocked) {
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/unblock-wallet-user/${wallet._id}`, {
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/unblock-wallet-user/${wallet._id}`, {
                 headers: authHeader
             })
                 .then(res => {
@@ -135,7 +135,7 @@ const LeftContainer = ({ wallet, setCurrent, authHeader, userWallets, userDetail
                     setBlocking(false)
                 })
         } else {
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/block-wallet-user/${wallet._id}`, {
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/block-wallet-user/${wallet._id}`, {
                 headers: authHeader
             })
                 .then(res => {
@@ -161,7 +161,7 @@ const LeftContainer = ({ wallet, setCurrent, authHeader, userWallets, userDetail
         }
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-account-transactions-by-date/${userDetails?._id}/0/0`,
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-by-date/${userDetails?._id}/0/0`,
             {
                 data: encrypted
             }, {
@@ -343,7 +343,7 @@ const LeftContainer = ({ wallet, setCurrent, authHeader, userWallets, userDetail
 
     const setActiveQrHandler = (setter) => {
         setIsSaving(true)
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/set-to-default-wallet/${wallet?.wallet_id}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/set-to-default-wallet/${wallet?.wallet_id}`, {
             headers: authHeader
         })
             .then(res => {

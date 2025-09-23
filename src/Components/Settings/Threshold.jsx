@@ -41,7 +41,7 @@ const Threshold = ({ userDetails, authHeader }) => {
         const getPlainExchangeRate = async (amount, setter) => {
             const localc = countries?.find((c) => c?.iso3 === userDetails?.country_iso_code)?.currency
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${"USD"}&to=${localc}&amount=${amount}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${"USD"}&to=${localc}&amount=${amount}`, {
                     headers: authHeader
                 })
 
@@ -70,7 +70,7 @@ const Threshold = ({ userDetails, authHeader }) => {
             }
 
             console.log(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/set-otp-threshold`, { data: encryptData(data) }, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/set-otp-threshold`, { data: encryptData(data) }, {
                 headers: authHeader
             })
 
@@ -82,7 +82,7 @@ const Threshold = ({ userDetails, authHeader }) => {
             }
 
             if (toggle === false) {
-                await axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-individual/${userDetails._id}`, { data: encryptData({ qr_quicker_pay_enabled: !toggle }) }, {
+                await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-individual/${userDetails._id}`, { data: encryptData({ qr_quicker_pay_enabled: !toggle }) }, {
                     headers: authHeader
                 })
 
@@ -106,7 +106,7 @@ const Threshold = ({ userDetails, authHeader }) => {
             const data1 = {
                 phone: userDetails?.phone,
             }
-            const response1 = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/login-biometric-challenge`, {
+            const response1 = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/login-biometric-challenge`, {
                 data: encryptData(data1)
             })
 
@@ -116,7 +116,7 @@ const Threshold = ({ userDetails, authHeader }) => {
 
             console.log(dec1)
 
-            const getDetails = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/login-biometric-verify`, { data: encryptData({ credentials, account_id: dec1.account_id, toggle_verification: true }) })
+            const getDetails = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/login-biometric-verify`, { data: encryptData({ credentials, account_id: dec1.account_id, toggle_verification: true }) })
             const dec2 = decryptData(getDetails.data.data)
 
             let headers = { ...authHeader }
@@ -128,7 +128,7 @@ const Threshold = ({ userDetails, authHeader }) => {
                 }
             }
 
-            const res = await axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/update-individual/${userDetails._id}`, { data: encryptData({ qr_quicker_pay_enabled: !toggle }) }, {
+            const res = await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-individual/${userDetails._id}`, { data: encryptData({ qr_quicker_pay_enabled: !toggle }) }, {
                 headers: headers
             })
 

@@ -28,7 +28,6 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 import chat from "./files/chat.svg"
-import chat_an from "./files/chat.gif"
 import { ChevronRight } from "react-feather";
 import BusinessModal from "../BusinessModal";
 import OtherBalance from "./OtherBalance";

@@ -14,7 +14,7 @@ const DeleteBeneficiary = ({ isOpen, toggle, benef }) => {
     const deleteBeneficiary = async () => {
         setIsDeleting(true)
         try {
-            const res = await axios.delete(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/delete-beneficiary/${benef._id}/${userDetails?._id}`, {
+            const res = await axios.delete(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/delete-beneficiary/${benef._id}/${userDetails?._id}`, {
                 headers: authHeader
             })
             // console.log(decryptData(res.data.data))

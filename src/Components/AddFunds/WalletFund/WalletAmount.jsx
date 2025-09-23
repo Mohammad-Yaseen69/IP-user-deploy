@@ -32,7 +32,7 @@ const WalletAmount = ({ setSubStep, amount, setAmount, wallet, limits, setLimits
 
     //     // const getFees = async () => {
     //     //     try {
-    //     //         const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/get-tbc-fee/${wallet?._id}/${amount}`, {
+    //     //         const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-tbc-fee/${wallet?._id}/${amount}`, {
     //     //             headers: authHeader,
     //     //             signal: controller.signal,
     //     //             timeout: 5000

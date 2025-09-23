@@ -92,8 +92,8 @@ const TransactionsTable = () => {
         if (page === 1) {
             setIsLoading(true)
         }
-        // axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${(page - 1) * 15}/15`, {
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${page}/15`, {
+        // axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${(page - 1) * 15}/15`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/${page}/15`, {
             headers: authHeader
         })
             .then(res => {
@@ -118,7 +118,7 @@ const TransactionsTable = () => {
         if (page === 1) {
             setIsLoading(true)
         }
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-account-transactions/${userDetails?._id}/${page}/15/${debouncedSearchQuery}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions/${userDetails?._id}/${page}/15/${debouncedSearchQuery}`, {
             headers: authHeader
         })
             .then(res => {
@@ -151,7 +151,7 @@ const TransactionsTable = () => {
         // console.log(data)
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-account-transactions-by-date/${userDetails?._id}/${page}/15`,
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-by-date/${userDetails?._id}/${page}/15`,
             {
                 data: encrypted
             }, {

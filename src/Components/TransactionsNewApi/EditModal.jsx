@@ -26,7 +26,7 @@ const EditModal = ({ showEditModal, setShowEditModal, item, categories, setCateg
 
         const encrypted = encryptData(data)
 
-        axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/edit-category`, {
+        axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/edit-category`, {
             data: encrypted
         }, {
             headers: authHeader

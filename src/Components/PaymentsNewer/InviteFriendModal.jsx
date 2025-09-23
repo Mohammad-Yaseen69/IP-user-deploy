@@ -28,7 +28,7 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
                 message
             }
             const enc = encryptData(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/invitation/invite-user/${userDetails?._id}/${loginMethod}`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/invitation/invite-user/${userDetails?._id}/${loginMethod}`, {
                 data: enc
             }, {
                 headers: authHeader

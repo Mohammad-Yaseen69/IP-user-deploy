@@ -55,7 +55,7 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
                 setError("Insufficient balance")
                 setFxDet({})
             } else {
-                const url = `${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${userCurrency}&to=${exchangedCurrency}&amount=${enteredCurrency}&type=conversion&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=wallet&receiver_wallet_id=${userWallets?.find(item => item?.currency?.code === exchangedCurrency)?._id}&sender_wallet_id=${userWallets?.find(item => item?.currency?.code === userCurrency)?._id}&payment_method=instant`
+                const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-new-exchange-rate?from=${userCurrency}&to=${exchangedCurrency}&amount=${enteredCurrency}&type=conversion&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}&payment_type=wallet&receiver_wallet_id=${userWallets?.find(item => item?.currency?.code === exchangedCurrency)?._id}&sender_wallet_id=${userWallets?.find(item => item?.currency?.code === userCurrency)?._id}&payment_method=instant`
                 axios.get(url, { headers: authHeader })
                     .then(res => {
                         const decrypted = decryptData(res.data.data)

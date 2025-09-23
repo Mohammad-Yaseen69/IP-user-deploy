@@ -60,7 +60,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         const getSavedCards = async () => {
             try {
 
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/get-user-pan-list/${userDetails?._id}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-user-pan-list/${userDetails?._id}`, {
                     headers: authHeader
                 })
                 const dec = decryptData(res.data.data)
@@ -182,7 +182,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         console.log(data)
         const encrypted = encryptData(data)
         try {
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -229,7 +229,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
 
 
 
-        const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-topup-fee`, { data: enc }, {
+        const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/get-card-topup-fee`, { data: enc }, {
             headers: authHeader
         })
 
@@ -292,7 +292,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
 
         console.log(data)
         try {
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/topup-by${!selectedSaveCard?._id ? "-new" : ""}-card`, { data: enc }, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/topup-by${!selectedSaveCard?._id ? "-new" : ""}-card`, { data: enc }, {
                 headers: authHeader
             })
             setToken(null)
@@ -325,7 +325,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         const enc = encryptData(data)
         setLoading(true)
         try {
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/topup-by-paypal`, { data: enc }, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/topup-by-paypal`, { data: enc }, {
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
@@ -355,7 +355,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         console.log(data)
         setLoading(true)
         try {
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/wallet-to-card-transfer`, data, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/wallet-to-card-transfer`, data, {
                 headers: authHeader
             })
             setToken(null)
@@ -621,8 +621,8 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
                     currency={cardTransactionDetails?.currency}
                     transaction={cardTransactionDetails}
                     amount={cardTransactionDetails?.amount}
-                    url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm${selectedSaveCard?._id ? "-chatbot" : ""}-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
-                    tokenUrl={() => `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm${selectedSaveCard?._id ? "-chatbot" : ""}-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
+                    url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm${selectedSaveCard?._id ? "-chatbot" : ""}-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
+                    tokenUrl={() => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm${selectedSaveCard?._id ? "-chatbot" : ""}-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
                 />
                 :
                 <></>

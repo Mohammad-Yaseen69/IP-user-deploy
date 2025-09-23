@@ -15,7 +15,7 @@ const DeleteModal = ({ isOpen, toggle, item, pAddress }) => {
 
     const deleteHandler = () => {
         setDeleting(true)
-        axios.delete(`${process.env.REACT_APP_IP_DEV_API}/api/account/delete-document/${item?._id}`, {
+        axios.delete(`${import.meta.env.VITE_IP_DEV_API}/api/account/delete-document/${item?._id}`, {
             headers: authHeader
         })
             .then(res => {

@@ -108,7 +108,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
 
             const encrypted = encryptData(data)
 
-            axios.post(`${process.env.REACT_APP_THUNES_API}/createTransaction/${createdQuotation.QuotationID}`, {
+            axios.post(`${import.meta.env.VITE_THUNES_API}/createTransaction/${createdQuotation.QuotationID}`, {
                 data: encrypted
             })
                 .then(res => {
@@ -159,7 +159,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
 
     useEffect(() => {
         const getCountries = async () => {
-            const res = await fetch(`${process.env.REACT_APP_THUNES_API}/Countries`)
+            const res = await fetch(`${import.meta.env.VITE_THUNES_API}/Countries`)
             const data = await res.json()
             const decrypted = decryptData(data.data)
             const isAvailable = decrypted.filter(country => country.countryName.toLowerCase() === item.country.toLowerCase())
@@ -174,7 +174,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
 
     useEffect(() => {
         if (payoutChannel) {
-            axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country.alpha3}`, { headers: authHeader })
+            axios.get(`${import.meta.env.VITE_THUNES_API}/services/${country.alpha3}`, { headers: authHeader })
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     // console.log(decrypted)
@@ -187,7 +187,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                         if (isAvailable.length > 0) {
                             const data = { country: country.alpha3, id: payoutChannel.id }
                             const encrypted = encryptData(data)
-                            axios.post(`${process.env.REACT_APP_THUNES_API}/payerInfo`, {
+                            axios.post(`${import.meta.env.VITE_THUNES_API}/payerInfo`, {
                                 data: encrypted
                             }, { headers: authHeader })
                                 .then(res => {
@@ -229,7 +229,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
 
                 const encrypted = encryptData(data)
 
-                axios.post(`${process.env.REACT_APP_THUNES_API}/get-rates/${service.id}`, {
+                axios.post(`${import.meta.env.VITE_THUNES_API}/get-rates/${service.id}`, {
                     data: encrypted
                 }, {
                     headers: authHeader
@@ -265,7 +265,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
         }
         const encrypted = encryptData(quotationData)
 
-        axios.post(`${process.env.REACT_APP_THUNES_API}/createQuotation`, {
+        axios.post(`${import.meta.env.VITE_THUNES_API}/createQuotation`, {
             data: encrypted
         },
             {
@@ -340,7 +340,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
     const createTransaction = () => {
         const data = { token: createdTransaction.token }
         const encrypted = encryptData(data)
-        axios.post(`${process.env.REACT_APP_THUNES_API}/confirmTransaction`, {
+        axios.post(`${import.meta.env.VITE_THUNES_API}/confirmTransaction`, {
             data: encrypted
         })
             .then(res => {

@@ -113,7 +113,7 @@ const CreatePin = () => {
                 type: "sms"
             }
 
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/change-pin`, { data: encryptData(data) }, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/change-pin`, { data: encryptData(data) }, {
                 headers: authHeader
             })
 
@@ -163,7 +163,7 @@ const CreatePin = () => {
                 type: "sms"
             }
             const encrypted = encryptData(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
                 data: encrypted
             }, {
                 headers: authHeader

@@ -95,7 +95,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
             const walletPromises = activeWallets.map(async (item) => {
                 if (item?.currency?.code === "USD") return item?.balance?.available >= 3.99 ? item : null;
                 try {
-                    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=USD&to=${item?.currency?.code}&amount=4`, {
+                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=USD&to=${item?.currency?.code}&amount=4`, {
                         headers: authHeader
                     });
                     const dec = decryptData(res?.data?.data);
@@ -129,7 +129,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
             }
             // console.log(data)
             const encrypted = encryptData(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -157,7 +157,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                 type: codeType
             }
             // console.log(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/user/charge-kyc`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/user/charge-kyc`, {
                 data: encryptData(data)
             }, {
                 headers: authHeader
@@ -186,7 +186,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
     const initiatePaypal = async () => {
         setSaving(true)
         try {
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/paypal/initiate-kyc-payment`, { data: encryptData({}) }, { headers: authHeader })
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-kyc-payment`, { data: encryptData({}) }, { headers: authHeader })
             const dec = decryptData(res.data.data)
             window.location.href = dec?.url
         } catch (err) {

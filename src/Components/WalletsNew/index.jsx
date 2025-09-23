@@ -19,7 +19,7 @@ export const getLimits = async (currentWallet, setData, authHeader, setLoading, 
     setLoading(true)
     setData({})
     try {
-        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-account-limits/${currentWallet?._id}`, { headers: authHeader, cancelToken })
+        const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-account-limits/${currentWallet?._id}`, { headers: authHeader, cancelToken })
         const dec = decryptData(res?.data?.data)
         const { topup_values, limits, limits_used } = dec?.data;
 

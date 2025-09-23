@@ -103,7 +103,7 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
 
                     const encrypted = encryptData(data)
 
-                    const url = `${process.env.REACT_APP_IP_DEV_API}/api/payment/withrdrawal-rates/${subService?.id}`
+                    const url = `${import.meta.env.VITE_IP_DEV_API}/api/payment/withrdrawal-rates/${subService?.id}`
                     axios.post(url, {
                         data: encrypted
                     }, {

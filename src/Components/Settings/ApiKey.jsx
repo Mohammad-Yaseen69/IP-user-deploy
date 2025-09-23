@@ -26,7 +26,7 @@ const ApiKey = () => {
         // // console.log(data)
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/userkey/create-user-key`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/userkey/create-user-key`, {
             data: encrypted
         }, {
             headers: authHeader
@@ -50,7 +50,7 @@ const ApiKey = () => {
     useEffect(() => {
         if (userDetails?._id) {
             const checkUserKey = () => {
-                axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/userkey/account-user-key/${userDetails?._id}`, {
+                axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/userkey/account-user-key/${userDetails?._id}`, {
                     headers: authHeader
                 })
                     .then(res => {
@@ -76,7 +76,7 @@ const ApiKey = () => {
                 try {
                     setIsGetting(true);
 
-                    const response = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/userkey/get-apikey/${userDetails?._id}`, {
+                    const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/userkey/get-apikey/${userDetails?._id}`, {
                         headers: authHeader
                     });
 
@@ -98,7 +98,7 @@ const ApiKey = () => {
         setIsGetting(true)
 
         try {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/userkey/request-user-key/${userDetails?._id}`, {
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/userkey/request-user-key/${userDetails?._id}`, {
                 headers: authHeader
             })
                 .then(res => {

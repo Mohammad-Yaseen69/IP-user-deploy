@@ -28,7 +28,7 @@ const SidebarLogo = () => {
                     if (window.location.pathname === "/" || window.location.pathname === "/dashboard/default") return;
                     setTogglSidebar(!togglSidebar)
                 }} style={{ height: winWidth > 1400 ? "17px" : "14px", width: winWidth > 1400 ? "20px" : "17px" }} />
-                <Link to={`${process.env.PUBLIC_URL}/dashboard/default`} style={{ display: "flex", alignItems: "center", gap: ".6rem", justifyContent: "center" }}>
+                <Link to={`${window.location.origin}/dashboard/default`} style={{ display: "flex", alignItems: "center", gap: ".6rem", justifyContent: "center" }}>
                     <Image attrImage={{ className: "img-fluid for-light", src: cubaimg, alt: "", style: { height: "32px" } }} />
                     {/* <span style={{ fontSize: "1.2rem", color: "black", fontWeight: 600 }}>InstaPay</span> */}
                 </Link>

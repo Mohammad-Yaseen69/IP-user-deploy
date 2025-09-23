@@ -155,10 +155,10 @@ const useBenCreateFunc = ({
         const encrypted = encryptData(trimObj)
         setBenLoading(true)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`, {
             data: encryptData({ number: `+${mobileNumber}` })
         }).then(() => {
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/add-beneficiary`, {
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/add-beneficiary`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -197,7 +197,7 @@ const useBenCreateFunc = ({
         if (extractWalletNum) {
             try {
                 setBenLoading(true)
-                await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
+                await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`, {
                     data: encryptData({ number: `+${formData.mobile_wallet_account_number}` })
                 });
                 addBenFunc();

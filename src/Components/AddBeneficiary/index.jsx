@@ -52,7 +52,7 @@ const AddBeneficiary = () => {
     // useEffect(() => {
     //     const getReceivingCountries = async () => {
     //         try {
-    //             const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/country/get-all-receiving-country`, {
+    //             const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/country/get-all-receiving-country`, {
     //                 headers: authHeader
     //             })
 

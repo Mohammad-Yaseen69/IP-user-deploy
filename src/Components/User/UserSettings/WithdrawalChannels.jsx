@@ -36,7 +36,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
         const fetchData = async () => {
             try {
                 // Fetch countries
-                const countriesResponse = await axios.get(`${process.env.REACT_APP_THUNES_API}/Countries`);
+                const countriesResponse = await axios.get(`${import.meta.env.VITE_THUNES_API}/Countries`);
                 const decryptedCountries = decryptData(countriesResponse.data.data);
 
                 // Check if user's country is allowed
@@ -52,10 +52,10 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
                     // const encrypted = encryptData(data);
 
                     // Fetch services
-                    // const servicesResponse = await axios.post(`${process.env.REACT_APP_THUNES_API}/Services`, {
+                    // const servicesResponse = await axios.post(`${import.meta.env.VITE_THUNES_API}/Services`, {
                     //     data: encrypted,
                     // });
-                    const servicesResponse = await axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country.alpha3}`, { headers: authHeader })
+                    const servicesResponse = await axios.get(`${import.meta.env.VITE_THUNES_API}/services/${country.alpha3}`, { headers: authHeader })
                     setServices(decryptData(servicesResponse.data.data));
                 }
             } catch (error) {
@@ -361,7 +361,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
         }
         // console.log(data)
         const encrypted = encryptData(data)
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/create-withdrawal`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/withdrawal/create-withdrawal`, {
             data: encrypted
         }, {
             headers: authHeader
@@ -460,7 +460,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
         }
         // console.log(data)
         const encrypted = encryptData(data)
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/update-withdrawal/${userWithdrawals?._id}`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/withdrawal/update-withdrawal/${userWithdrawals?._id}`, {
             data: encrypted
         }, {
             headers: authHeader

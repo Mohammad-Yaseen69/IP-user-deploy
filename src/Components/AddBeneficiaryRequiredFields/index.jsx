@@ -67,7 +67,7 @@ const AddBeneficiaryRequiredFields = ({ isOpen, toggle, beneficiary, close, requ
             }
             console.log(data)
             const encrypted = encryptData(data)
-            const res = await axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/update-beneficiary/${beneficiary?._id}`, {
+            const res = await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/update-beneficiary/${beneficiary?._id}`, {
                 data: encrypted
             }, {
                 headers: authHeader

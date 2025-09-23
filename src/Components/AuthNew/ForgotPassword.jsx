@@ -121,7 +121,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
             if ((method === "whatsapp") && data.phone) {
                 data.platform = "whatsapp"
             }
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/send-forgot-password-otp`, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/send-forgot-password-otp`, {
                 data: encryptData(data)
             })
             const dec = decryptData(response.data.data)
@@ -146,7 +146,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                 token: otpToken
             }
             isEmail.test(email) ? data.email = email : data.phone = email
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/verify-forgot-password-otp`, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/verify-forgot-password-otp`, {
                 data: encryptData(data)
             })
             const dec = decryptData(response.data.data)
@@ -175,7 +175,7 @@ const ForgotPassword = ({ setIsLoginForm, setIsForgot, country }) => {
                 password: passwords.password.value
             }
             isEmail.test(email) ? data.email = email : data.phone = email
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/reset-forgot-password`, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/reset-forgot-password`, {
                 data: encryptData(data)
             })
             const dec = decryptData(response.data.data)

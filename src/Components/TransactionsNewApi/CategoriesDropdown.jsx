@@ -45,7 +45,7 @@ const CategoryDropdown = ({ category = "", disabled = false, padding = ".7rem .5
     }, [searchTerm])
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-category/${userDetails?._id}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-category/${userDetails?._id}`, {
             headers: authHeader
         })
             .then(res => {
@@ -59,7 +59,7 @@ const CategoryDropdown = ({ category = "", disabled = false, padding = ".7rem .5
     }, [])
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-all-user-categories/${userDetails?._id}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-all-user-categories/${userDetails?._id}`, {
             headers: authHeader
         })
             .then(res => {
@@ -116,7 +116,7 @@ const CategoryDropdown = ({ category = "", disabled = false, padding = ".7rem .5
 
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/add-category`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/add-category`, {
             data: encrypted
         }, {
             headers: authHeader

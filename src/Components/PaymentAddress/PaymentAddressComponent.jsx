@@ -43,7 +43,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const width = useWindowWidth()
 
     const getPaymentAddress = () => {
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/get-payment-address/${userDetails?.username}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/get-payment-address/${userDetails?.username}`, {
             headers: authHeader
         })
             .then(res => {
@@ -94,7 +94,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
             }
             // const enc = payload
             const enc = encryptData(payload)
-            await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/add-payment-address/${userDetails?.username}`, {
+            await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/add-payment-address/${userDetails?.username}`, {
                 data: enc
             }, {
                 headers: authHeader
@@ -142,7 +142,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
         try {
             const encrypted = encryptData({ status: !isActive })
             console.log(encrypted)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/update-payment-address-status-user/${userDetails?.username}`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/update-payment-address-status-user/${userDetails?.username}`, {
                 data: encrypted
             }, {
                 headers: authHeader

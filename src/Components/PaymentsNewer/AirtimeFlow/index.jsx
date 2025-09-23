@@ -161,7 +161,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
     useEffect(() => {
         const getCountryOperators = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/country-operators/${data.country?.alpha3}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/dt/country-operators/${data.country?.alpha3}`, {
                     headers: authHeader
                 })
                 const dec = decryptData(res.data.data)
@@ -179,7 +179,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
     const getPackageRates = async () => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/service-products-details/${data.localWallet?._id}/${data.package?.id || data.eSimData.selectedPlan?.productId}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/dt/service-products-details/${data.localWallet?._id}/${data.package?.id || data.eSimData.selectedPlan?.productId}`, {
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
@@ -202,7 +202,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             // }
             // // console.log(data)
             // const enc = encryptData(dataa);
-            // const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/products/${data.package?.id}`, {
+            // const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/products/${data.package?.id}`, {
             //     data: enc
             // }, {
             //     headers: authHeader
@@ -228,7 +228,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             console.log(dataa)
             const enc = encryptData(dataa);
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/${isOpenRange ? "get-ranged-airtime-rates" : "rates"}`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/${isOpenRange ? "get-ranged-airtime-rates" : "rates"}`, {
                 data: enc
             }, {
                 headers: authHeader
@@ -265,7 +265,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                 payload.data.email = data.eSimData.email
             }
             const encrypted = encryptData(payload)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -297,23 +297,23 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             console.log(dataa)
             const enc = encryptData(dataa)
 
-            // const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/confirm${isFixedAirtime ? "-airtime" : ""}-transaction`, {    
+            // const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/confirm${isFixedAirtime ? "-airtime" : ""}-transaction`, {    
             const isOpenRange = +String(data?.airtime_amount)?.replaceAll(",", "") > 0 && data.service_type?.name?.toLowerCase()?.includes("airtime");
             let url;
 
             if (data.flow === "airtime") {
                 if (data.payment_type.value === "paypal") {
-                    url = `${process.env.REACT_APP_IP_DEV_API}${isOpenRange ? "/api/paypal/initiate-airtime-ranged-payment" : "/api/paypal/initiate-airtime-fixed-payment"}`
+                    url = `${import.meta.env.VITE_IP_DEV_API}${isOpenRange ? "/api/paypal/initiate-airtime-ranged-payment" : "/api/paypal/initiate-airtime-fixed-payment"}`
                 } else {
-                    url = `${process.env.REACT_APP_IP_DEV_API}/api/dt/confirm${isOpenRange ? "-ranged" : ""}-airtime-transaction`
+                    url = `${import.meta.env.VITE_IP_DEV_API}/api/dt/confirm${isOpenRange ? "-ranged" : ""}-airtime-transaction`
                 }
             }
             else {
                 if (data.payment_type.value === "wallet") {
-                    url = `${process.env.REACT_APP_IP_DEV_API}/api/dt/confirm-esim-transaction`
+                    url = `${import.meta.env.VITE_IP_DEV_API}/api/dt/confirm-esim-transaction`
                 }
                 else if (data.payment_type.value === "paypal") {
-                    url = `${process.env.REACT_APP_IP_DEV_API}/api/paypal/initiate-esim`
+                    url = `${import.meta.env.VITE_IP_DEV_API}/api/paypal/initiate-esim`
                 }
             }
             const res = await axios.post(url, { data: enc }, { headers: authHeader })
@@ -453,7 +453,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
             const enc = encryptData(payload)
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/initiate${data.selectedSavedCard?._id ? "-pan" : ""}-airtime-transaction`,
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiate${data.selectedSavedCard?._id ? "-pan" : ""}-airtime-transaction`,
                 { data: enc },
                 { headers: authHeader }
             )
@@ -538,8 +538,8 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                         currency={data.currency_wallet?.currency?.code}
                         transaction={data.cardTransactionDetails}
                         paymentWithSavedCard={data.selectedSavedCard?._id ? true : false}
-                        url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm${data.selectedSavedCard?._id ? "-pan" : ""}-airtime-transaction/${data.cardTransactionDetails?.transaction_id}`}
-                        tokenUrl={() => `${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm${data.selectedSavedCard?._id ? "-pan" : ""}-airtime-transaction/${data.cardTransactionDetails?.transaction_id}`}
+                        url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm${data.selectedSavedCard?._id ? "-pan" : ""}-airtime-transaction/${data.cardTransactionDetails?.transaction_id}`}
+                        tokenUrl={() => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm${data.selectedSavedCard?._id ? "-pan" : ""}-airtime-transaction/${data.cardTransactionDetails?.transaction_id}`}
                     />
                     :
                     <></>
@@ -713,8 +713,8 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                                         <CreditCard
                                                             data={data}
                                                             dataHandler={updateDataHandler}
-                                                            url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-airtime${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}/${data.service_type?.id === 11 && !data.packages?.[0]?.baseAmount ? "fixed" : "hulululu"}`}
-                                                            tokenUrl={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-airtime${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}/${data.service_type?.id === 11 && !data.packages?.[0]?.baseAmount ? "fixed" : "hulululu"}`}
+                                                            url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-airtime${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}/${data.service_type?.id === 11 && !data.packages?.[0]?.baseAmount ? "fixed" : "hulululu"}`}
+                                                            tokenUrl={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-airtime${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}/${data.service_type?.id === 11 && !data.packages?.[0]?.baseAmount ? "fixed" : "hulululu"}`}
                                                         />
                                                         <div className={styles.buttons}>
                                                             <button disabled={data.loading} onClick={() => {
@@ -869,8 +869,8 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                                                 <CreditCard
                                                                     data={data}
                                                                     dataHandler={updateDataHandler}
-                                                                    url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-airtime${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}/${data.service_type?.id === 11 && !data.packages?.[0]?.baseAmount ? "fixed" : "hulululu"}`}
-                                                                    tokenUrl={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/confirm-airtime${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}/${data.service_type?.id === 11 && !data.packages?.[0]?.baseAmount ? "fixed" : "hulululu"}`}
+                                                                    url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-airtime${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}/${data.service_type?.id === 11 && !data.packages?.[0]?.baseAmount ? "fixed" : "hulululu"}`}
+                                                                    tokenUrl={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-airtime${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}/${data.service_type?.id === 11 && !data.packages?.[0]?.baseAmount ? "fixed" : "hulululu"}`}
                                                                 />
                                                                 {/* <div className={styles.buttons}>
                                                             <button disabled={data.loading} onClick={() => updateDataHandler("step", 3)} className={styles.trs}>{t("Back")}</button>

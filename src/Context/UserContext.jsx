@@ -10,8 +10,8 @@ import questionsData from "../Components/Settings/questions.json"
 import Modal from "../Components/SessionExpireModal"
 // removed unused AiOutlineConsoleSql import
 
-axios.defaults.timeout = 10000;
-axios.defaults.timeoutErrorMessage = "Server Timeout."
+// axios.defaults.timeout = 10000;
+// axios.defaults.timeoutErrorMessage = "Server Timeout."
 axios.defaults.withCredentials = true
 
 
@@ -84,7 +84,7 @@ const UserState = ({ children }) => {
         if (email) {
             const encrypted = encryptData(data)
             try {
-                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/account-check/business`, {
+                const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/account-check/business`, {
                     data: encrypted
                 })
                 return decryptData(res.data.data).status
@@ -100,7 +100,7 @@ const UserState = ({ children }) => {
         if (email || phone) {
             const encrypted = encryptData(data)
             try {
-                await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/account-check/beneficiary`, {
+                await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/account-check/beneficiary`, {
                     data: encrypted
                 }, { headers: authHeader })
 
@@ -266,7 +266,7 @@ const UserState = ({ children }) => {
 
     const verifyToken = () => {
         if (!window.location.pathname.includes("auth")) {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/auth/${token}`)
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${token}`)
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     setUserDetails(decrypted)
@@ -323,7 +323,7 @@ const UserState = ({ children }) => {
 
     // check auth
     const checkAuth = () => {
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/auth/${token}`)
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${token}`)
             .then(res => {
                 const decrypted = decryptData(res.data.data)
                 setUserDetails(decrypted)
@@ -364,7 +364,7 @@ const UserState = ({ children }) => {
     const getExchangedAmounts = async (from, to, amount) => {
         if (amount) {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
                     headers: authHeader
                 });
                 const dec = decryptData(res?.data?.data);
@@ -391,7 +391,7 @@ const UserState = ({ children }) => {
         return balances
     }
     const getUserWallets = (dontSort) => {
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-user-wallet/${userDetails?._id}`, { headers: authHeader })
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallet/${userDetails?._id}`, { headers: authHeader })
             .then(async (res) => {
                 const decrypted = decryptData(res.data.data)
                 const sorted = decrypted.walletList.sort((a, b) => {
@@ -425,7 +425,7 @@ const UserState = ({ children }) => {
 
     const getPAddressDets = async () => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/get-payment-address/${userDetails?.username}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/get-payment-address/${userDetails?.username}`, {
                 headers: authHeader
             })
             const decrypted = decryptData(res.data.data)
@@ -454,7 +454,7 @@ const UserState = ({ children }) => {
     // user beneficiaries
     const getUserBeneficiaries = async () => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/beneficiary/get-user-beneficiaries/${userDetails?._id}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/get-user-beneficiaries/${userDetails?._id}`, {
                 headers: authHeader
             })
             const decrypted = decryptData(res.data.data)
@@ -491,7 +491,7 @@ const UserState = ({ children }) => {
 
     // security questions
     const getSecurityQuestions = () => {
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-security-question`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-security-question`, {
             headers: authHeader
         })
             .then(res => {
@@ -509,7 +509,7 @@ const UserState = ({ children }) => {
 
     // invitation link
     const getInvitationLink = () => {
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/invitation/get-link/${userDetails?._id}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/invitation/get-link/${userDetails?._id}`, {
             headers: authHeader
         })
             .then(res => {
@@ -524,7 +524,7 @@ const UserState = ({ children }) => {
 
     // user sessions
     const getSessions = () => {
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/login/get-user-login-history/${userDetails._id}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/login/get-user-login-history/${userDetails._id}`, {
             headers: authHeader
         })
             .then(res => {
@@ -545,7 +545,7 @@ const UserState = ({ children }) => {
 
     // profile completion details
     const getProfileCompletionDetails = () => {
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-profile-completion/${userDetails?._id}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-profile-completion/${userDetails?._id}`, {
             headers: authHeader
         })
             .then(res => {
@@ -568,7 +568,7 @@ const UserState = ({ children }) => {
 
     // getActive countries
     const getAllActiveCountries = () => {
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/country/get-all-active-country`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/country/get-all-active-country`, {
             headers: authHeader
         })
             .then(res => {
@@ -586,7 +586,7 @@ const UserState = ({ children }) => {
 
     // user portfolio
     const getUserDocuments = () => {
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-all-document/${userDetails._id}/portfolio`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/get-all-document/${userDetails._id}/portfolio`, {
             headers: authHeader
         })
             .then(res => {
@@ -598,7 +598,7 @@ const UserState = ({ children }) => {
     }
     const getUserVideos = (userId = null) => {
         const id = userId ?? userDetails?._id
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-all-document/${id}/address`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/get-all-document/${id}/address`, {
             headers: authHeader
         })
             .then(res => {
@@ -609,7 +609,7 @@ const UserState = ({ children }) => {
 
     const getWithdrawals = async () => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/get-all-withdrawal/${userDetails?._id}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/withdrawal/get-all-withdrawal/${userDetails?._id}`, {
                 headers: authHeader
             })
             const decrypted = await decryptData(res.data.data)
@@ -637,7 +637,7 @@ const UserState = ({ children }) => {
     const [totalReferralAmount, setTotalReferralAmount] = useState(0)
     const getReferralCommission = async () => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/invitation/get-user-commissions/${userDetails?._id}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/invitation/get-user-commissions/${userDetails?._id}`, {
                 headers: authHeader
             })
 
@@ -703,7 +703,7 @@ const UserState = ({ children }) => {
             if (!userDetails?.user?.answer1 || !userDetails?.user?.answer2 || !userDetails?.user?.answer3) {
                 const getSecurityQuestionDetails = async () => {
                     try {
-                        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/check-security-questions/${userDetails?._id}`, {
+                        const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/check-security-questions/${userDetails?._id}`, {
                             headers: authHeader
                         })
                         setIs30Days(res?.data?.thirtyDaysCheck)
@@ -718,7 +718,7 @@ const UserState = ({ children }) => {
             }
             const getInfoQuestionDets = async () => {
                 try {
-                    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/check-financial-questions/${userDetails?._id}`, {
+                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/check-financial-questions/${userDetails?._id}`, {
                         headers: authHeader
                     })
                     const dec = decryptData(res.data.data)

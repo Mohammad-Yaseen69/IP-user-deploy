@@ -24,7 +24,7 @@ const StepTwo = ({ data, dataHandler, dataHandlerE }) => {
         const getPlans = async () => {
             setLoading(true)
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/get-esim-products?code=${data.country?.alpha3 ?? data.eSimData?.region?.value}&wallet_id=${data.localWallet?._id}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/dt/get-esim-products?code=${data.country?.alpha3 ?? data.eSimData?.region?.value}&wallet_id=${data.localWallet?._id}`, {
                     headers: authHeader
                 })
                 const dec = decryptData(res.data.data)

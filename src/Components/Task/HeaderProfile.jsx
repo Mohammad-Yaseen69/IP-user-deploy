@@ -11,7 +11,7 @@ const HeaderProfile = () => {
         </div>
         <div  className='flex-grow-1'>
           <H6 attrH6={{ className: 'f-w-600' }} >
-            <Link to={`${process.env.PUBLIC_URL}/users/userprofile`}>{MARKJENCO}</Link></H6>
+            <Link to={`${window.location.origin}/users/userprofile`}>{MARKJENCO}</Link></H6>
           <P attrPara={{ className:'mb-0' }}>{MARKJENCOEMAIL}</P>
         </div>
       </div>

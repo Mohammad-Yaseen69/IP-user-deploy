@@ -21,7 +21,7 @@ const Nominee = () => {
     useEffect(() => {
         if (userDetails) {
             const getNomineeDetails = () => {
-                axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/nominee/get-nominee/${userDetails?._id}`, {
+                axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/nominee/get-nominee/${userDetails?._id}`, {
                     headers: authHeader
                 })
                     .then(res => {

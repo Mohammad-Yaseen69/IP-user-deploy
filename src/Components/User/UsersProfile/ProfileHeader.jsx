@@ -57,7 +57,7 @@ const ProfileHeader = () => {
                 fontWeight: 800
               }}>{userDetails?.user?.first_name[0]}</div>
             </div>
-            <Link className="icon-wrapper" to={`${process.env.PUBLIC_URL}/users/useredit`}>
+            <Link className="icon-wrapper" to={`${window.location.origin}/users/useredit`}>
               <i className="icofont icofont-pencil-alt-5"></i>
             </Link>
           </div>

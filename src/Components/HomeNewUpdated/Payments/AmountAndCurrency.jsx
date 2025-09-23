@@ -38,7 +38,7 @@ const AmountAndCurrency = ({ amount, setAmount, currency, setCurrency, reason, s
 
                         const encrypted = encryptData(data)
 
-                        axios.post(`${process.env.REACT_APP_THUNES_API}/get-rates/${subService?.id}`, {
+                        axios.post(`${import.meta.env.VITE_THUNES_API}/get-rates/${subService?.id}`, {
                             data: encrypted
                         }, {
                             headers: authHeader
@@ -67,7 +67,7 @@ const AmountAndCurrency = ({ amount, setAmount, currency, setCurrency, reason, s
 
             if (paymentType === "wallet") {
                 if (amount.length > 0) {
-                    axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-exchange-rate?from=${currency}&to=EUR&amount=${amount}&type=wallet_to_wallet&level_id=${userDetails.level?._id}`, {
+                    axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-exchange-rate?from=${currency}&to=EUR&amount=${amount}&type=wallet_to_wallet&level_id=${userDetails.level?._id}`, {
                         headers: authHeader
                     })
                         .then(res => {

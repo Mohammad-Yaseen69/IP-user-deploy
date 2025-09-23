@@ -85,7 +85,7 @@ const Password = () => {
                 type: codeType
             }
             const encrypted = encryptData(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -110,7 +110,7 @@ const Password = () => {
                 otp,
                 type: codeType
             }
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/change-password`, { data: encryptData(data) }, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/change-password`, { data: encryptData(data) }, {
                 headers: authHeader
             })
             const decrypted = decryptData(res.data.data)

@@ -46,7 +46,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
         formData.append('relationship', relationship);
         formData.append('contact', contact);
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/nominee/add-nominee/${userDetails?._id}`,
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/nominee/add-nominee/${userDetails?._id}`,
             formData,
             {
                 headers: authHeader

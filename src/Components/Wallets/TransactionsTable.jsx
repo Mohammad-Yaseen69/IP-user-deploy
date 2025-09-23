@@ -80,8 +80,8 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
     const getAllTransactions = () => {
         setActive("All")
         setIsLoading(true)
-        // axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-all-transactions-by-wallet/${currentWallet?.wallet_id}/${(page - 1) * 15}/15`, {
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-all-transactions-by-wallet/${currentWallet?.wallet_id}/${page}/15`, {
+        // axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-all-transactions-by-wallet/${currentWallet?.wallet_id}/${(page - 1) * 15}/15`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-all-transactions-by-wallet/${currentWallet?.wallet_id}/${page}/15`, {
             headers: authHeader
         })
             .then(res => {
@@ -102,8 +102,8 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
     const getTransactionsByQuery = () => {
         setActive("All")
         setIsLoading(true)
-        // axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-wallet-transactions/${currentWallet?.wallet_id}/${(page - 1) * 15}/15/${debouncedSearchQuery}`, {
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-wallet-transactions/${currentWallet?.wallet_id}/${page}/15/${debouncedSearchQuery}`, {
+        // axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-wallet-transactions/${currentWallet?.wallet_id}/${(page - 1) * 15}/15/${debouncedSearchQuery}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-wallet-transactions/${currentWallet?.wallet_id}/${page}/15/${debouncedSearchQuery}`, {
             headers: authHeader
         })
             .then(res => {
@@ -132,8 +132,8 @@ const TransactionsTable = ({ currentWallet, filtered, setFiltered }) => {
         }
         const encrypted = encryptData(data)
 
-        // axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-account-transactions-wallet-by-date/${currentWallet?.wallet_id}/${(page - 1) * 15}/15`,
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/search-account-transactions-wallet-by-date/${currentWallet?.wallet_id}/${page}/15`,
+        // axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-wallet-by-date/${currentWallet?.wallet_id}/${(page - 1) * 15}/15`,
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-wallet-by-date/${currentWallet?.wallet_id}/${page}/15`,
             {
                 data: encrypted
             }, {

@@ -88,7 +88,7 @@ const OTPConfirmation = ({ setStep, createdTransaction = "", setTransactionDetai
 
     const getExchangeRate = (data) => {
         // console.log(decryptData(data))
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-request-exchange-rate`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-request-exchange-rate`, {
             data: data
         }, {
             headers: authHeader
@@ -121,7 +121,7 @@ const OTPConfirmation = ({ setStep, createdTransaction = "", setTransactionDetai
                     }
                     // console.log(data)
                     const encrypted = encryptData(data)
-                    axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/insta-payment-request-w2w`, {
+                    axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/insta-payment-request-w2w`, {
                         data: encrypted
                     }, {
                         headers: authHeader
@@ -162,7 +162,7 @@ const OTPConfirmation = ({ setStep, createdTransaction = "", setTransactionDetai
                     }
                     // console.log(data)
                     const encrypted = encryptData(data)
-                    axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/subcribe-payment-request-w2w`, {
+                    axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/subcribe-payment-request-w2w`, {
                         data: encrypted
                     }, {
                         headers: authHeader
@@ -204,7 +204,7 @@ const OTPConfirmation = ({ setStep, createdTransaction = "", setTransactionDetai
                     }
                     // console.log(data)
                     const encrypted = encryptData(data)
-                    axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/schedule-payment-request-w2w`, {
+                    axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/schedule-payment-request-w2w`, {
                         data: encrypted
                     }, {
                         headers: authHeader
@@ -240,7 +240,7 @@ const OTPConfirmation = ({ setStep, createdTransaction = "", setTransactionDetai
         if (createdTransaction) {
             const data = { token: createdTransaction.token }
             const encrypted = encryptData(data)
-            axios.post(`${process.env.REACT_APP_THUNES_API}/confirmTransaction`, {
+            axios.post(`${import.meta.env.VITE_THUNES_API}/confirmTransaction`, {
                 data: encrypted
             })
                 .then(res => {
@@ -268,7 +268,7 @@ const OTPConfirmation = ({ setStep, createdTransaction = "", setTransactionDetai
 
                 const encrypted = encryptData(data)
 
-                axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/insta-wallet-to-wallet`,
+                axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/insta-wallet-to-wallet`,
                     {
                         data: encrypted
                     }, {
@@ -303,7 +303,7 @@ const OTPConfirmation = ({ setStep, createdTransaction = "", setTransactionDetai
 
                 const encrypted = encryptData(data)
 
-                axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/subscribe-payment-w2w`,
+                axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/subscribe-payment-w2w`,
                     {
                         data: encrypted
                     }, {
@@ -340,7 +340,7 @@ const OTPConfirmation = ({ setStep, createdTransaction = "", setTransactionDetai
 
                 const encrypted = encryptData(data)
 
-                axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/schedule-payment-w2w`,
+                axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/schedule-payment-w2w`,
                     {
                         data: encrypted
                     }, {

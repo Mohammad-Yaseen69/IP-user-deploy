@@ -115,7 +115,7 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
             formData.append("platform", platform)
         }
         try {
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/upload-qrcode`, formData)
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/upload-qrcode`, formData)
             const dec = decryptData(res.data.data)
             console.log("wallet_res = ", dec)
             console.log("url = ", url)

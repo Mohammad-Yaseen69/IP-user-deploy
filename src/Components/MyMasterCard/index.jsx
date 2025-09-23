@@ -49,7 +49,7 @@ const MyMasterCard = () => {
   useEffect(() => {
     const getCard = async () => {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-user-vvc`, {
+        const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/get-user-vvc`, {
           headers: authHeader
         })
 
@@ -87,7 +87,7 @@ const MyMasterCard = () => {
     const getTransactions = async () => {
       console.log(cards[current])
       try {
-        const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-transcations`, { data: encryptData({ cardId: cards[current].card_id, account_id: userDetails._id }) }, {
+        const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/get-card-transcations`, { data: encryptData({ cardId: cards[current].card_id, account_id: userDetails._id }) }, {
           headers: authHeader
         })
 

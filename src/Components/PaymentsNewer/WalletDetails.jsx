@@ -28,7 +28,7 @@ const WalletDetails = ({ setWallet, setSubStep, wallet }) => {
         setSearching(true)
         setWalletError("")
         const query = searchQuery.startsWith("@") ? searchQuery.slice(1).toLowerCase() : searchQuery.toLowerCase()
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-user-wallets/${id || query}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallets/${id || query}`, {
             headers: authHeader
         })
             .then(res => {

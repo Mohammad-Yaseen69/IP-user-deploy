@@ -32,7 +32,7 @@ const WithdrawalChannels = () => {
         const fetchData = async () => {
             try {
                 // Fetch countries
-                const countriesResponse = await axios.get(`${process.env.REACT_APP_THUNES_API}/Countries`, { headers: authHeader });
+                const countriesResponse = await axios.get(`${import.meta.env.VITE_THUNES_API}/Countries`, { headers: authHeader });
                 const decryptedCountries = decryptData(countriesResponse.data.data);
 
                 // Check if user's country is allowed
@@ -44,7 +44,7 @@ const WithdrawalChannels = () => {
                 if (isIn) {
                     // Fetch user country
                     const country = countries.find(item => item.name.includes(userDetails?.country_name));
-                    const servicesResponse = await axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country.alpha3}`, { headers: authHeader })
+                    const servicesResponse = await axios.get(`${import.meta.env.VITE_THUNES_API}/services/${country.alpha3}`, { headers: authHeader })
                     setServices(decryptData(servicesResponse.data.data));
                 }
             } catch (error) {
@@ -393,7 +393,7 @@ const WithdrawalChannels = () => {
                 : []
         }
         const encrypted = encryptData(data)
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/create-withdrawal`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/withdrawal/create-withdrawal`, {
             data: encrypted
         }, {
             headers: authHeader
@@ -505,7 +505,7 @@ const WithdrawalChannels = () => {
         }
         // console.log(data)
         const encrypted = encryptData(data)
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/update-withdrawal/${userWithdrawals?._id}`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/withdrawal/update-withdrawal/${userWithdrawals?._id}`, {
             data: encrypted
         }, {
             headers: authHeader
@@ -534,7 +534,7 @@ const WithdrawalChannels = () => {
                 const data = { country: userDetails?.country_iso_code, id: payoutChannel.id }
                 const encrypted = encryptData(data)
 
-                const res = await axios.post(`${process.env.REACT_APP_THUNES_API}/payerInfo`, {
+                const res = await axios.post(`${import.meta.env.VITE_THUNES_API}/payerInfo`, {
                     data: encrypted
                 }, { headers: authHeader })
                 const decrypted = decryptData(res.data.data)

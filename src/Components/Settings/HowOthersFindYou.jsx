@@ -81,7 +81,7 @@ const HowOthersFindYou = () => {
                 account_id: userDetails?._id
             }
             const encrypted = encryptData(data)
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/set-search-users-checks`, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/set-search-users-checks`, {
                 data: encrypted
             }, {
                 headers: authHeader

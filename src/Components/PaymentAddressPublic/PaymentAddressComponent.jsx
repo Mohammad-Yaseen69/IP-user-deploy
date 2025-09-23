@@ -197,7 +197,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
             if (isMounted) dataHandler("userCountry", filteredCountry);
         }
         if (user_name) {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/get-payment-address-public/${user_name}`, { signal: controller.signal })
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/get-payment-address-public/${user_name}`, { signal: controller.signal })
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     if (!isMounted) return

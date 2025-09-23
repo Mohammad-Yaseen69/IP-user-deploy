@@ -45,7 +45,7 @@ const AddFunds = () => {
             const confirmPaypalTransaction = async () => {
                 setLoading(true)
                 try {
-                    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/paypal/payment-details/${paymentId}`, {
+                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/paypal/payment-details/${paymentId}`, {
                         headers: authHeader
                     })
 
@@ -87,7 +87,7 @@ const AddFunds = () => {
                             reference_id: ref_id,
                         }
                         const enc = encryptData(data)
-                        const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/fail-transaction`, {
+                        const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/fail-transaction`, {
                             data: enc
                         }, {
                             headers: authHeader

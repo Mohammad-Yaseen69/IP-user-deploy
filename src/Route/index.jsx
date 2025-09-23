@@ -42,8 +42,8 @@ const Routers = () => {
             <Route path={"/"} element={<PrivateRoute />}>
               {authenticated || jwt_token ? (
                 <>
-                  <Route exact path={`${process.env.PUBLIC_URL}`} element={<Navigate to={`${process.env.PUBLIC_URL}/dashboard/default`} />} />
-                  <Route exact path={`/`} element={<Navigate to={`${process.env.PUBLIC_URL}/dashboard/default`} />} />
+                  <Route exact path={`${window.location.origin}`} element={<Navigate to={`${window.location.origin}/dashboard/default`} />} />
+                  <Route exact path={`/`} element={<Navigate to={`${window.location.origin}/dashboard/default`} />} />
                   {/* <Route path={`/new-dashboard`} element={<NewLayout />} /> */}
                   <Route path={`/*`} element={<LayoutRoutes />} />
                 </>
@@ -52,12 +52,12 @@ const Routers = () => {
               )}
             </Route>
             <Route path={`/requests/:id`} element={<Requests />} />
-            <Route path={`${process.env.PUBLIC_URL}/callback`} render={() => <Callback />} />
-            <Route exact path={`${process.env.PUBLIC_URL}/login`} element={<AuthNew />} />
-            <Route exact path={`${process.env.PUBLIC_URL}/signup`} element={<AuthNew />} />
-            <Route exact path={`${process.env.PUBLIC_URL}/signup/:code`} element={<AuthNew />} />
-            {/* <Route exact path={`${process.env.PUBLIC_URL}/profile/:user_name`} element={<UserProfilePublic />} /> */}
-            <Route exact path={`${process.env.PUBLIC_URL}/verify-phone`} element={<VerifyPhone />} />
+            <Route path={`${window.location.origin}/callback`} render={() => <Callback />} />
+            <Route exact path={`${window.location.origin}/login`} element={<AuthNew />} />
+            <Route exact path={`${window.location.origin}/signup`} element={<AuthNew />} />
+            <Route exact path={`${window.location.origin}/signup/:code`} element={<AuthNew />} />
+            {/* <Route exact path={`${window.location.origin}/profile/:user_name`} element={<UserProfilePublic />} /> */}
+            <Route exact path={`${window.location.origin}/verify-phone`} element={<VerifyPhone />} />
             {authRoutes.map(({ path, Components }, i) => (
               <Route path={path} element={Components} key={i} />
             ))}

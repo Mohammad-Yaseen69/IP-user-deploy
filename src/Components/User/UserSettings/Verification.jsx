@@ -32,7 +32,7 @@ const Verification = ({ isCollapsed, setIsCollapsed }) => {
 
         try {
             const response = await axios.post(
-                `${process.env.REACT_APP_IP_DEV_API}/api/user/verification/user_${userDetails?.user?._id
+                `${import.meta.env.VITE_IP_DEV_API}/api/user/verification/user_${userDetails?.user?._id
                 }`,
                 { data: encrypted },
                 { headers: authHeader }

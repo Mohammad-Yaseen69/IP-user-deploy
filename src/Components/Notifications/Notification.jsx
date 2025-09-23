@@ -106,7 +106,7 @@ const Notification = ({ notification, currentUser }) => {
 
     const updateNotificationStatus = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/notification/update-notification-status/${notification?._id}`)
+            const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/notification/update-notification-status/${notification?._id}`)
             const data = await decryptData(response.data.data)
             setStatus(data?.notification?.status)
         } catch (error) {

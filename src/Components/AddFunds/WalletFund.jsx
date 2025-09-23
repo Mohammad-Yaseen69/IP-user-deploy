@@ -68,7 +68,7 @@ const WalletFund = ({ setAction }) => {
         const getExchangeRate = async (api_amount, type) => {
             setLoading(true)
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=USD&to=${wallet?.currency?.code}&amount=${api_amount}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=USD&to=${wallet?.currency?.code}&amount=${api_amount}`, {
                     headers: authHeader
                 })
                 const dec = decryptData(res?.data?.data)
@@ -109,7 +109,7 @@ const WalletFund = ({ setAction }) => {
             setLoading(true)
             if (channel?.value === "paypal") {
                 try {
-                    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/paypal/fee/${wallet?._id}/${parseFloat(amount)}`, {
+                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/paypal/fee/${wallet?._id}/${parseFloat(amount)}`, {
                         headers: authHeader,
                     })
                     const dec = decryptData(res.data.data)
@@ -147,7 +147,7 @@ const WalletFund = ({ setAction }) => {
 
     const getMobileWalletChannels = async () => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/collection/get-services/${userDetails?.country_iso_code}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/collection/get-services/${userDetails?.country_iso_code}`, {
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
@@ -169,7 +169,7 @@ const WalletFund = ({ setAction }) => {
     const getMobileWalletServices = async (service = channel?.sub_name) => {
         setPLoading(true)
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/collection/get-payers/${userDetails?.country_iso_code}/${service}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/collection/get-payers/${userDetails?.country_iso_code}/${service}`, {
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
@@ -214,7 +214,7 @@ const WalletFund = ({ setAction }) => {
             setLoading(true)
             if (channel?.value === "card" || channel?.value === "paypal") {
                 try {
-                    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/get-tbc-fee/${wallet?._id}/${amount}`, {
+                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-tbc-fee/${wallet?._id}/${amount}`, {
                         headers: authHeader,
                     })
                     const dec = decryptData(res.data.data)
@@ -271,7 +271,7 @@ const WalletFund = ({ setAction }) => {
 
                     const encrypted = encryptData(data)
                     const res = await axios.post(
-                        `${process.env.REACT_APP_IP_DEV_API}/api/collection/get-rates`,
+                        `${import.meta.env.VITE_IP_DEV_API}/api/collection/get-rates`,
                         {
                             data: encrypted
                         },

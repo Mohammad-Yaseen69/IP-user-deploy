@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import './index.scss';
 import App from './App';
 // import reportWebVitals from './reportWebVitals';
@@ -21,7 +21,7 @@ import * as Sentry from "@sentry/react";
 
 
 window.addEventListener("error", (e) => {
-    if ( 
+    if (
         e?.message?.includes("Loading chunk") ||
         e?.message?.includes("ChunkLoadError") ||
         e?.message?.includes("Loading CSS chunk")
@@ -31,7 +31,7 @@ window.addEventListener("error", (e) => {
 });
 
 // In index.js or App.js (dev only)
-if (process.env.NODE_ENV === 'development') {
+if (import.meta.env.NODE_ENV === 'development') {
     window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = () => { };
 }
 
@@ -52,10 +52,10 @@ Sentry.init({
     tracePropagationTargets: ["localhost", "https://my.insta-pay.ch", "https://ip-user-deploy-e57p.vercel.app"],
     replaysSessionSampleRate: 0.1,
     replaysOnErrorSampleRate: 1.0,
-    environment: process.env.NODE_ENV === "development" ? "development" : "production",
+    environment: import.meta.env.NODE_ENV === "development" ? "development" : "production",
     beforeSend(event) {
         console.log(event, "Sentry Event")
-        if (process.env.NODE_ENV === 'development') {
+        if (import.meta.env.NODE_ENV === 'development') {
             return null;
         }
         return event
@@ -64,12 +64,14 @@ Sentry.init({
 });
 
 // export const sdk = new WidgetSDK({
-//     integrationId: process.env.REACT_APP_KEABANK_INTEGRATION_ID,
-//     merchantId: process.env.REACT_APP_KEABANK_MERCHANT_ID,
+//     integrationId: import.meta.env.VITE_KEABANK_INTEGRATION_ID,
+//     merchantId: import.meta.env.VITE_KEABANK_MERCHANT_ID,
 // })
 
+const container = document.getElementById("root");
+const root = createRoot(container);
 
-ReactDOM.render(
+root.render(
     <BrowserRouter>
         <App />
     </BrowserRouter>

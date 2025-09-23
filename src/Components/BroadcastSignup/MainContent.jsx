@@ -79,7 +79,7 @@ const MainContent = () => {
             account_type,
             kyc_status
         };
-        const url = `${process.env.REACT_APP_IP_DEV_API}/api/account/registration/multiple`;
+        const url = `${import.meta.env.VITE_IP_DEV_API}/api/account/registration/multiple`;
         const encrypted = encryptData(body);
 
         try {

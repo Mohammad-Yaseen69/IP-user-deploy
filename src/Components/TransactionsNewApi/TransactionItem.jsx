@@ -84,7 +84,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
         }
         // console.log(data)
         const encrypted = encryptData(data)
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/add-transactions-category`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/add-transactions-category`, {
             data: encrypted
         }, {
             headers: authHeader

@@ -20,7 +20,7 @@ const DeleteAccount = ({ isCollapsed, setIsCollapsed }) => {
     const { userDetails, authHeader } = useContext(UserContext)
 
     const deleteAccountHandler = async () => {
-        axios.delete(`${process.env.REACT_APP_IP_DEV_API}/api/account/delete-account/${userDetails?._id}`, {
+        axios.delete(`${import.meta.env.VITE_IP_DEV_API}/api/account/delete-account/${userDetails?._id}`, {
             headers: authHeader
         })
             .then(res => {

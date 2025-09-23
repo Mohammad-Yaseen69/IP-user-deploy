@@ -174,7 +174,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
         const getCardDetail = async () => {
 
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-card-details/${cards[current]._id}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/get-card-details/${cards[current]._id}`, {
                     headers: authHeader
                 })
 
@@ -199,7 +199,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
     const freezeToggle = async () => {
         setFreezeLoading(true);
         try {
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/${cardStatus === "deactive" ? "activate" : "freeze"}`,
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/${cardStatus === "deactive" ? "activate" : "freeze"}`,
                 {
                     data: encryptData({ card_id: cards[current]._id })
                 },
@@ -262,7 +262,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
             }
 
             const encrypted = encryptData(body)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/set-${type}-otp`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/set-${type}-otp`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -287,7 +287,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                 card_email: missingEmail,
             }
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/update-email`, { data: encryptData(data) }, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/update-email`, { data: encryptData(data) }, {
                 headers: authHeader
             })
 
@@ -309,7 +309,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                 account_id: userDetails?._id
             }
 
-            await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/verify-${type}-otp`, {
+            await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/verify-${type}-otp`, {
                 data: encryptData(data)
             }, {
                 headers: authHeader

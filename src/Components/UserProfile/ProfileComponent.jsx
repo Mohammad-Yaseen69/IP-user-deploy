@@ -67,19 +67,19 @@ const ProfileComponent = () => {
 
                     if (username) {
                         // Fetch default wallet
-                        const walletResponse = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-default-wallet/${username}`);
+                        const walletResponse = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-default-wallet/${username}`);
                         const decryptedWallet = decryptData(walletResponse.data.data);
                         setUserWallet(decryptedWallet?.defaultWallet);
 
                         // Fetch user reviews as seller
-                        const sellerReviewsResponse = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-reviews/${username}/seller/0/5`);
+                        const sellerReviewsResponse = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-user-reviews/${username}/seller/0/5`);
                         const decryptedSellerReviews = decryptData(sellerReviewsResponse.data.data);
                         setUserReviewsAsSeller(decryptedSellerReviews?.userReviews?.reviews);
                         setAverageRatingAsSeller(decryptedSellerReviews?.userReviews?.averageRating)
                         setTotalReviewsAsSeller(decryptedSellerReviews?.userReviews?.totalNumberOfReviews)
 
                         // Fetch user reviews as buyer
-                        const buyerReviewsResponse = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-reviews/${username}/buyer/0/5`);
+                        const buyerReviewsResponse = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-user-reviews/${username}/buyer/0/5`);
                         const decryptedBuyerReviews = decryptData(buyerReviewsResponse.data.data);
                         setUserReviewsAsBuyer(decryptedBuyerReviews?.userReviews?.reviews);
                         setAverageRatingAsBuyer(decryptedBuyerReviews?.userReviews?.averageRating)

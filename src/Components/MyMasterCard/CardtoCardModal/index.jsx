@@ -143,7 +143,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
 
 
         try {
-          const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/card-to-card-fee`, {
+          const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/card-to-card-fee`, {
             data: enc
           }, {
             headers: authHeader
@@ -187,7 +187,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
     const getSavedCards = async () => {
       try {
 
-        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/get-user-pan-list/${userDetails?._id}`, {
+        const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-user-pan-list/${userDetails?._id}`, {
           headers: authHeader
         })
         const dec = decryptData(res.data.data)
@@ -240,7 +240,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
     const encrypted = encryptData(apiData)
     updateHandler("loading", true)
     try {
-      const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+      const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
         data: encrypted
       }, {
         headers: authHeader
@@ -330,7 +330,7 @@ const CardtoCard = ({ setOpen, isOpen, card, currentCardDetails, setCurrentCardD
 
 
     try {
-      await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/card-to-card-transfer`, { data: encrypted }, {
+      await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/card-to-card-transfer`, { data: encrypted }, {
         headers: authHeader
       })
 

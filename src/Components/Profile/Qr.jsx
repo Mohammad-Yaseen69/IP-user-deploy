@@ -20,7 +20,7 @@ const Qr = ({ currentRevTab, averageRatingAsBuyer, averageRatingAsSeller, totalR
     useEffect(() => {
         const getWalletDetails = async () => {
             try {
-                const walletResponse = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-default-wallet/${userDetails?.username}`, { headers: authHeader });
+                const walletResponse = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-default-wallet/${userDetails?.username}`, { headers: authHeader });
                 const decryptedWallet = decryptData(walletResponse.data.data);
                 setUserWallet(decryptedWallet?.defaultWallet);
             } catch (error) {
@@ -30,7 +30,7 @@ const Qr = ({ currentRevTab, averageRatingAsBuyer, averageRatingAsSeller, totalR
 
         const getProfilePendings = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-pending-reports/${userDetails?._id}`, { headers: authHeader })
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/get-pending-reports/${userDetails?._id}`, { headers: authHeader })
                 const data = decryptData(res.data.data)
                 setProfileInfo(data)
             } catch (error) {

@@ -103,7 +103,7 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                 console.log(data)
                 const encrypted = encryptData(data)
 
-                axios.post(`${process.env.REACT_APP_THUNES_API}/createQuotation`, {
+                axios.post(`${import.meta.env.VITE_THUNES_API}/createQuotation`, {
                     data: encrypted
                 },
                     {
@@ -135,7 +135,7 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
             setIsLoading(true)
             const query = argQuery ? argQuery : searchQuery.startsWith("@") ? searchQuery.slice(1) : searchQuery
             console.log(query)
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/search-users/${query}`, {
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/search-users/${query}`, {
                 headers: authHeader
             })
                 .then(res => {

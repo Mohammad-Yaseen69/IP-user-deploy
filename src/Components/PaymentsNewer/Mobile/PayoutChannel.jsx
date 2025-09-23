@@ -64,7 +64,7 @@ const PayoutChannel = ({ payoutChannel, setPayoutChannel, setStep, services = []
         if (payoutChannel && country) {
             const data = { country: country.alpha3, id: payoutChannel.id }
             const encrypted = encryptData(data)
-            axios.post(`${process.env.REACT_APP_THUNES_API}/payerInfo`, {
+            axios.post(`${import.meta.env.VITE_THUNES_API}/payerInfo`, {
                 data: encrypted
             }, { headers: authHeader })
                 .then(res => {

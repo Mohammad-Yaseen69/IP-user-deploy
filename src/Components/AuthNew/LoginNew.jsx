@@ -54,7 +54,7 @@ const LoginNew = ({ country, setIsLoginForm, setIsForgot }) => {
                 : { phone: email, password }
             const encrypted = encryptData(credentials)
 
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/send-login-otp`, {
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/send-login-otp`, {
                 data: encrypted
             })
                 .then(async (res) => {

@@ -107,7 +107,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
 
             const enc = encryptData(payload)
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/guest-pay/initiate-paypal`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/initiate-paypal`, {
                 data: enc
             })
 
@@ -165,7 +165,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
             const enc = encryptData(payload)
 
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/guest-pay/initiate-card-payment`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/initiate-card-payment`, {
                 data: enc
             })
 
@@ -200,7 +200,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
             const payload = { number: `+${data.phone}` }
             const enc = encryptData(payload)
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`, {
                 data: enc
             })
             const decrypted = decryptData(res.data.data)
@@ -320,7 +320,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
     const getFeesPaypal = async () => {
         dataHandler("loading", true)
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/guest-pay/paypal-fee/${wallet?.wallet_id}/${amount}?payment_type=${invoiceId && "invoice"}`)
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/paypal-fee/${wallet?.wallet_id}/${amount}?payment_type=${invoiceId && "invoice"}`)
             const dec = decryptData(res.data.data)
             console.log(dec)
             dataHandler("exchange_rate", {
@@ -348,7 +348,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
     const getFeesCard = async () => {
         dataHandler("loading", true)
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/guest-pay/card-fee/${wallet?.wallet_id}/${amount}?payment_type=${invoiceId && "invoice"}`)
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/card-fee/${wallet?.wallet_id}/${amount}?payment_type=${invoiceId && "invoice"}`)
             const dec = decryptData(res.data.data)
             console.log(dec)
             dataHandler("exchange_rate", {
@@ -381,7 +381,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
         const getPayouts = async () => {
             dataHandler("loading", true)
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/guest-pay/payment-methods/${user?.level?._id}`)
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/payment-methods/${user?.level?._id}`)
                 const dec = decryptData(res.data.data)
                 setAllowed(dec?.data ?? [])
             }
@@ -430,7 +430,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
                     card_number={data.cardNumber}
                     currency={wallet?.currency?.code}
                     transaction={data.cardTransactionDetails}
-                    url={`${process.env.REACT_APP_IP_DEV_API}/api/guest-pay/confirm-card-payment/${data.cardTransactionDetails?.transaction_ref}`}
+                    url={`${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/confirm-card-payment/${data.cardTransactionDetails?.transaction_ref}`}
                     guestUserName={username}
                     guestWallet={wallet}
                     guestUser={user}

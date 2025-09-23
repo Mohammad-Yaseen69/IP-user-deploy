@@ -15,7 +15,7 @@ const FileContent = () => {
   const [myfiles, setMyfiles] = useState([])
 
   useEffect(() => {
-    axios.get(`${process.env.PUBLIC_URL}/api/files.json`).then((resp) => {
+    axios.get(`${window.location.origin}/api/files.json`).then((resp) => {
       setMyfiles(resp.data);
     })
   }, [setMyfiles])

@@ -122,12 +122,12 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
                                     >
                                         <ReactJWPlayer
                                             key={item?.jw_media?.mediaId}
-                                            playerId={`${process.env.REACT_APP_JW_PLAYER_ID}_${item?.jw_media?.mediaId}`}
-                                            playerScript={process.env.REACT_APP_JW_PLAYER_URL}
+                                            playerId={`${import.meta.env.VITE_JW_PLAYER_ID}_${item?.jw_media?.mediaId}`}
+                                            playerScript={import.meta.env.VITE_JW_PLAYER_URL}
                                             controls={true}
                                             autoStart={playingMediaId === item?.jw_media?.mediaId}
                                             onReady={() => {
-                                                playerRefs.current[item?.jw_media?.mediaId] = window.jwplayer(`${process.env.REACT_APP_JW_PLAYER_ID}_${item?.jw_media?.mediaId}`);
+                                                playerRefs.current[item?.jw_media?.mediaId] = window.jwplayer(`${import.meta.env.VITE_JW_PLAYER_ID}_${item?.jw_media?.mediaId}`);
                                             }}
                                             onPlay={() => {
                                                 Object.entries(playerRefs.current).forEach(([id, player]) => {
@@ -160,8 +160,8 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
                                             style={{ aspectRatio: "16/9" }}
                                         >
                                             <ReactJWPlayer
-                                                playerId={`${process.env.REACT_APP_JW_PLAYER_ID}_${item?.jw_media?.mediaId}`}
-                                                playerScript={process.env.REACT_APP_JW_PLAYER_URL}
+                                                playerId={`${import.meta.env.VITE_JW_PLAYER_ID}_${item?.jw_media?.mediaId}`}
+                                                playerScript={import.meta.env.VITE_JW_PLAYER_URL}
                                                 controls={true}
                                                 autoStart={true}
                                                 playlist={`https://cdn.jwplayer.com/v2/media/${item?.jw_media?.mediaId}`}

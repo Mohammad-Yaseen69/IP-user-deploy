@@ -1,8 +1,13 @@
 {
-  "name": "tivo",
-  "version": "0.1.0",
+  "name": "instapay",
   "private": true,
-  "homepage": "/",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "node --max-old-space-size=12288 node_modules/vite/bin/vite.js",
+    "build": "node --max-old-space-size=12288 node_modules/vite/bin/vite.js build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@asseinfo/react-kanban": "^2.2.0",
     "@auth0/auth0-react": "^1.10.1",
@@ -11,6 +16,7 @@
     "@emotion/styled": "^11.11.0",
     "@fullcalendar/daygrid": "^5.11.3",
     "@fullcalendar/interaction": "^5.11.3",
+    "@fullcalendar/react": "^5.11.2",
     "@keabank/websdk": "^0.0.5",
     "@lottiefiles/dotlottie-react": "^0.9.2",
     "@material-ui/core": "^4.12.4",
@@ -18,20 +24,22 @@
     "@mui/material": "^5.15.11",
     "@mui/x-date-pickers": "^6.19.5",
     "@reduxjs/toolkit": "^1.9.5",
-    "@sentry/react": "^9.24.0",
+    "@sentry/react": "^9.31.0",
     "@simplewebauthn/browser": "^9.0.1",
-    "@tanstack/react-query": "^5.85.9",
+    "@tanstack/react-query": "^5.90.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/user-event": "^13.5.0",
     "@yudiel/react-qr-scanner": "^1.2.10",
     "ajv": "^8.17.1",
+    "ajv-keywords": "^5.1.0",
     "apexcharts": "^3.35.3",
     "axios": "^0.27.2",
+    "body-scroll-lock": "^4.0.0-beta.0",
     "bootstrap": "^5.2.2",
     "compression": "^1.7.4",
     "country-list-json": "^1.1.0",
     "country-state-city": "^3.2.1",
-    "crypto-js": "^4.1.1",
+    "crypto-js": "^4.2.0",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
     "deni-react-treeview": "^1.1.11",
@@ -46,6 +54,7 @@
     "fs": "^0.0.1-security",
     "fuse.js": "^7.0.0",
     "html2canvas": "^1.4.1",
+    "html5-qrcode": "^2.3.8",
     "http": "^0.0.1-security",
     "https": "^1.0.0",
     "i18next": "^23.10.1",
@@ -54,12 +63,14 @@
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.7.0",
     "jwt-decode": "^4.0.0",
+    "latest-version": "^7.0.0",
     "linkify-plugin-hashtag": "^4.3.2",
     "linkify-react": "^4.3.2",
     "linkifyjs": "^4.3.2",
     "localforage": "^1.10.0",
+    "lodash": "^4.17.21",
     "moment": "^2.30.1",
-    "node-sass": "^7.0.1",
+    "node-sass": "^9.0.0",
     "npm": "^11.4.1",
     "papaparse": "^5.4.1",
     "path": "^0.12.7",
@@ -75,9 +86,11 @@
     "react-currency-input-field": "^3.8.0",
     "react-data-table-component": "^7.5.2",
     "react-date-range": "^1.4.0",
+    "react-datepicker": "^4.11.0",
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.3.1",
     "react-draggable": "^4.4.5",
+    "react-dragula": "^1.1.17",
     "react-dropzone-uploader": "^2.11.0",
     "react-easy-crop": "^5.4.1",
     "react-feather": "^2.0.9",
@@ -94,13 +107,13 @@
     "react-redux": "^8.0.5",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "^5.0.1",
     "react-select": "^5.6.1",
     "react-stepzilla": "^7.0.0",
     "react-to-print": "^2.14.7",
     "react-toastify": "^9.0.5",
     "react-vertical-timeline-component": "^3.5.2",
     "reactstrap": "^9.0.2",
+    "redux-persist": "^6.0.0",
     "sass": "^1.51.0",
     "sass-loader": "^12.6.0",
     "simplebar-react": "^3.2.0",
@@ -112,11 +125,19 @@
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
   },
-  "scripts": {
-    "start": "cross-env NODE_ENV=development node --max-old-space-size=12288 node_modules/react-scripts/scripts/start.js --host",
-    "build": "cross-env NODE_ENV=production node --max-old-space-size=12288 node_modules/react-scripts/scripts/build.js",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+  "devDependencies": {
+    "@eslint/js": "^9.25.0",
+    "@types/html2canvas": "^1.0.0",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@types/react-slick": "^0.23.10",
+    "@vitejs/plugin-react": "^4.4.1",
+    "eslint": "^9.25.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "rollup-plugin-visualizer": "^6.0.3",
+    "vite": "^6.3.5"
   },
   "browserslist": {
     "production": [
@@ -129,15 +150,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@types/html2canvas": "^1.0.0",
-    "@types/react-slick": "^0.23.10",
-    "cross-env": "^7.0.3",
-    "eslint-plugin-i18next": "^6.1.2",
-    "source-map-explorer": "^2.5.3"
-  },
-  "engines": {
-    "node": "20.x"
   }
 }

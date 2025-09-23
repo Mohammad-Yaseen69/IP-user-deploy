@@ -79,7 +79,7 @@ const TwoFactorAuth = ({ isCollapsed, setIsCollapsed }) => {
                 email_verification: emailActive
             }
             const encrypted = encryptData(data)
-            const response = await axios.put(`${process.env.REACT_APP_IP_DEV_API}/api/account/tfa-settings/${userDetails?._id}`, {
+            const response = await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/tfa-settings/${userDetails?._id}`, {
                 data: encrypted
             }, {
                 headers: authHeader

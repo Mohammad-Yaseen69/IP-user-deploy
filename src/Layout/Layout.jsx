@@ -172,7 +172,7 @@ const Layout = ({ children, classNames, ...rest }) => {
 
 
   // const socketConfig = {
-  //   url: process.env.REACT_APP_IP_DEV_API,
+  //   url: import.meta.env.VITE_IP_DEV_API,
   //   transports: ["websocket", "polling", "flashsocket"],
   // };
 
@@ -322,7 +322,11 @@ const Layout = ({ children, classNames, ...rest }) => {
                   />
                   <div className="page-body" style={{ marginTop: 0, paddingTop: 0 }}>
                     <TransitionGroup {...rest}>
-                      <CSSTransition key={location.key} timeout={100} classNames={animationTheme} unmountOnExit>
+                      <CSSTransition
+                        timeout={100}
+                        classNames={animationTheme}
+                        unmountOnExit
+                      >
                         <div>
                           <Outlet />
                         </div>

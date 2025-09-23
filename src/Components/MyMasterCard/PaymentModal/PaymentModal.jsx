@@ -202,7 +202,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
 
       const encrypted = encryptData(paymentType === "card" ? cardData : data)
       console.log(encrypted, data)
-      const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+      const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
         data: encrypted
       }, {
         headers: authHeader
@@ -254,7 +254,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
       otp
     }
     try {
-      await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/create-vvc`, { data: encryptData(data) }, {
+      await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/create-vvc`, { data: encryptData(data) }, {
         headers: authHeader
       })
 
@@ -277,7 +277,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
     const getSavedCards = async () => {
       try {
 
-        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/get-user-pan-list/${userDetails?._id}`, {
+        const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-user-pan-list/${userDetails?._id}`, {
           headers: authHeader
         })
         const dec = decryptData(res.data.data)
@@ -304,7 +304,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
     const getFee = async (method) => {
 
       try {
-        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/get-vvc-fee/${walletState?.wallet_id ? walletState?.wallet_id : defaultWallet?.wallet_id}/${vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual"}/${method}`, {
+        const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/get-vvc-fee/${walletState?.wallet_id ? walletState?.wallet_id : defaultWallet?.wallet_id}/${vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual"}/${method}`, {
           headers: authHeader
         })
 
@@ -386,7 +386,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
     }
 
     try {
-      const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/initiate-vcc${selectedSaveCard._id ? "-pan" : ""}-card`, { data: encryptData(data) }, {
+      const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/initiate-vcc${selectedSaveCard._id ? "-pan" : ""}-card`, { data: encryptData(data) }, {
         headers: authHeader
       })
       setToken(null)
@@ -413,7 +413,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
       }
 
 
-      const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/initiate-vcc-paypal`, { data: encryptData(data) }, {
+      const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/initiate-vcc-paypal`, { data: encryptData(data) }, {
         headers: authHeader
       })
 
@@ -624,8 +624,8 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
           currency={"USD"}
           transaction={cardTransactionDetails}
           amount={feeDetails?.totalFee}
-          url={`${process.env.REACT_APP_IP_DEV_API}/api/mastercard/confirm-vcc${selectedSaveCard._id ? "-pan" : ""}-card/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
-          tokenUrl={() => `${process.env.REACT_APP_IP_DEV_API}/api/mastercard/confirm-vcc${selectedSaveCard._id ? "-pan" : ""}-card/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
+          url={`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/confirm-vcc${selectedSaveCard._id ? "-pan" : ""}-card/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
+          tokenUrl={() => `${import.meta.env.VITE_IP_DEV_API}/api/mastercard/confirm-vcc${selectedSaveCard._id ? "-pan" : ""}-card/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
         />
         :
         <></>

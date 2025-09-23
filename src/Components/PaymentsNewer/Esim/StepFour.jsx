@@ -16,7 +16,7 @@ const StepFour = ({ data, dataHandler, dataHandlerE }) => {
 
   const verifyNumber = async () => {
     try {
-      const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
+      const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`, {
         data: encryptData({ number: `+${data.eSimData.phone}` })
       })
 

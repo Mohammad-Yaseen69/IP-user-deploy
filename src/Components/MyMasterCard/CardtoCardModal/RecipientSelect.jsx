@@ -83,7 +83,7 @@ const RecipientSelect = ({ dataHandler, data }) => {
             };
 
             const res = await axios.post(
-                `${process.env.REACT_APP_IP_DEV_API}/api/mastercard/lookup`,
+                `${import.meta.env.VITE_IP_DEV_API}/api/mastercard/lookup`,
                 { data: encryptData(data) },
                 { headers: authHeader }
             );

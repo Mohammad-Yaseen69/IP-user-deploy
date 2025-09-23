@@ -29,7 +29,7 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
             formData.append('file_type', fileType);
             formData.append('type', pAddress ? "address" : "portfolio")
 
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/upload-portfolio/${userDetails?._id}`,
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/upload-portfolio/${userDetails?._id}`,
                 formData, {
                 headers: {
                     ...authHeader,
@@ -68,7 +68,7 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
                 "type": pAddress ? "address" : "portfolio"
             }
             const enc = encryptData(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-jw-media-status`,
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/get-jw-media-status`,
                 {
                     data: enc
                 },
@@ -138,7 +138,7 @@ const AddPortfolioItem = ({ isOpen, toggle, pAddress }) => {
                 type: pAddress ? "address" : "portfolio"
             }
             const enc = encryptData(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/add-portfolio-item`,
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/add-portfolio-item`,
                 {
                     data: enc
                 },
@@ -311,7 +311,7 @@ export default AddPortfolioItem
 //             method: 'POST',
 //             headers: {
 //                 'Content-Type': "application/json",
-//                 "Authorization": `Bearer ${process.env.REACT_APP_JW_PLAYER_API_KEY}`,
+//                 "Authorization": `Bearer ${import.meta.env.VITE_JW_PLAYER_API_KEY}`,
 //             },
 //             body: JSON.stringify({
 //                 "upload": {
@@ -329,7 +329,7 @@ export default AddPortfolioItem
 //             })
 //         };
 
-//         const url = `https://api.jwplayer.com/v2/sites/${process.env.REACT_APP_JW_PLAYER_SITE_ID}/media`
+//         const url = `https://api.jwplayer.com/v2/sites/${import.meta.env.VITE_JW_PLAYER_SITE_ID}/media`
 //         const res = await fetch(url, options)
 //         const data = await res.json()
 //         uploadVideo(data?.upload_link)
@@ -344,10 +344,10 @@ export default AddPortfolioItem
 // const getMediaStatus = async (media_id) => {
 //     try {
 //         const headers = {
-//             Authorization: `Bearer ${process.env.REACT_APP_JW_PLAYER_API_KEY}`,
+//             Authorization: `Bearer ${import.meta.env.VITE_JW_PLAYER_API_KEY}`,
 //         }
 
-//         const url = `https://api.jwplayer.com/v2/sites/${process.env.REACT_APP_JW_PLAYER_SITE_ID}/media/${media_id}`
+//         const url = `https://api.jwplayer.com/v2/sites/${import.meta.env.VITE_JW_PLAYER_SITE_ID}/media/${media_id}`
 
 //         const res = await fetch(url, { headers })
 //         if (!res.ok) {

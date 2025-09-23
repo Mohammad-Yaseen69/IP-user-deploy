@@ -13,7 +13,7 @@ const DefaultWalletModal = ({ showConfirmationModal, setShowConfirmationModal, w
 
     const setActiveQrHandler = () => {
         setIsSaving(true)
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/set-to-default-wallet/${wallet?.wallet_id}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/set-to-default-wallet/${wallet?.wallet_id}`, {
             headers: authHeader
         })
             .then(res => {

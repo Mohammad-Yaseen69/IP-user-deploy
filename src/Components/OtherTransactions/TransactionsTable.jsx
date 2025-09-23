@@ -134,10 +134,10 @@ const TransactionsTable = () => {
                     };
 
                     await Promise.all([
-                        handleRequest(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/subcribe-payment-request-w2w/${userDetails._id}`, setSentPayments),
-                        handleRequest(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/schedule-payment-request-w2w/${userDetails._id}`, setSentPayments),
-                        handleRequest(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/subcribe-payment-w2w/${userDetails._id}`, setReceivedPayments),
-                        handleRequest(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/schedule-payment-w2w/${userDetails._id}`, setReceivedPayments),
+                        handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/subcribe-payment-request-w2w/${userDetails._id}`, setSentPayments),
+                        handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/schedule-payment-request-w2w/${userDetails._id}`, setSentPayments),
+                        handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/subcribe-payment-w2w/${userDetails._id}`, setReceivedPayments),
+                        handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/schedule-payment-w2w/${userDetails._id}`, setReceivedPayments),
                     ]);
                 }
             } catch (error) {

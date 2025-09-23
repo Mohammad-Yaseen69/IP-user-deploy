@@ -60,7 +60,7 @@ const CreatePassword = () => {
     }
 
     const decodeToken = () => {
-        const decodedToken = jwtDecode(token, process.env.REACT_APP_JWT_SECRET_KEY)
+        const decodedToken = jwtDecode(token, import.meta.env.VITE_JWT_SECRET_KEY)
         setData(decodedToken)
     }
 
@@ -75,7 +75,7 @@ const CreatePassword = () => {
 
             const encryptedData = encryptData(bodyData)
 
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/set-password`, {
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/instagram/set-password`, {
                 data: encryptedData
             }).then((res) => {
                 const dec = decryptData(res.data.data)

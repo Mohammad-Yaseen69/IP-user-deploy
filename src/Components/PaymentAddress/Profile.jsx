@@ -49,7 +49,7 @@ const Profile = ({ dp, setDp, dets }) => {
         const formData = new FormData();
         // formData.append("file", blob, `profile_image_${Date.now()}.png`);
         formData.append("file", file);
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/add-payment-address-profile/${userDetails?.username}`,
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/add-payment-address-profile/${userDetails?.username}`,
             formData, {
             headers: authHeader
         })
@@ -71,7 +71,7 @@ const Profile = ({ dp, setDp, dets }) => {
         setIsSaving(true);
         setDeleting(true)
 
-        axios.delete(`${process.env.REACT_APP_IP_DEV_API}/api/payment-address/delete-profile-picture/${userDetails?._id}`, {
+        axios.delete(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/delete-profile-picture/${userDetails?._id}`, {
             headers: authHeader
         })
             .then(res => {

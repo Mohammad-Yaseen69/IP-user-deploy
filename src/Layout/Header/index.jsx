@@ -18,7 +18,7 @@ const Header = () => {
             <Grid className="status_toggle middle sidebar-toggle" />
           </div>
           <div className="logo-header-main">
-            <Link to={`${process.env.PUBLIC_URL}/dashboard/default`}>
+            <Link to={`${window.location.origin}/dashboard/default`}>
               <Image attrImage={{ className: 'img-fluid for-light img-100', src: `${require('../../assets/images/logo/logo2.png')}`, alt: 'logo' }} />
               <Image attrImage={{ className: 'img-fluid for-dark', src: `${require('../../assets/images/logo/logo.png')}`, alt: 'logo' }} />
             </Link>

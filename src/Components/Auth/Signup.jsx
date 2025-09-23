@@ -103,7 +103,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
             const payload = { number: `+${data.phone}` }
             const enc = encryptData(payload)
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`, {
                 data: enc
             })
             const decrypted = decryptData(res.data.data)
@@ -129,7 +129,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                 const payload = data.email.length > 0 ? { email: data.email, phone: data.phone } : { phone: data.phone }
                 const enc = encryptData(payload)
 
-                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/account-check/individual`, {
+                const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/account-check/individual`, {
                     data: enc
                 })
                 const decrypted = decryptData(res.data.data)
@@ -171,7 +171,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
             console.log(payload)
             const enc = encryptData(payload)
 
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/registration/individual`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/registration/individual`, {
                 data: enc
             })
             const dec = decryptData(res.data.data)
@@ -190,8 +190,8 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
         try {
             const formData = new FormData()
             formData.append("file", data.dp);
-            console.log(`${process.env.REACT_APP_IP_DEV_API}/api/account/upload-profile-image-by-token/${token}`)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/upload-profile-image-by-token/${token}`, formData)
+            console.log(`${import.meta.env.VITE_IP_DEV_API}/api/account/upload-profile-image-by-token/${token}`)
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/upload-profile-image-by-token/${token}`, formData)
             const decrypted = decryptData(res.data.data)
             dataHandler("verified", true)
         }
@@ -215,7 +215,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                 sms_otp: otp
             }
             const enc = encryptData(paylaod)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/verify-registration/${data.account_type}`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/verify-registration/${data.account_type}`, {
                 data: enc
             })
 
@@ -261,7 +261,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                 email_otp: otp
             }
             const enc = encryptData(paylaod)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/verify-email-registration/${data.account_type}`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/verify-email-registration/${data.account_type}`, {
                 data: enc
             })
             const dec = decryptData(res.data.data)

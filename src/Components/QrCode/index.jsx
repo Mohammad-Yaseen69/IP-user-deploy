@@ -61,7 +61,7 @@ const QrCode = () => {
         formData.append('qrCode', file);
         formData.append("wallet_id", item?.wallet_id)
         try {
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/upload-qrcode`, formData)
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/upload-qrcode`, formData)
             const dec = decryptData(res.data.data)
             console.log("wallet_res = ", dec)
             console.log("url = ", url)
@@ -73,7 +73,7 @@ const QrCode = () => {
 
     const onUploadClick = async () => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-all-wallets-temp`)
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-all-wallets-temp`)
             const wallets = res.data
 
             for (const item of wallets) {

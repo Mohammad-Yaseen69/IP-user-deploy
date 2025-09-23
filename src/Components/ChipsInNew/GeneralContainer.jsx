@@ -68,7 +68,7 @@ const GeneralContainer = ({ currentWallet, currency, setCurrency, setWalletRefre
 
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/wallet-qrcode/${currentWallet?.wallet_id}`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/wallet-qrcode/${currentWallet?.wallet_id}`, {
             data: encrypted
         }, {
             headers: authHeader
@@ -89,7 +89,7 @@ const GeneralContainer = ({ currentWallet, currency, setCurrency, setWalletRefre
 
     // const setActiveQrHandler = (setter) => {
     //     setIsSaving(true)
-    //     axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/set-to-default-wallet/${currentWallet?.wallet_id}`, {
+    //     axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/set-to-default-wallet/${currentWallet?.wallet_id}`, {
     //         headers: authHeader
     //     })
     //         .then(res => {

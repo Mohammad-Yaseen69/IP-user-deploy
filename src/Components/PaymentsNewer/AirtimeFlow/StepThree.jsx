@@ -24,7 +24,7 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
             dataHandler("service_type", {})
 
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/sub-services-in-country/${data?.country?.alpha3}/${data?.providers?.[0]?.id}/${data.service}`, { headers: authHeader })
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/dt/sub-services-in-country/${data?.country?.alpha3}/${data?.providers?.[0]?.id}/${data.service}`, { headers: authHeader })
                 const dec = decryptData(res.data.data)
                 dataHandler("service_types", dec)
                 dataHandler("service_type", dec?.[0])
@@ -51,7 +51,7 @@ const StepThree = ({ data, dataHandler, getPackageDetails }) => {
                     const dataa = {
                         wallet_id: data.localWallet?._id,
                     }
-                    const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/service-products/${data.country?.alpha3}/${data.providers?.[0]?.id}/${data.service}/${data.service_type?.id}`, {
+                    const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/service-products/${data.country?.alpha3}/${data.providers?.[0]?.id}/${data.service}/${data.service_type?.id}`, {
                         data: encryptData(dataa)
                     }, { headers: authHeader })
                     const dec = await decryptData(res.data.data)

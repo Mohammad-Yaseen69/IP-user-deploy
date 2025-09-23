@@ -35,7 +35,7 @@ const AccountItem = ({ data, ssa }) => {
     }
 
     const otpCallback = (setter) => {
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/insta-unlink/${userDetails?._id}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/instagram/insta-unlink/${userDetails?._id}`, {
             headers: authHeader
         })
             .then(res => {
@@ -54,7 +54,7 @@ const AccountItem = ({ data, ssa }) => {
     const getInstaLink = () => {
         // console.log("got insta link!")
         if (userDetails) {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-insta-link-code/${userDetails?._id}`, {
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/get-insta-link-code/${userDetails?._id}`, {
                 headers: authHeader
             })
                 .then(res => {

@@ -54,7 +54,7 @@ const AmountAndCurrency = ({ setStep, amount, setAmount, currency, setCurrency, 
         const getSavedCards = async () => {
             try {
 
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/get-user-pan-list/${userDetails?._id}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-user-pan-list/${userDetails?._id}`, {
                     headers: authHeader
                 })
                 const dec = decryptData(res.data.data)
@@ -143,7 +143,7 @@ const AmountAndCurrency = ({ setStep, amount, setAmount, currency, setCurrency, 
 
                             const encrypted = encryptData(data)
 
-                            axios.post(`${process.env.REACT_APP_THUNES_API}/get-rates/${subService.id}`, {
+                            axios.post(`${import.meta.env.VITE_THUNES_API}/get-rates/${subService.id}`, {
                                 data: encrypted
                             }, {
                                 headers: authHeader
@@ -229,7 +229,7 @@ const AmountAndCurrency = ({ setStep, amount, setAmount, currency, setCurrency, 
                     }
                     else {
                         if (argAmount) {
-                            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-exchange-rate?from=${currency}&to=${walletDetails?.currency?.code}&amount=${argAmount}&type=${exchangeType}&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}${exchangeType === "qr_pay" ? "&payment_type=conversion" : ""}`, {
+                            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-exchange-rate?from=${currency}&to=${walletDetails?.currency?.code}&amount=${argAmount}&type=${exchangeType}&level_id=${userDetails?.level?._id}&account_id=${userDetails?._id}${exchangeType === "qr_pay" ? "&payment_type=conversion" : ""}`, {
                                 headers: authHeader
                             })
                                 .then(res => {
@@ -298,7 +298,7 @@ const AmountAndCurrency = ({ setStep, amount, setAmount, currency, setCurrency, 
         const getTopupFees = async () => {
             const wallet = userWallets?.find(item => item?.currency?.code === currency)
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/get-tbc-fee/${wallet?._id}/${amount?.toString()?.split(".")?.[0]}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-tbc-fee/${wallet?._id}/${amount?.toString()?.split(".")?.[0]}`, {
                     headers: authHeader
                 })
                 const dec = decryptData(res.data.data)

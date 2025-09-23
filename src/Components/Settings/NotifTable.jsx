@@ -47,7 +47,7 @@ const NotifTable = () => {
     useEffect(() => {
         const getNotificationsDetails = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/notifications-status/get-notifications/${userDetails?._id}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/notifications-status/get-notifications/${userDetails?._id}`, {
                     headers: authHeader
                 })
                 const data = await decryptData(res.data.data)
@@ -146,7 +146,7 @@ const NotifTable = () => {
         }
         const enc = encryptData(payload)
         try {
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/notifications-status/set-notifications/${userDetails?._id}`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/notifications-status/set-notifications/${userDetails?._id}`, {
                 data: enc
             }, {
                 headers: authHeader

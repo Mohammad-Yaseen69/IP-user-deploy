@@ -43,7 +43,7 @@ const CardDetails = ({ setSubStep, cardNumber, setCardNumber, expiry, setExpiry,
     const getSavedCards = async () => {
       try {
 
-        const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/get-user-pan-list/${userDetails?._id}`, {
+        const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-user-pan-list/${userDetails?._id}`, {
           headers: authHeader
         })
         const dec = decryptData(res.data.data)
@@ -77,7 +77,7 @@ const CardDetails = ({ setSubStep, cardNumber, setCardNumber, expiry, setExpiry,
   const deleteCard = async () => {
     setIsDeleting(true)
     try {
-      const res = await axios.delete(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/delete-user-pan/${currentCard?._id}`)
+      const res = await axios.delete(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/delete-user-pan/${currentCard?._id}`)
       const dec = await decryptData(res.data.data)
       toast.success("Deleted card successfully!")
       toggleDeleteModal()
@@ -98,7 +98,7 @@ const CardDetails = ({ setSubStep, cardNumber, setCardNumber, expiry, setExpiry,
 
   const expiryCheck = async (item) => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/check-card-expiry`, { data: encryptData({ card_id: item._id }) }, {
+      const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/check-card-expiry`, { data: encryptData({ card_id: item._id }) }, {
         headers: authHeader
       })
 

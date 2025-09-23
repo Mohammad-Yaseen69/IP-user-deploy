@@ -64,7 +64,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
         formData.append('relationship', relationship);
         formData.append('contact', contact);
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/nominee/update-nominee/${userDetails?._id}`,
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/nominee/update-nominee/${userDetails?._id}`,
             formData,
             {
                 headers: authHeader
@@ -85,7 +85,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
 
     const NumberValidation = async () => {
         try {
-            await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/dt/check-number-public`, {
+            await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-public`, {
                 data: encryptData({ number: `+${contact}` })
             });
             updateNomineeHandler()
@@ -95,7 +95,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
     }
     const deleteNomineeHandler = () => {
         setLoading(true)
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/nominee/delete-nominee/${userDetails?._id}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/nominee/delete-nominee/${userDetails?._id}`, {
             headers: authHeader
         })
             .then(res => {

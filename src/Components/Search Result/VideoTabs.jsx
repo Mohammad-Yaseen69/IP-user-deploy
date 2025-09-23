@@ -7,7 +7,7 @@ import axios from 'axios';
 const VideoTabs = () => {
   const [tabsDatas, setTabsDatas] = useState();
   useEffect(() => {
-    axios.get(`${process.env.PUBLIC_URL}/api/searchAllTabs.json`).then((resp) => {
+    axios.get(`${window.location.origin}/api/searchAllTabs.json`).then((resp) => {
       setTabsDatas(resp.data);
     });
   }, []);

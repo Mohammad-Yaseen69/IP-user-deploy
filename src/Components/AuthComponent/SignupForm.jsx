@@ -57,7 +57,7 @@ const SignupForm = ({ silf }) => {
             }
 
             debounceTimeout = setTimeout(() => {
-                axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/invitation/check-referral-code/${referralCode}`)
+                axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/invitation/check-referral-code/${referralCode}`)
                     .then(res => {
                         const decrypted = decryptData(res.data.data);
                         setReferralError("")
@@ -120,7 +120,7 @@ const SignupForm = ({ silf }) => {
             // console.log(credentials)
             const encrypted = encryptData(credentials)
 
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/invitation/get-link-signup/${referralCode}`, {
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/invitation/get-link-signup/${referralCode}`, {
                 data: encrypted
             })
                 .then(res => {
@@ -136,7 +136,7 @@ const SignupForm = ({ silf }) => {
                         // console.log(data)
                         const encrypted = encryptData(data)
 
-                        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/invitation/ref-user-update`, {
+                        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/invitation/ref-user-update`, {
                             data: encrypted
                         })
                             .then(res => {
@@ -168,7 +168,7 @@ const SignupForm = ({ silf }) => {
                 const encrypted = encryptData(credentials)
                 // console.log(encrypted)
 
-                axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/registration/business`, {
+                axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/registration/business`, {
                     data: encrypted
                 })
                     .then(res => {
@@ -195,7 +195,7 @@ const SignupForm = ({ silf }) => {
                 const encrypted = encryptData(credentials)
                 // console.log(encrypted)
 
-                axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/registration/individual`, {
+                axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/registration/individual`, {
                     data: encrypted
                 })
                     .then(res => {
@@ -220,7 +220,7 @@ const SignupForm = ({ silf }) => {
         const data = { email: e }
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/account-check/business`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/account-check/business`, {
             data: encrypted
         })
             .then(res => {
@@ -246,7 +246,7 @@ const SignupForm = ({ silf }) => {
         const data = { email, phone: e }
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/account-check/individual`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/account-check/individual`, {
             data: encrypted
         })
             .then(res => {

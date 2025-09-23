@@ -62,7 +62,7 @@ const GeoFencing = () => {
 
             try {
                 const response = await axios.get(
-                    `${process.env.REACT_APP_IP_DEV_API}/api/user-preferences/get-user-preferences/${userDetails?._id}`,
+                    `${import.meta.env.VITE_IP_DEV_API}/api/user-preferences/get-user-preferences/${userDetails?._id}`,
                     { headers: authHeader }
                 );
                 const dec = decryptData(response.data.data);
@@ -263,7 +263,7 @@ const GeoFencing = () => {
             setChanges([]);
 
             const response = await axios.put(
-                `${process.env.REACT_APP_IP_DEV_API}/api/user-preferences/update-preferences/${userDetails?._id}`,
+                `${import.meta.env.VITE_IP_DEV_API}/api/user-preferences/update-preferences/${userDetails?._id}`,
                 { data: encryptData(data) },
                 { headers: authHeader }
             );

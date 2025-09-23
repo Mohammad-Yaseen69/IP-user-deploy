@@ -54,7 +54,7 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
 
     useEffect(() => {
         const getCat = () => {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-category/${userDetails?._id}`, {
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-category/${userDetails?._id}`, {
                 headers: authHeader
             })
                 .then(res => {
@@ -71,7 +71,7 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
 
     useEffect(() => {
         const getAllCats = () => {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/get-all-user-categories/${userDetails?._id}`, {
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-all-user-categories/${userDetails?._id}`, {
                 headers: authHeader
             })
                 .then(res => {
@@ -103,7 +103,7 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
 
         const encrypted = encryptData(data)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/transaction/add-category`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/add-category`, {
             data: encrypted
         }, {
             headers: authHeader

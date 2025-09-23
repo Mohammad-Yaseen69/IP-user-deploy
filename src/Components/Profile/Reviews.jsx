@@ -19,7 +19,7 @@ const Reviews = ({ currentRevTab, setCurrentRevTab, userReviewsAsBuyer, userRevi
         const getUserReviewsAsBuyer = async () => {
             setIsLoading(true)
             try {
-                const buyerReviewsResponse = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-reviews/${userDetails?.username}/buyer/0/0`);
+                const buyerReviewsResponse = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-user-reviews/${userDetails?.username}/buyer/0/0`);
                 const decryptedBuyerReviews = decryptData(buyerReviewsResponse.data.data);
                 setUserReviewsAsBuyer(decryptedBuyerReviews?.userReviews?.reviews);
                 setAverageRatingAsBuyer(decryptedBuyerReviews?.userReviews?.averageRating)
@@ -34,7 +34,7 @@ const Reviews = ({ currentRevTab, setCurrentRevTab, userReviewsAsBuyer, userRevi
         const getUserReviewsAsSeller = async () => {
             setIsLoading(true)
             try {
-                const sellerReviewsResponse = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/user/get-user-reviews/${userDetails?.username}/seller/0/0`);
+                const sellerReviewsResponse = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/user/get-user-reviews/${userDetails?.username}/seller/0/0`);
                 const decryptedSellerReviews = decryptData(sellerReviewsResponse.data.data);
                 setUserReviewsAsSeller(decryptedSellerReviews?.userReviews?.reviews);
                 setAverageRatingAsSeller(decryptedSellerReviews?.userReviews?.averageRating)

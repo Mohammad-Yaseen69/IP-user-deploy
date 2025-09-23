@@ -72,7 +72,7 @@ const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor =
                 quotation_id: item?._id
             }
             const encrypted = encryptData(data)
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/quotation/${type}`, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/quotation/${type}`, {
                 data: encrypted
             }, {
                 headers: authHeader

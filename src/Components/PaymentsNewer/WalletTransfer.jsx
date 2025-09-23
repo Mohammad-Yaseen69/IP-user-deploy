@@ -68,7 +68,7 @@ const WalletTransfer = ({ sendPaymentType, setStep, setSendPaymentType, setIsWal
 
     useEffect(() => {
         if (wallet) {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-by-wallet-id/${wallet}`, {
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-by-wallet-id/${wallet}`, {
                 headers: authHeader
             })
                 .then(res => {

@@ -6,7 +6,7 @@ import axios from "axios"
 export const resendHandler = async (data, setToken, setter, authHeader) => {
     try {
         const encrypted = encryptData(data)
-        const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+        const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
             data: encrypted
         }, {
             headers: authHeader

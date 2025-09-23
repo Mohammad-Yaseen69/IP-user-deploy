@@ -103,7 +103,7 @@ const WalletFundsFlow = ({ setAction }) => {
     //         dataHandler("loading", true)
     //         try {
     //             console.log(`from=USD&to=${data?.wallet?.currency?.code}&amount=${api_amount}`)
-    //             const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=USD&to=${data?.wallet?.currency?.code}&amount=${api_amount}`, {
+    //             const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=USD&to=${data?.wallet?.currency?.code}&amount=${api_amount}`, {
     //                 headers: authHeader
     //             })
     //             const dec = decryptData(res?.data?.data)
@@ -144,7 +144,7 @@ const WalletFundsFlow = ({ setAction }) => {
     const getMobileWalletChannels = async () => {
         dataHandler("loading", true)
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/collection/get-services/${userDetails?.country_iso_code}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/collection/get-services/${userDetails?.country_iso_code}`, {
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
@@ -161,7 +161,7 @@ const WalletFundsFlow = ({ setAction }) => {
     const getMobileWalletServices = async (service_name = data.channel?.sub_name) => {
         dataHandler("loading", true)
         try {
-            const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/collection/get-payers/${userDetails?.country_iso_code}/${service_name}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/collection/get-payers/${userDetails?.country_iso_code}/${service_name}`, {
                 headers: authHeader
             })
             const dec = decryptData(res.data.data)
@@ -205,7 +205,7 @@ const WalletFundsFlow = ({ setAction }) => {
 
                     const encrypted = encryptData(dataa)
                     const res = await axios.post(
-                        `${process.env.REACT_APP_IP_DEV_API}/api/collection/get-rates`,
+                        `${import.meta.env.VITE_IP_DEV_API}/api/collection/get-rates`,
                         {
                             data: encrypted
                         },
@@ -250,7 +250,7 @@ const WalletFundsFlow = ({ setAction }) => {
             dataHandler("loading", true)
             if (data.channel?.value === "card") {
                 try {
-                    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/get-tbc-fee/${data.wallet?._id}/${parseFloat(data.amount)}`, {
+                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-tbc-fee/${data.wallet?._id}/${parseFloat(data.amount)}`, {
                         headers: authHeader,
                     })
                     const dec = decryptData(res.data.data)
@@ -271,7 +271,7 @@ const WalletFundsFlow = ({ setAction }) => {
             }
             else if (data.channel?.value === "paypal") {
                 try {
-                    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/paypal/fee/${data.wallet?._id}/${parseFloat(data.amount)}`, {
+                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/paypal/fee/${data.wallet?._id}/${parseFloat(data.amount)}`, {
                         headers: authHeader,
                     })
                     const dec = decryptData(res.data.data)
@@ -429,7 +429,7 @@ const WalletFundsFlow = ({ setAction }) => {
                         currency={data.currency_wallet?.currency?.code}
                         transaction={data.cardTransactionDetails}
                         paymentWithSavedCard={data.selectedSavedCard?._id ? true : false}
-                        url={`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/payment${data?.selectedSavedCard?._id ? "-pan" : ""}-confirmation/${data.cardTransactionDetails?.transaction_id}`}
+                        url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/payment${data?.selectedSavedCard?._id ? "-pan" : ""}-confirmation/${data.cardTransactionDetails?.transaction_id}`}
                     />
                     :
                     <></>

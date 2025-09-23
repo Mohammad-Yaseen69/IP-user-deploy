@@ -27,7 +27,7 @@ const Socials = () => {
     useEffect(() => {
         const getFollowers = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/get-social-media-details/${userDetails?._id}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/get-social-media-details/${userDetails?._id}`, {
                     headers: authHeader
                 })
                 const dec = decryptData(res.data.data)

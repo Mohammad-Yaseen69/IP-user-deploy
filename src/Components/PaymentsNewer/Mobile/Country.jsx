@@ -30,7 +30,7 @@ const Country = ({ country, setCountry, setStep, setServices, type = "thunes" })
     useEffect(() => {
         const getCountries = async () => {
             if (type === "thunes") {
-                const res = await fetch(`${process.env.REACT_APP_THUNES_API}/Countries`)
+                const res = await fetch(`${import.meta.env.VITE_THUNES_API}/Countries`)
                 const data = await res.json()
                 const decrypted = decryptData(data.data)
 
@@ -41,7 +41,7 @@ const Country = ({ country, setCountry, setStep, setServices, type = "thunes" })
                 setFiltered(allowed)
                 setSearchCountries(allowed)
             } else {
-                const res = await fetch(`${process.env.REACT_APP_IP_DEV_API}/api/dt/countries`)
+                const res = await fetch(`${import.meta.env.VITE_IP_DEV_API}/api/dt/countries`)
                 const data = await res.json()
                 const decrypted = decryptData(data.data)
 
@@ -60,7 +60,7 @@ const Country = ({ country, setCountry, setStep, setServices, type = "thunes" })
     useEffect(() => {
         if (country) { 
             if (type === "thunes") {
-                axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country.alpha3}`, { headers: authHeader })
+                axios.get(`${import.meta.env.VITE_THUNES_API}/services/${country.alpha3}`, { headers: authHeader })
                     .then(res => {
                         setServices(decryptData(res.data.data))
                         setServicesLoad(true)
@@ -69,7 +69,7 @@ const Country = ({ country, setCountry, setStep, setServices, type = "thunes" })
                         // console.log(err)
                     })
             } else {
-                axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/dt/services-in-country/${country?.alpha3}`)
+                axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/dt/services-in-country/${country?.alpha3}`)
                     .then(res => {
                         // console.log(decryptData(res.data.data))
                         setServices(decryptData(res.data.data))

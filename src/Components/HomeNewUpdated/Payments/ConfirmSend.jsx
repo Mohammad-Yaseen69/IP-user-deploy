@@ -29,7 +29,7 @@ const ConfirmSend = ({ country, payoutChannel, amount, currency, item, reason, q
         }
         const encrypted = encryptData(quotationData)
 
-        axios.post(`${process.env.REACT_APP_THUNES_API}/createQuotation`, {
+        axios.post(`${import.meta.env.VITE_THUNES_API}/createQuotation`, {
             data: encrypted
         },
             {
@@ -73,7 +73,7 @@ const ConfirmSend = ({ country, payoutChannel, amount, currency, item, reason, q
 
             const encrypted = encryptData(data)
 
-            axios.post(`${process.env.REACT_APP_THUNES_API}/createTransaction/${createdQuotation.QuotationID}`, {
+            axios.post(`${import.meta.env.VITE_THUNES_API}/createTransaction/${createdQuotation.QuotationID}`, {
                 data: encrypted
             })
                 .then(res => {

@@ -50,7 +50,7 @@ const PaymentStep = (
 
     const expiryCheck = async (item) => {
         try {
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/trust-payment/check-card-expiry`, { data: encryptData({ card_id: item._id }) }, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/check-card-expiry`, { data: encryptData({ card_id: item._id }) }, {
                 headers: authHeader
             })
 

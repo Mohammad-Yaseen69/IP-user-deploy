@@ -60,7 +60,7 @@ const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurr
                 type: codeTypeArg ?? codeType
             }
             const encrypted = encryptData(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -90,7 +90,7 @@ const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurr
             type: codeType
         }
         // console.log(data)
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/invitation/move-commissions`, { data: encryptData(data) }, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/invitation/move-commissions`, { data: encryptData(data) }, {
             headers: authHeader
         })
             .then(res => {
@@ -127,7 +127,7 @@ const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurr
             setFx({})
             try {
                 const wallet = userWallets?.find(it => it?.currency?.code === currency)
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/invitation/get-withdrawal-rates/USD/${userDetails?.level?._id}/${amount}/${wallet?._id}`)
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/invitation/get-withdrawal-rates/USD/${userDetails?.level?._id}/${amount}/${wallet?._id}`)
                 const dec = decryptData(res.data.data)
                 setFx(dec?.data)
             }

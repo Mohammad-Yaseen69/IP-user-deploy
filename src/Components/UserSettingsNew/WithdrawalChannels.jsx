@@ -30,7 +30,7 @@ const WithdrawalChannels = () => {
         const fetchData = async () => {
             try {
                 // Fetch countries
-                const countriesResponse = await axios.get(`${process.env.REACT_APP_THUNES_API}/Countries`);
+                const countriesResponse = await axios.get(`${import.meta.env.VITE_THUNES_API}/Countries`);
                 const decryptedCountries = decryptData(countriesResponse.data.data);
 
                 // Check if user's country is allowed
@@ -44,7 +44,7 @@ const WithdrawalChannels = () => {
                     const country = countries.find(item => item.name.includes(userDetails?.country_name));
                     // const data = { country: country.alpha3 };
                     // const encrypted = encryptData(data);
-                    const servicesResponse = await axios.get(`${process.env.REACT_APP_THUNES_API}/services/${country.alpha3}`)
+                    const servicesResponse = await axios.get(`${import.meta.env.VITE_THUNES_API}/services/${country.alpha3}`)
                     setServices(decryptData(servicesResponse.data.data));
                 }
             } catch (error) {
@@ -350,7 +350,7 @@ const WithdrawalChannels = () => {
         }
         // console.log(data)
         const encrypted = encryptData(data)
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/create-withdrawal`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/withdrawal/create-withdrawal`, {
             data: encrypted
         }, {
             headers: authHeader
@@ -449,7 +449,7 @@ const WithdrawalChannels = () => {
         }
         // console.log(data)
         const encrypted = encryptData(data)
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/withdrawal/update-withdrawal/${userWithdrawals?._id}`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/withdrawal/update-withdrawal/${userWithdrawals?._id}`, {
             data: encrypted
         }, {
             headers: authHeader

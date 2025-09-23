@@ -44,14 +44,14 @@ const LoginForm = ({ silf }) => {
 
         const encrypted = encryptData(credentials)
 
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/account/login`, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/login`, {
             data: encrypted
         })
             .then(async (res) => {
                 const decrypted = decryptData(res.data.data)
                 localStorage.setItem("login", true)
                 localStorage.setItem("token", decrypted.token)
-                axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/account/auth/${decrypted?.token}`)
+                axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${decrypted?.token}`)
                     .then(async res => {
                         const decrypted = decryptData(res.data.data)
                         const data = await getUserInfo()
@@ -61,7 +61,7 @@ const LoginForm = ({ silf }) => {
                                 ...data
                             }
                         )
-                        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/login/create-login-history`, {
+                        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/login/create-login-history`, {
                             data: encrypted
                         })
                             .then(res => {
@@ -130,7 +130,7 @@ const LoginForm = ({ silf }) => {
                         <Input id="checkbox1" type="checkbox" />
                         <Label className="text-muted" for="checkbox1">{RememberPassword}</Label>
                     </div>
-                    <Link to={`${process.env.PUBLIC_URL}/authentication/forget-pwd`} className="link">
+                    <Link to={`${window.location.origin}/authentication/forget-pwd`} className="link">
                         {ForgotPassword}?
                     </Link>
                 </FormGroup>

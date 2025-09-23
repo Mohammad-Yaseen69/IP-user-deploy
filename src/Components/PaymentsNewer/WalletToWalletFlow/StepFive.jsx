@@ -19,7 +19,7 @@ const StepFive = ({ data, sending_currency = "", showMid = true }) => {
         if (data.payment_type?.value === "wallet" && data?.wallet?._id && data.currency_wallet?._id !== data?.wallet?._id) {
             const getExchangedAmounts = async () => {
                 try {
-                    const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${data?.currency_wallet?.currency?.code}&to=${data.payment_type?.value !== "wallet" ? data.currency_wallet?.currency?.code : data.wallet?.currency?.code}&amount=${data.amount}`, {
+                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${data?.currency_wallet?.currency?.code}&to=${data.payment_type?.value !== "wallet" ? data.currency_wallet?.currency?.code : data.wallet?.currency?.code}&amount=${data.amount}`, {
                         headers: authHeader
                     });
                     const dec = decryptData(res?.data?.data);

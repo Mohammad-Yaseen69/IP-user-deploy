@@ -41,7 +41,7 @@ const CommissionWithdraw = ({ isOpen, toggle, referralBalance = 0, defaultCurren
                 type: codeType
             }
             const encrypted = encryptData(data)
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
                 data: encrypted
             }, {
                 headers: authHeader
@@ -69,7 +69,7 @@ const CommissionWithdraw = ({ isOpen, toggle, referralBalance = 0, defaultCurren
                 otp,
                 type: codeType
             }
-            const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/invitation/request-commission-withdrawal`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/invitation/request-commission-withdrawal`, {
                 data: encryptData(data)
             }, {
                 headers: authHeader

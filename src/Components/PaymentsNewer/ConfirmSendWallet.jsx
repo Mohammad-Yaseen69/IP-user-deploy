@@ -123,7 +123,7 @@ const ConfirmSendWallet = ({ amount, currency, setConfirmed, setSubStep, payment
                 }
                 console.log(data)
                 const encrypted = encryptData(data)
-                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+                const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
                     data: encrypted
                 }, {
                     headers: authHeader

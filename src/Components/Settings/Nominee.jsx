@@ -20,7 +20,7 @@ const Nominee = () => {
     useEffect(() => {
         const getNomineeDetails = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/nominee/get-nominee/${userDetails?._id}`, {
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/nominee/get-nominee/${userDetails?._id}`, {
                     headers: authHeader
                 })
                 const decrypted = await decryptData(res.data.data)

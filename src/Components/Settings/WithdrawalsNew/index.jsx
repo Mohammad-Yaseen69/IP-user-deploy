@@ -25,7 +25,7 @@ const WithdrawalsNew = () => {
     useEffect(() => {
         const getCountries = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/payment/countries/${userDetails?.country?.country_iso_code}`, { headers: authHeader, timeout: 0 })
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment/countries/${userDetails?.country?.country_iso_code}`, { headers: authHeader, timeout: 0 })
                 const decrypted = decryptData(res.data.data)
                 const countriesArray = allCountries.filter((item) => {
                     return decrypted.some(apiCountry => apiCountry.countryIso3 === item?.alpha3)

@@ -59,7 +59,7 @@ const SecurityQuestions = () => {
         if (userDetails?.user?.question1 || userDetails?.user?.question2 || userDetails?.user?.question3) {
             try {
                 const encrypted = encryptData(data)
-                const res = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/wallet/send-otp`, {
+                const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
                     data: encrypted
                 }, {
                     headers: authHeader
@@ -76,7 +76,7 @@ const SecurityQuestions = () => {
                 setSaving(false)
             }
         } else {
-            axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/user/set-security-question-no-otp/${userDetails._id}`, data, {
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/user/set-security-question-no-otp/${userDetails._id}`, data, {
                 headers: authHeader
             })
                 .then(res => {
@@ -117,7 +117,7 @@ const SecurityQuestions = () => {
         }
         // console.log(data)
         // console.log(encryptData(data))
-        axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/user/set-security-question/${userDetails._id}`, { data: encryptData(data) }, {
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/user/set-security-question/${userDetails._id}`, { data: encryptData(data) }, {
             headers: authHeader
         })
             .then(res => {

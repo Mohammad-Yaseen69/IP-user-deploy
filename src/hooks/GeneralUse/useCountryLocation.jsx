@@ -13,7 +13,7 @@ const useCountryLocation = () => {
                 setCountry(ipBasedStoredCountry)
             } else {
                 try {
-                    const res = await fetch(`https://iplocate.io/api/lookup?apikey=${process.env.REACT_APP_IP_LOCATE_API_KEY}`)
+                    const res = await fetch(`https://iplocate.io/api/lookup?apikey=${import.meta.env.VITE_IP_LOCATE_API_KEY}`)
                     const location = await res.json();
 
                     if (location?.privacy?.is_proxy === true || location?.privacy?.is_tor === true || location?.privacy?.is_vpn === true) {

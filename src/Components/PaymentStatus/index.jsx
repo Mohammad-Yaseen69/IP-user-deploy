@@ -17,7 +17,7 @@ const PaymentStatus = () => {
         const searchUser = async () => {
             try {
                 const response = await axios.get(
-                    `${process.env.REACT_APP_IP_DEV_API}/api/account/search-users/${code}`,
+                    `${import.meta.env.VITE_IP_DEV_API}/api/account/search-users/${code}`,
                     {
                         headers: authHeader,
                     }

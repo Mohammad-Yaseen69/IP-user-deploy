@@ -55,7 +55,7 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                 // console.log(data)
                 const encrypted = encryptData(data)
 
-                axios.post(`${process.env.REACT_APP_THUNES_API}/createQuotation`, {
+                axios.post(`${import.meta.env.VITE_THUNES_API}/createQuotation`, {
                     data: encrypted
                 },
                     {
@@ -79,7 +79,7 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
     }
 
     const searchUser = debounce((e) => {
-        axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/search-account/${e.target.value}`, {
+        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/instagram/search-account/${e.target.value}`, {
             headers: authHeader
         })
             .then(res => {
@@ -98,7 +98,7 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
 
     useEffect(() => {
         if (searched !== null || searched) {
-            axios.get(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/get-user-details/${searched._id}`, {
+            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/instagram/get-user-details/${searched._id}`, {
                 headers: authHeader
             })
                 .then(res => {

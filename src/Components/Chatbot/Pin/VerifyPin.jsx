@@ -146,7 +146,7 @@ const CreatePin = () => {
             console.log(data)
             const enc = encryptData(data)
 
-            const response = await axios.post(`${process.env.REACT_APP_IP_DEV_API}/api/instagram/${flow === "connect" ? "connect-account" : "verify-pin"}`, { data: enc })
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/instagram/${flow === "connect" ? "connect-account" : "verify-pin"}`, { data: enc })
 
             const dec = decryptData(response.data.data)
 

@@ -23,7 +23,7 @@ const AddKYBPartner = ({ setPartners }) => {
         const searchUser = async () => {
             try {
                 const response = await axios.get(
-                    `${process.env.REACT_APP_IP_DEV_API}/api/account/search-users/${search}`,
+                    `${import.meta.env.VITE_IP_DEV_API}/api/account/search-users/${search}`,
                     {
                         headers: authHeader,
                     }
