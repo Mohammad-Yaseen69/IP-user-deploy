@@ -4,7 +4,6 @@ import axios from 'axios';
 import logo from "../../assets/images/logo/logo.png"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 
-// Use a per-component instance to avoid shared canvas and race conditions
 
 const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, platform, isInvoice, invoiceQrGenerateFn, invoiceUrl, invoiceId }) => {
     const ref = useRef(null);
@@ -55,12 +54,15 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
                         img.onerror = reject;
                     });
                 }
-                qrRef.current && qrRef.current.update({ image: logo });
-                if (ref.current) {
-                    qrRef.current && qrRef.current.append(ref.current);
+                if (qrRef.current) {
+                    qrRef.current.update({ image: logo });
+                    if (ref.current) {
+                        qrRef.current.append(ref.current);
+                    }
                 }
                 setIsReady(true);
-            } catch (_) {
+            } catch (err) {
+                console.error("Image failed to load:", err);
                 if (ref.current) {
                     qrRef.current && qrRef.current.append(ref.current);
                 }
