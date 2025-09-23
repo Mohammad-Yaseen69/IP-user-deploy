@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './ErrorBoundary.css';
 import * as Sentry from "@sentry/react";
-import { getCurrentHub } from "@sentry/core";
 
 
 class ErrorBoundary extends Component {

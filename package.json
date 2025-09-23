@@ -106,8 +106,6 @@
     "simplebar-react": "^3.2.0",
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^4.7.2",
-    "source-map-explorer": "^2.5.3",
-    "source-map-loader": "^5.0.0",
     "styled-components": "^5.3.5",
     "sweetalert2": "^11.4.29",
     "swiper": "^9.3.2",
@@ -136,7 +134,8 @@
     "@types/html2canvas": "^1.0.0",
     "@types/react-slick": "^0.23.10",
     "cross-env": "^7.0.3",
-    "eslint-plugin-i18next": "^6.1.2"
+    "eslint-plugin-i18next": "^6.1.2",
+    "source-map-explorer": "^2.5.3"
   },
   "engines": {
     "node": "18.19.1"
