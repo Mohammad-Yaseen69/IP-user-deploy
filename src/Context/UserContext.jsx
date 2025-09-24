@@ -70,7 +70,7 @@ export const getCroppedImg = async (imageSrc, pixelCrop) => {
     })
 }
 
-export const UserContext = createContext(null)
+export const UserContext = createContext({})
 
 export const authHeader = {
     "Authorization": `Bearer ${localStorage.getItem("token")}`,

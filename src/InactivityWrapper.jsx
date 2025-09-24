@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { UserContext } from './Context/UserContext';
 
-export const InactivityContext = createContext(null);
+export const InactivityContext = createContext({});
 
 function InactivityWrapper({ children }) {
     const { setShowInactivityModal, userDetails } = useContext(UserContext);
