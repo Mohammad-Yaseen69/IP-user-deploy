@@ -22,6 +22,11 @@ jobs:
       - name: Mark repo as safe
         run: git config --global --add safe.directory /home/ubuntu/Projects/instapay
 
+      -  name: Fix permissions
+         run: |
+          sudo chown -R $USER:$USER /home/ubuntu/Projects/instapay
+          sudo chmod -R u+rw /home/ubuntu/Projects/instapay
+
       - name: Deploy
         run: |
          sudo apt-get update && sudo apt-get install -y jq
