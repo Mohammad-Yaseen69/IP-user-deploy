@@ -240,6 +240,8 @@ export const BeneficiaryCard = ({ data, dataHandler, item, type, setBenWalletsFo
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(40px, 1fr))"
     }
+
+
     return (
         <div className={`${styles.user} ${showMore ? styles.user_full : ""}`} >
 
@@ -277,7 +279,7 @@ export const BeneficiaryCard = ({ data, dataHandler, item, type, setBenWalletsFo
                         ?
                         <img src={item?.profileImage} alt="" className={styles.dp_img} style={{ background: "transparent" }} />
                         :
-                        <div className={styles.dp}>{item?.first_name[0]}</div>
+                        <div className={styles.dp}>{item?.first_name?.[0]}</div>
                 }
                 <div style={{ gap: type === "recent" && "0px" }} className={styles.name_un}>
                     <h5>
@@ -298,9 +300,9 @@ export const BeneficiaryCard = ({ data, dataHandler, item, type, setBenWalletsFo
 
                     {
                         loading ?
-                            <div class="d-flex justify-content-center">
-                                <div class="spinner-border" color='primary' role="status">
-                                    <span class="sr-only">Loading...</span>
+                            <div className="d-flex justify-content-center">
+                                <div className="spinner-border" color='primary' role="status">
+                                    <span className="sr-only">Loading...</span>
                                 </div>
                             </div> :
                             showMore

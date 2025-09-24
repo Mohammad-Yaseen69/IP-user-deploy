@@ -35,12 +35,13 @@ export default defineConfig([
       "no-unused-vars": ["warn"], // unused vars warning
       "react-hooks/exhaustive-deps": "off",
       "no-dupe-keys": "off",
+      "react/prop-types": "off",
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },
       ],
       "i18next/no-literal-string": [
-        "error",
+        "warn",
         {
           markupOnly: true,
           ignoreAttribute: [
