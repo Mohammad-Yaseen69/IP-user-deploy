@@ -4,10 +4,11 @@ import { useTranslation } from 'react-i18next';
 import iso2 from "../AddFunds/WalletFund/countries_iso2.json"
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 
 const getCities = async (iso2) => {
     const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/country/get-cities/${iso2}`);
-    return res.data.data; 
+    return encryptData(res.data.data)?.data;
 }
 
 const CitiesDropDown = ({ country, userCity, setUserCity, disabled = false, styles = {}, iso_3 = "", isState, title = "Select City", stateData, background = "#fff" }) => {
@@ -15,6 +16,7 @@ const CitiesDropDown = ({ country, userCity, setUserCity, disabled = false, styl
     const [isOpen, setIsOpen] = useState(false);
     const cityInputRef = useRef()
     const [searchTerm, setSearchTerm] = useState('');
+    const [isManual, setIsManual] = useState(false)
     const iso2Value = useMemo(() => {
         return iso2[iso_3?.toUpperCase()]
     }, [iso2, iso_3])
@@ -101,6 +103,10 @@ const CitiesDropDown = ({ country, userCity, setUserCity, disabled = false, styl
                             ) : <span style={{ color: "#a8a8a8" }}>{t(title)}</span>}
                         </>
                 }
+
+                {!disabled && <span>{ }</span>}
+
+
             </DropdownToggle>
             <DropdownMenu style={{ maxHeight: "350px", overflowY: "auto", overflowX: "auto", width: "100%" }}>
                 {

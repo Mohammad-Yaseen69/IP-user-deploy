@@ -44,10 +44,6 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
 
 
     const badgeColor = useMemo(() => {
-        if (item?.parent_transaction) {
-            item.status = "reversed"
-        }
-
         switch (item?.status?.toLowerCase()) {
             case "initiated":
                 return "#ADD8E6"

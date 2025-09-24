@@ -28,10 +28,6 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
     useEffect(() => { }, [item])
 
     const badgeColor = useMemo(() => {
-        if (item?.parent_transaction) {
-            item.status = "reversed"
-        }
-
         switch (item?.status?.toLowerCase()) {
             case "initiated":
                 return "#ADD8E6"

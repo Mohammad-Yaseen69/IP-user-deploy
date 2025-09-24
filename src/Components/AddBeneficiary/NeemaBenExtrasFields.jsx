@@ -5,10 +5,11 @@ import iso2 from '../AddFunds/WalletFund/countries_iso2.json'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
+import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 
 const getStates = async (iso2) => {
     const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/country/get-states/${iso2}`)
-    return res?.data?.data
+    return encryptData(res.data.data)?.data;
 }
 
 const NeemaBenExtrasFields = ({ fieldInfoValidate, country, basicExtras, countryIsoCode, setBasicExtras, handleBasicExtraChange }) => {
