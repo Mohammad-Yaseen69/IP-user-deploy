@@ -19,6 +19,12 @@ jobs:
       - name: Switch Nginx port to Blue
         run: bash /home/ubuntu/switch-to-blue.sh
 
+      - name: Check Node.js version
+        run: |
+          node -v
+          npm -v
+
+
       - name: Mark repo as safe
         run: git config --global --add safe.directory /home/ubuntu/Projects/instapay
 
