@@ -1,16 +1,15 @@
 import React, { lazy } from 'react';
-import QrCode from '../Components/QrCode';
-import QRScan from '../Components/QrScan';
-import ChatbotQrCode from '../Components/ChatbotQrCode';
-import PanTransaction from '../Components/Chatbot/PanTransaction';
-import PanTransactionStatus from '../Components/Chatbot/PanTransactionStatus';
-import PaymentStatus from '../Components/PaymentStatus';
-import DataDecrypt from '../Components/DataDecrypt';
-import NotFound from '../Components/NotFound';
-import PaypalTransactions from '../Components/Chatbot/PaypalTransactions';
-import GetLocation from '../Components/Chatbot/GetLocation';
-import ShowLocation from '../Components/Chatbot/ShowLocation';
-
+const QrCode = lazy(() => import("../Components/QrCode"));
+const QRScan = lazy(() => import("../Components/QrScan"));
+const ChatbotQrCode = lazy(() => import("../Components/ChatbotQrCode"));
+const PanTransaction = lazy(() => import("../Components/Chatbot/PanTransaction"));
+const PanTransactionStatus = lazy(() => import("../Components/Chatbot/PanTransactionStatus"));
+const PaymentStatus = lazy(() => import("../Components/PaymentStatus"));
+const DataDecrypt = lazy(() => import("../Components/DataDecrypt"));
+const NotFound = lazy(() => import("../Components/NotFound"));
+const PaypalTransactions = lazy(() => import("../Components/Chatbot/PaypalTransactions"));
+const GetLocation = lazy(() => import("../Components/Chatbot/GetLocation"));
+const ShowLocation = lazy(() => import("../Components/Chatbot/ShowLocation"));
 const AddBeneficiary = lazy(() => import('../Components/AddBeneficiary'));
 const AddFunds = lazy(() => import('../Components/AddFunds'));
 const Analytics = lazy(() => import('../Components/Analytics'));
