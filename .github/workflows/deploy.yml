@@ -16,9 +16,6 @@ jobs:
       - name: Git global config for private repo access
         run: git config --global url."https://oauth2:${{ secrets.YOUR_GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
 
-      - name: Check Node version
-        run: node -v
-
       - name: Switch Nginx port to Blue
         run: bash /home/ubuntu/switch-to-blue.sh
 
