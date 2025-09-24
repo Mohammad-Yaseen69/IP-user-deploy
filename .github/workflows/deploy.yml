@@ -16,14 +16,13 @@ jobs:
       - name: Git global config for private repo access
         run: git config --global url."https://oauth2:${{ secrets.YOUR_GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
 
-      - name: Use Node.js 18.20.8
+      - name: Force Node.js 18.20.8
         run: |
-         export NVM_DIR="$HOME/.nvm"
-         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-         nvm install 18.20.8
-         nvm use 18.20.8
-         node -v
-         npm -v
+          sudo ln -sf /root/.nvm/versions/node/v18.20.8/bin/node /usr/bin/node
+          sudo ln -sf /root/.nvm/versions/node/v18.20.8/bin/npm /usr/bin/npm
+          node -v
+          npm -v
+      
 
       - name: Switch Nginx port to Blue
         run: bash /home/ubuntu/switch-to-blue.sh
@@ -53,14 +52,12 @@ jobs:
           jq '. + {"type":"module"}' package.json > temp.json && mv temp.json package.json
           sudo pm2 restart main --update-env
 
-      - name: Use Node.js 18.20.8
+      - name: Force Node.js 18.20.8
         run: |
-         export NVM_DIR="$HOME/.nvm"
-         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-         nvm install 18.20.8
-         nvm use 18.20.8
-         node -v
-         npm -v
+          sudo ln -sf /root/.nvm/versions/node/v18.20.8/bin/node /usr/bin/node
+          sudo ln -sf /root/.nvm/versions/node/v18.20.8/bin/npm /usr/bin/npm
+          node -v
+          npm -v
       - name: Switch Nginx port to Main
         run: bash /home/ubuntu/switch-to-main.sh
 
