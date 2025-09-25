@@ -12,13 +12,13 @@ const Stepone = ({ data, dataHandler }) => {
     return (
         <div className={styles.container}>
             <label>{t("Account Type")}</label>
-            <div style={{flexWrap: "wrap"}} className={styles.items}>
+            <div style={{ flexWrap: "wrap" }} className={styles.items}>
                 <div className={`${styles.item} ${data.account_type === "individual" ? styles.active : ""}`} onClick={() => dataHandler("account_type", "individual")}>
                     <img src={data.account_type === "individual" ? ind_a : ind} alt="" />
                     <span>{t("Individual")}</span>
                 </div>
-                {/* <div className={styles.item} onClick={() => dataHandler("account_type", "business")}> */}
-                <div className={`${styles.item} ${styles.disabled} ${data.account_type === "business" ? styles.active : ""}`}>
+                {/* <div className={styles.item} > */}
+                <div onClick={() => dataHandler("account_type", "business")} className={`${styles.item} ${data.account_type === "business" ? styles.active : ""}`}>
                     <img src={data.account_type === "business" ? bus_a : bus} alt="" />
                     <span>{t("Business")}</span>
                 </div>
