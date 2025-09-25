@@ -224,6 +224,9 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const disabledButton = useMemo(() => {
         switch (subStep) {
             case 1:
+                if(userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status !== "approved" : userDetails?.company?.kyb_status !== "approved"){
+                    return false
+                }
                 return !internationalData.amount || +String(internationalData.amount)?.replaceAll(",", "") < 1 || !internationalData.currency || !internationalData.currency_wallet?.currency?.code || !internationalData.country?.name || !internationalData?.payoutChannel?.name || !internationalData?.payer?.name || internationalData.error || internationalData.exchange_rate_error || !internationalData.exchange_rate?.receiver?.amount > 0
 
             case 2:
