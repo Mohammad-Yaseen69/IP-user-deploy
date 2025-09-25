@@ -63,7 +63,7 @@ const WalletDetails = ({ setWallet, setSubStep, wallet }) => {
         const wallet_ben = beneficiaries.filter(item => item.wallet.length > 0)
         if (wallet_ben.length > 0) {
             const filtered = wallet_ben.filter(item => {
-                return item.first_name.includes(searchQuery) || item.last_name.includes(searchQuery) || item.wallet?.join("")?.includes(searchQuery)
+                return item.first_name.includes(searchQuery) || item.company_name.includes(searchQuery) || item.last_name.includes(searchQuery) || item.wallet?.join("")?.includes(searchQuery)
             })
 
             setSearchedBeneficiaries(filtered)
@@ -236,7 +236,7 @@ const WalletDetails = ({ setWallet, setSubStep, wallet }) => {
                                             color: "white",
                                             fontSize: "1rem",
                                             fontWeight: 800
-                                        }}>{searchUser?.first_name[0]}</div>
+                                        }}>{searchUser?.first_name?.[0] || searchUser?.company_name?.[0]}</div>
                                 }
                                 <div>
                                     <h5 style={{ marginBottom: 0, whiteSpace: "nowrap" }}>

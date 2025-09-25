@@ -219,14 +219,6 @@ const KYB = () => {
                     </>
                 }
                 {
-                    (
-                        userDetails?.company?.kyb_status
-                            ?
-                            userDetails?.company?.kyb_status === "verified"
-                            :
-                            companyType
-                    )
-                    &&
                     <Card style={{ marginTop: "1.5rem" }}>
                         <CardHeader style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                             <h4>Partners</h4>

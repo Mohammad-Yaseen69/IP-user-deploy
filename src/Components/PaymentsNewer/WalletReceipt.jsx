@@ -117,7 +117,7 @@ const WalletReceipt = ({ walletDetails, transactionDetails, amount, currency, se
                     }}>
                         <span style={{ minWidth: "30px", color: "#8a8a8a" }}>To:</span>
                         <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
-                            <span style={{ fontWeight: 600, fontSize: ".9rem" }}>{`${walletDetails?.first_name} ${walletDetails?.last_name}`} (INSTA-{walletDetails.wallet_id})</span>
+                            <span style={{ fontWeight: 600, fontSize: ".9rem" }}>{`${walletDetails?.first_name || walletDetails?.company_name} ${walletDetails?.last_name}`} (INSTA-{walletDetails.wallet_id})</span>
                         </div>
                     </div>
                 </div>
@@ -130,9 +130,9 @@ const WalletReceipt = ({ walletDetails, transactionDetails, amount, currency, se
                     {
                         downloading
                             ?
-                            <div class="d-flex justify-content-center">
-                                <div class="spinner-border" color='primary' role="status">
-                                    <span class="sr-only">Loading...</span>
+                            <div className="d-flex justify-content-center">
+                                <div className="spinner-border" color='primary' role="status">
+                                    <span className="sr-only">Loading...</span>
                                 </div>
                             </div>
                             :

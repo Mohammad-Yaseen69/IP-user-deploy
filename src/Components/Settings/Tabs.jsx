@@ -100,21 +100,25 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             active_icon: notif_active,
         },
         {
-            name: account_type === "individual" ? "Identity Verification" : "",
-            icon: iv,
-            active_icon: iv_active,
-            tabType: 'kyc'
-        },
-        {
             name: account_type === "business" ? "API Key" : "",
             icon: iv,
             active_icon: iv_active,
         },
-        {
-            name: account_type === "business" ? "Business Verification" : "",
-            icon: iv,
-            active_icon: iv_active,
-        },
+        account_type === "business"
+            ?
+            {
+                name: "Business Verification",
+                icon: iv,
+                active_icon: iv_active,
+            } :
+
+            {
+                name: "Identity Verification",
+                icon: iv,
+                active_icon: iv_active,
+                tabType: 'kyc'
+            }
+        ,
         {
             name: "Login Activity",
             icon: login,
@@ -217,6 +221,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                     {missingTabs?.map(item => (
                         <div
                             style={{ padding: '12px 5px', width: '100%' }}
+                            key={item.name}
                             className={`${styles.tab} ${currentTab === item.name ? styles.active : ""} ${((item.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item.name !== "Verification" && !ft && userDetails?.user?.kyc_status !== "approved")) ? styles.disabled : ""} ${(userDetails?.country?.kyc_required && item.name !== "Verification") ? styles.kyc : ""}`}
                             onClick={() => {
                                 window.history.replaceState(null, null, "")
@@ -333,6 +338,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             {
                 tabsData.filter(item => (item.name.length > 0 && (!missingTabs.some(i => i.name === item.name) && width > 1000))).map(item => (
                     <div
+                        key={item.name}
                         className={`${styles.tab} ${currentTab === item.name ? styles.active : ""} ${((item.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item.name !== "Verification" && !ft && userDetails?.user?.kyc_status !== "approved")) ? styles.disabled : ""} ${(userDetails?.country?.kyc_required && item.name !== "Verification") ? styles.kyc : ""}`}
                         onClick={() => {
                             if ((item.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item.name !== "Verification" && !ft && userDetails?.user?.kyc_status !== "approved")) return;

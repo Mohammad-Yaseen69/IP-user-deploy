@@ -279,7 +279,7 @@ export const BeneficiaryCard = ({ data, dataHandler, item, type, setBenWalletsFo
                         ?
                         <img src={item?.profileImage} alt="" className={styles.dp_img} style={{ background: "transparent" }} />
                         :
-                        <div className={styles.dp}>{item?.first_name?.[0]}</div>
+                        <div className={styles.dp}>{item?.first_name?.[0] || item?.company_name?.[0]}</div>
                 }
                 <div style={{ gap: type === "recent" && "0px" }} className={styles.name_un}>
                     <h5>

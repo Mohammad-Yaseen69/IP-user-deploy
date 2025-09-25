@@ -1,4 +1,4 @@
-/* eslint-disable no-template-curly-in-string */
+ 
 import { Check, ChevronLeft, ChevronRight, HelpCircle, Search, X, XCircle } from "react-feather"
 import { Badge, Button, Card, CardBody, Input } from "reactstrap"
 import { useSelector } from "react-redux"
@@ -50,7 +50,7 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
     useEffect(() => {
         let fil = payoutChannel ? beneficiaries.filter(item => item.account_type.some(item => item.toLowerCase().includes(payoutChannel.toLowerCase()))) : registeredBeneficiaries
 
-        fil =[]
+        fil = []
         if (fil?.length === 0) {
             setAddMessage(t(`You have no beneficiary.`))
         }
@@ -59,7 +59,7 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
             fil = fil.filter(item => item?.country_name?.toLowerCase()?.includes(country?.toLowerCase()))
 
             if (fil?.length === 0) {
-                // eslint-disable-next-line no-template-curly-in-string
+                 
                 setAddMessage(t("You have no beneficiary from ${country} having ${payoutChannel} details.").replace("${country}", country)?.replace("${payoutChannel}", payoutChannel))
             }
         }
@@ -158,6 +158,8 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                     item?.first_name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
                     ||
                     item?.last_name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+                    ||
+                    item?.company_name?.toLowerCase()?.includes(searchQuery?.toLowerCase())
                     // ||
                     // item?.email?.toLowerCase()?.includes(e.target.value.toLowerCase())
                 )
@@ -337,8 +339,8 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                                         {/* {searched?._id !== userDetails?._id
                                             ? */}
                                         {
-                                            searched.filter(item => item?._id !== userDetails?._id).map(user_searched => (
-                                                <div style={{ background: "#fff", borderRadius: "12px", padding: ".5rem", cursor: "pointer", flex: 1, }}>
+                                            searched.filter(item => item?._id !== userDetails?._id).map((user_searched, idx) => (
+                                                <div key={idx} style={{ background: "#fff", borderRadius: "12px", padding: ".5rem", cursor: "pointer", flex: 1, }}>
                                                     <div key={user_searched?.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", maxHeight: "72px" }} onClick={() => {
                                                         // console.log(user_searched)
                                                         setBeneficiary([user_searched])

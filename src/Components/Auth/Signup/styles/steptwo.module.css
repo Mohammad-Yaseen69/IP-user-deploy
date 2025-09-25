@@ -56,7 +56,7 @@
     margin-bottom: 0;
 }
 
-.inp input {
+.inp input, .inp select {
     outline: none;
     border: none;
     border-radius: 8px;

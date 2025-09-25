@@ -56,9 +56,9 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
                                 <div key={item?._id} className={styles.review_card}>
                                     <div className={styles.rc_top}>
                                         <div className={styles.rct_left}>
-                                            <div className={styles.rctl_dp}>{item?.buyer?.user?.first_name?.[0]}</div>
+                                            <div className={styles.rctl_dp}>{item?.buyer?.user?.first_name?.[0] || item?.buyer?.user?.company_name?.[0]}</div>
                                             <div className={styles.rctl_dets}>
-                                                <h5>{item?.buyer?.user?.first_name} {item?.buyer?.user?.last_name}</h5>
+                                                <h5>{item?.buyer?.user?.first_name ?? item?.buyer?.user?.company_name} {item?.buyer?.user?.last_name}</h5>
                                                 <span>{item?.buyer?.account_type}</span>
                                             </div>
                                         </div>
@@ -83,16 +83,16 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
                                 {
                                     item?.sender?.profileImage?.url
                                         ?
-                                        <img src={item?.sender?.profileImage?.url} alt={item?.sender?.user?.first_name} className={styles.dp} style={{ background: "none" }} />
+                                        <img src={item?.sender?.profileImage?.url} alt={item?.sender?.user?.first_name || item?.sender?.user?.company_name} className={styles.dp} style={{ background: "none" }} />
                                         :
                                         <div className={styles.dp}>
                                             {
                                                 type === "received"
                                                     ?
-                                                    `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 24)?.[0]
+                                                    `${item?.sender?.user?.first_name || item?.sender?.user?.company_name} ${item?.sender?.user?.last_name}`.slice(0, 24)?.[0]
                                                     :
 
-                                                    `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 24)?.[0]
+                                                    `${item?.receiver?.user?.first_name || item?.receiver?.user?.company_name} ${item?.receiver?.user?.last_name}`.slice(0, 24)?.[0]
                                             }
                                         </div>
                                 }
@@ -101,9 +101,9 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
                                         {
                                             type === "received"
                                                 ?
-                                                `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 24)
+                                                `${item?.sender?.user?.first_name || item?.sender?.user?.company_name} ${item?.sender?.user?.last_name}`.slice(0, 24)
                                                 :
-                                                `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 24)
+                                                `${item?.receiver?.user?.first_name || item?.receiver?.user?.company_name} ${item?.receiver?.user?.last_name}`.slice(0, 24)
                                         }
                                     </h5>
                                     <p>INSTA-{item?.currency?.code} </p>

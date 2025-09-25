@@ -44,7 +44,9 @@ const initialState = {
     show_email_otp: false,
     verified: false,
     phone_error: "",
-    account_created: false
+    account_created: false,
+    company_name: "",
+    category_id: ""
 }
 
 function reducer(state, action) {
@@ -60,6 +62,7 @@ function reducer(state, action) {
 }
 
 const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
+    // eslint-disable-next-line no-useless-escape
     const emailRegex = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/
     const { t } = useTranslation()
     const [data, dispatch] = useReducer(reducer, initialState);
@@ -86,9 +89,9 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
             case 1:
                 return !data.account_type
             case 2:
-                return !data.first_name || !data.last_name
+                return data.account_type === "individual" ? !data.first_name || !data.last_name : !data.category_id || !data.company_name || !data.country?._id
             case 3:
-                return !data.phone || data.phone.length < 9 || !/^\d{9,20}$/g.test(data.phone) || (data.email.length > 0 ? !emailRegex.test(data.email) : false)
+                return data.account_type === "individual" ? !data.phone || data.phone.length < 9 || !/^\d{9,20}$/g.test(data.phone) : (!emailRegex.test(data.email))
             case 4:
                 return !passwordRegex.every(item => item.test(data.password)) || data.password !== data.confirm_password
 
@@ -111,7 +114,6 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
             return true
         }
         catch (error) {
-            const dec = decryptData(error?.response?.data?.data)
             dataHandler("phone_error", "Incorrect phone number, please enter a valid number.")
             // dataHandler("error", typeof dec === "string" ? dec : dec?.message ?? "Something went wrong while verifying details.")
             return false
@@ -122,14 +124,15 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
     }
 
     const checkEmailAndPhone = async () => {
-        const isPhoneValid = await checkIfPhoneIsValid()
-        if (isPhoneValid) {
+        const isPhoneValid = data.account_type === "individual" ? await checkIfPhoneIsValid() : null
+
+        if (isPhoneValid || data.account_type === "business") {
             dataHandler("loading", true)
             try {
                 const payload = data.email.length > 0 ? { email: data.email, phone: data.phone } : { phone: data.phone }
                 const enc = encryptData(payload)
 
-                const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/account-check/individual`, {
+                const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/account-check/${data.account_type === "individual" ? "individual" : "business"}`, {
                     data: enc
                 })
                 const decrypted = decryptData(res.data.data)
@@ -168,15 +171,32 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                 payload.ref_code = data.referral_code
             }
 
+            if (data.account_type === "business") {
+                delete payload.first_name
+                delete payload.last_name
+                delete payload.phone
+                delete payload.country_iso_code
+                payload.category_id = data.category_id
+                payload.company_name = data.company_name
+                payload.country_iso_code = data.country?.alpha3
+                payload.country = data.country?._id
+                payload.country_name = data.country?.country_name
+
+            }
+
             console.log(payload)
             const enc = encryptData(payload)
 
-            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/registration/individual`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/registration/${data.account_type === "individual" ? "individual" : "business"}`, {
                 data: enc
             })
             const dec = decryptData(res.data.data)
             dataHandler("signup_token", dec?.token)
-            dataHandler("show_otp", true)
+            if (data.account_type === "individual") {
+                dataHandler("show_otp", true)
+            } else {
+                dataHandler("show_email_otp", true)
+            }
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
             dataHandler("error", dec?.message ?? "Something went wrong while sending OTP.")
@@ -212,8 +232,10 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
             dataHandler("phone_otp_values", otp)
             const paylaod = {
                 token: data.signup_token,
-                sms_otp: otp
+                [data.account_type === "business" ? "email_otp" : "sms_otp"]: otp
             }
+
+
             const enc = encryptData(paylaod)
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/verify-registration/${data.account_type}`, {
                 data: enc
@@ -223,7 +245,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
             console.log(dec)
 
 
-            if (data.email.length < 1) {
+            if (data.email.length < 1 || data.account_type === "business") {
                 if (data.dp) {
                     await uploadDp(dec?.token ?? dec?.im)
                 } else {
@@ -347,8 +369,8 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                                     ?
                                     <OtpConfirmation
                                         dataHandler={dataHandler}
-                                        resendHandler={() => verifyPhoneOtp(data.phone_otp_values?.split(""), () => { }, 6, true)}
-                                        verifyOTpHandler={verifyEmailOtp}
+                                        resendHandler={data.account_type === "individual" ? () => verifyPhoneOtp(data.phone_otp_values?.split(""), () => { }, 6, true) : signupHandler}
+                                        verifyOTpHandler={data.account_type === "individual" ? verifyEmailOtp : verifyPhoneOtp}
                                         timer={900}
                                         type="email"
                                         data={data}
@@ -457,16 +479,16 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                                     <h5>{t("Two-factor authentication (2FA) is the best way to protect yourself online.")}</h5>
                                     <p>{t("We recommend you download and install the Google Authenticator app to ensure you receive your verification codes instantly, avoiding any SMS delays or issues.")}</p>
                                     <div className={styles.download_info}>
-                                        <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&pli=1" target="_blank">
+                                        <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&pli=1" target="_blank" rel="noreferrer">
                                             <img src={gs} alt="" />
                                         </a>
-                                        <a href="https://apps.apple.com/us/app/google-authenticator/id388497605" target="_blank">
+                                        <a href="https://apps.apple.com/us/app/google-authenticator/id388497605" target="_blank" rel="noreferrer">
                                             <img src={as} alt="" />
                                         </a>
                                     </div>
                                 </div>
                                 <div className={styles.right}>
-                                    <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&pli=1" target="_blank">
+                                    <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&pli=1" target="_blank" rel="noreferrer">
                                         <img src={authenticator} alt="" />
                                     </a>
                                     <h4>{t("Strong security with Google Authenticator")}</h4>

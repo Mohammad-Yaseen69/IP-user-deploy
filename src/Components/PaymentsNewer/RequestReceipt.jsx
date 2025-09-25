@@ -54,8 +54,8 @@ const RequestReceipt = ({ beneficiary, amount, currency, paymentType, setShowSta
                             }}
                         >
                             {
-                                beneficiary.map(item => (
-                                    <SwiperSlide>
+                                beneficiary.map((item,idx) => (
+                                    <SwiperSlide key={idx}>
                                         <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
                                             {
                                                 item?.profileImage?.url || item?.profileImage
@@ -133,9 +133,9 @@ const RequestReceipt = ({ beneficiary, amount, currency, paymentType, setShowSta
                     {
                         downloading
                             ?
-                            <div class="d-flex justify-content-center">
-                                <div class="spinner-border" color='primary' role="status">
-                                    <span class="sr-only">Loading...</span>
+                            <div className="d-flex justify-content-center">
+                                <div className="spinner-border" color='primary' role="status">
+                                    <span className="sr-only">Loading...</span>
                                 </div>
                             </div>
                             :

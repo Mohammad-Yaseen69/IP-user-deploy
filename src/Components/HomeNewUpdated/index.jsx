@@ -167,7 +167,7 @@ const HomeNewUpdated = () => {
                                                 {
                                                     userDetails?.profileImage?.url
                                                         ?
-                                                        <img src={croppedImages.profileDP ||userDetails?.profileImage?.url} alt={userDetails?.user?.first_name} style={{
+                                                        <img src={croppedImages.profileDP || userDetails?.profileImage?.url} alt={userDetails?.user?.first_name} style={{
                                                             minWidth: window.innerWidth > 1650 ? "50px" : "40px",
                                                             minHeight: window.innerWidth > 1650 ? "50px" : "40px",
                                                             width: window.innerWidth > 1650 ? "50px" : "40px",
@@ -263,7 +263,7 @@ const HomeNewUpdated = () => {
                             showBusinessModal={showBusinessModal}
                             setShowBusinessModal={setShowBusinessModal}
                         />
-                        <a href="https://api.whatsapp.com/send/?phone=41783258200" target="_blank" style={{ width: "100%", flex: 1, display: "flex" }}>
+                        <a href="https://api.whatsapp.com/send/?phone=41783258200" target="_blank" style={{ width: "100%", flex: 1, display: "flex" }} rel="noreferrer">
                             <div style={{
                                 minHeight: "75px",
                                 padding: "1rem",
@@ -335,20 +335,22 @@ const HomeNewUpdated = () => {
                                 ))
                             }
                         </div>
-                        <button onClick={() => setShowBusinessModal(true)} className={cardsStyle.button} style={{
-                            background: "linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
-                            color: "white",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            gap: ".75rem",
-                            borderRadius: "7px",
-                            padding: "1rem"
-                        }}>
-                            <img src={crown} alt="c" style={{ width: "20px" }} />
-                            <span style={{ color: "white", WebkitTextFillColor: "white", fontSize: ".9rem" }}>{t("Upgrade to Business Account")}</span>
-                            <BsFillPlayFill size={25} style={{ marginLeft: "auto" }} />
-                        </button>
+                        {userDetails?.account_type === "individual" &&
+                            <button onClick={() => setShowBusinessModal(true)} className={cardsStyle.button} style={{
+                                background: "linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
+                                color: "white",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                gap: ".75rem",
+                                borderRadius: "7px",
+                                padding: "1rem"
+                            }}>
+                                <img src={crown} alt="c" style={{ width: "20px" }} />
+                                <span style={{ color: "white", WebkitTextFillColor: "white", fontSize: ".9rem" }}>{t("Upgrade to Business Account")}</span>
+                                <BsFillPlayFill size={25} style={{ marginLeft: "auto" }} />
+                            </button>
+                        }
                     </div>
                     <QuickLinksMobile />
                     <Stats

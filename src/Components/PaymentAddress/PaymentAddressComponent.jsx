@@ -255,7 +255,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                             <Profile dets={paymentAddressDetails} dp={dp} setDp={setDp} />
                                             <div className={styles.basic_dets}>
                                                 <div className={styles.badge}>{userDetails?.account_type === "individual" ? t("Personal") : t("Business")} {t("Account")}</div>
-                                                <h4>{userDetails?.user?.first_name} {userDetails?.user?.last_name}</h4>
+                                                <h4>{userDetails?.user?.first_name || userDetails?.company_name} {userDetails?.user?.last_name}</h4>
                                                 <div className={styles.country}>
                                                     <img src={userCountry?.file_url ?? logo} alt={userCountry?.alpha3} style={{ boxShadow: "0 0 5px #afafaf" }} />
                                                     <span>{userCountry?.name}</span>
@@ -269,7 +269,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                 {
                                                     userDetails?.about_me
                                                     &&
-                                                    <div style={{marginTop: width < 1000 && "1rem"}} className={styles.about}>
+                                                    <div style={{ marginTop: width < 1000 && "1rem" }} className={styles.about}>
                                                         <h5>{t("About Me")}:</h5>
                                                         <p>{userDetails?.about_me?.length > 150 ? userDetails?.about_me + ".." : userDetails?.about_me}</p>
                                                         {
@@ -295,7 +295,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                 <div style={{ marginRight: "10px" }}>
                                                     <span>
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 16 15" fill="none">
-                                                            <path d="M6.16601 2.00769L4.33459 12.9962M11.0498 2.00769L9.21836 12.9962M12.8812 5.06006H2.50317M12.2708 9.94385H1.8927" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                            <path d="M6.16601 2.00769L4.33459 12.9962M11.0498 2.00769L9.21836 12.9962M12.8812 5.06006H2.50317M12.2708 9.94385H1.8927" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                                         </svg>
                                                     </span>
                                                     <p>

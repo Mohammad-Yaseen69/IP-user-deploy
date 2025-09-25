@@ -127,7 +127,7 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
 
             <div className={styles.transCont}>
                 {data?.map((tx) => {
-                    const receiverName = `${tx?.beneficiary?.first_name || tx?.receiver?.first_name || ""} ${tx?.receiver?.last_name || tx?.beneficiary?.last_name || ""}`.trim()
+                    const receiverName = `${tx?.beneficiary?.first_name || tx?.receiver?.first_name || tx?.receiver?.company_name || ""} ${tx?.receiver?.last_name || tx?.beneficiary?.last_name || tx?.receiver?.company_name || ""}`.trim()
                     const country = tx?.receiver?.country_name || tx?.beneficiary?.country_name || ""
                     // const paymentTypeLabel = tx?.paid_via_details?.type === "ip_wallet" ? "Mobile Wallet" : (tx?.paid_via_details?.type || "")
                     const createdAt = tx?.created_at ? new Date(tx.created_at).toLocaleString("en-US", { month: "short", day: "numeric" }) : ""

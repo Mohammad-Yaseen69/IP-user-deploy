@@ -110,7 +110,7 @@ const W2WReceipt = ({ walletDetails, transactionDetails, amount, currency, type 
                     }}>
                         <span style={{ minWidth: "80px", color: "#8a8a8a" }}>{t("To")}:</span>
                         <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
-                            <span style={{ fontWeight: 600, fontSize: ".9rem" }}>{`${item?.first_name} ${item?.last_name}`.slice(0, 20)} (INSTA-{walletDetails.wallet_id})</span>
+                            <span style={{ fontWeight: 600, fontSize: ".9rem" }}>{`${item?.first_name || item?.company_name} ${item?.last_name}`.slice(0, 20)} (INSTA-{walletDetails.wallet_id})</span>
                         </div>
                     </div>
                 </div>

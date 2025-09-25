@@ -208,7 +208,7 @@ const LeftContainer = ({ wallet, setCurrent, authHeader, userWallets, userDetail
         doc.setFont("montserrat", "normal");
         doc.setFontSize(10);
         doc.text(`Wallet ID: INSTA-${wallet.wallet_id}`, 14, 32);
-        doc.text(`Name: ${userDetails?.user?.first_name} ${userDetails?.user?.last_name}`, 14, 38);
+        doc.text(`Name: ${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`}`, 14, 38);
         doc.text(`Address: ${userDetails?.address ?? "N/A"}`, 14, 44);
         doc.text(`Statement Duration: ${apiDates?.from} to ${apiDates?.to}`, 14, 50);
 
