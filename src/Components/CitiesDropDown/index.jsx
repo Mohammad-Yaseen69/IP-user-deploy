@@ -1,27 +1,26 @@
-import React, { useMemo, useRef, useState, useCallback, useEffect } from 'react';
+import { useMemo, useRef, useState, useCallback, useEffect } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { useTranslation } from 'react-i18next';
 import iso2 from "../AddFunds/WalletFund/countries_iso2.json"
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
+import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 
 const getCities = async (iso2) => {
     const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/country/get-cities/${iso2}`);
-    return encryptData(res.data.data)?.data;
+    return decryptData(res.data.data)?.data;
 }
 
-const CitiesDropDown = ({ country, userCity, setUserCity, disabled = false, styles = {}, iso_3 = "", isState, title = "Select City", stateData, background = "#fff" }) => {
+const CitiesDropDown = ({ userCity, setUserCity, disabled = false, iso_3 = "", isState, title = "Select City", stateData, background = "#fff" }) => {
     const { t } = useTranslation()
     const [isOpen, setIsOpen] = useState(false);
     const cityInputRef = useRef()
     const [searchTerm, setSearchTerm] = useState('');
-    const [isManual, setIsManual] = useState(false)
     const iso2Value = useMemo(() => {
         return iso2[iso_3?.toUpperCase()]
     }, [iso2, iso_3])
 
-    const { data: cities } = useQuery({
+    const { data: cities = [] } = useQuery({
         queryKey: ["GetCities", iso2Value],
         queryFn: () => getCities(iso2Value),
         staleTime: Infinity,
@@ -30,10 +29,10 @@ const CitiesDropDown = ({ country, userCity, setUserCity, disabled = false, styl
     })
 
 
-    console.log(cities)
+   
     const filtered = useMemo(() => {
         if (!searchTerm) return isState ? stateData : cities;
-        return (isState ? stateData : cities)?.filter(item => item?.name?.toLowerCase()?.includes(searchTerm?.toLowerCase()))
+        return (isState ? stateData : cities)?.filter(item => item?.name?.toLowerCase()?.includes(searchTerm?.toLowerCase())) || []
     }, [searchTerm, cities, stateData])
 
     const toggleDropdown = () => {
@@ -59,9 +58,9 @@ const CitiesDropDown = ({ country, userCity, setUserCity, disabled = false, styl
         if (target.isIntersecting && !reachedEnd) {
             setRenderCount(prev => {
                 const newCount = prev + 100;
-                if (newCount >= filtered.length) {
+                if (newCount >= filtered?.length) {
                     setReachedEnd(true);
-                    return filtered.length;
+                    return filtered?.length;
                 }
                 return newCount;
             });
@@ -106,17 +105,35 @@ const CitiesDropDown = ({ country, userCity, setUserCity, disabled = false, styl
 
                 {!disabled && <span>{ }</span>}
 
-
             </DropdownToggle>
             <DropdownMenu style={{ maxHeight: "350px", overflowY: "auto", overflowX: "auto", width: "100%" }}>
+                {/* Show manual entry message and option if no results and searchTerm is not empty */}
+                {filtered?.length === 0 && searchTerm && !isState && (
+                    <>
+                        <div style={{ padding: '0.5rem 1rem', color: '#d9534f', fontWeight: 500, background: '#f6f6f6', borderBottom: '1px solid #f8f8f8' }}>
+                            {t("If you can not find your city in the list just enter manually.")}
+                        </div>
+                        <DropdownItem
+                            key="manual-entry"
+                            onClick={() => {
+                                setUserCity(searchTerm);
+                                setIsOpen(false);
+                                setSearchTerm("");
+                            }}
+                            style={{ color: '#5926F0', fontWeight: 700 }}
+                        >
+                            {t("Set city as")}: <span style={{ fontWeight: 700 }}>&apos;{searchTerm}&apos;</span>
+                        </DropdownItem>
+                    </>
+                )}
                 {
-                    !isState && filtered?.slice(0, renderCount)?.map((item) => (
-                        <DropdownRenderItem item={item} setItem={setUserCity} setSearchTerm={setSearchTerm} />
+                    !isState && filtered?.slice(0, renderCount)?.map((item, idx) => (
+                        <DropdownRenderItem key={idx} item={item} setItem={setUserCity} setSearchTerm={setSearchTerm} />
                     ))
                 }
                 {
-                    isState && filtered?.map((item) => (
-                        <DropdownRenderItem item={item} setItem={setUserCity} isState={isState} setSearchTerm={setSearchTerm} />
+                    isState && filtered?.map((item, idx) => (
+                        <DropdownRenderItem key={idx} item={item} setItem={setUserCity} isState={isState} setSearchTerm={setSearchTerm} />
                     ))
                 }
                 {!reachedEnd && <div ref={menuRef} style={{ height: "1px" }} />}
