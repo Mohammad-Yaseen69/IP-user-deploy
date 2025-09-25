@@ -165,14 +165,14 @@ const Withdraw = ({ isOpen, toggle, wallet }) => {
                                             padding: ".7rem 2.5rem"
                                         }}
                                             disabled={mainStep === 1 ? !withdrawType : (mainStep === 2 && withdrawType === "default")}
-                                            onClick={() => userDetails?.user?.kyc_status === "approved" ? setMainStep(prev => prev + 1) : navigate("/settings?tab=verification")}
+                                            onClick={() => userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status === "approved" : userDetails?.company?.kyb_status === "approved" ? setMainStep(prev => prev + 1) : navigate("/settings?tab=verification")}
                                         >
                                             {
-                                                userDetails?.user?.kyc_status === "approved"
+                                                userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status === "approved" : userDetails?.company?.kyb_status === "approved"
                                                     ?
                                                     t("Continue")
                                                     :
-                                                    t("Verify Your Identity")
+                                                    t(`Verify Your ${userDetails?.account_type === "individual" ? "Identity" : "Business"}`)
                                             }
                                         </Button>
                                     </ModalFooter>
