@@ -290,46 +290,35 @@ const TwoFactorAuth = () => {
     }
 
     const deviceToggle = async (device) => {
-        try {
-            const data = {
-                account_id: userDetails?._id,
-                credentialId: device?.credentialId,
-                enable: !device.enabled
-            }
-
-            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/enable-biometric-device`, { data: encryptData(data) }, {
-                headers: authHeader
-            })
-
-            console.log(res)
-            setDevices(prev => prev.map(d => d.credentialId === device.credentialId ? { ...d, enabled: !d.enabled } : d))
+        const data = {
+            account_id: userDetails?._id,
+            credentialId: device?.credentialId,
+            enable: !device.enabled
         }
-        catch (error) {
 
-        }
+        const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/enable-biometric-device`, { data: encryptData(data) }, {
+            headers: authHeader
+        })
+
+        console.log(res)
+        setDevices(prev => prev.map(d => d.credentialId === device.credentialId ? { ...d, enabled: !d.enabled } : d))
     }
 
     const deleteDevice = async () => {
-        try {
-            const data = {
-                account_id: userDetails?._id,
-                credentialId: deleteState.deviceToDelete.credentialId
-            }
-
-            await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/delete-biometric-device`, { data: encryptData(data) }, {
-                headers: authHeader
-            })
-
-            // const dec = decryptData(res.data.data)
-
-            setDevices(prev => prev.filter(d => d.credentialId !== deleteState.deviceToDelete.credentialId))
-            setFingerBioActive(prev => !devices.length ? false : prev)
-            setDelete({ deviceToDelete: {}, showModal: false })
-
-        } catch (error) {
-
+        const data = {
+            account_id: userDetails?._id,
+            credentialId: deleteState.deviceToDelete.credentialId
         }
 
+        await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/delete-biometric-device`, { data: encryptData(data) }, {
+            headers: authHeader
+        })
+
+        // const dec = decryptData(res.data.data)
+
+        setDevices(prev => prev.filter(d => d.credentialId !== deleteState.deviceToDelete.credentialId))
+        setFingerBioActive(prev => !devices.length ? false : prev)
+        setDelete({ deviceToDelete: {}, showModal: false })
     }
     useEffect(() => {
         if (devices.length > 0) {
@@ -345,8 +334,6 @@ const TwoFactorAuth = () => {
             setIsSaving(true)
             await Promise.all(devices.map(device => deviceToggle(device)))
             setFingerBioActive(prev => !prev)
-        } catch (error) {
-
         } finally {
             setIsSaving(false)
         }
@@ -401,36 +388,44 @@ const TwoFactorAuth = () => {
                                 <img src={EmailIcon} style={{ width: window.innerWidth > 1000 ? "22px" : "14px", height: "22px", aspectRadio: "1/1", marginRight: "7px" }} alt="" />
                                 {t("Email Address")}
                             </td>
-                            <td data-label={t("Email Address")}>
-                                <Switch checked={emailActive} callback={() => {
-                                    setShowAuth(true)
-                                    setCurrent("Email")
-                                }} disabled={isSaving} />
-                            </td>
+                            {userDetails?.email ?
+                                <td data-label={t("Email Address")}>
+                                    <Switch checked={emailActive} callback={() => {
+                                        setShowAuth(true)
+                                        setCurrent("Email")
+                                    }} disabled={isSaving} />
+                                </td> : <p style={{ marginBottom: "0px", fontWeight: 600 }}>{t("Please add your email first.")}</p>
+                            }
                         </tr>
                         <tr>
                             <td style={{ width: "100%", fontWeight: 600 }} data-label="Phone Number">
                                 <img src={PhoneIcon} style={{ width: window.innerWidth > 1000 ? "22px" : "14px", height: "22px", aspectRadio: "1/1", marginRight: "7px" }} alt="" />
                                 {t("Phone Number")}
                             </td>
-                            <td data-label={t("Phone Number")}>
-                                <Switch checked={smsActive} callback={() => {
-                                    setShowAuth(true)
-                                    setCurrent("SMS")
-                                }} disabled={isSaving} />
-                            </td>
+                            {userDetails?.phone ?
+                                <td data-label={t("Phone Number")}>
+                                    <Switch checked={smsActive} callback={() => {
+                                        setShowAuth(true)
+                                        setCurrent("SMS")
+                                    }} disabled={isSaving} />
+                                </td> :
+                                <p style={{ marginBottom: "0px", fontWeight: 600 }}>{t("Please add your phone first.")}</p>
+                            }
                         </tr>
                         <tr>
                             <td style={{ width: "100%", fontWeight: 600 }} data-label="Phone Number">
                                 <img src={PhoneIcon} style={{ width: window.innerWidth > 1000 ? "22px" : "14px", height: "22px", aspectRadio: "1/1", marginRight: "7px" }} alt="" />
                                 {t("Whatsapp")}
                             </td>
-                            <td data-label={t("Whatsapp")}>
-                                <Switch checked={wpActive} callback={() => {
-                                    setShowAuth(true)
-                                    setCurrent("WP")
-                                }} disabled={isSaving} />
-                            </td>
+                            {userDetails?.phone ?
+                                <td data-label={t("Whatsapp")}>
+                                    <Switch checked={wpActive} callback={() => {
+                                        setShowAuth(true)
+                                        setCurrent("WP")
+                                    }} disabled={isSaving} />
+                                </td> : <p style={{ marginBottom: "0px", fontWeight: 600 }}>{t("Please add your phone first.")}</p>
+                            }
+
                         </tr>
                         <tr>
                             <td style={{ width: "100%", fontWeight: 600 }} data-label="Phone Number">
@@ -441,9 +436,9 @@ const TwoFactorAuth = () => {
                                 {
                                     enablingAuth
                                         ?
-                                        <div class="d-flex justify-content-center">
-                                            <div class="spinner-border" color='primary' role="status">
-                                                <span class="sr-only">Loading...</span>
+                                        <div className="d-flex justify-content-center">
+                                            <div className="spinner-border" color='primary' role="status">
+                                                <span className="sr-only">Loading...</span>
                                             </div>
                                         </div>
                                         :
@@ -483,7 +478,7 @@ const TwoFactorAuth = () => {
                         <div className={styles.devices}>
                             <h4>{t("Manage Your Biometric Devices")}</h4>
                             {devices?.map((device, idx) => (
-                                <div className={styles.device}>
+                                <div key={idx} className={styles.device}>
                                     <div>
                                         <div style={{ display: "flex", alignItems: "center", gap: "7px" }}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18" fill="none">
@@ -501,7 +496,7 @@ const TwoFactorAuth = () => {
                                             style={{ cursor: "pointer" }}
                                             onClick={() => setDelete({ showModal: true, deviceToDelete: device })}
                                             xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
-                                            <path d="M6 2.604H10M2 4.604H14M12.6667 4.604L12.1991 11.6169C12.129 12.669 12.0939 13.1951 11.8667 13.594C11.6666 13.9452 11.3648 14.2275 11.0011 14.4038C10.588 14.604 10.0607 14.604 9.00623 14.604H6.99377C5.93927 14.604 5.41202 14.604 4.99889 14.4038C4.63517 14.2275 4.33339 13.9452 4.13332 13.594C3.90607 13.1951 3.871 12.669 3.80086 11.6169L3.33333 4.604" stroke="#D00416" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                            <path d="M6 2.604H10M2 4.604H14M12.6667 4.604L12.1991 11.6169C12.129 12.669 12.0939 13.1951 11.8667 13.594C11.6666 13.9452 11.3648 14.2275 11.0011 14.4038C10.588 14.604 10.0607 14.604 9.00623 14.604H6.99377C5.93927 14.604 5.41202 14.604 4.99889 14.4038C4.63517 14.2275 4.33339 13.9452 4.13332 13.594C3.90607 13.1951 3.871 12.669 3.80086 11.6169L3.33333 4.604" stroke="#D00416" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                         </svg>
 
                                         <Switch callback={() => deviceToggle(device)} checked={device?.enabled} />
@@ -524,7 +519,7 @@ const TwoFactorAuth = () => {
                             <h4 style={{ fontSize: "12px" }}>{t("Manage Your Biometric Devices")}</h4>
 
                             {devices?.map((device, idx) => (
-                                <div className={styles.device}>
+                                <div key={idx} className={styles.device}>
                                     <div>
                                         <div>
                                             <p style={{ fontSize: "12px", color: "#333333" }}>{device.deviceName} </p>
@@ -538,7 +533,7 @@ const TwoFactorAuth = () => {
                                             style={{ cursor: "pointer" }}
                                             onClick={() => setDelete({ showModal: true, deviceToDelete: device })}
                                             xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
-                                            <path d="M6 2.604H10M2 4.604H14M12.6667 4.604L12.1991 11.6169C12.129 12.669 12.0939 13.1951 11.8667 13.594C11.6666 13.9452 11.3648 14.2275 11.0011 14.4038C10.588 14.604 10.0607 14.604 9.00623 14.604H6.99377C5.93927 14.604 5.41202 14.604 4.99889 14.4038C4.63517 14.2275 4.33339 13.9452 4.13332 13.594C3.90607 13.1951 3.871 12.669 3.80086 11.6169L3.33333 4.604" stroke="#D00416" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                            <path d="M6 2.604H10M2 4.604H14M12.6667 4.604L12.1991 11.6169C12.129 12.669 12.0939 13.1951 11.8667 13.594C11.6666 13.9452 11.3648 14.2275 11.0011 14.4038C10.588 14.604 10.0607 14.604 9.00623 14.604H6.99377C5.93927 14.604 5.41202 14.604 4.99889 14.4038C4.63517 14.2275 4.33339 13.9452 4.13332 13.594C3.90607 13.1951 3.871 12.669 3.80086 11.6169L3.33333 4.604" stroke="#D00416" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                         </svg>
                                     </div>
                                 </div>
@@ -647,7 +642,7 @@ const TwoFactorAuth = () => {
                             <div className={styles.top}>
                                 <div>
                                     <span><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
-                                        <path d="M5.32298 16.9862C5.33921 16.9588 5.35584 16.9316 5.37286 16.9046C6.61448 14.9308 7.33325 12.5966 7.33325 10.0833C7.33325 8.05829 8.97487 6.41667 10.9999 6.41667C13.025 6.41667 14.6666 8.05829 14.6666 10.0833C14.6666 11.0156 14.6031 11.9337 14.4802 12.8333M12.5393 19.1067C13.1 17.9874 13.5597 16.8088 13.9065 15.5833M17.4255 16.621C18.0168 14.5435 18.3333 12.3504 18.3333 10.0833C18.3333 6.03324 15.0501 2.75 11 2.75C9.66428 2.75 8.41197 3.10711 7.33333 3.73107M2.75 14.0838C3.33727 12.8749 3.66667 11.5176 3.66667 10.0833C3.66667 8.74761 4.02378 7.4953 4.64774 6.41667M10.9999 10.0833C10.9999 13.3074 10.0752 16.3156 8.47648 18.8569" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M5.32298 16.9862C5.33921 16.9588 5.35584 16.9316 5.37286 16.9046C6.61448 14.9308 7.33325 12.5966 7.33325 10.0833C7.33325 8.05829 8.97487 6.41667 10.9999 6.41667C13.025 6.41667 14.6666 8.05829 14.6666 10.0833C14.6666 11.0156 14.6031 11.9337 14.4802 12.8333M12.5393 19.1067C13.1 17.9874 13.5597 16.8088 13.9065 15.5833M17.4255 16.621C18.0168 14.5435 18.3333 12.3504 18.3333 10.0833C18.3333 6.03324 15.0501 2.75 11 2.75C9.66428 2.75 8.41197 3.10711 7.33333 3.73107M2.75 14.0838C3.33727 12.8749 3.66667 11.5176 3.66667 10.0833C3.66667 8.74761 4.02378 7.4953 4.64774 6.41667M10.9999 10.0833C10.9999 13.3074 10.0752 16.3156 8.47648 18.8569" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg></span>
                                     <h5 style={{ fontSize: "16px", fontWeight: 600, color: "#333333", marginBottom: "0" }}>{t("Fingerprint / Biometrics")}</h5>
                                 </div>
@@ -726,7 +721,7 @@ const TwoFactorAuth = () => {
                                 <div style={{ display: "flex", alignItems: 'center', gap: '10px' }}>
                                     <span>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 23 23" fill="none">
-                                            <path d="M8.75 3.25H14.25M3.25 6H19.75M17.9167 6L17.2738 15.6427C17.1774 17.0894 17.1291 17.8128 16.8167 18.3613C16.5416 18.8441 16.1266 19.2323 15.6265 19.4747C15.0585 19.75 14.3335 19.75 12.8836 19.75H10.1164C8.6665 19.75 7.94153 19.75 7.37348 19.4747C6.87336 19.2323 6.45841 18.8441 6.18332 18.3613C5.87085 17.8128 5.82263 17.0894 5.72618 15.6427L5.08333 6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                            <path d="M8.75 3.25H14.25M3.25 6H19.75M17.9167 6L17.2738 15.6427C17.1774 17.0894 17.1291 17.8128 16.8167 18.3613C16.5416 18.8441 16.1266 19.2323 15.6265 19.4747C15.0585 19.75 14.3335 19.75 12.8836 19.75H10.1164C8.6665 19.75 7.94153 19.75 7.37348 19.4747C6.87336 19.2323 6.45841 18.8441 6.18332 18.3613C5.87085 17.8128 5.82263 17.0894 5.72618 15.6427L5.08333 6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                         </svg>
                                     </span>
 
