@@ -9,6 +9,7 @@ import { currencies, usePayoutChannel } from "../InternationalFlow/StepOne"
 import { toast } from "react-toastify"
 import useWindowWidth from "../../../utils/useWindowWidth"
 import countriesData from "../CountriesData.json"
+import repeat from "./repeat.svg"
 
 
 const getRecentTransaction = async (authHeader, account, type) => {
@@ -123,7 +124,7 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
                 <h4>{t("RECENT TRANSFERS")}</h4>
                 {width > 1000 && <span>{t("See all")}</span>}
             </div>
-        
+
             <div className={styles.transCont}>
                 {data?.map((tx) => {
                     const receiverName = `${tx?.beneficiary?.first_name || tx?.receiver?.first_name || ""} ${tx?.receiver?.last_name || tx?.beneficiary?.last_name || ""}`.trim()
@@ -137,7 +138,13 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
                                     <h4>{truncate(receiverName, 16)}</h4>
                                     <span>{country}</span>
                                 </div>
-                                {width > 1300 && <button className={styles.send} onClick={() => setTransaction(tx)} type="button">{t("Send Again")}</button>}
+                                {width > 1300 &&
+                                    <span
+                                        onClick={() => setTransaction(tx)}
+                                        style={{ background: "#5926F0", height: "19px", width: "19px", display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "3px", cursor: "pointer" }}>
+                                        <img src={repeat} />
+                                    </span>
+                                }
                             </div>
 
                             {/* <div className={styles.paymentType}>

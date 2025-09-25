@@ -4,11 +4,11 @@ import CitiesDropDown from '../../CitiesDropDown'
 import iso2 from "../../AddFunds/WalletFund/countries_iso2.json"
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
-import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
+import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 
 const getStates = async (iso2) => {
     const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/country/get-states/${iso2}`)
-    return encryptData(res.data.data)?.data;
+    return decryptData(res.data.data)?.data;
 }
 
 const ShippingDetails = ({ data, dataHandler }) => {

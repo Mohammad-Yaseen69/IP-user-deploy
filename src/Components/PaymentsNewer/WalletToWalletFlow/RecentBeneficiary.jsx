@@ -75,7 +75,7 @@ const RecentBeneficiary = ({ data, dataHandler, setExpandRecent, expandRecent })
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                {uniqueBeneficiaries?.map((item) => (
+                {uniqueBeneficiaries?.map((item, idx) => (
                     <BeneficiaryCard
                         benWalletsFound={benWalletsFound}
                         setBenWalletsFound={setBenWalletsFound}
@@ -83,6 +83,7 @@ const RecentBeneficiary = ({ data, dataHandler, setExpandRecent, expandRecent })
                         dataHandler={dataHandler}
                         type="recent"
                         item={item}
+                        key={idx}
                     />
                 ))}
             </div>
