@@ -232,8 +232,10 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
             dataHandler("phone_otp_values", otp)
             const paylaod = {
                 token: data.signup_token,
-                sms_otp: otp
+                [data.account_type === "business" ? "email_otp" : "sms_otp"]: otp
             }
+
+
             const enc = encryptData(paylaod)
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/verify-registration/${data.account_type}`, {
                 data: enc
