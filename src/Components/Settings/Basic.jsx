@@ -232,12 +232,11 @@ const Basic = ({ setCurrentTab }) => {
         if (userDetails?.account_type === "business") {
             const data = isVerified ? { about_me: aboutMe } : {
                 company_name: company,
-                // address,
+                address,
                 city,
-                // postal_code: postalCode,
+                postal_code: postalCode,
                 about_me: aboutMe,
                 // gender,
-                dob: dateOfBirth !== userDetails?.dob ? dateOfBirth?.split("-")?.reverse()?.join("-") : dateOfBirth,
                 timezone: timezone
             }
             // console.log(data)
@@ -495,9 +494,9 @@ const Basic = ({ setCurrentTab }) => {
 
                             {loading &&
                                 <div style={{ position: "absolute", right: "7px", top: "7px" }}>
-                                    <div class="d-flex justify-content-center">
-                                        <div class="spinner-border" color='primary' role="status">
-                                            <span class="sr-only">Loading...</span>
+                                    <div className="d-flex justify-content-center">
+                                        <div className="spinner-border" color='primary' role="status">
+                                            <span className="sr-only">Loading...</span>
                                         </div>
                                     </div>
                                 </div>
@@ -568,11 +567,9 @@ const Basic = ({ setCurrentTab }) => {
                         </Input> */}
                         </FormGroup>
                     }
-                    {
+                    {userDetails?.account_type === "individual" && (
                         <FormGroup style={{ position: "relative" }}>
-                            {
-                                !dateOfBirth
-                                &&
+                            {!dateOfBirth &&
                                 <div style={{
                                     height: "9px",
                                     width: "9px",
@@ -587,56 +584,52 @@ const Basic = ({ setCurrentTab }) => {
                                 {t("Date Of Birth")}
                                 {!dateOfBirth && <span style={{ color: "red" }}>{t("(Required)")}</span>}
                             </Label>
-                            {
-                                !isEditMode
-                                    ?
-                                    <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={dateOfBirth} />
-                                    :
-                                    <DatePicker
-                                        format="YYYY/MM/DD"
-                                        className="form-control custom-datepicker"
-                                        style={{
-                                            background: "#fff",
-                                            border: "1px solid #e9e9e9",
-                                            borderRadius: "6px",
-                                            boxShadow: "none",
-                                            padding: "0px",
-                                            display: 'flex',
-                                            justifyContent: "center",
-                                            position: "static"
-                                        }}
-                                        value={dateOfBirth || null}
-                                        onChange={handleDateChange}
-                                        placeholder="YYYY/MM/DD"
-                                        maxDate={minDate}
-                                        disabled={!isEditMode || isVerified}
-                                        InputProps={{
-                                            disableUnderline: true,
-                                            style: {
-                                                background: isVerified ? "#e9ecef" : '#fff',
-                                                border: 'none',
-                                                boxShadow: 'none',
-                                                padding: '0 10px',
-                                                minHeight: '40px',
-                                                fontWeight: 500,
-
-                                            }
-                                        }}
-                                        inputProps={{
-                                            style: {
-                                                background: isVerified ? "#e9ecef" : '#fff',
-                                                border: 'none',
-                                                boxShadow: 'none',
-                                                padding: '2px 0px',
-                                                minHeight: '40px',
-                                            }
-                                        }}
-                                        clearable
-                                        autoOk
-                                    />
+                            {!isEditMode
+                                ? <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={dateOfBirth} />
+                                : <DatePicker
+                                    format="YYYY/MM/DD"
+                                    className="form-control custom-datepicker"
+                                    style={{
+                                        background: "#fff",
+                                        border: "1px solid #e9e9e9",
+                                        borderRadius: "6px",
+                                        boxShadow: "none",
+                                        padding: "0px",
+                                        display: 'flex',
+                                        justifyContent: "center",
+                                        position: "static"
+                                    }}
+                                    value={dateOfBirth || null}
+                                    onChange={handleDateChange}
+                                    placeholder="YYYY/MM/DD"
+                                    maxDate={minDate}
+                                    disabled={!isEditMode || isVerified}
+                                    InputProps={{
+                                        disableUnderline: true,
+                                        style: {
+                                            background: isVerified ? "#e9ecef" : '#fff',
+                                            border: 'none',
+                                            boxShadow: 'none',
+                                            padding: '0 10px',
+                                            minHeight: '40px',
+                                            fontWeight: 500,
+                                        }
+                                    }}
+                                    inputProps={{
+                                        style: {
+                                            background: isVerified ? "#e9ecef" : '#fff',
+                                            border: 'none',
+                                            boxShadow: 'none',
+                                            padding: '2px 0px',
+                                            minHeight: '40px',
+                                        }
+                                    }}
+                                    clearable
+                                    autoOk
+                                />
                             }
                         </FormGroup>
-                    }
+                    )}
                     <FormGroup style={{ position: "relative" }}>
                         {
                             (!email && userDetails?.account_type !== "individual")
@@ -688,8 +681,6 @@ const Basic = ({ setCurrentTab }) => {
                         {/* <Input disabled={1 + 1 === 2} readOnly={1 + 1 === 2} value={phone} onChange={e => setPhone(e.target.value)} /> */}
                     </FormGroup>
                     {
-                        userDetails?.address
-                        &&
                         <FormGroup style={{ position: "relative" }}>
                             {
                                 !address
@@ -780,29 +771,28 @@ const Basic = ({ setCurrentTab }) => {
                             <Input disabled={1 + 1 === 2} readOnly={1 + 1 === 2} value={timezone} />
                     } */}
                     </FormGroup>
-                    {
-                        userDetails?.postalCode
-                        &&
-                        <FormGroup style={{ position: "relative" }}>
-                            {
-                                !postalCode
-                                &&
-                                <div style={{
-                                    height: "9px",
-                                    width: "9px",
-                                    borderRadius: "9px",
-                                    background: "red",
-                                    position: "absolute",
-                                    bottom: "20px",
-                                    right: "-17px"
-                                }}></div>
-                            }
-                            <Label>{t("Postal Code")}  {
-                                !postalCode
-                                && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
-                            <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={postalCode} onChange={e => setPostalCode(e.target.value)} />
-                        </FormGroup>
-                    }
+
+                    <FormGroup style={{ position: "relative" }}>
+                         {
+                            !postalCode
+                            &&
+                            <div style={{
+                                height: "9px",
+                                width: "9px",
+                                borderRadius: "9px",
+                                background: "red",
+                                position: "absolute",
+                                bottom: "20px",
+                                right: "-17px"
+                            }}></div>
+                        }
+                        <Label>
+                            {t("Postal Code")}
+                            {!postalCode && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                        </Label>
+                        <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={postalCode} onChange={e => setPostalCode(e.target.value)} />
+                    </FormGroup>
+
                 </CardBody>
                 <CardFooter style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
                     {
