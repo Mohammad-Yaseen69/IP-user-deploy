@@ -147,11 +147,11 @@ const ProfileComponent = () => {
                                     ?
                                     <img src={userDetails?.profileImage?.url} className={styles.dp} alt="profile picture" />
                                     :
-                                    <div className={styles.dp}>{userDetails?.user?.first_name?.[0]}</div>
+                                    <div className={styles.dp}>{userDetails?.user?.first_name?.[0] || userDetails?.company?.company_name?.[0]}</div>
                             }
                             <div className={styles.basic_dets}>
                                 <div className={styles.badge}>{userDetails?.account_type === "individual" ? t("Personal") : t("Business")} {t("Account")}</div>
-                                <h4>{userDetails?.user?.first_name} {userDetails?.user?.last_name}</h4>
+                                <h4>{userDetails?.user?.first_name || userDetails?.company?.company_name} {userDetails?.user?.last_name || ''}</h4>
                                 <div className={styles.country}>
                                     <img src={userCountry?.file_url} alt={userCountry?.alpha3} style={{ boxShadow: "0 0 5px #afafaf" }} />
                                     <span>{userCountry?.name}</span>
@@ -357,10 +357,10 @@ const ProfileComponent = () => {
                                                                             ?
                                                                             <img src={userDetails?.profileImage?.url} alt="dp" className={styles.rctl_dp} />
                                                                             :
-                                                                            <div className={styles.rctl_dp}>{userDetails?.user?.first_name?.[0]}</div>
+                                                                            <div className={styles.rctl_dp}>{userDetails?.user?.first_name?.[0] || userDetails?.company?.company_name?.[0]}</div>
                                                                     }
                                                                     <div className={styles.rctl_dets}>
-                                                                        <h5>{userDetails?.user?.first_name} {userDetails?.user?.last_name}</h5>
+                                                                        <h5>{userDetails?.user?.first_name || userDetails?.company?.company_name} {userDetails?.user?.last_name || ''}</h5>
                                                                         <span>{userDetails?.account_type}</span>
                                                                     </div>
                                                                 </div>
@@ -387,10 +387,10 @@ const ProfileComponent = () => {
                                                                             ?
                                                                             <img src={userDetails?.profileImage?.url} alt="dp" className={styles.rctl_dp} />
                                                                             :
-                                                                            <div className={styles.rctl_dp}>{userDetails?.user?.first_name?.[0]}</div>
+                                                                            <div className={styles.rctl_dp}>{userDetails?.user?.first_name?.[0] || userDetails?.company?.company_name?.[0]}</div>
                                                                     }
                                                                     <div className={styles.rctl_dets}>
-                                                                        <h5>{userDetails?.user?.first_name} {userDetails?.user?.last_name}</h5>
+                                                                        <h5>{userDetails?.user?.first_name || userDetails?.company?.company_name} {userDetails?.user?.last_name || ''}</h5>
                                                                         <span>{userDetails?.account_type}</span>
                                                                     </div>
                                                                 </div>

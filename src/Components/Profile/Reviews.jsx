@@ -88,10 +88,10 @@ const Reviews = ({ currentRevTab, setCurrentRevTab, userReviewsAsBuyer, userRevi
                                                             ?
                                                             <img src={item?.buyer?.profileImage?.url} alt="dp" className={styles.rctl_dp} />
                                                             :
-                                                            <div className={styles.rctl_dp}>{item?.buyer?.user?.first_name?.[0]}</div>
+                                                            <div className={styles.rctl_dp}>{item?.buyer?.user?.first_name?.[0] || item?.buyer?.user?.company_name?.[0]}</div>
                                                     }
                                                     <div className={styles.rctl_dets}>
-                                                        <h5>{item?.buyer?.user?.first_name} {item?.buyer?.user?.last_name}</h5>
+                                                        <h5>{item?.buyer?.user?.first_name || item?.buyer?.user?.company_name} {item?.buyer?.user?.last_name || ''}</h5>
                                                         <span>{item?.buyer?.account_type}</span>
                                                     </div>
                                                 </div>
@@ -117,13 +117,13 @@ const Reviews = ({ currentRevTab, setCurrentRevTab, userReviewsAsBuyer, userRevi
                                                                         ?
                                                                         <img src={userDetails?.profileImage?.url} alt="dp" className={styles.rctl_dp} style={{ boxShadow: "0 0 3px #1111111e" }} />
                                                                         :
-                                                                        <div className={styles.rctl_dp}>{userDetails?.user?.first_name?.[0]}</div>
+                                                                        <div className={styles.rctl_dp}>{userDetails?.user?.first_name?.[0] || userDetails?.company?.company_name?.[0]}</div>
                                                                 }
                                                                 <div className={styles.rctl_dets}>
                                                                     <div className={styles.seller_res_badge}>
                                                                         Seller Response
                                                                     </div>
-                                                                    <h5 style={{ cursor: "pointer" }} onClick={() => navigate(`/profile/${userDetails?.username}`)}>{userDetails?.user?.first_name} {userDetails?.user?.last_name}</h5>
+                                                                    <h5 style={{ cursor: "pointer" }} onClick={() => navigate(`/profile/${userDetails?.username}`)}>{userDetails?.user?.first_name || userDetails?.company?.company_name} {userDetails?.user?.last_name || ''}</h5>
                                                                     <span>{userDetails?.account_type}</span>
                                                                 </div>
                                                             </div>
@@ -150,10 +150,10 @@ const Reviews = ({ currentRevTab, setCurrentRevTab, userReviewsAsBuyer, userRevi
                                                             ?
                                                             <img src={item?.seller?.profileImage?.url} alt="dp" className={styles.rctl_dp} />
                                                             :
-                                                            <div className={styles.rctl_dp}>{item?.seller?.user?.first_name?.[0]}</div>
+                                                            <div className={styles.rctl_dp}>{item?.seller?.user?.first_name?.[0] || item?.seller?.user?.company_name?.[0]}</div>
                                                     }
                                                     <div className={styles.rctl_dets}>
-                                                        <h5>{item?.seller?.user?.first_name} {item?.seller?.user?.last_name}</h5>
+                                                        <h5>{item?.seller?.user?.first_name || item?.seller?.user?.company_name} {item?.seller?.user?.last_name || ''}</h5>
                                                         <span>{item?.seller?.account_type}</span>
                                                     </div>
                                                 </div>

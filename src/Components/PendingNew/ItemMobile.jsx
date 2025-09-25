@@ -118,7 +118,7 @@ const ItemMobile = ({ item, activeItem, setActiveItem, index, type }) => {
                                         ?
                                         <img src={item?.sender?.profileImage?.url} alt="dp" className={styles.dp} style={{ objectFit: "cover" }} />
                                         :
-                                        <div className={styles.dp}>{item?.sender?.user?.first_name?.[0]}</div>
+                                        <div className={styles.dp}>{item?.sender?.user?.first_name?.[0] || item?.sender?.user?.company_name?.[0]}</div>
                                 }
                             </>
                             :
@@ -128,7 +128,7 @@ const ItemMobile = ({ item, activeItem, setActiveItem, index, type }) => {
                                         ?
                                         <img src={item?.receiver?.profileImage?.url} alt="dp" className={styles.dp} style={{ objectFit: "cover" }} />
                                         :
-                                        <div className={styles.dp}>{item?.receiver?.user?.first_name?.[0]}</div>
+                                        <div className={styles.dp}>{item?.receiver?.user?.first_name?.[0] || item?.receiver?.user?.company_name?.[0]}</div>
                                 }
                             </>
                     }
@@ -137,9 +137,9 @@ const ItemMobile = ({ item, activeItem, setActiveItem, index, type }) => {
                             {
                                 type === "receive"
                                     ?
-                                    `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`
+                                    `${item?.sender?.user?.first_name || item?.sender?.user?.company_name} ${item?.sender?.user?.last_name}`
                                     :
-                                    `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`
+                                    `${item?.receiver?.user?.first_name || item?.receiver?.user?.company_name} ${item?.receiver?.user?.last_name}`
                             }
                         </h5>
                         <span>{new Date(item?.createdAt)?.toLocaleString()}</span>

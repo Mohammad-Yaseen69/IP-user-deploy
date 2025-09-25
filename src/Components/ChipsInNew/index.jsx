@@ -44,7 +44,7 @@ const ChipsInNew = () => {
                 if (wal?.wallet_id && !wal?.qrCode?.url && wal.wallet_type.toLowerCase() === "insta") {
                     // console.log(wal)
                     const data = {
-                        title: `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}`,
+                        title: `${userDetails?.user?.first_name ?? userDetails?.company_name} ${userDetails?.user?.last_name ?? ""}`,
                         description: wal?.currency?.code,
                         status: "true"
                     }
@@ -55,7 +55,7 @@ const ChipsInNew = () => {
                     }, {
                         headers: authHeader
                     })
-                        .then(res => {                    
+                        .then(res => {
                             setWalletRefresh(prev => prev + 1)
                         })
                 }

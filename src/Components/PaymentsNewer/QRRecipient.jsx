@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {  Card, CardBody } from 'reactstrap'
+import { Card, CardBody } from 'reactstrap'
 import invite from "./files/invite.png"
 import countries from "./CountriesData.json"
 import { useNavigate } from 'react-router'
@@ -76,7 +76,7 @@ const QRRecipient = ({ wallet, dataHandler }) => {
                                                     containerType: "inline-size",
                                                     overflow: "hidden"
                                                 }}>
-                                                    {wallet?.first_name?.[0]}
+                                                    {wallet?.first_name?.[0] || wallet?.company_name?.[0]}
                                                 </div>
                                         }
                                     </div>
@@ -88,7 +88,7 @@ const QRRecipient = ({ wallet, dataHandler }) => {
                                         </div>
                                         {/* username */}
 
-                                        <h4 style={{ fontSize: "7.3cqi", marginBottom: "0" }}>{wallet?.first_name} {wallet?.last_name}</h4>
+                                        <h4 style={{ fontSize: "7.3cqi", marginBottom: "0" }}>{wallet?.first_name || wallet?.company_name} {wallet?.last_name}</h4>
                                         <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
                                             <div style={{
                                                 borderRadius: "6px",

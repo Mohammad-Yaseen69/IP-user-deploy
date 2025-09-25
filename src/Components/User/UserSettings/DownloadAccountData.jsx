@@ -105,7 +105,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
         doc.addImage(img, "png", 14, 10, 46.5, 13)
         doc.setFont("montserrat", "normal", "normal");
         doc.setFontSize(10);
-        doc.text(`Below are the requested details of ${userDetails?.user?.first_name} ${userDetails?.user?.last_name} includes their requested info available on InstaPay.`, 14, 32, { maxWidth: 200 });
+        doc.text(`Below are the requested details of ${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`} includes their requested info available on InstaPay.`, 14, 32, { maxWidth: 200 });
         const currentDate = new Date();
         const formattedDate = `As of ${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
         doc.setFont("montserrat", "normal", "bold");
@@ -140,7 +140,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
 
         doc.autoTable(personalTable);
 
-        doc.save(`${userDetails?.user?.first_name ?? "user_details"}.pdf`);
+        doc.save(`${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name}_${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`}${new Date().toLocaleString()}.pdf`);
         setDownloading(false)
     };
 
@@ -209,7 +209,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                         new TableCell({
                             children: [
                                 new Paragraph(
-                                    `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}`
+                                    userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`
                                 ),
                             ],
                         }),
@@ -369,7 +369,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                         new Paragraph({
                             children: [
                                 new TextRun({
-                                    text: `Below are the requested details of ${userDetails?.user?.first_name} ${userDetails?.user?.last_name} includes their requested info available on InstaPay.`,
+                                    text: `Below are the requested details of ${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`} includes their requested info available on InstaPay.`,
                                     size: 18,
                                     spacing: {
                                         before: 240,
@@ -419,7 +419,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
         });
 
         Packer.toBlob(doc).then((blob) => {
-            FileSaver.saveAs(blob, "example.docx");
+            FileSaver.saveAs(blob, `${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name}_${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`}${new Date().toLocaleString()}.docx`);
             // console.log("Document created successfully");
         });
     };

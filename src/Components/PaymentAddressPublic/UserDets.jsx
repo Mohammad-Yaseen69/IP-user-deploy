@@ -27,7 +27,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                                         ?
                                         <img src={croppedDp || dp} className={styles.dp} alt="profile" style={{ background: "transparent" }} />
                                         :
-                                        <div className={styles.dp} style={{ overflow: "hidden" }}>{userDetails?.first_name?.[0]}</div>
+                                        <div className={styles.dp} style={{ overflow: "hidden" }}>{userDetails?.first_name?.[0] || userDetails?.company_name?.[0]}</div>
                                 }
                             </div>
                             {width > 1000 && <button onClick={() => navigate(`/profile/${user_name}`)} className={styles.viewProfileBtn}>{t("View Profile")}</button>}
@@ -44,7 +44,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                                             textAlign: width < 1000 && 'center',
                                         }}
                                     >
-                                        {userDetails?.first_name} {userDetails?.last_name}
+                                        {userDetails?.first_name || userDetails?.company_name} {userDetails?.last_name}
                                         {userDetails?.kyc_status === "approved" && (
                                             <>
                                                 <img

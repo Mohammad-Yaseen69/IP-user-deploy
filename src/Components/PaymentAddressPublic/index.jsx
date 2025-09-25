@@ -93,8 +93,8 @@ const PaymentAddressPublic = () => {
                         <Receipt
                             data={{
                                 beneficiary: {
-                                    first_name: userDetails?.first_name,
-                                    last_name: userDetails?.last_name,
+                                    first_name: userDetails?.first_name || userDetails?.company_name,
+                                    last_name: userDetails?.last_name || "",
                                 }
                             }}
                             backHandler={() => {

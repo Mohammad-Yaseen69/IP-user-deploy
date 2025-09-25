@@ -254,9 +254,9 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                                             <div className={styles.review_card}>
                                                 <div className={styles.rc_top}>
                                                     <div className={styles.rct_left}>
-                                                        <div className={styles.rctl_dp}>{item?.sender?.user?.first_name?.[0]}</div>
+                                                        <div className={styles.rctl_dp}>{item?.sender?.user?.first_name?.[0] || item?.sender?.user?.company_name?.[0]}</div>
                                                         <div className={styles.rctl_dets}>
-                                                            <h5>{item?.sender?.user?.first_name} {item?.sender?.user?.last_name}</h5>
+                                                            <h5>{item?.sender?.user?.first_name || item?.sender?.user?.company_name} {item?.sender?.user?.last_name || ''}</h5>
                                                             <span>{item?.sender?.account_type}</span>
                                                         </div>
                                                     </div>
@@ -286,9 +286,9 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                                             <div className={styles.review_card}>
                                                 <div className={styles.rc_top}>
                                                     <div className={styles.rct_left}>
-                                                        <div className={styles.rctl_dp}>{item?.sender?.user?.first_name?.[0]}</div>
+                                                        <div className={styles.rctl_dp}>{item?.sender?.user?.first_name?.[0] || item?.sender?.company?.company_name?.[0]}</div>
                                                         <div className={styles.rctl_dets}>
-                                                            <h5>{item?.sender?.user?.first_name} {item?.sender?.user?.last_name}</h5>
+                                                            <h5>{item?.sender?.user?.first_name || item?.sender?.company?.company_name} {item?.sender?.user?.last_name || ''}</h5>
                                                             <span>{item?.sender?.account_type}</span>
                                                         </div>
                                                     </div>
@@ -349,9 +349,9 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                                     <div className={styles.review_card}>
                                         <div className={styles.rc_top}>
                                             <div className={styles.rct_left}>
-                                                <div className={styles.rctl_dp}>{item?.receiver?.user?.first_name?.[0]}</div>
+                                                <div className={styles.rctl_dp}>{item?.receiver?.user?.first_name?.[0] || item?.receiver?.company?.company_name?.[0]}</div>
                                                 <div className={styles.rctl_dets}>
-                                                    <h5>{item?.receiver?.user?.first_name} {item?.receiver?.user?.last_name}</h5>
+                                                    <h5>{item?.receiver?.user?.first_name || item?.receiver?.company?.company_name} {item?.receiver?.user?.last_name || ''}</h5>
                                                     <span>{item?.receiver?.account_type}</span>
                                                 </div>
                                             </div>
@@ -392,15 +392,15 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                                                     <div className={replyStyles.rct_left}>
                                                         <div className={replyStyles.rctl_top}>
                                                             <span>Replied to </span>
-                                                            <div>{item?.receiver?.user?.first_name}</div>
+                                                            <div>{item?.receiver?.user?.first_name || item?.receiver?.user?.company_name}</div>
                                                         </div>
                                                         <div className={replyStyles.rctl_bottom}>
-                                                            <div className={replyStyles.rctl_dp}>{item?.sender?.user?.first_name?.[0]}</div>
+                                                            <div className={replyStyles.rctl_dp}>{item?.sender?.user?.first_name?.[0] || item?.sender?.user?.company_name?.[0]}</div>
                                                             <div className={replyStyles.rctl_dets}>
                                                                 <div className={replyStyles.seller_res_badge}>
                                                                     Seller Response
                                                                 </div>
-                                                                <h5>{item?.sender?.user?.first_name} {item?.sender?.user?.last_name}</h5>
+                                                                <h5>{item?.sender?.user?.first_name || item?.sender?.user?.company_name} {item?.sender?.user?.last_name || ''}</h5>
                                                                 <span>{item?.sender?.account_type}</span>
                                                             </div>
                                                         </div>

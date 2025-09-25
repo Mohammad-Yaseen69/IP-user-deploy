@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { Button, Card, CardBody, CardFooter, CardHeader, FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import CitiesDropDown from '../CitiesDropDown';
 import { toast } from 'react-toastify';
-import PhoneInput from 'react-phone-input-2';
 import { countries } from 'country-list-json';
 import SuccessModal from '../AddBeneficiary/SuccessModal';
 import OTPConfirmation from '../UserSettingsNew/OTPConfirmation';
@@ -16,6 +15,8 @@ import QrGenerate from './QrGenerate';
 import NextStepModal from './NextStepModal';
 import DateMomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import PhoneInput from '../PhoneInput';
+import countriesData from "../PaymentsNewer/CountriesData.json"
 
 // dates
 export const currentDate = new Date();
@@ -667,15 +668,15 @@ const Basic = ({ setCurrentTab }) => {
                             (!phone && userDetails?.account_type !== "business")
                             && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
                         <PhoneInput
-                            // country={countries.filter(item => userDetails?.country_name?.toLowerCase().includes(item.name?.toLowerCase())?.[0]?.code ?? "pk")}
-                            value={phone}
-                            onChange={e => setPhone(e)}
+                            phone={phone}
+                            country={countriesData.find(item => item.name === country)?.alpha3}
                             disableDropdown={true}
+                            setPhone={setPhone}
                             disabled={userDetails?.phone || isVerified}
-                            inputStyle={{
+                            customStyles={{
                                 width: "100%",
                                 background: userDetails?.phone ? "#e9ecef" : "white",
-                                height: "47px"
+                                alignItems: "center"
                             }}
                         />
                         {/* <Input disabled={1 + 1 === 2} readOnly={1 + 1 === 2} value={phone} onChange={e => setPhone(e.target.value)} /> */}
@@ -773,7 +774,7 @@ const Basic = ({ setCurrentTab }) => {
                     </FormGroup>
 
                     <FormGroup style={{ position: "relative" }}>
-                         {
+                        {
                             !postalCode
                             &&
                             <div style={{

@@ -252,13 +252,13 @@ const ProfileComponent = () => {
                                                     ?
                                                     <img src={croppedDp || userDp} className={styles.dp} alt="profile" style={{ background: "transparent" }} />
                                                     :
-                                                    <div className={styles.dp} style={{ overflow: "hidden" }}>{userDetails?.first_name?.[0]}</div>
+                                                    <div className={styles.dp} style={{ overflow: "hidden" }}>{userDetails?.first_name?.[0] || userDetails?.company_name?.[0]}</div>
                                             }
                                             <div className={styles.basic_dets}>
                                                 <div className={styles.badge}>{userDetails?.account_type === "individual" ? t("Personal") : t("Business")} {t("Account")}</div>
                                                 {/* <div className={styles.badge} style={{ background: userDetails?.kyc_status === "approved" ? "green" : "grey" }}>{userDetails?.kyc_status === "approved" ? "Verified" : "Unverified"}</div> */}
                                                 <div style={{ /*display: "flex", gap: ".5rem", alignItems: "center",*/ position: "relative" }}>
-                                                    <h4 style={{ marginBottom: 0, display: "inline", marginRight: ".3rem" }}>{userDetails?.first_name} {userDetails?.last_name}</h4>
+                                                    <h4 style={{ marginBottom: 0, display: "inline", marginRight: ".3rem" }}>{userDetails?.first_name || userDetails?.company_name} {userDetails?.last_name || ''}</h4>
                                                     {
                                                         userDetails?.kyc_status === "approved"
                                                         &&
@@ -336,7 +336,7 @@ const ProfileComponent = () => {
                                                         {
                                                             item?.name?.toLowerCase()?.includes("instagram") && userDetails?.insta_username
                                                                 ?
-                                                                <a target='_blank' href={`https://www.instagram.com/${userDetails?.insta_username}`} style={{ cursor: "pointer", color: "#5926f0", fontSize: ".65rem" }}>@{userDetails?.insta_username}</a>
+                                                                <a target='_blank' href={`https://www.instagram.com/${userDetails?.insta_username}`} style={{ cursor: "pointer", color: "#5926f0", fontSize: ".65rem" }} rel="noreferrer">@{userDetails?.insta_username}</a>
                                                                 : ""
 
                                                         }
@@ -498,10 +498,10 @@ const ProfileComponent = () => {
                                                                                 ?
                                                                                 <img src={item?.buyer?.profileImage?.url} alt="dp" className={styles.rctl_dp} />
                                                                                 :
-                                                                                <div className={styles.rctl_dp}>{item?.buyer?.user?.first_name?.[0]}</div>
+                                                                                <div className={styles.rctl_dp}>{item?.buyer?.user?.first_name?.[0] || item?.buyer?.user?.company_name?.[0]}</div>
                                                                         }
                                                                         <div className={styles.rctl_dets}>
-                                                                            <h5>{item?.buyer?.user?.first_name} {item?.buyer?.user?.last_name}</h5>
+                                                                            <h5>{item?.buyer?.user?.first_name || item?.buyer?.user?.company_name} {item?.buyer?.user?.last_name || ''}</h5>
                                                                             <span>{item?.buyer?.account_type}</span>
                                                                         </div>
                                                                     </div>
@@ -519,7 +519,7 @@ const ProfileComponent = () => {
                                                                             <div className={styles.rct_left}>
                                                                                 <div className={styles.rctl_top}>
                                                                                     <span>{t("Replied to ")}</span>
-                                                                                    <div>{item?.buyer?.user?.first_name} {item?.buyer?.user?.last_name}</div>
+                                                                                    <div>{item?.buyer?.user?.first_name || item?.buyer?.user?.company_name} {item?.buyer?.user?.last_name || ''}</div>
                                                                                 </div>
                                                                                 <div className={styles.rctl_bottom}>
                                                                                     {
@@ -527,13 +527,13 @@ const ProfileComponent = () => {
                                                                                             ?
                                                                                             <img src={userDp} alt="dp" className={styles.rctl_dp} style={{ boxShadow: "0 0 3px #1111111e" }} />
                                                                                             :
-                                                                                            <div className={styles.rctl_dp}>{userDetails?.first_name?.[0]}</div>
+                                                                                            <div className={styles.rctl_dp}>{userDetails?.first_name?.[0] || userDetails?.company_name?.[0]}</div>
                                                                                     }
                                                                                     <div className={styles.rctl_dets}>
                                                                                         <div className={styles.seller_res_badge}>
                                                                                             {t("Seller Response")}
                                                                                         </div>
-                                                                                        <h5>{userDetails?.first_name} {userDetails?.last_name}</h5>
+                                                                                        <h5>{userDetails?.first_name || userDetails?.company_name} {userDetails?.last_name || ''}</h5>
                                                                                         <span>{userDetails?.account_type}</span>
                                                                                     </div>
                                                                                 </div>
@@ -560,10 +560,10 @@ const ProfileComponent = () => {
                                                                                 ?
                                                                                 <img src={item?.seller?.profileImage?.url} alt="dp" className={styles.rctl_dp} />
                                                                                 :
-                                                                                <div className={styles.rctl_dp}>{item?.seller?.user?.first_name?.[0]}</div>
+                                                                                <div className={styles.rctl_dp}>{item?.seller?.user?.first_name?.[0] || item?.seller?.user?.company_name?.[0]}</div>
                                                                         }
                                                                         <div className={styles.rctl_dets}>
-                                                                            <h5>{item?.seller?.user?.first_name} {item?.seller?.user?.last_name}</h5>
+                                                                            <h5>{item?.seller?.user?.first_name || item?.seller?.user?.company_name} {item?.seller?.user?.last_name || ''}</h5>
                                                                             <span>{item?.seller?.account_type}</span>
                                                                         </div>
                                                                     </div>

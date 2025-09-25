@@ -37,10 +37,10 @@ const QRRecipient = ({ wallet, dataHandler }) => {
                             <img src={wallet?.profileImage} className={styles.pfp} alt="" />
                         ) : (
                             <div className={styles.pfp_placeHolder}>
-                                {wallet?.first_name?.[0]}{wallet?.last_name?.[0]}
+                                {wallet?.first_name?.[0] || wallet?.company_name?.[0]}{wallet?.last_name?.[0]}
                             </div>
                         )}
-                        <h2>{wallet?.first_name} {wallet?.last_name}</h2>
+                        <h2>{wallet?.first_name || wallet?.company_name?.[0]} {wallet?.last_name}</h2>
                         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                             <p>@{wallet?.username}</p>
                             <span>{wallet?.account_type === "individual" ? "Personal" : "Business"} Account</span>
@@ -67,13 +67,13 @@ const QRRecipient = ({ wallet, dataHandler }) => {
                         {t("View Profile")}
                     </button>
 
-                    <button 
+                    <button
                         onClick={() => {
                             dataHandler("beneficiary", {})
                             dataHandler("beneficiary_wallet", {})
                             navigate("/payments?payment_action=send_money&send_type=qr_pay")
                             window.history.replaceState(null, null, window.location.search?.split("&wallet_id")?.[0])
-                        }} 
+                        }}
                         className={styles.gradientBtn}
                     >
                         {t("Go Back")}

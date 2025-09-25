@@ -372,7 +372,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
         doc.addImage(img, "png", 14, 10, 46.5, 13);
         doc.setFont("sans-serif", "normal", "normal");
         doc.setFontSize(10);
-        doc.text(`Transaction Statement for ${userDetails?.first_name} ${userDetails?.last_name}`, 14, 32, { maxWidth: 200 });
+        doc.text(`Transaction Statement for ${userDetails?.first_name || userDetails?.company_name} ${userDetails?.last_name}`, 14, 32, { maxWidth: 200 });
 
         const currentDate = new Date();
         const formattedDate = `Generated on ${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
@@ -422,7 +422,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
         doc.autoTable(transactionTable);
 
-        const fileName = `transaction_statement_${userDetails?.first_name}_${userDetails?.last_name}_${new Date().toISOString().split('T')[0]}.pdf`;
+        const fileName = `transaction_statement_${userDetails?.first_name || userDetails?.company_name}_${userDetails?.last_name}_${new Date().toISOString().split('T')[0]}.pdf`;
         doc.save(fileName);
         setDownloading(false);
     };
@@ -527,7 +527,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                         new Paragraph({
                             children: [
                                 new TextRun({
-                                    text: `Transaction Statement for ${userDetails?.first_name} ${userDetails?.last_name}`,
+                                    text: `Transaction Statement for ${userDetails?.first_name || userDetails?.company_name} ${userDetails?.last_name}`,
                                     size: 18,
                                     spacing: {
                                         before: 240,
@@ -596,7 +596,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
         });
 
         Packer.toBlob(doc).then((blob) => {
-            const fileName = `transaction_statement_${userDetails?.first_name}_${userDetails?.last_name}_${new Date().toISOString().split('T')[0]}.docx`;
+            const fileName = `transaction_statement_${userDetails?.first_name || userDetails?.company_name}_${userDetails?.last_name}_${new Date().toISOString().split('T')[0]}.docx`;
             FileSaver.saveAs(blob, fileName);
             setDownloading(false);
         });
@@ -617,7 +617,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                             <button style={{ opacity: cards.length === 3 && 0.5 }} disabled={cards.length === 3} onClick={() => setCardPurchased(false)}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
-                                    <path d="M8.67521 4.24182V13.5752M4.00854 8.90849H13.3419" stroke="white" stroke-width="1.56777" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M8.67521 4.24182V13.5752M4.00854 8.90849H13.3419" stroke="white" strokeWidth="1.56777" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                                 {t("Add Card")}
                             </button>
@@ -677,15 +677,15 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                                     <img src={IpLogo} alt="" />
                                                     <span className={styles.topicon}>
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="33" height="21" viewBox="0 0 33 21" fill="none">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.1074 17.9641H20.8834V2.23291H12.1074V17.9641Z" fill="#FF5F00" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.664 10.0988C12.664 6.90736 14.162 4.06492 16.4947 2.23323C14.7886 0.893439 12.6361 0.0941772 10.2964 0.0941772C4.75752 0.0941772 0.267578 4.57349 0.267578 10.0988C0.267578 15.6242 4.75752 20.1035 10.2964 20.1035C12.6361 20.1035 14.7886 19.3043 16.4947 17.9645C14.162 16.1325 12.664 13.2903 12.664 10.0988Z" fill="#EB001B" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M32.4081 16.2984V15.9101H32.3065L32.1897 16.1772L32.0727 15.9101H31.971V16.2984H32.0426V16.0054L32.1524 16.2581H32.2268L32.3365 16.0049V16.2984H32.4081ZM31.7643 16.2984V15.9763H31.8947V15.9107H31.5631V15.9763H31.6933V16.2984H31.7643ZM32.7213 10.0988C32.7213 15.6241 28.2311 20.1035 22.6925 20.1035C20.3528 20.1035 18.2 19.3042 16.4941 17.9644C18.8269 16.1327 20.3249 13.2903 20.3249 10.0988C20.3249 6.90758 18.8269 4.06514 16.4941 2.23317C18.2 0.893378 20.3528 0.0941162 22.6925 0.0941162C28.2311 0.0941162 32.7213 4.57343 32.7213 10.0988Z" fill="#F79E1B" />
+                                                            <path fillRule="evenodd" clipRule="evenodd" d="M12.1074 17.9641H20.8834V2.23291H12.1074V17.9641Z" fill="#FF5F00" />
+                                                            <path fillRule="evenodd" clipRule="evenodd" d="M12.664 10.0988C12.664 6.90736 14.162 4.06492 16.4947 2.23323C14.7886 0.893439 12.6361 0.0941772 10.2964 0.0941772C4.75752 0.0941772 0.267578 4.57349 0.267578 10.0988C0.267578 15.6242 4.75752 20.1035 10.2964 20.1035C12.6361 20.1035 14.7886 19.3043 16.4947 17.9645C14.162 16.1325 12.664 13.2903 12.664 10.0988Z" fill="#EB001B" />
+                                                            <path fillRule="evenodd" clipRule="evenodd" d="M32.4081 16.2984V15.9101H32.3065L32.1897 16.1772L32.0727 15.9101H31.971V16.2984H32.0426V16.0054L32.1524 16.2581H32.2268L32.3365 16.0049V16.2984H32.4081ZM31.7643 16.2984V15.9763H31.8947V15.9107H31.5631V15.9763H31.6933V16.2984H31.7643ZM32.7213 10.0988C32.7213 15.6241 28.2311 20.1035 22.6925 20.1035C20.3528 20.1035 18.2 19.3042 16.4941 17.9644C18.8269 16.1327 20.3249 13.2903 20.3249 10.0988C20.3249 6.90758 18.8269 4.06514 16.4941 2.23317C18.2 0.893378 20.3528 0.0941162 22.6925 0.0941162C28.2311 0.0941162 32.7213 4.57343 32.7213 10.0988Z" fill="#F79E1B" />
                                                         </svg>
                                                     </span>
                                                 </div>
 
                                                 <div style={{ alignItems: 'flex-end' }}>
-                                                    <h2>{userDetails?.first_name} {userDetails?.last_name}</h2>
+                                                    <h2>{userDetails?.first_name || userDetails?.company_name} {userDetails?.last_name}</h2>
 
                                                     <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: '4px' }}>
                                                         {card?.premium_features?.apple_pay === true && <img src={ApayWhite} alt="" />}
@@ -702,9 +702,9 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                                     <img src={IpLogo} alt="" />
                                                     <span className={styles.topicon}>
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="33" height="21" viewBox="0 0 33 21" fill="none">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.1074 17.9641H20.8834V2.23291H12.1074V17.9641Z" fill="#FF5F00" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.664 10.0988C12.664 6.90736 14.162 4.06492 16.4947 2.23323C14.7886 0.893439 12.6361 0.0941772 10.2964 0.0941772C4.75752 0.0941772 0.267578 4.57349 0.267578 10.0988C0.267578 15.6242 4.75752 20.1035 10.2964 20.1035C12.6361 20.1035 14.7886 19.3043 16.4947 17.9645C14.162 16.1325 12.664 13.2903 12.664 10.0988Z" fill="#EB001B" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M32.4081 16.2984V15.9101H32.3065L32.1897 16.1772L32.0727 15.9101H31.971V16.2984H32.0426V16.0054L32.1524 16.2581H32.2268L32.3365 16.0049V16.2984H32.4081ZM31.7643 16.2984V15.9763H31.8947V15.9107H31.5631V15.9763H31.6933V16.2984H31.7643ZM32.7213 10.0988C32.7213 15.6241 28.2311 20.1035 22.6925 20.1035C20.3528 20.1035 18.2 19.3042 16.4941 17.9644C18.8269 16.1327 20.3249 13.2903 20.3249 10.0988C20.3249 6.90758 18.8269 4.06514 16.4941 2.23317C18.2 0.893378 20.3528 0.0941162 22.6925 0.0941162C28.2311 0.0941162 32.7213 4.57343 32.7213 10.0988Z" fill="#F79E1B" />
+                                                            <path fillRule="evenodd" clipRule="evenodd" d="M12.1074 17.9641H20.8834V2.23291H12.1074V17.9641Z" fill="#FF5F00" />
+                                                            <path fillRule="evenodd" clipRule="evenodd" d="M12.664 10.0988C12.664 6.90736 14.162 4.06492 16.4947 2.23323C14.7886 0.893439 12.6361 0.0941772 10.2964 0.0941772C4.75752 0.0941772 0.267578 4.57349 0.267578 10.0988C0.267578 15.6242 4.75752 20.1035 10.2964 20.1035C12.6361 20.1035 14.7886 19.3043 16.4947 17.9645C14.162 16.1325 12.664 13.2903 12.664 10.0988Z" fill="#EB001B" />
+                                                            <path fillRule="evenodd" clipRule="evenodd" d="M32.4081 16.2984V15.9101H32.3065L32.1897 16.1772L32.0727 15.9101H31.971V16.2984H32.0426V16.0054L32.1524 16.2581H32.2268L32.3365 16.0049V16.2984H32.4081ZM31.7643 16.2984V15.9763H31.8947V15.9107H31.5631V15.9763H31.6933V16.2984H31.7643ZM32.7213 10.0988C32.7213 15.6241 28.2311 20.1035 22.6925 20.1035C20.3528 20.1035 18.2 19.3042 16.4941 17.9644C18.8269 16.1327 20.3249 13.2903 20.3249 10.0988C20.3249 6.90758 18.8269 4.06514 16.4941 2.23317C18.2 0.893378 20.3528 0.0941162 22.6925 0.0941162C28.2311 0.0941162 32.7213 4.57343 32.7213 10.0988Z" fill="#F79E1B" />
                                                         </svg>
                                                     </span>
                                                 </div>
@@ -757,11 +757,11 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                         <div className={styles.balance}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="222" height="160" viewBox="0 0 222 160" fill="none">
                                 <g filter="url(#filter0_f_3023_732)">
-                                    <path d="M150.496 -82.8116C127.102 -53.7846 100.534 11.0036 181.415 37.9406C282.517 71.6118 252.58 -130.996 150.496 -82.8116Z" fill="#5926F0" fill-opacity="0.26" />
+                                    <path d="M150.496 -82.8116C127.102 -53.7846 100.534 11.0036 181.415 37.9406C282.517 71.6118 252.58 -130.996 150.496 -82.8116Z" fill="#5926F0" fillOpacity="0.26" />
                                 </g>
                                 <defs>
-                                    <filter id="filter0_f_3023_732" x="0.534958" y="-216.562" width="369.6" height="384.6" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                                        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                                    <filter id="filter0_f_3023_732" x="0.534958" y="-216.562" width="369.6" height="384.6" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                                        <feFlood floodOpacity="0" result="BackgroundImageFix" />
                                         <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                                         <feGaussianBlur stdDeviation="63.15" result="effect1_foregroundBlur_3023_732" />
                                     </filter>
@@ -803,7 +803,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                         <h3>{t('My Primary MasterCard')}</h3>
 
                                         <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
-                                            <path d="M8.67479 13.7417H14.6748M2.6748 13.7417H3.79117C4.11729 13.7417 4.28035 13.7417 4.4338 13.7049C4.56985 13.6722 4.69991 13.6183 4.8192 13.5452C4.95376 13.4628 5.06906 13.3475 5.29966 13.1169L13.6748 4.74171C14.2271 4.18943 14.2271 3.294 13.6748 2.74171C13.1225 2.18943 12.2271 2.18943 11.6748 2.74171L3.29964 11.1169C3.06904 11.3475 2.95374 11.4628 2.87128 11.5973C2.79818 11.7166 2.74431 11.8467 2.71164 11.9827C2.6748 12.1362 2.6748 12.2992 2.6748 12.6254V13.7417Z" stroke="#71767A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                            <path d="M8.67479 13.7417H14.6748M2.6748 13.7417H3.79117C4.11729 13.7417 4.28035 13.7417 4.4338 13.7049C4.56985 13.6722 4.69991 13.6183 4.8192 13.5452C4.95376 13.4628 5.06906 13.3475 5.29966 13.1169L13.6748 4.74171C14.2271 4.18943 14.2271 3.294 13.6748 2.74171C13.1225 2.18943 12.2271 2.18943 11.6748 2.74171L3.29964 11.1169C3.06904 11.3475 2.95374 11.4628 2.87128 11.5973C2.79818 11.7166 2.74431 11.8467 2.71164 11.9827C2.6748 12.1362 2.6748 12.2992 2.6748 12.6254V13.7417Z" stroke="#71767A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                         </svg>
                                     </div>
                                 </div>

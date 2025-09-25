@@ -117,7 +117,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
         doc.addImage(img, "png", 14, 10, 46.5, 13)
         doc.setFont("sans-serif", "normal", "normal");
         doc.setFontSize(10);
-        doc.text(`Below are the requested details of ${userDetails?.user?.first_name} ${userDetails?.user?.last_name} includes their requested info available on InstaPay.`, 14, 32, { maxWidth: 200 });
+        doc.text(`Below are the requested details of ${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`} includes their requested info available on InstaPay.`, 14, 32, { maxWidth: 200 });
         const currentDate = new Date();
         const formattedDate = `As of ${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
         doc.setFont("sans-serif", "normal", "bold");
@@ -178,7 +178,7 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                         new TableCell({
                             children: [
                                 new Paragraph(
-                                    `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}`
+                                    userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name} ${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`
                                 ),
                             ],
                         }),

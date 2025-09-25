@@ -211,14 +211,14 @@ const PendingNew = () => {
 
     const filteredReceived = useMemo(() => {
         if (searchQuery.length > 0) {
-            return receivedRequests.filter(item => item?.sender?.user?.first_name?.toLowerCase()?.includes(searchQuery.toLowerCase()) || item?.sender?.user?.last_name?.toLowerCase()?.includes(searchQuery.toLowerCase()))
+            return receivedRequests.filter(item => item?.sender?.user?.first_name?.toLowerCase()?.includes(searchQuery.toLowerCase()) || item?.sender?.user?.last_name?.toLowerCase()?.includes(searchQuery.toLowerCase()) || item?.sender?.user?.company_name?.toLowerCase()?.includes(searchQuery.toLowerCase()))
         }
         return receivedRequests
     }, [receivedRequests, searchQuery])
 
     const filteredSent = useMemo(() => {
         if (searchQuery.length > 0) {
-            return sentRequests.filter(item => item?.receiver?.user?.first_name?.toLowerCase()?.includes(searchQuery.toLowerCase()) || item?.receiver?.user?.last_name?.toLowerCase()?.includes(searchQuery.toLowerCase()))
+            return sentRequests.filter(item => item?.receiver?.user?.first_name?.toLowerCase()?.includes(searchQuery.toLowerCase()) || item?.receiver?.user?.last_name?.toLowerCase()?.includes(searchQuery.toLowerCase()) || item?.receiver?.user?.company_name?.toLowerCase()?.includes(searchQuery.toLowerCase()))
         }
         return sentRequests
     }, [sentRequests, searchQuery])
@@ -238,9 +238,9 @@ const PendingNew = () => {
                 )
         }
 
-       
-            lastShown()
-        
+
+        lastShown()
+
     }, [filteredReceived, userDetails])
     return (
         <>
