@@ -36,6 +36,13 @@ const Settings = () => {
     const { userDetails, verifyToken, profileCompletedPercentage, authHeader, setUpdateToken } = useContext(UserContext)
     const navigate = useNavigate()
 
+
+    if (!userDetails || Object.keys(userDetails || {})?.length === 0) {
+        return (
+            <InstaPayLoader />
+        )
+    }
+
     return (
         <>
             <Suspense fallback={<InstaPayLoader />}>
