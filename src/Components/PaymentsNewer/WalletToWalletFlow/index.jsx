@@ -216,7 +216,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
             case 3:
                 return !data.reason
             case 4:
-                return !data.payment_type?.name || data.limitReached || data.payment_type?.value === "wallet" ? !data.wallet?._id || !isShippingValid : false || data?.payment_duration?.value === "subscription" ? !data.payment_duration?.recStartDate || (!data.payment_duration?.cycles && !data.payment_duration?.unlimited) : data?.payment_duration?.value === "schedule" ? !data.payment_duration?.scheduleDate || !data.payment_duration?.scheduleTime : false || !isShippingValid
+                return !data.payment_type?.name || data.limitReached || (data.payment_type?.value === "wallet" ? !data.wallet?._id || !isShippingValid : false) || data?.payment_duration?.value === "subscription" ? !data.payment_duration?.recStartDate || (!data.payment_duration?.cycles && !data.payment_duration?.unlimited) : (data?.payment_duration?.value === "schedule" ? !data.payment_duration?.scheduleDate || !data.payment_duration?.scheduleTime : false) || !isShippingValid
             case 5:
                 if (data.payment_type?.value === "card") {
                     const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
@@ -258,8 +258,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
             })
             const dec = decryptData(res.data.data)
             dataHandler("mobile_wallet_services", dec?.data?.payers ?? [])
-        } catch {
-        }
+        } 
         finally {
             dataHandler("loading", false)
         }
@@ -293,7 +292,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                         "type": data.payment_duration?.value,
                         "payment_type": payment_type ?? "wallet_to_wallet",
                         'description': data.comment,
-                        "token": data.payment_type?.value === "paypal" ? data.exchange_rate?.token : "",
+                        "token": data.exchange_rate?.token || "",
                         // preserved_amount=${Number(String(data.recipient_amount)?.replace(",",""))}
                         "preserved_amount": Number(String(data.recipient_amount)?.replace(",", "")),
                     },
@@ -316,7 +315,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                         "cycles": data.payment_duration?.unlimited ? "unlimited" : data.payment_duration?.cycles,
                         "date": date,
                         "timezone": data?.timezone,
-                        "token": data.payment_type?.value === "paypal" ? data.exchange_rate?.token : "",
+                        "token": data.exchange_rate?.token || "",
                         "preserved_amount": Number(String(data.recipient_amount)?.replace(",", ""))
                     },
                     type: codeType || data.codeType
@@ -338,7 +337,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                         "time": data.payment_duration?.scheduleTime,
                         "date": date,
                         "timezone": data?.timezone,
-                        "token": data.exchange_rate?.token ? data.exchange_rate?.token : "",
+                        "token": data.exchange_rate?.token || "",
                         "preserved_amount": Number(String(data.recipient_amount)?.replace(",", ""))
                     },
                     type: codeType || data.codeType
@@ -564,7 +563,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
     //         return +String(data.amount)?.replaceAll(",", "") - Number(dec?.feeDetails)
     //     } catch (error) {
     //         const dec = decryptData(error?.response?.data?.data)
-    //         dataHandler("error", typeof dec === "string" ? dec : dec?.message ?? "We cannot process your request at the moment, please try again later.!")
+    //         dataHandler("error", typeof dec === "string" ? dec : dec?.message ?? "We cannot process your request at the moment, please tryagainlater.!")
     //     } finally {
     //         dataHandler("loading", false)
     //     }
@@ -631,8 +630,11 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                 },
                 min_amount: decrypted?.data?.min_amount,
                 max_amount: decrypted?.data?.max_amount,
-                token: decrypted?.data?.token ?? ""
+                token: decrypted?.data?.token || ""
             }
+
+
+            console.log(exchange_rate_details, decrypted, "exchange_rate_dets")
 
             if (decrypted?.data?.paypal) exchange_rate_details.paypal = decrypted?.data?.paypal;
 
@@ -1338,7 +1340,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                         <div className={styles.noticeDiv}>
                                                             <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="49" height="48" viewBox="0 0 49 48" fill="none">
-                                                                    <path d="M24.1519 18V26M24.1519 34H24.1719M21.3825 7.78342L4.93272 36.1967C4.02031 37.7726 3.5641 38.5606 3.63153 39.2074C3.69034 39.7715 3.98588 40.2841 4.4446 40.6176C4.97051 41 5.88104 41 7.70209 41H40.6016C42.4227 41 43.3332 41 43.8591 40.6176C44.3178 40.2841 44.6134 39.7715 44.6722 39.2074C44.7396 38.5606 44.2834 37.7726 43.371 36.1967L26.9212 7.78341C26.0121 6.21309 25.5575 5.42793 24.9645 5.16422C24.4471 4.93419 23.8566 4.93419 23.3393 5.16422C22.7462 5.42793 22.2916 6.21309 21.3825 7.78342Z" stroke="#6039CD" stroke-width="4" stroke-linecap="round" />
+                                                                    <path d="M24.1519 18V26M24.1519 34H24.1719M21.3825 7.78342L4.93272 36.1967C4.02031 37.7726 3.5641 38.5606 3.63153 39.2074C3.69034 39.7715 3.98588 40.2841 4.4446 40.6176C4.97051 41 5.88104 41 7.70209 41H40.6016C42.4227 41 43.3332 41 43.8591 40.6176C44.3178 40.2841 44.6134 39.7715 44.6722 39.2074C44.7396 38.5606 44.2834 37.7726 43.371 36.1967L26.9212 7.78341C26.0121 6.21309 25.5575 5.42793 24.9645 5.16422C24.4471 4.93419 23.8566 4.93419 23.3393 5.16422C22.7462 5.42793 22.2916 6.21309 21.3825 7.78342Z" stroke="#6039CD" strokeWidth="4" strokeLinecap="round" />
                                                                 </svg>
                                                                 <span className={styles.noticeHead}>{t("Notice!")}</span>
                                                             </div>
@@ -1581,7 +1583,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                             <div className={styles.noticeDiv}>
                                                                                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="49" height="48" viewBox="0 0 49 48" fill="none">
-                                                                                        <path d="M24.1519 18V26M24.1519 34H24.1719M21.3825 7.78342L4.93272 36.1967C4.02031 37.7726 3.5641 38.5606 3.63153 39.2074C3.69034 39.7715 3.98588 40.2841 4.4446 40.6176C4.97051 41 5.88104 41 7.70209 41H40.6016C42.4227 41 43.3332 41 43.8591 40.6176C44.3178 40.2841 44.6134 39.7715 44.6722 39.2074C44.7396 38.5606 44.2834 37.7726 43.371 36.1967L26.9212 7.78341C26.0121 6.21309 25.5575 5.42793 24.9645 5.16422C24.4471 4.93419 23.8566 4.93419 23.3393 5.16422C22.7462 5.42793 22.2916 6.21309 21.3825 7.78342Z" stroke="#6039CD" stroke-width="4" stroke-linecap="round" />
+                                                                                        <path d="M24.1519 18V26M24.1519 34H24.1719M21.3825 7.78342L4.93272 36.1967C4.02031 37.7726 3.5641 38.5606 3.63153 39.2074C3.69034 39.7715 3.98588 40.2841 4.4446 40.6176C4.97051 41 5.88104 41 7.70209 41H40.6016C42.4227 41 43.3332 41 43.8591 40.6176C44.3178 40.2841 44.6134 39.7715 44.6722 39.2074C44.7396 38.5606 44.2834 37.7726 43.371 36.1967L26.9212 7.78341C26.0121 6.21309 25.5575 5.42793 24.9645 5.16422C24.4471 4.93419 23.8566 4.93419 23.3393 5.16422C22.7462 5.42793 22.2916 6.21309 21.3825 7.78342Z" stroke="#6039CD" strokeWidth="4" strokeLinecap="round" />
                                                                                     </svg>
                                                                                     <span className={styles.noticeHead}>{t("Notice!")}</span>
                                                                                 </div>
