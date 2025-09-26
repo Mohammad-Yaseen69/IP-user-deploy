@@ -132,6 +132,24 @@ const PaymentsNewer = () => {
     const [currentFlow, setCurrentFlow] = useState("")
 
     useEffect(() => {
+        const hasParams = Boolean(payment_action || send_type)
+        if (!hasParams) {
+            setStep(1)
+            setAction("")
+            setSendPaymentType("")
+            setCurrentFlow("")
+        }
+    }, [payment_action, send_type])
+
+    const resetToMain = () => {
+        setStep(1)
+        setAction("")
+        setSendPaymentType("")
+        setCurrentFlow("")
+        window.history.replaceState(null, "", "/payments")
+    }
+
+    useEffect(() => {
         if (action && !payment_action) {
             window.history.replaceState(null, null, `?payment_action=${action}`)
         }
@@ -146,6 +164,30 @@ const PaymentsNewer = () => {
             <div className={styles.container}>
                 <div className={styles.top}>
                     <h4 style={{ marginBottom: ".2rem" }}>{t("Payments")}</h4>
+                    {
+                        step > 1 && (
+                            <button
+                                onClick={resetToMain}
+                                style={{
+                                    fontSize: ".75rem",
+                                    padding: "4px 8px",
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: "6px",
+                                    borderRadius: "6px",
+                                    border: "1px solid #e5e5e5",
+                                    background: "#fff",
+                                    color: "#444",
+                                    cursor: "pointer",
+                                    marginLeft: "auto"
+                                }}
+                                aria-label={t("Go back to main menu")}
+                            >
+                                <ChevronLeft color="#5826e9" size={14} />
+                                <span style={{fontWeight: 600}}>{t("Go back to main menu")}</span>
+                            </button>
+                        )
+                    }
                     {
                         step === 1
                         &&
@@ -206,10 +248,7 @@ const PaymentsNewer = () => {
                                     if (step === 1) {
                                         navigate(-1)
                                     } else {
-                                        setStep(prev => prev - 1)
-                                        setAction("")
-                                        setCurrentFlow("")
-                                        setSendPaymentType("")
+                                        resetToMain()
                                     }
                                 }}>
                                     <ChevronLeft />
@@ -255,7 +294,7 @@ const PaymentsNewer = () => {
 
                                                 )
                                                     ?
-                                                    <button dataAction="send_money" style={{ background: `url(${sendmoney_m})` }} onClick={() => setActionType("send_money")}>
+                                                    <button data-action="send_money" style={{ background: `url(${sendmoney_m})` }} onClick={() => setActionType("send_money")}>
                                                         <img src={sm_m_i} alt="" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
                                                         <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left" }}>{t("Send Money")}</span>
                                                     </button>
@@ -270,7 +309,7 @@ const PaymentsNewer = () => {
                                                         userDetails?.level?.payment_request?.send
                                                 )
                                                 &&
-                                                <button dataAction="req_money" style={{ background: `url(${reqmoney_m})` }} onClick={() => {
+                                                <button data-action="req_money" style={{ background: `url(${reqmoney_m})` }} onClick={() => {
                                                     setActionType("req_money")
                                                     setCurrentFlow("req_money")
                                                 }}>
@@ -287,7 +326,7 @@ const PaymentsNewer = () => {
                                                         userDetails?.level?.quotation?.send
                                                 )
                                                 &&
-                                                <button dataAction="send_quote" style={{ background: `url(${quote_m})` }} onClick={() => {
+                                                <button data-action="send_quote" style={{ background: `url(${quote_m})` }} onClick={() => {
                                                     setActionType("send_quote")
                                                     setCurrentFlow("send_quote")
                                                 }}>
@@ -295,7 +334,7 @@ const PaymentsNewer = () => {
                                                     <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left" }}>{t("Send A Quote")}</span>
                                                 </button>
                                             }
-                                            <button dataAction="airtime" style={{ background: `url(${airtime_m})` }} onClick={() => {
+                                            <button data-action="airtime" style={{ background: `url(${airtime_m})` }} onClick={() => {
                                                 setActionType("airtime")
                                                 setCurrentFlow("airtime")
                                             }}>
@@ -311,14 +350,14 @@ const PaymentsNewer = () => {
                                                         userDetails?.level?.wallet_to_wallet?.crypto_to_fiat
                                                 )
                                                 &&
-                                                <button dataAction="send_crypto" onClick={() => {
+                                                <button data-action="send_crypto" onClick={() => {
                                                     setActionType("send_crypto")
                                                     setCurrentFlow("send_crypto")
                                                 }}>
                                                     <img src={sc} alt="payment types" />
                                                 </button>
                                             }
-                                            <button className={styles.disabled} disabled>
+                                            <button className={styles.disabled} disabled data-action="placeholder">
                                                 <img src={rq} alt="payment types" />
                                             </button>
                                         </>

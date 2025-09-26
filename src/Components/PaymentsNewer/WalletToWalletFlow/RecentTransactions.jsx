@@ -110,6 +110,19 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
         if (!sendingWallet) return false
 
         if (type === "international") {
+            const hasNA = (paths = []) => paths.some(path => {
+                const val = path.split('.')?.reduce((acc, key) => acc?.[key], tx)
+                return val === "N/A" || val === "NA" || String(val)?.toLowerCase?.() === "n/a"
+            })
+
+            if (hasNA([
+                "payer.id",
+                "payer.vendor",
+                "beneficiary._id",
+                "beneficiary.country_name",
+                "payer.type"
+            ])) return false
+
             const hasCountry = Boolean(countriesData.find(item => item.name === tx?.beneficiary?.country_name))
             const hasBeneficiary = Boolean(beneficiaries?.find(ben => ben?._id === tx?.beneficiary?._id))
             const typeStr = tx?.payer?.type?.toLowerCase() || ""

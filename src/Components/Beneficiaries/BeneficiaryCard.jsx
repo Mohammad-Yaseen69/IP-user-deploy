@@ -8,14 +8,17 @@ import cw from "../PaymentsNewer/files/cw.png"
 import { ChevronDown, ChevronUp, MoreHorizontal } from "react-feather"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { UserContext } from "../../Context/UserContext"
 import { Button } from "reactstrap"
 import DeleteBeneficiary from "./DeleteBeneficiary"
 
 const BeneficiaryCard = ({ user }) => {
     const { t } = useTranslation()
-    const country = countries.filter(coun => coun.name.toLowerCase() === user?.country_name?.toLowerCase())[0]
+    const normalizeName = (s) => (s || "").toLowerCase().replace(/[^a-z]/g, "")
+    const exact = countries.find(c => normalizeName(c.name) === normalizeName(user?.country_name))
+    const loose = countries.find(c => normalizeName(c.name).includes(normalizeName(user?.country_name)) || normalizeName(user?.country_name).includes(normalizeName(c.name)))
+    const country = exact || loose
     const itemCheck = (item) => user?.account_type.some(acc => acc.toLowerCase() === item);
     const { verifyToken } = useContext(UserContext)
     const [showMore, setShowMore] = useState(false);
@@ -23,6 +26,18 @@ const BeneficiaryCard = ({ user }) => {
     const [showDelete, setShowDelete] = useState(false);
     const toggleShowDelete = () => setShowDelete(!showDelete)
     const [showFull, setShowFull] = useState(window.innerWidth > 1000)
+
+    const normalizeFlagUrl = (url) => {
+        if (!url) return ""
+        return url.startsWith("//") ? `https:${url}` : url
+    }
+    const primaryFlagSrc = normalizeFlagUrl(country?.file_url)
+    const [flagSrc, setFlagSrc] = useState(primaryFlagSrc || ins)
+
+    useEffect(() => {
+        setFlagSrc(primaryFlagSrc || ins)
+    }, [primaryFlagSrc])
+
 
     return (
         <div className={styles.container}>
@@ -62,7 +77,7 @@ const BeneficiaryCard = ({ user }) => {
                                 <h5>{user?.company_name?.split(" ")[0].slice(0, 10)}</h5>
                             }
                             {/* </Link> */}
-                            <img src={country?.file_url} alt={country?.alpha3} style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", }} className={styles.flag} draggable="false" />
+                            <img src={flagSrc} alt={country?.alpha3 || user?.country_name || "flag"} style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", }} className={styles.flag} draggable="false" onError={() => setFlagSrc(ins)} loading="lazy" />
                             <div className={styles.type_badge}>{t(user?.beneficiary_type[0]?.toUpperCase() + user?.beneficiary_type?.slice(1)?.toLowerCase())}</div>
                         </div>
                         <button className={styles.toggle} onClick={e => {
@@ -113,7 +128,7 @@ const BeneficiaryCard = ({ user }) => {
                                         gap: ".75rem",
                                         paddingLeft: "45px"
                                     }}>
-                                        <img src={country?.file_url} alt={country?.alpha3} style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", }} className={styles.flag} draggable="false" />
+                                        <img src={flagSrc} alt={country?.alpha3 || user?.country_name || "flag"} style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", }} className={styles.flag} draggable="false" onError={() => setFlagSrc(ins)} loading="lazy" />
                                         <div className={styles.type_badge}>{t(user?.beneficiary_type)}</div>
                                     </div>
 
@@ -141,7 +156,7 @@ const BeneficiaryCard = ({ user }) => {
                                         <h5 style={{ maxWidth: showFull ? "fit-content" : "25vw" }}>{user?.company_name?.split(" ")[0].slice(0, 10)}</h5>
                                     }
                                     {/* </Link> */}
-                                    <img src={country?.file_url} alt={country?.alpha3} style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", }} className={styles.flag} draggable="false" />
+                                    <img src={flagSrc} alt={country?.alpha3 || user?.country_name || "flag"} style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", }} className={styles.flag} draggable="false" onError={() => setFlagSrc(ins)} loading="lazy" />
                                     <div className={styles.type_badge}>{t(user?.beneficiary_type)}</div>
 
                                 </div>
@@ -247,7 +262,7 @@ const BeneficiaryCard = ({ user }) => {
                         {
                             showMore
                             &&
-                            <div style={{top: window.innerWidth < 1000 && "inherit", bottom: window.innerWidth < 1000 &&"100%", zIndex: 12}} className={styles.showMore}>
+                            <div style={{ top: window.innerWidth < 1000 && "inherit", bottom: window.innerWidth < 1000 && "100%", zIndex: 12 }} className={styles.showMore}>
                                 <Link to={`/beneficiaries/edit?user_id=${user._id}&edit=true`}>
                                     <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }}>
                                         {t("Edit") + " " + t("Beneficiary")}

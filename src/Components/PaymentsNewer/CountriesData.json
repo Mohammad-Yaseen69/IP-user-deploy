@@ -347,7 +347,7 @@
         "url": "/wiki/Democratic_Republic_of_the_Congo",
         "alpha3": "COD",
         "name": "Congo - Democratic Republic of the",
-        "file_url": "//upload.wikimedia.org/wikipedia/commons/6/6f/Flag_of_the_Democratic_Republic_of_the_Congo.svg",
+        "file_url": "https://flagcdn.com/w320/cd.png",
         "license": "Public domain"
     },
     {
@@ -1446,7 +1446,7 @@
         "url": "/wiki/Switzerland",
         "alpha3": "CHE",
         "name": "Switzerland",
-        "file_url": "//upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Switzerland.svg",
+        "file_url": "https://flagcdn.com/w320/ch.png",
         "license": "Public domain"
     },
     {

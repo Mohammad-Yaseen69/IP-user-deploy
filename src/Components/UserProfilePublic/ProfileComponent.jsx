@@ -487,96 +487,89 @@ const ProfileComponent = () => {
                                             </div>
                                             <div className={styles.reviews_body}>
                                                 {
-                                                    currentRevTab === "Buyer" && userReviewsAsBuyer.length > 0
-                                                        ?
-                                                        userReviewsAsBuyer.sort((a, b) => new Date(a?.createdAt) - new Date(b?.createdAt)).map((item) => (
-                                                            <div key={item._id} className={styles.review_card}>
-                                                                <div className={styles.rc_top}>
-                                                                    <div className={styles.rct_left}>
-                                                                        {
-                                                                            item?.buyer?.profileImage?.url
-                                                                                ?
-                                                                                <img src={item?.buyer?.profileImage?.url} alt="dp" className={styles.rctl_dp} />
-                                                                                :
-                                                                                <div className={styles.rctl_dp}>{item?.buyer?.user?.first_name?.[0] || item?.buyer?.user?.company_name?.[0]}</div>
-                                                                        }
-                                                                        <div className={styles.rctl_dets}>
-                                                                            <h5>{item?.buyer?.user?.first_name || item?.buyer?.user?.company_name} {item?.buyer?.user?.last_name || ''}</h5>
-                                                                            <span>{item?.buyer?.account_type}</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    {/* <MoreHorizontal size={30} /> */}
-                                                                </div>
-                                                                <div className={styles.rc_rating}>
-                                                                    <Rating initialRating={item?.rating} emptySymbol="fa fa-star-o fa-2x" fullSymbol="fa fa-star fa-2x" readonly></Rating>
-                                                                </div>
-                                                                <p>{item?.comment}</p>
-                                                                {
-                                                                    item?.reply
-                                                                    &&
-                                                                    <div className={styles.reply_review_card}>
+                                                    currentRevTab === "Buyer" && (
+                                                        userReviewsAsBuyer.length > 0
+                                                            ? userReviewsAsBuyer
+                                                                .sort((a, b) => new Date(a?.createdAt) - new Date(b?.createdAt))
+                                                                .map((item) => (
+                                                                    <div key={item._id} className={styles.review_card}>
                                                                         <div className={styles.rc_top}>
                                                                             <div className={styles.rct_left}>
-                                                                                <div className={styles.rctl_top}>
-                                                                                    <span>{t("Replied to ")}</span>
-                                                                                    <div>{item?.buyer?.user?.first_name || item?.buyer?.user?.company_name} {item?.buyer?.user?.last_name || ''}</div>
-                                                                                </div>
-                                                                                <div className={styles.rctl_bottom}>
-                                                                                    {
-                                                                                        userDp
-                                                                                            ?
-                                                                                            <img src={userDp} alt="dp" className={styles.rctl_dp} style={{ boxShadow: "0 0 3px #1111111e" }} />
-                                                                                            :
-                                                                                            <div className={styles.rctl_dp}>{userDetails?.first_name?.[0] || userDetails?.company_name?.[0]}</div>
-                                                                                    }
-                                                                                    <div className={styles.rctl_dets}>
-                                                                                        <div className={styles.seller_res_badge}>
-                                                                                            {t("Seller Response")}
-                                                                                        </div>
-                                                                                        <h5>{userDetails?.first_name || userDetails?.company_name} {userDetails?.last_name || ''}</h5>
-                                                                                        <span>{userDetails?.account_type}</span>
-                                                                                    </div>
+                                                                                {
+                                                                                    item?.buyer?.profileImage?.url
+                                                                                        ? <img src={item?.buyer?.profileImage?.url} alt="dp" className={styles.rctl_dp} />
+                                                                                        : <div className={styles.rctl_dp}>{item?.buyer?.user?.first_name?.[0] || item?.buyer?.user?.company_name?.[0]}</div>
+                                                                                }
+                                                                                <div className={styles.rctl_dets}>
+                                                                                    <h5>{item?.buyer?.user?.first_name || item?.buyer?.user?.company_name} {item?.buyer?.user?.last_name || ''}</h5>
+                                                                                    <span>{item?.buyer?.account_type}</span>
                                                                                 </div>
                                                                             </div>
-                                                                            {/* <MoreHorizontal size={30} /> */}
                                                                         </div>
-                                                                        <p>{item?.reply}</p>
+                                                                        <div className={styles.rc_rating}>
+                                                                            <Rating initialRating={item?.rating} emptySymbol="fa fa-star-o fa-2x" fullSymbol="fa fa-star fa-2x" readonly></Rating>
+                                                                        </div>
+                                                                        <p>{item?.comment}</p>
+                                                                        {
+                                                                            item?.reply && (
+                                                                                <div className={styles.reply_review_card}>
+                                                                                    <div className={styles.rc_top}>
+                                                                                        <div className={styles.rct_left}>
+                                                                                            <div className={styles.rctl_top}>
+                                                                                                <span>{t("Replied to ")}</span>
+                                                                                                <div>{item?.buyer?.user?.first_name || item?.buyer?.user?.company_name} {item?.buyer?.user?.last_name || ''}</div>
+                                                                                            </div>
+                                                                                            <div className={styles.rctl_bottom}>
+                                                                                                {
+                                                                                                    userDp
+                                                                                                        ? <img src={userDp} alt="dp" className={styles.rctl_dp} style={{ boxShadow: "0 0 3px #1111111e" }} />
+                                                                                                        : <div className={styles.rctl_dp}>{userDetails?.first_name?.[0] || userDetails?.company_name?.[0]}</div>
+                                                                                                }
+                                                                                                <div className={styles.rctl_dets}>
+                                                                                                    <div className={styles.seller_res_badge}>{t("Seller Response")}</div>
+                                                                                                    <h5>{userDetails?.first_name || userDetails?.company_name} {userDetails?.last_name || ''}</h5>
+                                                                                                    <span>{userDetails?.account_type}</span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <p>{item?.reply}</p>
+                                                                                </div>
+                                                                            )
+                                                                        }
                                                                     </div>
-                                                                }
-                                                            </div>
-                                                        ))
-                                                        : ""
-
+                                                                ))
+                                                            : <div className="text-center my-3" style={{ color: "#666" }}>{t("No Buyer Reviews Found")}</div>
+                                                    )
                                                 }
                                                 {
-                                                    currentRevTab === "Seller" && userReviewsAsSeller.length > 0
-                                                        ?
-                                                        userReviewsAsSeller.sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt)).map((item) => (
-                                                            <div key={item._id} className={styles.review_card}>
-                                                                <div className={styles.rc_top}>
-                                                                    <div className={styles.rct_left}>
-                                                                        {
-                                                                            item?.seller?.profileImage?.url
-                                                                                ?
-                                                                                <img src={item?.seller?.profileImage?.url} alt="dp" className={styles.rctl_dp} />
-                                                                                :
-                                                                                <div className={styles.rctl_dp}>{item?.seller?.user?.first_name?.[0] || item?.seller?.user?.company_name?.[0]}</div>
-                                                                        }
-                                                                        <div className={styles.rctl_dets}>
-                                                                            <h5>{item?.seller?.user?.first_name || item?.seller?.user?.company_name} {item?.seller?.user?.last_name || ''}</h5>
-                                                                            <span>{item?.seller?.account_type}</span>
+                                                    currentRevTab === "Seller" && (
+                                                        userReviewsAsSeller.length > 0
+                                                            ? userReviewsAsSeller
+                                                                .sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt))
+                                                                .map((item) => (
+                                                                    <div key={item._id} className={styles.review_card}>
+                                                                        <div className={styles.rc_top}>
+                                                                            <div className={styles.rct_left}>
+                                                                                {
+                                                                                    item?.seller?.profileImage?.url
+                                                                                        ? <img src={item?.seller?.profileImage?.url} alt="dp" className={styles.rctl_dp} />
+                                                                                        : <div className={styles.rctl_dp}>{item?.seller?.user?.first_name?.[0] || item?.seller?.user?.company_name?.[0]}</div>
+                                                                                }
+                                                                                <div className={styles.rctl_dets}>
+                                                                                    <h5>{item?.seller?.user?.first_name || item?.seller?.user?.company_name} {item?.seller?.user?.last_name || ''}</h5>
+                                                                                    <span>{item?.seller?.account_type}</span>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
+                                                                        <div className={styles.rc_rating}>
+                                                                            <Rating initialRating={item?.rating} emptySymbol="fa fa-star-o fa-2x" fullSymbol="fa fa-star fa-2x" readonly></Rating>
+                                                                        </div>
+                                                                        <p>{item?.comment}</p>
                                                                     </div>
-                                                                    {/* <MoreHorizontal size={30} /> */}
-                                                                </div>
-                                                                <div className={styles.rc_rating}>
-                                                                    <Rating initialRating={item?.rating} emptySymbol="fa fa-star-o fa-2x" fullSymbol="fa fa-star fa-2x" readonly></Rating>
-                                                                </div>
-                                                                <p>{item?.comment}</p>
-                                                            </div>
-                                                        ))
-                                                        : ""
-
+                                                                ))
+                                                            : <div className="text-center my-3" style={{ color: "#666" }}>{t("No Seller Reviews Found")}</div>
+                                                    )
                                                 }
                                             </div>
                                         </div>

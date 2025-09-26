@@ -5,8 +5,10 @@ import file_img from "../Portfolio/files/file.png"
 import ReactJWPlayer from "react-jw-player"
 import pdfPl from "../Portfolio/files/pdf.jpeg"
 import docPl from "../Portfolio/files/doc.jpeg"
+import { useTranslation } from 'react-i18next'
 
 const PortfolioItemModal = ({ showModal, setShowModal, item }) => {
+    const {t} = useTranslation()
     return (
         <Modal isOpen={showModal} toggle={() => setShowModal(!showModal)} contentClassName={styles.content_modal} className={styles.content_modal}>
             <ModalHeader toggle={() => setShowModal(!showModal)}>
@@ -61,6 +63,31 @@ const PortfolioItemModal = ({ showModal, setShowModal, item }) => {
                     }
                     <div>
                         <p>{item?.description}</p>
+                        {
+                            item?.document_details?.url && (
+                                <a
+                                    href={item?.document_details?.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    download
+                                    style={{
+                                        display: "inline-block",
+                                        marginTop: "8px",
+                                        fontSize: "0.9rem",
+                                        padding: "6px 10px",
+                                        border: "1px solid #e5e5e5",
+                                        borderRadius: "6px",
+                                        background: "#fff",
+                                        color: "#5926F0",
+                                        fontWeight: 600,
+                                        textDecoration: "none",
+                                        cursor: "pointer"
+                                    }}
+                                >
+                                    {t("Download")}
+                                </a>
+                            )
+                        }
                     </div>
                 </div>
             </ModalBody>
