@@ -92,7 +92,6 @@ const Verification = () => {
                 )?.tokenized_link;
                 const newWindow = window.open(verificationLink, "_blank");
 
-                // If blocked, redirect in same window
                 if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
                     window.location.href = verificationLink;
                 }

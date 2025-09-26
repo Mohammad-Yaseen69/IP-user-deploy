@@ -16,9 +16,11 @@ const PartnerVerificationPage = () => {
 
                 if (data?.KYBLink) {
                     setMessage("Authenticated, redirecting you to the verification page.")
-                    setTimeout(() => {
-                        window.open(data?.KYBLink, "_blank");
-                    }, 1500)
+                    const newWindow = window.open(data?.KYBLink, "_blank");
+
+                    if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+                        window.location.href = data?.KYBLink;
+                    }
                 }
             } catch (error) {
                 // console.log(error)
