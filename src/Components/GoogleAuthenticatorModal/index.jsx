@@ -291,7 +291,7 @@ const GoogleAuthenticatorModal = ({
                                 (
                                     step < 3
                                     &&
-                                    <button disabled={enablingAuth} style={{ opacity: enablingAuth ? .7 : 1, pointerEvents: enablingAuth ? "none" : "all" }} type="submit" className={styles.next_btn} /*onClick={() => {
+                                    <button disabled={enablingAuth || !password} style={{ opacity: enablingAuth || !password ? .7 : 1, pointerEvents: enablingAuth || !password ? "none" : "all" }} type="submit" className={styles.next_btn} /*onClick={() => {
                                     // step === 1 ? verifyPassword() : verifyAuthenticator()
                                 }}*/>
                                         {step === 1 ? t("Continue") : t("Enable")}

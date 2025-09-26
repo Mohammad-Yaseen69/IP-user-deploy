@@ -22,7 +22,7 @@ const PartnerVerificationPage = () => {
                         window.location.href = data?.KYBLink;
                     }
                 }
-            } catch (error) {
+            } catch {
                 // console.log(error)
                 // console.log(decryptData(error?.response?.data?.data))
                 setMessage("Token expired.")
