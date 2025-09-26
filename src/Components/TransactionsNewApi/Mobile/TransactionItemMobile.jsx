@@ -129,7 +129,7 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
                 return [first, last].filter(Boolean).join(" ")
             }
 
-            const first = internationalReceiver?.first_name ?? item?.account?.user?.first_name
+            const first = internationalReceiver?.first_name ?? item?.account?.user?.first_name ?? internationalReceiver?.company_name ?? item?.account?.user?.company_name
             const last = internationalReceiver?.last_name ?? item?.account?.user?.last_name
             return [first, last].filter(Boolean).join(" ")
         }
@@ -140,7 +140,7 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
             return [first, last].filter(Boolean).join(" ")
         }
 
-        const first = item?.sender?.user?.first_name ?? item?.mastercard?.account?.first_name
+        const first = item?.sender?.user?.first_name ?? item?.mastercard?.account?.first_name ?? item?.sender?.user?.company_name
         const last = item?.sender?.user?.last_name ?? item?.mastercard?.account?.last_name
         return [first, last].filter(Boolean).join(" ")
     }, [item, internationalReceiver])

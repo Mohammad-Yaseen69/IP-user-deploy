@@ -188,11 +188,11 @@ const StepTwo = ({ data, dataHandler }) => {
                         filterd?.map(item => (
                             <div key={item?._id} className={`${styles.ben_card} ${data?.beneficiary?._id === item?._id ? styles.active : ""}`} onClick={() => dataHandler("beneficiary", item)}>
                                 <div className={styles.dp}>
-                                    {item?.first_name?.[0]}
+                                    {item?.first_name?.[0] ?? item?.company_name?.[0]}
                                 </div>
                                 <div className={styles.ben_details}>
                                     <div className={styles.bd_top}>
-                                        <h5>{item?.first_name} {item?.last_name}</h5>
+                                        <h5>{item?.first_name ?? item?.company_name} {item?.last_name}</h5>
                                         {/* {
                                             window.innerWidth > 1000 &&
                                             <div className={styles.badge}>
@@ -258,11 +258,11 @@ const StepTwo = ({ data, dataHandler }) => {
                                             console.log(item)
                                         }}>
                                         <div className={styles.dp}>
-                                            {item?.first_name?.[0]}
+                                            {item?.first_name?.[0] ?? item?.company_name?.[0]}
                                         </div>
                                         <div className={styles.ben_details}>
                                             <div className={styles.bd_top}>
-                                                <h5>{item?.first_name} {item?.last_name}</h5>
+                                                <h5>{item?.first_name ?? item?.company_name} {item?.last_name ?? ""}</h5>
                                                 {/* {
                                                     window.innerWidth > 1000 &&
                                                     <div className={styles.badge}>

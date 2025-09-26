@@ -35,7 +35,7 @@ const MobileTransactionItem = ({ item, activeItem, setActiveItem, index, cardNo 
                                     (item?.receiverCard?.account?.first_name + " " + item?.receiverCard?.account?.last_name)[0] :
                                     (item?.receiverWallet?.account?.first_name && item?.receiverWallet?.account?.last_name) ?
                                         (item?.receiverWallet?.account?.first_name + " " + item?.receiverWallet?.account?.last_name)[0] :
-                                        (userDetails?.first_name + " " + userDetails?.last_name)[0]
+                                        ((userDetails?.first_name ?? userDetails?.company_name) + " " + (userDetails?.last_name ?? ""))[0]
                         }
                     </div>
                     <div className={styles.t_details}>
@@ -51,7 +51,7 @@ const MobileTransactionItem = ({ item, activeItem, setActiveItem, index, cardNo 
                                         (item?.receiverCard?.account?.first_name + " " + item?.receiverCard?.account?.last_name) :
                                         (item?.receiverWallet?.account?.first_name && item?.receiverWallet?.account?.last_name) ?
                                             (item?.receiverWallet?.account?.first_name + " " + item?.receiverWallet?.account?.last_name) :
-                                            (userDetails?.first_name + " " + userDetails?.last_name) ||
+                                            ((userDetails?.first_name ?? userDetails?.company_name) + " " + (userDetails?.last_name ?? "")) ||
                                             "Transaction"
                             }
                         </h5>

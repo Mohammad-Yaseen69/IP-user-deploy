@@ -18,8 +18,8 @@ const WalletDetails = ({ wallet, authHeader, setWalletError, setWalletIds, setDu
                     const decrypted = decryptData(res.data.data)
 
                     if ((!firstName && !lastName) && (setFirstName && setLastName)) {
-                        setFirstName(decrypted.walletDetails.first_name)
-                        setLastName(decrypted.walletDetails.last_name)
+                        setFirstName(decrypted.walletDetails.first_name ?? decrypted?.walletDetails?.company_name)
+                        setLastName(decrypted.walletDetails.last_name ?? "")
                     }
                     setDetails(decrypted.walletDetails)
                     const filtered = walletIds.filter(item => item === decrypted?.walletDetails?._id)

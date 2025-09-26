@@ -117,7 +117,7 @@ const Receipt = ({ data, showBack = false, backHandler = () => { }, showTrxBtn =
                                         values={{
                                             name: title
                                                 ? title
-                                                : `${data.beneficiary?.firstname ?? data.beneficiary?.first_name} ${data.beneficiary?.lastname ?? data.beneficiary?.last_name}`,
+                                                : `${data.beneficiary?.firstname ?? data.beneficiary?.first_name ?? data.beneficiary?.company_name} ${data.beneficiary?.lastname ?? data.beneficiary?.last_name ?? ""}`,
                                         }}
                                         components={{
                                             user: <strong />,

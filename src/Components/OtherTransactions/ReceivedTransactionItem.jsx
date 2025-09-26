@@ -35,7 +35,7 @@ const ReceivedTransactionItem = ({ color, item, activeItem, setActiveItem, index
     const [currentImage, setCurrentImage] = useState("")
     const { authHeader, verifyToken } = useContext(UserContext)
     const recipient = useMemo(() => {
-        return item?.request_payment?.receiver?.account_type === "individual" ? `${item?.request_payment?.receiver?.first_name} ${item?.request_payment?.receiver?.last_name}` : item?.request_payment?.receiver?.company_name
+        return item?.request_payment?.receiver?.account_type === "individual" ? `${item?.request_payment?.receiver?.first_name ?? item?.request_payment?.receiver?.company_name} ${item?.request_payment?.receiver?.last_name ?? ""}` : item?.request_payment?.receiver?.company_name
     }, [item])
 
     return (

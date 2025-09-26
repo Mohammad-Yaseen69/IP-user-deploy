@@ -46,19 +46,19 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
         if (isDebit) {
             if (item?.service_type === "kyc_verification") return "InstaPay"
             if (item?.service_type === "withdrawal") {
-                return `${item?.sender?.user?.first_name ?? ""} ${item?.sender?.user?.last_name ?? ""}`.trim()
+                return `${item?.sender?.user?.first_name ?? item?.sender?.user?.company_name ?? ""} ${item?.sender?.user?.last_name ?? ""}`.trim()
             }
             if (item?.receiver) {
-                return `${item?.receiver?.user?.first_name ?? ""} ${item?.receiver?.user?.last_name ?? ""}`.trim()
+                return `${item?.receiver?.user?.first_name ?? item?.receiver?.user?.company_name ?? ""} ${item?.receiver?.user?.last_name ?? ""}`.trim()
             }
-            return `${internationalReceiver?.first_name ?? item.receiverCard?.account?.first_name ?? item?.account?.user?.first_name ?? ""} ${internationalReceiver?.last_name ?? item.receiverCard?.account?.first_name ?? item?.account?.user?.last_name ?? ""}`.trim()
+            return `${internationalReceiver?.first_name ?? item.receiverCard?.account?.first_name ?? item?.account?.user?.first_name ?? internationalReceiver?.company_name ?? item.receiverCard?.account?.company_name ?? item?.account?.user?.company_name ?? ""} ${internationalReceiver?.last_name ?? item.receiverCard?.account?.last_name ?? item?.account?.user?.last_name ?? ""}`.trim()
         }
 
         if (item?.service_type === "topup") {
-            return `${item?.receiver?.user?.first_name ?? ""} ${item?.receiver?.user?.last_name ?? ""}`.trim()
+            return `${item?.receiver?.user?.first_name ?? item?.receiver?.user?.company_name ?? ""} ${item?.receiver?.user?.last_name ?? ""}`.trim()
         }
 
-        return `${item?.sender?.user?.first_name ?? item?.senderCard?.account?.first_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.first_name ?? userDetails?.first_name ?? ""} ${item?.sender?.user?.last_name ?? item?.senderCard?.account?.last_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.last_name ?? userDetails?.last_name ?? ""}`.trim()
+        return `${item?.sender?.user?.first_name ?? item?.senderCard?.account?.first_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.first_name ?? userDetails?.first_name ?? item?.sender?.user?.company_name ?? item?.senderCard?.account?.company_name ?? item.receiverCard?.account?.company_name ?? item?.receiverWallet?.account?.company_name ?? userDetails?.company_name ?? ""} ${item?.sender?.user?.last_name ?? item?.senderCard?.account?.last_name ?? item.receiverCard?.account?.last_name ?? item?.receiverWallet?.account?.last_name ?? userDetails?.last_name ?? ""}`.trim()
     }, [item, internationalReceiver, userDetails])
 
     const recipientInitial = useMemo(() => {
@@ -71,23 +71,23 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
             if (item?.service_type === "withdraw_by_admin") return "A"
             if (item?.service_type === "kyc_verification") return "I"
             if (item?.service_type === "withdrawal") {
-                const name = `${item?.sender?.user?.first_name ?? ""} ${item?.sender?.user?.last_name ?? ""}`.trim()
+                const name = `${item?.sender?.user?.first_name ?? item?.sender?.user?.company_name ?? ""} ${item?.sender?.user?.last_name ?? ""}`.trim()
                 return name?.slice(0, 1)
             }
             if (item?.receiver) {
-                const name = `${item?.receiver?.user?.first_name ?? ""} ${item?.receiver?.user?.last_name ?? ""}`.trim()
+                const name = `${item?.receiver?.user?.first_name ?? item?.receiver?.user?.company_name ?? ""} ${item?.receiver?.user?.last_name ?? ""}`.trim()
                 return name?.slice(0, 1)
             }
-            const name = `${internationalReceiver?.first_name ?? item?.account?.user?.first_name ?? ""} ${internationalReceiver?.last_name ?? item?.account?.user?.last_name ?? ""}`.trim()
+            const name = `${internationalReceiver?.first_name ?? item?.account?.user?.first_name ?? internationalReceiver?.company_name ?? item?.account?.user?.company_name ?? ""} ${internationalReceiver?.last_name ?? item?.account?.user?.last_name ?? ""}`.trim()
             return name?.slice(0, 1)
         }
 
         if (item?.service_type === "topup") {
-            const name = `${item?.receiver?.user?.first_name ?? ""} ${item?.receiver?.user?.last_name ?? ""}`.trim()
+            const name = `${item?.receiver?.user?.first_name ?? item?.receiver?.user?.company_name ?? ""} ${item?.receiver?.user?.last_name ?? ""}`.trim()
             return name?.slice(0, 1)
         }
 
-        const name = `${item?.sender?.user?.first_name ?? item?.senderCard?.account?.first_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.first_name ?? userDetails?.first_name ?? ""} ${item?.sender?.user?.last_name ?? item?.senderCard?.account?.last_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.last_name ?? userDetails?.last_name ?? ""}`.trim()
+        const name = `${item?.sender?.user?.first_name ?? item?.senderCard?.account?.first_name ?? item.receiverCard?.account?.first_name ?? item?.receiverWallet?.account?.first_name ?? userDetails?.first_name ?? item?.sender?.user?.company_name ?? item?.senderCard?.account?.company_name ?? item.receiverCard?.account?.company_name ?? item?.receiverWallet?.account?.company_name ?? userDetails?.company_name ?? ""} ${item?.sender?.user?.last_name ?? item?.senderCard?.account?.last_name ?? item.receiverCard?.account?.last_name ?? item?.receiverWallet?.account?.last_name ?? userDetails?.last_name ?? ""}`.trim()
         return name?.slice(0, 1)
     }, [item, internationalReceiver, userDetails])
     return (
