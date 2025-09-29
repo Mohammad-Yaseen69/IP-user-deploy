@@ -10,14 +10,14 @@ const Stepthree = () => {
     const { t } = useTranslation();
 
     useEffect(() => {
-        if (userDetails.user.kyc_status === "approved") {
+        if (userDetails?.account_type === "individual" ? userDetails.user.kyc_status === "approved" : userDetails?.user?.kyb_status) {
             setIsKycVerified(true)
         }
     }, [userDetails])
 
     return (
         <>
-            <div className={styles.top} style={{width: "100%"}}>
+            <div className={styles.top} style={{ width: "100%" }}>
                 <h2>
                     {!isKycVerified ? t("Let's Verify Your Identity") : t("You're Already Verified!")}
                 </h2>
@@ -30,7 +30,7 @@ const Stepthree = () => {
                 </p>
             </div>
 
-            <img style={{width: "550px"}} src={Img} alt="" />
+            <img style={{ width: "550px" }} src={Img} alt="" />
         </>
     )
 }

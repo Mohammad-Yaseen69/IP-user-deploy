@@ -26,6 +26,9 @@ import ErrorBoundary from './ErrorBoundary'
 import BroadcastPage from './BroadcastPage'
 import { ToastContainer } from "react-toastify";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateMomentUtils from '@date-io/moment';
+
 
 
 const App = () => {
@@ -129,9 +132,11 @@ const App = () => {
                     <InactivityWrapper>
                       <CustomizerProvider>
                         <AnimationThemeProvider>
-                          {" "}
-                          <Routers />
-                          {" "}
+                          <MuiPickersUtilsProvider utils={DateMomentUtils}>
+                            {" "}
+                            <Routers />
+                            {" "}
+                          </MuiPickersUtilsProvider>
                         </AnimationThemeProvider>
                       </CustomizerProvider>
                     </InactivityWrapper>

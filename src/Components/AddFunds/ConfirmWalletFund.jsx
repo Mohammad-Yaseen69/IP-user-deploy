@@ -22,7 +22,7 @@ import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
 
 const isBig = window.innerWidth > 1000
 
-const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, limits, setLimits, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { } }) => {
+const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, limits, setLimits, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [complete, setComplete] = useState(false);
@@ -31,7 +31,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
     const svgRef = useRef(null)
     const chevRef = useRef(null)
     const [transDetails, setTransDetails] = useState(null)
-    const { userDetails, authHeader, userWallets } = useContext(UserContext)
+    const { userDetails, authHeader, userWallets, setUserDetails } = useContext(UserContext)
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
 
@@ -73,7 +73,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                     const enc = encryptData(data)
 
                     // api
-                    const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiat${type === "add_fund" ? "" : "-kyc"}${paymentWithSavedCard ? "-pan" : ""}-transaction`, {
+                    const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiat${type === "add_fund" ? "" : type === 'kyc_fee' ? "-kyc" : "-kyb"}${paymentWithSavedCard ? "-pan" : ""}-transaction`, {
                         data: enc
                     }, {
                         headers: authHeader
@@ -159,7 +159,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                     setLoading(false)
                 }
             } else {
-                const data = {
+                const data = type === "kyb" ? { wallet_id: wallet?._id } : {
                     wallet_id: wallet?._id,
                     country_iso_code: userDetails?.country_iso_code,
                     payment_page_id: payer?.payment_page_id,
@@ -169,16 +169,19 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                     service_name: payoutChannel?.sub_name
                 }
 
-                console.log(data)
                 try {
-                    const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/collection/create-payment-order`, {
-                        data: encryptData(data)
-                    }, {
-                        headers: authHeader
-                    })
-                    const decrypted = await decryptData(res.data.data)
-                    console.log(data)
-                    setExternalLink(decrypted?.external_link)
+                    if (type === "kyb") {
+                        sendKybWalletOTP()
+                    } else {
+                        const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/collection/create-payment-order`, {
+                            data: encryptData(data)
+                        }, {
+                            headers: authHeader
+                        })
+                        const decrypted = await decryptData(res.data.data)
+
+                        setExternalLink(decrypted?.external_link)
+                    }
                     // console.log(decrypted)
                 } catch (error) {
                     const dec = decryptData(error?.response?.data?.data)

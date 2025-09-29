@@ -35,7 +35,7 @@ const paymentChannels = [
 ]
 
 
-const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading, source_of_funds }) => {
+const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading, source_of_funds, isKYB, amount, getFeeDetails }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [step, setStep] = useState(1)
@@ -51,7 +51,6 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
     const [saving, setSaving] = useState(false)
     const [showOtp, setShowOtp] = useState(false)
     const [token, setToken] = useState("")
-    const [timer, setTimer] = useState(3)
     const [showSuccess, setShowSuccess] = useState(false)
     const [cardNumber, setCardNumber] = useState('');
     const [expiry, setExpiry] = useState('');
@@ -61,6 +60,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
     const [currentCard, setCurrentCard] = useState(null)
     const [cardError, setCardError] = useState('');
     const [codeType, setCodeType] = useState("sms")
+    const [feeDetails, setFeeDetails] = useState({})
 
     useEffect(() => {
         setCodeType(userDetails?.tfa ? "authenticator" : "sms")
@@ -93,13 +93,14 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
             );
 
             const walletPromises = activeWallets.map(async (item) => {
-                if (item?.currency?.code === "USD") return item?.balance?.available >= 3.99 ? item : null;
+                if (item?.currency?.code === "USD") return item?.balance?.available >= (amount || 3.99) ? item : null;
                 try {
-                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=USD&to=${item?.currency?.code}&amount=4`, {
+                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=USD&to=${item?.currency?.code}&amount=${amount || 4}`, {
                         headers: authHeader
                     });
                     const dec = decryptData(res?.data?.data);
-                    return item?.balance?.available > dec?.exchangeRate?.result ? item : null;
+                    const requiredAmountInTarget = Number(dec?.exchangeRate?.exchanged_amount ?? dec?.exchangeRate?.result ?? 0);
+                    return item?.balance?.available >= requiredAmountInTarget ? item : null;
                 } catch (error) {
                     return null;
                 }
@@ -110,7 +111,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
         };
 
         filterWallets();
-    }, [userWallets]);
+    }, [userWallets, amount]);
 
     const wallets = useMemo(() => filteredWallets, [filteredWallets]);
 
@@ -119,7 +120,6 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
         try {
             const data = {
                 data: {
-                    account_id: userDetails?._id,
                     wallet_id: wallet?._id,
                     desc,
                     occupation,
@@ -128,6 +128,10 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                 type: codeType
             }
             // console.log(data)
+
+            if (!isKYB) {
+                data.data.account_id = userDetails?._id
+            }
             const encrypted = encryptData(data)
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
                 data: encrypted
@@ -138,7 +142,9 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
             const dec = decryptData(res.data.data)
             setToken(dec?.token)
             setShowOtp(true)
-            toggle()
+            if (!isKYB) {
+                toggle()
+            }
         } catch (error) {
             toast.error("Something went wrong while confirming the transaction!")
             // console.log(decryptData(error?.response?.data?.data))
@@ -157,7 +163,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                 type: codeType
             }
             // console.log(data)
-            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/user/charge-kyc`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/${isKYB ? "company" : "user"}/charge-${isKYB ? "kyb" : "kyc"}`, {
                 data: encryptData(data)
             }, {
                 headers: authHeader
@@ -197,7 +203,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
         }
     }
 
-    const handleClick = () => {
+    const handleClick = async () => {
         if (step === 1) {
             if (payoutChannel?.value === "paypal") {
                 initiatePaypal()
@@ -208,9 +214,24 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
 
         if (step === 2) {
             if (payoutChannel?.value === "wallet" && wallet) {
-                sendOtp()
+                if (!isKYB) {
+                    sendOtp()
+                } else {
+                    const feeDets = await getFeeDetails({
+                        payment_type: "wallet",
+                        wallet_id: wallet?._id
+                    })
+                    setFeeDetails(feeDets)
+                    setStep(prev => prev + 1)
+                }
             }
             if (payoutChannel?.value === "card" && (currentCard?._id ?? isValid)) {
+                if (isKYB) {
+                    const feeDets = await getFeeDetails({
+                        payment_type: "card",
+                    })
+                    setFeeDetails(feeDets)
+                }
                 setStep(prev => prev + 1)
             }
         }
@@ -291,8 +312,9 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                 <h5>Select Your Wallet: </h5>
                                 <div style={{ margin: "1rem 0", display: "flex", flexDirection: "column", gap: "1rem" }}>
                                     {
-                                        wallets?.map(item => (
+                                        wallets?.map((item, index) => (
                                             <div
+                                                key={index}
                                                 onClick={() => setWallet(item)}
                                                 style={{
                                                     display: "flex",
@@ -393,22 +415,23 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                             <ConfirmWalletFund
                                 setSubStep={setStep}
                                 payoutChannel={payoutChannel}
-                                amount={userDetails?.country?.kyc_fee}
+                                amount={feeDetails?.base_fee_breakdown?.base_fee_usd || userDetails?.country?.kyc_fee}
                                 card_cvc={cvc}
                                 card_expiry={expiry}
                                 card_number={cardNumber}
                                 saveCard={saveCard}
-                                type='kyc_fee'
+                                type={isKYB ? "kyb" : 'kyc_fee'}
                                 reEnterCallback={() => {
                                     setStep(2)
                                 }}
                                 paymentWithSavedCard={currentCard?._id ? true : false}
                                 currentCard={currentCard}
+                                sendKybWalletOTP={sendOtp}
                             // wallet={userWallets?.find(item => item?.currency?.code === "USD")}
                             />
                         }
                         {
-                            step < 3
+                            step < 3 && !isKYB
                             &&
                             <h5 style={{ marginTop: "1rem" }}>A fee of ${userDetails?.country?.kyc_fee} will be charged for the verification process.</h5>
                         }

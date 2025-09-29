@@ -699,7 +699,7 @@ const Basic = ({ setCurrentTab }) => {
                             <Label>{t("Address")}  {
                                 !address
                                 && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
-                            <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={address} onChange={e => setAddress(e.target.value)} />
+                            <Input disabled={!isEditMode || (isVerified && address)} readOnly={!isEditMode || (isVerified && address)} value={address} onChange={e => setAddress(e.target.value)} />
                         </FormGroup>
                     }
                     <FormGroup style={{ position: "relative" }}>
@@ -791,7 +791,7 @@ const Basic = ({ setCurrentTab }) => {
                             {t("Postal Code")}
                             {!postalCode && <span style={{ color: "red" }}>{t("(Required)")}</span>}
                         </Label>
-                        <Input disabled={!isEditMode || isVerified} readOnly={!isEditMode || isVerified} value={postalCode} onChange={e => setPostalCode(e.target.value)} />
+                        <Input disabled={!isEditMode || (isVerified && postalCode)} readOnly={!isEditMode || (isVerified && postalCode)} value={postalCode} onChange={e => setPostalCode(e.target.value)} />
                     </FormGroup>
 
                 </CardBody>

@@ -134,13 +134,13 @@ const HowOthersFindYou = () => {
                         <tr>
                             <td style={{ width: "100%" }} data-label="Name">{t("Name")}</td>
                             <td data-label={t("Name")}>
-                                <Switch checked={nameActive} disabled={true} />
+                                <Switch checked={nameActive} />
                             </td>
                         </tr>
                         <tr>
                             <td style={{ width: "100%" }} data-label="Username">{t("Username")}</td>
                             <td data-label={t("Username")}>
-                                <Switch checked={usernameActive} disabled={true} />
+                                <Switch checked={usernameActive} />
                             </td>
                         </tr>
                     </tbody>
