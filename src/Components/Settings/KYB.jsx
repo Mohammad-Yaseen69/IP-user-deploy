@@ -14,7 +14,6 @@ import SoleTradedDocs from './SoleTradedDocs'
 import UploadAdditionalKYB from './UploadAdditionalKYB'
 import { DatePicker } from '@material-ui/pickers'
 import { toast } from 'react-toastify'
-import { minDate } from './Basic'
 import VerificationPayment from './VerificationPayment'
 import { useMutation } from '@tanstack/react-query'
 
@@ -211,12 +210,7 @@ const KYB = () => {
 
     const handleDateChange = (date) => {
         if (date) {
-            const selected = new Date(date);
-            if (selected <= minDate) {
-                setDateOfI(date.format("DD-MM-YYYY"));
-            } else {
-                toast.error('Please select a date at least 15 years ago or earlier.');
-            }
+            setDateOfI(date.format("DD-MM-YYYY"));
         } else {
             setDateOfI("");
         }
@@ -281,7 +275,7 @@ const KYB = () => {
 
                         <FormGroup>
                             <Label>
-                                {t("Registration Number")}
+                                {t("Registration Number")} <span style={{ color: "red", fontWeight: 600 }}>*</span> 
                             </Label>
                             <Input
                                 type='text'
@@ -292,7 +286,7 @@ const KYB = () => {
                         </FormGroup>
                         <FormGroup>
                             <Label>
-                                {t("Taxation Id")}
+                                {t("Taxation Id")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                             </Label>
                             <Input
                                 type='text'
@@ -303,7 +297,7 @@ const KYB = () => {
                         </FormGroup>
                         <FormGroup>
                             <Label>
-                                {t("Date of Incorporation")}
+                                {t("Date of Incorporation")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                             </Label>
                             <DatePicker
                                 value={dateOfI || null}
@@ -311,7 +305,6 @@ const KYB = () => {
                                 format="DD/MM/YYYY"
                                 className="form-control custom-datepicker"
                                 placeholder="DD/MM/YYYY"
-                                maxDate={minDate}
                                 clearable
                                 autoOk
                                 style={{
