@@ -244,7 +244,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                 &&
                 <Modal isOpen={isOpen}>
                     <ModalHeader toggle={toggle}>
-                        Payment For KYC Verification
+                        Payment For {isKYB ? "KYB" : t("KYC")} Verification
                     </ModalHeader>
                     <ModalBody>
                         {
@@ -441,6 +441,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                 paymentWithSavedCard={currentCard?._id ? true : false}
                                 currentCard={currentCard}
                                 sendKybWalletOTP={sendOtp}
+                                kybFeeDets={feeDetails}
                             // wallet={userWallets?.find(item => item?.currency?.code === "USD")}
                             />
                         }

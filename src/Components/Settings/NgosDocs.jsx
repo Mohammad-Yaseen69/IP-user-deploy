@@ -1,7 +1,60 @@
-import React, { useState } from 'react'
+ import React, { useState, useContext } from 'react'
 import { FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import styles from "./styles/doctype.module.css"
 import { CheckCircle, Info } from 'react-feather'
+import { UserContext } from '../../Context/UserContext'
+
+const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, userDetails, checkFileStatus }) => {
+    const existingFile = userDetails?.company?.kyb_files?.find(f => f.document_name === docName)
+    const [localFile, setLocalFile] = useState(null)
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0]
+        if (file) {
+            setLocalFile(file)
+            setCompanyFiles(prev => {
+                const idx = prev.findIndex(f => f?.document_name === docName)
+                if (idx !== -1) {
+                    const updated = [...prev]
+                    updated[idx] = { file, document_name: docName }
+                    return updated
+                }
+                return [...prev, file]
+            })
+            setCompanyFileNames(prev => (prev.includes(docName) ? prev : [...prev, docName]))
+        }
+    }
+
+    if (userDetails?.kyb_verification_paid) {
+        return (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '.7rem', fontSize: '1rem', fontWeight: 500 }}>
+                <CheckCircle color='green' />
+                {checkFileStatus(docName)?.status?.toUpperCase()}
+            </div>
+        )
+    }
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
+            {existingFile && !localFile && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <span style={{ fontWeight: 500 }}>
+                        Uploaded: <a href={existingFile.file_link} target="_blank" rel="noopener noreferrer">{existingFile.key?.split('/')?.[2]}</a>
+                    </span>
+                </div>
+            )}
+            {localFile && (
+                <div style={{ color: 'green', fontWeight: 500 }}>
+                    Selected: {localFile.name}
+                </div>
+            )}
+            <Input type='file' name={docName} onChange={handleFileChange} style={{ maxWidth: 300 }} />
+            {existingFile && !localFile && (
+                <small style={{ color: '#888' }}>Choose a new file to replace the existing one.</small>
+            )}
+        </div>
+    )
+}
 
 const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => {
     const [modalOne, setModalOne] = useState(false)
@@ -10,30 +63,20 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => 
     const [modalFour, setModalFour] = useState(false)
     const [modalFive, setModalFive] = useState(false)
     const [modalSix, setModalSix] = useState(false)
+    const { userDetails } = useContext(UserContext)
     return (
         <div className={styles.container}>
             <h5>Documents Required: </h5>
             <div>
                 <FormGroup>
                     <Label>Entity's Registry Extract (Entity'sRegistration/Creation Document) <Info className={styles.info_icon} size={16} onClick={() => setModalOne(!modalOne)} /></Label>
-                    {
-                        checkFileStatus("Entity's Registry Extract (Entity'sRegistration/Creation Document)")
-                            ?
-                            <div style={{ display: "flex", alignItems: "center", gap: ".7rem", fontSize: "1rem", fontWeight: 500 }}>
-                                <CheckCircle color='green' />
-                                {
-                                    checkFileStatus("Entity's Registry Extract (Entity'sRegistration/Creation Document)")?.status?.toUpperCase()
-                                }
-                            </div>
-                            :
-                            <Input type='file' name={`Entity's Registry Extract (Entity'sRegistration/Creation Document)`} onChange={e => {
-                                const file = e.target?.files?.[0];
-                                if (file) {
-                                    setCompanyFiles((prevFiles) => [...prevFiles, file]);
-                                    setCompanyFileNames((prevFiles) => [...prevFiles, e.target.name]);
-                                }
-                            }} />
-                    }
+                    <FileUploadWithPreview
+                        docName={`Entity's Registry Extract (Entity'sRegistration/Creation Document)`}
+                        setCompanyFiles={setCompanyFiles}
+                        setCompanyFileNames={setCompanyFileNames}
+                        userDetails={userDetails}
+                        checkFileStatus={checkFileStatus}
+                    />
                 </FormGroup>
                 <Modal isOpen={modalOne} toggle={() => setModalOne(!modalOne)} style={{ minWidth: "60vw" }}>
                     <ModalHeader toggle={() => setModalOne(!modalOne)}>Details</ModalHeader>
@@ -78,24 +121,13 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => 
             <div>
                 <FormGroup>
                     <Label>Articles of Association <Info className={styles.info_icon} size={16} onClick={() => setModalTwo(!modalTwo)} /></Label>
-                    {
-                        checkFileStatus("Articles of Association")
-                            ?
-                            <div style={{ display: "flex", alignItems: "center", gap: ".7rem", fontSize: "1rem", fontWeight: 500 }}>
-                                <CheckCircle color='green' />
-                                {
-                                    checkFileStatus("Articles of Association")?.status?.toUpperCase()
-                                }
-                            </div>
-                            :
-                            <Input type='file' name={`Articles of Association`} onChange={e => {
-                                const file = e.target?.files?.[0];
-                                if (file) {
-                                    setCompanyFiles((prevFiles) => [...prevFiles, file]);
-                                    setCompanyFileNames((prevFiles) => [...prevFiles, e.target.name]);
-                                }
-                            }} />
-                    }
+                    <FileUploadWithPreview
+                        docName={`Articles of Association`}
+                        setCompanyFiles={setCompanyFiles}
+                        setCompanyFileNames={setCompanyFileNames}
+                        userDetails={userDetails}
+                        checkFileStatus={checkFileStatus}
+                    />
                 </FormGroup>
                 <Modal isOpen={modalTwo} toggle={() => setModalTwo(!modalTwo)} style={{ minWidth: "60vw" }}>
                     <ModalHeader toggle={() => setModalTwo(!modalTwo)}>Details</ModalHeader>
@@ -140,24 +172,13 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => 
             <div>
                 <FormGroup>
                     <Label>Proof of Legal Representative's Authority <Info className={styles.info_icon} size={16} onClick={() => setModalThree(!modalThree)} /></Label>
-                    {
-                        checkFileStatus("Proof of Legal Representative's Authority")
-                            ?
-                            <div style={{ display: "flex", alignItems: "center", gap: ".7rem", fontSize: "1rem", fontWeight: 500 }}>
-                                <CheckCircle color='green' />
-                                {
-                                    checkFileStatus("Proof of Legal Representative's Authority")?.status?.toUpperCase()
-                                }
-                            </div>
-                            :
-                            <Input type='file' name={`Proof of Legal Representative's Authority`} onChange={e => {
-                                const file = e.target?.files?.[0];
-                                if (file) {
-                                    setCompanyFiles((prevFiles) => [...prevFiles, file]);
-                                    setCompanyFileNames((prevFiles) => [...prevFiles, e.target.name]);
-                                }
-                            }} />
-                    }
+                    <FileUploadWithPreview
+                        docName={`Proof of Legal Representative's Authority`}
+                        setCompanyFiles={setCompanyFiles}
+                        setCompanyFileNames={setCompanyFileNames}
+                        userDetails={userDetails}
+                        checkFileStatus={checkFileStatus}
+                    />
                 </FormGroup>
                 <Modal isOpen={modalThree} toggle={() => setModalThree(!modalThree)} style={{ minWidth: "60vw" }}>
                     <ModalHeader toggle={() => setModalThree(!modalThree)}>Details</ModalHeader>
@@ -195,24 +216,13 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => 
             <div>
                 <FormGroup>
                     <Label>Ownership Structure & Ultimate Beneficial Owners (UBOs) <Info className={styles.info_icon} size={16} onClick={() => setModalFour(!modalFour)} /></Label>
-                    {
-                        checkFileStatus("Ownership Structure & Ultimate Beneficial Owners (UBOs)")
-                            ?
-                            <div style={{ display: "flex", alignItems: "center", gap: ".7rem", fontSize: "1rem", fontWeight: 500 }}>
-                                <CheckCircle color='green' />
-                                {
-                                    checkFileStatus("Ownership Structure & Ultimate Beneficial Owners (UBOs)")?.status?.toUpperCase()
-                                }
-                            </div>
-                            :
-                            <Input type='file' name={`Ownership Structure & Ultimate Beneficial Owners (UBOs)`} onChange={e => {
-                                const file = e.target?.files?.[0];
-                                if (file) {
-                                    setCompanyFiles((prevFiles) => [...prevFiles, file]);
-                                    setCompanyFileNames((prevFiles) => [...prevFiles, e.target.name]);
-                                }
-                            }} />
-                    }
+                    <FileUploadWithPreview
+                        docName={`Ownership Structure & Ultimate Beneficial Owners (UBOs)`}
+                        setCompanyFiles={setCompanyFiles}
+                        setCompanyFileNames={setCompanyFileNames}
+                        userDetails={userDetails}
+                        checkFileStatus={checkFileStatus}
+                    />
                 </FormGroup>
                 <Modal isOpen={modalFour} toggle={() => setModalFour(!modalFour)} style={{ minWidth: "60vw" }}>
                     <ModalHeader toggle={() => setModalFour(!modalFour)}>Details</ModalHeader>
@@ -231,24 +241,13 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => 
             <div>
                 <FormGroup>
                     <Label>Collection of Identification Documents <Info className={styles.info_icon} size={16} onClick={() => setModalFive(!modalFive)} /></Label>
-                    {
-                        checkFileStatus("Collection of Identification Documents")
-                            ?
-                            <div style={{ display: "flex", alignItems: "center", gap: ".7rem", fontSize: "1rem", fontWeight: 500 }}>
-                                <CheckCircle color='green' />
-                                {
-                                    checkFileStatus("Collection of Identification Documents")?.status?.toUpperCase()
-                                }
-                            </div>
-                            :
-                            <Input type='file' name={`Collection of Identification Documents`} onChange={e => {
-                                const file = e.target?.files?.[0];
-                                if (file) {
-                                    setCompanyFiles((prevFiles) => [...prevFiles, file]);
-                                    setCompanyFileNames((prevFiles) => [...prevFiles, e.target.name]);
-                                }
-                            }} />
-                    }
+                    <FileUploadWithPreview
+                        docName={`Collection of Identification Documents`}
+                        setCompanyFiles={setCompanyFiles}
+                        setCompanyFileNames={setCompanyFileNames}
+                        userDetails={userDetails}
+                        checkFileStatus={checkFileStatus}
+                    />
                 </FormGroup>
                 <Modal isOpen={modalFive} toggle={() => setModalFive(!modalFive)} style={{ minWidth: "60vw" }}>
                     <ModalHeader toggle={() => setModalFive(!modalFive)}>Details</ModalHeader>
@@ -281,24 +280,13 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => 
             <div>
                 <FormGroup>
                     <Label>Additional Documents <Info className={styles.info_icon} size={16} onClick={() => setModalSix(!modalSix)} /></Label>
-                    {
-                        checkFileStatus("Additional Documents")
-                            ?
-                            <div style={{ display: "flex", alignItems: "center", gap: ".7rem", fontSize: "1rem", fontWeight: 500 }}>
-                                <CheckCircle color='green' />
-                                {
-                                    checkFileStatus("Additional Documents")?.status?.toUpperCase()
-                                }
-                            </div>
-                            :
-                            <Input type='file' name={`Additional Documents`} onChange={e => {
-                                const file = e.target?.files?.[0];
-                                if (file) {
-                                    setCompanyFiles((prevFiles) => [...prevFiles, file]);
-                                    setCompanyFileNames((prevFiles) => [...prevFiles, e.target.name]);
-                                }
-                            }} />
-                    }
+                    <FileUploadWithPreview
+                        docName={`Additional Documents`}
+                        setCompanyFiles={setCompanyFiles}
+                        setCompanyFileNames={setCompanyFileNames}
+                        userDetails={userDetails}
+                        checkFileStatus={checkFileStatus}
+                    />
                 </FormGroup>
                 <Modal isOpen={modalSix} toggle={() => setModalSix(!modalSix)} style={{ minWidth: "60vw" }}>
                     <ModalHeader toggle={() => setModalSix(!modalSix)}>Details</ModalHeader>

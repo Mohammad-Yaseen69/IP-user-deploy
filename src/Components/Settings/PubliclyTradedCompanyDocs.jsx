@@ -1,7 +1,60 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import styles from "./styles/doctype.module.css"
 import { CheckCircle, Info } from 'react-feather'
+import { UserContext } from '../../Context/UserContext'
+
+const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, userDetails, checkFileStatus }) => {
+    const existingFile = userDetails?.company?.kyb_files?.find(f => f.document_name === docName)
+    const [localFile, setLocalFile] = useState(null)
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0]
+        if (file) {
+            setLocalFile(file)
+            setCompanyFiles(prev => {
+                const idx = prev.findIndex(f => f?.document_name === docName)
+                if (idx !== -1) {
+                    const updated = [...prev]
+                    updated[idx] = { file, document_name: docName }
+                    return updated
+                }
+                return [...prev, file]
+            })
+            setCompanyFileNames(prev => (prev.includes(docName) ? prev : [...prev, docName]))
+        }
+    }
+
+    if (userDetails?.kyb_verification_paid) {
+        return (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '.7rem', fontSize: '1rem', fontWeight: 500 }}>
+                <CheckCircle color='green' />
+                {checkFileStatus(docName)?.status?.toUpperCase()}
+            </div>
+        )
+    }
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
+            {existingFile && !localFile && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <span style={{ fontWeight: 500 }}>
+                        Uploaded: <a href={existingFile.file_link} target="_blank" rel="noopener noreferrer">{existingFile.key?.split('/')?.[2]}</a>
+                    </span>
+                </div>
+            )}
+            {localFile && (
+                <div style={{ color: 'green', fontWeight: 500 }}>
+                    Selected: {localFile.name}
+                </div>
+            )}
+            <Input type='file' name={docName} onChange={handleFileChange} style={{ maxWidth: 300 }} />
+            {existingFile && !localFile && (
+                <small style={{ color: '#888' }}>Choose a new file to replace the existing one.</small>
+            )}
+        </div>
+    )
+}
 
 const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => {
     const [modalOne, setModalOne] = useState(false)
@@ -9,33 +62,22 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
     const [modalThree, setModalThree] = useState(false)
     const [modalFour, setModalFour] = useState(false)
     const [modalFive, setModalFive] = useState(false)
+    const { userDetails } = useContext(UserContext)
     return (
         <div className={styles.container}>
             <h5>Documents Required: </h5>
             <div>
                 <FormGroup>
                     <Label>Official Company Registry Extract (Entity's Registration/Incorporation Document) <Info className={styles.info_icon} size={16} onClick={() => setModalOne(!modalOne)} /></Label>
-                    {
-                        checkFileStatus("Official Company Registry Extract (Entity's Registration/Incorporation Document)")
-                            ?
-                            <div style={{ display: "flex", alignItems: "center", gap: ".7rem", fontSize: "1rem", fontWeight: 500 }}>
-                                <CheckCircle color='green' />
-                                {
-                                    checkFileStatus("Official Company Registry Extract (Entity's Registration/Incorporation Document)")?.status?.toUpperCase()
-                                }
-                            </div>
-                            :
-                            <Input type='file' name={`Official Company Registry Extract (Entity's Registration/Incorporation Document)`} onChange={e => {
-                                const file = e.target?.files?.[0];
-                                if (file) {
-                                    setCompanyFiles((prevFiles) => [...prevFiles, file]);
-                                    setCompanyFileNames((prevFiles) => [...prevFiles, e.target.name]);
-                                }
-                            }} />
-
-                    }
+                    <FileUploadWithPreview
+                        docName={`Official Company Registry Extract (Entity's Registration/Incorporation Document)`}
+                        setCompanyFiles={setCompanyFiles}
+                        setCompanyFileNames={setCompanyFileNames}
+                        userDetails={userDetails}
+                        checkFileStatus={checkFileStatus}
+                    />
                 </FormGroup>
-                <Modal isOpen={modalOne} toggle={() => setModalOne(!modalOne)} style={{ minWidth: "60vw" }}>
+                <Modal isOpen={modalOne} toggle={() => setModalOne(!modalOne)} style={{ minWidth: '60vw' }}>
                     <ModalHeader toggle={() => setModalOne(!modalOne)}>Details</ModalHeader>
                     <ModalBody>
                         <div className={styles.content}>
@@ -75,27 +117,15 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
             <div>
                 <FormGroup>
                     <Label>Proof of Legal Representative's Authority <Info className={styles.info_icon} size={16} onClick={() => setModalTwo(!modalTwo)} /></Label>
-                    {
-                        checkFileStatus("Proof of Legal Representative's Authority")
-                            ?
-                            <div style={{ display: "flex", alignItems: "center", gap: ".7rem", fontSize: "1rem", fontWeight: 500 }}>
-                                <CheckCircle color='green' />
-                                {
-                                    checkFileStatus("Proof of Legal Representative's Authority")?.status?.toUpperCase()
-                                }
-                            </div>
-                            :
-                            <Input type='file' name={`Proof of Legal Representative's Authority`} onChange={e => {
-                                const file = e.target?.files?.[0];
-                                if (file) {
-                                    setCompanyFiles((prevFiles) => [...prevFiles, file]);
-                                    setCompanyFileNames((prevFiles) => [...prevFiles, e.target.name]);
-                                }
-                            }} />
-
-                    }
+                    <FileUploadWithPreview
+                        docName={`Proof of Legal Representative's Authority`}
+                        setCompanyFiles={setCompanyFiles}
+                        setCompanyFileNames={setCompanyFileNames}
+                        userDetails={userDetails}
+                        checkFileStatus={checkFileStatus}
+                    />
                 </FormGroup>
-                <Modal isOpen={modalTwo} toggle={() => setModalTwo(!modalTwo)} style={{ minWidth: "60vw" }}>
+                <Modal isOpen={modalTwo} toggle={() => setModalTwo(!modalTwo)} style={{ minWidth: '60vw' }}>
                     <ModalHeader toggle={() => setModalTwo(!modalTwo)}>Details</ModalHeader>
                     <ModalBody>
                         <div className={styles.content}>
@@ -119,27 +149,16 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
             <div>
                 <FormGroup>
                     <Label>Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation <Info className={styles.info_icon} size={16} onClick={() => setModalThree(!modalThree)} /></Label>
-                    {
-                        checkFileStatus("Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation")
-                            ?
-                            <div style={{ display: "flex", alignItems: "center", gap: ".7rem", fontSize: "1rem", fontWeight: 500 }}>
-                                <CheckCircle color='green' />
-                                {
-                                    checkFileStatus("Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation")?.status?.toUpperCase()
-                                }
-                            </div>
-                            :
-                            <Input type='file' name={`Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation`} onChange={e => {
-                                const file = e.target?.files?.[0];
-                                if (file) {
-                                    setCompanyFiles((prevFiles) => [...prevFiles, file]);
-                                    setCompanyFileNames((prevFiles) => [...prevFiles, e.target.name]);
-                                }
-                            }} />
+                    <FileUploadWithPreview
+                        docName={`Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation`}
+                        setCompanyFiles={setCompanyFiles}
+                        setCompanyFileNames={setCompanyFileNames}
+                        userDetails={userDetails}
+                        checkFileStatus={checkFileStatus}
+                    />
 
-                    }
                 </FormGroup>
-                <Modal isOpen={modalThree} toggle={() => setModalThree(!modalThree)} style={{ minWidth: "60vw" }}>
+                <Modal isOpen={modalThree} toggle={() => setModalThree(!modalThree)} style={{ minWidth: '60vw' }}>
                     <ModalHeader toggle={() => setModalThree(!modalThree)}>Details</ModalHeader>
                     <ModalBody>
                         <div className={styles.content}>
@@ -157,27 +176,15 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
             <div>
                 <FormGroup>
                     <Label>Collection of Identification Documents <Info className={styles.info_icon} size={16} onClick={() => setModalFour(!modalFour)} /></Label>
-                    {
-                        checkFileStatus("Collection of Identification Documents")
-                            ?
-                            <div style={{ display: "flex", alignItems: "center", gap: ".7rem", fontSize: "1rem", fontWeight: 500 }}>
-                                <CheckCircle color='green' />
-                                {
-                                    checkFileStatus("Collection of Identification Documents")?.status?.toUpperCase()
-                                }
-                            </div>
-                            :
-                            <Input type='file' name={`Collection of Identification Documents`} onChange={e => {
-                                const file = e.target?.files?.[0];
-                                if (file) {
-                                    setCompanyFiles((prevFiles) => [...prevFiles, file]);
-                                    setCompanyFileNames((prevFiles) => [...prevFiles, e.target.name]);
-                                }
-                            }} />
-
-                    }
+                    <FileUploadWithPreview
+                        docName={`Collection of Identification Documents`}
+                        setCompanyFiles={setCompanyFiles}
+                        setCompanyFileNames={setCompanyFileNames}
+                        userDetails={userDetails}
+                        checkFileStatus={checkFileStatus}
+                    />
                 </FormGroup>
-                <Modal isOpen={modalFour} toggle={() => setModalFour(!modalFour)} style={{ minWidth: "60vw" }}>
+                <Modal isOpen={modalFour} toggle={() => setModalFour(!modalFour)} style={{ minWidth: '60vw' }}>
                     <ModalHeader toggle={() => setModalFour(!modalFour)}>Details</ModalHeader>
                     <ModalBody>
                         <div className={styles.content}>
@@ -206,27 +213,15 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
             <div>
                 <FormGroup>
                     <Label>Additional Documents <Info className={styles.info_icon} size={16} onClick={() => setModalFive(!modalFive)} /></Label>
-                    {
-                        checkFileStatus("Additional Documents")
-                            ?
-                            <div style={{ display: "flex", alignItems: "center", gap: ".7rem", fontSize: "1rem", fontWeight: 500 }}>
-                                <CheckCircle color='green' />
-                                {
-                                    checkFileStatus("Additional Documents")?.status?.toUpperCase()
-                                }
-                            </div>
-                            :
-                            <Input type='file' name={`Additional Documents`} onChange={e => {
-                                const file = e.target?.files?.[0];
-                                if (file) {
-                                    setCompanyFiles((prevFiles) => [...prevFiles, file]);
-                                    setCompanyFileNames((prevFiles) => [...prevFiles, e.target.name]);
-                                }
-                            }} />
-
-                    }
+                    <FileUploadWithPreview
+                        docName={`Additional Documents`}
+                        setCompanyFiles={setCompanyFiles}
+                        setCompanyFileNames={setCompanyFileNames}
+                        userDetails={userDetails}
+                        checkFileStatus={checkFileStatus}
+                    />
                 </FormGroup>
-                <Modal isOpen={modalFive} toggle={() => setModalFive(!modalFive)} style={{ minWidth: "60vw" }}>
+                <Modal isOpen={modalFive} toggle={() => setModalFive(!modalFive)} style={{ minWidth: '60vw' }}>
                     <ModalHeader toggle={() => setModalFive(!modalFive)}>Details</ModalHeader>
                     <ModalBody>
                         <div className={styles.content}>
