@@ -119,34 +119,36 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
             <td>{partner?.email}</td>
             <td>{partner?.designation}</td>
             <td style={{ display: "flex", gap: ".75rem" }}>
-                <Button color="primary" style={{
-                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                    border: "none",
-                    outline: "none",
-                    borderRadius: "5px",
-                    padding: "5px",
-                    fontSize: ".7rem",
-                    display: "flex", alignItems: "center"
-                }}
-                    onClick={() => setShowEditModal(!showEditModal)}
-                >
-                    <Edit size={15} />
-                </Button>
-                <Button color="primary" style={{
-                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                    border: "none",
-                    outline: "none",
-                    borderRadius: "5px",
-                    padding: "5px",
-                    fontSize: ".7rem",
-                    display: "flex", alignItems: "center"
-                }}
-                    onClick={() => setShowDeleteModal(!showDeleteModal)}
-                >
-                    <Trash2 size={15} />
-                </Button>
+                {!userDetails?.kyb_verification_paid && <>
+                    <Button color="primary" style={{
+                        background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                        border: "none",
+                        outline: "none",
+                        borderRadius: "5px",
+                        padding: "5px",
+                        fontSize: ".7rem",
+                        display: "flex", alignItems: "center"
+                    }}
+                        onClick={() => setShowEditModal(!showEditModal)}
+                    >
+                        <Edit size={15} />
+                    </Button>
+                    <Button color="primary" style={{
+                        background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                        border: "none",
+                        outline: "none",
+                        borderRadius: "5px",
+                        padding: "5px",
+                        fontSize: ".7rem",
+                        display: "flex", alignItems: "center"
+                    }}
+                        onClick={() => setShowDeleteModal(!showDeleteModal)}
+                    >
+                        <Trash2 size={15} />
+                    </Button>
+                </>}
                 {
-                    emailSent
+                    userDetails?.kyb_verification_paid && emailSent
                         ?
                         <CheckCircle color="green" />
                         :
@@ -200,13 +202,13 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
                             display: "flex",
                             justifyContent: "center", alignItems: "center"
                         }}>
-                            {partnerFiles.length}
+                            {partnerFiles?.length}
                         </div>
                     </Button>
                 }
             </td>
             {
-                partnerFiles.length > 0
+                partnerFiles?.length > 0
                 &&
                 <UploadAdditionalKYB files={partnerFiles} isOpen={showAdditionalModal} toggle={() => setShowAdditionalModal(!showAdditionalModal)} user_id={userDetails?._id} type="partner" partner_id={partner?._id} />
             }
