@@ -28,7 +28,7 @@ const FileUploadWithPreview = ({
                 console.log(idx)
                 if (idx !== -1) {
                     const updated = [...prev];
-                    updated[idx] = { file };
+                    updated[idx] = { file, document_name: docName };
                     return updated;
                 }
                 return [...prev, file];

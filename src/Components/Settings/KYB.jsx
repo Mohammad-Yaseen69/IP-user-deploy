@@ -113,27 +113,40 @@ const KYB = () => {
     const addPartnerHandler = async () => {
         setAdding(true)
         try {
-            const payload = {
-                name: partnerName,
-                email: partnerEmail,
-                designation: partnerDesignation,
-                account_id: userDetails?._id
-            }
-            const encrypted = encryptData(payload)
-            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/company/add-partner`, {
-                data: encrypted
-            }, {
-                headers: authHeader
-            })
-            const data = await decryptData(response.data.data)
-            setAdding(false)
-            setShowAddModal(false)
-            setPartners(prev => [data.partner, ...prev])
-            // console.log(data)
+            if (userDetails?.company?.kyb_files?.length === 0) {
+                setPartners(prev => [{
+                    name: partnerName,
+                    email: partnerEmail,
+                    designation: partnerDesignation,
+                }, ...prev])
+                setPartnerName("")
+                setPartnerEmail("")
+                setPartnerDesignation("")
+                setAdding(false)
+                setShowAddModal(false)
+            } else {
+                const payload = {
+                    name: partnerName,
+                    email: partnerEmail,
+                    designation: partnerDesignation,
+                    account_id: userDetails?._id
+                }
+                const encrypted = encryptData(payload)
+                const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/company/add-partner`, {
+                    data: encrypted
+                }, {
+                    headers: authHeader
+                })
+                const data = await decryptData(response.data.data)
+                setAdding(false)
+                setShowAddModal(false)
+                setPartners(prev => [data.partner, ...prev])
+                // console.log(data)
 
-            setPartnerName("")
-            setPartnerEmail("")
-            setPartnerDesignation("")
+                setPartnerName("")
+                setPartnerEmail("")
+                setPartnerDesignation("")
+            }
         } catch (error) {
             setAdding(false)
             // console.log(decryptData(error?.response?.data?.data))
@@ -173,7 +186,7 @@ const KYB = () => {
 
             formdata.append("account_id", userDetails?._id)
             formdata.append("business_type", companyType?._id)
-            editedEntries.forEach(({ file }) => formdata.append('files', file));
+            editedEntries.forEach(({ file }) => formdata.append('files', file?.file));
             editedEntries.forEach(({ name }, i) => formdata.append(`file_names[${i}]`, name));
 
             formdata.append("registration_number", registrationNum);
@@ -210,7 +223,7 @@ const KYB = () => {
 
     const handleDateChange = (date) => {
         if (date) {
-            setDateOfI(date.format("DD-MM-YYYY"));
+            setDateOfI(date);
         } else {
             setDateOfI("");
         }
@@ -275,7 +288,7 @@ const KYB = () => {
 
                         <FormGroup>
                             <Label>
-                                {t("Registration Number")} <span style={{ color: "red", fontWeight: 600 }}>*</span> 
+                                {t("Registration Number")} <span style={{ color: "red", fontWeight: 600 }}>*</span>
                             </Label>
                             <Input
                                 type='text'
@@ -304,7 +317,6 @@ const KYB = () => {
                                 onChange={handleDateChange}
                                 format="DD/MM/YYYY"
                                 className="form-control custom-datepicker"
-                                placeholder="DD/MM/YYYY"
                                 clearable
                                 autoOk
                                 style={{
