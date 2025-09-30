@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Badge, Button, Card, CardBody, CardHeader, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Table } from 'reactstrap'
 import { useTranslation } from 'react-i18next'
 import { UserContext } from '../../Context/UserContext'
@@ -167,7 +167,7 @@ const KYB = () => {
 
             const editedEntries = compnanyFiles
                 .map((file, idx) => ({ file, name: compnanyFileNames[idx] }))
-                .filter(({ file }) => file && (file instanceof File || !('status' in file)));
+                .filter(({ file }) => file && (file instanceof File || !('status' in file)))?.filter(entry => entry.name !== undefined);
 
             if (editedEntries?.length === 0) {
                 setShowPaymentModal(true);
@@ -184,7 +184,7 @@ const KYB = () => {
 
             formdata.append("registration_number", registrationNum);
             formdata.append("tax_id", taxId);
-            formdata.append("date_of_incorporation", dateOfI);
+            formdata.append("date_of_incorporation", dateOfI.format("DD-MM-YYYY"));
             console.log(compnanyFileNames?.filter(name => !compnanyFiles.find(f => f.document_name === name)))
 
             if (userDetails?.company?.kyb_files?.length === 0) {
@@ -228,7 +228,9 @@ const KYB = () => {
     };
 
 
-    console.log(partners)
+    const requiredFilesLength = useMemo(() => {
+        return companyType?.name?.toLowerCase()?.includes("ngos") ? 6 : companyType?.name?.toLowerCase()?.includes("sole") ? 3 : 5
+    }, [companyType])
     return (
         <Card>
             <CardHeader style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -433,7 +435,7 @@ const KYB = () => {
                             outline: "none",
                             alignSelf: "flex-end "
                         }}
-                        disabled={isUploading || compnanyFiles?.length === 0 || partners?.length === 0 || !taxId || !dateOfI || !registrationNum}
+                        disabled={isUploading || compnanyFiles?.length === 0 || partners?.length === 0 || !taxId || !dateOfI || !registrationNum || compnanyFileNames.length < requiredFilesLength}
                         onClick={uploadKybFiles}
                     >{t("Submit")}</Button>
                 }
