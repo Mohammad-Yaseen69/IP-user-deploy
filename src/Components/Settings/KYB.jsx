@@ -88,9 +88,12 @@ const KYB = () => {
             if (userDetails?.company?.kyb_files?.length > 0) {
                 setCompanyFiles(userDetails.company.kyb_files)
                 setCompanyFileNames(userDetails?.company?.kyb_files?.map(f => f?.document_name))
-                setDateOfI(userDetails?.company?.date_of_incorporation)
                 setTaxId(userDetails?.company?.tax_id)
                 setRegistrationNum(userDetails?.company?.registration_number)
+                if (userDetails?.company?.date_of_incorporation) {
+                    const [day, month, year] = userDetails.company.date_of_incorporation.split("-")
+                    setDateOfI(new Date(`${year}-${month}-${day}`))
+                }
             }
         }
     }, [userDetails])
