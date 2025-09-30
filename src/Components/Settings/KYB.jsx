@@ -16,6 +16,23 @@ import { DatePicker } from '@material-ui/pickers'
 import VerificationPayment from './VerificationPayment'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
+import { format } from 'date-fns'
+
+
+function getFirstLargeFileName(files) {
+    if (!files || files.length === 0) return false
+
+    const limit = 20 * 1024 * 1024 // 20MB in bytes
+
+    for (let i = 0; i < files.length; i++) {
+        if (files[i].size > limit) {
+            return files[i].name
+        }
+    }
+
+    return false
+}
+
 
 
 const getFeeAmount = async ({ payload, authHeader }) => {
@@ -31,7 +48,7 @@ const getFeeAmount = async ({ payload, authHeader }) => {
 
 const KYB = () => {
     const { t } = useTranslation()
-    const { userDetails, authHeader } = useContext(UserContext)
+    const { userDetails, authHeader, setUserDetails } = useContext(UserContext)
     const { mutateAsync } = useMutation({
         mutationFn: (payload) => getFeeAmount({ payload, authHeader }),
     })
@@ -163,19 +180,31 @@ const KYB = () => {
     }, [userDetails])
 
     const uploadKybFiles = async () => {
+        console.log(compnanyFiles
+            .map((file, idx) => ({ file, name: compnanyFileNames[idx] })), compnanyFiles, compnanyFileNames)
+
+        const editedEntries = compnanyFiles
+            .map((file, idx) => ({ file, name: compnanyFileNames[idx] }))
+            .filter(({ file }) => file && (file instanceof File || !('status' in file)))?.filter(entry => entry.name !== undefined);
+
+        if (editedEntries?.length === 0) {
+            const data = await mutateAsync({
+                payment_type: "card"
+            })
+            setFeeAmount(data?.base_fee_breakdown?.base_fee_usd)
+            setShowPaymentModal(true);
+            return;
+        }
+
+        const bigFile = getFirstLargeFileName(editedEntries?.map(item => item?.file?.file || item?.file))
+
+        if (bigFile) {
+            toast.error(`${bigFile} is larger then 20MB please select smaller file.`)
+            return;
+        }
+
         setIsUploading(true)
         try {
-            console.log(compnanyFiles
-                .map((file, idx) => ({ file, name: compnanyFileNames[idx] })), compnanyFiles, compnanyFileNames)
-
-            const editedEntries = compnanyFiles
-                .map((file, idx) => ({ file, name: compnanyFileNames[idx] }))
-                .filter(({ file }) => file && (file instanceof File || !('status' in file)))?.filter(entry => entry.name !== undefined);
-
-            if (editedEntries?.length === 0) {
-                setShowPaymentModal(true);
-                return;
-            }
             const formdata = new FormData()
 
             console.log(editedEntries)
@@ -187,7 +216,11 @@ const KYB = () => {
 
             formdata.append("registration_number", registrationNum);
             formdata.append("tax_id", taxId);
-            formdata.append("date_of_incorporation", dateOfI.format("DD-MM-YYYY"));
+            console.log(dateOfI)
+            formdata.append(
+                "date_of_incorporation",
+                format(new Date(dateOfI), "dd-MM-yyyy")
+            )
             console.log(compnanyFileNames?.filter(name => !compnanyFiles.find(f => f.document_name === name)))
 
             if (userDetails?.company?.kyb_files?.length === 0) {
@@ -204,13 +237,15 @@ const KYB = () => {
             const data = await mutateAsync({
                 payment_type: "card"
             })
-
             setFeeAmount(data?.base_fee_breakdown?.base_fee_usd)
+            setUserDetails(prev => ({ ...prev, company: decrypted?.results?.company }))
             setShowPaymentModal(true)
             console.log(decrypted)
         } catch (error) {
+            console.log(error)
             const dec = decryptData(error.response?.data?.data)
-            toast.error(dec?.message?.toLowerCase()?.includes("big") ? "Some of your file are larger then 20MB please select smaller files." : dec?.message)
+            const fileName = getFirstLargeFileName(editedEntries?.map(item => item?.file?.file || item?.file))
+            toast.error(dec?.message?.toLowerCase()?.includes("big") ? `${fileName} is larger then 20MB please select smaller a smaller file.` : dec?.message)
             // console.log(decryptData(error?.response?.data?.data))
         } finally {
             setIsUploading(false)
@@ -236,6 +271,8 @@ const KYB = () => {
     const requiredFilesLength = useMemo(() => {
         return companyType?.name?.toLowerCase()?.includes("ngos") ? 6 : companyType?.name?.toLowerCase()?.includes("sole") ? 3 : 5
     }, [companyType])
+
+    console.log(partners)
     return (
         <Card>
             <CardHeader style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -417,6 +454,7 @@ const KYB = () => {
                                                 <td>Email</td>
                                                 <td>Designation</td>
                                                 <td>Actions</td>
+                                                <td>Status</td>
                                             </tr>
                                         </thead>
                                         <tbody>

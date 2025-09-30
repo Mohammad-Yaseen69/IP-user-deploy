@@ -22,7 +22,7 @@ import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
 
 const isBig = window.innerWidth > 1000
 
-const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, limits, setLimits, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP }) => {
+const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, limits, setLimits, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP, kybFeeDets }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [complete, setComplete] = useState(false);
@@ -273,7 +273,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                                 type === "add_fund" &&
                                 <SelectedWallet setSubStep={setSubStep} wallet={wallet} />
                             }
-                            <SelectedAmountAndCurrency amount={amount} currency={wallet?.currency?.code} setSubStep={setSubStep} step={2} />
+                            <SelectedAmountAndCurrency amount={amount} currency={kybFeeDets ? "USD" : wallet?.currency?.code} setSubStep={setSubStep} step={2} />
                             {
                                 payoutChannel?.icon
                                 &&

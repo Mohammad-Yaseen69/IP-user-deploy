@@ -1,12 +1,14 @@
 import { useContext, useEffect, useState } from "react"
 import { ModalFooter } from "react-bootstrap"
-import { CheckCircle, Edit, File, RefreshCw, Trash2 } from "react-feather"
+import { CheckCircle, Edit, File, RefreshCw, Trash2, Mail } from "react-feather"
 import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap"
 import { UserContext } from "../../Context/UserContext"
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import axios from "axios"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import UploadAdditionalKYB from "./UploadAdditionalKYB"
+import { useTranslation } from "react-i18next"
+import { capitalizeStatus } from "../PendingNew/ItemMobile"
 
 const KYBPartner = ({ partner, partners, setPartners, index }) => {
 
@@ -19,6 +21,7 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
     const [partnerDesignation, setPartnerDesignation] = useState(partner?.designation)
     const [emailSent, setEmailSent] = useState(false)
     const [showAdditionalModal, setShowAdditionalModal] = useState(false)
+    const { t } = useTranslation()
 
     const updatePartnerHandler = async () => {
         setUpdating(true)
@@ -148,7 +151,7 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
                     </Button>
                 </>}
                 {
-                    userDetails?.kyb_verification_paid &&
+                    (userDetails?.kyb_verification_paid && (!partner?.kyc_status || partner?.kyc_status === "initiated")) &&
                     <>
                         {
                             emailSent
@@ -168,10 +171,30 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
                                     disabled={updating}
                                     onClick={sendEmailVerification}
                                 >
-                                    <RefreshCw size={15} />
+                                    <Mail size={15} />
                                 </Button>
                         }
                     </>
+                }
+                {
+                    partner?.kyc_status === "declined" &&
+                    <Button color="primary" style={{
+                        background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                        border: "none",
+                        outline: "none",
+                        borderRadius: "5px",
+                        padding: "5px",
+                        fontSize: ".7rem",
+                        display: "flex", alignItems: "center"
+                    }}
+                        title="Verify"
+                    // onClick={sendEmailVerification}
+                    >
+                        <RefreshCw size={15} />
+                    </Button>
+                }
+                {
+                    (userDetails?.kyb_verification_paid && (partner?.kyc_status && partner?.kyc_status !== "initiated" && partner?.kyc_status !== "declined")) && <span style={{ fontWeight: 600, color: "darkgray" }}>{t("No Action Allowed")} </span>
                 }
                 {
                     partnerFiles?.length > 0 && partnerFiles?.some(item => item?.status === "requested")
@@ -211,6 +234,9 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
                         </div>
                     </Button>
                 }
+            </td>
+            <td style={{ color: partner?.kyc_status === "approved" ? "green" : partner?.kyc_status === 'declined' ? "red" : "orange", fontWeight: 600 }}>
+                {capitalizeStatus(partner?.kyc_status || "Not-Initiated")}
             </td>
             {
                 partnerFiles?.length > 0
