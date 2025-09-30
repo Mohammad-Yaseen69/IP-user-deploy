@@ -254,53 +254,67 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                 <h5>Select Payment Method: </h5>
                                 <div style={{ margin: "1rem 0", display: "flex", flexDirection: "column", gap: "1rem" }}>
                                     {
-                                        paymentChannels.filter(item => wallets.length > 0 ? item : item?.value !== "wallet").map(item => (
-                                            <Card key={item.name} style={{ marginBottom: 0, borderRadius: "12px" }} onClick={() => {
-                                                setPayoutChannel(item)
-                                            }}>
-                                                <CardBody style={{
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    gap: ".5rem",
-                                                    padding: "15px",
-                                                    justifyContent: "space-between",
-                                                    cursor: "pointer",
-                                                    position: "relative",
-                                                }}>
-                                                    <div style={{
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        gap: "20px"
-                                                    }}>
-                                                        <div style={{
-                                                            height: "35px",
-                                                            width: "35px",
-                                                            background: "linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%)",
+                                        paymentChannels
+                                            .filter(item => wallets.length > 0 ? item : item?.value !== "wallet")
+                                            .map(item => {
+                                                const isPaypalDisabled = isKYB && item?.value === "paypal";
+                                                return (
+                                                    <Card
+                                                        key={item.name}
+                                                        style={{ marginBottom: 0, borderRadius: "12px" }}
+                                                        onClick={() => {
+                                                            if (isPaypalDisabled) return;
+                                                            setPayoutChannel(item)
+                                                        }}
+                                                    >
+                                                        <CardBody style={{
                                                             display: "flex",
-                                                            justifyContent: "center",
                                                             alignItems: "center",
-                                                            borderRadius: "12px",
-                                                            boxShadow: "0px 4px 7px rgba(172, 53, 159, 0.31)"
+                                                            gap: ".5rem",
+                                                            padding: "15px",
+                                                            justifyContent: "space-between",
+                                                            cursor: isPaypalDisabled ? "not-allowed" : "pointer",
+                                                            position: "relative",
+                                                            pointerEvents: isPaypalDisabled ? "none" : "auto",
+                                                            opacity: isPaypalDisabled ? .7 : 1,
                                                         }}>
-                                                            <img src={item.icon} draggable="false" alt={item.name[0]} style={{
-                                                                width: "19px",
-                                                                height: "19px",
-                                                                objectFit: "contain",
-                                                                aspectRatio: 1
-                                                            }} />
-                                                        </div>
-                                                        <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>{t(item.name)}</h5>
-                                                    </div>
-                                                    {
-                                                        payoutChannel?.name === item.name
-                                                            ?
-                                                            <Check color="green" size={24} style={{ position: "absolute", right: "20px" }} />
-                                                            :
-                                                            <img src={i} alt="i" style={{ objectFit: "cover", position: "absolute", right: "14px", top: "19px" }} />
-                                                    }
-                                                </CardBody>
-                                            </Card>
-                                        ))
+                                                            <div style={{
+                                                                display: "flex",
+                                                                alignItems: "center",
+                                                                gap: "20px"
+                                                            }}>
+                                                                <div style={{
+                                                                    height: "35px",
+                                                                    width: "35px",
+                                                                    background: "linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%)",
+                                                                    display: "flex",
+                                                                    justifyContent: "center",
+                                                                    alignItems: "center",
+                                                                    borderRadius: "12px",
+                                                                    boxShadow: "0px 4px 7px rgba(172, 53, 159, 0.31)"
+                                                                }}>
+                                                                    <img src={item.icon} draggable="false" alt={item.name[0]} style={{
+                                                                        width: "19px",
+                                                                        height: "19px",
+                                                                        objectFit: "contain",
+                                                                        aspectRatio: 1
+                                                                    }} />
+                                                                </div>
+                                                                <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>{t(item.name)}</h5>
+                                                            </div>
+                                                            {
+                                                                isPaypalDisabled
+                                                                    ? <span style={{ fontWeight: 600 }}>{t("Coming Soon")}</span>
+                                                                    : (
+                                                                        payoutChannel?.name === item.name
+                                                                            ? <Check color="green" size={24} style={{ position: "absolute", right: "20px" }} />
+                                                                            : <img src={i} alt="i" style={{ objectFit: "cover", position: "absolute", right: "14px", top: "19px" }} />
+                                                                    )
+                                                            }
+                                                        </CardBody>
+                                                    </Card>
+                                                )
+                                            })
                                     }
                                 </div>
                             </>
