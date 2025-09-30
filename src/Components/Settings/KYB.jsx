@@ -13,9 +13,9 @@ import NgosDocs from './NgosDocs'
 import SoleTradedDocs from './SoleTradedDocs'
 import UploadAdditionalKYB from './UploadAdditionalKYB'
 import { DatePicker } from '@material-ui/pickers'
-import { toast } from 'react-toastify'
 import VerificationPayment from './VerificationPayment'
 import { useMutation } from '@tanstack/react-query'
+import { toast } from 'react-toastify'
 
 
 const getFeeAmount = async ({ payload, authHeader }) => {
@@ -206,6 +206,8 @@ const KYB = () => {
             setShowPaymentModal(true)
             console.log(decrypted)
         } catch (error) {
+            const dec = decryptData(error.response?.data?.data)
+            toast.error(dec?.message?.toLowerCase()?.includes("big") ? "Some of your file are larger then 20MB please select smaller files." : dec?.message)
             // console.log(decryptData(error?.response?.data?.data))
         } finally {
             setIsUploading(false)

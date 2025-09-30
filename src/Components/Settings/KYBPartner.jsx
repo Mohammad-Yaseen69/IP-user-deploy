@@ -148,25 +148,30 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
                     </Button>
                 </>}
                 {
-                    userDetails?.kyb_verification_paid && emailSent
-                        ?
-                        <CheckCircle color="green" />
-                        :
-                        <Button color="primary" style={{
-                            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                            border: "none",
-                            outline: "none",
-                            borderRadius: "5px",
-                            padding: "5px",
-                            fontSize: ".7rem",
-                            display: "flex", alignItems: "center"
-                        }}
-                            title="Send Verification Email"
-                            disabled={updating}
-                            onClick={sendEmailVerification}
-                        >
-                            <RefreshCw size={15} />
-                        </Button>
+                    userDetails?.kyb_verification_paid &&
+                    <>
+                        {
+                            emailSent
+                                ?
+                                <CheckCircle color="green" />
+                                :
+                                <Button color="primary" style={{
+                                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                    border: "none",
+                                    outline: "none",
+                                    borderRadius: "5px",
+                                    padding: "5px",
+                                    fontSize: ".7rem",
+                                    display: "flex", alignItems: "center"
+                                }}
+                                    title="Send Verification Email"
+                                    disabled={updating}
+                                    onClick={sendEmailVerification}
+                                >
+                                    <RefreshCw size={15} />
+                                </Button>
+                        }
+                    </>
                 }
                 {
                     partnerFiles?.length > 0 && partnerFiles?.some(item => item?.status === "requested")
