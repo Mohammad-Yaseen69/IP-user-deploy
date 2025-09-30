@@ -85,13 +85,6 @@ const KYB = () => {
 
     useEffect(() => {
         if (!userDetails?.kyb_verification_paid) {
-            (async () => {
-                const data = await mutateAsync({
-                    payment_type: "card"
-                })
-
-                setFeeAmount(data?.base_fee_breakdown?.base_fee_usd)
-            })()
             if (userDetails?.company?.kyb_files?.length > 0) {
                 setCompanyFiles(userDetails.company.kyb_files)
                 setCompanyFileNames(userDetails?.company?.kyb_files?.map(f => f?.document_name))
@@ -113,7 +106,7 @@ const KYB = () => {
     const addPartnerHandler = async () => {
         setAdding(true)
         try {
-            if (userDetails?.company?.kyb_files?.length === 0) {
+            if (userDetails?.company?.kyb_files && userDetails?.company?.kyb_files?.length === 0) {
                 setPartners(prev => [{
                     name: partnerName,
                     email: partnerEmail,
@@ -176,7 +169,7 @@ const KYB = () => {
                 .map((file, idx) => ({ file, name: compnanyFileNames[idx] }))
                 .filter(({ file }) => file && (file instanceof File || !('status' in file)));
 
-            if (editedEntries.length === 0) {
+            if (editedEntries?.length === 0) {
                 setShowPaymentModal(true);
                 return;
             }
@@ -186,7 +179,7 @@ const KYB = () => {
 
             formdata.append("account_id", userDetails?._id)
             formdata.append("business_type", companyType?._id)
-            editedEntries.forEach(({ file }) => formdata.append('files', file?.file));
+            editedEntries.forEach(({ file }) => formdata.append('files', file?.file || file));
             editedEntries.forEach(({ name }, i) => formdata.append(`file_names[${i}]`, name));
 
             formdata.append("registration_number", registrationNum);
@@ -205,6 +198,11 @@ const KYB = () => {
             })
 
             const decrypted = decryptData(res.data.data)
+            const data = await mutateAsync({
+                payment_type: "card"
+            })
+
+            setFeeAmount(data?.base_fee_breakdown?.base_fee_usd)
             setShowPaymentModal(true)
             console.log(decrypted)
         } catch (error) {
@@ -229,6 +227,8 @@ const KYB = () => {
         }
     };
 
+
+    console.log(partners)
     return (
         <Card>
             <CardHeader style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -357,28 +357,28 @@ const KYB = () => {
                 {
                     <Card style={{ marginTop: "1.5rem" }}>
                         <CardHeader style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <h4>Partners</h4>
+                            <h4>Directors</h4>
                             <Button style={{
                                 background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                                 border: "none",
                                 outline: "none"
-                            }} onClick={() => setShowAddModal(!showAddModal)}>Add New Partner</Button>
+                            }} onClick={() => setShowAddModal(!showAddModal)}>Add New Director</Button>
                             <Modal isOpen={showAddModal} toggle={() => setShowAddModal(!showAddModal)}>
                                 <ModalHeader toggle={() => setShowAddModal(!showAddModal)}>
-                                    Add New Partner
+                                    Add New Director
                                 </ModalHeader>
                                 <ModalBody>
                                     <FormGroup>
-                                        <Label>Partner Name</Label>
-                                        <Input placeholder="Partner Name" value={partnerName} onChange={e => setPartnerName(e.target.value)} />
+                                        <Label>Director Name</Label>
+                                        <Input placeholder="Director Name" value={partnerName} onChange={e => setPartnerName(e.target.value)} />
                                     </FormGroup>
                                     <FormGroup>
-                                        <Label>Partner Email</Label>
-                                        <Input placeholder="Partner Email" value={partnerEmail} onChange={e => setPartnerEmail(e.target.value)} />
+                                        <Label>Director Email</Label>
+                                        <Input placeholder="Director Email" value={partnerEmail} onChange={e => setPartnerEmail(e.target.value)} />
                                     </FormGroup>
                                     <FormGroup>
-                                        <Label>Partner Designation</Label>
-                                        <Input placeholder="Partner Email" value={partnerDesignation} onChange={e => setPartnerDesignation(e.target.value)} />
+                                        <Label>Director Designation</Label>
+                                        <Input placeholder="Director Designation" value={partnerDesignation} onChange={e => setPartnerDesignation(e.target.value)} />
                                     </FormGroup>
                                 </ModalBody>
                                 <ModalFooter>
@@ -433,7 +433,7 @@ const KYB = () => {
                             outline: "none",
                             alignSelf: "flex-end "
                         }}
-                        disabled={isUploading || compnanyFiles.length === 0 || partners?.length === 0 || !taxId || !dateOfI || !registrationNum}
+                        disabled={isUploading || compnanyFiles?.length === 0 || partners?.length === 0 || !taxId || !dateOfI || !registrationNum}
                         onClick={uploadKybFiles}
                     >{t("Submit")}</Button>
                 }

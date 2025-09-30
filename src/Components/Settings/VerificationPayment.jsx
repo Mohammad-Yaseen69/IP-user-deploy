@@ -70,7 +70,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
         const isValidCardNumber = cardDetails.cardNumber.split(" ").join("").length >= 16;
         const [contentMonth, contentYear] = expiry.split("/").map(Number);
         const currentDate = new Date();
-        const currentMonth = currentDate.getMonth() + 1; // getMonth() returns 0-11, so add 1
+        const currentMonth = currentDate.getMonth() + 1;
         const currentYear = currentDate.getFullYear() % 100; // Get last two digits of the year
 
         const isValidExpiry = contentYear > currentYear ||
@@ -527,16 +527,16 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                     setShowSuccess(false)
                 }}
                 >
-                    KYC Fee Payment
+                    {t(`${isKYB ? "KYB" : "KYC"} Fee Payment`)}
                 </ModalHeader>
                 <ModalBody>
                     <h5 className='modal-title' style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                         <CheckCircle size={64} className="text-success" style={{ marginBottom: "1rem" }} />
-                        Payment Successful!
+                        {t("Payment Successful!")}
                     </h5>
                     <div className="text-center">
                         <p className="mb-0">
-                            The KYC fee payment is successful. Please proceed to verify your account.
+                            {t("The KYC fee payment is successful.")} {isKYB ? t("Partner kyb pending, documents verification going on") : t("Please proceed to verify your account.")}
                         </p>
                         <Button
                             style={{

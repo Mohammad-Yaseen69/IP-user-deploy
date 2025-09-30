@@ -216,20 +216,20 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
             {/* edit modal */}
             <Modal isOpen={showEditModal} toggle={() => setShowEditModal(!showEditModal)}>
                 <ModalHeader toggle={() => setShowEditModal(!showEditModal)}>
-                    Edit Partner
+                    Edit Director
                 </ModalHeader>
                 <ModalBody>
                     <FormGroup>
-                        <Label>Partner Name</Label>
-                        <Input placeholder="Partner Name" value={partnerName} onChange={e => setPartnerName(e.target.value)} />
+                        <Label>Director Name</Label>
+                        <Input placeholder="Director Name" value={partnerName} onChange={e => setPartnerName(e.target.value)} />
                     </FormGroup>
                     <FormGroup>
-                        <Label>Partner Email</Label>
-                        <Input placeholder="Partner Email" value={partnerEmail} onChange={e => setPartnerEmail(e.target.value)} />
+                        <Label>Director Email</Label>
+                        <Input placeholder="Director Email" value={partnerEmail} onChange={e => setPartnerEmail(e.target.value)} />
                     </FormGroup>
                     <FormGroup>
-                        <Label>Partner Designation</Label>
-                        <Input placeholder="Partner Designation" value={partnerDesignation} onChange={e => setPartnerDesignation(e.target.value)} />
+                        <Label>Director Designation</Label>
+                        <Input placeholder="Director Designation" value={partnerDesignation} onChange={e => setPartnerDesignation(e.target.value)} />
                     </FormGroup>
                 </ModalBody>
                 <ModalFooter>
@@ -250,7 +250,7 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
             {/* delete modal */}
             <Modal isOpen={showDeleteModal} toggle={() => setShowDeleteModal(!showDeleteModal)}>
                 <ModalHeader toggle={() => setShowDeleteModal(!showDeleteModal)}>
-                    Delete Partner
+                    Delete Director
                 </ModalHeader>
                 <ModalBody>
                     <p>Are you sure, you want to remove {partner?.name} as partner?</p>
