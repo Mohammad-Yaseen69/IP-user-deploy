@@ -122,7 +122,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                                     <TextInput
                                         styles={{ background: "#f7f7f7" }}
                                         id='name'
-                                        placeholder={"Enter your Name"}
+                                        placeholder={t("Enter your Name")}
                                         value={data?.cryptoDetails?.name}
                                         onChange={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, name: e.target.value })}
                                     />

@@ -62,7 +62,7 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                     <div>
                                         <img src={addFunds} alt="A" />
                                     </div>
-                                    <span>Pay As Guest</span>
+                                    <span>{t("Pay As Guest")}</span>
                                     {
                                         state.guestPayError
                                         &&
@@ -95,7 +95,7 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                     <div>
                                         <img src={CryptoPay} alt="A" />
                                     </div>
-                                    <span>Pay with Crypto</span>
+                                    <span>{t("Pay with Crypto")}</span>
                                 </Link>
 
                                 <Link onClick={(e) => {
@@ -115,7 +115,7 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                     <div>
                                         <img src={logo} alt="A" />
                                     </div>
-                                    <span style={{color:"white"}}>Pay With InstaPay</span>
+                                    <span style={{color:"white"}}>{t("Pay With InstaPay")}</span>
                                 </Link>
                             </div>
                         </>}
