@@ -272,6 +272,7 @@ const PayAsGuest = ({
         break;
     }
   };
+
   const onBackClickHandler = () => {
     switch (data.step) {
       case 1:
@@ -279,6 +280,7 @@ const PayAsGuest = ({
         break;
       case 2:
         dataHandler("step", 1);
+        dataHandler("payment_type", {});
         break;
       case 3:
         dataHandler("step", 2);
