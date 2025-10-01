@@ -45,7 +45,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                                         }}
                                     >
                                         {userDetails?.first_name || userDetails?.company_name} {userDetails?.last_name}
-                                        {userDetails?.kyc_status === "approved" && (
+                                        {(userDetails?.kyc_status === "approved" || userDetails?.kyb_status === "approved") && (
                                             <>
                                                 <img
                                                     onMouseEnter={() => setShowVerTT(true)}

@@ -23,6 +23,7 @@ import { getCroppedImg } from '../../Context/UserContext'
 import UserDets from "./UserDets"
 import AmountContainer from './AmountContainer'
 import PayWithCrypto from './PayWithCrypto'
+import LanguagePicker from '../LanguagePicker'
 
 // Initial state
 const initialState = {
@@ -85,12 +86,15 @@ function reducer(state, action) {
 export const LeftJsx = ({ width, userDetails, title, description, userVideos, playingMediaId, setPlayingMediaId, playerRefs, currentWallet, amount, currency, user_name, invoiceId }) => {
     const { t } = useTranslation()
     return (
-        <div style={{ flex: 1.7, alignSelf: (userVideos.length >= 1 && "stretch") }} className={styles.left}>
+        <div style={{ flex: 1.7, alignSelf: (userVideos.length >= 1 && "stretch"), overflow: "visible" }} className={styles.left}>
             {width > 1000 &&
                 <div className={styles.left_top}>
-                    <div>
-                        <span>{t("Send money to 150+ countries,")}</span>
-                        <p>{t("Instantly")}</p>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px", flexDirection: "row" }}>
+                        <LanguagePicker />
+                        <div>
+                            <span>{t("Send money to 150+ countries,")}</span>
+                            <p>{t("Instantly")}</p>
+                        </div>
                     </div>
                     <img src={ip} alt="" />
                 </div>
