@@ -10,7 +10,7 @@ import UploadAdditionalKYB from "./UploadAdditionalKYB"
 import { useTranslation } from "react-i18next"
 import { capitalizeStatus } from "../PendingNew/ItemMobile"
 
-const KYBPartner = ({ partner, partners, setPartners, index }) => {
+const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPartnerVerification }) => {
 
     const [showEditModal, setShowEditModal] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -188,7 +188,10 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
                         display: "flex", alignItems: "center"
                     }}
                         title="Verify"
-                    // onClick={sendEmailVerification}
+                        onClick={() => {
+                            setModalOpen(true)
+                            setPartnerVerification(partner)
+                        }}
                     >
                         <RefreshCw size={15} />
                     </Button>

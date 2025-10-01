@@ -35,7 +35,7 @@ const paymentChannels = [
 ]
 
 
-const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading, source_of_funds, isKYB, amount, getFeeDetails }) => {
+const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading, source_of_funds, isKYB, amount, getFeeDetails, partnerId }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [step, setStep] = useState(1)
@@ -132,6 +132,11 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
             if (!isKYB) {
                 data.data.account_id = userDetails?._id
             }
+
+            if (partnerId) {
+                data.data.partner_id = partnerId
+            }
+
             const encrypted = encryptData(data)
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
                 data: encrypted
@@ -163,7 +168,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                 type: codeType
             }
             // console.log(data)
-            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/${isKYB ? "company" : "user"}/charge-${isKYB ? "kyb" : "kyc"}`, {
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/${partnerId ? "partner" : isKYB ? "company" : "user"}/charge-${partnerId ? "kyc" : isKYB ? "kyb" : "kyc"}`, {
                 data: encryptData(data)
             }, {
                 headers: authHeader
@@ -217,16 +222,18 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                 if (!isKYB) {
                     sendOtp()
                 } else {
-                    const feeDets = await getFeeDetails({
-                        payment_type: "wallet",
-                        wallet_id: wallet?._id
-                    })
-                    setFeeDetails(feeDets)
+                    if (!partnerId) {
+                        const feeDets = await getFeeDetails({
+                            payment_type: "wallet",
+                            wallet_id: wallet?._id
+                        })
+                        setFeeDetails(feeDets)
+                    }
                     setStep(prev => prev + 1)
                 }
             }
             if (payoutChannel?.value === "card" && (currentCard?._id ?? isValid)) {
-                if (isKYB) {
+                if (isKYB && !partnerId) {
                     const feeDets = await getFeeDetails({
                         payment_type: "card",
                     })
@@ -442,6 +449,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                 currentCard={currentCard}
                                 sendKybWalletOTP={sendOtp}
                                 kybFeeDets={feeDetails}
+                                partnerId={partnerId}
                             // wallet={userWallets?.find(item => item?.currency?.code === "USD")}
                             />
                         }

@@ -22,7 +22,7 @@ import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
 
 const isBig = window.innerWidth > 1000
 
-const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, limits, setLimits, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP, kybFeeDets }) => {
+const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, limits, setLimits, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP, kybFeeDets, partnerId }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [complete, setComplete] = useState(false);
@@ -67,13 +67,14 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                             is_card_save: saveCard
                         } : {
                             se_shambey: createShambeToken({ cardNumber: card_number, expiry: card_expiry, cvc: card_cvc }),
-                            is_card_save: saveCard
+                            is_card_save: saveCard,
+                            partner_id: partnerId
                         }
                     // console.log(data)
                     const enc = encryptData(data)
 
                     // api
-                    const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiat${type === "add_fund" ? "" : type === 'kyc_fee' ? "-kyc" : "-kyb"}${paymentWithSavedCard ? "-pan" : ""}-transaction`, {
+                    const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/initiat${type === "add_fund" ? "" : partnerId ? "-partner-kyc" : type === 'kyc_fee' ? "-kyc" : "-kyb"}${paymentWithSavedCard ? "-pan" : ""}-transaction`, {
                         data: enc
                     }, {
                         headers: authHeader
@@ -371,6 +372,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                         transaction={transDetails}
                         type={type}
                         paymentWithSavedCard={paymentWithSavedCard}
+                        isPartner={partnerId ? true : false}
                     />
                     : ""
             }

@@ -58,6 +58,7 @@ const KYB = () => {
     const [dateOfI, setDateOfI] = useState("")
     const [showPaymentModal, setShowPaymentModal] = useState(false)
     const [feeAmount, setFeeAmount] = useState("")
+    const [partnerVerification, setPartnerVerification] = useState(null)
 
     // partners
     const [partners, setPartners] = useState([])
@@ -460,7 +461,7 @@ const KYB = () => {
                                         <tbody>
                                             {
                                                 partners?.map((item, index) => (
-                                                    <KYBPartner key={item?._id} partner={item} partners={partners} setPartners={setPartners} index={index} />
+                                                    <KYBPartner setPartnerVerification={setPartnerVerification} setModalOpen={setShowPaymentModal} key={item?._id} partner={item} partners={partners} setPartners={setPartners} index={index} />
                                                 ))
                                             }
                                         </tbody>
@@ -486,9 +487,13 @@ const KYB = () => {
                 {showPaymentModal &&
                     <VerificationPayment
                         isOpen={showPaymentModal}
-                        toggle={() => setShowPaymentModal(false)}
+                        toggle={() => {
+                            setShowPaymentModal(false)
+                            setPartnerVerification(null)
+                        }}
                         isKYB={true}
                         amount={feeAmount}
+                        partnerId={partnerVerification?._id}
                         getFeeDetails={mutateAsync}
                     />
                 }
