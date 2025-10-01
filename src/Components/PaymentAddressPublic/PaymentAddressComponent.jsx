@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useReducer } from "react";
+import { useEffect, useRef, useReducer } from "react";
 import styles from "./styles/PAC.module.scss";
 import { Card, CardBody, CardText } from "reactstrap";
 import countries from "../PaymentsNewer/CountriesData.json";
@@ -145,8 +145,8 @@ export const LeftJsx = ({
                 userVideos.length === 1 || window.innerWidth < 700
                   ? 1
                   : userVideos.length === 2
-                  ? 2
-                  : 2.3
+                    ? 2
+                    : 2.3
               }
             >
               {userVideos.map((video, index) => (
@@ -186,6 +186,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const width = useWindowWidth();
   const playerRefs = useRef({});
+  const { t } = useTranslation()
 
   const dataHandler = (field, value) => {
     dispatch({ type: "UPDATE_FIELD", field, value });
@@ -218,32 +219,26 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
       const imageUrl = await getCroppedImg(img, c);
       const image = URL.createObjectURL(imageUrl);
       return image;
-    } catch (e) {
+    } catch {
       return null;
     }
   };
   useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
 
     if (userDetails?.country_name) {
       const normalize = normalizeText(userDetails?.country_name);
       const filteredCountry = countries.find((item) =>
         item.name.toLowerCase().includes(normalize.toLowerCase())
       );
-      if (isMounted) dataHandler("userCountry", filteredCountry);
+
+      dataHandler("userCountry", filteredCountry);
     }
     if (user_name) {
       axios
         .get(
-          `${
-            import.meta.env.VITE_IP_DEV_API
-          }/api/payment-address/get-payment-address-public/${user_name}`,
-          { signal: controller.signal }
-        )
+          `${import.meta.env.VITE_IP_DEV_API}/api/payment-address/get-payment-address-public/${user_name}`,        )
         .then((res) => {
           const decrypted = decryptData(res.data.data);
-          if (!isMounted) return;
 
           dataHandler(
             "paymentAddressDetails",
@@ -266,43 +261,46 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
           dataHandler("currentWallet", decrypted?.wallet);
           dataHandler("limits", decrypted?.limits);
 
-          // Kick off image crops in parallel without blocking initial render
           const coverPromise = decrypted?.paymentAddressDetails?.coverImage?.url
             ? getImage(
-                decrypted?.paymentAddressDetails?.coverImage?.url,
-                decrypted?.paymentAddressDetails?.coverImage?.coordinates
-              ).then((img) => {
-                if (isMounted && img) dataHandler("croppedCover", img);
-              })
+              decrypted?.paymentAddressDetails?.coverImage?.url,
+              decrypted?.paymentAddressDetails?.coverImage?.coordinates
+            ).then((img) => {
+              if (img) dataHandler("croppedCover", img);
+            })
             : Promise.resolve();
 
           const dpPromise = decrypted?.paymentAddressDetails?.profileImage?.url
             ? getImage(
-                decrypted?.paymentAddressDetails?.profileImage?.url,
-                decrypted?.paymentAddressDetails?.profileImage?.coordinates
-              ).then((img) => {
-                if (isMounted && img) dataHandler("croppedDp", img);
-              })
+              decrypted?.paymentAddressDetails?.profileImage?.url,
+              decrypted?.paymentAddressDetails?.profileImage?.coordinates
+            ).then((img) => {
+              if (img) dataHandler("croppedDp", img);
+            })
             : Promise.resolve();
 
-          Promise.allSettled([coverPromise, dpPromise]).catch(() => {});
+          Promise.allSettled([coverPromise, dpPromise]).catch(() => { });
         })
         .catch((err) => {
+          let errorMsg = "";
+          if (err.code === 'ECONNABORTED') {
+            errorMsg = "Request timed out. Please try again later.";
+          } else if (err?.response?.status === 404) {
+            errorMsg = "This user hasn't set their payment address yet.";
+          } else {
+            errorMsg = "Failed to load payment address details. Please try again.";
+          }
+          dataHandler("error", errorMsg);
           try {
             console.log(decryptData(err?.response?.data?.data));
-          } catch (_) {
+          } catch {
             /* noop */
           }
         })
         .finally(() => {
-          if (isMounted) dataHandler("loading", false);
+          dataHandler("loading", false);
         });
     }
-
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
   }, [userDetails, user_name]);
 
   // const copyHandler = () => {
@@ -317,16 +315,16 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
 
       toast.error(
         t("Minimum amount for guest pay is") +
-          formatCurrency(state.limits?.topup_min_amount, true) +
-          " " +
-          state.currentWallet?.currency?.code
+        formatCurrency(state.limits?.topup_min_amount, true) +
+        " " +
+        state.currentWallet?.currency?.code
       );
       dataHandler(
         "guestPayError",
         t("Minimum amount for guest pay is") +
-          formatCurrency(state.limits?.topup_min_amount, true) +
-          " " +
-          state.currentWallet?.currency?.code
+        formatCurrency(state.limits?.topup_min_amount, true) +
+        " " +
+        state.currentWallet?.currency?.code
       );
       setTimeout(() => {
         dataHandler("guestPayError", "");
@@ -334,16 +332,16 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     } else if (state.amount > state.limits?.topup_max_amount) {
       toast.error(
         t("Maximum amount for guest pay is ") +
-          formatCurrency(state.limits?.topup_max_amount, true) +
-          " " +
-          state.currentWallet?.currency?.code
+        formatCurrency(state.limits?.topup_max_amount, true) +
+        " " +
+        state.currentWallet?.currency?.code
       );
       dataHandler(
         "guestPayError",
         t("Maximum amount for guest pay is ") +
-          formatCurrency(state.limits?.topup_max_amount, true) +
-          " " +
-          state.currentWallet?.currency?.code
+        formatCurrency(state.limits?.topup_max_amount, true) +
+        " " +
+        state.currentWallet?.currency?.code
       );
       setTimeout(() => {
         dataHandler("guestPayError", "");
@@ -357,18 +355,18 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
 
   return (
     <>
-      <div className={styles.container}>
-        {state.loading ? (
-          <div
-            style={{
-              height: "300px",
-              width: "300px",
-              margin: "1rem auto",
-            }}
-          >
-            <InstaPayLoader />
-          </div>
-        ) : state.paymentAddressDetails ? (
+      {state.loading ? (
+        <div
+          style={{
+            height: "100%",
+            width: "100%",
+            zIndex: 999
+          }}
+        >
+          <InstaPayLoader />
+        </div>
+      ) : <div className={styles.container}>
+        {state.paymentAddressDetails ? (
           <>
             {state.showCreditModal && (
               <PayAsGuest
@@ -479,18 +477,19 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
           <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
             <CardBody>
               <CardText>
-                This user hasn't set their payment address yet.{" "}
+                {t("This user hasn't set their payment address yet.")}{" "}
                 <Link
                   to={"/"}
                   style={{ textDecoration: "underline", fontWeight: 600 }}
                 >
-                  Go back to Home.
+                  {t("Go back to Home.")}
                 </Link>
               </CardText>
             </CardBody>
           </Card>
         )}
       </div>
+      }
     </>
   );
 };
