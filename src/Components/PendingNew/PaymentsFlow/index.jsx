@@ -379,7 +379,7 @@ const PaymentsFlow = ({ item }) => {
                         <span>{t("Trouble Sending Money?")}</span>
                     </Link>
 
-                    <button>
+                    <button disabled={!data.payment_type?.name}>
                         <span>{t("Proceed")}</span>
                         <ChevronRight size={20} color="white" />
                     </button>

@@ -13,10 +13,10 @@ import { useTranslation } from "react-i18next";
 const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }) => {
     // dropdown
     const dropdownRef = useRef(null)
-    const {t} = useTranslation()
+    const { t } = useTranslation()
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
     const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen)
+        setIsDropdownOpen(prev => !prev)
     }
 
     // modals
@@ -34,6 +34,8 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
     const [isSaving, setIsSaving] = useState(false)
 
     // search field
+
+    console.log(isEditMode)
     const [searchTerm, setSearchTerm] = useState("")
 
     // api data 
@@ -135,29 +137,32 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
     };
 
     useEffect(() => {
-        const handleClickOutside = (event) => {
+        let timeoutId;
+        function handleClickOutside(event) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setIsDropdownOpen(false);
             }
-        };
-
-        if (isDropdownOpen) {
-            // Add the event listener when the dropdown is open
-            document.addEventListener('click', handleClickOutside);
         }
 
-        // Remove the event listener when the component unmounts or when the dropdown closes
+        if (isDropdownOpen) {
+            // Delay adding the listener to the next tick
+            timeoutId = setTimeout(() => {
+                document.addEventListener('click', handleClickOutside);
+            }, 0);
+        }
+
         return () => {
+            clearTimeout(timeoutId);
             document.removeEventListener('click', handleClickOutside);
         };
     }, [isDropdownOpen]);
-
     console.log(selectedCategories)
     return (
         <>
             <div ref={dropdownRef} style={{ flex: 1, position: "relative", width: "100%" }}>
                 <div style={{ width: "100%" }} onClick={() => {
                     if (isEditMode) {
+                        console.log('Clicked main area', isEditMode, isDropdownOpen);
                         toggleDropdown()
                     }
                 }}>
