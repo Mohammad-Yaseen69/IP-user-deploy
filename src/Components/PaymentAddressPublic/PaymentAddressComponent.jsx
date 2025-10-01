@@ -103,7 +103,6 @@ export const LeftJsx = ({
       style={{
         flex: 1.7,
         alignSelf: userVideos.length >= 1 && "stretch",
-        overflow: "visible",
       }}
       className={styles.left}
     >
