@@ -122,7 +122,7 @@ const QrDetails = ({
 
       {!inInvoice && (
         <div className={styles.details}>
-          <h5>{t("How to Pay Using QR Code")}:</h5>
+          <h5>{t("How to Pay Using QR Code:")}</h5>
 
           <ul style={{ marginTop: "0.3rem" }} className={styles.list}>
             <li>
@@ -168,11 +168,9 @@ const QrDetails = ({
             <li>
               <span>
                 <Trans
-                  i18nkey="
-                2. Send <strong>“ Hi ”</strong> to <strong>@instapay_swiss</strong> and select <strong> QR QuickPay </strong>
-                "
+                  i18nKey="2. Send <strong>“ Hi ”</strong> to <strong>@instapay_swiss</strong> and select <strong> QR QuickPay </strong>"
                   components={{
-                    qr: <strong />,
+                    strong: <strong />,
                   }}
                 />
               </span>

@@ -272,7 +272,6 @@ const PayAsGuest = ({
         break;
     }
   };
-
   const onBackClickHandler = () => {
     switch (data.step) {
       case 1:
