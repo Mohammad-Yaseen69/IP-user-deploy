@@ -17,7 +17,7 @@ import "./styles/modal.css"
 // import { sdk } from '../../..'
 
 const cryptoReasons = {
-    
+
 }
 
 const PayWithCrypto = ({ user, data, dataHandler }) => {
@@ -89,9 +89,9 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
         }
     }
     return (
-        <Modal isOpen={data.showCryptoModal} style={{ minWidth: window.innerWidth > 850 && "800px", overflow: "hidden" }} toggle={() => dataHandler("showCryptoModal", false)} >
+        <Modal centered isOpen={data.showCryptoModal} style={{ minWidth: window.innerWidth > 850 && "800px", overflow: "hidden", margin: "0px auto" }} toggle={() => dataHandler("showCryptoModal", false)} >
             <ModalBody style={{ minHeight: width < 850 && "100vh", background: width < 850 && "#fafafafa" }}>
-                <div style={{ height: '100vh' }} className={styles.container}>
+                <div className={styles.container}>
                     {width > 850 &&
                         <div className={styles.left}>
                             <h3>
@@ -154,7 +154,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                                 </div>
 
                                 <div>
-                                    <label htmlFor="email">{t("Payment Purpose")}{"*:"}</label>
+                                    <label htmlFor="purpose">{t("Payment Purpose")}{"*:"}</label>
                                     <Select
                                         placeholder={t("Select Purpose of Payment")}
                                         value={data?.cryptoDetails?.reason}
@@ -165,9 +165,20 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                                                 label: t(reasons[i])
                                             }
                                         ))}
+                                        id='purpose'
                                         style={{
                                             background: "#f7f7f7"
                                         }}
+                                    />
+                                </div>
+
+                                <div style={{ marginBottom: "1.5rem" }}>
+                                    <label htmlFor="paymentRef">{t("Payment Reference (Optional)")}</label>
+                                    <TextInput
+                                        styles={{ background: "#f7f7f7" }}
+                                        id='paymentRef'
+                                        value={data?.cryptoDetails?.paymentRef}
+                                        onChange={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, paymentRef: e.target.value })}
                                     />
                                 </div>
                             </div>

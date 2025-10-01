@@ -48,6 +48,7 @@ const initialState = {
     error: "",
     phone_error: "",
     dob: "",
+    paymentRef: "",
     shippingDetails: {
         houseNo: "",
         street: "",
@@ -128,8 +129,6 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
             }
             dataHandler("loading", false)
         }
-        finally {
-        }
     }
     const [showCardModal, setShowCardModal] = useState(false)
     const initiateCardPayment = async () => {
@@ -188,8 +187,6 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
                 dataHandler("error", dec?.message ?? "We cannot process your request at the moment, please try again later.")
             }
             dataHandler("loading", false)
-        }
-        finally {
         }
     }
 
@@ -456,7 +453,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
             {
                 window.innerWidth > 1000
                     ?
-                    <Modal isOpen={isOpen} style={{ width: "100vw", maxWidth: "1000px" }} contentClassName={styles.content}>
+                    <Modal isOpen={isOpen} style={{ width: "100vw", maxWidth: "1000px", margin: "0px auto" }} contentClassName={styles.content}>
                         <ModalBody style={{ position: "relative" }} className={styles.body}>
                             <button style={{
                                 all: "unset",
@@ -980,7 +977,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping }) => {
                     <PhoneInput
                         country={data.country?.alpha3}
                         setPhone={e => dataHandler("phone", e)}
-                        disabledDropdown={true}
+                        disableDropdown={true}
                         phone={data.phone}
                     />
                     {
@@ -1020,6 +1017,14 @@ const RecipientDetails = ({ data, dataHandler, isShipping }) => {
                             :
                             ""
                     }
+                </div>
+                <div className={styles.inpt_co}>
+                    <label>{t("Payment Reference")} ({t("Optional")}) </label>
+                    <input
+                        type="text"
+                        value={data.paymentRef}
+                        onChange={e => dataHandler("paymentRef", e.target.value.trim())}
+                    />
                 </div>
 
                 {isShipping &&

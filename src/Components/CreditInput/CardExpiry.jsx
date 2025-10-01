@@ -1,84 +1,39 @@
-import React, { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import styles from "./styles/card_cvc.module.css";
 
 const CardExpiry = ({ content, setContent, isinVVC = false, guest }) => {
     const divRef = useRef(null);
-    const caretPositionRef = useRef(0);
-
-    // Function to save caret position
-    const saveCaretPosition = () => {
-        const selection = window.getSelection();
-        if (selection.rangeCount > 0) {
-            const range = selection.getRangeAt(0);
-            const preCaretRange = range.cloneRange();
-            preCaretRange.selectNodeContents(divRef.current);
-            preCaretRange.setEnd(range.endContainer, range.endOffset);
-            caretPositionRef.current = preCaretRange.toString().replace(/\D/g, '').length;
-        }
-    };
-
-    // Function to restore caret position
-    const restoreCaretPosition = () => {
-        const selection = window.getSelection();
-        const div = divRef.current;
-        let charIndex = caretPositionRef.current;
-        let node, offset = 0;
-
-        const findNodeAndOffset = (root, index) => {
-            for (node of root.childNodes) {
-                if (node.nodeType === 3) { // Text node
-                    const cleanText = node.textContent.replace(/\D/g, '');
-                    const cleanTextLength = cleanText.length;
-                    if (cleanTextLength >= index) {
-                        let charCount = 0;
-                        for (let i = 0; i < node.textContent.length; i++) {
-                            if (/\d/.test(node.textContent[i])) {
-                                charCount++;
-                            }
-                            if (charCount === index) {
-                                offset = i + 1;
-                                return node;
-                            }
-                        }
-                    } else {
-                        index -= cleanTextLength;
-                    }
-                } else {
-                    node = findNodeAndOffset(node, index);
-                    if (node) return node;
-                }
-            }
-            return null;
-        };
-
-        node = findNodeAndOffset(div, charIndex);
-        if (node) {
-            const range = document.createRange();
-            range.setStart(node, offset);
-            range.collapse(true);
-            selection.removeAllRanges();
-            selection.addRange(range);
-        }
-    };
+    
 
     // Function to sanitize input
     const sanitizeInput = (input) => {
         return input.replace(/\D/g, '');
     };
 
+    // Set caret to the end (prevents digit reordering issues)
+    const setCaretToEnd = () => {
+        const selection = window.getSelection();
+        const div = divRef.current;
+        if (!div) return;
+        const range = document.createRange();
+        range.selectNodeContents(div);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    };
+
     // Handle input event
     const handleInput = (event) => {
-        saveCaretPosition(); // Save the caret position before modifying the content.
-        let sanitizedContent = sanitizeInput(event.target.innerText);
+        let sanitizedContent = sanitizeInput(event.target.innerText).slice(0, 4); // keep max 4 digits
 
         // Format the content
         const formattedContent = formatExpiry(sanitizedContent);
 
-        // Defer content setting and caret restoration slightly to allow DOM updates
+        // Defer content setting and caret placement slightly to allow DOM updates
         setTimeout(() => {
             setContent(formattedContent);
             event.target.innerText = formattedContent;
-            restoreCaretPosition();
+            setCaretToEnd();
         }, 0);
     };
 
