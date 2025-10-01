@@ -256,6 +256,7 @@ const PayAsGuest = ({ amount, isOpen, toggle, user, wallet, username, isShipping
                 break;
             case 2:
                 dataHandler("step", 1)
+                dataHandler("payment_type", {})
                 break;
             case 3:
                 dataHandler("step", 2)
