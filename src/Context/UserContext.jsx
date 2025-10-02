@@ -208,9 +208,9 @@ const UserState = ({ children }) => {
     const [available, setAvailable] = useState(0)
     const [blocked, setBlocked] = useState(0)
     const { data: registeredBenApiData, isLoading: benLoading } = useQuery({
-        queryKey: ["RegisteredBeneficiaries", token],
+        queryKey: ["RegisteredBeneficiaries", userDetails?._id],
         queryFn: () => getRegisteredBeneficiariesFn(authHeader),
-        enabled: !!token
+        enabled: !!userDetails?._id
     })
     const { data: balances, isLoading: balanceLoading } = useQuery({
         queryKey: ["getBalancesIUSD", userDetails?._id],
@@ -557,7 +557,7 @@ const UserState = ({ children }) => {
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
-                if(decrypted.fieldsInformation){
+                if (decrypted.fieldsInformation) {
                     const { completedBasicFields, totalBasicFields, completedProfilePercent } = decrypted.fieldsInformation
                     setProfileIncompleteReason(completedBasicFields !== totalBasicFields ? "basic" : "")
                     setProfileCompleted(completedProfilePercent === 100)
@@ -648,7 +648,7 @@ const UserState = ({ children }) => {
             const data = decryptData(res.data.data)
             setTotalReferralAmount(data?.availableCommission ?? 0)
             // console.log(data)
-        } catch  {
+        } catch {
             // console.log(decryptData(error?.response?.data?.data));
         }
     }

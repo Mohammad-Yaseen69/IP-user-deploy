@@ -666,7 +666,7 @@ const PayAsGuest = ({
                   >
                     {t("Back")}
                   </button>
-                  {data.loading ? <div style={{width: "100px"}}> <InstaPayLoader /> </div> :
+                  {data.loading ? <div style={{ width: "100px" }}> <InstaPayLoader /> </div> :
                     <button
                       disabled={data.loading || disabled}
                       onClick={onClickHandler}
@@ -792,6 +792,7 @@ const PayAsGuest = ({
                         url={""}
                         showCards={false}
                         guest={true}
+                        inGuest={true}
                       />
                     </div>
                   ) : data.payment_type?.value === "paypal" ? (
@@ -990,13 +991,13 @@ const PayAsGuest = ({
                   className={paym_styles?.buttons}
                   style={{ flexDirection: "column" }}
                 >
-                  <button
+                  {data.loading ? <div style={{ width: "120px" }}><InstaPayLoader /> </div> : <button
                     disabled={data.loading || disabled}
                     onClick={onClickHandler}
                     style={{ width: "100%", background: "#5926F0" }}
                   >
                     {t("Next")}
-                  </button>
+                  </button>}
                   <button
                     className={styles.transparent}
                     disabled={data.loading}
