@@ -26,6 +26,8 @@ import logo from "../instapay_black.svg";
 import ShippingDetails from "../../ReceiptInvoices/InvoicePaymentQr/ShippingDetails";
 import { LimitsErrorMessage } from "../../PaymentsNewer/OTPConfirmation";
 import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow";
+import DateMomentUtils from '@date-io/moment';
+import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 
 const initialState = {
   loading: false,
@@ -138,7 +140,7 @@ const PayAsGuest = ({
         dataHandler(
           "error",
           dec?.message ??
-            "We cannot process your request at the moment, please try again later."
+          "We cannot process your request at the moment, please try again later."
         );
       }
       dataHandler("loading", false);
@@ -179,8 +181,7 @@ const PayAsGuest = ({
       const enc = encryptData(payload);
 
       const res = await axios.post(
-        `${
-          import.meta.env.VITE_IP_DEV_API
+        `${import.meta.env.VITE_IP_DEV_API
         }/api/guest-pay/initiate-card-payment`,
         {
           data: enc,
@@ -205,7 +206,7 @@ const PayAsGuest = ({
         dataHandler(
           "error",
           dec?.message ??
-            "We cannot process your request at the moment, please try again later."
+          "We cannot process your request at the moment, please try again later."
         );
       }
       dataHandler("loading", false);
@@ -317,16 +318,16 @@ const PayAsGuest = ({
           !data.dob ||
           (data.email?.length > 0
             ? !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
-                data.email
-              )
+              data.email
+            )
             : false) ||
           (isShipping
             ? !data.shippingDetails.country ||
-              !data.shippingDetails.city ||
-              !data.shippingDetails.houseNo ||
-              !data.shippingDetails.state ||
-              !data.shippingDetails.street ||
-              !data.shippingDetails.zipCode
+            !data.shippingDetails.city ||
+            !data.shippingDetails.houseNo ||
+            !data.shippingDetails.state ||
+            !data.shippingDetails.street ||
+            !data.shippingDetails.zipCode
             : false);
       }
       if (data.payment_type?.value === "card") {
@@ -357,8 +358,8 @@ const PayAsGuest = ({
           data.phone.length < 9 ||
           (data.email?.length > 0
             ? !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
-                data.email
-              )
+              data.email
+            )
             : false);
       }
     }
@@ -369,8 +370,7 @@ const PayAsGuest = ({
     dataHandler("loading", true);
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/paypal-fee/${
-          wallet?.wallet_id
+        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/paypal-fee/${wallet?.wallet_id
         }/${amount}?payment_type=${invoiceId && "invoice"}`
       );
       const dec = decryptData(res.data.data);
@@ -399,7 +399,7 @@ const PayAsGuest = ({
       dataHandler(
         "exchange_rate_error",
         dec?.message ??
-          "We cannot process your request at the moment, please try again later."
+        "We cannot process your request at the moment, please try again later."
       );
       console.log(dec);
     } finally {
@@ -411,8 +411,7 @@ const PayAsGuest = ({
     dataHandler("loading", true);
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/card-fee/${
-          wallet?.wallet_id
+        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/card-fee/${wallet?.wallet_id
         }/${amount}?payment_type=${invoiceId && "invoice"}`
       );
       const dec = decryptData(res.data.data);
@@ -435,7 +434,7 @@ const PayAsGuest = ({
       dataHandler(
         "exchange_rate_error",
         dec?.message ??
-          "We cannot process your request at the moment, please try again later."
+        "We cannot process your request at the moment, please try again later."
       );
       console.log(dec);
     } finally {
@@ -458,8 +457,7 @@ const PayAsGuest = ({
       dataHandler("loading", true);
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/payment-methods/${
-            user?.level?._id
+          `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/payment-methods/${user?.level?._id
           }`
         );
         const dec = decryptData(res.data.data);
@@ -503,11 +501,9 @@ const PayAsGuest = ({
           card_number={data.cardNumber}
           currency={wallet?.currency?.code}
           transaction={data.cardTransactionDetails}
-          url={`${
-            import.meta.env.VITE_IP_DEV_API
-          }/api/guest-pay/confirm-card-payment/${
-            data.cardTransactionDetails?.transaction_ref
-          }`}
+          url={`${import.meta.env.VITE_IP_DEV_API
+            }/api/guest-pay/confirm-card-payment/${data.cardTransactionDetails?.transaction_ref
+            }`}
           guestUserName={username}
           guestWallet={wallet}
           guestUser={user}
@@ -816,133 +812,133 @@ const PayAsGuest = ({
                       {!PaypalCurrencies.some(
                         (item) => item === wallet?.currency?.code
                       ) && (
-                        <>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "flex-start",
-                              gap: ".7rem",
-                              padding: "12px",
-                              borderRadius: "6px",
-                              background: "rgba(255, 218, 68, 0.24)",
-                              marginTop: "1rem",
-                            }}
-                          >
-                            <Info color="#BE9A08" size={20} />
-                            <span
-                              style={{
-                                color: "#BE9A08",
-                                fontFamily: "Manrope",
-                                fontSize: ".7rem",
-                                fontStyle: "normal",
-                                fontWeight: 700,
-                                lineHeight: 1.3,
-                                letterSpacing: "-0.28px",
-                              }}
-                            >
-                              <strong>{wallet?.currency?.code} </strong> is not
-                              supported by Paypal, <strong>USD</strong> will be
-                              used as the default currency.
-                            </span>
-                          </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              gap: ".9rem",
-                              padding: ".8rem",
-                              background: "#fff",
-                              borderRadius: "6px",
-                              boxShadow:
-                                "0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11)",
-                            }}
-                          >
+                          <>
                             <div
                               style={{
                                 display: "flex",
-                                alignItems: "center",
-                                gap: "1rem",
-                                justifyContent: "space-between",
+                                alignItems: "flex-start",
+                                gap: ".7rem",
+                                padding: "12px",
+                                borderRadius: "6px",
+                                background: "rgba(255, 218, 68, 0.24)",
+                                marginTop: "1rem",
                               }}
                             >
+                              <Info color="#BE9A08" size={20} />
                               <span
                                 style={{
-                                  color: "#8A8A8A",
+                                  color: "#BE9A08",
                                   fontFamily: "Manrope",
                                   fontSize: ".7rem",
-                                  fontStyle: "normal",
-                                  fontWeight: 600,
-                                  lineHeight: 1.5,
-                                  letterSpacing: "-0.14px",
-                                }}
-                              >
-                                {t("Exchange Rate")}
-                              </span>
-                              <strong
-                                style={{
-                                  color: "#000",
-                                  fontFamily: "Manrope",
-                                  fontSize: ".7rem",
-                                  fontStyle: "normal",
-                                  lineHeight: 1.5,
-                                  letterSpacing: "-0.14px",
-                                }}
-                              >
-                                1.00 {wallet?.currency?.code} ={" "}
-                                {Number(
-                                  data.paypal_fx?.exchange_rate
-                                )?.toLocaleString("en-US", {
-                                  minimumFractionDigits: 2,
-                                  maximumFractionDigits: 4,
-                                })}{" "}
-                                USD
-                              </strong>
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "1rem",
-                                justifyContent: "space-between",
-                              }}
-                            >
-                              <span
-                                style={{
-                                  color: "#8A8A8A",
-                                  fontFamily: "Manrope",
-                                  fontSize: ".7rem",
-                                  fontStyle: "normal",
-                                  fontWeight: 600,
-                                  lineHeight: 1.5,
-                                  letterSpacing: "-0.14px",
-                                }}
-                              >
-                                {t("Amount in USD")}
-                              </span>
-                              <strong
-                                style={{
-                                  color: "#000",
-                                  fontFamily: "Manrope",
-                                  fontSize: "1.2rem",
                                   fontStyle: "normal",
                                   fontWeight: 700,
-                                  lineHeight: 1.7,
-                                  letterSpacing: "-0.8px",
+                                  lineHeight: 1.3,
+                                  letterSpacing: "-0.28px",
                                 }}
                               >
-                                {Number(data.paypal_fx?.amount)?.toLocaleString(
-                                  "en-US",
-                                  {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2,
-                                  }
-                                )}{" "}
-                                USD
-                              </strong>
+                                <strong>{wallet?.currency?.code} </strong> is not
+                                supported by Paypal, <strong>USD</strong> will be
+                                used as the default currency.
+                              </span>
                             </div>
-                          </div>
-                        </>
-                      )}
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: ".9rem",
+                                padding: ".8rem",
+                                background: "#fff",
+                                borderRadius: "6px",
+                                boxShadow:
+                                  "0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11)",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "1rem",
+                                  justifyContent: "space-between",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    color: "#8A8A8A",
+                                    fontFamily: "Manrope",
+                                    fontSize: ".7rem",
+                                    fontStyle: "normal",
+                                    fontWeight: 600,
+                                    lineHeight: 1.5,
+                                    letterSpacing: "-0.14px",
+                                  }}
+                                >
+                                  {t("Exchange Rate")}
+                                </span>
+                                <strong
+                                  style={{
+                                    color: "#000",
+                                    fontFamily: "Manrope",
+                                    fontSize: ".7rem",
+                                    fontStyle: "normal",
+                                    lineHeight: 1.5,
+                                    letterSpacing: "-0.14px",
+                                  }}
+                                >
+                                  1.00 {wallet?.currency?.code} ={" "}
+                                  {Number(
+                                    data.paypal_fx?.exchange_rate
+                                  )?.toLocaleString("en-US", {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 4,
+                                  })}{" "}
+                                  USD
+                                </strong>
+                              </div>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "1rem",
+                                  justifyContent: "space-between",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    color: "#8A8A8A",
+                                    fontFamily: "Manrope",
+                                    fontSize: ".7rem",
+                                    fontStyle: "normal",
+                                    fontWeight: 600,
+                                    lineHeight: 1.5,
+                                    letterSpacing: "-0.14px",
+                                  }}
+                                >
+                                  {t("Amount in USD")}
+                                </span>
+                                <strong
+                                  style={{
+                                    color: "#000",
+                                    fontFamily: "Manrope",
+                                    fontSize: "1.2rem",
+                                    fontStyle: "normal",
+                                    fontWeight: 700,
+                                    lineHeight: 1.7,
+                                    letterSpacing: "-0.8px",
+                                  }}
+                                >
+                                  {Number(data.paypal_fx?.amount)?.toLocaleString(
+                                    "en-US",
+                                    {
+                                      minimumFractionDigits: 2,
+                                      maximumFractionDigits: 2,
+                                    }
+                                  )}{" "}
+                                  USD
+                                </strong>
+                              </div>
+                            </div>
+                          </>
+                        )}
                     </>
                   ) : data.payment_type?.value === "card" ? (
                     <RecipientDetails
@@ -1024,104 +1020,138 @@ export default PayAsGuest;
 
 const RecipientDetails = ({ data, dataHandler, isShipping }) => {
   const { t } = useTranslation();
-  const handleDateChange = (e) => {
-    const selected = new Date(e.target.value);
-
-    if (selected <= minDate) {
-      dataHandler("dob", e.target.value);
+  const handleDateChange = (date) => {
+    if (date) {
+      const selected = new Date(date);
+      const minDate = new Date();
+      minDate.setFullYear(minDate.getFullYear() - 15);
+      if (selected <= minDate) {
+        dataHandler("dob", date.format ? date.format("YYYY-MM-DD") : date.toISOString().split("T")[0]);
+      } else {
+        toast.error("Please select a date at least 15 years ago or earlier.");
+      }
     } else {
-      toast.error("Please select a date at least 15 years ago or earlier.");
+      dataHandler("dob", "");
     }
   };
   return (
-    <div style={{ height: "100%", overflow: "auto" }}>
-      <div className={styles.bot_top}>
-        <h5>{t("Personal Details")}</h5>
-        <span>
-          {t(
-            "Please finalize your payment by entering the required personal information."
-          )}
-        </span>
+    <MuiPickersUtilsProvider utils={DateMomentUtils}>
+      <div style={{ height: "100%", overflow: "auto" }}>
+        <div className={styles.bot_top}>
+          <h5>{t("Personal Details")}</h5>
+          <span>
+            {t(
+              "Please finalize your payment by entering the required personal information."
+            )}
+          </span>
+        </div>
+        <div className={styles.personal}>
+          <div className={styles.inpt_co}>
+            <label>
+              {t("Full Name")} <span>*</span>{" "}
+            </label>
+            <input
+              type="text"
+              placeholder={t("Enter your Name")}
+              value={data.fullName}
+              onChange={(e) => dataHandler("fullName", e.target.value)}
+            />
+          </div>
+          <div className={styles.inpt_co}>
+            <label>
+              {t("Phone Number")} <span>*</span>{" "}
+            </label>
+            <PhoneInput
+              country={data.country?.alpha3}
+              setPhone={(e) => dataHandler("phone", e)}
+              disableDropdown={true}
+              phone={data.phone}
+            />
+            {data?.phone_error && (
+              <div style={{ color: "red", fontWeight: 500, marginTop: ".5rem" }}>
+                {t("Incorrect phone number, please enter a valid number.")}
+              </div>
+            )}
+          </div>
+          <div className={styles.inpt_co}>
+            <label>{t("Date of Birth")}*</label>
+            <DatePicker
+              required={true}
+              format="YYYY-MM-DD"
+              className="form-control custom-datepicker"
+              style={{ width: '100%' }}
+              value={data.dob || null}
+              onChange={handleDateChange}
+              placeholder="YYYY-MM-DD"
+              maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 15))}
+              disableFuture
+              InputProps={{
+                disableUnderline: true,
+                style: {
+                  background: '#fff',
+                  border: '1px solid #e9e9e9',
+                  borderRadius: '6px',
+                  boxShadow: 'none',
+                  padding: '0 10px',
+                  minHeight: '40px',
+                  fontWeight: 500,
+                }
+              }}
+              inputProps={{
+                style: {
+                  background: '#fff',
+                  border: 'none',
+                  boxShadow: 'none',
+                  padding: '2px 0px',
+                  minHeight: '40px',
+                }
+              }}
+              clearable
+              autoOk
+            />
+          </div>
+          <div className={styles.inpt_co}>
+            <label>
+              {t("Email")} ({t("Optional")}){" "}
+            </label>
+            <input
+              required={true}
+              type="email"
+              placeholder="ie: abc@gmail.com"
+              value={data.email}
+              onChange={(e) => dataHandler("email", e.target.value.trim())}
+            />
+            {!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
+              data.email
+            ) && data.email.length > 0 ? (
+              <span
+                style={{
+                  fontWeight: "600",
+                  color: "red",
+                  padding: ".4rem .7rem",
+                }}
+              >
+                {t("Please enter a valid email address.")}
+              </span>
+            ) : (
+              ""
+            )}
+          </div>
+          <div className={styles.inpt_co}>
+            <label>
+              {t("Payment Reference")} ({t("Optional")}){" "}
+            </label>
+            <input
+              type="text"
+              value={data.paymentRef}
+              onChange={(e) => dataHandler("paymentRef", e.target.value.trim())}
+            />
+          </div>
+        </div>
+        {isShipping && <ShippingDetails data={data} dataHandler={dataHandler} />}
       </div>
 
-      <div className={styles.personal}>
-        <div className={styles.inpt_co}>
-          <label>
-            {t("Full Name")} <span>*</span>{" "}
-          </label>
-          <input
-            type="text"
-            placeholder={t("Enter your Name")}
-            value={data.fullName}
-            onChange={(e) => dataHandler("fullName", e.target.value)}
-          />
-        </div>
-        <div className={styles.inpt_co}>
-          <label>
-            {t("Phone Number")} <span>*</span>{" "}
-          </label>
-          <PhoneInput
-            country={data.country?.alpha3}
-            setPhone={(e) => dataHandler("phone", e)}
-            disableDropdown={true}
-            phone={data.phone}
-          />
-          {data?.phone_error && (
-            <div style={{ color: "red", fontWeight: 500, marginTop: ".5rem" }}>
-              {t("Incorrect phone number, please enter a valid number.")}
-            </div>
-          )}
-        </div>
-        <div className={styles.inpt_co}>
-          <label>{t("Date of Birth")}*</label>
-          <Input
-            required={true}
-            type="date"
-            placeholder="Enter your Date of birth"
-            value={data.dob}
-            onChange={handleDateChange}
-            max={minDate.toISOString().split("T")[0]}
-          />
-        </div>
-        <div className={styles.inpt_co}>
-          <label>
-            {t("Email")} ({t("Optional")}){" "}
-          </label>
-          <input
-            required={true}
-            type="email"
-            placeholder="ie: abc@gmail.com"
-            value={data.email}
-            onChange={(e) => dataHandler("email", e.target.value.trim())}
-          />
-          {!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
-            data.email
-          ) && data.email.length > 0 ? (
-            <span
-              style={{
-                fontWeight: "600",
-                color: "red",
-                padding: ".4rem .7rem",
-              }}
-            >
-              Please enter a valid email address.
-            </span>
-          ) : (
-            ""
-          )}
-        </div>
-        <div className={styles.inpt_co}>
-          <label>
-            {t("Payment Reference")} ({t("Optional")}){" "}
-          </label>
-          <input
-            type="text"
-            value={data.paymentRef}
-            onChange={(e) => dataHandler("paymentRef", e.target.value.trim())}
-          />
-        </div>
-      </div>
-    </div>
+    </MuiPickersUtilsProvider>
   );
 };
 
