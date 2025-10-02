@@ -123,7 +123,6 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                         } else {
                                             const path = url;
                                             sessionStorage.setItem("path", path);
-                                            e.preventDefault();
                                         }
                                     } else {
                                         e.preventDefault();
