@@ -1049,7 +1049,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping }) => {
           </label>
           <input
             type="text"
-            placeholder="Enter your name"
+            placeholder={t("Enter your name")}
             value={data.fullName}
             onChange={(e) => dataHandler("fullName", e.target.value)}
           />
@@ -1075,7 +1075,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping }) => {
           <Input
             required={true}
             type="date"
-            placeholder="Enter your Date of birth"
+            placeholder={t("Enter your Date of birth")}
             value={data.dob}
             onChange={handleDateChange}
             max={minDate.toISOString().split("T")[0]}
@@ -1102,7 +1102,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping }) => {
                 padding: ".4rem .7rem",
               }}
             >
-              Please enter a valid email address.
+              {t("Please enter a valid email address.")}
             </span>
           ) : (
             ""

@@ -2776,5 +2776,22 @@
   "Terms and conditions": "Geschäftsbedingungen",
   "Pay With InstaPay": "Bezahlen mit InstaPay",
   "Pay As Guest": "Als Gast bezahlen",
-  "Minimum amount for guest pay is": "Der Mindestbetrag für die Gästezahlung beträgt"
+  "Minimum amount for guest pay is": "Der Mindestbetrag für die Gästezahlung beträgt",
+  "They will receive": "Sie erhalten",
+  "You are Sending": "Sie senden",
+  "Sending Fees": "Versandgebühren",
+  "Personal Details": "Persönliche Daten",
+  "Enter your Date of birth": "Geben Sie Ihr Geburtsdatum ein",
+  "Please enter a valid email address.": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+  "Payment Reference": "Zahlungsreferenz",
+  "You have to pay": "Sie müssen bezahlen",
+  "Receiver Gets": "Empfänger erhält",
+  "(Including fee)": "(Inklusive Gebühr)",
+  "paypal": "Paypal",
+  "Business Account": "Geschäftskonto",
+  "Total amount to pay": "Zu zahlender Gesamtbetrag",
+  "Payment purpose": "Zahlungszweck",
+  "TRC20 Network only": "Nur TRC20-Netzwerk",
+  "Enter your name": "Geben Sie Ihren Namen ein",
+  "Scan to pay": "Scannen zum Bezahlen"
 }

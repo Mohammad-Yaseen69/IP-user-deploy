@@ -2775,5 +2775,22 @@
   "Terms and conditions": "Sharuɗɗa da sharuɗɗa",
   "Pay With InstaPay": "Biya Tare da InstaPay",
   "Pay As Guest": "Biya A Matsayin Baƙo",
-  "Minimum amount for guest pay is": "Mafi qarancin adadin kuɗin baƙo shine"
+  "Minimum amount for guest pay is": "Mafi qarancin adadin kuɗin baƙo shine",
+  "They will receive": "Za su karba",
+  "You are Sending": "Kuna Aiko",
+  "Sending Fees": "Kudaden Aika",
+  "Personal Details": "Cikakken Bayani",
+  "Enter your Date of birth": "Shigar da ranar haihuwar ku",
+  "Please enter a valid email address.": "Don Allah shigar da adireshin i-mel mai inganci.",
+  "Payment Reference": "Maganar Biyan Kuɗi",
+  "You have to pay": "Dole ne ku biya",
+  "Receiver Gets": "Mai karɓa Ya Samu",
+  "(Including fee)": "(ciki har da kudi)",
+  "paypal": "PayPal",
+  "Business Account": "Account Account",
+  "Total amount to pay": "Jimlar adadin da za a biya",
+  "Payment purpose": "Dalilin biyan kuɗi",
+  "TRC20 Network only": "TRC20 Network kawai",
+  "Enter your name": "Shigar da sunan ku",
+  "Scan to pay": "Duba don biya"
 }

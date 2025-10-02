@@ -88,7 +88,7 @@ const MobileWalletLink = ({ externalLink, setSubStep, data, type = "Mobile Walle
                         lineHeight: "normal",
                         letterSpacing: "-1.5px",
                     }}>
-                        {data?.name}
+                        {t(data?.name)}
                     </h4>
                 </div>
                 {/* <div style={{
@@ -152,7 +152,8 @@ const MobileWalletLink = ({ externalLink, setSubStep, data, type = "Mobile Walle
                     fontSize: "12px",
                     fontStyle: "normal",
                     fontWeight: 500,
-                    lineHeight: "130%", // Equivalent to 15.6px
+                    lineHeight: "130%",
+                    
                 }}
             >
                 {t("You Have 15 Minutes To Complete The Transaction, Please Complete Within The Time Limit To Avoid URL Expiration")}
