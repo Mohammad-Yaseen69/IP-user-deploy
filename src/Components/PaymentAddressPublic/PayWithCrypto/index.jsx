@@ -122,7 +122,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                                     <TextInput
                                         styles={{ background: "#f7f7f7" }}
                                         id='name'
-                                        placeholder={"Enter your Name"}
+                                        placeholder={t("Enter your Name")}
                                         value={data?.cryptoDetails?.name}
                                         onChange={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, name: e.target.value })}
                                     />
@@ -206,7 +206,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                                     </div>
                                 </div>
 
-                                <p style={{ margin: "20px 0 10px 0", fontWeight: 700, color: "black", textAlign: "center" }}>TRC20 Network only</p>
+                                <p style={{ margin: "20px 0 10px 0", fontWeight: 700, color: "black", textAlign: "center" }}>{t("TRC20 Network only")}</p>
                                 <div className={styles.id}>
                                     <span id="crypto-address" style={{ flex: 1, wordBreak: "break-all" }}>TKBYYHJmpQjkBELSJTpmiEJE78K7F9ov7f</span>
                                     <img

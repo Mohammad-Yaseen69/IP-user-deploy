@@ -51,32 +51,32 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
         <div className={styles.container}>
             {
                 !data?.payment_type?.value ?
-                    payouts.map(item => (
-                        <div
-                            key={item?.id}
-                            className={`${styles.item} ${data?.payment_type?.id === item?.id ? styles.active : ''}`}
-                            style={{ cursor: item.coming_soon ? "not-allowed" : "pointer", opacity: item.coming_soon ? .8 : 1 }}
-                            onClick={() => item.coming_soon ? console.log("") : dataHandler("payment_type", item)}
-                        >
-                            {/* <img src={data?.payment_type?.id === item?.id ? item.active_icon : item.icon} alt="" /> */}
-                            {data?.payment_type?.id === item?.id ? item.active_icon : item.icon}
-                            <span>{item?.name}</span>
-                            {
-                                item.coming_soon
-                                &&
-                                <div className={styles.badge}>
-                                    {t("Coming Soon")}
-                                </div>
-                            }
-                        </div>
-                    )) :
+                        payouts.map(item => (
+                            <div
+                                key={item?.id}
+                                className={`${styles.item} ${data?.payment_type?.id === item?.id ? styles.active : ''}`}
+                                style={{ cursor: item.coming_soon ? "not-allowed" : "pointer", opacity: item.coming_soon ? .8 : 1 }}
+                                onClick={() => item.coming_soon ? console.log("") : dataHandler("payment_type", item)}
+                            >
+                                {/* <img src={data?.payment_type?.id === item?.id ? item.active_icon : item.icon} alt="" /> */}
+                                {data?.payment_type?.id === item?.id ? item.active_icon : item.icon}
+                                <span>{t(item?.name)}</span>
+                                {
+                                    item.coming_soon
+                                    &&
+                                    <div className={styles.badge}>
+                                        {t("Coming Soon")}
+                                    </div>
+                                }
+                            </div>
+                        )) :
                     <div
                         className={`${styles.item}`}
                         style={{ justifyContent: 'space-between' }}
                     >
                         <div style={{ display: "flex", alignItems: "center", gap: '10px' }}>
                             {data?.payment_type?.active_icon}
-                            <span>{data.payment_type?.name}</span>
+                            <span>{t(data.payment_type?.name)}</span>
                         </div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
                             <path d="M13.3332 4.68896L5.99984 12.0223L2.6665 8.68896" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -96,10 +96,10 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                     <>
                         <FeesComponent
                             data={data}
-                            receiverLabel={`They will receive `}
+                            receiverLabel={t("They will receive")}
                             error={data.exchange_rate_error}
-                            feesLabel="Sending Fees"
-                            sendingLabel="You are Sending"
+                            feesLabel={t("Sending Fees")}
+                            sendingLabel={t("You are Sending")}
                             receiverFee={true}
                             totalLabel="Amount To Pay"
                             bright={true}

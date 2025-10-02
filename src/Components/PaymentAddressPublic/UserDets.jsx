@@ -34,7 +34,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", flexDirection: width < 1000 && "column" }}>
                             <div style={{ alignItems: 'flex-start' }} className={styles.basic_dets}>
-                                <div className={styles.badge}>{userDetails?.account_type === "individual" ? "Personal" : "Business"} {t("Account")}</div>
+                                <div className={styles.badge}>{userDetails?.account_type === "individual" ? t("Personal") :t("Business")} {t("Account")}</div>
                                 <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: ".3rem" }}>
                                     <h4
                                         style={{
@@ -45,7 +45,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                                         }}
                                     >
                                         {userDetails?.first_name || userDetails?.company_name} {userDetails?.last_name}
-                                        {userDetails?.kyc_status === "approved" && (
+                                        {(userDetails?.kyc_status === "approved" || userDetails?.kyb_status === "approved") && (
                                             <>
                                                 <img
                                                     onMouseEnter={() => setShowVerTT(true)}
@@ -84,7 +84,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                                 </div>
                                 <div className={styles.country}>
                                     <img src={userCountry?.file_url} alt={userCountry?.alpha3} style={{ boxShadow: "0 0 5px #afafaf" }} />
-                                    <span>{userCountry?.name}</span>
+                                    <span>{t(userCountry?.name)}</span>
                                 </div>
                                 {width < 1000 && <button onClick={() => navigate(`/profile/${user_name}`)} style={{ backdropFilter: "blur(0px)", background: '#5926f0' }} className={styles.viewProfileBtn}>View Profile</button>}
                             </div>

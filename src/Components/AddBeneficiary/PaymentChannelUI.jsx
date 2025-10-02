@@ -356,7 +356,7 @@ const PaymentChannelUI = ({
                     gap: "1rem"
                 }}>
                     <FormGroup style={{ flex: 1, margin: 0, maxWidth: "180px" }}>
-                        <Label className="col-form-label" htmlFor="bank_account_number">{t("IBAN / SWIFT Code")} <span className="req_star">*</span></Label>
+                        <Label className="col-form-label" >{t("IBAN / SWIFT Code")} <span className="req_star">*</span></Label>
                         <Input disabled={isEdit ? !isEditMode : false} className="form-control" style={{ minWidth: "150px" }} type="select" value={accNumType} onChange={e => {
                             setAccNumType(e.target.value)
                             getBankDetails({ target: { value: "" } })
@@ -366,8 +366,8 @@ const PaymentChannelUI = ({
                         </Input>
                     </FormGroup>
                     <FormGroup style={{ flex: 1, margin: 0, position: "relative" }}>
-                        <Label className="col-form-label" htmlFor="bank_account_number">{accNumType === "IBAN" ? t("IBAN Number") : t("Swift Code")} <span className="req_star">*</span></Label>
-                        <Input disabled={isEdit ? !isEditMode : false} className="form-control" style={{ flex: 1, width: "100%", minWidth: "250px" }} placeholder={accNumType === "IBAN" ? t("IBAN Number") : t("Swift Code")} required name="bank_account_number" id="bank_account_number" value={ibanSwift} onChange={(e) => getBankDetails(e, false)} maxLength={34} min={8} />
+                        <Label className="col-form-label">{accNumType === "IBAN" ? t("IBAN Number") : t("Swift Code")} <span className="req_star">*</span></Label>
+                        <Input disabled={isEdit ? !isEditMode : false} className="form-control" style={{ flex: 1, width: "100%", minWidth: "250px" }} placeholder={accNumType === "IBAN" ? t("IBAN Number") : t("Swift Code")} required value={ibanSwift} onChange={(e) => getBankDetails(e, false)} maxLength={34} min={8} />
                         {
                             bankDetailsError && <span style={{ color: "red", position: "absolute", bottom: "-25px", left: "10px" }} > {bankDetailsError}</span>
                         }

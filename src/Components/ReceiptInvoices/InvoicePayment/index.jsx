@@ -79,9 +79,10 @@ const InvoicePayment = () => {
 
 
   const toggleCreditModal = () => {
+    if(!state.limits) return
     if (data.amount < state.limits?.topup_min_amount) {
-      toast.error("Minimum amount for guest pay is " + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
-      dataHandler("guestPayError", "Minimum amount for guest pay is " + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
+      toast.error("Minimum amount for guest pay is" + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
+      dataHandler("guestPayError", "Minimum amount for guest pay is" + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
       setTimeout(() => {
         dataHandler("guestPayError", "")
       }, 3000)
@@ -145,7 +146,7 @@ const InvoicePayment = () => {
                   currencySymbol: CitiesData?.find(c => c?.currency === data?.currency)?.currency_symbol
                 }}
                 url={url}
-                toggleCreditModal={() => { }}
+                toggleCreditModal={toggleCreditModal}
                 paidInvoice={true}
               />
             }
