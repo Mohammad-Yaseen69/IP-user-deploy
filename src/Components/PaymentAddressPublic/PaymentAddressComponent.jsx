@@ -116,7 +116,6 @@ export const LeftJsx = ({
               flexDirection: "row",
             }}
           >
-            <LanguagePicker />
             <div>
               <span>{t("Send money to 150+ countries,")}</span>
               <p>{t("Instantly")}</p>
@@ -236,7 +235,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     if (user_name) {
       axios
         .get(
-          `${import.meta.env.VITE_IP_DEV_API}/api/payment-address/get-payment-address-public/${user_name}`,        )
+          `${import.meta.env.VITE_IP_DEV_API}/api/payment-address/get-payment-address-public/${user_name}`,)
         .then((res) => {
           const decrypted = decryptData(res.data.data);
 
