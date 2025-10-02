@@ -57,6 +57,7 @@ export const apiErrors = {
     "insufficient_funds": "You don't have enough funds for this transaction.",
     "invoice_not_found_or_inactive": "The invoice you're trying to pay is either inactive or the invoice id is not correct!",
     "invoice_not_found": "The invoice you're trying to pay is either inactive or the invoice id is not correct!",
+    "invoice_already_paid": "This invoice is already paid!"
 }
 
 
@@ -224,7 +225,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const disabledButton = useMemo(() => {
         switch (subStep) {
             case 1:
-                if(userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status !== "approved" : userDetails?.company?.kyb_status !== "approved"){
+                if (userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status !== "approved" : userDetails?.company?.kyb_status !== "approved") {
                     return false
                 }
                 return !internationalData.amount || +String(internationalData.amount)?.replaceAll(",", "") < 1 || !internationalData.currency || !internationalData.currency_wallet?.currency?.code || !internationalData.country?.name || !internationalData?.payoutChannel?.name || !internationalData?.payer?.name || internationalData.error || internationalData.exchange_rate_error || !internationalData.exchange_rate?.receiver?.amount > 0

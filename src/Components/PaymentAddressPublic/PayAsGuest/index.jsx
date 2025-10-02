@@ -103,6 +103,7 @@ const PayAsGuest = ({
         phone: data.phone,
         dob: formattedDob,
         client_reference: data.paymentRef,
+        iso_code: data.country?.alpha3,
       };
 
       if (invoiceId) {
@@ -371,7 +372,7 @@ const PayAsGuest = ({
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/paypal-fee/${wallet?.wallet_id
-        }/${amount}?payment_type=${invoiceId && "invoice"}`
+        }/${amount}?payment_type=${invoiceId ? "invoice" : "payment_address"}`
       );
       const dec = decryptData(res.data.data);
       console.log(dec);
@@ -412,7 +413,7 @@ const PayAsGuest = ({
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/card-fee/${wallet?.wallet_id
-        }/${amount}?payment_type=${invoiceId && "invoice"}`
+        }/${amount}?payment_type=${invoiceId ? "invoice" : "payment_address"}`
       );
       const dec = decryptData(res.data.data);
       console.log(dec);

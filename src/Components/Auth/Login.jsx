@@ -6,7 +6,7 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import PhoneInput from "../PhoneInput";
 import { AlertTriangle, ChevronRight, Eye, EyeOff } from "react-feather";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import gs from "./files/gs.svg"
 import as from "./files/as.svg"
 import authenticator from "./files/authenticator.png"
@@ -54,6 +54,9 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [showQuickLogin, setShowQuickLogin] = useState(false)
     const [biometricLoading, setBiometricLoading] = useState(false)
     const [biometricSuccessfull, setBiometricSuccessfull] = useState(false)
+    const location = useLocation()
+    const queryParams = new URLSearchParams(location.search)
+    const redirect = queryParams.get("redirect")
 
     // convert this object into an array of object it should just have a type property which should tell like whatsapp insta biometric instead of a object property
 
@@ -434,7 +437,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         if (dec?.country?.status) {
                             const data = await getUserInfo()
                                 .catch(() => {
-                                    const path = sessionStorage.getItem("path")
+                                    const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
                                     localStorage.setItem("login", true)
                                     localStorage.setItem("token", token)
                                     setData({
@@ -473,7 +476,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     data: encrypted
                                 })
                                     .then(res => {
-                                        const path = sessionStorage.getItem("path")
+                                        const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
                                         if (path && path !== "undefined") {
                                             navigate(path)
                                         } else {
@@ -485,7 +488,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     .catch(err => {
                                         setIsPressed(false)
                                         setIsLoginError("Something went wrong while creating login details")
-                                        const path = sessionStorage.getItem("path")
+                                        const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
                                         console.log(path)
                                         if (path && path !== "undefined") {
                                             navigate(path)
@@ -618,7 +621,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     if (dec?.country?.status) {
                         const data = await getUserInfo()
                             .catch(() => {
-                                const path = sessionStorage.getItem("path")
+                                const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
                                 localStorage.setItem("login", true)
                                 localStorage.setItem("token", token)
                                 setUserDetails(dec)
@@ -657,7 +660,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 data: encrypted
                             })
                                 .then(res => {
-                                    const path = sessionStorage.getItem("path")
+                                    const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
                                     if (path && path !== "undefined") {
                                         navigate(path)
                                     } else {
@@ -670,7 +673,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     setIsPressed(false)
                                     setBiometricLoading(false)
                                     setIsLoginError("Something went wrong while creating login details")
-                                    const path = sessionStorage.getItem("path")
+                                    const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
                                     console.log(path)
                                     if (path && path !== "undefined") {
                                         navigate(path)

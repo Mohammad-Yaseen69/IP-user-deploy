@@ -28,6 +28,7 @@ import localforage from "localforage"
 import { UserContext } from "../../../Context/UserContext"
 import ShippingDetails from "./ShippingDetails"
 import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow"
+import { isInIframe, openInNewTab } from "../../../utils/Functions"
 
 const initialData = {
     step: 1,
@@ -71,6 +72,10 @@ function reducer(state, action) {
             return state;
     }
 }
+
+
+
+
 
 const InvoicePaymentQr = () => {
     const { invoiceId } = useParams()
@@ -248,13 +253,20 @@ const InvoicePaymentQr = () => {
         check()
     }, [localforage])
 
+
+
     const navigateToInstapay = () => {
-        if (userDetails) {
-            sessionStorage.setItem("path", url)
-            navigate(url)
+        if (isInIframe()) {
+            const toNavigate = `${import.meta.env.VITE_PUBLIC_URL}/login?redirect=${encodeURIComponent(url)}`
+            openInNewTab(toNavigate)
         } else {
-            sessionStorage.setItem("path", url)
-            navigate("/login")
+            if (userDetails) {
+                sessionStorage.setItem("path", url)
+                navigate(url)
+            } else {
+                sessionStorage.setItem("path", url)
+                navigate("/login")
+            }
         }
     }
     return (
