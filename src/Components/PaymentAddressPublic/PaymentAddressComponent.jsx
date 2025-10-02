@@ -138,7 +138,7 @@ export const LeftJsx = ({
           <div className="p-swiper-videos-123">
             <Swiper
               modules={[Pagination]}
-              pagination={{ clickable: true }}
+              pagination={{ clickable: true, el: '.portfolio-swiper-pagination' }}
               spaceBetween={10}
               slidesPerView={
                 userVideos.length === 1 || window.innerWidth < 700
@@ -161,6 +161,9 @@ export const LeftJsx = ({
                 </SwiperSlide>
               ))}
             </Swiper>
+
+            <div className="portfolio-swiper-pagination" style={{ marginTop: 12, textAlign: 'center' }} />
+
           </div>
         )}
 

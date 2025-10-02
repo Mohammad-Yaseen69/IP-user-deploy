@@ -604,6 +604,7 @@ const PayAsGuest = ({
                       dataHandler={dataHandler}
                       tokenUrl={(e) => ""}
                       url={""}
+                      inGuest={true}
                       showCards={false}
                     />
                   </div>
@@ -665,13 +666,15 @@ const PayAsGuest = ({
                   >
                     {t("Back")}
                   </button>
-                  <button
-                    disabled={data.loading || disabled}
-                    onClick={onClickHandler}
-                  >
-                    {t("Next")}
-                    <ChevronRight size={18} />
-                  </button>
+                  {data.loading ? <div style={{width: "100px"}}> <InstaPayLoader /> </div> :
+                    <button
+                      disabled={data.loading || disabled}
+                      onClick={onClickHandler}
+                    >
+                      {t("Next")}
+                      <ChevronRight size={18} />
+                    </button>
+                  }
                 </div>
               </div>
             </div>

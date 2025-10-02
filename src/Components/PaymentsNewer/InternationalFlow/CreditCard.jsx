@@ -15,7 +15,7 @@ import { toast } from 'react-toastify'
 // import purple from "../../AddFunds/files/pb_card.png"
 // import red from "../../AddFunds/files/rb_card.png"
 
-const CreditCard = ({ data, dataHandler, url, tokenUrl, showCards = true, showSave = true, guest }) => {
+const CreditCard = ({ data, dataHandler, url, tokenUrl, showCards = true, showSave = true, guest, inGuest }) => {
     const { t } = useTranslation()
     const { userDetails, authHeader } = useContext(UserContext)
     const [cards, setCards] = useState([])
@@ -111,6 +111,10 @@ const CreditCard = ({ data, dataHandler, url, tokenUrl, showCards = true, showSa
                     setCardHolderName={(e) => {
                         dataHandler("cardHolderName", e)
                         dataHandler("selectedSavedCard", {})
+
+                        if (inGuest) {
+                            dataHandler("fullName", e)
+                        }
                     }}
                     cardExpiry={data.expiry}
                     setCardExpiry={(e) => {
