@@ -33,7 +33,13 @@ import DateMomentUtils from '@date-io/moment';
 
 const App = () => {
   const [showOtherTabError, setShowOtherTabError] = useState(false)
-  const client = new QueryClient()
+  const client = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false
+      }
+    }
+  })
 
   useLayoutEffect(() => {
     const bc = new BroadcastChannel("dcode");

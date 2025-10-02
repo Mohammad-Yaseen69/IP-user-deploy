@@ -2,12 +2,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { createContext } from "react";
 import { decryptData } from "../Helper/EssentilaMethods/Decryption";
-import { encryptData } from "../Helper/EssentilaMethods/Encryption";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { publicRoutes } from "../RouteNew/Routes";
 import questionsData from "../Components/Settings/questions.json"
 import Modal from "../Components/SessionExpireModal"
+import { useQuery } from "@tanstack/react-query";
 // removed unused AiOutlineConsoleSql import
 
 // axios.defaults.timeout = 10000;
@@ -73,80 +73,79 @@ export const getCroppedImg = async (imageSrc, pixelCrop) => {
 // Initial value for UserContext to avoid undefined errors
 const initialUserContext = {
     userDetails: null,
-    setUserDetails: () => {},
+    setUserDetails: () => { },
     userWallets: [],
-    setUserWallets: () => {},
+    setUserWallets: () => { },
     token: '',
     authHeader: {},
     beneficiaries: [],
-    setBeneficiaries: () => {},
+    setBeneficiaries: () => { },
     userTransactions: [],
-    setUserTransactions: () => {},
+    setUserTransactions: () => { },
     searchQuery: '',
-    setSearchQuery: () => {},
+    setSearchQuery: () => { },
     apiDates: null,
-    setApiDates: () => {},
+    setApiDates: () => { },
     userSecurityQues: [],
     referralLink: '',
     userSessions: [],
     allowedFeatures: null,
-    verifyToken: () => {},
+    verifyToken: () => { },
     userWithdrawals: undefined,
-    setUserWithdrawals: () => {},
+    setUserWithdrawals: () => { },
     allowedWithdrawals: null,
     registeredBeneficiaries: [],
     profileCompleted: null,
     allowedCountries: [],
     userPortfolio: [],
     profileIncompleteReason: '',
-    setUserPortfolio: () => {},
-    setUserVideos: () => {},
-    getUserVideos: () => {},
+    setUserPortfolio: () => { },
+    setUserVideos: () => { },
+    getUserVideos: () => { },
     userVideos: [],
-    checkRegisteredBenficiaries: () => {},
-    getAllActiveCountries: () => {},
-    getUserWallets: () => {},
-    getUserBeneficiaries: () => {},
-    getUserDocuments: () => {},
-    checkAuth: () => {},
-    getSecurityQuestions: () => {},
-    getInvitationLink: () => {},
-    getSessions: () => {},
+    checkRegisteredBenficiaries: () => { },
+    getAllActiveCountries: () => { },
+    getUserWallets: () => { },
+    getUserBeneficiaries: () => { },
+    getUserDocuments: () => { },
+    checkAuth: () => { },
+    getSecurityQuestions: () => { },
+    getInvitationLink: () => { },
+    getSessions: () => { },
     profileCompletedPercentage: 0,
-    getWithdrawals: () => {},
-    getReferralCommission: () => {},
+    getWithdrawals: () => { },
+    getReferralCommission: () => { },
     totalReferralAmount: 0,
     validateSendingLimits: () => false,
     validateReceivingLimits: () => false,
     validateTransactionsCount: () => false,
     profileLockTIme: 0,
-    setProfileLockTime: () => {},
+    setProfileLockTime: () => { },
     showInactivityModal: false,
-    setShowInactivityModal: () => {},
+    setShowInactivityModal: () => { },
     is30Days: false,
-    setIs30Days: () => {},
+    setIs30Days: () => { },
     threeDaysReminder: false,
-    set3DaysReminder: () => {},
+    set3DaysReminder: () => { },
     is30DaysInfo: false,
-    setIs30DaysInfo: () => {},
+    setIs30DaysInfo: () => { },
     threeDaysReminderInfo: false,
-    set3DaysReminderInfo: () => {},
-    clearData: () => {},
+    set3DaysReminderInfo: () => { },
+    clearData: () => { },
     croppedImages: {
         profileDP: '',
         profileBanner: '',
         paDP: '',
         paBanner: '',
     },
-    updateCoordinates: () => {},
-    setCroppedImages: () => {},
+    updateCoordinates: () => { },
+    setCroppedImages: () => { },
     missingTabsData: [],
-    setMissingTabsData: () => {},
-    setAvailable: () => {},
-    available: [],
-    setBlocked: () => {},
-    blocked: [],
-    benLoading: false,
+    setMissingTabsData: () => { },
+    setAvailable: () => { },
+    available: 0,
+    setBlocked: () => { },
+    blocked: 0,
 };
 
 export const UserContext = createContext(initialUserContext)
@@ -155,54 +154,26 @@ export const authHeader = {
     "Authorization": `Bearer ${localStorage.getItem("token")}`,
     "source": "user"
 }
+
+
+const getRegisteredBeneficiariesFn = async (head) => {
+    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/get-registered-beneficiaries`, {
+        headers: head
+    })
+
+    return decryptData(res.data.data)?.registeredBeneficiaries
+}
+const getBalances = async (head) => {
+    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-balance-usd`, {
+        headers: head
+    })
+
+    return decryptData(res.data.data)?.data
+}
+
+
 const UserState = ({ children }) => {
     console.info(`%c Dear User, Please be aware that copying and pasting code or commands directly into your console(in this section) can pose significant security risks. Malicious code can compromise your account, steal sensitive information, or damage your system. \nFor your safety, never paste commands from untrusted or unknown sources.\nThank you for your attention to this matter.\nSincerely,\nInstaPay`, 'color: white; font-size: 20px; font-weight: 500; background: linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%); padding: .5rem; border-radius: 5px;');
-
-    const checkBusinessBeneficiary = async (email) => {
-        const data = { email }
-        if (email) {
-            const encrypted = encryptData(data)
-            try {
-                const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/account-check/business`, {
-                    data: encrypted
-                })
-                return decryptData(res.data.data).status
-            } catch (error) {
-                return decryptData(error?.response?.data?.data).status
-            }
-        }
-    }
-
-    const checkIndividualBeneficiary = async (email, phone) => {
-        const data = { email, phone }
-
-        if (email || phone) {
-            const encrypted = encryptData(data)
-            try {
-                await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/account-check/beneficiary`, {
-                    data: encrypted
-                }, { headers: authHeader })
-
-
-                return { status: false, existType: undefined }
-
-            } catch (error) {
-                const dec = decryptData(error?.response?.data?.data)
-
-                if (dec?.foundVia === "email" && email) {
-                    return { status: true, existType: "email" }
-                }
-                else if (dec?.foundVia === "phone" && phone) {
-                    return { status: true, existType: "phone" }
-                }
-                else if ((email && phone) && (dec?.foundVia === "phone" || dec?.foundVia === "email")) {
-                    return { status: true, existType: "phone" }
-                }
-                return { status: false, existType: undefined }
-            }
-        }
-    }
-
 
     const token = localStorage.getItem("token")
     const [userDetails, setUserDetails] = useState(null)
@@ -225,7 +196,6 @@ const UserState = ({ children }) => {
     const [profileCompletedPercentage, setProfileCompletedPercentage] = useState(0)
     const [profileIncompleteReason, setProfileIncompleteReason] = useState("")
     const [showModalState, setShowModalState] = useState(false)
-    const [benLoading, setBenLoading] = useState(false)
     const navigate = useNavigate()
     const [croppedImages, setCroppedImages] = useState({
         profileDP: "",
@@ -235,8 +205,18 @@ const UserState = ({ children }) => {
     })
     const [pAddressData, setPAddressData] = useState({})
     const [missingTabsData, setMissingTabsData] = useState([])
-    const [available, setAvailable] = useState([])
-    const [blocked, setBlocked] = useState([])
+    const [available, setAvailable] = useState(0)
+    const [blocked, setBlocked] = useState(0)
+    const { data: registeredBenApiData, isLoading: benLoading } = useQuery({
+        queryKey: ["RegisteredBeneficiaries", token],
+        queryFn: () => getRegisteredBeneficiariesFn(authHeader),
+        enabled: !!token
+    })
+    const { data: balances, isLoading: balanceLoading } = useQuery({
+        queryKey: ["getBalancesIUSD", userDetails?._id],
+        queryFn: () => getBalances(authHeader),
+        enabled: !!userDetails?._id
+    })
 
     const authHeader = {
         "Authorization": `Bearer ${token}`,
@@ -423,8 +403,8 @@ const UserState = ({ children }) => {
                     navigate("/login")
                 }
             })
-            .catch(err => {
-                const dec = decryptData(err.response.data.data)
+            .catch((err) => {
+                const dec = decryptData(err?.response?.data?.data)
                 const coun = localStorage.getItem("ip_country")
                 localStorage.clear()
                 localStorage.setItem("ip_country", coun)
@@ -440,35 +420,6 @@ const UserState = ({ children }) => {
     }
 
 
-    const getExchangedAmounts = async (from, to, amount) => {
-        if (amount) {
-            try {
-                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${from}&to=${to}&amount=${amount}`, {
-                    headers: authHeader
-                });
-                const dec = decryptData(res?.data?.data);
-                return dec?.exchangeRate?.exchanged_amount ?? 0;
-            } catch (error) {
-                return 0;
-            } finally {
-            }
-        } else {
-            return 0
-        }
-    };
-
-
-    const calculateAvailable = async (wallets) => {
-        const promises = wallets.filter(item => item?.wallet_type === "insta").map(item => getExchangedAmounts(item?.currency?.code, "USD", item?.balance?.available));
-        const balances = await Promise.all(promises);
-        return balances
-    }
-
-    const calculateBlocked = async (wallets) => {
-        const promises = await wallets.filter(item => item?.wallet_type === "insta").map(item => getExchangedAmounts(item?.currency?.code, "USD", item?.balance?.reserved));
-        const balances = await Promise.all(promises);
-        return balances
-    }
     const getUserWallets = (dontSort) => {
         axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-user-wallet/${userDetails?._id}`, { headers: authHeader })
             .then(async (res) => {
@@ -484,22 +435,13 @@ const UserState = ({ children }) => {
 
                 if (dontSort) {
                     setUserWallets(sorted)
-                    const availableBalance = await calculateAvailable(sorted)
-                    const blockedBalance = await calculateBlocked(sorted)
-                    setAvailable(availableBalance)
-                    setBlocked(blockedBalance)
                 } else {
                     const defaultWallet = decrypted.walletList.find(w => w.default);
                     const otherWallets = sorted.filter(w => !w.default);
                     const wallets = defaultWallet ? [defaultWallet, ...otherWallets] : otherWallets
-                    const availableBalance = await calculateAvailable(wallets)
-                    const blockedBalance = await calculateBlocked(wallets)
-                    setAvailable(availableBalance)
-                    setBlocked(blockedBalance)
                     setUserWallets(wallets);
                 }
             })
-            .catch(err => "a")
     }
 
     const getPAddressDets = async () => {
@@ -517,7 +459,8 @@ const UserState = ({ children }) => {
                 getImage(p?.coverImage?.url, p?.coverImage?.coordinates, "pa", "cover")
             }
             setPAddressData(p)
-        } catch (error) {
+        } catch {
+            // 
         }
     }
     useEffect(() => {
@@ -526,6 +469,13 @@ const UserState = ({ children }) => {
             getPAddressDets()
         }
     }, [userDetails])
+
+    useEffect(() => {
+        if (balances) {
+            setAvailable(balances?.available ?? 0)
+            setBlocked(balances?.blocked ?? 0)
+        }
+    }, [balances])
 
 
 
@@ -539,33 +489,13 @@ const UserState = ({ children }) => {
             const decrypted = decryptData(res.data.data)
             setBeneficiaries(decrypted.beneficiaryList)
 
-        } catch (error) {
+        } catch {
+            // 
         }
     }
 
-    // beneficiary registration check
     const checkRegisteredBenficiaries = () => {
-        if (beneficiaries.length > 0) {
-            setBenLoading(true)
-            Promise.all(beneficiaries.map(async (benef) => {
-                if (benef.beneficiary_type === "individual") {
-                    const result = await checkIndividualBeneficiary(benef.email, benef.phone);
-                    return { ...benef, ...result };
-                } else {
-                    const status = await checkBusinessBeneficiary(benef.email);
-                    return { ...benef, status: !status, existType: status === false ? "email" : null };
-                }
-            })).then((results) => {
-                const filtered = results.filter(b => b.status === true);
-
-                console.log(filtered)
-                setRegisteredBeneficiaries(filtered);
-            }).catch((error) => {
-                console.error("An error occurred while checking beneficiaries:", error);
-            }).finally(() => {
-                setBenLoading(false)
-            })
-        }
+        setRegisteredBeneficiaries(registeredBenApiData)
     }
 
     // security questions
@@ -581,7 +511,7 @@ const UserState = ({ children }) => {
                 })
                 setUserSecurityQues(questions)
             })
-            .catch(err => {
+            .catch(() => {
                 // console.log(err.response.data)
             })
     }
@@ -597,8 +527,6 @@ const UserState = ({ children }) => {
                 const formattedUrl = `https://my.insta-pay.ch/signup/${url[1]}`
                 setReferralLink(formattedUrl)
             })
-            .catch(err => {
-            })
     }
 
     // user sessions
@@ -611,7 +539,7 @@ const UserState = ({ children }) => {
                 setUserSessions(decrypted?.history?.sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt))?.slice(0) ?? [])
                 // console.log(decrypted?.history?.sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt))?.slice(0) ?? [])
             })
-            .catch(err => {
+            .catch(() => {
                 // console.log(err)
             })
     }
@@ -629,13 +557,12 @@ const UserState = ({ children }) => {
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
-                const { completedBasicFields, totalBasicFields, completedProfilePercent } = decrypted?.fieldsInformation
-                setProfileIncompleteReason(completedBasicFields !== totalBasicFields ? "basic" : "")
-                setProfileCompleted(completedProfilePercent === 100)
-                setProfileCompletedPercentage(completedProfilePercent)
-            })
-            .catch(err => {
-                // console.log(decrypted)
+                if(decrypted.fieldsInformation){
+                    const { completedBasicFields, totalBasicFields, completedProfilePercent } = decrypted.fieldsInformation
+                    setProfileIncompleteReason(completedBasicFields !== totalBasicFields ? "basic" : "")
+                    setProfileCompleted(completedProfilePercent === 100)
+                    setProfileCompletedPercentage(completedProfilePercent)
+                }
             })
 
     }
@@ -671,8 +598,6 @@ const UserState = ({ children }) => {
             .then(res => {
                 const decrypted = decryptData(res.data.data)
                 setUserPortfolio(decrypted.result)
-            })
-            .catch(err => {
             })
     }
     const getUserVideos = (userId = null) => {
@@ -723,7 +648,7 @@ const UserState = ({ children }) => {
             const data = decryptData(res.data.data)
             setTotalReferralAmount(data?.availableCommission ?? 0)
             // console.log(data)
-        } catch (error) {
+        } catch  {
             // console.log(decryptData(error?.response?.data?.data));
         }
     }
@@ -741,7 +666,7 @@ const UserState = ({ children }) => {
         return false;
     }
 
-    const validateReceivingLimits = (amount) => {
+    const validateReceivingLimits = () => {
         if (userDetails?.level?.daily_receiving_limit - userDetails?.used_limits?.daily_receiving_limit < 1) {
             return true
         }
@@ -819,7 +744,7 @@ const UserState = ({ children }) => {
 
 
     return (
-        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading }}>
+        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading }}>
             {showModalState && <Modal isOpen={showModalState} toggle={() => window.history.replaceState(null, null, "")} />}
             {children}
         </UserContext.Provider>

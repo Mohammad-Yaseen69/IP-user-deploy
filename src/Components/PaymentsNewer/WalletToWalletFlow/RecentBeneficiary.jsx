@@ -49,16 +49,18 @@ const RecentBeneficiary = ({ data, dataHandler, setExpandRecent, expandRecent })
             ))) && item.existType === "phone"
         });
 
-        const uniqueArray = [...uniqueEmailBen, ...uniquePhoneBen]
-        const allBens = [...uniqueArray.filter(ben => !ipWalletBens.find(b => b?._id === ben?._id)), ...ipWalletBens]
+        if (uniqueEmailBen && uniquePhoneBen) {
+            const uniqueArray = [...uniqueEmailBen, ...uniquePhoneBen]
+            const allBens = [...uniqueArray.filter(ben => !ipWalletBens.find(b => b?._id === ben?._id)), ...ipWalletBens]
 
 
-        const ownAccountFilteration = allBens.filter((item) => {
-            return item?.phone !== userDetails?.phone && item?.email !== userDetails?.email
-            // return true
-        })
+            const ownAccountFilteration = allBens.filter((item) => {
+                return item?.phone !== userDetails?.phone && item?.email !== userDetails?.email
+                // return true
+            })
 
-        return ownAccountFilteration
+            return ownAccountFilteration
+        }
     }, [registeredBeneficiaries])
 
 
