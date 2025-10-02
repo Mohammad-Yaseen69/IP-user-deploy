@@ -162,7 +162,7 @@ const WalletFund = ({ setAction }) => {
                 localStorage.setItem("ip_country", coun)
                 window.location.pathname = "/login";
             }
-            toast.error("Something went wrong while getting mobile wallet channels.")
+            setThunesServices([])
         }
     }
 
