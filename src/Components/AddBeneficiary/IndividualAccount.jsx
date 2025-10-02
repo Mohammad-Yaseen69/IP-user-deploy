@@ -637,16 +637,16 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
                                         pointerEvents: showAdditional ? "all" : "none"
                                     }}>
                                         {
-                                            Object.keys(additionFields).map(item => (
+                                            Object.keys(additionFields).map((item,key) => (
                                                 item === "gender"
                                                     ?
-                                                    <FormGroup FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
+                                                    <FormGroup key={key} FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                         <Label className="col-form-label">{t(service_name_formatter(item))}</Label>
                                                         <Input type="select" className="form-control" style={{ flex: 1, minWidth: "250px" }} value={additionFields[item]} name={item} onChange={handleAddtionalFieldChange}>
                                                             <option value="">--{t("Select Gender")}--</option>
                                                             {
-                                                                Object.keys(gendersData).map(item => (
-                                                                    <option value={item}>{t(item)}</option>
+                                                                Object.keys(gendersData).map((item, idx) => (
+                                                                    <option key={`${key}-${idx}`} value={item}>{t(item)}</option>
                                                                 ))
                                                             }
                                                         </Input>

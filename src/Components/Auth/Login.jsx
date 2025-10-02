@@ -22,6 +22,7 @@ import useWindowWidth from "../../utils/useWindowWidth";
 import i18next from "i18next";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import localforage from "localforage"
+import InstaPayLoader from "../Loader";
 const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
@@ -51,6 +52,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [showNoticeModal, setShowNoticeModal] = useState(false);
     const [loginData, setLoginData] = useState(null)
     const [showQuickLogin, setShowQuickLogin] = useState(false)
+    const [biometricLoading, setBiometricLoading] = useState(false)
+    const [biometricSuccessfull, setBiometricSuccessfull] = useState(false)
 
     // convert this object into an array of object it should just have a type property which should tell like whatsapp insta biometric instead of a object property
 
@@ -569,6 +572,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         try {
             setIsPressed(true)
             setIsLoginError("")
+            setBiometricLoading(true)
 
             const emailOrPhone = isEmail.test(email) ?
                 { email: email } :
@@ -579,8 +583,17 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             })
 
             const dec1 = await decryptData(response1.data.data)
+            let credentials;
+            try {
+                credentials = await startAuthentication(dec1.options)
 
-            const credentials = await startAuthentication(dec1.options)
+            } catch {
+                credentials = null
+                setBiometricLoading(false)
+                setIsPressed(false)
+                setIsLoginError("Biometric verification failed")
+                return
+            }
 
             console.log(dec1)
             const verificationData = {
@@ -655,6 +668,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 })
                                 .catch(err => {
                                     setIsPressed(false)
+                                    setBiometricLoading(false)
                                     setIsLoginError("Something went wrong while creating login details")
                                     const path = sessionStorage.getItem("path")
                                     console.log(path)
@@ -673,16 +687,20 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 .catch(err => {
                     // console.log(decryptData(err.response.data.data))
                     setIsPressed(false)
+                    setBiometricLoading(false)
                     setIsLoginError("Something went wrong while getting account details")
                 })
 
 
+            setBiometricSuccessfull(true)
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
             console.log(dec)
             setIsLoginError("Biometric verification failed");
+            setBiometricLoading(false)
         }
         finally {
+            setBiometricLoading(false)
             setIsPressed(false)
         }
     };
@@ -973,24 +991,34 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         <h4 style={{ color: "#545454", fontSize: "1rem", fontWeight: 600 }}>
                                             {t("Verify identity using your created Passkey on this device")}
                                         </h4>
-                                        <button
-                                            onClick={handleBiometricVerification}
-                                            className={styles.otpMethodButton}
-                                            type="button"
-                                            style={{
-                                                border: "none",
-                                                outline: "none",
-                                                backgroundColor: "#f5f5f5",
-                                                padding: "10px 1.5rem",
-                                                borderRadius: "5px",
-                                                width: "100%"
-                                            }}
-                                        >
-                                            <img width={30} src={BiometricSvg} alt="" />
-                                            <span>
-                                                {t("Click to Continue with Biometric")}
-                                            </span>
-                                        </button>
+                                        {biometricLoading || biometricSuccessfull ? (
+                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', flexDirection: "column" }}>
+                                                <span style={{ fontWeight: 600 }}>{biometricSuccessfull ? t("Biometric verification successful, We will redirect you to the dashboard page in a while.") : t('Please wait while we verify your biometric...')}</span>
+                                                <div style={{ width: "100px" }}>
+                                                    <InstaPayLoader />
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={handleBiometricVerification}
+                                                className={styles.otpMethodButton}
+                                                type="button"
+                                                style={{
+                                                    border: "none",
+                                                    outline: "none",
+                                                    backgroundColor: "#f5f5f5",
+                                                    padding: "10px 1.5rem",
+                                                    borderRadius: "5px",
+                                                    width: "100%"
+                                                }}
+                                                disabled={biometricLoading}
+                                            >
+                                                <img width={30} src={BiometricSvg} alt="" />
+                                                <span>
+                                                    {t("Click to Continue with Biometric")}
+                                                </span>
+                                            </button>
+                                        )}
                                     </div>
                                 ) : (
                                     // Existing OTP input fields
@@ -1091,7 +1119,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                                 key={index}
                                                                 className={styles.otpMethodButton}
                                                                 type="button"
-                                                                disabled={isPressed || methodLoading}
+                                                                disabled={isPressed || methodLoading || biometricLoading}
                                                                 onClick={() => handleOtpMethod(method.attr)}
                                                             >
                                                                 <img
@@ -1118,7 +1146,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                                 key={index}
                                                                 className={styles.otpMethodButton}
                                                                 type="button"
-                                                                disabled={isPressed || methodLoading}
+                                                                disabled={isPressed || methodLoading || biometricLoading}
                                                                 onClick={() => handleOtpMethod(method.attr)}
                                                             >
                                                                 <img

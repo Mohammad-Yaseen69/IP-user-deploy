@@ -100,6 +100,7 @@ const PayAsGuest = ({
         email: data.email,
         phone: data.phone,
         dob: formattedDob,
+        client_reference: data.paymentRef,
       };
 
       if (invoiceId) {
@@ -161,6 +162,7 @@ const PayAsGuest = ({
         phone: data.phone,
         iso_code: data.country?.alpha3,
         dob: formattedDob,
+        client_reference: data.paymentRef,
       };
 
       if (invoiceId) {
@@ -1049,7 +1051,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping }) => {
           </label>
           <input
             type="text"
-            placeholder={t("Enter your name")}
+            placeholder={t("Enter your Name")}
             value={data.fullName}
             onChange={(e) => dataHandler("fullName", e.target.value)}
           />
@@ -1075,7 +1077,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping }) => {
           <Input
             required={true}
             type="date"
-            placeholder={t("Enter your Date of birth")}
+            placeholder="Enter your Date of birth"
             value={data.dob}
             onChange={handleDateChange}
             max={minDate.toISOString().split("T")[0]}
@@ -1102,7 +1104,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping }) => {
                 padding: ".4rem .7rem",
               }}
             >
-              {t("Please enter a valid email address.")}
+              Please enter a valid email address.
             </span>
           ) : (
             ""
@@ -1118,12 +1120,6 @@ const RecipientDetails = ({ data, dataHandler, isShipping }) => {
             onChange={(e) => dataHandler("paymentRef", e.target.value.trim())}
           />
         </div>
-
-        {isShipping && (
-          <div className={styles.inpt_co}>
-            <ShippingDetails data={data} dataHandler={dataHandler} />
-          </div>
-        )}
       </div>
     </div>
   );

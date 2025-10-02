@@ -59,7 +59,9 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                                         CountriesList?.some(item => item.code === code)
                                     )
                                 }
-                            } catch (_) { }
+                            } catch (error) {
+                                console.log(error)
+                            }
 
                             if (!isValidCountry) {
                                 const msg = "IBAN must belong to your selected country!"
@@ -98,7 +100,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                                     }
                                 }
                             }
-                            setBankCountry(decrypted?.bicDetails?.structured_address?.country_name[0] + decrypted?.bicDetails?.structured_address?.country_name.slice(1).toLowerCase() ?? "")
+                            setBankCountry(decrypted?.bicDetails?.structured_address?.country_name[0] + decrypted?.bicDetails?.structured_address?.country_name.slice(1).toLowerCase() || "")
                             setBankCountryCode(decrypted?.bicDetails?.structured_address?.country_code ?? "")
                             setError ? setError("") : setBankDetailsError("")
                             setIsValidIban(true)
@@ -179,10 +181,12 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                                         CountriesList?.some(item => item.code === code)
                                     )
                                 }
-                            } catch (_) { }
+                            } catch (error) {
+                                console.log(error)
+                            }
 
                             if (!isValidCountry) {
-                                const msg = "IBAN must belong to your selected country!"
+                                const msg = "Swift Code must belong to your selected country!"
                                 setError ? setError(msg) : setBankDetailsError(msg)
                                 setFormData(prev => ({
                                     ...prev,
@@ -207,6 +211,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                                     [bankCityKey]: decrypted?.structured_address?.town_name ?? "",
                                     [bankProvinceKey]: decrypted?.structured_address?.town_name ?? "",
                                     [bankPostalCodeKey]: decrypted?.structured_address?.post_code ?? "",
+                                    [bankAccountNumberKey]: ""
                                 }
                             })
                             if (!isForEdit) {
@@ -216,7 +221,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                                     }
                                 }
                             }
-                            setBankCountry(decrypted?.structured_address?.country_name[0] + decrypted?.structured_address?.country_name.slice(1).toLowerCase() ?? "")
+                            setBankCountry(decrypted?.structured_address?.country_name[0] + decrypted?.structured_address?.country_name.slice(1).toLowerCase() || "")
                             setBankCountryCode(decrypted?.structured_address?.country_code ?? "")
                             setError ? setError("") : setBankDetailsError("")
                             setIsValidIban(true)
