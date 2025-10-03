@@ -26,10 +26,10 @@ import { useLocation } from "react-router";
 import { toast } from "react-toastify";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver"
-import { FaFileExport } from "react-icons/fa6";
+ 
 import exportPng from "./files/export.svg"
 
-const formatWithZero = (value) => value.toString().padStart(2, '0');
+ 
 
 const TransactionsTable = () => {
     const { t } = useTranslation()
@@ -372,10 +372,10 @@ const TransactionsTable = () => {
         setExportLoading(true)
         if (!transactions || transactions.length === 0) {
             toast.error("No Transactions to import")
+            setExportLoading(false)
             return;
         }
         try {
-
             const payload = encryptData({
                 query: String(searchQuery).trim(),
                 from: '',
@@ -393,20 +393,64 @@ const TransactionsTable = () => {
             );
             const dec = decryptData(res.data.data);
 
-            console.log(dec)
+            const allTransactions = dec?.transactionList || [];
 
-            const allTransactions = dec?.transactionList;
+            const desiredHeaders = [
+                "Currency Symbol",
+                "Currency Code",
+                "Guest Details Name",
+                "Guest Details Phone",
+                "Guest Details Email",
+                "Guest Details Iso Code",
+                "External Token Type",
+                "Reference Id",
+                "Transaction Type",
+                "Service Type",
+                "Payment Type",
+                "Status",
+                "Description",
+                "Purpose",
+                "Amount",
+                "Fee",
+                "Total",
+                "Current Balance",
+                "Wallet Id",
+                "Timeline",
+                "Account Company Company Name",
+                "CreatedAt",
+                "Account User First Name",
+                "Account User Last Name",
+                "Sender Country Country Name",
+                "Sender User First Name",
+                "Sender User Last Name",
+                "Receiver User First Name",
+                "Invoice Id",
+                "Recipient Received Currency"
+            ];
 
             const flatTransactions = allTransactions.map(transaction => flattenObject(transaction));
 
-            const worksheet = XLSX.utils.json_to_sheet(flatTransactions);
+            const rowsWithDesiredHeaders = flatTransactions.map(obj => {
+                const outputRow = {};
+                Object.keys(obj).forEach(originalKey => {
+                    const formatted = formatHeader(originalKey);
+                    if (desiredHeaders.includes(formatted)) {
+                        outputRow[formatted] = obj[originalKey];
+                    }
+                });
+                desiredHeaders.forEach(h => {
+                    if (!(h in outputRow)) outputRow[h] = undefined;
+                });
+                return outputRow;
+            });
 
+            const worksheet = XLSX.utils.json_to_sheet(rowsWithDesiredHeaders, { header: desiredHeaders });
 
             const range = XLSX.utils.decode_range(worksheet["!ref"]);
             for (let C = range.s.c; C <= range.e.c; ++C) {
                 const address = XLSX.utils.encode_cell({ r: range.s.r, c: C });
-                const header = worksheet[address].v;
-                worksheet[address].v = formatHeader(header);
+                if (!worksheet[address]) continue;
+                worksheet[address].v = desiredHeaders[C] || worksheet[address].v;
                 worksheet[address].s = {
                     font: { bold: true },
                     alignment: { horizontal: "center" },
