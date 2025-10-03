@@ -1,121 +1,53 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Card, CardBody, CardHeader, Col, FormGroup, Input, Label } from 'reactstrap'
-import axios from 'axios'
+import { toast } from 'react-toastify'
 import { UserContext } from '../../Context/UserContext'
-import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
-import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
+import { useCreateUserKey, useGetApiKey, useRegenerateUserKey } from '../../hooks/GeneralUse/useApiKey'
 
 const ApiKey = () => {
     const { t } = useTranslation()
     const { userDetails, authHeader } = useContext(UserContext)
-    const [apiKey, setApiKey] = useState("")
     const [webhookUrl, setWebHookUrl] = useState("")
-    const [isGenerating, setIsGenerating] = useState(false)
-    const [isGetting, setIsGetting] = useState(false)
-    const [featureStatus, setFeatureStatus] = useState("")
+    const [showKey, setShowKey] = useState(false)
 
-    const GENERATE_API_KEY = () => {
-        setIsGenerating(true)
-        setIsGetting(true)
-        const data = {
-            webhook_url: "https://www.transactions-third-party-platform-NEW.com",
-            account: userDetails?._id
-        }
+    const accountId = userDetails?._id
+    const { data, isLoading, isFetching } = useGetApiKey({ accountId, headers: authHeader, enabled: !!accountId })
+    const createMutation = useCreateUserKey({ headers: authHeader })
+    const regenerateMutation = useRegenerateUserKey({ headers: authHeader, accountId })
 
-        // // console.log(data)
-        const encrypted = encryptData(data)
+    const apiKey = data?.userKey?.api_key ?? ""
+    const featureStatus = data?.userKey?.status ?? ""
 
-        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/userkey/create-user-key`, {
-            data: encrypted
-        }, {
-            headers: authHeader
-        })
-            .then(res => {
-                const decrypted = decryptData(res.data.data)
-                setApiKey(decrypted?.userKey?.api_key)
-                setWebHookUrl(decrypted?.userKey?.webhook_url)
-                setIsGenerating(false)
-                setIsGetting(false)
-            })
-            .catch(err => {
-                const decrypted = decryptData(err.response.data.data)
-                // console.log(decrypted)
-                setIsGenerating(false)
-                setIsGetting(false)
-            })
+    const isBusy = useMemo(() => {
+        return isLoading || isFetching || createMutation.isPending || regenerateMutation.isPending
+    }, [isLoading, isFetching, createMutation.isPending, regenerateMutation.isPending])
 
+    const handleCreate = () => {
+        if (!accountId) return
+        createMutation.mutate({ webhook_url: webhookUrl, account: accountId })
     }
 
-    useEffect(() => {
-        if (userDetails?._id) {
-            const checkUserKey = () => {
-                axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/userkey/account-user-key/${userDetails?._id}`, {
-                    headers: authHeader
-                })
-                    .then(res => {
-                        const decrypted = decryptData(res.data.data)
-                        setFeatureStatus(decrypted?.userkey?.status)
-                        // console.log(decrypted)
-                    })
-                    .catch(err => {
-                        const decrypted = decryptData(err?.response?.data.data)
-                        // console.log(decrypted)
-                        if (decrypted?.message?.toLowerCase() === "no userkey found!") {
-                            setFeatureStatus("not requested")
-                        }
-                    })
-            }
-            checkUserKey()
-        }
-    }, [userDetails])
+    const handleRegenerate = () => {
+        regenerateMutation.mutate()
+    }
 
-    useEffect(() => {
-        if (featureStatus === "enabled") {
-            const fetchApiKey = async () => {
-                try {
-                    setIsGetting(true);
-
-                    const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/userkey/get-apikey/${userDetails?._id}`, {
-                        headers: authHeader
-                    });
-
-                    const decrypted = decryptData(response.data.data);
-                    setApiKey(decrypted?.userKey?.api_key);
-                    setWebHookUrl(decrypted?.userKey?.webhook_url);
-                } catch (error) {
-                    const decrypted = decryptData(error.response?.data?.data || {});
-                    console.error(decrypted);
-                } finally {
-                    setIsGetting(false);
-                }
-            }
-            fetchApiKey();
-        };
-    }, [featureStatus]);
-
-    const requestFeature = async () => {
-        setIsGetting(true)
-
+    const handleCopy = async () => {
         try {
-            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/userkey/request-user-key/${userDetails?._id}`, {
-                headers: authHeader
-            })
-                .then(res => {
-                    const decrypted = decryptData(res.data.data)
-                    // console.log(decrypted)
-                    setIsGetting(false)
-                    setFeatureStatus("requested")
-                })
-                .catch(err => {
-                    const decrypted = decryptData(err?.response?.data.data)
-                    // console.log(decrypted)
-                    setIsGetting(false)
-                })
-        } catch (error) {
-            // console.log(error)
+            if (!apiKey) return
+            await navigator.clipboard.writeText(apiKey)
+            toast.success(t("API Key copied to clipboard"))
+        } catch {
+            toast.error(t("Failed to copy"))
         }
     }
+
+
+    useEffect(() => {
+        if (data) {
+            setWebHookUrl(data.userKey?.webhook_url)
+        }
+    }, [data])
 
     return (
         <Card>
@@ -123,21 +55,21 @@ const ApiKey = () => {
                 <h4>{t("API Key")}</h4>
             </CardHeader>
             <CardBody>
-                {
-                    featureStatus === "not requested"
-                    &&
+
+                {(!featureStatus || featureStatus !== "enabled") && (
                     <Col md="12" style={{ display: "flex", alignItems: "center", gap: "1rem", flexDirection: "column" }}>
-                        <p>Request for an API Key.</p>
-                        <Button onClick={requestFeature} color='primary' style={{ borderRadius: "5px" }} disabled={isGetting}>{isGetting ? "Requesting" : "Request Now"}</Button>
+                        <p style={{ fontWeight: 600, marginBottom: "0px", fontSize: "15px" }}>{t("Create your API Key")}</p>
+                        <FormGroup className="mb-2" style={{ width: "100%", maxWidth: 560 }}>
+                            <Label className="form-label">{t("Webhook URL")}</Label>
+                            <input className="form-control" value={webhookUrl} onChange={e => setWebHookUrl(e.target.value)} type="text" placeholder="https://example.com/webhook" />
+                        </FormGroup>
+                        <Button onClick={handleCreate} disabled={isBusy || !webhookUrl} style={{ borderRadius: "5px" }}>
+                            {createMutation.isPending ? t("Creating...") : t("Create API Key")}
+                        </Button>
                     </Col>
-                }
-                {
-                    featureStatus === "requested"
-                    &&
-                    <Col md="12" style={{ display: "flex", alignItems: "center", gap: "1rem", flexDirection: "column" }}>
-                        <p style={{ maxWidth: "75%", textAlign: "center" }}>Admin has received the request, the feature will be enabled once they accept the request. Please comeback later.</p>
-                    </Col>
-                }
+                )}
+
+
                 {
                     featureStatus === "disabled"
                     &&
@@ -157,19 +89,23 @@ const ApiKey = () => {
                             flexDirection: window.innerWidth > 1000 ? "row" : "column",
                         }}>
                             <h5 style={{ marginBottom: 0, whiteSpace: "nowrap", minWidth: "110px" }}>Get API Key</h5>
-                            <div style={{ display: "flex", flexDirection: "column", gap: ".65rem", flex: 1 }}>
-                                <Input type='text' placeholder={isGetting ? "Getting API Key..." : 'API key will be rendered'} readOnly disabled value={isGetting ? "Generating New API Key" : apiKey} />
-                                <Button color='primary' style={{ borderRadius: "5px" }} onClick={GENERATE_API_KEY} disabled={isGenerating}>
-                                    {
-                                        apiKey
-                                            ?
-                                            `${isGenerating ? "Regenerating" : "Regenerate"} API Key`
-                                            :
-                                            `${isGenerating ? "Generating" : "Generate"} API Key`
-                                    }
-                                </Button>
+                            <div style={{ display: "flex", flexDirection: "column", gap: ".65rem", flex: 1, maxWidth: 720 }}>
+                                <div style={{ display: "flex", gap: ".5rem", alignItems: "center" }}>
+                                    <Input type={showKey ? 'text' : 'password'} placeholder={isBusy ? "Loading..." : 'API key will be rendered'} readOnly disabled value={apiKey || ''} />
+                                    <Button color='secondary' outline style={{ borderRadius: "5px", whiteSpace: "nowrap" }} onClick={() => setShowKey(prev => !prev)} disabled={!apiKey}>
+                                        {showKey ? t("Hide") : t("Reveal")}
+                                    </Button>
+                                    <Button color='secondary' style={{ borderRadius: "5px", whiteSpace: "nowrap" }} onClick={handleCopy} disabled={!apiKey}>
+                                        {t("Copy")}
+                                    </Button>
+                                </div>
+                                <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
+                                    <Button color='primary' style={{ borderRadius: "5px" }} onClick={handleRegenerate} disabled={isBusy}>
+                                        {regenerateMutation.isPending ? "Regenerating..." : (apiKey ? "Regenerate API Key" : "Generate API Key")}
+                                    </Button>
+                                </div>
                             </div>
-                            <p style={{ marginBottom: "0", color: "#afafaf", fontSize: ".65rem", flex: 1 }}>To harness the full potential of InstaPay's seamless transactions, follow these quick steps to generate your API key. First, sign up for an account at [your registration URL] and access the Developer Dashboard. Navigate to the "API Keys" section, generate a new key, and ensure its secure storage.</p>
+                            <p style={{ marginBottom: "0", color: "#afafaf", fontSize: ".65rem", flex: 1 }}>To harness the full potential of InstaPay&apos;s seamless transactions, follow these quick steps to generate your API key. First, sign up for an account at [your registration URL] and access the Developer Dashboard. Navigate to the &quot;API Keys&quot; section, generate a new key, and ensure its secure storage.</p>
                         </Col>
                         <Col md="12" style={{
                             display: "flex",
@@ -182,12 +118,12 @@ const ApiKey = () => {
                             <div style={{ display: "flex", flexDirection: "column", gap: ".65rem", flex: 1 }}>
                                 <Button color='danger' style={{ borderRadius: "5px" }}>Delete API Key</Button>
                             </div>
-                            <p style={{ marginBottom: "0", color: "#afafaf", fontSize: ".65rem", flex: 1 }}>To harness the full potential of InstaPay's seamless transactions, follow these quick steps to generate your API key. First, sign up for an account at [your registration URL] and access the Developer Dashboard. Navigate to the "API Keys" section, generate a new key, and ensure its secure storage.</p>
+                            <p style={{ marginBottom: "0", color: "#afafaf", fontSize: ".65rem", flex: 1 }}>To harness the full potential of InstaPay&apos;s seamless transactions, follow these quick steps to generate your API key. First, sign up for an account at [your registration URL] and access the Developer Dashboard. Navigate to the &quot;API Keys&quot; section, generate a new key, and ensure its secure storage.</p>
                         </Col>
                         <Col md="12">
                             <FormGroup className="mb-3">
                                 <Label className="form-label">{t("Webhook URL")}</Label>
-                                <input className="form-control" value={webhookUrl} onChange={e => setWebHookUrl(e.target.value)} type="text" placeholder="Webhook URL" />
+                                <input disabled readOnly className="form-control" value={webhookUrl} onChange={e => setWebHookUrl(e.target.value)} type="text" placeholder="https://example.com/webhook" />
                             </FormGroup>
                         </Col>
                     </>
