@@ -26,10 +26,10 @@ import { useLocation } from "react-router";
 import { toast } from "react-toastify";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver"
- 
+
 import exportPng from "./files/export.svg"
 
- 
+
 
 const TransactionsTable = () => {
     const { t } = useTranslation()
@@ -357,7 +357,7 @@ const TransactionsTable = () => {
                             return JSON.stringify(item);
                         }
                         return item;
-                    }).join(' | '); 
+                    }).join(' | ');
                 } else {
                     Object.assign(acc, flattenObject(obj[key], propName));
                 }
@@ -376,66 +376,71 @@ const TransactionsTable = () => {
             return;
         }
         try {
-            const payload = encryptData({
-                query: String(searchQuery).trim(),
-                from: '',
-                to: "",
-                limit: totalNumberOfTransactions || 999,
+
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/1/99999999999`, {
+                headers: authHeader
             });
-            const res = await axios.post(
-                `${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-all-transactions`,
-                {
-                    data: payload
-                },
-                {
-                    headers: authHeader
-                }
-            );
             const dec = decryptData(res.data.data);
 
             const allTransactions = dec?.transactionList || [];
 
             const desiredHeaders = [
-                "Currency Symbol",
-                "Currency Code",
-                "Guest Details Name",
-                "Guest Details Phone",
-                "Guest Details Email",
-                "Guest Details Iso Code",
-                "External Token Type",
-                "Reference Id",
-                "Transaction Type",
-                "Service Type",
-                "Payment Type",
-                "Status",
-                "Description",
-                "Purpose",
-                "Amount",
-                "Fee",
-                "Total",
-                "Current Balance",
-                "Wallet Id",
-                "Timeline",
-                "Account Company Company Name",
                 "CreatedAt",
-                "Account User First Name",
-                "Account User Last Name",
-                "Sender Country Country Name",
-                "Sender User First Name",
-                "Sender User Last Name",
-                "Receiver User First Name",
-                "Invoice Id",
-                "Recipient Received Currency"
+                "Reference Id",
+                "Currency Code",
+                "Recipient Name",
+                "Payment Type",
+                'Transaction Type',
+                "Type",
+                "Status",
+                "Amount",
+                "Wallet Id",
             ];
 
             const flatTransactions = allTransactions.map(transaction => flattenObject(transaction));
 
+            const formatDate = (dateString) => {
+                if (!dateString) return "";
+                try {
+                    const date = new Date(dateString);
+                    return date.toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: true
+                    });
+                } catch (error) {
+                    return dateString;
+                }
+            };
+
             const rowsWithDesiredHeaders = flatTransactions.map(obj => {
                 const outputRow = {};
+
+                const receiverFirstName = obj["receiver.user.first_name"] || obj["receiver.user.firstName"] || obj["receiver.company.company_name"] || obj["account.user.first_name"];
+                const receiverLastName = obj["receiver.user.last_name"] || obj["receiver.user.lastName"] || obj["account.user.first_name"]
+                const guestDetailsName = obj["guest_details.name"] || obj["guestDetails.name"];
+
+                if (receiverFirstName) {
+                    outputRow["Recipient Name"] = receiverFirstName + "" + (receiverLastName ?? "");
+                } else if (guestDetailsName) {
+                    outputRow["Recipient Name"] = guestDetailsName;
+                } else {
+                    outputRow["Recipient Name"] = "";
+                }
+
                 Object.keys(obj).forEach(originalKey => {
                     const formatted = formatHeader(originalKey);
-                    if (desiredHeaders.includes(formatted)) {
-                        outputRow[formatted] = obj[originalKey];
+                    if (desiredHeaders.includes(formatted) && formatted !== "Recipient Name") {
+                        let value = obj[originalKey];
+                        // Format date fields
+                        if (formatted === "CreatedAt" && value) {
+                            value = formatDate(value);
+                        }
+                        outputRow[formatted] = value;
                     }
                 });
                 desiredHeaders.forEach(h => {
@@ -502,7 +507,7 @@ const TransactionsTable = () => {
                         <Input placeholder={t("Search Transactions")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
                     </div>
                     <img src={calendar} alt="c" onClick={handleDatePickerClick} />
-                    <span  onClick={exportToExcel} style={{ background: "linear-gradient(346deg, rgb(230, 64, 103) 0%, rgb(89, 38, 240) 55.65%, rgb(72, 40, 160) 100%), rgb(217, 217, 217)", borderRadius: "8px", padding: "4px", marginBottom: "3px", pointerEvents: exportLoading && "none", opacity: exportLoading && .6 }}>
+                    <span onClick={exportToExcel} style={{ background: "linear-gradient(346deg, rgb(230, 64, 103) 0%, rgb(89, 38, 240) 55.65%, rgb(72, 40, 160) 100%), rgb(217, 217, 217)", borderRadius: "8px", padding: "4px", marginBottom: "3px", pointerEvents: exportLoading && "none", opacity: exportLoading && .6 }}>
                         <img style={{ width: "20px" }} src={exportPng} alt="" />
                     </span>
                     {showDatePicker && (
