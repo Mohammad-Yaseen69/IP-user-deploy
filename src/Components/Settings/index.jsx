@@ -17,7 +17,6 @@ const Notifications = React.lazy(() => import("./Notifications"));
 const Verification = React.lazy(() => import("./Verification"));
 const Accounts = React.lazy(() => import("./Accounts"));
 const Sessions = React.lazy(() => import("./Sessions"));
-const WithdrawalChannels = React.lazy(() => import("./WithdrawalChannels"));
 const DeleteAccount = React.lazy(() => import("./DeleteAccount"));
 const DownloadData = React.lazy(() => import("./DownloadAccountData"));
 const ApiKey = React.lazy(() => import("./ApiKey"));
