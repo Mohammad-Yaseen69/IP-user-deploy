@@ -23,6 +23,13 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import InstaPayLoader from "../Loader";
 import TransactionItemMobile from "./Mobile/TransactionItemMobile";
 import { useLocation } from "react-router";
+import { toast } from "react-toastify";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver"
+import { FaFileExport } from "react-icons/fa6";
+import exportPng from "./files/export.svg"
+
+const formatWithZero = (value) => value.toString().padStart(2, '0');
 
 const TransactionsTable = () => {
     const { t } = useTranslation()
@@ -67,6 +74,8 @@ const TransactionsTable = () => {
     const loaderRef = useRef()
     const mobileLoaderRef = useRef()
     const [stopLoader, setStopLoader] = useState(false)
+    const [exportLoading, setExportLoading] = useState(false)
+    const [totalNumberOfTransactions, setTotalNumberOfTransactions] = useState()
 
     useEffect(() => {
         getUserBeneficiaries()
@@ -100,6 +109,7 @@ const TransactionsTable = () => {
                 const decrypted = decryptData(res.data.data)
                 setTransactions(prev => [...prev, ...decrypted.transactionList])
                 setFiltered(prev => [...prev, ...decrypted.transactionList])
+                setTotalNumberOfTransactions(decrypted?.totalTransactions)
                 // console.log("all", decrypted)
                 setIsLoading(false)
             })
@@ -125,12 +135,15 @@ const TransactionsTable = () => {
                 const decrypted = decryptData(res.data.data)
                 setTransactions(prev => [...prev, ...decrypted.transactionList])
                 setFiltered(prev => [...prev, ...decrypted.transactionList])
+                setTotalNumberOfTransactions(decrypted?.totalTransactions)
+
                 // console.log("query", decrypted)
                 setIsLoading(false)
             })
             .catch(err => {
                 const decrypted = decryptData(err.response.data.data)
                 setIsLoading(false)
+                setTotalNumberOfTransactions(decrypted?.totalTransactions)
                 setFiltered([])
                 setTransactions([])
                 if (decrypted.status === false && page !== 1) {
@@ -161,6 +174,8 @@ const TransactionsTable = () => {
                 const decrypted = decryptData(res.data.data)
                 setTransactions(prev => [...prev, ...decrypted.transactionList])
                 setFiltered(prev => [...prev, ...decrypted.transactionList])
+                setTotalNumberOfTransactions(decrypted?.totalTransactions)
+
                 // console.log("date & query", decrypted)
                 setIsLoading(false)
             })
@@ -324,6 +339,96 @@ const TransactionsTable = () => {
         setActiveItem(currentIndex)
     }, [])
 
+
+    const formatHeader = (header) => {
+        return header
+            .split(".")
+            .map((part) => part?.split("_")?.map((word) => word[0]?.toUpperCase() + word?.slice(1)).filter(word => !word.includes("undefined"))?.join(" "))
+            .join(" ");
+    };
+
+    const flattenObject = (obj, prefix = '') => {
+        return Object.keys(obj).reduce((acc, key) => {
+            const propName = prefix ? `${prefix}.${key}` : key;
+            if (typeof obj[key] === 'object' && obj[key] !== null) {
+                if (Array.isArray(obj[key])) {
+                    acc[propName] = obj[key].map(item => {
+                        if (typeof item === 'object' && item !== null) {
+                            return JSON.stringify(item);
+                        }
+                        return item;
+                    }).join(' | '); 
+                } else {
+                    Object.assign(acc, flattenObject(obj[key], propName));
+                }
+            } else {
+                acc[propName] = obj[key];
+            }
+            return acc;
+        }, {});
+    };
+
+    const exportToExcel = async () => {
+        setExportLoading(true)
+        if (!transactions || transactions.length === 0) {
+            toast.error("No Transactions to import")
+            return;
+        }
+        try {
+
+            const payload = encryptData({
+                query: String(searchQuery).trim(),
+                from: '',
+                to: "",
+                limit: totalNumberOfTransactions || 999,
+            });
+            const res = await axios.post(
+                `${import.meta.env.VITE_IP_DEV_API}/api/transaction/get-all-transactions`,
+                {
+                    data: payload
+                },
+                {
+                    headers: authHeader
+                }
+            );
+            const dec = decryptData(res.data.data);
+
+            console.log(dec)
+
+            const allTransactions = dec?.transactionList;
+
+            const flatTransactions = allTransactions.map(transaction => flattenObject(transaction));
+
+            const worksheet = XLSX.utils.json_to_sheet(flatTransactions);
+
+
+            const range = XLSX.utils.decode_range(worksheet["!ref"]);
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                const address = XLSX.utils.encode_cell({ r: range.s.r, c: C });
+                const header = worksheet[address].v;
+                worksheet[address].v = formatHeader(header);
+                worksheet[address].s = {
+                    font: { bold: true },
+                    alignment: { horizontal: "center" },
+                    fill: { fgColor: { rgb: "D3D3D3" } },
+                };
+            }
+
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
+
+            const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+            const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+            saveAs(blob, "transactions.xlsx");
+
+            toast.success("Transaction export successfully")
+        } catch {
+            toast.error("Something went wrong while exporting Please Try again!")
+        }
+        setExportLoading(false)
+
+
+    };
     return (
         <div className={styles.table}>
             <div className={styles.menu}>
@@ -353,6 +458,9 @@ const TransactionsTable = () => {
                         <Input placeholder={t("Search Transactions")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
                     </div>
                     <img src={calendar} alt="c" onClick={handleDatePickerClick} />
+                    <span  onClick={exportToExcel} style={{ background: "linear-gradient(346deg, rgb(230, 64, 103) 0%, rgb(89, 38, 240) 55.65%, rgb(72, 40, 160) 100%), rgb(217, 217, 217)", borderRadius: "8px", padding: "4px", marginBottom: "3px", pointerEvents: exportLoading && "none", opacity: exportLoading && .6 }}>
+                        <img style={{ width: "20px" }} src={exportPng} alt="" />
+                    </span>
                     {showDatePicker && (
                         <div ref={datePickerRef} style={{ position: "absolute", top: "100%", right: 0, boxShadow: "0px 0px 3px rgba(0,0,0,0.1)", borderRadius: "10xp", overflow: "hidden", zIndex: 10000000 }}>
                             <DateRangePicker maxDate={new Date()}
@@ -361,6 +469,7 @@ const TransactionsTable = () => {
                             />
                         </div>
                     )}
+
                 </div>
             </div>
             <div className={styles.tableWrapper}>

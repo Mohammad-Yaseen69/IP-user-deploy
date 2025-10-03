@@ -31,7 +31,7 @@ const ApiKey = () => {
 
     const handleCreate = () => {
         if (!accountId) return
-        createMutation.mutate({ webhook_url: webhookUrl, account: accountId })
+        createMutation.mutate({ webhook_url: webhookUrl || " ", account: accountId })
     }
 
     const handleRegenerate = () => {
@@ -100,11 +100,7 @@ const ApiKey = () => {
                     {(!data) && (
                         <Col md="12" className={styles.centerCol}>
                             <p style={{ fontWeight: 600, marginBottom: "0px", fontSize: "15px" }}>{t("Create your API Key")}</p>
-                            <FormGroup className="mb-2" style={{ width: "100%", maxWidth: 560 }}>
-                                <Label className="form-label">{t("Webhook URL")}</Label>
-                                <input className="form-control" value={webhookUrl} onChange={e => setWebHookUrl(e.target.value)} type="text" placeholder="https://example.com/webhook" />
-                            </FormGroup>
-                            <Button onClick={handleCreate} disabled={isBusy || !webhookUrl} className={styles.btnRound}>
+                            <Button onClick={handleCreate} disabled={isBusy} className={styles.btnRound}>
                                 {createMutation.isPending ? t("Creating...") : t("Create API Key")}
                             </Button>
                         </Col>
@@ -143,7 +139,7 @@ const ApiKey = () => {
 
                             <Col md="12" className={styles.sectionRow}>
                                 <h5 className={styles.sectionTitle}>Api Key Status</h5>
-                                
+
                                 <div className={styles.inlineControls} style={{ flex: 1, maxWidth: '100%' }}>
 
                                     <Input type="select" value={selectedStatus} onChange={(e) => setSelectedStatus(e.target.value)}>
@@ -169,14 +165,14 @@ const ApiKey = () => {
                 </CardBody>
             }
             {/* Delete Confirmation Modal */}
-            <Modal isOpen={false} toggle={() => {}}>
+            <Modal isOpen={false} toggle={() => { }}>
                 <ModalHeader>{t("Delete API Key")}</ModalHeader>
                 <ModalBody>
                     {t("Are you sure you want to delete your API Key? This action cannot be undone.")}
                 </ModalBody>
                 <ModalFooter>
-                    <Button className={styles.btnRound} onClick={() => {}}>{t("Cancel")}</Button>
-                    <Button className={styles.btnRound + " " + styles.btnDeleteOutline} onClick={() => {}}>{t("Delete")}</Button>
+                    <Button className={styles.btnRound} onClick={() => { }}>{t("Cancel")}</Button>
+                    <Button className={styles.btnRound + " " + styles.btnDeleteOutline} onClick={() => { }}>{t("Delete")}</Button>
                 </ModalFooter>
             </Modal>
         </Card>

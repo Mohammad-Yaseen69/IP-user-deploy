@@ -644,7 +644,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 ...data
                             }
                         )
-                        if (data?.privacy?.is_proxy === true || data?.privacy?.is_tor === true || data?.privacy?.is_vpn === true) {
+                        if ((data?.privacy?.is_proxy === true || data?.privacy?.is_tor === true || data?.privacy?.is_vpn === true) && !dec?.isVpnAllowed) {
                             setShowNoticeModal(true);
                         } else {
                             localStorage.setItem("login", true)
