@@ -847,6 +847,30 @@
         "maxLength": 8,
         "dial_code": "+377"
     },
+    "REU": {
+        "maxLength": 9,
+        "dial_code": "+262"
+    },
+    "MYT": {
+        "maxLength": 9,
+        "dial_code": "+262"
+    },
+    "MTQ": {
+        "maxLength": 9,
+        "dial_code": "+596"
+    },
+    "GLP": {
+        "maxLength": 9,
+        "dial_code": "+590"
+    },
+    "GUF": {
+        "maxLength": 9,
+        "dial_code": "+594"
+    },
+    "SPM": {
+        "maxLength": 7,
+        "dial_code": "+508"
+    },
     "MSR": {
         "maxLength": 7,
         "dial_code": "+1-664"
