@@ -2837,5 +2837,9 @@
   "Payment purpose": "Ödeme amacı",
   "TRC20 Network only": "Yalnızca TRC20 Ağı",
   "Enter your name": "Adınızı girin",
-  "Scan to pay": "Ödemek için tarayın"
+  "Scan to pay": "Ödemek için tarayın",
+  "Maximum amount for guest pay is": "Misafir ödemesi için maksimum tutar",
+  "Zip Code": "Posta kodu",
+  "House No": "Ev No",
+  "Street": "Sokak"
 }

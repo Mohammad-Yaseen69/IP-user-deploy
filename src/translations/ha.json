@@ -2792,5 +2792,9 @@
   "Payment purpose": "Dalilin biyan kuɗi",
   "TRC20 Network only": "TRC20 Network kawai",
   "Enter your name": "Shigar da sunan ku",
-  "Scan to pay": "Duba don biya"
+  "Scan to pay": "Duba don biya",
+  "Maximum amount for guest pay is": "Matsakaicin adadin kuɗin baƙo shine",
+  "Zip Code": "Lambar titi",
+  "House No": "Gidan No",
+  "Street": "Titin"
 }

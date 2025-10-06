@@ -2850,5 +2850,9 @@
   "Payment purpose": "Payment purpose",
   "TRC20 Network only": "TRC20 Network only",
   "Enter your name": "Enter your name",
-  "Scan to pay": "Scan to pay"
+  "Scan to pay": "Scan to pay",
+  "Maximum amount for guest pay is": "Maximum amount for guest pay is",
+  "Zip Code": "Zip Code",
+  "House No": "House No",
+  "Street": "Street"
 }

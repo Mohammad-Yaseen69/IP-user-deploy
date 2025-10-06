@@ -2842,5 +2842,9 @@
   "Payment purpose": "Призначення платежу",
   "TRC20 Network only": "Тільки мережа TRC20",
   "Enter your name": "Введіть своє ім'я",
-  "Scan to pay": "Сканування для оплати"
+  "Scan to pay": "Сканування для оплати",
+  "Maximum amount for guest pay is": "Максимальна сума оплати гостя становить",
+  "Zip Code": "Поштовий індекс",
+  "House No": "будинок №",
+  "Street": "вул"
 }

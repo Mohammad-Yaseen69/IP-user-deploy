@@ -2836,5 +2836,9 @@
   "Payment purpose": "付款目的",
   "TRC20 Network only": "仅限 TRC20 网络",
   "Enter your name": "输入您的姓名",
-  "Scan to pay": "扫描支付"
+  "Scan to pay": "扫描支付",
+  "Maximum amount for guest pay is": "客人支付的最高金额为",
+  "Zip Code": "邮政编码",
+  "House No": "门牌号",
+  "Street": "街道"
 }

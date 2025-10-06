@@ -2835,5 +2835,9 @@
   "Payment purpose": "ادائیگی کا مقصد",
   "TRC20 Network only": "صرف TRC20 نیٹ ورک",
   "Enter your name": "Loading...",
-  "Scan to pay": "Loading..."
+  "Scan to pay": "Loading...",
+  "Maximum amount for guest pay is": "مہمان کی تنخواہ کے لیے زیادہ سے زیادہ رقم ہے۔",
+  "Zip Code": "زپ کوڈ",
+  "House No": "مکان نمبر",
+  "Street": "گلی"
 }

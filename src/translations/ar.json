@@ -2835,5 +2835,9 @@
   "Payment purpose": "غرض الدفع",
   "TRC20 Network only": "شبكة TRC20 فقط",
   "Enter your name": "أدخل اسمك",
-  "Scan to pay": "امسح ضوئيًا للدفع"
+  "Scan to pay": "امسح ضوئيًا للدفع",
+  "Maximum amount for guest pay is": "الحد الأقصى لمبلغ الدفع للضيف هو",
+  "Zip Code": "الرمز البريدي",
+  "House No": "رقم المنزل",
+  "Street": "شارع"
 }

@@ -2837,5 +2837,9 @@
   "Payment purpose": "भुगतान का उद्देश्य",
   "TRC20 Network only": "केवल TRC20 नेटवर्क",
   "Enter your name": "अपना नाम दर्ज करें",
-  "Scan to pay": "भुगतान करने के लिए स्कैन करें"
+  "Scan to pay": "भुगतान करने के लिए स्कैन करें",
+  "Maximum amount for guest pay is": "अतिथि भुगतान की अधिकतम राशि है",
+  "Zip Code": "ज़िप कोड",
+  "House No": "मकान नंबर",
+  "Street": "गली"
 }

@@ -2837,5 +2837,9 @@
   "Payment purpose": "Kusudi la malipo",
   "TRC20 Network only": "Mtandao wa TRC20 pekee",
   "Enter your name": "Ingiza jina lako",
-  "Scan to pay": "Changanua ili kulipa"
+  "Scan to pay": "Changanua ili kulipa",
+  "Maximum amount for guest pay is": "Kiasi cha juu cha malipo ya wageni ni",
+  "Zip Code": "Msimbo wa Eneo",
+  "House No": "Nyumba Na",
+  "Street": "Mtaa"
 }

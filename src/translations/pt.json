@@ -2842,5 +2842,9 @@
   "Payment purpose": "Finalidade do pagamento",
   "TRC20 Network only": "Somente rede TRC20",
   "Enter your name": "Loading...",
-  "Scan to pay": "Loading..."
+  "Scan to pay": "Loading...",
+  "Maximum amount for guest pay is": "O valor máximo para pagamento de hóspedes é",
+  "Zip Code": "CEP",
+  "House No": "Casa nº",
+  "Street": "Rua"
 }

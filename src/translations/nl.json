@@ -2824,5 +2824,9 @@
   "Payment purpose": "Betalingsdoel",
   "TRC20 Network only": "Alleen TRC20-netwerk",
   "Enter your name": "Loading...",
-  "Scan to pay": "Loading..."
+  "Scan to pay": "Loading...",
+  "Maximum amount for guest pay is": "Het maximale bedrag voor gastenbetaling is",
+  "Zip Code": "Postcode",
+  "House No": "Huis nr.",
+  "Street": "Straat"
 }
