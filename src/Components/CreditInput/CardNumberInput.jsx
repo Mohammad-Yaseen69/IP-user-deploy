@@ -92,7 +92,7 @@ const CardNumberInput = ({ content, setContent, cardType, cardError, isinVVC = f
 
     return (
         <>
-           {guest && <label htmlFor=""style={{fontWeight: 600, marginBottom: '0'}}>Card Number:</label>}
+           {guest && <label htmlFor=""style={{fontWeight: 600, marginBottom: '0'}}>{t("Card Number")}:</label>}
             <div className={styles.main}>
                 <img style={{ top: isinVVC && "10px" }} src={creditCardImages?.[cardType?.type]} alt="" className={styles.card_img} />
                 <div

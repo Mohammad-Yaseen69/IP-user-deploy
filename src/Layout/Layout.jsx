@@ -22,6 +22,7 @@ import AddBeneficiaryAddressModal from "../Components/AddBeneficiaryAddressModal
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import FinancialInfoModal from "../Components/FinancialInfoModal";
 import success from "../Components/Auth/files/success.gif"
+import SessionExpireModal from "../Components/SessionExpireModal";
 
 
 
@@ -41,7 +42,6 @@ const MobileSbContextProvider = ({ children }) => {
 const Layout = ({ children, classNames, ...rest }) => {
   const { setTogglSidebar, sidebar_types } =
     useContext(CheckContext);
-  // const { setIsVertical } = useContext(ProductContext);
   const location = useLocation();
   const query = new URLSearchParams(location.search)
   const benId = query.get("user_id")
@@ -104,7 +104,7 @@ const Layout = ({ children, classNames, ...rest }) => {
     setIs30DaysInfo,
     verifyToken,
     beneficiaries,
-    getUserBeneficiaries
+    getUserBeneficiaries,
   } = useContext(UserContext)
   const [showSuccessModal, setShowSuccessModal] = useState()
 

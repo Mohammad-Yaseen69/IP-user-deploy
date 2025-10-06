@@ -11,7 +11,7 @@ const CardHolderName = ({ content, setContent, isinVVC = false, guest }) => {
     const { t } = useTranslation()
     return (
         <div className={styles.main}>
-            {guest && <label htmlFor="" style={{ fontWeight: 600 }}>Cardholder Name:</label>}
+            {guest && <label htmlFor="" style={{ fontWeight: 600 }}>{t("Card Holder Name")}:</label>}
             <input
                 className={styles.input_container}
                 style={{ padding: isinVVC && "8px 14px", borderRadius: isinVVC && "6px" }}

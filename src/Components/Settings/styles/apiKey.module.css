@@ -1,0 +1,132 @@
+/* Layout containers mirroring previous inline styles */
+.sectionRow {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-direction: row;
+}
+
+@media (max-width: 1000px) {
+  .sectionRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
+.sectionTitle {
+  margin-bottom: 0;
+  white-space: nowrap;
+  min-width: 110px;
+}
+
+.columnFlex {
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+  flex: 1;
+  max-width: 100%;
+}
+
+.inlineControls {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+}
+
+.centerLoader {
+  width: 200px;
+  margin: 0 auto;
+}
+
+.centerCol {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+.endActions {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  float: inline-end;
+}
+
+/* Buttons to replace inline radius and outlines */
+.btnRound {
+  border-radius: 5px;
+  flex-shrink: 0;
+}
+
+.btnDeleteOutline {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: red;
+  border: 1px solid red;
+}
+/* Layout containers mirroring previous inline styles */
+.sectionRow {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-direction: row;
+}
+
+@media (max-width: 1000px) {
+  .sectionRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
+.sectionTitle {
+  margin-bottom: 0;
+  white-space: nowrap;
+  min-width: 110px;
+}
+
+.columnFlex {
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+  flex: 1;
+  max-width: 100%;
+}
+
+.inlineControls {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+}
+
+.centerLoader {
+  width: 200px;
+  margin: 0 auto;
+}
+
+.centerCol {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+.endActions {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  float: inline-end;
+}
+
+/* Buttons to replace inline radius and outlines */
+.btnRound {
+  border-radius: 5px;
+}
+
+.btnDeleteOutline {
+  background: transparent;
+  color: red;
+  border: 1px solid red;
+}

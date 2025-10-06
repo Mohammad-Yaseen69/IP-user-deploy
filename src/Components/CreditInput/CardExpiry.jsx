@@ -1,9 +1,10 @@
 import { useRef, useEffect, useState } from 'react';
 import styles from "./styles/card_cvc.module.css";
+import { useTranslation } from 'react-i18next';
 
 const CardExpiry = ({ content, setContent, isinVVC = false, guest }) => {
     const divRef = useRef(null);
-    
+    const  {t} = useTranslation()
 
     // Function to sanitize input
     const sanitizeInput = (input) => {
@@ -85,7 +86,7 @@ const CardExpiry = ({ content, setContent, isinVVC = false, guest }) => {
     }, [content]);
     return (
         <div style={{ display: 'flex', width: '100%', flexDirection: 'column' }}>
-            {guest && <label htmlFor="" style={{ fontWeight: 600 }}>Expiry Date:</label>}
+            {guest && <label htmlFor="" style={{ fontWeight: 600 }}>{t("Expiry Date")}:</label>}
             <div className={styles.main}>
                 <div
                     ref={divRef}

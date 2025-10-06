@@ -526,6 +526,48 @@
         "license": "Public domain"
     },
     {
+        "url": "/wiki/R%C3%A9union",
+        "alpha3": "REU",
+        "name": "रीयूनियन",
+        "file_url": "https://flagcdn.com/w320/re.png",
+        "license": "Public domain"
+    },
+    {
+        "url": "/wiki/Martinique",
+        "alpha3": "MTQ",
+        "name": "मार्टीनिक",
+        "file_url": "https://flagcdn.com/w320/mq.png",
+        "license": "Public domain"
+    },
+    {
+        "url": "/wiki/Guadeloupe",
+        "alpha3": "GLP",
+        "name": "ग्वाडेलूप",
+        "file_url": "https://flagcdn.com/w320/gp.png",
+        "license": "Public domain"
+    },
+    {
+        "url": "/wiki/Mayotte",
+        "alpha3": "MYT",
+        "name": "मायोत्ते",
+        "file_url": "https://flagcdn.com/w320/yt.png",
+        "license": "Public domain"
+    },
+    {
+        "url": "/wiki/French_Guiana",
+        "alpha3": "GUF",
+        "name": "फ्रेंच गुयाना",
+        "file_url": "https://flagcdn.com/w320/gf.png",
+        "license": "Public domain"
+    },
+    {
+        "url": "/wiki/Saint_Pierre_and_Miquelon",
+        "alpha3": "SPM",
+        "name": "सेंट पियरे और मिक्वेलॉन",
+        "file_url": "https://flagcdn.com/w320/pm.png",
+        "license": "Public domain"
+    },
+    {
         "url": "/wiki/French_Polynesia",
         "alpha3": "PYF",
         "name": "फ्रांसीसी पोलिनेशिया",

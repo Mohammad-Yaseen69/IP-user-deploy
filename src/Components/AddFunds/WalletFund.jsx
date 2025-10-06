@@ -162,7 +162,7 @@ const WalletFund = ({ setAction }) => {
                 localStorage.setItem("ip_country", coun)
                 window.location.pathname = "/login";
             }
-            toast.error("Something went wrong while getting mobile wallet channels.")
+            setThunesServices([])
         }
     }
 
@@ -464,9 +464,9 @@ const WalletFund = ({ setAction }) => {
                                         externalLink
                                             ?
                                             <MobileWalletLink
-                                                data={channel?.value === "paypal" ? { name: "Paypal" } : thunesProvider}
+                                                data={channel?.value === "paypal" ? { name: t("Paypal") } : thunesProvider}
                                                 setSubStep={setSubStep}
-                                                type={channel?.value === "paypal" ? "Payment Type" : "Mobile Wallet"}
+                                                type={channel?.value === "paypal" ? t("Payment Type") : t("Mobile Wallet")}
                                                 externalLink={externalLink}
                                             />
                                             :

@@ -10,7 +10,7 @@ const SessionExpireModal = ({ isOpen, toggle }) => {
     const { clearData } = useContext(UserContext)
     const [isOpenState, setIsOpenState] = useState(isOpen)
     const navigate = useNavigate()
-    const {t} = useTranslation()
+    const { t } = useTranslation()
 
     const logoutHandler = () => {
         const coun = localStorage.getItem("ip_country")

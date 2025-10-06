@@ -151,7 +151,8 @@ const WalletFundsFlow = ({ setAction }) => {
             dataHandler("mobile_wallet_channels", dec?.data?.services ?? [])
             dataHandler("mobile_wallet_merchant", dec?.data?.merchant_id ?? "")
         } catch {
-            dataHandler("error", "Something went wrong while getting mobile wallet channels.")
+            dataHandler("mobile_wallet_channels", [])
+            dataHandler("mobile_wallet_merchant" , "")
         }
         finally {
             dataHandler("loading", false)

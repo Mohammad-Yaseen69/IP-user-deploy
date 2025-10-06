@@ -6,7 +6,7 @@ import CustomizerProvider from './Helper/Customizer/CustomizerProvider'
 // import ProductProvider from './Helper/product/ProductProvider';
 // import WishListProvider from "./Helper/wishlist/WishProvider"
 // import EmailProvider from "./Helper/email/EmailProvider"
-// import ChatProvider from "./Helper/chat-app/ChatProvider"
+// import ChatProvider pfrom "./Helper/chat-app/ChatProvider"
 // import BookmarkProvider from "./Helper/bookmark/BookmarkProvider"
 // import ContactProvider from './Helper/Contact/ContactProvider'
 // import TaskProvider from './Helper/task-app/TaskProvider'
@@ -17,7 +17,7 @@ import CustomizerProvider from './Helper/Customizer/CustomizerProvider'
 // import GoogleChartProvider from "./Helper/GoogleChart/GoogleChartProvider"
 // import ChartistProvider from "./Helper/Chartist/ChartistProvider"
 import AnimationThemeProvider from './Helper/AnimationTheme/AnimationThemeProvider'
-import UserState from './Context/UserContext'
+import UserState from './Context/UserContextState'
 import InactivityWrapper from './InactivityWrapper'
 import { Suspense } from 'react'
 import InstaPayLoader from './Components/Loader'
@@ -33,7 +33,14 @@ import DateMomentUtils from '@date-io/moment';
 
 const App = () => {
   const [showOtherTabError, setShowOtherTabError] = useState(false)
-  const client = new QueryClient()
+  const client = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+      }
+    }
+  })
 
   useLayoutEffect(() => {
     const bc = new BroadcastChannel("dcode");

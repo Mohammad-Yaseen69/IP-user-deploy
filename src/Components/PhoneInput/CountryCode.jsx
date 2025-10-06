@@ -51,6 +51,7 @@ const CountryCode = ({ country, selectedCountry, setSelectedCountry, setCountry,
     useEffect(() => {
         if (country && countriesData.length > 0) {
             const filtered = countriesData.filter(item => item.alpha3 === country)?.[0]
+            console.log(filtered)
             setSelectedCountry(filtered)
             if (firstTime && !number) {
                 const formatted = phone?.replace(filtered?.dial_code?.replace("+", "")?.replace("-", ""), "")

@@ -16,6 +16,7 @@ import coun from "../PaymentsNewer/CountriesData.json"
 import Signup from "./Signup"
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import useCountryLocation from "../../hooks/GeneralUse/useCountryLocation"
+import { useLocation } from "react-router"
 
 const swissFlag = coun.find(item => item.alpha3 === "CHE")?.file_url
 
@@ -24,11 +25,13 @@ const Auth = () => {
     const [isLoginForm, setIsLoginForm] = useState(window?.location?.href?.includes("login") ? true : false);
     const { country, showNoticeModal } = useCountryLocation()
     const noticeMessage = `It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.`;
+    const location = useLocation()
+    const redirect = new URLSearchParams(location.search).get("redirect")
 
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
-            const path = sessionStorage.getItem("path")
+            const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
             window.location.href = (path && path !== "undefined") ? path : "/dashboard/default"
         }
     }, []);

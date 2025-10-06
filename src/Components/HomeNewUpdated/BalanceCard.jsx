@@ -6,24 +6,9 @@ import { UserContext } from '../../Context/UserContext';
 
 const BalanceComponent = () => {
     const { t } = useTranslation()
-    const { available } = useContext(UserContext)
-    const [isLoading, setIsLoading] = useState(true)
-    const [totalBalance, setTotalBalance] = useState(0)
+    const { available: totalBalance = 0, balanceLoading: isLoading } = useContext(UserContext)
 
 
-
-    useEffect(() => {
-        if (available) {
-            const calculateTotal = async () => {
-                const total = available?.reduce((acc, balance) => acc + balance, 0);
-                setTotalBalance(total ?? 0);
-                setIsLoading(false)
-            };
-
-
-            calculateTotal();
-        }
-    }, [available])
 
     return (
         <Card style={{ marginBottom: 0, minWidth: "220px", flex: 2, background: "#fafafa", boxShadow: "0px 0px 146px 0px rgba(109, 41, 220, 0.05) inset" }}>
@@ -34,9 +19,9 @@ const BalanceComponent = () => {
                         {
                             isLoading
                                 ?
-                                <div class="d-flex justify-content-center">
-                                    <div class="spinner-border" color='primary' role="status">
-                                        <span class="sr-only">Loading...</span>
+                                <div className="d-flex justify-content-center">
+                                    <div className="spinner-border" color='primary' role="status">
+                                        <span className="sr-only">Loading...</span>
                                     </div>
                                 </div>
                                 :

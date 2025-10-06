@@ -15,6 +15,7 @@ import { Card, CardBody } from 'reactstrap'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
+import { useTranslation } from 'react-i18next'
 
 const initialState = {
   showAboutModal: false,
@@ -51,6 +52,7 @@ const Wrapper = ({ children, isPaid }) => (
 
 const InvoicePayment = () => {
   const [state, dispatch] = useReducer(reducer, initialState)
+  const { t } = useTranslation()
   const dataHandler = (field, value) => {
     dispatch({ type: "UPDATE_FIELD", field, value })
   }
@@ -68,6 +70,7 @@ const InvoicePayment = () => {
       axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/get-payment-address-public/${user_name}`).then(res => {
         const dec = decryptData(res.data.data)
         dataHandler("limits", dec?.limits)
+        console.log(dec)
       })
     }
 
@@ -79,23 +82,24 @@ const InvoicePayment = () => {
 
 
   const toggleCreditModal = () => {
-    if (data.amount < state.limits?.topup_min_amount) {
-      toast.error("Minimum amount for guest pay is " + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
-      dataHandler("guestPayError", "Minimum amount for guest pay is " + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
-      setTimeout(() => {
-        dataHandler("guestPayError", "")
-      }, 3000)
-    }
-    else if (data.amount > state.limits?.topup_max_amount) {
-      toast.error("Maximum amount for guest pay is " + formatCurrency(state.limits?.topup_max_amount, true) + " " + data?.currency)
-      dataHandler("guestPayError", "Maximum amount for guest pay is " + formatCurrency(state.limits?.topup_max_amount, true) + " " + data?.currency)
-      setTimeout(() => {
-        dataHandler("guestPayError", "")
-      }, 3000)
-    }
-    else {
+    if (!state.limits) console.log("limits not found", state)
+    // if (data.amount < state.limits?.topup_min_amount) {
+    //   toast.error(t("Minimum amount for guest pay is") + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
+    //   dataHandler("guestPayError", t("Minimum amount for guest pay is") + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
+    //   setTimeout(() => {
+    //     dataHandler("guestPayError", "")
+    //   }, 3000)
+    // }
+    // else if (data.amount > state.limits?.topup_max_amount) {
+    //   toast.error("Maximum amount for guest pay is " + formatCurrency(state.limits?.topup_max_amount, true) + " " + data?.currency)
+    //   dataHandler("guestPayError", "Maximum amount for guest pay is " + formatCurrency(state.limits?.topup_max_amount, true) + " " + data?.currency)
+    //   setTimeout(() => {
+    //     dataHandler("guestPayError", "")
+    //   }, 3000)
+    // }
+    // else {
       dataHandler("showCreditModal", !state.showCreditModal);
-    }
+    // }
   }
 
 
@@ -145,7 +149,7 @@ const InvoicePayment = () => {
                   currencySymbol: CitiesData?.find(c => c?.currency === data?.currency)?.currency_symbol
                 }}
                 url={url}
-                toggleCreditModal={() => { }}
+                toggleCreditModal={toggleCreditModal}
                 paidInvoice={true}
               />
             }

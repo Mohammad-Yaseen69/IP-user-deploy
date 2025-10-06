@@ -5,6 +5,7 @@ import iso2 from "../../AddFunds/WalletFund/countries_iso2.json"
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
+import { useTranslation } from 'react-i18next'
 
 const getStates = async (iso2) => {
     const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/country/get-states/${iso2}`)
@@ -12,6 +13,7 @@ const getStates = async (iso2) => {
 }
 
 const ShippingDetails = ({ data, dataHandler }) => {
+    const {t} = useTranslation()
     const iso2Value = useMemo(() => {
         return iso2[data.shippingDetails?.country?.iso?.toUpperCase()]
     }, [iso2, data.shippingDetails?.country?.iso?.toUpperCase()])
@@ -28,7 +30,7 @@ const ShippingDetails = ({ data, dataHandler }) => {
     return (
         <form action="">
             <div style={{ display: "grid", gap: "12px", width: "100%" }}>
-                <label style={{ marginBottom: "0px", fontWeight: 600 }}>Country</label>
+                <label style={{ marginBottom: "0px", fontWeight: 600 }}>{t("Country")}</label>
                 <CountryDropDown
                     onSelect={(selectedCountry) => {
                         if (selectedCountry?.name?.toLowerCase()?.includes("bolivia")) {
@@ -49,7 +51,7 @@ const ShippingDetails = ({ data, dataHandler }) => {
                     background='#f6f6f6'
                 />
 
-                <label style={{ marginBottom: "0px", fontWeight: 600 }}>City</label>
+                <label style={{ marginBottom: "0px", fontWeight: 600 }}>{t("City")}</label>
                 <CitiesDropDown
                     country={data.shippingDetails?.country?.iso}
                     isState={false}
@@ -59,7 +61,7 @@ const ShippingDetails = ({ data, dataHandler }) => {
                     background='#f6f6f6'
                 />
 
-                <label style={{ marginBottom: "0px", fontWeight: 600 }}>State</label>
+                <label style={{ marginBottom: "0px", fontWeight: 600 }}>{t("State")}</label>
                 <CitiesDropDown
                     country={data.shippingDetails?.country?.iso}
                     isState={true}
@@ -71,7 +73,7 @@ const ShippingDetails = ({ data, dataHandler }) => {
                     iso_3={data.shippingDetails?.country?.iso}
                 />
 
-                <label style={{ marginBottom: "0px", fontWeight: 600 }}>House No</label>
+                <label style={{ marginBottom: "0px", fontWeight: 600 }}>{t("House No")}</label>
                 <input
                     type="text"
                     value={data.shippingDetails?.houseNo || ""}
@@ -79,7 +81,7 @@ const ShippingDetails = ({ data, dataHandler }) => {
                     style={{ width: "100%", border: "1px solid rgba(0,0,0,.06)", borderRadius: "5px", padding: ".75rem", backgroundColor: "#f6f6f6" }}
                 />
 
-                <label style={{ marginBottom: "0px", fontWeight: 600 }}>Street</label>
+                <label style={{ marginBottom: "0px", fontWeight: 600 }}>{t("Street")}</label>
                 <input
                     type="text"
                     value={data.shippingDetails?.street || ""}
@@ -87,7 +89,7 @@ const ShippingDetails = ({ data, dataHandler }) => {
                     style={{ width: "100%", border: "1px solid rgba(0,0,0,.06)", borderRadius: "5px", padding: ".75rem", backgroundColor: "#f6f6f6" }}
                 />
 
-                <label style={{ marginBottom: "0px", fontWeight: 600 }}>Zip Code</label>
+                <label style={{ marginBottom: "0px", fontWeight: 600 }}>{t("Zip Code")}</label>
                 <input
                     type="text"
                     value={data.shippingDetails?.zipCode || ""}

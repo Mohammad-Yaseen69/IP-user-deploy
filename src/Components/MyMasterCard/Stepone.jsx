@@ -151,14 +151,14 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApp
                     <div className={styles.features}>
                         {cardType === "premium"
                             ?
-                            premiumFeatures.map((feat) => (
-                                <div>
+                            premiumFeatures.map((feat,idx) => (
+                                <div key={idx}>
                                     <span style={{ fontSize: "12px", fontWeight: 600, color: "#9E9E9E" }}>{t(feat.label)}</span>
                                     {feat.text && <p style={{ fontSize: "14px", fontWeight: '600', marginBottom: "0" }}>{t(feat.text)}</p>}
                                     {feat.bullet &&
                                         <ul>
-                                            {feat.bullet.map((b) => (
-                                                <li style={{ fontSize: "14px", fontWeight: '600', marginBottom: "0" }}>{t(b)}</li>
+                                            {feat.bullet.map((b, idx2) => (
+                                                <li key={`${idx}-${idx2}`} style={{ fontSize: "14px", fontWeight: '600', marginBottom: "0" }}>{t(b)}</li>
                                             ))}
                                         </ul>
                                     }
@@ -166,14 +166,14 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApp
                             ))
 
                             :
-                            standardFeatures.map((feat) => (
-                                <div>
+                            standardFeatures.map((feat, idx) => (
+                                <div key={idx}>
                                     <span style={{ fontSize: "12px", fontWeight: 600, color: "#9E9E9E" }}>{t(feat.label)}</span>
                                     {feat.text && <p style={{ fontSize: "14px", fontWeight: '600', marginBottom: "0" }}>{t(feat.text)}</p>}
                                     {feat.bullet &&
                                         <ul>
-                                            {feat.bullet.map((b) => (
-                                                <li style={{ fontSize: "14px", fontWeight: '600', marginBottom: "0" }}>{t(b)}</li>
+                                            {feat.bullet.map((b, idx2) => (
+                                                <li key={`${idx}-${idx2}`} style={{ fontSize: "14px", fontWeight: '600', marginBottom: "0" }}>{t(b)}</li>
                                             ))}
                                         </ul>
                                     }
@@ -198,7 +198,7 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApp
                         </div>
 
                         <div>
-                            <h2>{userDetails?.first_name || userDetails?.company_name} {userDetails.last_name}</h2>
+                            <h2>{userDetails?.first_name || userDetails?.company_name} {userDetails?.last_name}</h2>
 
                             <h3>{t("Virtual")} <br /> {t("Card")}</h3>
                         </div>

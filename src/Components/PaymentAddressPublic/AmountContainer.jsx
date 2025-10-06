@@ -7,12 +7,28 @@ import addFunds from "../HomeNewUpdated/files/AddFunds.png"
 import CryptoPay from "../HomeNewUpdated/files/CryptoPay.svg"
 import logo from "../../assets/images/logo/logo.png"
 import { formatCurrency } from '../../Helper/AmountFormat'
+import { isInIframe } from '../../utils/Functions'
 
 
 
 const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlur, handleKeyUp, isEditable, paidInvoice = false, toggleCryptoModal = () => { } }) => {
     const width = useWindowWidth()
     const { t } = useTranslation()
+
+    const openInNewTab = (url) => {
+        const newWindow = window.open(url, "_blank", "noopener,noreferrer");
+        if (!newWindow || newWindow.closed || typeof newWindow.closed === "undefined") {
+            const a = document.createElement("a");
+            a.href = url;
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+            a.style.display = "none";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    };
+
     return (
         <div style={{ backgroundColor: 'white', borderRadius: "16px", maxHeight: "100%" }}>
             <div style={{ marginBottom: "0px", gap: "0px", height: "100%" }} className={vpa_styles.container}>
@@ -52,7 +68,7 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                     {!paidInvoice &&
                         <>
                             <div style={{ margin: '0' }} className={vpa_styles.buttons}>
-                                <Link to={"#"} onClick={toggleCreditModal} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
+                                <Link onClick={toggleCreditModal} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
                                     style={{
                                         opacity: state.amount <= 0 ? .7 : 1,
                                         pointerEvents: state.amount <= 0 ? "none" : "all",
@@ -62,7 +78,7 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                     <div>
                                         <img src={addFunds} alt="A" />
                                     </div>
-                                    <span>Pay As Guest</span>
+                                    <span>{t("Pay As Guest")}</span>
                                     {
                                         state.guestPayError
                                         &&
@@ -95,18 +111,23 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                     <div>
                                         <img src={CryptoPay} alt="A" />
                                     </div>
-                                    <span>Pay with Crypto</span>
+                                    <span>{t("Pay with Crypto")}</span>
                                 </Link>
+
 
                                 <Link onClick={(e) => {
                                     if (state.amount > 0) {
-                                        const path = url
-                                        sessionStorage.setItem("path", path)
+                                        if (isInIframe()) {
+                                            const toNavigate = `${import.meta.env.VITE_PUBLIC_URL}/login?redirect=${encodeURIComponent(url)}`
+                                            openInNewTab(toNavigate)
+                                        } else {
+                                            const path = url;
+                                            sessionStorage.setItem("path", path);
+                                        }
+                                    } else {
+                                        e.preventDefault();
                                     }
-                                    else {
-                                        e.preventDefault()
-                                    }
-                                }} to={state.amount > 0 ? url : ""} className={`${vpa_styles.button} ${vpa_styles.ipBtn}`}
+                                }} to={state.amount > 0 && !isInIframe() ? url : ""} className={`${vpa_styles.button} ${vpa_styles.ipBtn}`}
                                     style={{
                                         opacity: state.amount <= 0 ? .7 : 1,
                                         pointerEvents: state.amount <= 0 ? "none" : "all",
@@ -115,7 +136,7 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                     <div>
                                         <img src={logo} alt="A" />
                                     </div>
-                                    <span style={{color:"white"}}>Pay With InstaPay</span>
+                                    <span style={{ color: "white" }}>{t("Pay With InstaPay")}</span>
                                 </Link>
                             </div>
                         </>}

@@ -20,6 +20,16 @@ export const handleYearKeyPress = (event) => {
     }
 };
 
+
+export function isInIframe() {
+    if (window.frameElement) return true;
+    try {
+        return window.self !== window.top;
+    } catch {
+        return true;
+    }
+}
+
 export const serviceFieldInfoValidate = (service, field_name, sub_field_name, fieldsInfo) => {
     if (fieldsInfo === null) return false;
     let isInThere = false;
@@ -37,3 +47,17 @@ export const getExtractedPhone = (formData, countryIsoCode) => {
 
     return extractWalletNum
 }
+
+export const openInNewTab = (url) => {
+    const newWindow = window.open(url, "_blank", "noopener,noreferrer");
+    if (!newWindow || newWindow.closed || typeof newWindow.closed === "undefined") {
+        const a = document.createElement("a");
+        a.href = url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+};
