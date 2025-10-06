@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './ErrorBoundary.css';
 import * as Sentry from "@sentry/react";
+import InstaPayLoader from './Components/Loader';
 
 class ErrorBoundary extends Component {
     constructor(props) {
@@ -10,7 +11,7 @@ class ErrorBoundary extends Component {
 
     static getDerivedStateFromError(error) {
         const stored = JSON.parse(localStorage.getItem("errorsInstances")) || {};
-        if (!stored[error?.toString()]) {
+        if (stored[error?.toString()] === 1) {
             return { isRefreshing: true };
         }
         return { hasError: true };
@@ -29,23 +30,15 @@ class ErrorBoundary extends Component {
         localStorage.setItem(errorKey, JSON.stringify(stored));
 
         if (stored[errorMessage] === 1) {
-            this.setState({ isRefreshing: true, countdown: 5 }, () => {
-                const timer = setInterval(() => {
-                    this.setState(prev => {
-                        if (prev.countdown <= 1) {
-                            clearInterval(timer);
-                            window.location.reload();
-                            return null;
-                        }
-                        return { countdown: prev.countdown - 1 };
-                    });
-                }, 1000);
+            this.setState({ isRefreshing: true }, () => {
+                window.location.reload();
             });
             return;
         }
 
+        // Second occurrence → send to Sentry
         const eventId = Sentry.captureException(error, { extra: { errorInfo } });
-        this.setState({ hasError: true, eventId });
+        this.setState({ hasError: true, eventId, isRefreshing: false });
 
         localStorage.setItem(errorKey, JSON.stringify(stored));
     }
@@ -54,27 +47,17 @@ class ErrorBoundary extends Component {
         if (this.state.isRefreshing) {
             return (
                 <div className="container">
-                    <div className="error-box">
-                        <div>
-                            <h1>Whoops! Something didn’t go as planned.</h1>
-                            <p>This usually fixes itself with a quick refresh, so we’re taking care of that for you automatically.</p>
-                            <p>If it happens again, you’ll see the full error screen with details so we can help you better.</p>
-                            <p style={{ marginTop: "20px", fontStyle: "italic", color: "#555" }}>
-                                Refreshing in {this.state.countdown} seconds...
-                            </p>
-                        </div>
-                    </div>
+                    <InstaPayLoader />
                 </div>
             );
         }
-
         else if (this.state.hasError) {
             return (
                 <div className="container">
                     <div className="error-box">
                         <div>
                             <h1>Oops! We cannot process your request at the moment, please try again later.</h1>
-                            <p>We are working to fix it. Please try refreshing the page or clear your browsing data for smooth experience.</p>
+                            <p>We <address></address>re working to fix it. Please try refreshing the page or clear your browsing data for smooth experience.</p>
                             <div className='error-id'>
                                 Error ID: {this.state.eventId}
                             </div>
