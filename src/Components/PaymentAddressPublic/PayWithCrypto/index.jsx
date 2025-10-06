@@ -14,11 +14,7 @@ import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { formatCurrency } from '../../../Helper/AmountFormat'
 import useWindowWidth from '../../../utils/useWindowWidth'
 import "./styles/modal.css"
-// import { sdk } from '../../..'
-
-const cryptoReasons = {
-
-}
+import { sdk } from '../../..'
 
 const PayWithCrypto = ({ user, data, dataHandler }) => {
     const { t } = useTranslation()
@@ -72,20 +68,23 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
             setStep(2)
         } else {
             const paymentConfig = {
-                amount: usdtAmount,
+                amount: 1.5,
                 orderId: 'order_123456',
-                paymentPurpose: data.cryptoDetails?.reason,
-                currency: 'USDT_TRC20',
+                paymentPurpose: "Crypt Transfer",
+                currency: 'USDT',
             };
 
 
-            // const paymentStatus = sdk.init(paymentConfig);
+            const paymentStatus = sdk.init(paymentConfig);
 
-            // paymentStatus.then(status => {
-            //     if (status === 'success') {
-            //         console.log('Payment success');
-            //     }
-            // });
+            paymentStatus.then(status => {
+                console.log(status)
+                if (status === 'success') {
+                    console.log('Payment success');
+                }
+            }).catch(error => {
+                console.log(error)
+            });
         }
     }
     return (
