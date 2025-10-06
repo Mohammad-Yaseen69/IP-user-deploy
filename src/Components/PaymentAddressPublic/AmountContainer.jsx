@@ -32,7 +32,7 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
     return (
         <div style={{ backgroundColor: 'white', borderRadius: "16px", maxHeight: "100%" }}>
             <div style={{ marginBottom: "0px", gap: "0px", height: "100%" }} className={vpa_styles.container}>
-                <div style={{ padding: width < 400 && "20px", height: "100%", padding: paidInvoice ? "0px" : '24px', background: 'white', width: '100%', justifyContent: width > 1000 && "space-between", gap: width < 1000 && "0px" }} className={vpa_styles.right}>
+                <div style={{ padding: width < 400 && "20px", height: "100%", padding: paidInvoice ? "0px" : '0px 24px 24px 24px', background: 'white', width: '100%', justifyContent: width > 1000 && "space-between", gap: width < 1000 && "0px" }} className={vpa_styles.right}>
                     <div style={{ flexDirection: width < 1000 && 'column', gap: width < 1000 && '15px' }} className={vpa_styles.top}>
                         <div style={{ margin: 'inherit' }} className={vpa_styles.currency}>
                             <div>{state.currentWallet?.currency?.symbol || state.currencySymbol} </div>
@@ -41,7 +41,7 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
 
                         {isEditable ? <label >{t("Enter Amount")}</label> : <label >{t("Amount")}</label>}
                     </div>
-                    <div style={{ margin: paidInvoice ? "20px 0px 0px 0px" : width < 1000 ? "0 0 2rem" : '2rem 0 2rem 0' }} className={vpa_styles.amount}>
+                    <div style={{ margin: paidInvoice ? "20px 0px 0px 0px" : width < 1000 ? "0 0 2rem" : '.5rem 0' }} className={vpa_styles.amount}>
                         <div style={{ justifyContent: "center", gap: "5px" }}>
                             {width > 1000 && <span>{state.currentWallet?.currency?.code || state.currencyCode} </span>}
 
