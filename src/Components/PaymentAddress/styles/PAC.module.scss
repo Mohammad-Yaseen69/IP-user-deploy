@@ -17,6 +17,7 @@
 
     .sub_container {
         margin-top: -15px !important;
+
         .sc_body {
             padding: 0 80px;
 
@@ -426,7 +427,7 @@
                             font-weight: 600;
                         }
 
-                        textarea{
+                        textarea {
                             -webkit-user-drag: none;
                         }
 
@@ -438,8 +439,8 @@
                             box-shadow: 0px 2px 4px 0px rgba(27, 28, 29, 0.04);
                             width: 100%;
 
-                            input{
-                                 // padding: 0;
+                            input {
+                                // padding: 0;
                                 border: none;
                                 box-shadow: none;
                                 outline: none;
@@ -524,22 +525,6 @@
 
                     .bottomV {
                         width: 100%;
-
-                        button {
-                            display: flex;
-                            float: right;
-                            padding: var(--SPACING-spacing-0, 8px);
-                            justify-content: center;
-                            align-items: center;
-                            gap: 10px;
-                            border-radius: var(--RADIUS-radius-1, 4px);
-                            background: var(--COLORS-Primary-300, #5926F0);
-                            color: var(--COLORS-Neutral-100, #FFF);
-                            font-size: 10px;
-                            font-style: normal;
-                            font-weight: 600;
-                            border: none;
-                        }
                     }
 
                 }
@@ -547,6 +532,24 @@
 
         }
     }
+}
+
+
+.buttonStyles {
+    display: flex;
+    float: right;
+    padding: var(--SPACING-spacing-0, 8px);
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: var(--RADIUS-radius-1, 4px);
+    background: var(--COLORS-Primary-300, #5926F0);
+    background-color: var(--COLORS-Primary-300, #5926F0);
+    color: var(--COLORS-Neutral-100, #FFF);
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 600;
+    border: none;
 }
 
 @media screen and (max-width: 1780px) {

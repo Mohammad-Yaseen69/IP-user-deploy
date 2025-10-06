@@ -52,7 +52,6 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                                         <div className={styles.dp} style={{ overflow: "hidden" }}>{userDetails?.first_name?.[0] || userDetails?.company_name?.[0]}</div>
                                 }
                             </div>
-                            {width > 1000 && <button onClick={() => navigate(`/profile/${user_name}`)} className={styles.viewProfileBtn}>{t("View Profile")}</button>}
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", flexDirection: width < 1000 && "column" }}>
                             <div style={{ alignItems: 'flex-start' }} className={styles.basic_dets}>
@@ -108,7 +107,6 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                                     <img src={userCountry?.file_url} alt={userCountry?.alpha3} style={{ boxShadow: "0 0 5px #afafaf" }} />
                                     <span>{t(userCountry?.name)}</span>
                                 </div>
-                                {width < 1000 && <button onClick={() => navigate(`/profile/${user_name}`)} style={{ backdropFilter: "blur(0px)", background: '#5926f0' }} className={styles.viewProfileBtn}>{t("View Profile")}</button>}
                             </div>
                             {invoicePaid && AmountComponent}
                         </div>
@@ -117,7 +115,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
             </div>
 
             {paymentAddress &&
-                <div style={{ display: "flex", gap: "8px", alignItems: "center", padding: "15px", flexWrap: "wrap" }}>
+                <div style={{ display: "flex", gap: "8px", alignItems: "center", padding: "15px", flexWrap: "wrap", justifyContent: width < 1000 && "center" }}>
                     {actionButtons.map((button, idx) => (
                         <button
                             key={idx}

@@ -195,17 +195,8 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                 </span>
             }
 
-            <Button
-                style={{
-                    background: saved ? "#4bb543" : 'linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)',
-                    border: 'none',
-                    outline: 'none',
-                    borderRadius: "10px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10px",
-                    transition: "250ms"
-                }}
+            <button
+                className={styles.buttonStyles}
                 disabled={!title || !currency || isSaving || !isActive}
                 onClick={() => {
                     if (!editMode && paymentAddressDetails?.title) {
@@ -228,7 +219,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                             {paymentAddressDetails?.title ? (isSaving ? t("Updating") : editMode ? t('Update') : t("Edit")) : (isSaving ? t("Adding") : t('Add'))}
                         </>
                 }
-            </Button>
+            </button>
         </div>
     )
     return (
@@ -445,7 +436,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                 </div>
                                             </div>
                                             <div className={styles.bottomV}>
-                                                <button onClick={() => setShowModal(true)}>{t("Add Video")}</button>
+                                                <button className={styles.buttonStyles} onClick={() => setShowModal(true)}>{t("Add Video")}</button>
                                             </div>
                                         </div>
                                     </div>

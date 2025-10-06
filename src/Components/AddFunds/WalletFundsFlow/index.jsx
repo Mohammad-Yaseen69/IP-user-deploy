@@ -152,7 +152,7 @@ const WalletFundsFlow = ({ setAction }) => {
             dataHandler("mobile_wallet_merchant", dec?.data?.merchant_id ?? "")
         } catch {
             dataHandler("mobile_wallet_channels", [])
-            dataHandler("mobile_wallet_merchant" , "")
+            dataHandler("mobile_wallet_merchant", "")
         }
         finally {
             dataHandler("loading", false)

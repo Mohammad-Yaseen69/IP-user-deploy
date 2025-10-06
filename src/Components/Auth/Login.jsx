@@ -484,7 +484,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     })
                                     .catch(err => {
                                         setIsPressed(false)
-                                        setIsLoginError("Something went wrong while creating login details")
                                         const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
                                         console.log(path)
                                         if (path && path !== "undefined") {
@@ -669,7 +668,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 .catch(err => {
                                     setIsPressed(false)
                                     setBiometricLoading(false)
-                                    setIsLoginError("Something went wrong while creating login details")
                                     const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
                                     console.log(path)
                                     if (path && path !== "undefined") {
