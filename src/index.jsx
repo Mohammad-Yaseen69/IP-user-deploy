@@ -60,7 +60,8 @@ Sentry.init({
         }
         return event
     },
-    profilesSampleRate: 1.0
+    profilesSampleRate: 1.0,
+    defaultIntegrations: false
 });
 
 // export const sdk = new WidgetSDK({

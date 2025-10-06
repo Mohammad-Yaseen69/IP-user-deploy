@@ -8,6 +8,7 @@ import { publicRoutes } from "../RouteNew/Routes";
 import { useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import questionsData from "../Components/Settings/questions.json"
+import SessionExpireModal from "../Components/SessionExpireModal";
 
 
 
@@ -603,6 +604,7 @@ const UserState = ({ children }) => {
 
     return (
         <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, showModalState, setShowModalState }}>
+            {showModalState && <SessionExpireModal isOpen={showModalState} toggle={() => window.history.replaceState(null, null, "")} />}
             {children}
         </UserContext.Provider>
     )

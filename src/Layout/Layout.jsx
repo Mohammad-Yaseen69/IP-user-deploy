@@ -105,8 +105,6 @@ const Layout = ({ children, classNames, ...rest }) => {
     verifyToken,
     beneficiaries,
     getUserBeneficiaries,
-    showModalState,
-    setShowModalState
   } = useContext(UserContext)
   const [showSuccessModal, setShowSuccessModal] = useState()
 
@@ -289,9 +287,6 @@ const Layout = ({ children, classNames, ...rest }) => {
               isOpen={threeDaysReminder && !threeDaysReminderInfo && profileCompleted === true && !is30DaysInfo}
               toggle={() => set3DaysReminder(!threeDaysReminder)}
             />
-        }
-        {
-          showModalState && userDetails && <SessionExpireModal isOpen={true} toggle={() => setShowModalState(false)} />
         }
         <Modal toggle={() => setShowSuccessModal(false)} isOpen={showSuccessModal}>
           <ModalHeader toggle={() => setShowSuccessModal(false)}>
