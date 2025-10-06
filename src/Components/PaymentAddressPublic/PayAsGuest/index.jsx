@@ -1,4 +1,4 @@
-import { Input, Modal, ModalBody } from "reactstrap";
+import { Modal, ModalBody } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import styles from "./styles/index.module.css";
 import { useEffect, useMemo, useReducer, useState } from "react";
@@ -20,7 +20,6 @@ import paym_styles from "../../PaymentsNewer/InternationalFlow/styles/index.modu
 import ErrorModal from "../../PaymentsNewer/InternationalFlow/ErrorModal";
 import { createShambeToken } from "../../../Helper/CreateToken";
 import NotFoundModal from "../../NotFound/NotFoundModal";
-import { minDate } from "../../Settings/Basic";
 import { toast } from "react-toastify";
 import logo from "../instapay_black.svg";
 import ShippingDetails from "../../ReceiptInvoices/InvoicePaymentQr/ShippingDetails";
@@ -409,6 +408,7 @@ const PayAsGuest = ({
   };
 
   const getFeesCard = async () => {
+
     dataHandler("loading", true);
     try {
       const res = await axios.get(
@@ -476,7 +476,6 @@ const PayAsGuest = ({
     }
   }, [user]);
 
-  console.log(data.exchange_rate?.fee?.paymentAddressFee);
 
   return (
     <>
@@ -494,6 +493,7 @@ const PayAsGuest = ({
           reEnter={() => dataHandler("step", 3)}
         />
       )}
+
       {data.cardTransactionDetails?.transaction_ref && (
         <TrustpaymentPage
           amount={amount}
@@ -602,7 +602,7 @@ const PayAsGuest = ({
                       showSave={false}
                       data={data}
                       dataHandler={dataHandler}
-                      tokenUrl={(e) => ""}
+                      tokenUrl={() => ""}
                       url={""}
                       inGuest={true}
                       showCards={false}
@@ -716,22 +716,22 @@ const PayAsGuest = ({
                   alt=""
                 />
                 <h1 style={{ color: "#906EF5", letterSpacing: "1.5px" }}>
-                  {t("Pay As A Guest")}
+                  {t("PAY AS A GUEST")}
                 </h1>
                 <h2>
-                  {data.step === 1 && "Select Your Country"}
-                  {data.step === 2 && "Select Payment Type"}
+                  {data.step === 1 && t("Select Your Country")}
+                  {data.step === 2 && t("Select Payment Type")}
                   {data.step === 3 &&
                     (data.payment_type?.value === "card"
-                      ? "Enter Card Details"
-                      : "Enter Your Personal Details")}
+                      ? t("Enter Card Details")
+                      : t("Enter Your Personal Details"))}
                   {data.step === 4 &&
                     (data.payment_type?.value === "card"
-                      ? "Enter Your Personal Details"
-                      : "Review Payment")}
+                      ? t("Enter Your Personal Details")
+                      : t("Review Payment"))}
                   {data.step === 5 &&
                     (data.payment_type?.value === "card"
-                      ? "Review Payment"
+                      ? t("Review Payment")
                       : "")}
                 </h2>
               </div>
@@ -788,7 +788,7 @@ const PayAsGuest = ({
                         showSave={false}
                         data={data}
                         dataHandler={dataHandler}
-                        tokenUrl={(e) => ""}
+                        tokenUrl={() => ""}
                         url={""}
                         showCards={false}
                         guest={true}
@@ -840,10 +840,9 @@ const PayAsGuest = ({
                                   lineHeight: 1.3,
                                   letterSpacing: "-0.28px",
                                 }}
+
                               >
-                                <strong>{wallet?.currency?.code} </strong> is not
-                                supported by Paypal, <strong>USD</strong> will be
-                                used as the default currency.
+                                {t("PKR is not supported by Paypal, USD will be used as the default currency.").replace("PKR", wallet?.currency?.code)}
                               </span>
                             </div>
                             <div
@@ -1160,7 +1159,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping }) => {
   );
 };
 
-const PaymentDetails = ({ data, amount, dataHandler }) => {
+const PaymentDetails = ({ data, dataHandler }) => {
   const { t } = useTranslation();
   return (
     <div style={{ height: "100%" }}>
@@ -1192,13 +1191,13 @@ const PaymentDetails = ({ data, amount, dataHandler }) => {
               <span>{t("You are using")}</span>
               <div className={styles.cd_bot}>
                 <h5>
-                  Card ending{" "}
+                  {t("Card ending")} {" "}
                   {data.cardNumber?.slice(
                     data?.cardNumber?.length - 5,
                     data?.cardNumber?.length
                   )}
                 </h5>
-                <span>Exp date: {data.expiry}</span>
+                <span>{t("Exp date")}: {data.expiry}</span>
               </div>
               <button onClick={() => dataHandler("step", 3)}>
                 {t("Change")}

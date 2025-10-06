@@ -90,7 +90,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                                     <img src={userCountry?.file_url} alt={userCountry?.alpha3} style={{ boxShadow: "0 0 5px #afafaf" }} />
                                     <span>{t(userCountry?.name)}</span>
                                 </div>
-                                {width < 1000 && <button onClick={() => navigate(`/profile/${user_name}`)} style={{ backdropFilter: "blur(0px)", background: '#5926f0' }} className={styles.viewProfileBtn}>View Profile</button>}
+                                {width < 1000 && <button onClick={() => navigate(`/profile/${user_name}`)} style={{ backdropFilter: "blur(0px)", background: '#5926f0' }} className={styles.viewProfileBtn}>{t("View Profile")}</button>}
                             </div>
                             {invoicePaid && AmountComponent}
                         </div>
