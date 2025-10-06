@@ -11,7 +11,7 @@
 .cover_container {
     box-shadow: none;
     border-radius: 16px 16px 0px 0px;
-    margin-bottom: -105px;
+    margin-bottom: -130px;
     overflow: hidden;
     height: 171px;
     position: relative;
@@ -29,7 +29,7 @@
 .container .sub_container .sc_body {
     padding: 0 50px;
     display: flex;
-    gap: 1.5rem;
+    gap: 10px;
     align-items: flex-end;
 }
 
@@ -38,13 +38,18 @@
     align-self: baseline;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    background-color: white;
+    border-radius: 18px;
 }
 
 .container .sub_container .sc_body>.left .left_bottom {
     background-color: white;
     border-radius: 16px;
-    padding: 24px;
+    padding: 0px 24px 24px 24px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .container .sub_container .sc_body>.left .left_top {
@@ -55,7 +60,6 @@
     width: 100%;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 10px;
 }
 
 .container .sub_container .sc_body>.left .left_top>div {
@@ -65,26 +69,23 @@
 }
 
 .container .sub_container .sc_body>.left .left_top div span {
-    color: #000;
-    text-align: right;
-    font-size: 14px;
+    color: #5926F0;
+    font-size: 20px;
     font-style: normal;
-    font-weight: 600;
-    line-height: 20px;
-    letter-spacing: -0.42px;
+    font-weight: 700;
 }
 
 .container .sub_container .sc_body>.left .left_top div p {
-    margin-bottom: 0;
-    color: var(--COLORS-Primary-300, #5926F0);
-    text-align: justify;
-    font-size: 15px;
+    color: #777;
+    font-size: 14px;
     font-style: normal;
-    font-weight: 800;
+    font-weight: 600;
+    width: 416px;
+    margin-bottom: 0px;
 }
 
 .container .sub_container .sc_body>.left .left_top img {
-    width: 100px;
+    width: 150px;
 }
 
 .container .sub_container .sc_body .top {
@@ -292,7 +293,7 @@
 
 @media screen and (min-width: 1500px) {
     .container .sub_container .sc_body {
-        padding: 0 100px;
+        padding: 0 0px;
     }
 }
 
@@ -406,7 +407,7 @@
 @media screen and (min-width: 1200px) {
     .sc_body {
         display: grid;
-        grid-template-columns: .4fr 1fr;
+        grid-template-columns: .5fr .9fr;
     }
 }
 
@@ -423,7 +424,7 @@
 
 @media screen and (max-width: 1350px) {
     .container .sub_container .sc_body {
-        padding: 0 16px;
+        padding: 0px;
     }
 
     .container .sub_container .sc_body .top .left {

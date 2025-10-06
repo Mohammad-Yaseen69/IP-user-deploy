@@ -7,19 +7,37 @@ import { useTranslation } from "react-i18next"
 import LanguagePicker from "../LanguagePicker"
 
 
-const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, userCountry, setShowVerTT, showVerTT, invoicePaid, AmountComponent }) => {
+const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, userCountry, setShowVerTT, showVerTT, invoicePaid, AmountComponent, paymentAddress, }) => {
     const width = useWindowWidth()
     const navigate = useNavigate()
     const { t } = useTranslation()
+
+    const actionButtons = [
+        {
+            label: "View Profile",
+            onClick: () => navigate(`/profile/${user_name}`),
+            disable: false,
+            purple: true,
+        },
+        {
+            label: "View Plans",
+            onClick: () => { },
+            disable: true,
+            purple: false,
+        },
+        {
+            label: "Explore eShop",
+            onClick: () => { },
+            disable: true,
+            purple: false,
+        },
+    ]
 
     return (
         <div className={styles.userDets} style={{ position: "relative" }} >
 
             <div className={styles.cover_container} style={{ position: "relative" }}>
-                <img src={(croppedCover || cover) || coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: "171px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important", objectPosition: (!croppedCover || !cover) && "right" }} />
-
-
-
+                <img src={(croppedCover || cover) || coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: "135px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important", objectPosition: (!croppedCover || !cover) && "right" }} />
             </div>
             <div style={{ backgroundColor: 'white', borderRadius: "16px", padding: "14px", maxHeight: "fit-content" }}>
                 <div style={{ flexDirection: "column", gap: "0", padding: "0px", position: 'relative', }} className={styles.top}>
@@ -97,6 +115,29 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                     </div>
                 </div>
             </div>
+
+            {paymentAddress &&
+                <div style={{ display: "flex", gap: "8px", alignItems: "center", padding: "15px", flexWrap: "wrap" }}>
+                    {actionButtons.map((button, idx) => (
+                        <button
+                            key={idx}
+                            onClick={button.onClick}
+                            disabled={button.disable}
+                            style={{
+                                padding: "10px 20px",
+                                background: button.purple ? "#5926F0" : '#EBEBEB',
+                                border: 'none',
+                                outline: 'none',
+                                fontWeight: 600,
+                                borderRadius: "4px",
+                                color: button.purple ? "white" : "black"
+                            }}
+                        >
+                            {button.label}
+                        </button>
+                    ))}
+                </div>
+            }
 
 
             <div style={{ position: "absolute", top: "10px", left: "10px" }}>

@@ -117,55 +117,55 @@ export const LeftJsx = ({
             }}
           >
             <div>
-              <span>{t("Send money to 150+ countries,")}</span>
-              <p>{t("Instantly")}</p>
+              <span>{t("Get Paid Instantly Worldwide. ")}</span>
+              <p>{t("Your socials are now your bank—Receive money straight to your bank, wallet, crypto, or cash pick-up in 180+ countries")}</p>
             </div>
           </div>
           <img src={ip} alt="" />
         </div>
       )}
       <div className={styles.left_bottom}>
-        {(title || description) && (
-          <div className={styles.about}>
-            <h4 style={{ marginBottom: "0px" }}>{title}</h4>
-            <p style={{ fontSize: "14px", fontWeight: 600, color: "#7E7E7E" }}>
-              {description}
-            </p>
-          </div>
-        )}
+        <div>
+          {(title || description) && (
+            <div className={styles.about}>
+              <h4 style={{ marginBottom: "0px" }}>{title}</h4>
+              <p style={{ fontSize: "14px", fontWeight: 600, color: "#7E7E7E" }}>
+                {description}
+              </p>
+            </div>
+          )}
+          {userVideos && userVideos.length > 0 && (
+            <div className="p-swiper-videos-123">
+              <Swiper
+                modules={[Pagination]}
+                pagination={{ clickable: true, el: '.portfolio-swiper-pagination' }}
+                spaceBetween={10}
+                slidesPerView={
+                  userVideos.length === 1 || window.innerWidth < 700
+                    ? 1
+                    : userVideos.length === 2
+                      ? 2
+                      : 2.3
+                }
+              >
+                {userVideos.map((video, index) => (
+                  <SwiperSlide key={video._id || index}>
+                    <PortfolioCard
+                      item={video}
+                      pAddress={true}
+                      publicP={true}
+                      playingMediaId={playingMediaId}
+                      setPlayingMediaId={setPlayingMediaId}
+                      playerRefs={playerRefs}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
 
-        {userVideos && userVideos.length > 0 && (
-          <div className="p-swiper-videos-123">
-            <Swiper
-              modules={[Pagination]}
-              pagination={{ clickable: true, el: '.portfolio-swiper-pagination' }}
-              spaceBetween={10}
-              slidesPerView={
-                userVideos.length === 1 || window.innerWidth < 700
-                  ? 1
-                  : userVideos.length === 2
-                    ? 2
-                    : 2.3
-              }
-            >
-              {userVideos.map((video, index) => (
-                <SwiperSlide key={video._id || index}>
-                  <PortfolioCard
-                    item={video}
-                    pAddress={true}
-                    publicP={true}
-                    playingMediaId={playingMediaId}
-                    setPlayingMediaId={setPlayingMediaId}
-                    playerRefs={playerRefs}
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-
-            <div className="portfolio-swiper-pagination" style={{ marginTop: 12, textAlign: 'center' }} />
-
-          </div>
-        )}
+              <div className="portfolio-swiper-pagination" style={{ textAlign: 'center' }} />
+            </div>
+          )}
+        </div>
 
         <div>
           <QrDetails
@@ -396,14 +396,14 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
               <CardBody className={styles.sc_body}>
                 <div
                   style={{
-                    flex: width > 1000 && 0.5,
+                    flex: width > 1000 && 0.7,
                     borderRadius: "16px",
+                    background: "white",
                     width: width < 1000 && "100%",
                     overflow: width < 100 && "hidden",
                     alignSelf: width > 1000 && "stretch",
                     display: width > 1000 && "grid",
-                    gap: "10px",
-                    background: width < 1000 && "white",
+                    gap: "0px",
                   }}
                   className={styles.right}
                 >
@@ -417,6 +417,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                     userCountry={state.userCountry}
                     userDetails={userDetails}
                     user_name={user_name}
+                    paymentAddress={true}
                   />
 
                   <AmountContainer
