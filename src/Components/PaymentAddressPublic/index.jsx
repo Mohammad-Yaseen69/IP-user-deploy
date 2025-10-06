@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import TopRight from '../topRight'
 import PaymentAddressComponent from './PaymentAddressComponent'
-import { Card, CardBody, CardText, Modal, ModalBody } from 'reactstrap'
+import { Card, CardBody, CardText, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import styles from "./styles/index.module.css"
 import axios from 'axios'
@@ -89,6 +89,7 @@ const PaymentAddressPublic = () => {
                 currenctModal === "success"
                 &&
                 <Modal style={{ width: "96vw", maxWidth: "1200px" }} isOpen={currenctModal === "success"}>
+                    <ModalHeader toggle={() => setCurrentModal("")}></ModalHeader>
                     <ModalBody style={{ padding: 0 }}>
                         <Receipt
                             data={{
