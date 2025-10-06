@@ -22,6 +22,7 @@ import info from "./files/info.svg"
 import AddPortfolioItem from '../Portfolio/AddPortfolioItem'
 import PortfolioCard from '../Portfolio/PortfolioCard'
 import useWindowWidth from '../../utils/useWindowWidth'
+import QrGenerate from '../Settings/QrGenerate'
 
 const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const { t } = useTranslation()
@@ -40,6 +41,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const [showModal, setShowModal] = useState(false)
     const [apiTitle, setApiTitle] = useState("")
     const [apiDescription, setApiDescription] = useState("")
+    const [qrFile, setQrFile] = useState(null)
     const width = useWindowWidth()
 
     const getPaymentAddress = () => {
@@ -180,6 +182,18 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
 
     const [showAboutModal, setShowAboutModal] = useState(false)
 
+    const downloadQRCode = () => {
+        if (!qrFile) return;
+
+        const url = URL.createObjectURL(qrFile);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "qrcode.png";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+    };
     const btns = () => (
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             {editMode &&
@@ -197,6 +211,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
 
             <button
                 className={styles.buttonStyles}
+                style={{ fontSize: "15px" }}
                 disabled={!title || !currency || isSaving || !isActive}
                 onClick={() => {
                     if (!editMode && paymentAddressDetails?.title) {
@@ -234,6 +249,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                     isAllowed === true
                         ?
                         <>
+                            <QrGenerate downloadFileSetter={setQrFile} qrUrl={`https://my.insta-pay.ch/pay/${userDetails?.username}`} />
                             <InstructionsModal isOpen={isOpen} toggle={() => setIsOpen(!isOpen)} />
                             <Cover dets={paymentAddressDetails} cover={cover} setCover={setCover} />
                             <Card style={{ marginBottom: "0", borderRadius: '0px' }} className={styles.sub_container}>
@@ -344,6 +360,15 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                             :
                                                             <img src={copy} style={{ cursor: "pointer", height: "14px", width: "14px", objectFit: "contain" }} onClick={copyHandler} />
                                                     }
+                                                </span>
+                                            </div>
+
+                                            <div className={styles.copyDiv}>
+                                                <p>
+                                                    {t("Payment Address QR Code")}
+                                                </p>
+                                                <span onClick={downloadQRCode} style={{ cursor: "pointer" }}>
+                                                    {t("Download")}
                                                 </span>
                                             </div>
                                         </div>

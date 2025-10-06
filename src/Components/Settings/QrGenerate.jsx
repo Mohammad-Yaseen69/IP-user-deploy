@@ -5,7 +5,7 @@ import logo from "../../assets/images/logo/logo.png"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 
 
-const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, platform, isInvoice, invoiceQrGenerateFn, invoiceUrl, invoiceId }) => {
+const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, platform, isInvoice, invoiceQrGenerateFn, invoiceUrl, invoiceId, downloadFileSetter, qrUrl }) => {
     const ref = useRef(null);
     const qrRef = useRef(null);
     const [isReady, setIsReady] = useState(false);
@@ -94,6 +94,10 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
         const mimeType = `image/png`;
         const blob = await qrRef.current.getRawData("png");
 
+        if (downloadFileSetter) {
+            downloadFileSetter(blob)
+            return;
+        }
         const file = new File([blob], fileName, { type: mimeType });
         const formData = new FormData();
         formData.append("qrCode", file)
@@ -163,6 +167,12 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
             generateQr()
         }
     }, [isInvoice])
+
+    useEffect(() => {
+        if (downloadFileSetter) {
+            preparingFormData(qrUrl)
+        }
+    }, [downloadFileSetter])
 
     return (
         <div style={{ position: "absolute", top: "-1000vh", left: "-100vw" }}>

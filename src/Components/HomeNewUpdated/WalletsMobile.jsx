@@ -13,24 +13,9 @@ import { isSafari } from "react-device-detect"
 
 const WalletsMobile = ({ setCurrentWallet }) => {
     const { t } = useTranslation()
-    const { userWallets, totalReferralAmount, available } = useContext(UserContext)
+    const { userWallets, totalReferralAmount, available: totalBalance, balanceLoading: isLoading } = useContext(UserContext)
     const [activeDot, setActiveDot] = useState(0)
-    const [isLoading, setIsLoading] = useState(true)
-    const [totalBalance, setTotalBalance] = useState(0)
 
-
-    useEffect(() => {
-        if (available) {
-            const calculateTotal = async () => {
-                const total = available?.reduce((acc, balance) => acc + balance, 0);
-                setTotalBalance(total ?? 0);
-                setIsLoading(false)
-                console.log(total)
-            };
-
-            calculateTotal();
-        }
-    }, [available]);
 
     useEffect(() => {
         setCurrentWallet(userWallets?.[activeDot])
@@ -44,9 +29,9 @@ const WalletsMobile = ({ setCurrentWallet }) => {
                     {
                         isLoading
                             ?
-                            <div class="d-flex justify-content-center">
-                                <div class="spinner-border" color='primary' role="status">
-                                    <span class="sr-only">Loading...</span>
+                            <div className="d-flex justify-content-center">
+                                <div className="spinner-border" color='primary' role="status">
+                                    <span className="sr-only">Loading...</span>
                                 </div>
                             </div>
                             :
