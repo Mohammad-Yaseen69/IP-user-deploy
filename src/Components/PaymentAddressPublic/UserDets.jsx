@@ -19,18 +19,18 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
             disable: false,
             purple: true,
         },
-        {
-            label: "View Plans",
-            onClick: () => { },
-            disable: true,
-            purple: false,
-        },
-        {
-            label: "Explore eShop",
-            onClick: () => { },
-            disable: true,
-            purple: false,
-        },
+        // {
+        //     label: "View Plans",
+        //     onClick: () => { },
+        //     disable: true,
+        //     purple: false,
+        // },
+        // {
+        //     label: "Explore eShop",
+        //     onClick: () => { },
+        //     disable: true,
+        //     purple: false,
+        // },
     ]
 
     return (
@@ -53,8 +53,8 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                                 }
                             </div>
                         </div>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", flexDirection: width < 1000 && "column" }}>
-                            <div style={{ alignItems: 'flex-start' }} className={styles.basic_dets}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", flexDirection: width < 1000 && "column", position: "relative" }}>
+                            <div style={{ alignItems: 'flex-start',  }} className={styles.basic_dets}>
                                 <div className={styles.badge}>{userDetails?.account_type === "individual" ? t("Personal") : t("Business")} {t("Account")}</div>
                                 <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: ".3rem" }}>
                                     <h4
@@ -108,6 +108,12 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                                     <span>{t(userCountry?.name)}</span>
                                 </div>
                             </div>
+                            {width < 1000 &&
+                                <div style={{ position: "absolute", top: "0px", right: "-13px" }}>
+                                    <LanguagePicker newUI={true} backgroundWhite={true} />
+                                </div>
+                            }
+
                             {invoicePaid && AmountComponent}
                         </div>
                     </div>
@@ -115,7 +121,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
             </div>
 
             {paymentAddress &&
-                <div style={{ display: "flex", gap: "8px", alignItems: "center", padding: "15px", flexWrap: "wrap", justifyContent: width < 1000 && "center" }}>
+                <div style={{ display: "flex", gap: "8px", alignItems: width > 500 ? "center" : "stretch", padding: "0px 15px 15px 15px", flexWrap: "wrap", justifyContent: width < 1000 && "center", flexDirection: width < 500 && "column" }}>
                     {actionButtons.map((button, idx) => (
                         <button
                             key={idx}
@@ -136,11 +142,6 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                     ))}
                 </div>
             }
-
-
-            <div style={{ position: "absolute", top: "10px", left: "10px" }}>
-                <LanguagePicker backgroundWhite={true} />
-            </div>
         </div>
     )
 }

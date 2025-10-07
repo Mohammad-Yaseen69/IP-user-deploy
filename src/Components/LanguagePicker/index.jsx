@@ -8,129 +8,36 @@ import axios from "axios"
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import { UserContext } from "../../Context/UserContext"
 
-const   LanguagePicker = ({ size = "24", backgroundWhite }) => {
+const LanguagePicker = ({ size = "24", backgroundWhite, newUI }) => {
     const { i18n, t } = useTranslation()
     const [showDropDown, setShowDropDown] = useState()
     const [currentLang, setCurrentLang] = useState(localStorage.getItem("i18nextLng"))
     const [showModal, setShowModal] = useState(false)
     const toggleModal = () => setShowModal(!showModal)
+    const [openUp, setOpenUp] = useState(false)
 
     const languageCountries = [
-        {
-            name: "United Kingdom",
-            display: t("English (UK)"),
-            lang: "en",
-            alpha3: "GBR"
-        },
-        {
-            name: "France",
-            display: t("French"),
-            lang: "fr",
-            alpha3: "FRA"
-        },
-        {
-            name: "Spain",
-            display: t("Spanish"),
-            lang: "es",
-            alpha3: "ESP"
-        },
-        {
-            name: "Italy",
-            display: t("Italian"),
-            lang: "it",
-            alpha3: "ITA"
-        },
-        {
-            name: "Portugal",
-            display: t("Portuguese"),
-            lang: "pt",
-            alpha3: "PRT"
-        },
-        {
-            name: "Russia",
-            display: t("Russian"),
-            lang: "ru",
-            alpha3: "RUS"
-        },
-        {
-            name: "Germany",
-            display: t("German"),
-            lang: "de",
-            alpha3: "DEU"
-        },
-        {
-            name: "Ukraine",
-            display: t("Ukrainian"),
-            lang: "uk",
-            alpha3: "UKR"
-        },
-        {
-            name: "United Arab Emirates",
-            display: t("Arabic"),
-            lang: "ar",
-            alpha3: "ARE"
-        },
-        {
-            name: "Poland",
-            display: t("Polish"),
-            lang: "pl",
-            alpha3: "POL"
-        },
-        {
-            name: "Netherlands",
-            display: t("Dutch (Nederlands)"),
-            lang: "nl",
-            alpha3: "NLD"
-        },
-        {
-            name: "Nigeria",
-            display: t("Yoruba"),
-            lang: "yo",
-            alpha3: "NGA"
-        },
-        {
-            name: "Indonesia",
-            display: t("Indonesian"),
-            lang: "id",
-            alpha3: "IDN"
-        },
-        {
-            name: "Türkiye",
-            display: t("Turkish"),
-            lang: "tr",
-            alpha3: "TUR"
-        },
-        {
-            name: "Kenya",
-            display: t("Swahili"),
-            lang: "sw",
-            alpha3: "KEN"
-        },
-        {
-            name: "Benin",
-            display: t("Hausa"),
-            lang: "ha",
-            alpha3: "BEN"
-        },
-        {
-            name: "India",
-            display: t("Hindi"),
-            lang: "hi",
-            alpha3: "IND"
-        },
-        {
-            name: "China",
-            display: t("Chinese"),
-            lang: "cn",
-            alpha3: "CHN"
-        },
-        {
-            name: "Pakistan",
-            display: t("Urdu"),
-            lang: "ur",
-            alpha3: "PAK"
-        }
+        { name: "United Kingdom", display: t("English (UK)"), label: "EN-GB", lang: "en", alpha3: "GBR" },
+        { name: "France", display: t("French"), label: "FR-FR", lang: "fr", alpha3: "FRA" },
+        { name: "Spain", display: t("Spanish"), label: "ES-ES", lang: "es", alpha3: "ESP" },
+        { name: "Italy", display: t("Italian"), label: "IT-IT", lang: "it", alpha3: "ITA" },
+        { name: "Portugal", display: t("Portuguese"), label: "PT-PT", lang: "pt", alpha3: "PRT" },
+        { name: "Russia", display: t("Russian"), label: "RU-RU", lang: "ru", alpha3: "RUS" },
+        { name: "Germany", display: t("German"), label: "DE-DE", lang: "de", alpha3: "DEU" },
+        { name: "Ukraine", display: t("Ukrainian"), label: "UK-UA", lang: "uk", alpha3: "UKR" },
+        { name: "United Arab Emirates", display: t("Arabic"), label: "AR-AE", lang: "ar", alpha3: "ARE" },
+        { name: "Poland", display: t("Polish"), label: "PL-PL", lang: "pl", alpha3: "POL" },
+        { name: "Netherlands", display: t("Dutch (Nederlands)"), label: "NL-NL", lang: "nl", alpha3: "NLD" },
+        { name: "Nigeria", display: t("Yoruba"), label: "YO-NG", lang: "yo", alpha3: "NGA" },
+        { name: "Indonesia", display: t("Indonesian"), label: "ID-ID", lang: "id", alpha3: "IDN" },
+        { name: "Türkiye", display: t("Turkish"), label: "TR-TR", lang: "tr", alpha3: "TUR" },
+        { name: "Kenya", display: t("Swahili"), label: "SW-KE", lang: "sw", alpha3: "KEN" },
+        { name: "Benin", display: t("Hausa"), label: "HA-BJ", lang: "ha", alpha3: "BEN" },
+        { name: "India", display: t("Hindi"), label: "HI-IN", lang: "hi", alpha3: "IND" },
+        { name: "China", display: t("Chinese"), label: "ZH-CN", lang: "cn", alpha3: "CHN" },
+        { name: "Pakistan", display: t("Urdu"), label: "UR-PK", lang: "ur", alpha3: "PAK" },
     ];
+
 
 
     // const filtered = countries.filter(it => languageCountries.some(item => item.name === "India" ? it.name === item.name : it.name.includes(item.name))).map(coun => {
@@ -236,28 +143,32 @@ const   LanguagePicker = ({ size = "24", backgroundWhite }) => {
             localStorage.setItem("i18nextLng", eng.lang)
         }
     }, [userDetails])
+
+    useEffect(() => {
+        const handlePosition = () => {
+            const dropdown = dropdownRef.current
+            if (!dropdown) return
+            const rect = dropdown.getBoundingClientRect()
+            const windowHeight = window.innerHeight
+            const dropdownHeight = 500 // or whatever your dropdown’s max height is
+            const shouldOpenUp = rect.bottom + dropdownHeight > windowHeight
+            setOpenUp(shouldOpenUp)
+        }
+
+        handlePosition()
+        window.addEventListener("resize", handlePosition)
+        return () => window.removeEventListener("resize", handlePosition)
+    }, [showDropDown])
+
     return (
         <div ref={dropdownRef}>
             {
-                !showDropDown
+                showDropDown
                     ?
+
                     <Col xs="auto" style={{
-                        padding: ".5rem",
-                        boxShadow: "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: "10px",
-                        border: "1.11414px solid rgba(0, 0, 0, 0.08)",
-                        cursor: "pointer",
-                        background:   backgroundWhite && "white"
-                    }} onClick={() => setShowDropDown(!showDropDown)}>
-                        <GlobeSVG size={size} />
-                    </Col>
-                    :
-                    <Col xs="auto" style={{
-                        padding: ".5rem",
-                        boxShadow: "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
+                        padding: !openUp && ".5rem",
+                        boxShadow: !openUp && "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
                         display: "flex",
                         alignItems: "center",
                         borderRadius: "10px 10px 0 0",
@@ -269,17 +180,22 @@ const   LanguagePicker = ({ size = "24", backgroundWhite }) => {
                         zIndex: 1000,
                         containerType: "inline-size",
                         flex: 1,
-                        background :backgroundWhite && 'white',
-                        zIndex: backgroundWhite &&  999,
+                        background: backgroundWhite && 'white',
+                        zIndex: backgroundWhite && 999,
                     }} className={styles.active}>
-                        <GlobeSVG size={size} />
-                        <span style={{
-                            fontWeight: 500,
-                            fontSize: "7cqi",
-                        }}>{t("Pick a language")}</span>
+                        {!openUp &&
+                            <>
+                                <GlobeSVG size={size} />
+                                <span style={{
+                                    fontWeight: 500,
+                                    fontSize: "7cqi",
+                                }}>{t("Pick a language")}</span>
+                            </>
+                        }
                         <div style={{
                             position: "absolute",
-                            top: "90%",
+                            top: openUp ? "auto" : "90%",
+                            bottom: openUp ? "90%" : "auto",
                             left: "0",
                             display: "flex",
                             flexDirection: "column",
@@ -291,10 +207,19 @@ const   LanguagePicker = ({ size = "24", backgroundWhite }) => {
                             boxShadow: "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
                             // border: "1.11414px solid rgba(0, 0, 0, 0.08)",
                             // borderTop: "none",
-                            borderRadius: "0 0 10px 10px",
+                            borderRadius: openUp ? "12px" : "0 0 10px 10px",
                             zIndex: 10000,
                             gap: "10px"
                         }} onClick={() => setShowDropDown(!showDropDown)}>
+                            {openUp &&
+                                <div style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}>
+                                    <GlobeSVG size={size} />
+                                    <span style={{
+                                        fontWeight: 500,
+                                        fontSize: "7cqi",
+                                    }}>{t("Pick a language")}</span>
+                                </div>
+                            }
                             <div style={{
                                 display: "flex",
                                 alignItems: "center",
@@ -321,7 +246,7 @@ const   LanguagePicker = ({ size = "24", backgroundWhite }) => {
                                 filtered
                                     .slice(1, 6)
                                     .map(item => (
-                                        <div style={{
+                                        <div key={item.alpha3} style={{
                                             display: "flex",
                                             alignItems: "center",
                                             width: "100%",
@@ -348,6 +273,49 @@ const   LanguagePicker = ({ size = "24", backgroundWhite }) => {
                             <div onClick={toggleModal} style={{ textAlign: "center", color: "#5926f0", cursor: "pointer", fontWeight: "600" }}>{t("See More")} &rarr;</div>
                         </div>
                     </Col>
+                    :
+                    (newUI ?
+                        <>
+                            <div
+                                style={{
+                                    padding: "8px",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    gap: "10px",
+                                    borderRadius: "8px",
+                                    background: "white",
+                                    boxShadow: "0 4px 39.6px 0 rgba(109, 41, 220, 0.15)",
+                                    cursor: "pointer",
+                                }}
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    setShowDropDown(true)
+                                }}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                    <path d="M3.75 6L7.5 9.75M3 10.5L7.5 6L9 3.75M1.5 3.75H10.5M5.25 1.5H6M9.68478 12.75H15.0652M9.68478 12.75L8.25 15.75M9.68478 12.75L11.8337 8.25677C12.0069 7.8947 12.0935 7.71367 12.2119 7.65646C12.315 7.60671 12.435 7.60671 12.5381 7.65646C12.6565 7.71367 12.7431 7.8947 12.9163 8.25677L15.0652 12.75M15.0652 12.75L16.5 15.75" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <span style={{ fontWeight: 600, fontSize: "14px" }}>
+                                    {languageCountries.find(i => i.lang === currentLang).label}
+                                </span>
+                            </div>
+                        </> :
+
+                        <Col xs="auto" style={{
+                            padding: ".5rem",
+                            boxShadow: "0px 9.94788px 10.7769px rgba(109, 41, 220, 0.17)",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            borderRadius: "10px",
+                            border: "1.11414px solid rgba(0, 0, 0, 0.08)",
+                            cursor: "pointer",
+                            background: backgroundWhite && "white"
+                        }} onClick={() => setShowDropDown(!showDropDown)}>
+                            <GlobeSVG size={size} />
+                        </Col>
+                    )
             }
             <Modal isOpen={showModal} toggle={toggleModal} style={{ minWidth: window.innerWidth > 600 ? "500px" : "90vw" }}>
                 <ModalHeader toggle={toggleModal}>
@@ -397,7 +365,7 @@ export default LanguagePicker
 export function GlobeSVG({ size }) {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M9.57059 0.870605C7.77952 1.27733 6.10872 2.09819 4.69223 3.26733C3.27574 4.43647 2.15299 5.92134 1.41406 7.6028H6.33092C6.92875 4.58166 8.09007 2.17318 9.57059 0.870605ZM17.9373 7.6028H22.8542C22.1154 5.92152 20.9929 4.43677 19.5767 3.26764C18.1605 2.09852 16.49 1.27755 14.6992 0.870605C16.1797 2.17318 17.3411 4.58166 17.9373 7.6028ZM16.3406 7.60289C15.5173 3.77866 13.7612 1.35925 12.1371 1.35925C10.513 1.35925 8.75697 3.77866 7.93359 7.60289H16.3406ZM7.45313 12.2855C7.45293 13.3296 7.52255 14.3725 7.66151 15.4073H16.6102C16.7492 14.3725 16.8188 13.3296 16.8186 12.2855C16.8188 11.2414 16.7492 10.1985 16.6102 9.1637H7.66151C7.52255 10.1985 7.45293 11.2414 7.45313 12.2855ZM12.1371 23.2119C10.513 23.2119 8.75697 20.7925 7.93359 16.9683H16.3406C15.5173 20.7925 13.7612 23.2119 12.1371 23.2119ZM18.1883 9.1637H23.4173C23.9865 11.206 23.9857 13.365 23.4165 15.4073H18.1875C18.3165 14.3717 18.3812 13.3291 18.3811 12.2855C18.3814 11.2419 18.317 10.1993 18.1883 9.1637ZM14.6992 23.7005C16.4903 23.2937 18.1611 22.4729 19.5776 21.3037C20.9941 20.1346 22.1168 18.6497 22.8557 16.9683H17.9389C17.3411 19.9894 16.1797 22.3979 14.6992 23.7005ZM1.41797 16.9683H6.33483C6.9311 19.9894 8.09241 22.3979 9.57449 23.7005C7.78343 23.2937 6.11263 22.4729 4.69614 21.3037C3.27964 20.1346 2.1569 18.6497 1.41797 16.9683ZM6.0856 9.16367C5.95659 10.1993 5.89195 11.2419 5.89205 12.2855C5.89195 13.3291 5.95659 14.3717 6.0856 15.4073H0.856558C0.287397 13.365 0.287397 11.206 0.856558 9.16367H6.0856Z" fill="black" />
+            <path fillRule="evenodd" clipRule="evenodd" d="M9.57059 0.870605C7.77952 1.27733 6.10872 2.09819 4.69223 3.26733C3.27574 4.43647 2.15299 5.92134 1.41406 7.6028H6.33092C6.92875 4.58166 8.09007 2.17318 9.57059 0.870605ZM17.9373 7.6028H22.8542C22.1154 5.92152 20.9929 4.43677 19.5767 3.26764C18.1605 2.09852 16.49 1.27755 14.6992 0.870605C16.1797 2.17318 17.3411 4.58166 17.9373 7.6028ZM16.3406 7.60289C15.5173 3.77866 13.7612 1.35925 12.1371 1.35925C10.513 1.35925 8.75697 3.77866 7.93359 7.60289H16.3406ZM7.45313 12.2855C7.45293 13.3296 7.52255 14.3725 7.66151 15.4073H16.6102C16.7492 14.3725 16.8188 13.3296 16.8186 12.2855C16.8188 11.2414 16.7492 10.1985 16.6102 9.1637H7.66151C7.52255 10.1985 7.45293 11.2414 7.45313 12.2855ZM12.1371 23.2119C10.513 23.2119 8.75697 20.7925 7.93359 16.9683H16.3406C15.5173 20.7925 13.7612 23.2119 12.1371 23.2119ZM18.1883 9.1637H23.4173C23.9865 11.206 23.9857 13.365 23.4165 15.4073H18.1875C18.3165 14.3717 18.3812 13.3291 18.3811 12.2855C18.3814 11.2419 18.317 10.1993 18.1883 9.1637ZM14.6992 23.7005C16.4903 23.2937 18.1611 22.4729 19.5776 21.3037C20.9941 20.1346 22.1168 18.6497 22.8557 16.9683H17.9389C17.3411 19.9894 16.1797 22.3979 14.6992 23.7005ZM1.41797 16.9683H6.33483C6.9311 19.9894 8.09241 22.3979 9.57449 23.7005C7.78343 23.2937 6.11263 22.4729 4.69614 21.3037C3.27964 20.1346 2.1569 18.6497 1.41797 16.9683ZM6.0856 9.16367C5.95659 10.1993 5.89195 11.2419 5.89205 12.2855C5.89195 13.3291 5.95659 14.3717 6.0856 15.4073H0.856558C0.287397 13.365 0.287397 11.206 0.856558 9.16367H6.0856Z" fill="black" />
         </svg>
     )
 }

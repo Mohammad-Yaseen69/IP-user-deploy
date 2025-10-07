@@ -67,12 +67,19 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                     </div>
                     {!paidInvoice &&
                         <>
-                            <div style={{ margin: '0' }} className={vpa_styles.buttons}>
+                            <div
+                                style={{
+                                    margin: '0',
+                                    display: width > 1000 && width < 1350 && "grid",
+                                    gridTemplateColumns: width > 1000 && width < 1350 && "1fr 1fr 1fr"
+                                }}
+                                className={vpa_styles.buttons}
+                            >
                                 <Link onClick={toggleCreditModal} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
                                     style={{
                                         opacity: state.amount <= 0 ? .7 : 1,
                                         pointerEvents: state.amount <= 0 ? "none" : "all",
-                                        position: "relative"
+                                        position: "relative",
                                     }}
                                 >
                                     <div>

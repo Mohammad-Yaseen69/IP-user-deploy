@@ -12,7 +12,7 @@ import { formatCurrency } from "../../Helper/AmountFormat";
 import { toast } from "react-toastify";
 import InstaPayLoader from "../Loader";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper";
+import { FreeMode, Mousewheel } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 import "./styles/swiper.reset.css";
@@ -101,11 +101,17 @@ export const LeftJsx = ({
   return (
     <div
       style={{
-        flex: 1.7,
+        flex: width > 1350 ? 1.7 : 1.4,
         alignSelf: userVideos.length >= 1 && "stretch",
+        position: "relative"
       }}
       className={styles.left}
     >
+      {width > 1000 &&
+        <div style={{ position: "absolute", bottom: "10px", right: "10px" }}>
+          <LanguagePicker newUI={true} />
+        </div>
+      }
       {width > 1000 && (
         <div className={styles.left_top}>
           <div
@@ -137,8 +143,7 @@ export const LeftJsx = ({
           {userVideos && userVideos.length > 0 && (
             <div className="p-swiper-videos-123">
               <Swiper
-                modules={[Pagination]}
-                pagination={{ clickable: true, el: '.portfolio-swiper-pagination' }}
+                modules={[FreeMode, Mousewheel]}
                 spaceBetween={10}
                 slidesPerView={
                   userVideos.length === 1 || window.innerWidth < 700
@@ -147,6 +152,9 @@ export const LeftJsx = ({
                       ? 2
                       : 2.3
                 }
+                grabCursor={true}
+                freeMode={true}
+                mousewheel={{ forceToAxis: true }}
               >
                 {userVideos.map((video, index) => (
                   <SwiperSlide key={video._id || index}>
@@ -161,8 +169,6 @@ export const LeftJsx = ({
                   </SwiperSlide>
                 ))}
               </Swiper>
-
-              <div className="portfolio-swiper-pagination" style={{ textAlign: 'center' }} />
             </div>
           )}
         </div>
@@ -396,7 +402,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
               <CardBody className={styles.sc_body}>
                 <div
                   style={{
-                    flex: width > 1000 && 0.7,
+                    flex: width > 1000 && width > 1350 ? 0.7 : 1,
                     borderRadius: "16px",
                     background: "white",
                     width: width < 1000 && "100%",

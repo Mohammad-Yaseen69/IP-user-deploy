@@ -124,7 +124,7 @@
 
 .amount {
     display: grid;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .amount input,
@@ -203,12 +203,22 @@
 }
 
 
+
 @media (min-width: 1000px) and (max-width: 1450px) {
     .button div {
         width: 20px;
         height: 20px;
     }
+    .button{
+        border-radius: 8px;
+        padding: 8px;
+        gap: 6px;
+    }
 
+
+    .buttons{
+        gap: 5px;
+    }
     .button img {
         width: 15px;
         height: 15px;
