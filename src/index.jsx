@@ -44,10 +44,10 @@ Sentry.init({
     sendDefaultPii: true,
     integrations: [
         Sentry.browserTracingIntegration(),
-        Sentry.replayIntegration({
-            maskAllText: false,
-            blockAllMedia: false,
-        }),
+        // Sentry.replayIntegration({
+        //     maskAllText: false,
+        //     blockAllMedia: false,
+        // }),
         Sentry.browserProfilingIntegration()
     ],
     tracesSampleRate: 1.0,

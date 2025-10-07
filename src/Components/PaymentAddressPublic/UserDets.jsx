@@ -37,7 +37,9 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
         <div className={styles.userDets} style={{ position: "relative" }} >
 
             <div className={styles.cover_container} style={{ position: "relative" }}>
-                <img src={(croppedCover || cover) || coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: "135px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important", objectPosition: (!croppedCover || !cover) && "right" }} />
+                <div style={{ backgroundColor: "#1200BA" }}>
+                    <img src={(croppedCover || cover) || coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: "135px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important", objectPosition: (!croppedCover || !cover) && "right" }} />
+                </div>
             </div>
             <div style={{ backgroundColor: 'white', borderRadius: "16px", padding: "14px", maxHeight: "fit-content" }}>
                 <div style={{ flexDirection: "column", gap: "0", padding: "0px", position: 'relative', }} className={styles.top}>
@@ -54,7 +56,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                             </div>
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", flexDirection: width < 1000 && "column", position: "relative" }}>
-                            <div style={{ alignItems: 'flex-start',  }} className={styles.basic_dets}>
+                            <div style={{ alignItems: 'flex-start', }} className={styles.basic_dets}>
                                 <div className={styles.badge}>{userDetails?.account_type === "individual" ? t("Personal") : t("Business")} {t("Account")}</div>
                                 <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: ".3rem" }}>
                                     <h4

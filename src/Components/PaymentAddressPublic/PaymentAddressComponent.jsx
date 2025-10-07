@@ -1,4 +1,4 @@
-import { useEffect, useRef, useReducer } from "react";
+import { useEffect, useRef, useReducer, } from "react";
 import styles from "./styles/PAC.module.scss";
 import { Card, CardBody, CardText } from "reactstrap";
 import countries from "../PaymentsNewer/CountriesData.json";
@@ -24,6 +24,7 @@ import UserDets from "./UserDets";
 import AmountContainer from "./AmountContainer";
 import PayWithCrypto from "./PayWithCrypto";
 import LanguagePicker from "../LanguagePicker";
+import AnimatedHeader from "./AnimatedHeader";
 
 // Initial state
 const initialState = {
@@ -82,6 +83,8 @@ function reducer(state, action) {
 `}
 </style>;
 
+
+
 export const LeftJsx = ({
   width,
   userDetails,
@@ -97,7 +100,7 @@ export const LeftJsx = ({
   user_name,
   invoiceId,
 }) => {
-  const { t } = useTranslation();
+
   return (
     <div
       style={{
@@ -114,19 +117,7 @@ export const LeftJsx = ({
       }
       {width > 1000 && (
         <div className={styles.left_top}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              flexDirection: "row",
-            }}
-          >
-            <div>
-              <span>{t("Get Paid Instantly Worldwide. ")}</span>
-              <p>{t("Your socials are now your bank—Receive money straight to your bank, wallet, crypto, or cash pick-up in 180+ countries")}</p>
-            </div>
-          </div>
+          <AnimatedHeader />
           <img src={ip} alt="" />
         </div>
       )}
@@ -459,6 +450,19 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                       />
                     </div>
                   )}
+                  {width < 1000 &&
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        flexDirection: "column",
+                        marginTop: "3rem"
+                      }}
+                    >
+                      <AnimatedHeader mobileUI />
+                      <img src={ip} alt="" style={{ margin: "20px auto", width: "200px" }} />
+                    </div>
+                  }
                 </div>
                 {width > 1000 && (
                   <LeftJsx
@@ -478,7 +482,6 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                     width={width}
                   />
                 )}
-                {/* basic info */}
               </CardBody>
             </Card>
           </>
