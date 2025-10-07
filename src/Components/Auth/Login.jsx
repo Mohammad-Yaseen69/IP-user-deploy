@@ -26,6 +26,11 @@ import InstaPayLoader from "../Loader";
 const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
+    // capture redirect target from location state (if provided by router) or from query params (?redirect=...)
+    const location = useLocation();
+    const params = new URLSearchParams(location.search || "");
+    const redirectQuery = params.get("redirect");
+    const redirect = location?.state?.redirect ?? (redirectQuery ? decodeURIComponent(redirectQuery) : null)
     const isPhoneNumber = /^\d{9,20}$/g;
     const isEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const [emailVerified, setEmailVerified] = useState(false)
@@ -484,7 +489,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     })
                                     .catch(err => {
                                         setIsPressed(false)
-                                        const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
+                                        const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect ? redirect : ""
                                         console.log(path)
                                         if (path && path !== "undefined") {
                                             navigate(path)
