@@ -69,7 +69,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
         } else {
             const paymentConfig = {
                 amount: 1.5,
-                orderId: 'order_123456',
+                orderId: Date.now(),
                 paymentPurpose: "Crypt Transfer",
                 currency: 'USDT',
             };
