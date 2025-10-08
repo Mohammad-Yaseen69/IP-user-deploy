@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import styles from "./styles/card_number.module.css";
 import { creditCardImages } from './CreditCardImages';
 import { useTranslation } from 'react-i18next';
+import { cancelSubscriptionOrSchedulePayment } from '../OtherTransactions/ReceivedTransactionItem';
 
 
 
@@ -18,6 +19,7 @@ const CardNumberInput = ({ content, setContent, cardType, cardError, isinVVC = f
         return input.slice(0, cardType?.maxCardNumberLength).replace(/(.{4})/g, '$1 ').trim();
     };
 
+    console.log(cardType)
     const saveCaretPosition = () => {
         const selection = window.getSelection();
         if (selection.rangeCount > 0) {

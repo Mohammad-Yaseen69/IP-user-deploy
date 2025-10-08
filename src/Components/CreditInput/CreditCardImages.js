@@ -6,7 +6,11 @@ export const creditCardImages = {
     jcb: "https://www.global.jcb/en/common/images/svg/jcb_emblem_logo.svg",
     dankort: "https://images.ctfassets.net/5zfcs7jygjfr/3HEWkqTIVub9388fKWPZ9U/16949e8b696978e97474461d47e1242a/dankort-logo.svg",
     hipercard: "https://www.hipercard.com.br/assets/images/hipercard.png",
-    dinersclub: "https://www.dinersclub.com/content/experience-fragments/diners-club/home-header-xf/master/_jcr_content/root/header/image.coreimg.svg/1627886360030/dci-logo-default.svg",
-    discover: "	https://www.discover.com/content/dam/discover/en_us/global/logos/discover-logo.svg",
+    dinersclub: "https://www.pikpng.com/pngl/m/208-2087430_diners-club-logo-svg-clipart.png",
+    discover: "https://www.discoversignage.com/uploads/DGN_AcceptanceMark_FC_Hrz_RGB.jpg",
     maestro: 'data:image/svg+xml;base64,PHN2ZyBmb2N1c2FibGU9ImZhbHNlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAyMSI+ICA8ZyBpZD0iUGFnZS0xIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPiAgICA8ZyBpZD0ibWFzdGVyY2FyZCI+ICAgICAgPGcgaWQ9ImNhcmQiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAgMikiPiAgICAgICAgPHBhdGggaWQ9InNoYXBlIiBmaWxsPSIjMDAzNjYzIiBkPSJNMjYuNTggMTlIMi40MkEyLjQgMi40IDAgMCAxIDAgMTYuNjJWMi4zOEEyLjQgMi40IDAgMCAxIDIuNDIgMGgyNC4xNkEyLjQgMi40IDAgMCAxIDI5IDIuMzh2MTQuMjVBMi40IDIuNCAwIDAgMSAyNi41OCAxOXoiLz4gICAgICAgIDxjaXJjbGUgaWQ9InNoYXBlIiBjeD0iMTAuNSIgY3k9IjkuNSIgcj0iNi41IiBmaWxsPSIjRUIxQzI2Ii8+ICAgICAgICA8Y2lyY2xlIGlkPSJzaGFwZSIgY3g9IjE4LjUiIGN5PSI5LjUiIHI9IjYuNSIgZmlsbD0iI0Y5OUYxQiIvPiAgICAgICAgPHBhdGggaWQ9InNoYXBlIiBmaWxsPSIjRUY1RDIwIiBkPSJNMTQuNSA0LjM4YTYuNDkgNi40OSAwIDAgMCAwIDEwLjI0IDYuNDkgNi40OSAwIDAgMCAwLTEwLjI0eiIvPiAgICAgIDwvZz4gICAgPC9nPiAgPC9nPjwvc3ZnPg==',
+    laser: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNDQiIHZpZXdCb3g9IjAgMCA2NCA0NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNDQiIGZpbGw9IiNFMEUwRTAiIHJ4PSI4Ii8+CiAgPHRleHQgeD0iMzIiIHk9IjI3IiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjRkZGIj5MQVNFUjwvdGV4dD4KPC9zdmc+',
+    unionpay: 'https://upload.wikimedia.org/wikipedia/commons/0/0b/China_UnionPay_logo.svg',
+    visaelectron: 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Electron_logo.svg',
+    elo: 'https://upload.wikimedia.org/wikipedia/commons/1/11/Elo-Logo.svg',
 };

@@ -11,7 +11,7 @@ export const CARD_TYPES = [{
 }, {
     type: 'dankort',
     format: DEFAULT_CARD_FORMAT,
-    startPattern: /^5019/,
+    startPattern: /^(5019|7600)/,
     maxCardNumberLength: 16,
     cvcLength: DEFAULT_CVC_LENGTH
 }, {
@@ -23,7 +23,7 @@ export const CARD_TYPES = [{
 }, {
     type: 'dinersclub',
     format: DEFAULT_CARD_FORMAT,
-    startPattern: /^(36|38|30[0-5])/,
+    startPattern: /^(36|38|30)/,
     maxCardNumberLength: 14,
     cvcLength: DEFAULT_CVC_LENGTH
 }, {
