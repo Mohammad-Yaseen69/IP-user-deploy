@@ -2839,5 +2839,10 @@
   "Maximum amount for guest pay is": "الحد الأقصى لمبلغ الدفع للضيف هو",
   "Zip Code": "الرمز البريدي",
   "House No": "رقم المنزل",
-  "Street": "شارع"
+  "Street": "شارع",
+  "Invoice Description": "وصف الفاتورة",
+  "Invoice ID": "معرف الفاتورة",
+  "Invoice Title": "عنوان الفاتورة",
+  "Explore eShop": "استكشف المتجر الإلكتروني",
+  "Invoice": "فاتورة"
 }

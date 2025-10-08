@@ -2846,5 +2846,10 @@
   "Maximum amount for guest pay is": "El monto máximo a pagar por huésped es",
   "Zip Code": "Código postal",
   "House No": "Casa No.",
-  "Street": "Calle"
+  "Street": "Calle",
+  "Invoice Description": "Descripción de la factura",
+  "Invoice ID": "ID de factura",
+  "Invoice Title": "Título de la factura",
+  "Explore eShop": "Explorar la tienda electrónica",
+  "Invoice": "Factura"
 }

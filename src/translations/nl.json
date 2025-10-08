@@ -2828,5 +2828,10 @@
   "Maximum amount for guest pay is": "Het maximale bedrag voor gastenbetaling is",
   "Zip Code": "Postcode",
   "House No": "Huis nr.",
-  "Street": "Straat"
+  "Street": "Straat",
+  "Invoice Description": "Factuuromschrijving",
+  "Invoice ID": "Factuur-ID",
+  "Invoice Title": "Factuurtitel",
+  "Explore eShop": "Ontdek eShop",
+  "Invoice": "Factuur"
 }

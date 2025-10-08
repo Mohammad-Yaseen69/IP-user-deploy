@@ -2841,5 +2841,10 @@
   "Maximum amount for guest pay is": "अतिथि भुगतान की अधिकतम राशि है",
   "Zip Code": "ज़िप कोड",
   "House No": "मकान नंबर",
-  "Street": "गली"
+  "Street": "गली",
+  "Invoice Description": "चालान विवरण",
+  "Invoice ID": "इनवॉइस आईडी",
+  "Invoice Title": "चालान शीर्षक",
+  "Explore eShop": "ईशॉप का अन्वेषण करें",
+  "Invoice": "चालान"
 }

@@ -2839,5 +2839,10 @@
   "Maximum amount for guest pay is": "O pọju iye fun alejo sanwo ni",
   "Zip Code": "koodu Zip",
   "House No": "Ile No",
-  "Street": "Òpópónà"
+  "Street": "Òpópónà",
+  "Invoice Description": "Apejuwe risiti",
+  "Invoice ID": "ID risiti",
+  "Invoice Title": "Akọle risiti",
+  "Explore eShop": "Ye eShop",
+  "Invoice": "risiti"
 }

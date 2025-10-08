@@ -2854,5 +2854,10 @@
   "Maximum amount for guest pay is": "Maximum amount for guest pay is",
   "Zip Code": "Zip Code",
   "House No": "House No",
-  "Street": "Street"
+  "Street": "Street",
+  "Invoice Description": "Invoice Description",
+  "Invoice ID": "Invoice ID",
+  "Invoice Title": "Invoice Title",
+  "Explore eShop": "Explore eShop",
+  "Invoice": "Invoice"
 }

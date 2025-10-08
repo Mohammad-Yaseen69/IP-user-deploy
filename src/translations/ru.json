@@ -2750,5 +2750,10 @@
   "Maximum amount for guest pay is": "Максимальная сумма для оплаты гостя составляет",
   "Zip Code": "Почтовый индекс",
   "House No": "Номер дома",
-  "Street": "Улица"
+  "Street": "Улица",
+  "Invoice Description": "Описание счета",
+  "Invoice ID": "Идентификатор счета-фактуры",
+  "Invoice Title": "Название счета",
+  "Explore eShop": "Исследуйте интернет-магазин",
+  "Invoice": "Счет"
 }

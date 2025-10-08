@@ -2839,5 +2839,10 @@
   "Maximum amount for guest pay is": "مہمان کی تنخواہ کے لیے زیادہ سے زیادہ رقم ہے۔",
   "Zip Code": "زپ کوڈ",
   "House No": "مکان نمبر",
-  "Street": "گلی"
+  "Street": "گلی",
+  "Invoice Description": "انوائس کی تفصیل",
+  "Invoice ID": "انوائس ID",
+  "Invoice Title": "انوائس کا عنوان",
+  "Explore eShop": "ای شاپ کو دریافت کریں۔",
+  "Invoice": "رسید"
 }

@@ -2839,5 +2839,10 @@
   "Maximum amount for guest pay is": "Jumlah maksimum untuk pembayaran tamu adalah",
   "Zip Code": "Kode pos",
   "House No": "Nomor Rumah",
-  "Street": "Jalan"
+  "Street": "Jalan",
+  "Invoice Description": "Deskripsi Faktur",
+  "Invoice ID": "ID Faktur",
+  "Invoice Title": "Judul Faktur",
+  "Explore eShop": "Jelajahi eShop",
+  "Invoice": "Faktur"
 }

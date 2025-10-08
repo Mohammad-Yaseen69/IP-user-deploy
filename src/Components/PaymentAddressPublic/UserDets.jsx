@@ -14,7 +14,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
 
     const actionButtons = [
         {
-            label: "View Profile",
+            label: t("View Profile"),
             onClick: () => navigate(`/profile/${user_name}`),
             disable: false,
             purple: true,

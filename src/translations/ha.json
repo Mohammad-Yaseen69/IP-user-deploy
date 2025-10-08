@@ -2796,5 +2796,10 @@
   "Maximum amount for guest pay is": "Matsakaicin adadin kuɗin baƙo shine",
   "Zip Code": "Lambar titi",
   "House No": "Gidan No",
-  "Street": "Titin"
+  "Street": "Titin",
+  "Invoice Description": "Bayanin daftari",
+  "Invoice ID": "ID daftari",
+  "Invoice Title": "Taken daftari",
+  "Explore eShop": "Bincika eShop",
+  "Invoice": "Daftari"
 }

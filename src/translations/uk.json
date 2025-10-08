@@ -2846,5 +2846,10 @@
   "Maximum amount for guest pay is": "Максимальна сума оплати гостя становить",
   "Zip Code": "Поштовий індекс",
   "House No": "будинок №",
-  "Street": "вул"
+  "Street": "вул",
+  "Invoice Description": "Опис рахунку-фактури",
+  "Invoice ID": "Ідентифікатор рахунку-фактури",
+  "Invoice Title": "Назва рахунку-фактури",
+  "Explore eShop": "Дослідіть eShop",
+  "Invoice": "Рахунок-фактура"
 }

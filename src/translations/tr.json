@@ -2841,5 +2841,10 @@
   "Maximum amount for guest pay is": "Misafir ödemesi için maksimum tutar",
   "Zip Code": "Posta kodu",
   "House No": "Ev No",
-  "Street": "Sokak"
+  "Street": "Sokak",
+  "Invoice Description": "Fatura Açıklaması",
+  "Invoice ID": "Fatura Kimliği",
+  "Invoice Title": "Fatura Başlığı",
+  "Explore eShop": "eShop'u keşfedin",
+  "Invoice": "Fatura"
 }

@@ -2841,5 +2841,10 @@
   "Maximum amount for guest pay is": "Kiasi cha juu cha malipo ya wageni ni",
   "Zip Code": "Msimbo wa Eneo",
   "House No": "Nyumba Na",
-  "Street": "Mtaa"
+  "Street": "Mtaa",
+  "Invoice Description": "Maelezo ya ankara",
+  "Invoice ID": "Kitambulisho cha ankara",
+  "Invoice Title": "Kichwa cha ankara",
+  "Explore eShop": "Gundua eShop",
+  "Invoice": "Ankara"
 }

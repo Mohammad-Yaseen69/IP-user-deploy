@@ -2840,5 +2840,10 @@
   "Maximum amount for guest pay is": "客人支付的最高金额为",
   "Zip Code": "邮政编码",
   "House No": "门牌号",
-  "Street": "街道"
+  "Street": "街道",
+  "Invoice Description": "发票说明",
+  "Invoice ID": "发票 ID",
+  "Invoice Title": "发票标题",
+  "Explore eShop": "探索网上商店",
+  "Invoice": "发票"
 }
