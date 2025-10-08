@@ -55,7 +55,6 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI }) => {
 
     const dropdownRef = useRef(null);
     const dragHandleRef = useRef(null);
-    const dragParentRef = useRef(null);
     const draggingRef = useRef(false);
     const startYRef = useRef(0);
     const currentYRef = useRef(0);
@@ -334,7 +333,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI }) => {
                     (newUI ?
                         <>
                             <div
-                                ref={dragParentRef}
+                                ref={dragHandleRef}
                                 style={{
                                     padding: "8px",
                                     display: "flex",
@@ -361,7 +360,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI }) => {
                                     {languageCountries.find(i => i.lang === currentLang).label}
                                 </span>
 
-                                {window.innerWidth < 1000 && <img ref={dragHandleRef} src={drag} style={{ cursor: 'grab' }} alt="drag" />}
+                                {window.innerWidth < 1000 && <img src={drag} style={{ cursor: 'grab' }} alt="drag" />}
                             </div>
                         </> :
 
