@@ -3,7 +3,7 @@ import countries from "../PaymentsNewer/CountriesData.json"
 import { Col, Modal, ModalBody, ModalHeader } from "reactstrap"
 import { useTranslation } from "react-i18next"
 import styles from "./index.module.css"
-import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
+import drag from "./drag.png"
 import axios from "axios"
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import { UserContext } from "../../Context/UserContext"
@@ -54,6 +54,12 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI }) => {
     }, [filtered])
 
     const dropdownRef = useRef(null);
+    const dragHandleRef = useRef(null);
+    const dragParentRef = useRef(null);
+    const draggingRef = useRef(false);
+    const startYRef = useRef(0);
+    const currentYRef = useRef(0);
+    const [translateY, setTranslateY] = useState(0);
 
     useEffect(() => {
         // Function to handle clicks outside the dropdown
@@ -72,6 +78,54 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI }) => {
             document.removeEventListener("click", handleClickOutside);
         };
     }, []);
+
+    useEffect(() => {
+        const img = dragHandleRef.current;
+        if (!img) return;
+
+        const onPointerDown = (e) => {
+            if (window.innerWidth >= 1000) return;
+            if (showDropDown) return;
+            draggingRef.current = true;
+            startYRef.current = e.clientY ?? (e.touches && e.touches[0] && e.touches[0].clientY) ?? 0;
+            // prevent page scrolling while dragging
+            document.body.style.touchAction = 'none';
+            img.style.cursor = 'grabbing';
+        };
+
+        const onPointerMove = (e) => {
+            if (!draggingRef.current) return;
+            const y = e.clientY ?? (e.touches && e.touches[0] && e.touches[0].clientY) ?? startYRef.current;
+            const delta = y - startYRef.current;
+            const next = Math.max(-window.innerHeight / 2, Math.min(window.innerHeight / 2, currentYRef.current + delta));
+            setTranslateY(next);
+        };
+
+        const onPointerUp = () => {
+            if (!draggingRef.current) return;
+            currentYRef.current = translateY;
+            draggingRef.current = false;
+            document.body.style.touchAction = '';
+            if (img) img.style.cursor = 'grab';
+        };
+
+        img.addEventListener('pointerdown', onPointerDown);
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+        img.addEventListener('touchstart', onPointerDown, { passive: false });
+        window.addEventListener('touchmove', onPointerMove, { passive: false });
+        window.addEventListener('touchend', onPointerUp);
+
+        return () => {
+            img.removeEventListener('pointerdown', onPointerDown);
+            window.removeEventListener('pointermove', onPointerMove);
+            window.removeEventListener('pointerup', onPointerUp);
+            img.removeEventListener('touchstart', onPointerDown);
+            window.removeEventListener('touchmove', onPointerMove);
+            window.removeEventListener('touchend', onPointerUp);
+            document.body.style.touchAction = '';
+        };
+    }, [showDropDown, translateY]);
 
     const { authHeader, userDetails } = useContext(UserContext)
 
@@ -117,7 +171,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI }) => {
                 headers: authHeader
             })
 
-        } catch (error) {
+        } catch {
             // console.log(error)
             // toast.error("Something went wrong while setting the language")
             // console.log(decryptData(error?.response?.data?.data))
@@ -182,6 +236,9 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI }) => {
                         flex: 1,
                         background: backgroundWhite && 'white',
                         zIndex: backgroundWhite && 999,
+                        // when on small screens and user has dragged the compact control, move the dropdown to match
+                        transform: window.innerWidth < 1000 ? `translateY(${translateY}px)` : undefined,
+                        transition: window.innerWidth < 1000 ? 'transform 120ms linear' : undefined,
                     }} className={styles.active}>
                         {!openUp &&
                             <>
@@ -277,6 +334,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI }) => {
                     (newUI ?
                         <>
                             <div
+                                ref={dragParentRef}
                                 style={{
                                     padding: "8px",
                                     display: "flex",
@@ -287,6 +345,9 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI }) => {
                                     background: "white",
                                     boxShadow: "0 4px 39.6px 0 rgba(109, 41, 220, 0.15)",
                                     cursor: "pointer",
+                                    transform: window.innerWidth < 1000 ? `translateY(${translateY}px)` : undefined,
+                                    position: "relative",
+                                    zIndex: 999
                                 }}
                                 onClick={(e) => {
                                     e.stopPropagation()
@@ -294,11 +355,13 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI }) => {
                                 }}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                                    <path d="M3.75 6L7.5 9.75M3 10.5L7.5 6L9 3.75M1.5 3.75H10.5M5.25 1.5H6M9.68478 12.75H15.0652M9.68478 12.75L8.25 15.75M9.68478 12.75L11.8337 8.25677C12.0069 7.8947 12.0935 7.71367 12.2119 7.65646C12.315 7.60671 12.435 7.60671 12.5381 7.65646C12.6565 7.71367 12.7431 7.8947 12.9163 8.25677L15.0652 12.75M15.0652 12.75L16.5 15.75" stroke="#5926F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M3.75 6L7.5 9.75M3 10.5L7.5 6L9 3.75M1.5 3.75H10.5M5.25 1.5H6M9.68478 12.75H15.0652M9.68478 12.75L8.25 15.75M9.68478 12.75L11.8337 8.25677C12.0069 7.8947 12.0935 7.71367 12.2119 7.65646C12.315 7.60671 12.435 7.60671 12.5381 7.65646C12.6565 7.71367 12.7431 7.8947 12.9163 8.25677L15.0652 12.75M15.0652 12.75L16.5 15.75" stroke="#5926F0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                                 <span style={{ fontWeight: 600, fontSize: "14px" }}>
                                     {languageCountries.find(i => i.lang === currentLang).label}
                                 </span>
+
+                                {window.innerWidth < 1000 && <img ref={dragHandleRef} src={drag} style={{ cursor: 'grab' }} alt="drag" />}
                             </div>
                         </> :
 
@@ -323,8 +386,8 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI }) => {
                 </ModalHeader>
                 <ModalBody style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
                     {
-                        filtered.map(item => (
-                            <div style={{
+                        filtered.map((item, idx) => (
+                            <div key={idx} style={{
                                 display: "flex",
                                 alignItems: "center",
                                 borderRadius: "12px",
