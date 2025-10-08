@@ -116,49 +116,6 @@ const InvoicePayment = () => {
 
   const url = data ? `/payments?payment_action=send_money&send_type=wallet&wallet_id=${data.receivingWallet?.wallet_id}&currency=${data.currency}&amount=${data.amount}&invoiceId=${invoiceId}&isShipping=${data.shippingAddress}&payment_type=invoice` : "/"
 
-  // if (data.paid) {
-  //   return (
-  //     <Wrapper isPaid={true}>
-  //       <div style={{ width: "800px", background: "white", borderRadius: "24px", margin: "auto" }}>
-  //         <UserDets
-  //           cover={data?.account?.coverImage?.url}
-  //           dp={data?.account?.profileImage?.url}
-  //           setShowVerTT={(value) => dataHandler("showVerTT", value)}
-  //           showVerTT={state.showVerTT}
-  //           userCountry={CountriesData.find(c => c.alpha3 === data?.account?.country?.country_iso_code)}
-  //           userDetails={{
-  //             ...data.account,
-  //             kyc_status: data?.account?.user?.kyc_status
-  //           }}
-  //           user_name={user_name}
-  //           invoicePaid={true}
-  //           AmountComponent={
-  //             <AmountContainer
-  //               isEditable={false}
-  //               state={{
-  //                 amount: formatCurrency(data.amount, true),
-  //                 currencyCode: data.currency,
-  //                 currencySymbol: CitiesData?.find(c => c?.currency === data?.currency)?.currency_symbol
-  //               }}
-  //               url={url}
-  //               toggleCreditModal={toggleCreditModal}
-  //               paidInvoice={true}
-  //             />
-  //           }
-  //         />
-
-
-  //         <div className={styles.paidInvoice} >
-  //           <p>
-  //             {("This invoice is paid!")}
-  //           </p>
-  //         </div>
-  //       </div>
-  //     </Wrapper>
-  //   )
-  // }
-
-
   return (
     <Wrapper>
       <PaymentUI

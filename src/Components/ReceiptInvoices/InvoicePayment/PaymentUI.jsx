@@ -155,19 +155,27 @@ const PaymentUI = ({ data, dataHandler, user_name, state, url, toggleCreditModal
                     <h1>{data.currency} {formatCurrency(data.amount, true)}</h1>
                 </div>
 
-                <div className={styles.actions}>
-                    {actionButtons.map((btn, idx) => (
-                        <button className={styles.button} key={idx} onClick={btn.onClick} style={{ background: !btn.purple && "white" }} >
-                            <div style={{ background: !btn.purple && "radial-gradient(124.63% 259.09% at 48.48% 152.15%, rgba(230, 64, 103, 0.10) 0%, rgba(89, 38, 240, 0.10) 55.65%, rgba(72, 40, 160, 0.10) 100%), #FFF" }}>
-                                <img style={{ width: btn.purple && "15px" }} src={btn.logo} alt="" />
-                            </div>
+                {!data.paid ?
+                    <div className={styles.actions}>
+                        {actionButtons.map((btn, idx) => (
+                            <button className={styles.button} key={idx} onClick={btn.onClick} style={{ background: !btn.purple && "white" }} >
+                                <div style={{ background: !btn.purple && "radial-gradient(124.63% 259.09% at 48.48% 152.15%, rgba(230, 64, 103, 0.10) 0%, rgba(89, 38, 240, 0.10) 55.65%, rgba(72, 40, 160, 0.10) 100%), #FFF" }}>
+                                    <img style={{ width: btn.purple && "15px" }} src={btn.logo} alt="" />
+                                </div>
 
-                            <span style={{ color: !btn.purple ? "black" : "white" }}>
-                                {t(btn.label)}
-                            </span>
-                        </button>
-                    ))}
-                </div>
+                                <span style={{ color: !btn.purple ? "black" : "white" }}>
+                                    {t(btn.label)}
+                                </span>
+                            </button>
+                        ))}
+                    </div> :
+                    <div className={styles.paidInvoice}>
+                        <p>
+                            {("This invoice is paid!")}
+                        </p>
+                    </div>
+                }
+
 
             </div>
             {width < 1000 &&
