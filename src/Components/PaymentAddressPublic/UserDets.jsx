@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next"
 import LanguagePicker from "../LanguagePicker"
 
 
-const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, userCountry, setShowVerTT, showVerTT, invoicePaid, AmountComponent, paymentAddress, }) => {
+const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, userCountry, setShowVerTT, showVerTT, invoicePaid, AmountComponent, paymentAddress, invoice }) => {
     const width = useWindowWidth()
     const navigate = useNavigate()
     const { t } = useTranslation()
@@ -36,15 +36,15 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
     return (
         <div className={styles.userDets} style={{ position: "relative" }} >
 
-            <div className={styles.cover_container} style={{ position: "relative" }}>
+            <div className={styles.cover_container} style={{ position: "relative", marginBottom: invoice && "-90px" }}>
                 <div style={{ backgroundColor: "#1200BA" }}>
-                    <img src={(croppedCover || cover) || coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: "135px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important", objectPosition: (!croppedCover || !cover) && "right" }} />
+                    <img src={(croppedCover || cover) || coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: invoice ? "150px" : "135px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important", objectPosition: (!croppedCover || !cover) && "right" }} />
                 </div>
             </div>
-            <div style={{ backgroundColor: 'white', borderRadius: "16px", padding: "14px", maxHeight: "fit-content" }}>
+            <div style={{ backgroundColor: invoice ? "#F8F8F8" : 'white', borderRadius: "16px", padding: invoice ? "0px" : "14px", maxHeight: "fit-content" }}>
                 <div style={{ flexDirection: "column", gap: "0", padding: "0px", position: 'relative', }} className={styles.top}>
                     <div style={{ flexDirection: "column", width: "100%", }} className={styles.left}>
-                        <div style={{ display: "flex", width: "100%", alignItems: "center", justifyContent: width < 1000 ? "center" : "space-between" }}>
+                        <div style={{ display: "flex", width: "100%", alignItems: "center", justifyContent: width < 1000 || invoice ? "center" : "space-between" }}>
                             <div className={styles.dp_container}>
                                 {
                                     dp
@@ -55,8 +55,8 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                                 }
                             </div>
                         </div>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", flexDirection: width < 1000 && "column", position: "relative" }}>
-                            <div style={{ alignItems: 'flex-start', }} className={styles.basic_dets}>
+                        <div style={{ display: "flex", justifyContent: invoice ? "center" : "space-between", alignItems: "center", width: "100%", flexDirection: width < 1000 && "column", position: "relative" }}>
+                            <div style={{ alignItems: invoice ? "center" : 'flex-start', }} className={styles.basic_dets}>
                                 <div className={styles.badge}>{userDetails?.account_type === "individual" ? t("Personal") : t("Business")} {t("Account")}</div>
                                 <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: ".3rem" }}>
                                     <h4
@@ -111,7 +111,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                                 </div>
                             </div>
                             {width < 1000 &&
-                                <div style={{ position: "absolute", top: "0px", right: "-13px" }}>
+                                <div style={{ position: "absolute", top: "0px", right: invoice ? "0px" : "-13px" }}>
                                     <LanguagePicker newUI={true} backgroundWhite={true} />
                                 </div>
                             }

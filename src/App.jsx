@@ -44,21 +44,37 @@ const App = () => {
 
   useLayoutEffect(() => {
     const bc = new BroadcastChannel("dcode");
+    // unique id for this tab/instance so we can ignore our own messages
+    const instanceId = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`;
     let appInUse = false;
-    const paths = ["/profile/", "/pay/"]
+    const paths = ["/profile/", "/pay/", "/invoice"];
 
     const closeWindow = (e) => {
-      if (e?.data === "App is already in use!"
-        && !paths.some(item => window.location.href.toLowerCase()?.includes(`${e?.origin}${item}`.toLowerCase()))
-      ) {
-        appInUse = true;
-        setShowOtherTabError(true);
+      try {
+        const data = e?.data;
+        // support both string messages (legacy) and object messages
+        const messageText = typeof data === 'string' ? data : data?.text;
+        const senderId = typeof data === 'string' ? null : data?.id;
+
+        // ignore messages coming from this same instance
+        if (senderId && senderId === instanceId) return;
+
+        if (messageText === "App is already in use!") {
+          // Only show the broadcast page if current path is not one of the excluded paths
+          if (!paths.some(item => window.location.href.toLowerCase().includes(item.toLowerCase()))) {
+            appInUse = true;
+            setShowOtherTabError(true);
+          }
+        }
+      } catch (err) {
+        // ignore parsing errors
       }
     };
 
     const checkTabVisibility = () => {
       if (!document.hidden && !appInUse) {
-        bc.postMessage("App is already in use!");
+        // include our instance id so other tabs can ignore their own messages
+        bc.postMessage({ text: "App is already in use!", id: instanceId, origin: window.location.origin });
       }
     };
 
