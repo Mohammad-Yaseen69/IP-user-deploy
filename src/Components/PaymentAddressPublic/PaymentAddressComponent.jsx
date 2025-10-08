@@ -25,6 +25,7 @@ import AmountContainer from "./AmountContainer";
 import PayWithCrypto from "./PayWithCrypto";
 import LanguagePicker from "../LanguagePicker";
 import AnimatedHeader from "./AnimatedHeader";
+import { useQuery } from "@tanstack/react-query";
 
 // Initial state
 const initialState = {
@@ -181,10 +182,22 @@ export const LeftJsx = ({
   );
 };
 
+const getLimits = async (userName, wallet_id) => {
+  const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/get-address-limits/${userName}/${wallet_id}`)
+  return decryptData(res.data.data)?.limits
+}
+
 const PaymentAddressComponent = ({ userDetails, userVideos }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const width = useWindowWidth();
   const playerRefs = useRef({});
+
+
+  const { data: limits } = useQuery({
+    queryKey: ['getLimits', state?.currentWallet?.wallet_id],
+    queryFn: () => getLimits(user_name, state?.currentWallet?.wallet_id),
+    enabled: !!state?.currentWallet?.wallet_id
+  })
   const { t } = useTranslation()
 
   const dataHandler = (field, value) => {
@@ -258,7 +271,6 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
             decrypted?.paymentAddressDetails?.coverImage?.url
           );
           dataHandler("currentWallet", decrypted?.wallet);
-          dataHandler("limits", decrypted?.limits);
 
           const coverPromise = decrypted?.paymentAddressDetails?.coverImage?.url
             ? getImage(
@@ -310,35 +322,35 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
   //     }, 2500)
   // }
   const toggleCreditModal = () => {
-    if (state.amount < state.limits?.topup_min_amount) {
+    if (state.amount < limits?.topup_min_amount) {
 
       toast.error(
         t("Minimum amount for guest pay is") +
-        formatCurrency(state.limits?.topup_min_amount, true) +
+        formatCurrency(limits?.topup_min_amount, true) +
         " " +
         state.currentWallet?.currency?.code
       );
       dataHandler(
         "guestPayError",
         t("Minimum amount for guest pay is") +
-        formatCurrency(state.limits?.topup_min_amount, true) +
+        formatCurrency(limits?.topup_min_amount, true) +
         " " +
         state.currentWallet?.currency?.code
       );
       setTimeout(() => {
         dataHandler("guestPayError", "");
       }, 3000);
-    } else if (state.amount > state.limits?.topup_max_amount) {
+    } else if (state.amount > limits?.topup_max_amount) {
       toast.error(
         t("Maximum amount for guest pay is ") +
-        formatCurrency(state.limits?.topup_max_amount, true) +
+        formatCurrency(limits?.topup_max_amount, true) +
         " " +
         state.currentWallet?.currency?.code
       );
       dataHandler(
         "guestPayError",
         t("Maximum amount for guest pay is ") +
-        formatCurrency(state.limits?.topup_max_amount, true) +
+        formatCurrency(limits?.topup_max_amount, true) +
         " " +
         state.currentWallet?.currency?.code
       );

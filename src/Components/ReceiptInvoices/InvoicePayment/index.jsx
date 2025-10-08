@@ -1,4 +1,4 @@
-import  { useEffect, useReducer } from 'react'
+import { useEffect, useReducer } from 'react'
 import styles from './index.module.scss'
 import background from "./bg.jpg"
 import { useParams } from 'react-router-dom'
@@ -10,6 +10,8 @@ import { Card } from 'reactstrap'
 import axios from 'axios'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+import { formatCurrency } from '../../../Helper/AmountFormat'
 
 const initialState = {
   showAboutModal: false,
@@ -36,7 +38,7 @@ function reducer(state, action) {
 const Wrapper = ({ children, isPaid }) => (
   <div style={{ background: `url(${background})`, borderRadius: "none", minHeight: "100vh" }} className={styles.container}>
     <div className={styles.overlay} />
-    <Card style={{marginBottom: "0px"}} className={styles.sub_container}>
+    <Card style={{ marginBottom: "0px" }} className={styles.sub_container}>
       {children}
     </Card>
   </div >
@@ -58,40 +60,44 @@ const InvoicePayment = () => {
 
 
   useEffect(() => {
-    const getLimits = () => {
-      axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/get-payment-address-public/${user_name}`).then(res => {
-        const dec = decryptData(res.data.data)
-        dataHandler("limits", dec?.limits)
-        console.log(dec)
-      })
+    const getLimits = async () => {
+      try {
+        const walletId = data?.receivingWallet?.wallet_id;
+        if (!walletId) return;
+        const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/get-address-limits/${user_name}/${walletId}`);
+        const dec = decryptData(res.data.data);
+        dataHandler("limits", dec?.limits);
+      } catch (err) {
+        // fail silently — limits are optional
+        console.error("Failed to load limits:", err);
+      }
     }
 
-    if (user_name) {
+    if (user_name && data?.receivingWallet?.wallet_id) {
       getLimits()
     }
-  }, [user_name])
+  }, [user_name, data])
 
 
 
   const toggleCreditModal = () => {
-    if (!state.limits) console.log("limits not found", state)
-    // if (data.amount < state.limits?.topup_min_amount) {
-    //   toast.error(t("Minimum amount for guest pay is") + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
-    //   dataHandler("guestPayError", t("Minimum amount for guest pay is") + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
-    //   setTimeout(() => {
-    //     dataHandler("guestPayError", "")
-    //   }, 3000)
-    // }
-    // else if (data.amount > state.limits?.topup_max_amount) {
-    //   toast.error("Maximum amount for guest pay is " + formatCurrency(state.limits?.topup_max_amount, true) + " " + data?.currency)
-    //   dataHandler("guestPayError", "Maximum amount for guest pay is " + formatCurrency(state.limits?.topup_max_amount, true) + " " + data?.currency)
-    //   setTimeout(() => {
-    //     dataHandler("guestPayError", "")
-    //   }, 3000)
-    // }
-    // else {
-    dataHandler("showCreditModal", !state.showCreditModal);
-    // }
+    if (data.amount < state.limits?.topup_min_amount) {
+      toast.error(t("Minimum amount for guest pay is") + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
+      dataHandler("guestPayError", t("Minimum amount for guest pay is") + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
+      setTimeout(() => {
+        dataHandler("guestPayError", "")
+      }, 3000)
+    }
+    else if (data.amount > state.limits?.topup_max_amount) {
+      toast.error("Maximum amount for guest pay is " + formatCurrency(state.limits?.topup_max_amount, true) + " " + data?.currency)
+      dataHandler("guestPayError", "Maximum amount for guest pay is " + formatCurrency(state.limits?.topup_max_amount, true) + " " + data?.currency)
+      setTimeout(() => {
+        dataHandler("guestPayError", "")
+      }, 3000)
+    }
+    else {
+      dataHandler("showCreditModal", !state.showCreditModal);
+    }
   }
 
 
