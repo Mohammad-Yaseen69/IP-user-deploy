@@ -40,7 +40,6 @@ const Basic = ({ setCurrentTab }) => {
     const [country, setCountry] = useState(userDetails?.country_name);
     const [aboutMe, setAboutMe] = useState(userDetails?.about_me);
     const [timezone, setTimezone] = useState(userDetails?.timezone)
-    console.log(userDetails)
     const [usernameValid, setUsernameValid] = useState(true)
     const [isEditMode, setIsEditMode] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
@@ -199,18 +198,18 @@ const Basic = ({ setCurrentTab }) => {
         }
 
         if (userDetails?.account_type === "individual") {
-            const data = isVerified ? { about_me: aboutMe } : {
+            const data = isVerified ? { about_me: aboutMe, address, postal_code: postalCode } : {
                 first_name: firstName,
                 last_name: lastName,
-                // address,
+                address,
                 city,
-                // postal_code: postalCode,
+                postal_code: postalCode,
                 about_me: aboutMe,
                 // gender,
                 dob: dateOfBirth !== userDetails?.dob ? dateOfBirth?.split("-")?.reverse()?.join("-") : dateOfBirth,
                 timezone: timezone
+        
             }
-
             const encrypted = encryptData(data)
 
             axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-individual/${userDetails?._id}`, {
@@ -699,7 +698,7 @@ const Basic = ({ setCurrentTab }) => {
                             <Label>{t("Address")}  {
                                 !address
                                 && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
-                            <Input disabled={!isEditMode || (isVerified && address)} readOnly={!isEditMode || (isVerified && address)} value={address} onChange={e => setAddress(e.target.value)} />
+                            <Input disabled={!isEditMode || (userDetails?.address && isVerified )} readOnly={!isEditMode || (isVerified && userDetails?.address)} value={address} onChange={e => setAddress(e.target.value)} />
                         </FormGroup>
                     }
                     <FormGroup style={{ position: "relative" }}>
@@ -775,7 +774,7 @@ const Basic = ({ setCurrentTab }) => {
 
                     <FormGroup style={{ position: "relative" }}>
                         {
-                            !postalCode
+                            !userDetails?.postal_code
                             &&
                             <div style={{
                                 height: "9px",
@@ -789,9 +788,9 @@ const Basic = ({ setCurrentTab }) => {
                         }
                         <Label>
                             {t("Postal Code")}
-                            {!postalCode && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                            {!userDetails?.postal_code && <span style={{ color: "red" }}>{t("(Required)")}</span>}
                         </Label>
-                        <Input disabled={!isEditMode || (isVerified && postalCode)} readOnly={!isEditMode || (isVerified && postalCode)} value={postalCode} onChange={e => setPostalCode(e.target.value)} />
+                        <Input disabled={!isEditMode || (isVerified && userDetails?.postal_code)} readOnly={!isEditMode || (isVerified && userDetails?.postal_code)} value={postalCode} onChange={e => setPostalCode(e.target.value)} />
                     </FormGroup>
 
                 </CardBody>
