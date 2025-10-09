@@ -83,6 +83,7 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
             }
             else {
                 if (amount && +amount >= 1) {
+                    if (!subService?.id) return;
                     setIsLoading(true)
                     const data = {
                         wallet_id: userWallets?.filter(item => item?.currency?.code?.toLowerCase() === currency?.toLowerCase())[0]?._id,
@@ -201,7 +202,7 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
         return () => {
             clearTimeout(timeout)
         }
-    }, [amount, balance, currency, vendor])
+    }, [amount, balance, currency, vendor, subService])
 
     return (
         <CardBody style={{

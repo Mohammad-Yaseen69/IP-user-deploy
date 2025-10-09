@@ -34,6 +34,16 @@ const Cover = () => {
             toast.error("Only images are allowed!")
             return
         }
+
+        const maxSize = 5 * 1024 * 1024;
+
+        if (file.size > maxSize) {
+            toast.error("File too big! Must be less than 5MB.");
+            e.target.value = "";
+            return;
+        }
+
+
         setFile(file)
         const reader = new FileReader();
         reader.onload = () => {
@@ -96,7 +106,7 @@ const Cover = () => {
     return (
         <div className={styles.container}>
             <div className={styles.cover_container} ref={mainContainerRef}>
-                <img src={croppedImages?.profileBanner ||coverPhoto} alt="cover" className={styles.cover} />
+                <img src={croppedImages?.profileBanner || coverPhoto} alt="cover" className={styles.cover} />
                 {
                     isEditing
                         ?

@@ -49,6 +49,13 @@ const Header = () => {
             toast.error("Only images are allowed!")
             return
         }
+        const maxSize = 5 * 1024 * 1024;
+
+        if (file.size > maxSize) {
+            toast.error("File too big! Must be less than 5MB.");
+            e.target.value = "";
+            return;
+        }
         setFile(file)
         const reader = new FileReader();
         reader.onload = () => {
@@ -331,7 +338,7 @@ const Header = () => {
                 </div>
                 <div className={styles.basic_dets}>
                     <div className={styles.badge}>{userDetails?.account_type === "individual" ? t("Personal Account") : t("Business Account")}</div>
-                    <h4 style={{ maxWidth: "25ch",whiteSpace: "normal" }}>
+                    <h4 style={{ maxWidth: "25ch", whiteSpace: "normal" }}>
                         {
                             userDetails?.account_type?.toLowerCase() === "individual"
                                 ?

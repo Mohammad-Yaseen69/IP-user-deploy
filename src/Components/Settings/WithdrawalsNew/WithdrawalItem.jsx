@@ -328,7 +328,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                 bank_city: userWithdrawals?.bank_details?.[0]?.city ?? "",
                 bank_province: userWithdrawals?.bank_details?.[0]?.province ?? "",
                 bank_postal_code: userWithdrawals?.bank_details?.[0]?.postal_code ?? "",
-                bank_account_holder_name: userWithdrawals?.bank_details?.[0]?.account_holder_name ?? `${userDetails?.user?.first_name ?? userDetails?.company_name} ${userDetails?.user?.last_name??""}`,
+                bank_account_holder_name: userWithdrawals?.bank_details?.[0]?.account_holder_name ?? `${userDetails?.user?.first_name ?? userDetails?.company_name} ${userDetails?.user?.last_name ?? ""}`,
                 mobile_money_provider: userWithdrawals?.mobile_wallet?.[0]?.money_provider ?? "",
                 mobile_wallet_name: userWithdrawals?.mobile_wallet?.[0]?.wallet_name ?? "",
                 mobile_wallet_account_number: userWithdrawals?.mobile_wallet?.[0]?.wallet_account_number ?? "",
