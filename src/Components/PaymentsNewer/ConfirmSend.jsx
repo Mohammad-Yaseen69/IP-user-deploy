@@ -19,7 +19,7 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import InstaPayLoader from "../Loader";
 
-const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, paymentType, setConfirmed, setSubStep, scheduleDate, scheduleTime, recCycle, recStartDate, reason, quotationDetails, setCreatedTransaction, createdQuotation, setBeneficiary, comment, userWithdrawals = null, vendor }) => {
+const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, setConfirmed, setSubStep, isExternalWithdrawal, externalWithdrawalPayload, recCycle, recStartDate, reason, quotationDetails, setCreatedTransaction, createdQuotation, setBeneficiary, comment, userWithdrawals = null, vendor }) => {
     const { t } = useTranslation()
     const [complete, setComplete] = useState(false);
     const navigate = useNavigate()
@@ -68,7 +68,7 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, pa
         }
     }, [userDetails])
 
-    const createTransaction = () => {
+    const createTransaction = async () => {
         beneficiary.forEach(item => {
             setLoading(true)
             // console.log(item)
@@ -106,8 +106,8 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, pa
             }
 
 
-            
-            
+
+
 
             const vendorSpecificData =
                 vendor === "neema"
@@ -117,12 +117,17 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, pa
                         type: userDetails?.tfa ? "authenticator" : "sms",
                     }
                     :
-                    data
+
+                    isExternalWithdrawal ? {
+                        data: externalWithdrawalPayload,
+                        type: userDetails?.tfa ? "authenticator" : "sms",
+                    } :
+                        data
 
             const encrypted = encryptData(vendorSpecificData)
 
 
-            const url = vendor === "neema" ? `${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp` : `${userWithdrawals ? `${import.meta.env.VITE_IP_DEV_API}/api/withdrawal` : import.meta.env.VITE_THUNES_API}/${userWithdrawals ? "create-transaction" : "createTransaction"}/${createdQuotation.QuotationID}`
+            const url = vendor === "neema" || isExternalWithdrawal ? `${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp` : `${userWithdrawals ? `${import.meta.env.VITE_IP_DEV_API}/api/withdrawal` : import.meta.env.VITE_THUNES_API}/${userWithdrawals ? "create-transaction" : "createTransaction"}/${createdQuotation.QuotationID}`
 
             axios.post(url, {
                 data: encrypted
@@ -146,7 +151,6 @@ const ConfirmSend = ({ beneficiary, amount, currency, country, payoutChannel, pa
                     setLoading(false)
                 })
         })
-
     }
 
 

@@ -17,6 +17,9 @@ import ChooseType from './withdrawal/ChooseType'
 import ChooseWithdrawal from './withdrawal/ChooseWithdrawal'
 import DefaultWithdrawal from './withdrawal/DefaultWithdrawal'
 import { Link } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query'
+
+
 
 const Withdraw = ({ isOpen, toggle, wallet }) => {
     const navigate = useNavigate()
@@ -24,7 +27,7 @@ const Withdraw = ({ isOpen, toggle, wallet }) => {
     const { t } = useTranslation()
     const [step, setStep] = useState(1)
     const [payoutChannel, setPayoutChannel] = useState("")
-    const [amount, setAmount] = useState(10)
+    const [amount, setAmount] = useState(1.00)
     const [amountError, setAmountError] = useState("")
     const [quotationDetails, setQuotationDetails] = useState(null)
     const [subService, setSubService] = useState(null)
@@ -42,7 +45,7 @@ const Withdraw = ({ isOpen, toggle, wallet }) => {
         if (isOpen) {
             setStep(1)
             setPayoutChannel("")
-            setAmount(10)
+            setAmount(1.00)
             setAmountError("")
             setQuotationDetails(null)
             setSubService(null)
@@ -228,6 +231,10 @@ const WithdrawOldFlow = ({
     const { t } = useTranslation()
     const navigate = useNavigate()
     const { userDetails, authHeader } = useContext(UserContext)
+    const [isExternalWithdrawal, setIsExternalWithdrawal] = useState(false)
+    const [exchangeRate, setExchangeRate] = useState()
+
+
 
     const getVendor = () => {
         if (payoutChannel?.value === "bank") return currentWithdrawal?.bank_details?.[0]?.vendor || "thunes"
@@ -318,7 +325,7 @@ const WithdrawOldFlow = ({
 
             case 2:
                 if (amountError || !amount) break;
-                if (getVendor() === "neema") {
+                if (getVendor() === "neema" || isExternalWithdrawal) {
                     setStep(prev => prev + 1)
                     break;
                 }
@@ -372,9 +379,13 @@ const WithdrawOldFlow = ({
                         exchangeError={amountError}
                         setExchangeError={setAmountError}
                         wallet={wallet}
+                        exchangeRate={exchangeRate}
+                        setExchangeRate={setExchangeRate}
                         setIsLoading={setIsLoading}
                         isloading={isLoading}
                         vendor={getVendor()}
+                        isExternalWithdrawal={isExternalWithdrawal}
+                        setIsExternalWithdrawal={setIsExternalWithdrawal}
                     />
                 }
                 {
@@ -395,8 +406,21 @@ const WithdrawOldFlow = ({
                         setCreatedTransaction={setCreatedTransaction}
                         createdQuotation={createdQuotation}
                         setBeneficiary={() => "a"}
+                        codeType={codeType}
                         userWithdrawals={userWithdrawals}
                         vendor={getVendor()}
+                        isExternalWithdrawal={isExternalWithdrawal}
+                        externalWithdrawalPayload={{
+                            "account": userDetails?._id,
+                            "walletId": wallet?._id,
+                            "withdrawalId": currentWithdrawal?._id,
+                            "amount": exchangeRate.total,
+                            "receivingCurrency": exchangeRate.destination.currency,
+                            "receivingAmount": exchangeRate.destination.amount,
+                            "fx": exchangeRate.wholesale_fx_rate,
+                            "fee": exchangeRate.fee.amount,
+                            withdrawalAccountType: payoutChannel?.value
+                        }}
                     />
                 }
                 {
@@ -420,6 +444,18 @@ const WithdrawOldFlow = ({
                             currency: wallet?.currency?.code
                         }}
                         authType={codeType}
+                        externalWithdrawalPayload={{
+                            "account": userDetails?._id,
+                            "walletId": wallet?._id,
+                            "withdrawalId": currentWithdrawal?._id,
+                            "amount": exchangeRate.total,
+                            "receivingCurrency": exchangeRate.destination.currency,
+                            "receivingAmount": exchangeRate.destination.amount,
+                            "fx": exchangeRate.wholesale_fx_rate,
+                            "fee": exchangeRate.fee.amount,
+                            withdrawalAccountType: payoutChannel?.value
+                        }}
+                        isExternalWithdrawal={isExternalWithdrawal}
                         vendor={getVendor()}
                         setAuthType={setCodeType}
                     />
@@ -438,6 +474,7 @@ const WithdrawOldFlow = ({
                         setIsInternational={() => "a"}// console.log("er")}
                         transactionDetails={transactionDetails}
                         type='withdrawn'
+                        isExternalWithdrawal={isExternalWithdrawal}
                     />
                 }
             </ModalBody>
