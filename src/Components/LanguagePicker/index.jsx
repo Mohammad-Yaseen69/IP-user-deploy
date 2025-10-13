@@ -374,7 +374,10 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI }) => {
                             border: "1.11414px solid rgba(0, 0, 0, 0.08)",
                             cursor: "pointer",
                             background: backgroundWhite && "white"
-                        }} onClick={() => setShowDropDown(!showDropDown)}>
+                        }} onClick={(e) => {
+                            e.stopPropagation()
+                            setShowDropDown(!showDropDown)
+                            }}>
                             <GlobeSVG size={size} />
                         </Col>
                     )

@@ -11,6 +11,8 @@ import TrustpaymentPage from '../../AddFunds/WalletFund/CreditTransaction'
 import { Input } from 'reactstrap'
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import { toast } from 'react-toastify'
+import lockIcon from "./files/lock-03.png"
+import mainIcon from "./files/PCI-DSS-1 1.png"
 // import green from "../../AddFunds/files/gy_card.png"
 // import purple from "../../AddFunds/files/pb_card.png"
 // import red from "../../AddFunds/files/rb_card.png"
@@ -133,6 +135,14 @@ const CreditCard = ({ data, dataHandler, url, tokenUrl, showCards = true, showSa
                     }}
                     guest={guest}
                 />
+                <div className={styles.pcontainer}>
+                    <div className={styles.secure}>
+                        <div className={styles.sectio1}><img src={lockIcon} alt="lock" style={{ width: "20px", height: "20px" }} />
+                            <p>{t('Payments are secure and encrypted by')}</p></div>
+                        <img src={mainIcon} alt="pci" style={{ width: "60px", height: "25px" }} />
+
+                    </div>
+                </div>
                 {
                     showSave
                     &&

@@ -215,7 +215,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
         <div style={{ overflowX: width < 1000 && "visible" }} className={styles.container}>
             {(missingTabsData.length > 0 && width > 1000 && profileCompleted) &&
                 <div className={styles.missingTabs}>
-                    <span>
+                    <span  >
                         {t("Please complete the following important steps")}
                     </span>
                     {missingTabs?.map(item => (

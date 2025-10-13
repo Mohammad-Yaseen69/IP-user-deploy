@@ -63,7 +63,7 @@ const ProfileCompletionModal = ({ setShowModal, profileIncompleteReason, kyc = f
                         }}>
                             <LanguagePicker size={"16"} />
                         </div>
-                        <span style={{ color: "white", fontSize: "1rem", fontWeight: "500" }}>{("Language")}</span>
+                        <span style={{ color: "white", fontSize: "1rem", fontWeight: "500" }}>{t("Language")}</span>
                     </div>
                 </div>
                 <div className={styles.extra}>.</div>

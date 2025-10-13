@@ -109,8 +109,54 @@
     margin-bottom: 1rem;
 }
 
+.pcontainer{
+    display: flex;
+    align-items: center;
+    justify-content:start;
+    gap: 1rem;  
+}
+.secure{
+    margin-top: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+}
+.secure p{
+  
+ color: #768EA7;
+font-family: Manrope;
+font-size: 12px;
+font-style: normal;
+font-weight: 600;
+line-height: 18px;
+letter-spacing: -0.12px;
+text-align: center;
+  padding: 0;
+    margin: 0;
+}
+.sectio1{
+    display: flex;
+    align-items: center;
+    align-items: center;
+}
+
 @media screen and (max-width: 1000px) {
     .cards {
         max-width: 90vw;
     }
+    .pcontainer{
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    gap: 2rem;     }
+    .secure{
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    .pcontainer img{
+width: 55px;
+height: 22px;
+aspect-ratio: 5/2;    }
 }
