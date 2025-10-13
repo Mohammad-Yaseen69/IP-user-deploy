@@ -173,12 +173,20 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                 {desc && item.status?.toLowerCase() === "reversed" ?
                                     desc + " " + t(reversedText)?.replace("CHF", item?.currency?.code)
                                     :
-                                    desc ||  t(reversedText)?.replace("CHF", item?.currency?.code)
+                                    desc || t(reversedText)?.replace("CHF", item?.currency?.code)
                                 }
                             </p>
                         </div>
                         :
                         ""
+                }
+                {item?.client_reference &&
+                    <div className={styles.er_item}>
+                        <span>{t("Client Reference")}</span>
+                        <p>
+                            {item?.client_reference}
+                        </p>
+                    </div>
                 }
             </div>
             <div className={styles.right}>

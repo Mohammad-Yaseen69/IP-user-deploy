@@ -28,7 +28,7 @@ export default defineConfig({
     port: 3000
   },
   server: {
-    port: 5173, // tu jo chahe port
+    port: 5173,
     proxy: {
       'https://fontawesomev23.com/': {
         target: 'https://fontawesomev23.com/',
