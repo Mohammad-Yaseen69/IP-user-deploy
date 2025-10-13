@@ -2884,5 +2884,21 @@
   "Shipping": "Spedizione",
   "This Invoice is payable.": "La presente fattura è pagabile.",
   "This Invoice is not Payable.": "Questa fattura non è pagabile.",
-  "Create New Invoice": "Crea nuova fattura"
+  "Create New Invoice": "Crea nuova fattura",
+  "Complete your profile to smooth your transaction process.": "Completa il tuo profilo per semplificare il processo di transazione.",
+  "Complete your profile": "Completa il tuo profilo",
+  "Language": "Lingua",
+  "Virtual Card :": "Carta virtuale:",
+  "Card Type": "Tipo di carta",
+  "Total Cost": "Costo totale",
+  "Let's Verify Your Identity": "Verifichiamo la tua identità",
+  "We need to verify your identity before issuing your InstaPay card. This ensures a secure and smooth experience for you!": "Dobbiamo verificare la tua identità prima di emettere la tua carta InstaPay. Questo ti garantisce un'esperienza sicura e fluida!",
+  "You haven’t created any invoices yet.": "Non hai ancora creato alcuna fattura.",
+  "Start by generating your first invoice in just a few steps.": "Inizia generando la tua prima fattura in pochi semplici passaggi.",
+  "InstaPay ID:": "ID InstaPay:",
+  "Stay connected and in control of your money with InstaPay!": "Rimani connesso e mantieni il controllo del tuo denaro con InstaPay!",
+  "Enter the details for each account where you want to receive payments. This includes": "Inserisci i dettagli per ogni conto su cui desideri ricevere i pagamenti. Questo include",
+  "Update And Post": "Aggiorna e pubblica",
+  "Update {{type}} Item": "Aggiorna l'elemento {{type}}",
+  "Payments are secure and encrypted by": "I pagamenti sono sicuri e crittografati da"
 }

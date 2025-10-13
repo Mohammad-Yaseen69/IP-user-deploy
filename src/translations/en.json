@@ -2892,5 +2892,19 @@
   "Shipping": "Shipping",
   "This Invoice is payable.": "This Invoice is payable.",
   "This Invoice is not Payable.": "This Invoice is not Payable.",
-  "Create New Invoice": "Create New Invoice"
+  "Create New Invoice": "Create New Invoice",
+  "Complete your profile to smooth your transaction process.": "Complete your profile to smooth your transaction process.",
+  "Complete your profile": "Complete your profile",
+  "Language": "Language",
+  "Virtual Card :": "Virtual Card :",
+  "Let's Verify Your Identity": "Let's Verify Your Identity",
+  "We need to verify your identity before issuing your InstaPay card. This ensures a secure and smooth experience for you!": "We need to verify your identity before issuing your InstaPay card. This ensures a secure and smooth experience for you!",
+  "You haven’t created any invoices yet.": "You haven’t created any invoices yet.",
+  "Start by generating your first invoice in just a few steps.": "Start by generating your first invoice in just a few steps.",
+  "InstaPay ID:": "InstaPay ID:",
+  "Stay connected and in control of your money with InstaPay!": "Stay connected and in control of your money with InstaPay!",
+  "Enter the details for each account where you want to receive payments. This includes": "Enter the details for each account where you want to receive payments. This includes",
+  "Update And Post": "Update And Post",
+  "Update {{type}} Item": "Update {{type}} Item",
+  "Payments are secure and encrypted by": "Payments are secure and encrypted by"
 }

@@ -2879,5 +2879,21 @@
   "Shipping": "शिपिंग",
   "This Invoice is payable.": "यह चालान देय है।",
   "This Invoice is not Payable.": "यह चालान देय नहीं है।",
-  "Create New Invoice": "नया चालान बनाएँ"
+  "Create New Invoice": "नया चालान बनाएँ",
+  "Complete your profile to smooth your transaction process.": "अपनी लेन-देन प्रक्रिया को सुचारू बनाने के लिए अपना प्रोफ़ाइल पूरा करें।",
+  "Complete your profile": "अपनी प्रोफ़ाइल पूरी करें",
+  "Language": "भाषा",
+  "Virtual Card :": "वर्चुअल कार्ड :",
+  "Card Type": "कार्ड का प्रकार",
+  "Total Cost": "कुल लागत",
+  "Let's Verify Your Identity": "आइए आपकी पहचान सत्यापित करें",
+  "We need to verify your identity before issuing your InstaPay card. This ensures a secure and smooth experience for you!": "आपका इंस्टापे कार्ड जारी करने से पहले हमें आपकी पहचान सत्यापित करनी होगी। इससे आपके लिए एक सुरक्षित और सहज अनुभव सुनिश्चित होगा!",
+  "You haven’t created any invoices yet.": "आपने अभी तक कोई चालान नहीं बनाया है.",
+  "Start by generating your first invoice in just a few steps.": "बस कुछ ही चरणों में अपना पहला इनवॉइस तैयार करके शुरुआत करें।",
+  "InstaPay ID:": "इंस्टापे आईडी:",
+  "Stay connected and in control of your money with InstaPay!": "इंस्टापे के साथ जुड़े रहें और अपने पैसे पर नियंत्रण रखें!",
+  "Enter the details for each account where you want to receive payments. This includes": "प्रत्येक खाते का विवरण दर्ज करें जहाँ आप भुगतान प्राप्त करना चाहते हैं। इसमें शामिल हैं",
+  "Update And Post": "अपडेट करें और पोस्ट करें",
+  "Update {{type}} Item": "{{type}} आइटम अपडेट करें",
+  "Payments are secure and encrypted by": "भुगतान सुरक्षित और एन्क्रिप्टेड हैं"
 }

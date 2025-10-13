@@ -2877,5 +2877,21 @@
   "Shipping": "شپنگ",
   "This Invoice is payable.": "یہ رسید قابل ادائیگی ہے۔",
   "This Invoice is not Payable.": "یہ رسید قابل ادائیگی نہیں ہے۔",
-  "Create New Invoice": "نیا انوائس بنائیں"
+  "Create New Invoice": "نیا انوائس بنائیں",
+  "Complete your profile to smooth your transaction process.": "اپنے لین دین کے عمل کو ہموار کرنے کے لیے اپنا پروفائل مکمل کریں۔",
+  "Complete your profile": "اپنا پروفائل مکمل کریں۔",
+  "Language": "زبان",
+  "Virtual Card :": "ورچوئل کارڈ:",
+  "Card Type": "کارڈ کی قسم",
+  "Total Cost": "کل لاگت",
+  "Let's Verify Your Identity": "آئیے آپ کی شناخت کی تصدیق کریں۔",
+  "We need to verify your identity before issuing your InstaPay card. This ensures a secure and smooth experience for you!": "آپ کا InstaPay کارڈ جاری کرنے سے پہلے ہمیں آپ کی شناخت کی تصدیق کرنی ہوگی۔ یہ آپ کے لیے ایک محفوظ اور ہموار تجربہ کو یقینی بناتا ہے!",
+  "You haven’t created any invoices yet.": "آپ نے ابھی تک کوئی رسیدیں نہیں بنائی ہیں۔",
+  "Start by generating your first invoice in just a few steps.": "صرف چند مراحل میں اپنا پہلا انوائس بنا کر شروع کریں۔",
+  "InstaPay ID:": "InstaPay ID:",
+  "Stay connected and in control of your money with InstaPay!": "InstaPay کے ساتھ جڑے رہیں اور اپنے پیسے کو کنٹرول میں رکھیں!",
+  "Enter the details for each account where you want to receive payments. This includes": "ہر اس اکاؤنٹ کی تفصیلات درج کریں جہاں آپ ادائیگیاں وصول کرنا چاہتے ہیں۔ اس میں شامل ہیں۔",
+  "Update And Post": "اپ ڈیٹ اور پوسٹ کریں۔",
+  "Update {{type}} Item": "{{type}} آئٹم کو اپ ڈیٹ کریں۔",
+  "Payments are secure and encrypted by": "ادائیگیاں محفوظ اور خفیہ کردہ ہیں۔"
 }

@@ -2877,5 +2877,21 @@
   "Shipping": "شحن",
   "This Invoice is payable.": "هذه الفاتورة مستحقة الدفع.",
   "This Invoice is not Payable.": "هذه الفاتورة غير قابلة للدفع.",
-  "Create New Invoice": "إنشاء فاتورة جديدة"
+  "Create New Invoice": "إنشاء فاتورة جديدة",
+  "Complete your profile to smooth your transaction process.": "أكمل ملفك الشخصي لتسهيل عملية معاملتك.",
+  "Complete your profile": "أكمل ملفك الشخصي",
+  "Language": "لغة",
+  "Virtual Card :": "البطاقة الافتراضية :",
+  "Card Type": "نوع البطاقة",
+  "Total Cost": "التكلفة الإجمالية",
+  "Let's Verify Your Identity": "دعونا نتحقق من هويتك",
+  "We need to verify your identity before issuing your InstaPay card. This ensures a secure and smooth experience for you!": "نحتاج إلى التحقق من هويتك قبل إصدار بطاقة InstaPay الخاصة بك. هذا يضمن لك تجربة آمنة وسلسة!",
+  "You haven’t created any invoices yet.": "لم تقم بإنشاء أي فواتير بعد.",
+  "Start by generating your first invoice in just a few steps.": "ابدأ بإنشاء فاتورتك الأولى في بضع خطوات فقط.",
+  "InstaPay ID:": "معرف InstaPay:",
+  "Stay connected and in control of your money with InstaPay!": "ابق على اتصال وتحكم في أموالك مع InstaPay!",
+  "Enter the details for each account where you want to receive payments. This includes": "أدخل تفاصيل كل حساب ترغب في استلام المدفوعات منه. يشمل ذلك:",
+  "Update And Post": "التحديث والنشر",
+  "Update {{type}} Item": "تحديث العنصر {{type}}",
+  "Payments are secure and encrypted by": "المدفوعات آمنة ومشفرة بواسطة"
 }

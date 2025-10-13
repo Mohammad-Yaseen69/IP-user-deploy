@@ -2879,5 +2879,21 @@
   "Shipping": "Usafirishaji",
   "This Invoice is payable.": "Ankara hii inalipwa.",
   "This Invoice is not Payable.": "Ankara hii Hailipwi.",
-  "Create New Invoice": "Unda Ankara Mpya"
+  "Create New Invoice": "Unda Ankara Mpya",
+  "Complete your profile to smooth your transaction process.": "Kamilisha wasifu wako ili laini mchakato wako wa muamala.",
+  "Complete your profile": "Kamilisha wasifu wako",
+  "Language": "Lugha",
+  "Virtual Card :": "Kadi pepe :",
+  "Card Type": "Aina ya Kadi",
+  "Total Cost": "Jumla ya Gharama",
+  "Let's Verify Your Identity": "Hebu Tuhakikishe Utambulisho Wako",
+  "We need to verify your identity before issuing your InstaPay card. This ensures a secure and smooth experience for you!": "Tunahitaji kuthibitisha utambulisho wako kabla ya kutoa kadi yako ya InstaPay. Hii inahakikisha matumizi salama na laini kwako!",
+  "You haven’t created any invoices yet.": "Bado hujaunda ankara zozote.",
+  "Start by generating your first invoice in just a few steps.": "Anza kwa kutoa ankara yako ya kwanza kwa hatua chache tu.",
+  "InstaPay ID:": "Kitambulisho cha InstaPay:",
+  "Stay connected and in control of your money with InstaPay!": "Endelea kuwasiliana na udhibiti pesa zako ukitumia InstaPay!",
+  "Enter the details for each account where you want to receive payments. This includes": "Weka maelezo kwa kila akaunti ambapo ungependa kupokea malipo. Hii inajumuisha",
+  "Update And Post": "Sasisha Na Chapisha",
+  "Update {{type}} Item": "Sasisha Kipengee {{type}}",
+  "Payments are secure and encrypted by": "Malipo ni salama na yamesimbwa kwa njia fiche"
 }

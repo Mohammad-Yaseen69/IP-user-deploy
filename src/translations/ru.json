@@ -2788,5 +2788,21 @@
   "Shipping": "Перевозки",
   "This Invoice is payable.": "Данный счет подлежит оплате.",
   "This Invoice is not Payable.": "Данный счет не подлежит оплате.",
-  "Create New Invoice": "Создать новый счет"
+  "Create New Invoice": "Создать новый счет",
+  "Complete your profile to smooth your transaction process.": "Заполните свой профиль, чтобы упростить процесс транзакции.",
+  "Complete your profile": "Заполните свой профиль",
+  "Language": "Язык",
+  "Virtual Card :": "Виртуальная карта:",
+  "Card Type": "Тип карты",
+  "Total Cost": "Общая стоимость",
+  "Let's Verify Your Identity": "Давайте проверим вашу личность",
+  "We need to verify your identity before issuing your InstaPay card. This ensures a secure and smooth experience for you!": "Перед выпуском карты InstaPay нам необходимо подтвердить вашу личность. Это гарантирует вам безопасность и удобство использования!",
+  "You haven’t created any invoices yet.": "Вы еще не создали ни одного счета.",
+  "Start by generating your first invoice in just a few steps.": "Начните с создания своего первого счета всего за несколько шагов.",
+  "InstaPay ID:": "Идентификатор InstaPay:",
+  "Stay connected and in control of your money with InstaPay!": "Оставайтесь на связи и контролируйте свои деньги с InstaPay!",
+  "Enter the details for each account where you want to receive payments. This includes": "Введите данные каждого счёта, на который вы хотите получать платежи. Это включает:",
+  "Update And Post": "Обновление и публикация",
+  "Update {{type}} Item": "Обновить элемент {{type}}",
+  "Payments are secure and encrypted by": "Платежи безопасны и зашифрованы"
 }

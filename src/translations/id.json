@@ -2877,5 +2877,21 @@
   "Shipping": "Pengiriman",
   "This Invoice is payable.": "Faktur ini harus dibayar lunas.",
   "This Invoice is not Payable.": "Faktur ini tidak dapat dibayar.",
-  "Create New Invoice": "Buat Faktur Baru"
+  "Create New Invoice": "Buat Faktur Baru",
+  "Complete your profile to smooth your transaction process.": "Lengkapi profil Anda untuk memperlancar proses transaksi Anda.",
+  "Complete your profile": "Lengkapi profil Anda",
+  "Language": "Bahasa",
+  "Virtual Card :": "Kartu Virtual :",
+  "Card Type": "Jenis Kartu",
+  "Total Cost": "Total Biaya",
+  "Let's Verify Your Identity": "Mari Verifikasi Identitas Anda",
+  "We need to verify your identity before issuing your InstaPay card. This ensures a secure and smooth experience for you!": "Kami perlu memverifikasi identitas Anda sebelum menerbitkan kartu InstaPay Anda. Ini memastikan pengalaman yang aman dan lancar untuk Anda!",
+  "You haven’t created any invoices yet.": "Anda belum membuat faktur apa pun.",
+  "Start by generating your first invoice in just a few steps.": "Mulailah dengan membuat faktur pertama Anda hanya dalam beberapa langkah.",
+  "InstaPay ID:": "ID InstaPay:",
+  "Stay connected and in control of your money with InstaPay!": "Tetap terhubung dan kendalikan uang Anda dengan InstaPay!",
+  "Enter the details for each account where you want to receive payments. This includes": "Masukkan detail untuk setiap akun tempat Anda ingin menerima pembayaran. Ini termasuk:",
+  "Update And Post": "Perbarui dan Posting",
+  "Update {{type}} Item": "Perbarui Item {{type}}",
+  "Payments are secure and encrypted by": "Pembayaran aman dan terenkripsi oleh"
 }

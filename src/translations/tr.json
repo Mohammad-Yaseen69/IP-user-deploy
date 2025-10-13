@@ -2879,5 +2879,21 @@
   "Shipping": "Nakliye",
   "This Invoice is payable.": "Bu fatura ödenmelidir.",
   "This Invoice is not Payable.": "Bu Fatura Ödenemez.",
-  "Create New Invoice": "Yeni Fatura Oluştur"
+  "Create New Invoice": "Yeni Fatura Oluştur",
+  "Complete your profile to smooth your transaction process.": "İşlem sürecinizi kolaylaştırmak için profilinizi tamamlayın.",
+  "Complete your profile": "Profilinizi tamamlayın",
+  "Language": "Dil",
+  "Virtual Card :": "Sanal Kart :",
+  "Card Type": "Kart Türü",
+  "Total Cost": "Toplam Maliyet",
+  "Let's Verify Your Identity": "Kimliğinizi Doğrulayalım",
+  "We need to verify your identity before issuing your InstaPay card. This ensures a secure and smooth experience for you!": "InstaPay kartınızı vermeden önce kimliğinizi doğrulamamız gerekiyor. Bu, sizin için güvenli ve sorunsuz bir deneyim sağlar!",
+  "You haven’t created any invoices yet.": "Henüz fatura oluşturmadınız.",
+  "Start by generating your first invoice in just a few steps.": "Sadece birkaç adımda ilk faturanızı oluşturarak başlayın.",
+  "InstaPay ID:": "InstaPay Kimliği:",
+  "Stay connected and in control of your money with InstaPay!": "InstaPay ile bağlantıda kalın ve paranızın kontrolünü elinizde tutun!",
+  "Enter the details for each account where you want to receive payments. This includes": "Ödeme almak istediğiniz her hesabın ayrıntılarını girin. Bu, şunları içerir:",
+  "Update And Post": "Güncelle ve Gönder",
+  "Update {{type}} Item": "{{type}} Öğesini Güncelle",
+  "Payments are secure and encrypted by": "Ödemeler güvenlidir ve şifrelenmiştir"
 }

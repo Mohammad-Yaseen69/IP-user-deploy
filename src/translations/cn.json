@@ -2878,5 +2878,21 @@
   "Shipping": "船运",
   "This Invoice is payable.": "此发票已付。",
   "This Invoice is not Payable.": "此发票不可支付。",
-  "Create New Invoice": "创建新发票"
+  "Create New Invoice": "创建新发票",
+  "Complete your profile to smooth your transaction process.": "完善您的个人资料以使您的交易流程更加顺畅。",
+  "Complete your profile": "完善您的个人资料",
+  "Language": "语言",
+  "Virtual Card :": "虚拟卡：",
+  "Card Type": "卡类型",
+  "Total Cost": "总成本",
+  "Let's Verify Your Identity": "让我们验证您的身份",
+  "We need to verify your identity before issuing your InstaPay card. This ensures a secure and smooth experience for you!": "在签发您的 InstaPay 卡之前，我们需要验证您的身份。这是为了确保您获得安全顺畅的体验！",
+  "You haven’t created any invoices yet.": "您尚未创建任何发票。",
+  "Start by generating your first invoice in just a few steps.": "只需几个步骤即可生成您的第一张发票。",
+  "InstaPay ID:": "InstaPay ID：",
+  "Stay connected and in control of your money with InstaPay!": "使用 InstaPay 保持联系并控制您的资金！",
+  "Enter the details for each account where you want to receive payments. This includes": "输入您希望接收付款的每个账户的详细信息。这包括",
+  "Update And Post": "更新和发布",
+  "Update {{type}} Item": "更新 {{type}} 项目",
+  "Payments are secure and encrypted by": "付款安全且加密"
 }

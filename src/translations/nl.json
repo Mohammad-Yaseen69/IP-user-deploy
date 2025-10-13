@@ -2866,5 +2866,21 @@
   "Shipping": "Verzending",
   "This Invoice is payable.": "Deze factuur is betaalbaar.",
   "This Invoice is not Payable.": "Deze factuur is niet betaalbaar.",
-  "Create New Invoice": "Nieuwe factuur maken"
+  "Create New Invoice": "Nieuwe factuur maken",
+  "Complete your profile to smooth your transaction process.": "Maak uw profiel compleet om het transactieproces soepeler te laten verlopen.",
+  "Complete your profile": "Maak je profiel compleet",
+  "Language": "Taal",
+  "Virtual Card :": "Virtuele kaart:",
+  "Card Type": "Kaarttype",
+  "Total Cost": "Totale kosten",
+  "Let's Verify Your Identity": "Laten we uw identiteit verifiëren",
+  "We need to verify your identity before issuing your InstaPay card. This ensures a secure and smooth experience for you!": "We moeten uw identiteit verifiëren voordat we uw InstaPay-kaart uitgeven. Zo garanderen we een veilige en soepele ervaring voor u!",
+  "You haven’t created any invoices yet.": "U heeft nog geen facturen aangemaakt.",
+  "Start by generating your first invoice in just a few steps.": "Begin met het genereren van uw eerste factuur in slechts een paar stappen.",
+  "InstaPay ID:": "InstaPay-ID:",
+  "Stay connected and in control of your money with InstaPay!": "Blijf verbonden en behoud de controle over uw geld met InstaPay!",
+  "Enter the details for each account where you want to receive payments. This includes": "Vul de gegevens in voor elke rekening waarop u betalingen wilt ontvangen. Dit omvat:",
+  "Update And Post": "Update en post",
+  "Update {{type}} Item": "{{type}}-item bijwerken",
+  "Payments are secure and encrypted by": "Betalingen zijn veilig en gecodeerd door"
 }

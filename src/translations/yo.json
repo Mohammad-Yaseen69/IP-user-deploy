@@ -2877,5 +2877,21 @@
   "Shipping": "Gbigbe",
   "This Invoice is payable.": "Iwe risiti yii jẹ sisan.",
   "This Invoice is not Payable.": "Iwe risiti yii ko le san.",
-  "Create New Invoice": "Ṣẹda New Invoice"
+  "Create New Invoice": "Ṣẹda New Invoice",
+  "Complete your profile to smooth your transaction process.": "Pari profaili rẹ lati dan ilana iṣowo rẹ jẹ.",
+  "Complete your profile": "Pari profaili rẹ",
+  "Language": "Ede",
+  "Virtual Card :": "Kaadi Foju:",
+  "Card Type": "Kaadi Iru",
+  "Total Cost": "Lapapọ Iye owo",
+  "Let's Verify Your Identity": "Jẹ ki a Jẹrisi idanimọ rẹ",
+  "We need to verify your identity before issuing your InstaPay card. This ensures a secure and smooth experience for you!": "A nilo lati jẹrisi idanimọ rẹ ṣaaju fifun kaadi InstaPay rẹ. Eyi ṣe idaniloju iriri aabo ati didan fun ọ!",
+  "You haven’t created any invoices yet.": "O ko ṣẹda awọn iwe-owo kankan sibẹsibẹ.",
+  "Start by generating your first invoice in just a few steps.": "Bẹrẹ nipa ti ipilẹṣẹ risiti akọkọ rẹ ni awọn igbesẹ diẹ.",
+  "InstaPay ID:": "InstaPay ID:",
+  "Stay connected and in control of your money with InstaPay!": "Duro ni asopọ ati iṣakoso owo rẹ pẹlu InstaPay!",
+  "Enter the details for each account where you want to receive payments. This includes": "Tẹ awọn alaye sii fun akọọlẹ kọọkan nibiti o fẹ gba awọn sisanwo. Eyi pẹlu",
+  "Update And Post": "Imudojuiwọn Ati Ifiranṣẹ",
+  "Update {{type}} Item": "Ṣe imudojuiwọn nkan {{type}}",
+  "Payments are secure and encrypted by": "Awọn sisanwo wa ni aabo ati ti paroko nipasẹ"
 }

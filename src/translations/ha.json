@@ -2834,5 +2834,21 @@
   "Shipping": "Jirgin ruwa",
   "This Invoice is payable.": "Ana iya biyan wannan daftari.",
   "This Invoice is not Payable.": "Ba a Biya Wannan Daftari.",
-  "Create New Invoice": "Ƙirƙiri Sabon Daftari"
+  "Create New Invoice": "Ƙirƙiri Sabon Daftari",
+  "Complete your profile to smooth your transaction process.": "Kammala bayanan martaba don daidaita tsarin kasuwancin ku.",
+  "Complete your profile": "Kammala bayanin martabarka",
+  "Language": "Harshe",
+  "Virtual Card :": "Katin Virtual:",
+  "Card Type": "Nau'in Kati",
+  "Total Cost": "Jimlar Kudin",
+  "Let's Verify Your Identity": "Mu Tabbaci Shaidarku",
+  "We need to verify your identity before issuing your InstaPay card. This ensures a secure and smooth experience for you!": "Muna buƙatar tabbatar da ainihin ku kafin bayar da katin InstaPay. Wannan yana tabbatar da ingantaccen ƙwarewa da santsi a gare ku!",
+  "You haven’t created any invoices yet.": "Ba ku ƙirƙiri wani daftari ba tukuna.",
+  "Start by generating your first invoice in just a few steps.": "Fara da samar da daftari na farko a cikin ƴan matakai.",
+  "InstaPay ID:": "InstaPay ID:",
+  "Stay connected and in control of your money with InstaPay!": "Kasance da haɗin kai da sarrafa kuɗin ku tare da InstaPay!",
+  "Enter the details for each account where you want to receive payments. This includes": "Shigar da cikakkun bayanai na kowane asusu inda kake son karɓar kuɗi. Wannan ya hada da",
+  "Update And Post": "Sabuntawa Kuma Buga",
+  "Update {{type}} Item": "Sabunta abu {{nau'in}}",
+  "Payments are secure and encrypted by": "Biyan kuɗi amintattu ne kuma an ɓoye su ta"
 }
