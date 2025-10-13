@@ -182,7 +182,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                 }
                 {item?.client_reference &&
                     <div className={styles.er_item}>
-                        <span>{t("Client Reference")}</span>
+                        <span>{t("Payment Reference")}</span>
                         <p>
                             {item?.client_reference}
                         </p>
