@@ -1,16 +1,21 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AlertTriangle } from 'react-feather';
 import { Modal, ModalHeader, ModalBody, Button, ModalFooter } from 'reactstrap';
 import InstaPayLoader from '../Loader';
 import { t } from 'i18next';
 
-const Dropzone = ({ file, setFile, setFileType, pAddress }) => {
+const Dropzone = ({ file, setFile, setFileType, pAddress, tempFile }) => {
     const [isDragging, setIsDragging] = useState(false);
     const [temp, setTemp] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const inputRef = useRef(null);
     const [isUploading, setIsUploading] = useState(0)
 
+    useEffect(() => {
+        if(tempFile){
+            setTemp(tempFile)
+        }
+    },[tempFile])
     const handleDragEnter = (e) => {
         e.preventDefault();
         setIsDragging(true);
@@ -84,7 +89,7 @@ const Dropzone = ({ file, setFile, setFileType, pAddress }) => {
             className="dropzone"
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
-            onDragOver={handleDragOver}
+            onDragOver={handleDragOver} 
             onDrop={handleDrop}
             style={{
                 background: 'rgba(255, 217, 100, 0.10)',
