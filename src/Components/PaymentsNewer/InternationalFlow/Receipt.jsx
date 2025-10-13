@@ -1,6 +1,5 @@
 import styles from "./styles/receipt.module.css"
 import logo from "./files/ins_logo.svg"
-import confirm_vid from "../files/confirm.mp4"
 import { Trans, useTranslation } from "react-i18next"
 import { Check, Info } from "react-feather"
 import w from "../files/where.png"
@@ -12,7 +11,7 @@ import { useLocation, useNavigate } from "react-router"
 import fail from "./files/fail.json"
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
-const Receipt = ({ data, showBack = false, backHandler = () => { }, showTrxBtn = true, transactionStatus }) => {
+const Receipt = ({ data, showTrxBtn = true, transactionStatus }) => {
     const { t } = useTranslation()
     const [showShare, setShowShare] = useState(false)
     const navigate = useNavigate()
@@ -117,7 +116,7 @@ const Receipt = ({ data, showBack = false, backHandler = () => { }, showTrxBtn =
                                         values={{
                                             name: title
                                                 ? title
-                                                : `${data.beneficiary?.firstname ?? data.beneficiary?.first_name ?? data.beneficiary?.company_name} ${data.beneficiary?.lastname ?? data.beneficiary?.last_name ?? ""}`,
+                                                : `${data.beneficiary?.firstname ?? data.beneficiary?.first_name ?? data.beneficiary?.company_name ?? "Recipient's"} ${data.beneficiary?.lastname ?? data.beneficiary?.last_name ?? ""}`,
                                         }}
                                         components={{
                                             user: <strong />,

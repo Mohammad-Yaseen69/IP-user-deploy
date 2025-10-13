@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, Input, } from "reactstrap";
 import { useTranslation } from "react-i18next";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import styles from "../../PaymentsNewer/styles/AmountAndCurrency.module.scss"
 import axios from "axios";
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
@@ -11,38 +11,12 @@ import { LimitsErrorMessage, possibleErrors } from "../../PaymentsNewer/OTPConfi
 import InstaPayLoader from "../../Loader";
 import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem";
 import { formatCurrency } from "../../../Helper/AmountFormat";
+import { IoNotificationsCircle, IoWarning } from "react-icons/io5";
 
-export const reasons = [
-    {
-        name: /*t(*/"Family Support"/*),*/,
-        value: "FAMILY_SUPPORT"
-    },
-    {
-        name: /*t(*/"Education"/*),*/,
-        value: "EDUCATION"
-    },
-    {
-        name: /*t(*/"Gift And Donation"/*),*/,
-        value: "GIFT_AND_DONATION"
-    },
-    {
-        name: /*t(*/"Medical Treatment"/*),*/,
-        value: "MEDICAL_TREATMENT"
-    },
-    {
-        name: /*t(*/"Maintainence Expenses"/*),*/,
-        value: "MAINTENANCE_EXPENSES"
-    },
-    {
-        name: /*t(*/"Other"/*),*/,
-        value: "OTHER"
-    },
-]
 
 let timeout;
-const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQuotationDetails, payoutChannel, wallet, exchangeError, setExchangeError, setIsLoading, isloading, vendor }) => {
+const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQuotationDetails, payoutChannel, wallet, exchangeError, setExchangeError, setIsLoading, isloading, vendor, isExternalWithdrawal, setIsExternalWithdrawal, exchangeRate, setExchangeRate }) => {
     const { t } = useTranslation()
-    const [exchangeRate, setExchangeRate] = useState()
     const { authHeader, userWallets, userDetails } = useContext(UserContext)
     const balance = wallet?.balance?.available_balance
 
@@ -64,9 +38,6 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
         formatCurrency(e.target.value, true, setFormattedAmount);
     };
 
-    useEffect(() => {
-        setAmount(+String(formattedAmount)?.replaceAll(",", ""))
-    }, [formattedAmount])
 
     useEffect(() => {
         if (p_amount) {
@@ -119,6 +90,9 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
                                 destination: { currency: decrypted?.data?.result?.recipient?.currency, amount: decrypted?.data?.result?.recipient?.value },
                                 fee: { amount: decrypted?.data?.result?.fee?.value },
                                 total: decrypted?.data?.result?.total?.value
+                            }
+                            if (decrypted?.data?.result?.total?.inUSD >= 5000) {
+                                setIsExternalWithdrawal(true)
                             }
                             if (amount <= data.fee.amount) {
                                 setExchangeError("Invalid Amount Fee")
@@ -177,26 +151,7 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
         }
 
         timeout = setTimeout(() => {
-            if (amount && currency) {
-                let value = amount;
-                if (!String(value).includes(".") || String(value).endsWith(".") || String(value).split(".")?.[1]?.length === 1) {
-                    if (!String(value).includes(".")) {
-                        value = `${value}.00`
-                    }
-                    if (String(value).endsWith(".")) {
-                        value = `${value}00`
-                    }
-                    if (String(value).split(".")?.[1]?.length === 1) {
-                        value = `${value}0`
-                    }
-                    setAmount(value)
-                    setTimeout(() => {
-                        getExchangeRate()
-                    }, 1000)
-                } else {
-                    getExchangeRate()
-                }
-            }
+            getExchangeRate()
         }, 2000)
 
         return () => {
@@ -230,7 +185,10 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
                 <input
                     type="text"
                     value={formattedAmount}
-                    onChange={(e) => setFormattedAmount(e.target.value)}
+                    onChange={(e) => {
+                        setFormattedAmount(e.target.value)
+                        setAmount(e.target.value)
+                    }}
                     onKeyUp={handleKeyUp}
                     onBlur={handleBlur}
                     placeholder="Amount"
@@ -324,8 +282,15 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
                                     justifyContent: "space-between"
                                 }}>
                                     <span style={{ fontWeight: "600" }}>{t("Total Sent").split(" ")[0]}:</span>
-                                    <span style={{ fontWeight: "600", whiteSpace: "nowrap" }}>{amount ?? ""} {currency}</span>
+                                    <span style={{ fontWeight: "600", whiteSpace: "nowrap" }}>{formattedAmount ?? ""} {currency}</span>
                                 </p>
+                                {isExternalWithdrawal &&
+                                    <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center", padding: "12px", borderRadius: "8px", background: "#f8f8f8" }}>
+                                        <p style={{ marginBottom: "0px", fontWeight: 600 }}>
+                                            {t("Notice: You’re initiating an external withdrawal. Since the amount exceeds $5,000 (USD equivalent), this transaction will be processed manually. The final exchange rate may differ from the one shown on screen.")}
+                                        </p>
+                                    </div>
+                                }
                             </>
                             :
                             <>

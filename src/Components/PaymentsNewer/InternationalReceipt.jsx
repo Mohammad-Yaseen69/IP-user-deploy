@@ -8,7 +8,7 @@ import download from "../Profile/files/download.svg"
 import { useState } from "react";
 import gif from "../Auth/files/success.gif"
 
-const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, paymentType, setShowStatus, setIsInternational, transactionDetails, type = "transferring" }) => {
+const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, paymentType, setShowStatus, isExternalWithdrawal, transactionDetails, type = "transferring" }) => {
     const { t } = useTranslation()
     const [downloading, setDownloading] = useState(false)
     return (
@@ -28,12 +28,12 @@ const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, paymen
                 paddingBottom: 0,
                 boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)"
             }} className="conf_cont">
-                <div style={{width: "200px", margin: "auto"}}>
+                <div style={{ width: "200px", margin: "auto" }}>
                     <img src={gif} style={{ width: "100%" }} alt="" />
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", padding: "14px" }} className="conf_cont transaction-receipt">
                     <div style={{ textAlign: 'center' }}>
-                        <span style={{ color: "#8a8a8a", fontSize: "1.1rem" }}>{t(`You have ${type}`)}</span>
+                        {isExternalWithdrawal ? <span style={{ color: "#8a8a8a", fontSize: "1.1rem" }}>{t(`Your external withdrawal request is successfull`)}</span> : <span style={{ color: "#8a8a8a", fontSize: "1.1rem" }}>{t(`You have ${type}`)}</span>}
                         <h4 style={{ fontSize: "2rem" }}>{currency} {amount}</h4>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>

@@ -58,7 +58,9 @@ const OTPConfirmation = ({
     vendor,
     type,
     requestObject,
-    quotationDetails
+    quotationDetails,
+    externalWithdrawalPayload,
+    isExternalWithdrawal
 }) => {
     const { t } = useTranslation()
     const numberOfFields = 6;
@@ -72,7 +74,7 @@ const OTPConfirmation = ({
     const [verified, setVerified] = useState(false);
     const [timer, setTimer] = useState(3);
     const [resendTimer, setResendTimer] = useState(authType !== "authenticator" ? 120 : 0);
-    const { authHeader, userDetails, userWallets, verifyToken, setProfileLockTime } = useContext(UserContext)
+    const { authHeader, userDetails, userWallets, verifyToken, setProfileLockTime, getUserWallets } = useContext(UserContext)
     const [isAnyFieldEmpty, setIsAnyFieldEmpty] = useState(true);
     const [otpError, setOtpError] = useState("")
     const { setIsExtended } = useContext(InactivityContext)
@@ -347,7 +349,7 @@ const OTPConfirmation = ({
 
             axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/quotation/create-quotation`, formdata, {
                 headers: authHeader
-            })          
+            })
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     setIsSaving(false)
@@ -390,7 +392,7 @@ const OTPConfirmation = ({
 
             data.forEach(item => "a")
 
-            const url = vendor === "neema" ? `${import.meta.env.VITE_IP_DEV_API}/api/payment/confirm-withdrawal-transaction` : `${import.meta.env.VITE_THUNES_API}/confirmTransaction`
+            const url = isExternalWithdrawal ? `${import.meta.env.VITE_IP_DEV_API}/api/external-withdrawal/create-request` : vendor === "neema" ? `${import.meta.env.VITE_IP_DEV_API}/api/payment/confirm-withdrawal-transaction` : `${import.meta.env.VITE_THUNES_API}/confirmTransaction`
             const neemaData = {
                 token: token || createdTransaction.token,
                 otp: otp ? otp.join("") : otpValues.join(""),
@@ -399,7 +401,7 @@ const OTPConfirmation = ({
 
             const enc = encryptData(neemaData)
             const body = { data: enc }
-            const vendorSpecificBody = vendor === "neema" ? body : data
+            const vendorSpecificBody = vendor === "neema" || isExternalWithdrawal ? body : data
             axios.post(url, vendorSpecificBody, {
                 headers: authHeader
             })
@@ -408,6 +410,9 @@ const OTPConfirmation = ({
                     setTransactionDetails(decrypted)
                     // console.log(decrypted)
                     setSubStep(prev => prev + 1)
+                    if (isExternalWithdrawal) {
+                        getUserWallets()
+                    }
                     if (decrypted.TransactionID) {
                         setVerified(true)
                     }
@@ -532,7 +537,13 @@ const OTPConfirmation = ({
                 }
             }
         }
-        if (createdTransaction) {
+
+        if (externalWithdrawalPayload && isExternalWithdrawal) {
+            data = {
+                type: typeOfAuth ?? "",
+                data: externalWithdrawalPayload
+            }
+        } else if (createdTransaction) {
             data = intResend?.userWithdrawals ? {
                 data: {
                     "additional_information": intResend?.comment,

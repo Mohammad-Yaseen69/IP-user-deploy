@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 
 const AnimatedHeader = ({ mobileUI }) => {
@@ -24,7 +24,7 @@ const AnimatedHeader = ({ mobileUI }) => {
     useEffect(() => {
         const interval = setInterval(() => {
             setIndex((prev) => (prev + 1) % headerContents.length);
-        }, 3500);
+        }, 6000);
 
         return () => clearInterval(interval); // cleanup
     }, []);

@@ -12,7 +12,7 @@ import { formatCurrency } from "../../Helper/AmountFormat";
 import { toast } from "react-toastify";
 import InstaPayLoader from "../Loader";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, Mousewheel } from "swiper";
+import { FreeMode, Mousewheel, Pagination } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 import "./styles/swiper.reset.css";
@@ -135,8 +135,9 @@ export const LeftJsx = ({
           {userVideos && userVideos.length > 0 && (
             <div className="p-swiper-videos-123">
               <Swiper
-                modules={[FreeMode, Mousewheel]}
+                modules={[FreeMode, Mousewheel, Pagination]}
                 spaceBetween={10}
+                pagination={{ clickable: true, el: '.portfolio-swiper-pagination' }}
                 slidesPerView={
                   userVideos.length === 1 || window.innerWidth < 700
                     ? 1
@@ -161,6 +162,8 @@ export const LeftJsx = ({
                   </SwiperSlide>
                 ))}
               </Swiper>
+
+              <div className="portfolio-swiper-pagination" style={{ marginTop: 0, textAlign: 'center' }} />
             </div>
           )}
         </div>

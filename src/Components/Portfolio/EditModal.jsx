@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import {
     Modal,
     ModalHeader,
@@ -12,6 +12,7 @@ import { UserContext } from '../../Context/UserContext';
 import modal from "./files/edit_modal.png"
 import bg from "../PaymentAddress/files/bg.png"
 import Dropzone from './CustomDropZone';
+import { useTranslation } from 'react-i18next';
 
 const EditModal = ({ isOpen, toggle, item, pAddress }) => {
     const [title, setTitle] = useState(item?.title);
@@ -20,6 +21,7 @@ const EditModal = ({ isOpen, toggle, item, pAddress }) => {
     const [fileType, setFileType] = useState("")
     const [isSaving, setIsSaving] = useState(false)
     const { authHeader, getUserDocuments, getUserVideos } = useContext(UserContext)
+    const { t } = useTranslation()
 
     const handleUpdateAndSave = () => {
         setIsSaving(true)
@@ -29,9 +31,6 @@ const EditModal = ({ isOpen, toggle, item, pAddress }) => {
         formData.append('description', description);
         formData.append('file_type', fileType);
         formData.append('type', pAddress ? "address" : "portfolio")
-        formData.forEach((value, key) => {
-            // console.log(key, value);
-        });
 
 
         axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-portfolio/${item?._id}`,
@@ -39,8 +38,7 @@ const EditModal = ({ isOpen, toggle, item, pAddress }) => {
             {
                 headers: authHeader
             })
-            .then(res => {
-                const decrypted = decryptData(res.data.data)
+            .then(() => {
                 setIsSaving(true)
                 if (pAddress) {
                     getUserVideos()
@@ -56,13 +54,13 @@ const EditModal = ({ isOpen, toggle, item, pAddress }) => {
                 setIsSaving(true)
                 // console.log(decrypted)
             })
-            setIsSaving(false)
+        setIsSaving(false)
     };
 
     return (
         <Modal style={{ minWidth: window.innerWidth > 1000 ? "817px" : "90%" }} isOpen={isOpen} toggle={toggle}>
             <ModalHeader toggle={toggle}>
-                Update {pAddress ?  "Video" : "Portfolio"} Item
+                {t("Update {{type}} Item", { type: pAddress ? "Video" : "Portfolio" })}
             </ModalHeader>
             <ModalBody style={{
                 display: "flex",
@@ -82,7 +80,7 @@ const EditModal = ({ isOpen, toggle, item, pAddress }) => {
                     justifyContent: pAddress && "space-between",
                     flexDirection: pAddress && "column",
                 }}>
-                    <Dropzone file={file} setFile={setFile} setFileType={setFileType} />
+                    <Dropzone tempFile={item?.document_details?.url || item?.jw_media?.thumbnail_url} file={file} setFile={setFile} setFileType={setFileType} />
 
                     {!pAddress &&
                         <>
@@ -98,7 +96,7 @@ const EditModal = ({ isOpen, toggle, item, pAddress }) => {
                                     lineHeight: 'normal',
                                     marginTop: "24px"
                                 }}>
-                                    Title
+                                    {t("Title")}
                                 </Label>
                                 <Input type='text' style={{
                                     borderRadius: "12px",
@@ -117,7 +115,7 @@ const EditModal = ({ isOpen, toggle, item, pAddress }) => {
                                     lineHeight: 'normal',
                                     marginTop: "24px"
                                 }}>
-                                    Description
+                                    {t("Description")}
                                 </Label>
                                 <Input type='textarea' style={{
                                     borderRadius: "12px",
@@ -144,7 +142,7 @@ const EditModal = ({ isOpen, toggle, item, pAddress }) => {
                                 fontWeight: "600"
                             }}
                             onClick={toggle}
-                        >Discard</button>
+                        >{t("Discard")}</button>
                         <button
                             style={{
                                 borderRadius: "9px",
@@ -155,12 +153,12 @@ const EditModal = ({ isOpen, toggle, item, pAddress }) => {
                                 border: "none",
                                 outline: "none",
                                 padding: "9px 16px",
-                                opacity: ((!title) && !pAddress) || !file || isSaving ? .7 : 1,
-                                cursor: ((!title) && !pAddress) || !file || isSaving ? "not-allowed" : "pointer"
+                                opacity: ((!title) && !pAddress) || isSaving ? .7 : 1,
+                                cursor: ((!title) && !pAddress) || isSaving ? "not-allowed" : "pointer"
                             }}
-                            disabled={((!title) && !pAddress) || !file || isSaving}
+                            disabled={((!title) && !pAddress) || isSaving}
                             onClick={handleUpdateAndSave}
-                        >Update And Post</button>
+                        >{t("Update And Post")}</button>
                     </div>
                 </div>
             </ModalBody>

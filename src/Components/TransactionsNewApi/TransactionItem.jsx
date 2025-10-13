@@ -66,6 +66,8 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
             case "declined":
             case "failed":
                 return "#C82333"
+            case "processing":
+                return "#ADD8E6"    
             default:
                 break;
         }
