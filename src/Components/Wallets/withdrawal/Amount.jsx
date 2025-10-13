@@ -1,6 +1,6 @@
-import { Button, Card, CardBody, Input, } from "reactstrap";
+import { CardBody } from "reactstrap";
 import { useTranslation } from "react-i18next";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from "../../PaymentsNewer/styles/AmountAndCurrency.module.scss"
 import axios from "axios";
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
@@ -11,7 +11,6 @@ import { LimitsErrorMessage, possibleErrors } from "../../PaymentsNewer/OTPConfi
 import InstaPayLoader from "../../Loader";
 import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem";
 import { formatCurrency } from "../../../Helper/AmountFormat";
-import { IoNotificationsCircle, IoWarning } from "react-icons/io5";
 
 
 let timeout;
@@ -25,7 +24,6 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const p_amount = queryParams.get("amount")
-    const p_currency = queryParams.get("currency")
 
     const [limValue, setLimValue] = useState(0)
 
@@ -284,13 +282,6 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
                                     <span style={{ fontWeight: "600" }}>{t("Total Sent").split(" ")[0]}:</span>
                                     <span style={{ fontWeight: "600", whiteSpace: "nowrap" }}>{formattedAmount ?? ""} {currency}</span>
                                 </p>
-                                {isExternalWithdrawal &&
-                                    <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center", padding: "12px", borderRadius: "8px", background: "#f8f8f8" }}>
-                                        <p style={{ marginBottom: "0px", fontWeight: 600 }}>
-                                            {t("Notice: You’re initiating an external withdrawal. Since the amount exceeds $5,000 (USD equivalent), this transaction will be processed manually. The final exchange rate may differ from the one shown on screen.")}
-                                        </p>
-                                    </div>
-                                }
                             </>
                             :
                             <>

@@ -11,14 +11,13 @@ import ConfirmSend from '../PaymentsNewer/ConfirmSend'
 import countries from "../PaymentsNewer/CountriesData.json"
 import OTPConfirmation from '../PaymentsNewer/OTPConfirmation'
 import Receipt from '../PaymentsNewer/InternationalReceipt'
-import { useNavigate } from 'react-router'
+import { useActionData, useNavigate } from 'react-router'
 import { service_name_formatter } from '../TransactionsNewApi/TransactionItem'
 import ChooseType from './withdrawal/ChooseType'
 import ChooseWithdrawal from './withdrawal/ChooseWithdrawal'
 import DefaultWithdrawal from './withdrawal/DefaultWithdrawal'
 import { Link } from 'react-router-dom'
-import { useMutation } from '@tanstack/react-query'
-
+import { Toggle } from '../MyMasterCard/CardPurchased'
 
 
 const Withdraw = ({ isOpen, toggle, wallet }) => {
@@ -233,6 +232,8 @@ const WithdrawOldFlow = ({
     const { userDetails, authHeader } = useContext(UserContext)
     const [isExternalWithdrawal, setIsExternalWithdrawal] = useState(false)
     const [exchangeRate, setExchangeRate] = useState()
+    const [showNotice, setShowNotice] = useState(false)
+    const [agree, setAgree] = useState(false)
 
 
 
@@ -325,7 +326,16 @@ const WithdrawOldFlow = ({
 
             case 2:
                 if (amountError || !amount) break;
-                if (getVendor() === "neema" || isExternalWithdrawal) {
+                if (isExternalWithdrawal) {
+                    if (showNotice) {
+                        setStep(prev => prev + 1)
+                        break;
+                    } else {
+                        setShowNotice(true)
+                        break;
+                    }
+                }
+                if (getVendor() === "neema") {
                     setStep(prev => prev + 1)
                     break;
                 }
@@ -366,7 +376,7 @@ const WithdrawOldFlow = ({
                     />
                 }
                 {
-                    step === 2
+                    step === 2 && !showNotice
                     &&
 
                     <AmountAndCurrency
@@ -387,6 +397,27 @@ const WithdrawOldFlow = ({
                         isExternalWithdrawal={isExternalWithdrawal}
                         setIsExternalWithdrawal={setIsExternalWithdrawal}
                     />
+                }
+                {
+                    step === 2 && showNotice
+                    && <div>
+                        <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start", flexDirection: "column", padding: "18px", borderRadius: "8px", background: "#f8f8f8", gap: "12px" }}>
+                            <div style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
+                                <span style={{ fontWeight: 600, fontSize: "22px" }}>{t("Withdrawal Notice!")}</span>
+                            </div>
+
+                            <p style={{ marginBottom: "0px", fontWeight: 600, fontSize: "15px" }}>
+                                {t("The withdrawal amount exceeds USD 5,000 (or equivalent) and requires manual review and approval by an administrator before execution. Please note that the exchange rate, fees, and final receiving amount may vary slightly based on the spot rate at the time of processing.")}
+                            </p>
+                        </div>
+
+
+                        <div style={{ marginTop: "1rem" }}>
+                            <input id='agree' type='checkbox' checked={agree} onChange={() => setAgree(prev => !prev)} />
+                            <label htmlFor='agree' style={{ marginLeft: "8px", fontWeight: 600 }}>{t("I understand and agree.")}</label>
+                        </div>
+                    </div>
+
                 }
                 {
                     step === 3 && !confirmed
@@ -490,7 +521,7 @@ const WithdrawOldFlow = ({
                                 borderRadius: "8px",
                                 padding: ".7rem 2.5rem"
                             }}
-                                disabled={isLoading || amountError}
+                                disabled={isLoading || amountError || isExternalWithdrawal && showNotice ? !agree : false}
                                 onClick={clickHandler}
                             >
                                 {t("Continue")}
