@@ -7,34 +7,6 @@ import { useEffect, useRef, useState } from "react";
 import QRCodeStyling from "qr-code-styling";
 import logo from "../../assets/images/logo/logo.png";
 
-const qrCode = new QRCodeStyling({
-  width: 300,
-  height: 300,
-  qrOptions: {
-    typeNumber: "0",
-    mode: "Byte",
-    errorCorrectionLevel: "Q",
-  },
-  image: logo,
-  imageOptions: {
-    hideBackgroundDots: true,
-    imageSize: 0.2,
-    margin: 10,
-  },
-  dotsOptions: {
-    type: "extra-rounded",
-    color: "#6a1a4c",
-    gradient: {
-      type: "linear",
-      rotation: 0.3141592653589793,
-      colorStops: [
-        { offset: 0, color: "#4b1135" },
-        { offset: 1, color: "#3c087d" },
-      ],
-    },
-  },
-  backgroundOptions: { color: "#ffffff" },
-});
 
 const QrDetails = ({
   wallet,
@@ -50,6 +22,34 @@ const QrDetails = ({
   const { t } = useTranslation();
   const ref = useRef(null);
   const [qrLink, setQrLink] = useState("");
+  const [qrCode] = useState(new QRCodeStyling({
+    width: 300,
+    height: 300,
+    qrOptions: {
+      typeNumber: "0",
+      mode: "Byte",
+      errorCorrectionLevel: "Q",
+    },
+    image: logo,
+    imageOptions: {
+      hideBackgroundDots: true,
+      imageSize: 0.2,
+      margin: 10,
+    },
+    dotsOptions: {
+      type: "extra-rounded",
+      color: "#6a1a4c",
+      gradient: {
+        type: "linear",
+        rotation: 0.3141592653589793,
+        colorStops: [
+          { offset: 0, color: "#4b1135" },
+          { offset: 1, color: "#3c087d" },
+        ],
+      },
+    },
+    backgroundOptions: { color: "#ffffff" },
+  }))
   useEffect(() => {
     qrCode.append(ref.current);
   }, []);
@@ -107,8 +107,8 @@ const QrDetails = ({
                 address && window.innerWidth > 1000
                   ? "150px"
                   : inInvoice
-                  ? ""
-                  : "221px",
+                    ? ""
+                    : "221px",
               padding: inInvoice && "10px",
             }}
           />
