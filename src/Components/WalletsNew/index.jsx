@@ -103,7 +103,7 @@ export const getLimits = async (currentWallet, setData, authHeader, setLoading, 
         })
     }
     catch (error) {
-        if(error.response?.data?.data){
+        if (error.response?.data?.data) {
             const dec = decryptData(error.response?.data?.data)
             if (axios.isCancel(error)) {
                 return;

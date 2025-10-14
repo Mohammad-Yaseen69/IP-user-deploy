@@ -1,36 +1,39 @@
-import BalanceComponent from "./BalanceCard";
-import EarnMoneyBanner from "./EarnMoneyBanner";
-import TransDetails from "./TransDetails";
-import QuickLinksNew from "./QuickLinksNew";
-import Stats from "./Stats";
-import RecentTrans from "./RecentTrans";
-import RightContainer from "./RightContainer";
-import styles from "./styles/index.module.scss"
-import SearchComponent from "./Search";
-import ReferalRewards from "./ReferalRewards";
-import CryptoCard from "./CryptoCard";
-import btc from "../PaymentsNewer/files/btc.png"
-import eth from "../PaymentsNewer/files/eth.png"
-import usdt from "../PaymentsNewer/files/usdt.png"
-import RecentBeneficiaries from "./RecentBeneficiaries";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../Context/UserContext";
-import WalletsMobile from "./WalletsMobile";
+import { useContext, useEffect, useState, lazy } from "react";
+import styles from "./styles/index.module.scss";
+import cardsStyle from "./styles/CardsContainer.module.css";
 import { useTranslation } from "react-i18next";
 import { BsFillPlayFill } from "react-icons/bs";
-import crown from "./files/crown.svg"
-import cardsStyle from "./styles/CardsContainer.module.css"
-import CurConversion from "./CurConversion";
-import QuickLinksMobile from "./QuickLinksMobile";
-import TopBar from "../../Layout/TopBar";
-import ProfileCompletionModal from "../ProfileCompletionModal";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
-import chat from "./files/chat.svg"
 import { ChevronRight } from "react-feather";
-import BusinessModal from "../BusinessModal";
-import OtherBalance from "./OtherBalance";
+import axios from "axios";
+import { UserContext } from "../../Context/UserContext";
+import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
+
+//  Lazy-loaded components
+const BalanceComponent = lazy(() => import("./BalanceCard"));
+const EarnMoneyBanner = lazy(() => import("./EarnMoneyBanner"));
+const TransDetails = lazy(() => import("./TransDetails"));
+const QuickLinksNew = lazy(() => import("./QuickLinksNew"));
+const Stats = lazy(() => import("./Stats"));
+const RecentTrans = lazy(() => import("./RecentTrans"));
+const RightContainer = lazy(() => import("./RightContainer"));
+const SearchComponent = lazy(() => import("./Search"));
+const ReferalRewards = lazy(() => import("./ReferalRewards"));
+const CryptoCard = lazy(() => import("./CryptoCard"));
+const RecentBeneficiaries = lazy(() => import("./RecentBeneficiaries"));
+const WalletsMobile = lazy(() => import("./WalletsMobile"));
+const CurConversion = lazy(() => import("./CurConversion"));
+const QuickLinksMobile = lazy(() => import("./QuickLinksMobile"));
+const TopBar = lazy(() => import("../../Layout/TopBar"));
+const BusinessModal = lazy(() => import("../BusinessModal"));
+const OtherBalance = lazy(() => import("./OtherBalance"));
+
+//  Static assets (normal imports)
+import btc from "../PaymentsNewer/files/btc.png";
+import eth from "../PaymentsNewer/files/eth.png";
+import usdt from "../PaymentsNewer/files/usdt.png";
+import crown from "./files/crown.svg";
+import chat from "./files/chat.svg";
+
 
 const HomeNewUpdated = () => {
 

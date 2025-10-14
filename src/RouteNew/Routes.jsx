@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import { lazy } from 'react';
 const QrCode = lazy(() => import("../Components/QrCode"));
 const QRScan = lazy(() => import("../Components/QrScan"));
 const ChatbotQrCode = lazy(() => import("../Components/ChatbotQrCode"));

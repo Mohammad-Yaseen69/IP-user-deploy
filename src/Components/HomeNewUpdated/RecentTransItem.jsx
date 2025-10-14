@@ -156,9 +156,17 @@ const RecentTransItem = ({ transaction, transactions, i, windowWidth }) => {
                                                     `${transaction?.sender?.user?.first_name ?? transaction?.mastercard?.account?.first_name ?? transaction?.sender?.user?.company_name} ${transaction?.sender?.user?.last_name ?? transaction?.mastercard?.account?.last_name ?? ""}`.slice(0, 20)
                             }
                         </h4>
-                        <p className="text-muted" style={{ marginBottom: 0, color: "rgba(128,128,128,.7)", fontSize: ".6rem", display: "flex", gap: ".3rem", alignItems: "center", whiteSpace: "nowrap" }}>
+                        <p className="text-muted" style={{ marginBottom: 0, color: "rgba(128,128,128,.7)", fontSize: ".5rem", display: "flex", gap: ".3rem", alignItems: "center", whiteSpace: "nowrap", fontWeight: 600 }}>
                             {/* {formatTime(transaction?.createdAt)} */}
-                            {new Date(transaction?.createdAt)?.toLocaleString()}
+                            {new Date(transaction?.createdAt).toLocaleString("en-US", {
+                                month: "2-digit",
+                                day: "2-digit",
+                                year: "2-digit",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true,
+                            })}
+
                         </p>
                     </div>
                 </div>

@@ -1,55 +1,47 @@
-import { useContext, useEffect, useState } from "react";
-import PaymentAction from "./PaymentAction";
-import styles from "./styles/index.module.scss"
-import TopRight from "../topRight";
-import SendPaymentType from "./SendPaymentType";
+import { useContext, useEffect, useState, lazy } from "react";
+import styles from "./styles/index.module.scss";
 import { useTranslation } from "react-i18next";
-import RequestMoney from "./RequestMoney";
-import SendQuotation from "./SendQuotation";
-import CryptoFiat from "./CryptoFiat";
-import SendCrypto from "./SendCrypto";
 import { useLocation, useNavigate } from "react-router";
 import { UserContext } from "../../Context/UserContext";
 import { ChevronLeft } from "react-feather";
+import TopRight from "../topRight";
 
+//  Lazy-loaded components
+const PaymentAction = lazy(() => import("./PaymentAction"));
+const SendPaymentType = lazy(() => import("./SendPaymentType"));
+const RequestMoney = lazy(() => import("./RequestMoney"));
+const SendQuotation = lazy(() => import("./SendQuotation"));
+const CryptoFiat = lazy(() => import("./CryptoFiat"));
+const SendCrypto = lazy(() => import("./SendCrypto"));
+const International = lazy(() => import("./Mobile/International"));
+const WalletTransferMobile = lazy(() => import("./Mobile/Wallet"));
+const RequestMoneyMobile = lazy(() => import("./Mobile/RequestMoney"));
+const SendQuote = lazy(() => import("./Mobile/SendQuote"));
+const CryptoFiatMobile = lazy(() => import("./Mobile/CryptoFiatMobile"));
+const Airtime = lazy(() => import("./AirtimeFlow"));
+const AirtimeMobile = lazy(() => import("./Mobile/Airtime"));
+const QRPayment = lazy(() => import("./Mobile/QRPayment"));
 
-// mobile imports
-import sm from "./files/mobile/sm.png"
-import rq from "./files/mobile/rq.png"
-import sc from "./files/mobile/sc.png"
-import rm from "./files/mobile/rm.png"
-import sq from "./files/mobile/sq.png"
-import int from "./files/mobile/int.png"
-import wtw from "./files/mobile/wtw.png"
-import qr from "./files/mobile/qr.png"
-import airtime_mobile from "./files/mobile/airtime.png"
-import International from "./Mobile/International";
-import WalletTransferMobile from "./Mobile/Wallet";
-import RequestMoneyMobile from "./Mobile/RequestMoney";
-import SendQuote from "./Mobile/SendQuote";
-import CryptoFiatMobile from "./Mobile/CryptoFiatMobile";
-// import Airtime from "./Airtime";
-import Airtime from "./AirtimeFlow"
-import AirtimeMobile from "./Mobile/Airtime";
-import QRPayment from "./Mobile/QRPayment";
-import w2_ic from "./files/wallet.svg"
-import qr_ic from "./files/qr.svg"
+// Static assets (normal imports)
+import rq from "./files/mobile/rq.png";
+import sc from "./files/mobile/sc.png";
+import qr from "./files/mobile/qr.png";
+import w2_ic from "./files/wallet.svg";
+import qr_ic from "./files/qr.svg";
 
+import sendmoney_m from "./Mobile/files/send.png";
+import reqmoney_m from "./Mobile/files/receive.png";
+import quote_m from "./Mobile/files/quote.png";
+import airtime_m from "./Mobile/files/airtime.png";
+import internation_m from "./Mobile/files/international.png";
+import wallet_m from "./Mobile/files/wallet.png";
 
-// mobile bgs 
-import sendmoney_m from "./Mobile/files/send.png"
-import reqmoney_m from "./Mobile/files/receive.png"
-import quote_m from "./Mobile/files/quote.png"
-import airtime_m from "./Mobile/files/airtime.png"
-import internation_m from "./Mobile/files/international.png"
-import wallet_m from "./Mobile/files/wallet.png"
+import sm_m_i from "./files/sm.svg";
+import rm_m_i from "./files/rm.svg";
+import q_m_i from "./files/q.svg";
+import a_m_i from "./files/airtime.svg";
+import int_m_i from "./files/int.svg";
 
-// mobike icons
-import sm_m_i from "./files/sm.svg"
-import rm_m_i from "./files/rm.svg"
-import q_m_i from "./files/q.svg"
-import a_m_i from "./files/airtime.svg"
-import int_m_i from "./files/int.svg"
 
 const PaymentsNewer = () => {
     const { checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, userDetails, getUserBeneficiaries, beneficiaries } = useContext(UserContext)
