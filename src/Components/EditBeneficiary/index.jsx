@@ -357,7 +357,7 @@ const EditBeneficiary = () => {
             setInstapayWallets(user?.wallet?.length > 0 ? user?.wallet : [""])
             setApiWallets(user?.wallet?.length > 0 ? user?.wallet : [""])
             if ((user?.bank_details?.[0]?.iban || user?.bank_details?.[0]?.swift_code)) {
-                getBankDetails({ target: { value: (user?.bank_details?.[0]?.iban || user?.bank_details?.[0]?.swift_code) } }, true)
+                getBankDetails({ target: { value: (user?.bank_details?.[0]?.iban || user?.bank_details?.[0]?.swift_code) } }, true, user?.bank_details?.[0]?.account_number)
             }
             setMobileNumber(user?.phone)
             setCountryId(user?.country?._id ?? "")

@@ -14,7 +14,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
     const [isValidIban, setIsValidIban] = useState(true)
     const [ibanSwift, setIbanSwift] = useState("")
 
-    const getBankDetails = useCallback((e, isForEdit = false) => {
+    const getBankDetails = useCallback((e, isForEdit = false, account_number) => {
         // keep the input state in sync and sanitize
         setFormData(prev => ({
             ...prev,
@@ -89,7 +89,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                                     [bankCityKey]: decrypted?.bicDetails?.structured_address?.town_name ?? "",
                                     [bankProvinceKey]: decrypted?.bicDetails?.structured_address?.country_subdivision_name ?? "",
                                     [bankPostalCodeKey]: decrypted?.bicDetails?.structured_address?.post_code ?? "",
-                                    [bankAccountNumberKey]: decrypted?.ibanDetails?.account_number ?? '',
+                                    [bankAccountNumberKey]: decrypted?.ibanDetails?.account_number ?? account_number ?? '',
 
                                 }
                             })
@@ -211,7 +211,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
                                     [bankCityKey]: decrypted?.structured_address?.town_name ?? "",
                                     [bankProvinceKey]: decrypted?.structured_address?.town_name ?? "",
                                     [bankPostalCodeKey]: decrypted?.structured_address?.post_code ?? "",
-                                    [bankAccountNumberKey]: ""
+                                    [bankAccountNumberKey]: account_number ?? ""
                                 }
                             })
                             if (!isForEdit) {

@@ -37,7 +37,7 @@ const NeemaBenExtrasFields = ({ fieldInfoValidate, country, basicExtras, country
                 {fieldInfoValidate("credit_party_identifiers_accepted", "houseNumber") &&
                     <FormGroup style={{ flex: 1, margin: 0 }}>
                         <Label className="col-form-label" htmlFor="houseNumber">{t("House Number")} <span className="req_star">*</span></Label>
-                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="houseNumber" id="houseNumber" type="number" placeholder='House Number' value={basicExtras.houseNumber} onChange={handleBasicExtraChange} />
+                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="houseNumber" id="houseNumber"  placeholder='House Number' value={basicExtras.houseNumber} onChange={handleBasicExtraChange} />
                     </FormGroup>
                 }
                 {fieldInfoValidate("credit_party_identifiers_accepted", "street") &&
