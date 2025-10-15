@@ -176,7 +176,7 @@ const PaymentsNewer = () => {
                                 aria-label={t("Go back to main menu")}
                             >
                                 <ChevronLeft color="#5826e9" size={14} />
-                                <span style={{fontWeight: 600}}>{t("Go back to main menu")}</span>
+                                <span style={{ fontWeight: 600 }}>{t("Go back to main menu")}</span>
                             </button>
                         )
                     }

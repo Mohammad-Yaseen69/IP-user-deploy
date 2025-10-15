@@ -112,7 +112,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                             </div>
                             {width < 1000 &&
                                 <div style={{ position: "absolute", top: "0px", right: invoice ? "0px" : "-13px" }}>
-                                    <LanguagePicker newUI={true} backgroundWhite={true} />
+                                    <LanguagePicker defaultLanguage={userDetails?.language} newUI={true} backgroundWhite={true} />
                                 </div>
                             }
 

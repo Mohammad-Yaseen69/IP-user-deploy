@@ -116,7 +116,7 @@ export const LeftJsx = ({
     >
       {width > 1000 &&
         <div style={{ position: "absolute", bottom: "10px", right: "10px" }}>
-          <LanguagePicker newUI={true} />
+          <LanguagePicker defaultLanguage={userDetails.langauge} newUI={true} />
         </div>
       }
       {width > 1000 && (
