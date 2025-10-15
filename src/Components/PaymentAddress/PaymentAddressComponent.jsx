@@ -23,6 +23,7 @@ import AddPortfolioItem from '../Portfolio/AddPortfolioItem'
 import PortfolioCard from '../Portfolio/PortfolioCard'
 import useWindowWidth from '../../utils/useWindowWidth'
 import QrGenerate from '../Settings/QrGenerate'
+import PricingsAndPlan from './PricingsAndPlan'
 
 const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const { t } = useTranslation()
@@ -465,6 +466,10 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                             </div>
                                         </div>
                                     </div>
+
+
+                                    <PricingsAndPlan />
+
 
 
 
