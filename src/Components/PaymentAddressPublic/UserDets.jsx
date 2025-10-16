@@ -5,33 +5,53 @@ import { useNavigate } from "react-router"
 import verified from "../../assets/verified.png"
 import { useTranslation } from "react-i18next"
 import LanguagePicker from "../LanguagePicker"
+import { useEffect, useState } from "react"
+import PlansModal from "./PlansModal"
+import { useQuery } from "@tanstack/react-query"
+import { getUserPlans } from "../PaymentAddress/queries/pricings"
 
 
 const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, userCountry, setShowVerTT, showVerTT, invoicePaid, AmountComponent, paymentAddress, invoice }) => {
     const width = useWindowWidth()
     const navigate = useNavigate()
     const { t } = useTranslation()
+    const [showPlansModal, setShowPlansModal] = useState(false)
+    const { data, isLoading } = useQuery({
+        queryKey: ['PublicUserPlans', user_name],
+        queryFn: () => getUserPlans(user_name),
+        enabled: !!user_name
+    })
 
-    const actionButtons = [
+    const [actionButtons, setActionsButtons] = useState([
         {
             label: t("View Profile"),
             onClick: () => navigate(`/profile/${user_name}`),
             disable: false,
             purple: true,
         },
-        // {
-        //     label: "View Plans",
-        //     onClick: () => { },
-        //     disable: true,
-        //     purple: false,
-        // },
+
         // {
         //     label: "Explore eShop",
         //     onClick: () => { },
         //     disable: true,
         //     purple: false,
         // },
-    ]
+    ])
+
+
+
+    useEffect(() => {
+        if (data && data?.length > 0) {
+            setActionsButtons([...actionButtons, {
+                label: "View Plans",
+                onClick: () => setShowPlansModal(true),
+                disable: false,
+                purple: false,
+            },])
+        }
+    }, [data])
+
+
 
     return (
         <div className={styles.userDets} style={{ position: "relative" }} >
@@ -144,6 +164,14 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                     ))}
                 </div>
             }
+
+
+            <PlansModal
+                isOpen={showPlansModal}
+                toggle={() => setShowPlansModal(false)}
+                data={data}
+                isLoading={isLoading}
+            />
         </div>
     )
 }
