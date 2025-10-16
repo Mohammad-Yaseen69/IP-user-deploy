@@ -7,7 +7,7 @@ const getAuthHeader = () => ({
     "source": "user"
 })
 
-const path = `http://localhost:3004/api/plans`
+const path = `${import.meta.env.VITE_IP_DEV_API}/api/plans`
 
 export const addPlan = async (payload) => {
     const enc = encryptData(payload)
