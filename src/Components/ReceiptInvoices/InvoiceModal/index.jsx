@@ -142,8 +142,8 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
 
 
     return (
-        <Modal style={{ minWidth: width > 800 && 700 }} isOpen={isOpen} toggle={onClose}>
-            <ModalHeader style={{ padding: "20px", border: "none" }} toggle={onClose}>
+        <Modal style={{ minWidth: width > 800 && 700 }} isOpen={isOpen} toggle={data.mode === "form" && onClose}>
+            <ModalHeader style={{ padding: "20px", border: "none" }} toggle={data.mode === "form" && onClose}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <img src={icon} alt="" />
                     <span style={{ fontWeight: 600, fontSize: 18 }}>
@@ -171,7 +171,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
                     <ContactBox />
 
                     <ButtonForRequests
-                        isLoading={isInvalid || isPending || uploadPending || isEditing}
+                        isLoading={isInvalid || isPending || uploadPending || isEditing || (data.mode === "preview" ? !uploadData : false)}
                         onClick={() => {
                             if (data.mode === "form") {
                                 isEdit ? handleEditInvoice() : handleAddInvoice()
