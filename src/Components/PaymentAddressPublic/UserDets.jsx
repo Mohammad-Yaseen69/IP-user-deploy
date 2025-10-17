@@ -24,7 +24,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
 
     const [actionButtons, setActionsButtons] = useState([
         {
-            label: t("View Profile"),
+            label: "View Profile",
             onClick: () => navigate(`/profile/${user_name}`),
             disable: false,
             purple: true,
@@ -159,7 +159,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                                 color: button.purple ? "white" : "black"
                             }}
                         >
-                            {button.label}
+                            {t(button.label)}
                         </button>
                     ))}
                 </div>

@@ -177,7 +177,7 @@ const PricingsAndPlan = () => {
                                     <td style={{ padding: '12px 8px', fontWeight: 500 }}>{plan.title}</td>
                                     <td style={{ padding: '12px 8px' }}>{plan.description}</td>
                                     <td style={{ padding: '12px 8px', whiteSpace: 'nowrap' }}>{plan.currency || plan?.receivingWallet?.currency?.code} {Number(plan.price).toFixed(2)}</td>
-                                    <td style={{ padding: '12px 8px' }}>{plan.billingCycle}</td>
+                                    <td style={{ padding: '12px 8px' }}>{t(plan.billingCycle)}</td>
                                     <td style={{ padding: '12px 8px', textAlign: 'center', position: 'relative' }}>
                                         <span
                                             style={{ display: 'inline-block', cursor: 'pointer', borderRadius: 6, padding: 5, transition: 'background .15s', background: openMenuPlanId === (plan._id) ? '#eceaff' : 'transparent' }}

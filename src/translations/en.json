@@ -2906,5 +2906,24 @@
   "Enter the details for each account where you want to receive payments. This includes": "Enter the details for each account where you want to receive payments. This includes",
   "Update And Post": "Update And Post",
   "Update {{type}} Item": "Update {{type}} Item",
-  "Payments are secure and encrypted by": "Payments are secure and encrypted by"
-} 
+  "Payments are secure and encrypted by": "Payments are secure and encrypted by",
+  "Price": "Price",
+  "Billing Cycle": "Billing Cycle",
+  "Weekly": "Weekly",
+  "Monthly": "Monthly",
+  "Yearly": "Yearly",
+  "One-Time": "One-Time",
+  "Quarterly": "Quarterly",
+  "Edit Plan": "Edit Plan",
+  "Plan or Service Title": "Plan or Service Title",
+  "Short name of your plan (e.g. Starter)": "Short name of your plan (e.g. Starter)",
+  "Short Description": "Short Description",
+  "Short line for your customer": "Short line for your customer",
+  "Last Updated": "Last Updated",
+  "Select Currency": "Select Currency",
+  "Save & Publish to My Payment Address": "Save & Publish to My Payment Address",
+  "Plans & Pricing": "Plans & Pricing",
+  "Create subscription plans or pricing packages to display on your public Payment Address. Clients can choose a plan directly, and the amount will auto-fill at checkout.": "Create subscription plans or pricing packages to display on your public Payment Address. Clients can choose a plan directly, and the amount will auto-fill at checkout.",
+  "Add new": "Add new",
+  "Add new Plan": "Add new Plan"
+}

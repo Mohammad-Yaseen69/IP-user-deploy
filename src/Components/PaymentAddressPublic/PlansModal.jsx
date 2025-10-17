@@ -54,7 +54,7 @@ const PlansModal = ({ isOpen, toggle, data, isLoading }) => {
                             {!isLoading && plans?.map((plan) => {
                                 const isActive = selectedId === plan._id
                                 const wallet = plan?.receivingWallet?.currency
-                                const onClick = () => setSelectedId(selectedId === plan._id  && width < 1000 ? null : plan._id)
+                                const onClick = () => setSelectedId(selectedId === plan._id && width < 1000 ? null : plan._id)
                                 return (
                                     <div key={plan._id} className={`${styles.item} ${isActive && width > 1000 ? styles.active : ''}`}>
                                         <div className={styles.itemHeader} onClick={onClick}>
@@ -62,7 +62,7 @@ const PlansModal = ({ isOpen, toggle, data, isLoading }) => {
                                                 <h3>{plan.title}</h3>
                                                 <div className={styles.price}>
                                                     <h5>{wallet.symbol || wallet.code} {formatCurrency(plan.price, true)}</h5>
-                                                    <span>/ {plan.billingCycle?.toLowerCase?.() || plan.billingCycle}</span>
+                                                    <span>/ {t(plan.billingCycle)?.toLowerCase()}</span>
                                                 </div>
                                             </div>
                                             {chevron(isActive)}
@@ -75,7 +75,7 @@ const PlansModal = ({ isOpen, toggle, data, isLoading }) => {
                                                 <div className={styles.heading}>{plan.title}</div>
                                                 <div className={styles.desc}>{plan.description}</div>
 
-                                                <div className={styles.termsLabel}>{t('Terms of Service')}:</div>
+                                                <div className={styles.termsLabel}>{t('Terms & Conditions')}:</div>
                                                 <textarea
                                                     className={styles.terms}
                                                     readOnly
@@ -85,7 +85,7 @@ const PlansModal = ({ isOpen, toggle, data, isLoading }) => {
                                                 <div className={styles.footer}>
                                                     <div className={styles.priceWrap}>
                                                         <span className={styles.price}>{(plan?.receivingWallet?.currency?.code || 'USD')} {formatCurrency(plan.price, true)}</span>
-                                                        <span className={styles.cycle}>/ {plan.billingCycle?.toLowerCase?.() || plan.billingCycle}</span>
+                                                        <span className={styles.cycle}>/ {t(plan.billingCycle)?.toLowerCase()}</span>
                                                     </div>
                                                 </div>
 
@@ -111,7 +111,7 @@ const PlansModal = ({ isOpen, toggle, data, isLoading }) => {
                                         <div className={styles.heading}>{selectedPlan.title}</div>
                                         <div className={styles.desc}>{selectedPlan.description}</div>
 
-                                        <div className={styles.termsLabel}>{t('Terms of Service')}:</div>
+                                        <div className={styles.termsLabel}>{t('Terms & Conditions')}:</div>
                                         <textarea
                                             className={styles.terms}
                                             readOnly
@@ -121,7 +121,7 @@ const PlansModal = ({ isOpen, toggle, data, isLoading }) => {
                                         <div className={styles.footer}>
                                             <div className={styles.priceWrap}>
                                                 <span className={styles.price}>{(selectedPlan?.receivingWallet?.currency?.code || 'USD')} {formatCurrency(selectedPlan.price, true)}</span>
-                                                <span className={styles.cycle}>/ {selectedPlan.billingCycle?.toLowerCase?.() || selectedPlan.billingCycle}</span>
+                                                <span className={styles.cycle}>/ {t(selectedPlan?.billingCycle)?.toLowerCase()}</span>
                                             </div>
                                         </div>
                                     </>
