@@ -28,7 +28,7 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
 
     useEffect(() => {
         if (!userCurrency && !exchangedCurrency) {
-            const cur = userWallets?.filter(item => item?.wallet_type === "insta" && item?.status === "active" && !item?.blocked && !item?.admin_blocked)
+            const cur = userWallets?.filter(item =>  item?.status === "active" && !item?.blocked && !item?.admin_blocked)
             setUserCurrency(extCurrency || cur?.[0]?.currency?.code)
             setExchangedCurrency(extCurrency ? cur?.filter(item => item?.currency?.code !== extCurrency)?.[0]?.currency?.code : cur?.[1]?.currency?.code)
         }
@@ -148,7 +148,7 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
 
     const filteredWallets = useMemo(() => {
         return userWallets
-            ?.filter(item => item?.wallet_type === "insta" && !item?.blocked && !item?.admin_blocked && item?.status === "active")
+            ?.filter(item =>  !item?.blocked && !item?.admin_blocked && item?.status === "active")
             ?.sort((a, b) => (b?.default === true ? 1 : -1))
             ?.map(item => ({ name: item?.currency?.code, ...item }))
     }, [userWallets])
@@ -182,7 +182,7 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
                         <div className={styles.input_con}>
                             <select value={userCurrency} onChange={e => setUserCurrency(e.target.value)}>
                                 {
-                                    filteredWallets?.filter(item => item?.wallet_type === "insta" && item?.status && !item?.blocked && !item?.admin_blocked && !item?.blocked && !item?.admin_blocked && item?.currency?.code !== exchangedCurrency)?.map(item => (
+                                    filteredWallets?.filter(item =>  item?.status && !item?.blocked && !item?.admin_blocked && !item?.blocked && !item?.admin_blocked && item?.currency?.code !== exchangedCurrency)?.map(item => (
                                         <option value={item?.currency?.code} style={{ display: userCurrency === item?.currency?.code ? "none" : "inherit" }}>
                                             {item?.currency?.symbol}
                                         </option>
@@ -207,7 +207,7 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
                         <div className={styles.input_con}>
                             <select value={exchangedCurrency} onChange={e => setExchangedCurrency(e.target.value)}>
                                 {
-                                    userWallets?.filter(item => item?.wallet_type === "insta" && item?.status && !item?.blocked && !item?.admin_blocked && !item?.blocked && !item?.admin_blocked && item?.currency?.code !== userCurrency)?.map(item => (
+                                    userWallets?.filter(item => item?.status && !item?.blocked && !item?.admin_blocked && !item?.blocked && !item?.admin_blocked && item?.currency?.code !== userCurrency)?.map(item => (
                                         <option value={item?.currency?.code} style={{ fontSize: "1rem", fontWeight: 900, display: exchangedCurrency === item?.currency?.code ? "none" : "inherit" }}>
                                             {item?.currency?.symbol}
                                         </option>
