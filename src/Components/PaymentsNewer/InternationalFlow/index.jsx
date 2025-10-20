@@ -675,6 +675,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 transaction_type: internationalData.beneficiary?.beneficiary_type === "individual" ? "C2C" : "C2B",
                 wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
                 token: internationalData.quotation_details?.token,
+                vendor: internationalData.payoutChannel?.vendor
             }
 
             if (internationalData.payoutChannel?.vendor === "thunes") {
