@@ -1,10 +1,8 @@
 const formatNumber = (num, isDecimalPart = false) => {
-    // Don't add commas if it's the decimal part
     if (isDecimalPart) {
-        return num.replace(/\D/g, "");
+        return num.replace(/[^\d-]/g, "")
     }
-    // Format number 1000000 to 1,234,567
-    return num.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return num.replace(/[^\d-]/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 };
 
 const getDecimalPointIndex = (val) => {
@@ -24,6 +22,8 @@ const getDecimalPointIndex = (val) => {
 
 export const formatCurrency = (inputValue, blur, setValue = undefined, centeredInput, e) => {
     if (inputValue === "") return "";
+    if (inputValue === 0) return '0.00'
+    if (!inputValue) return ''
 
     let inputVal = inputValue.toString();
 
