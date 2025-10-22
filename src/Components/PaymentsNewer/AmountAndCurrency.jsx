@@ -63,7 +63,7 @@ const AmountAndCurrency = ({ setSubStep, amount, setAmount, currency, setCurrenc
     const [exchangeRate, setExchangeRate] = useState()
     const [exchangeError, setExchangeError] = useState("")
     const [balance, setBalance] = useState(null)
-    const { userDetails, authHeader, userWallets, allowedCountries } = useContext(UserContext)
+    const { userDetails, authHeader, userWallets } = useContext(UserContext)
 
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)

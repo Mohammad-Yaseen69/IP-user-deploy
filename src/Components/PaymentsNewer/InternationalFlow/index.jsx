@@ -36,6 +36,8 @@ import AddBeneficiaryRequiredFields from "../../AddBeneficiaryRequiredFields"
 import { Modal, ModalBody, ModalHeader } from "reactstrap"
 import AddBeneficiaryAddressModal from "../../AddBeneficiaryAddressModal"
 import RecentTransactions from "../WalletToWalletFlow/RecentTransactions"
+import { useQuery } from "@tanstack/react-query"
+import { apiWrapper } from "../../../utils/Functions/apiWrapper"
 
 const leftSideContent = [
     "Enter The Amount",
@@ -45,7 +47,7 @@ const leftSideContent = [
     "Review transfer"
 ]
 
-export const apiErrors = {
+const apiErrors = {
     "internal_server_error": "Something went wrong on our end. Please try again later.",
     "invalid_token": "You waited too long to complete this transaction. Please try again",
     "token_expired": "You waited too long to complete this transaction. Please try again",
@@ -193,6 +195,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const [internationalData, dispatch] = useReducer(reducer, initialState);
     const [showDetailsModal, setShowDetailsModal] = useState(false)
     const [showAddressModal, setShowAddressModal] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [requiredMissingFields, setRequiredMissingFields] = useState({
         beneficiary: {
             basic: [],
@@ -208,6 +211,18 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const [requiredFields] = useState({
         basic: [],
         extras: []
+    })
+
+    // eslint-disable-next-line no-unused-vars
+    const neemaReasons = useQuery({
+        queryKey: ['NeemaReasons', internationalData?.country?.alpha3, internationalData.payoutChannel?.vendor],
+        queryFn: async () => {
+            const res = await apiWrapper({
+                endpoint: `/api/payment/get-neema-reasons/${internationalData?.country?.alpha3}/${userDetails?.account_type === "individual" ? "C2C" : "B2B"}`
+            });
+            updateInternationalData("neemaReasons", res.data);
+        },
+        enabled: !!internationalData.country?.alpha3 && internationalData.payoutChannel?.vendor?.toLowerCase() === "neema"
     })
 
 
@@ -256,7 +271,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         }
     }, [internationalData, subStep])
 
-    const [loading, setLoading] = useState(false)
+
 
     const getCurrency = async () => {
         try {
@@ -267,11 +282,12 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             updateInternationalData("recipient_currency", dec?.data?.destination_currency)
             updateInternationalData("payerRequiredFields", dec?.data?.payer_required_fields)
             return dec?.data?.destination_currency
-        } catch (error) {
+        } catch {
             updateInternationalData("exchange_rate_error", "sww")
         }
     }
 
+    // eslint-disable-next-line no-unused-vars
     const getConversionRate = async (amount = internationalData.amount, setLimitType, wallet_id = "", currency_code = "", avoid_balance = true, setLoading, fromOrTo = "from") => {
         if (internationalData.payer?.id && internationalData.payoutChannel?.id && amount) {
             setLoading(true)
@@ -524,19 +540,12 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     }
 
     const getMobileWalletServices = async (service_name = internationalData.payment_type?.sub_name) => {
-        setLoading(true)
-        try {
-            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/collection/get-payers/${userDetails?.country_iso_code}/${service_name}`, {
-                headers: authHeader
-            })
-            const dec = decryptData(res.data.data)
-            console.log(dec)
-            updateInternationalData("mobile_wallet_services", dec?.data?.payers ?? [])
-        } catch {
-        }
-        finally {
-            setLoading(false)
-        }
+        const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/collection/get-payers/${userDetails?.country_iso_code}/${service_name}`, {
+            headers: authHeader
+        })
+        const dec = decryptData(res.data.data)
+        console.log(dec)
+        updateInternationalData("mobile_wallet_services", dec?.data?.payers ?? [])
     }
 
     useEffect(() => {
@@ -714,9 +723,9 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
 
             if (error2) {
-                updateInternationalData("error", `${t(error2)} Quotation ID: ${internationalData.created_quotation?.QuotationID}` ?? `We cannot process your request at the moment, please try again later.! Quotation ID: ${internationalData.created_quotation?.QuotationID}`)
+                updateInternationalData("error", `${t(error2) ?? "We cannot process your request at the moment, please try again later.!"} Quotation ID: ${internationalData.created_quotation?.QuotationID}`)
             } else {
-                updateInternationalData("error", typeof dec === "string" ? `${dec} Quotation ID:${internationalData.created_quotation?.QuotationID}` : `${dec?.message} Quotation ID: ${internationalData.created_quotation?.QuotationID}` ?? `We cannot process your request at the moment, please try again later.! Quotation ID: ${internationalData.created_quotation?.QuotationID}`)
+                updateInternationalData("error", typeof dec === "string" ? `${dec} Quotation ID:${internationalData.created_quotation?.QuotationID}` : `${dec?.message ?? "We cannot process your request at the moment, please try again later.!"} Quotation ID: ${internationalData.created_quotation?.QuotationID}`)
             }
         }
         finally {
@@ -874,46 +883,33 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         }
     }
 
-    // const getTopupFees = async () => {
-    //     setLoading(true)
-    //     try {
-    //         const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-tbc-fee/${internationalData.currency_wallet?._id}/${internationalData.amount?.toString()?.split(".")?.[0]?.replaceAll(",", "")}`, {
-    //             headers: authHeader
-    //         })
-    //         const dec = decryptData(res.data.data)
-    //         return +String(internationalData.amount)?.replaceAll(",", "") - Number(dec?.feeDetails)
-    //     } catch (error) {
-    //         const dec = decryptData(error?.response?.data?.data)
-    //         updateInternationalData("error", typeof dec === "string" ? dec : dec?.message ?? "We cannot process your request at the moment, please try again later.!")
-    //     } finally {
-    //         setLoading(false)
-    //     }
-    // }
 
 
     const handleClick = () => {
         console.log(+String(internationalData.amount)?.replaceAll(",", ""), internationalData.thunesBalance)
         switch (subStep) {
             case 1:
-                if (userDetails?.account_type === "individual" ? userDetails.user?.kyc_status !== "approved" : userDetails.company?.kyb_status !== "approved") {
-                    navigate("/settings?tab=verification")
-                    return
-                }
+                {
+                    if (userDetails?.account_type === "individual" ? userDetails.user?.kyc_status !== "approved" : userDetails.company?.kyb_status !== "approved") {
+                        navigate("/settings?tab=verification")
+                        return
+                    }
 
-                if (internationalData.thunesBalanceLoading) {
-                    return
+                    if (internationalData.thunesBalanceLoading) {
+                        return
+                    }
+                    if (internationalData.thunesBalanceError) {
+                        updateInternationalData("error", internationalData.thunesBalanceError)
+                        return
+                    }
+                    const amount = +String(internationalData.amount)?.replaceAll(",", "")
+                    if (amount <= internationalData.thunesBalance) {
+                        setSubStep(prev => prev + 1)
+                    } else {
+                        setShowBalanceModal(true)
+                    }
+                    break;
                 }
-                if (internationalData.thunesBalanceError) {
-                    updateInternationalData("error", internationalData.thunesBalanceError)
-                    return
-                }
-                const amount = +String(internationalData.amount)?.replaceAll(",", "")
-                if (amount <= internationalData.thunesBalance) {
-                    setSubStep(prev => prev + 1)
-                } else {
-                    setShowBalanceModal(true)
-                }
-                break;
             case 2:
                 console.log(internationalData.payerRequiredFields, internationalData?.payoutChannel.value, internationalData?.beneficiary)
 
@@ -979,15 +975,13 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 }
                 else if (internationalData.payment_type?.value === "card") {
                     updateInternationalData("showCard", true)
-                    // getTopupFees()
-                    //     .then((res) => {
+
                     if (internationalData.payoutChannel?.vendor === "thunes") {
                         createQuotation(+String(internationalData.amount)?.replaceAll(",", ""))
                     } else {
                         setSubStep(prev => prev + 1)
                     }
-                    //     }, 100)
-                    // })
+
                 }
                 else if (internationalData.payment_type?.value === "paypal") {
                     if (internationalData.payoutChannel?.vendor === "thunes") {
@@ -1151,7 +1145,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 updateInternationalData("transaction_details", dec?.data ?? dec)
                 updateInternationalData("transactionStatus", true)
 
-            } catch (error) {
+            } catch {
                 updateInternationalData("error", "Something went wrong while completing the transactions, But don't worry your funds have been added to your InstaPay Wallet.")
             }
             finally {
@@ -1303,7 +1297,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                     // setSendPaymentType("")
                                     // setStep(1)
                                 }}
-                                message={`Unfortunately, we can not send to "${internationalData.payer?.name}" at the moment. Please try again later.`}
+                                message={`Unfortunately, we can not send to "${internationalData.payer?.name}" at the moment. Please try again later.`}
                                 heading="Unsupported Transaction"
                             />
                         }
