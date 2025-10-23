@@ -138,6 +138,8 @@ export const bankExtrasInitial = {
     msisdn: "",
     sort_code: "",
     country_iso_code: "",
+    iban:"",
+    swift_bic_code: "",
 }
 
 
