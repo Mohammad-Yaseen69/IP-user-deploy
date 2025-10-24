@@ -129,7 +129,7 @@ const BankDeposit = ({ data, dataHandler }) => {
             formData.append('bank', selectedBank._id || '')
             formData.append('reference', selectedBank['Reference (Mandatory)'] || selectedBank.reference || '')
             formData.append('fee', data.exchange_rate?.fee?.amount)
-            formData.append('exchange_rate', data.exchange_rate?.exchange_rate?.exchange_rate)
+            formData.append('exchange_rate', data.exchange_rate?.exchange_rate?.exchange_rate || 1)
             formData.append('sendingAmount', data.exchange_rate?.sending?.amount)
             formData.append('sendingCurrency', selectedBank.Currency || selectedBank['Currency'] || '')
             formData.append('file', file)
