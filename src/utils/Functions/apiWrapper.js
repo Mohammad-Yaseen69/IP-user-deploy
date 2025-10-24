@@ -23,18 +23,29 @@ export const apiWrapper = async ({
     isEncrypted = false,
     isPublic = false,
     isDecrypted = true,
+    isFormData = false,
 }) => {
     try {
-        const dataToSend = isEncrypted ? encryptData(payload) : payload;
+        let dataToSend;
+
+        if (isFormData) {
+            dataToSend = payload; 
+        } else if (isEncrypted) {
+            dataToSend = { data: encryptData(payload) };
+        } else {
+            dataToSend = payload;
+        }
 
         const res = await axios({
             url: `${BASE_URL}${endpoint}`,
             method,
-            headers: isPublic ? {} : getAuthHeader(),
+            headers: {
+                ...(isPublic ? {} : getAuthHeader()),
+                ...(isFormData ? { "Content-Type": "multipart/form-data" } : {}),
+            },
             data: method === METHODS.GET ? undefined : dataToSend,
         });
 
-        console.log(res)
         return isDecrypted ? decryptData(res.data.data) : res.data;
     } catch (error) {
         console.error("API Wrapper Error:", error);

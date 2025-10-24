@@ -25,6 +25,7 @@ import wallet_ic from "../files/add_f_ic.png"
 import BankDeposit from "./BankDeposit";
 const initialState = {
     step: 1,
+    bankStep: 1,
     wallet: null,
     amount: "0.00",
     channnel: null,
@@ -54,7 +55,8 @@ const initialState = {
     show_providers: false,
     show_card: false,
     show_confirmation: false,
-    paypal_fx: {}
+    paypal_fx: {},
+    exchange_rate_backup: {}
 }
 function reducer(state, action) {
     switch (action.type) {
@@ -72,7 +74,8 @@ function reducer(state, action) {
 const headings = [
     "Choose The Wallet",
     "Enter the Amount",
-    "Choose The Top-Up Channel"
+    "Choose The Top-Up Channel",
+    "Add Funds to Wallet"
 ]
 
 const WalletFundsFlow = ({ setAction }) => {
@@ -168,6 +171,7 @@ const WalletFundsFlow = ({ setAction }) => {
             const dec = decryptData(res.data.data)
             dataHandler("mobile_wallet_services", dec?.data?.payers ?? [])
         } catch {
+            //
         }
         finally {
             dataHandler("loading", false)
@@ -249,9 +253,9 @@ const WalletFundsFlow = ({ setAction }) => {
     useEffect(() => {
         const getFees = async () => {
             dataHandler("loading", true)
-            if (data.channel?.value === "card") {
+            if (data.channel?.value === "card" || data.channel?.value === "bank") {
                 try {
-                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-tbc-fee/${data.wallet?._id}/${parseFloat(data.amount)}`, {
+                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/get-tbc-fee/${data.wallet?._id}/${parseFloat(data.amount)}?isBankFee=${data.channel?.value === "bank" ? true : false}`, {
                         headers: authHeader,
                     })
                     const dec = decryptData(res.data.data)
@@ -333,11 +337,17 @@ const WalletFundsFlow = ({ setAction }) => {
                     dataHandler("show_confirmation", true)
                 } else {
                     dataHandler("step", 4)
+                    dataHandler("exchange_rate_backup", data.exchange_rate)
                 }
                 break;
             case 4:
-                // if => not bank
-                dataHandler("show_confirmation", true)
+                if (data.channel?.value === "bank") {
+                    dataHandler("bankStep", data.bankStep + 1)
+                    dataHandler("exchange_rate_backup", data.exchange_rate)
+                    //
+                } else {
+                    dataHandler("show_confirmation", true)
+                }
                 // if bank 
                 // switch bank step 1 => make it 2 => make it 3 => confirm it
                 break;
@@ -360,6 +370,7 @@ const WalletFundsFlow = ({ setAction }) => {
             case 4:
                 dataHandler("step", 3)
                 dataHandler("selectedSavedCard", {})
+                dataHandler("bankStep", 1)
                 dataHandler("mobile_wallet_service", {})
 
                 break;
@@ -444,7 +455,8 @@ const WalletFundsFlow = ({ setAction }) => {
                         width: "100%",
                         transition: "500ms",
                         position: "relative",
-                        order: 1
+                        order: 1,
+                        height: "95vh"
                     }}>
                         <SendActionCard
                             bg={money}
@@ -482,7 +494,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                                             ?
                                                             t("Select Or Add Payment Card")
                                                             :
-                                                            ""
+                                                            t("Add Funds to Wallet")
                                                 )
                                                 :
                                                 data.showExternalLink
@@ -715,31 +727,39 @@ const WalletFundsFlow = ({ setAction }) => {
                                                                         showCards={true}
                                                                     />
                                                                     :
-                                                                    ""
+                                                                    data.channel.value === "bank" ?
+                                                                        <BankDeposit
+                                                                            data={data}
+                                                                            dataHandler={dataHandler}
+                                                                        />
+                                                                        :
+                                                                        ""
                                                         )
                                                         :
                                                         ""
                                                 }
 
-                                                <div className={styles.bottom}>
-                                                    <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
-                                                        <HelpCircle size={16} />
-                                                        {t("Trouble Sending Money")}
-                                                    </Link>
-                                                    <div className={styles?.buttons}>
-                                                        {/* {
+                                                {(data.channel?.value !== "bank" || data.step < 4) &&
+                                                    <div className={styles.bottom}>
+                                                        <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
+                                                            <HelpCircle size={16} />
+                                                            {t("Trouble Sending Money")}
+                                                        </Link>
+                                                        <div className={styles?.buttons}>
+                                                            {/* {
                                                             data.step > 1
                                                             && */}
-                                                        <button className={styles.transparent} onClick={onBackClickHandler} disabled={data.loading}>{t("Back")}</button>
-                                                        {/* } */}
-                                                        <button disabled={data.loading || disabledButton} onClick={onClickHandler}>
-                                                            {
-                                                                t("Next")
-                                                            }
-                                                            <ChevronRight size={18} />
-                                                        </button>
+                                                            <button className={styles.transparent} onClick={onBackClickHandler} disabled={data.loading}>{t("Back")}</button>
+                                                            {/* } */}
+                                                            <button disabled={data.loading || disabledButton} onClick={onClickHandler}>
+                                                                {
+                                                                    t("Next")
+                                                                }
+                                                                <ChevronRight size={18} />
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                }
                                             </>
                                 }
                             </div>
@@ -762,7 +782,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                                     ?
                                                     t("Select Or Add Payment Card")
                                                     :
-                                                    ""
+                                                    t("Add Funds to Wallet")
                                         )
                                         :
                                         data.showExternalLink
@@ -995,7 +1015,13 @@ const WalletFundsFlow = ({ setAction }) => {
                                                                         showCards={true}
                                                                     />
                                                                     :
-                                                                    ""
+                                                                    data.channel.value === 'bank' ?
+                                                                        <BankDeposit
+                                                                            data={data}
+                                                                            dataHandler={dataHandler}
+                                                                        />
+                                                                        :
+                                                                        ""
                                                         )
                                                         :
                                                         ""
@@ -1024,26 +1050,28 @@ const WalletFundsFlow = ({ setAction }) => {
                                 }
                             </div>
 
-                            <div className={styles.bottom}>
-                                <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
-                                    <HelpCircle size={16} />
-                                    {t("Trouble Sending Money")}
-                                </Link>
-                                <div className={styles.buttons}>
-                                    {
-                                        data.step > 1
-                                        &&
-                                        <button disabled={data.loading} onClick={onBackClickHandler}>
-                                            <ChevronLeft />
-                                        </button>
-                                    }
-                                    <button className={styles.full} disabled={data.loading || disabledButton} onClick={onClickHandler}>
+                            {(data.channel?.value !== "bank" || data.step < 4) &&
+                                <div className={styles.bottom}>
+                                    <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
+                                        <HelpCircle size={16} />
+                                        {t("Trouble Sending Money")}
+                                    </Link>
+                                    <div className={styles.buttons}>
                                         {
-                                            t("Next")
+                                            data.step > 1
+                                            &&
+                                            <button disabled={data.loading} onClick={onBackClickHandler}>
+                                                <ChevronLeft />
+                                            </button>
                                         }
-                                    </button>
+                                        <button className={styles.full} disabled={data.loading || disabledButton} onClick={onClickHandler}>
+                                            {
+                                                t("Next")
+                                            }
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
+                            }
                         </div>
                     </div>
             }

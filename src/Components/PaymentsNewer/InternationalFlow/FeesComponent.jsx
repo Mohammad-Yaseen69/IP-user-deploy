@@ -5,7 +5,12 @@ import { cleanString } from "../../../Helper/cleanString"
 
 const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Exchange Rate", feesLabel = "Transfer Fees", totalLabel = "Total Amount", error = "", receiverLabel = "They Receive", bright = false, extraContent, guest, receiverFee }) => {
     const { t } = useTranslation()
-    console.log(data.exchange_rate)
+   
+
+    const _exObj = data?.exchange_rate?.exchange_rate
+    const exchangeRateValue = _exObj && typeof _exObj === "object" ? _exObj.exchange_rate : _exObj ?? data?.exchange_rate
+    const exchangeRateSendingCurrency = data?.exchange_rate?.exchange_rate?.exchange_rate_sending_currency || data?.exchange_rate?.sending?.currency
+    const exchangeRateCurrency = data?.exchange_rate?.exchange_rate?.exchange_rate_currency || data?.exchange_rate?.receiver?.currency
     return (
         error
             ?
@@ -44,7 +49,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                         ?
                         <div className={styles.item}>
                             <span>{t(exchangeRateLabel)}</span>
-                            <p className={styles.sm}>1.00 {data.exchange_rate?.sending?.currency} = {Number(data?.exchange_rate?.exchange_rate)?.toLocaleString("en-US", { minimumFractionDigits: 4, maximumFractionDigits: 7 }) ?? "?"} {data.exchange_rate?.exchange_rate_currency ?? data.exchange_rate?.receiver?.currency}</p>
+                                <p className={styles.sm}>1.00 {exchangeRateSendingCurrency} = {(exchangeRateValue || exchangeRateValue === 0) ? Number(exchangeRateValue).toLocaleString("en-US", { minimumFractionDigits: 4, maximumFractionDigits: 7 }) : "?"} {exchangeRateCurrency}</p>
                         </div>
                         :
                         ""

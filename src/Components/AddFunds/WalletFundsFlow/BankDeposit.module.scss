@@ -1,4 +1,10 @@
 .container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+
     h4 {
         margin-bottom: 25px;
         color: var(--COLORS-Neutral-700, #777);
@@ -33,6 +39,7 @@
                 align-self: stretch;
                 border-radius: var(--Corner-Radius-XSmall-Roundness, 4px);
                 background: #fafafa;
+                cursor: pointer;
 
 
                 span {
@@ -41,6 +48,10 @@
                     font-style: normal;
                     font-weight: 600;
                 }
+            }
+
+            .item.selected {
+                background-color: #eee9fd;
             }
         }
     }
@@ -113,4 +124,65 @@
             background: var(--COLORS-Primary-300, #5926F0);
         }
     }
+}
+
+.bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.bottom a {
+    color: #A6A6A6;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+    /* 18px */
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.buttons button {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-radius: 6px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%);
+    background-blend-mode: overlay, normal;
+    box-shadow: 0px 11.901px 8.655px -5.409px rgba(89, 38, 240, 0.17);
+    display: flex;
+    padding: .4rem 1rem;
+    align-items: center;
+    color: #FFF;
+    leading-trim: both;
+    text-edge: cap;
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.16px;
+    gap: 16px;
+    outline: none;
+    border: none;
+}
+
+.buttons .transparent {
+    all: unset;
+    cursor: pointer;
+    color: #808080;
+    font-size: 14px;
+}
+
+.bottom button:disabled {
+    opacity: .7;
 }

@@ -36,22 +36,20 @@ const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] })
             }
             :
             {},
-    ]
-
-    const thunesAllowed = [
         userDetails?.level?.topup_channel?.bank
             ?
             {
                 name: "Bank Transfer",
                 id: 2,
                 icon: bd,
-                value: "truelayer",
-                coming_soon: true,
-                // coming_soon: userDetails?.level?.topup_channel?.bank === "coming_soon",
-                sub_name: "bank"
+                value: "bank",
+                coming_soon: userDetails?.level?.topup_channel?.bank === "coming_soon",
             }
             :
             {},
+    ]
+
+    const thunesAllowed = [
         userDetails?.level?.topup_channel?.mobile_money
             ?
             {
