@@ -153,6 +153,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
     const [disabled, setDisabled] = useState(false)
     const [cardTransactionDetails, setCardTransactionDetails] = useState({})
 
+
     const sendOtp = async () => {
         const data = {
             data: {
@@ -162,11 +163,10 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             type: codeType
         }
 
+        setDisabled(true)
+
         if (paymentType === "wallet") {
             data.data.sender_wallet_id = walletState?._id
-        }
-
-        if (paymentType === "paypal" || paymentType === "card") {
         }
 
         if (paymentType === "card") {
@@ -195,6 +195,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             toast.error("Something went wrong while creating your virtual card! please try again.")
         }
         finally {
+            setDisabled(false)
             setLoading(false)
         }
     }

@@ -14,7 +14,6 @@ import InstaPayLoader from "../../Loader";
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
 import PaypalCurrencies from "../../AddFunds/PaypalCurrencies.json";
 import TrustpaymentPage from "../../AddFunds/WalletFund/CreditTransaction";
-import { PaymentReviewSVG } from "./Svgs";
 import int_styles from "../../PaymentsNewer/Mobile/styles/International.module.css";
 import paym_styles from "../../PaymentsNewer/InternationalFlow/styles/index.module.css";
 import ErrorModal from "../../PaymentsNewer/InternationalFlow/ErrorModal";
@@ -27,6 +26,8 @@ import { LimitsErrorMessage } from "../../PaymentsNewer/OTPConfirmation";
 import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow";
 import DateMomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import BankDeposit from "../../AddFunds/WalletFundsFlow/BankDeposit";
+import PaymentDetails from "./PaymentDetails";
 
 const initialState = {
   loading: false,
@@ -57,6 +58,7 @@ const initialState = {
     country: null,
     zipCode: "",
   },
+  bankStep: 1,
 };
 
 function reducer(state, action) {
@@ -253,7 +255,10 @@ const PayAsGuest = ({
         if (data.payment_type?.value === "card") {
           dataHandler("step", 4);
         } else {
-          checkIfPhoneIsValid(() => dataHandler("step", 4));
+          checkIfPhoneIsValid(() => {
+            dataHandler("step", 4)
+            dataHandler("exchange_rate_backup", data.exchange_rate)
+          });
         }
         break;
       case 4:
@@ -412,8 +417,7 @@ const PayAsGuest = ({
     dataHandler("loading", true);
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/card-fee/${wallet?.wallet_id
-        }/${amount}?payment_type=${invoiceId ? "invoice" : "payment_address"}`
+        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/card-fee/${wallet?.wallet_id}/${amount}?payment_type=${invoiceId ? "invoice" : "payment_address"}&isBank=${data.payment_type?.value === "bank" ? true : false} `
       );
       const dec = decryptData(res.data.data);
       console.log(dec);
@@ -447,7 +451,7 @@ const PayAsGuest = ({
     if (data.payment_type?.value === "paypal") {
       getFeesPaypal();
     }
-    if (data.payment_type?.value === "card") {
+    if (data.payment_type?.value === "card" || data.payment_type?.value === "bank") {
       getFeesCard();
     }
   }, [data.payment_type]);
@@ -588,52 +592,65 @@ const PayAsGuest = ({
                 />
               )}
               {data.step === 3 &&
-                (data.payment_type?.value === "card" ? (
-                  <div style={{ height: "100%" }}>
-                    <div className={styles.bot_top}>
-                      <h5>{t("Payment Details")}</h5>
-                      <span>
-                        {t(
-                          "Complete your payment by providing your payment details"
-                        )}
-                      </span>
+                (data.payment_type?.value === "card" ?
+                  (
+                    <div style={{ height: "100%" }}>
+                      <div className={styles.bot_top}>
+                        <h5>{t("Payment Details")}</h5>
+                        <span>
+                          {t(
+                            "Complete your payment by providing your payment details"
+                          )}
+                        </span>
+                      </div>
+                      <CreditCard
+                        showSave={false}
+                        data={data}
+                        dataHandler={dataHandler}
+                        tokenUrl={() => ""}
+                        url={""}
+                        inGuest={true}
+                        showCards={false}
+                      />
                     </div>
-                    <CreditCard
-                      showSave={false}
-                      data={data}
-                      dataHandler={dataHandler}
-                      tokenUrl={() => ""}
-                      url={""}
-                      inGuest={true}
-                      showCards={false}
-                    />
-                  </div>
-                ) : data.payment_type?.value === "paypal" ? (
+                  ) :
                   <RecipientDetails
                     data={data}
                     dataHandler={dataHandler}
                     isShipping={isShipping}
                   />
-                ) : (
-                  ""
-                ))}
+                )
+              }
               {data.step === 4 &&
-                (data.payment_type?.value === "paypal" ? (
-                  // <StepFive
-                  <PaymentDetails
-                    dataHandler={dataHandler}
-                    data={data}
-                    amount={amount}
-                  />
-                ) : data.payment_type?.value === "card" ? (
-                  <RecipientDetails
-                    data={data}
-                    dataHandler={dataHandler}
-                    isShipping={isShipping}
-                  />
-                ) : (
-                  ""
-                ))}
+                (
+                  data.payment_type?.value === "paypal" ?
+                    <PaymentDetails
+                      dataHandler={dataHandler}
+                      data={data}
+                      amount={amount}
+                    />
+                    :
+                    data.payment_type?.value === "card" ?
+                      <RecipientDetails
+                        data={data}
+                        dataHandler={dataHandler}
+                        isShipping={isShipping}
+                      />
+                      :
+                      <BankDeposit
+                        type={'payment_address'}
+                        data={{ ...data, wallet }}
+                        dataHandler={dataHandler}
+                        guestDetails={{
+                          name: data.fullName,
+                          phone: data.phone,
+                          email: data.email,
+                          iso_code: data.country?.alpha3
+                        }}
+                        toggle={toggle}
+                      />
+                )
+              }
               {data.step === 5 &&
                 (data.payment_type?.value === "card" ? (
                   // <StepFive
@@ -645,38 +662,40 @@ const PayAsGuest = ({
                 ) : (
                   ""
                 ))}
-              <div className={styles.bottom} style={{ marginTop: "auto" }}>
-                <Link
-                  to={"https://insta-pay.ch/faqs"}
-                  target="_blank"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: ".7rem",
-                  }}
-                >
-                  <HelpCircle size={16} />
-                  {t("Trouble Sending Money")}
-                </Link>
-                <div className={styles?.buttons}>
-                  <button
-                    className={styles.transparent}
-                    disabled={data.loading}
-                    onClick={onBackClickHandler}
+              {(data.payment_type?.value !== "bank" || data.step < 4) &&
+                <div className={styles.bottom} style={{ marginTop: "auto" }}>
+                  <Link
+                    to={"https://insta-pay.ch/faqs"}
+                    target="_blank"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: ".7rem",
+                    }}
                   >
-                    {t("Back")}
-                  </button>
-                  {data.loading ? <div style={{ width: "100px" }}> <InstaPayLoader /> </div> :
+                    <HelpCircle size={16} />
+                    {t("Trouble Sending Money")}
+                  </Link>
+                  <div className={styles?.buttons}>
                     <button
-                      disabled={data.loading || disabled}
-                      onClick={onClickHandler}
+                      className={styles.transparent}
+                      disabled={data.loading}
+                      onClick={onBackClickHandler}
                     >
-                      {t("Next")}
-                      <ChevronRight size={18} />
+                      {t("Back")}
                     </button>
-                  }
+                    {data.loading ? <div style={{ width: "100px" }}> <InstaPayLoader /> </div> :
+                      <button
+                        disabled={data.loading || disabled}
+                        onClick={onClickHandler}
+                      >
+                        {t("Next")}
+                        <ChevronRight size={18} />
+                      </button>
+                    }
+                  </div>
                 </div>
-              </div>
+              }
             </div>
           </ModalBody>
         </Modal>
@@ -699,15 +718,7 @@ const PayAsGuest = ({
             >
               <X color="black" />
             </button>
-            {/* <div className={int_styles.top}>
-                                <button className={int_styles.back_btn} onClick={toggle}>
-                                    <ChevronLeft />
-                                </button>
-                                <h5>{t("")}</h5>
-                                <div>
-                                    <img src={recent} alt="" style={{ width: "30px", height: "30px", objectFit: "contain" }} />
-                                </div>
-                            </div> */}
+
             <div className={paym_styles.mobile} style={{ marginTop: 0 }}>
               <div className={paym_styles.m_top}>
                 <img
@@ -737,19 +748,7 @@ const PayAsGuest = ({
               </div>
             </div>
             <div className={paym_styles.flow}>
-              {/* {
-                                    data.step === 2 && data?.payment_type?.value
-                                        ?
-                                        data.loading
-                                            ?
-                                            <div style={{ height: "200px", width: "200px" }}>
-                                                <InstaPayLoader />
-                                            </div>
-                                            :
-                                            null
-                                        :
-                                        ""
-                                } */}
+
               <div
                 className={paym_styles.flow_com}
                 style={{ minHeight: "41vh" }}
@@ -766,193 +765,213 @@ const PayAsGuest = ({
                   />
                 )}
                 {data.step === 3 &&
-                  (data.payment_type?.value === "card" ? (
-                    <div
-                      style={{
-                        height: "100%",
-                        background:
-                          "linear-gradient(180deg, #FFF 0%, rgba(255, 255, 255, 0.00) 100%)",
-                        borderRadius: "8px",
-                        padding: "15px",
-                      }}
-                    >
-                      <div className={styles.bot_top}>
-                        <h5>{t("Payment Details")}</h5>
-                        <span>
-                          {t(
-                            "Complete your payment by providing your payment details"
-                          )}
-                        </span>
+                  (data.payment_type?.value === "card" ?
+                    (
+                      <div
+                        style={{
+                          height: "100%",
+                          background:
+                            "linear-gradient(180deg, #FFF 0%, rgba(255, 255, 255, 0.00) 100%)",
+                          borderRadius: "8px",
+                          padding: "15px",
+                        }}
+                      >
+                        <div className={styles.bot_top}>
+                          <h5>{t("Payment Details")}</h5>
+                          <span>
+                            {t(
+                              "Complete your payment by providing your payment details"
+                            )}
+                          </span>
+                        </div>
+                        <CreditCard
+                          showSave={false}
+                          data={data}
+                          dataHandler={dataHandler}
+                          tokenUrl={() => ""}
+                          url={""}
+                          showCards={false}
+                          guest={true}
+                          inGuest={true}
+                        />
                       </div>
-                      <CreditCard
-                        showSave={false}
+                    ) :
+                    (
+                      <RecipientDetails
                         data={data}
                         dataHandler={dataHandler}
-                        tokenUrl={() => ""}
-                        url={""}
-                        showCards={false}
-                        guest={true}
-                        inGuest={true}
+                        isShipping={isShipping}
                       />
-                    </div>
-                  ) : data.payment_type?.value === "paypal" ? (
-                    <RecipientDetails
-                      data={data}
-                      dataHandler={dataHandler}
-                      isShipping={isShipping}
-                    />
-                  ) : (
-                    ""
-                  ))}
+                    ))
+                }
+
                 {data.step === 4 &&
-                  (data.payment_type?.value === "paypal" ? (
-                    // <StepFive
-                    <>
-                      <PaymentDetails
-                        dataHandler={dataHandler}
-                        data={data}
-                        amount={amount}
-                      />
+                  (data.payment_type?.value === "paypal" ?
+                    (
+                      <>
+                        <PaymentDetails
+                          dataHandler={dataHandler}
+                          data={data}
+                          amount={amount}
+                        />
 
-                      {!PaypalCurrencies.some(
-                        (item) => item === wallet?.currency?.code
-                      ) && (
-                          <>
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "flex-start",
-                                gap: ".7rem",
-                                padding: "12px",
-                                borderRadius: "6px",
-                                background: "rgba(255, 218, 68, 0.24)",
-                                marginTop: "1rem",
-                              }}
-                            >
-                              <Info color="#BE9A08" size={20} />
-                              <span
-                                style={{
-                                  color: "#BE9A08",
-                                  fontFamily: "Manrope",
-                                  fontSize: ".7rem",
-                                  fontStyle: "normal",
-                                  fontWeight: 700,
-                                  lineHeight: 1.3,
-                                  letterSpacing: "-0.28px",
-                                }}
-
-                              >
-                                {t("PKR is not supported by Paypal, USD will be used as the default currency.").replace("PKR", wallet?.currency?.code)}
-                              </span>
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: ".9rem",
-                                padding: ".8rem",
-                                background: "#fff",
-                                borderRadius: "6px",
-                                boxShadow:
-                                  "0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11)",
-                              }}
-                            >
+                        {!PaypalCurrencies.some(
+                          (item) => item === wallet?.currency?.code
+                        ) && (
+                            <>
                               <div
                                 style={{
                                   display: "flex",
-                                  alignItems: "center",
-                                  gap: "1rem",
-                                  justifyContent: "space-between",
+                                  alignItems: "flex-start",
+                                  gap: ".7rem",
+                                  padding: "12px",
+                                  borderRadius: "6px",
+                                  background: "rgba(255, 218, 68, 0.24)",
+                                  marginTop: "1rem",
                                 }}
                               >
+                                <Info color="#BE9A08" size={20} />
                                 <span
                                   style={{
-                                    color: "#8A8A8A",
+                                    color: "#BE9A08",
                                     fontFamily: "Manrope",
                                     fontSize: ".7rem",
-                                    fontStyle: "normal",
-                                    fontWeight: 600,
-                                    lineHeight: 1.5,
-                                    letterSpacing: "-0.14px",
-                                  }}
-                                >
-                                  {t("Exchange Rate")}
-                                </span>
-                                <strong
-                                  style={{
-                                    color: "#000",
-                                    fontFamily: "Manrope",
-                                    fontSize: ".7rem",
-                                    fontStyle: "normal",
-                                    lineHeight: 1.5,
-                                    letterSpacing: "-0.14px",
-                                  }}
-                                >
-                                  1.00 {wallet?.currency?.code} ={" "}
-                                  {Number(
-                                    data.paypal_fx?.exchange_rate
-                                  )?.toLocaleString("en-US", {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 4,
-                                  })}{" "}
-                                  USD
-                                </strong>
-                              </div>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: "1rem",
-                                  justifyContent: "space-between",
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    color: "#8A8A8A",
-                                    fontFamily: "Manrope",
-                                    fontSize: ".7rem",
-                                    fontStyle: "normal",
-                                    fontWeight: 600,
-                                    lineHeight: 1.5,
-                                    letterSpacing: "-0.14px",
-                                  }}
-                                >
-                                  {t("Amount in USD")}
-                                </span>
-                                <strong
-                                  style={{
-                                    color: "#000",
-                                    fontFamily: "Manrope",
-                                    fontSize: "1.2rem",
                                     fontStyle: "normal",
                                     fontWeight: 700,
-                                    lineHeight: 1.7,
-                                    letterSpacing: "-0.8px",
+                                    lineHeight: 1.3,
+                                    letterSpacing: "-0.28px",
+                                  }}
+
+                                >
+                                  {t("PKR is not supported by Paypal, USD will be used as the default currency.").replace("PKR", wallet?.currency?.code)}
+                                </span>
+                              </div>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  gap: ".9rem",
+                                  padding: ".8rem",
+                                  background: "#fff",
+                                  borderRadius: "6px",
+                                  boxShadow:
+                                    "0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11)",
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "1rem",
+                                    justifyContent: "space-between",
                                   }}
                                 >
-                                  {Number(data.paypal_fx?.amount)?.toLocaleString(
-                                    "en-US",
-                                    {
+                                  <span
+                                    style={{
+                                      color: "#8A8A8A",
+                                      fontFamily: "Manrope",
+                                      fontSize: ".7rem",
+                                      fontStyle: "normal",
+                                      fontWeight: 600,
+                                      lineHeight: 1.5,
+                                      letterSpacing: "-0.14px",
+                                    }}
+                                  >
+                                    {t("Exchange Rate")}
+                                  </span>
+                                  <strong
+                                    style={{
+                                      color: "#000",
+                                      fontFamily: "Manrope",
+                                      fontSize: ".7rem",
+                                      fontStyle: "normal",
+                                      lineHeight: 1.5,
+                                      letterSpacing: "-0.14px",
+                                    }}
+                                  >
+                                    1.00 {wallet?.currency?.code} ={" "}
+                                    {Number(
+                                      data.paypal_fx?.exchange_rate
+                                    )?.toLocaleString("en-US", {
                                       minimumFractionDigits: 2,
-                                      maximumFractionDigits: 2,
-                                    }
-                                  )}{" "}
-                                  USD
-                                </strong>
+                                      maximumFractionDigits: 4,
+                                    })}{" "}
+                                    USD
+                                  </strong>
+                                </div>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "1rem",
+                                    justifyContent: "space-between",
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      color: "#8A8A8A",
+                                      fontFamily: "Manrope",
+                                      fontSize: ".7rem",
+                                      fontStyle: "normal",
+                                      fontWeight: 600,
+                                      lineHeight: 1.5,
+                                      letterSpacing: "-0.14px",
+                                    }}
+                                  >
+                                    {t("Amount in USD")}
+                                  </span>
+                                  <strong
+                                    style={{
+                                      color: "#000",
+                                      fontFamily: "Manrope",
+                                      fontSize: "1.2rem",
+                                      fontStyle: "normal",
+                                      fontWeight: 700,
+                                      lineHeight: 1.7,
+                                      letterSpacing: "-0.8px",
+                                    }}
+                                  >
+                                    {Number(data.paypal_fx?.amount)?.toLocaleString(
+                                      "en-US",
+                                      {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                      }
+                                    )}{" "}
+                                    USD
+                                  </strong>
+                                </div>
                               </div>
-                            </div>
-                          </>
-                        )}
-                    </>
-                  ) : data.payment_type?.value === "card" ? (
-                    <RecipientDetails
-                      data={data}
-                      dataHandler={dataHandler}
-                      isShipping={isShipping}
-                    />
-                  ) : (
-                    ""
-                  ))}
+                            </>
+                          )}
+                      </>
+                    ) :
+
+                    data.payment_type?.value === "card" ?
+                      <RecipientDetails
+                        data={data}
+                        dataHandler={dataHandler}
+                        isShipping={isShipping}
+                      />
+                      :
+
+                      <BankDeposit
+                        type={'payment_address'}
+                        data={{ ...data, wallet }}
+                        dataHandler={dataHandler}
+                        guestDetails={{
+                          name: data.fullName,
+                          phone: data.phone,
+                          email: data.email,
+                          iso_code: data.country?.alpha3
+                        }}
+                        toggle={toggle}
+                      />
+                  )
+                }
+
+
+
                 {data.step === 5 &&
                   (data.payment_type?.value === "card" ? (
                     // <StepFive
@@ -966,52 +985,54 @@ const PayAsGuest = ({
                   ))}
               </div>
 
-              <div
-                className={paym_styles.bottom}
-                style={{
-                  flexDirection: "column",
-                  margin: "2rem 0",
-                  gap: "1.5rem",
-                }}
-              >
-                <Link
-                  to={"https://insta-pay.ch/faqs"}
-                  target="_blank"
+              {(data.payment_type?.value !== "bank" || data.step < 4) &&
+                <div
+                  className={paym_styles.bottom}
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: ".7rem",
+                    flexDirection: "column",
+                    margin: "2rem 0",
+                    gap: "1.5rem",
                   }}
                 >
-                  <HelpCircle size={16} />
-                  {t("Trouble Sending Money")}
-                </Link>
-                <div
-                  className={paym_styles?.buttons}
-                  style={{ flexDirection: "column" }}
-                >
-                  {data.loading ? <div style={{ width: "120px" }}><InstaPayLoader /> </div> : <button
-                    disabled={data.loading || disabled}
-                    onClick={onClickHandler}
-                    style={{ width: "100%", background: "#5926F0" }}
-                  >
-                    {t("Next")}
-                  </button>}
-                  <button
-                    className={styles.transparent}
-                    disabled={data.loading}
+                  <Link
+                    to={"https://insta-pay.ch/faqs"}
+                    target="_blank"
                     style={{
-                      width: "100%",
-                      background: "#EEEEEE",
-                      boxShadow: "0px 3.643px 30.052px 0px rgba(0, 0, 0, 0.09)",
-                      color: "black",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: ".7rem",
                     }}
-                    onClick={onBackClickHandler}
                   >
-                    {t("Go Back")}
-                  </button>
+                    <HelpCircle size={16} />
+                    {t("Trouble Sending Money")}
+                  </Link>
+                  <div
+                    className={paym_styles?.buttons}
+                    style={{ flexDirection: "column" }}
+                  >
+                    {data.loading ? <div style={{ width: "120px" }}><InstaPayLoader /> </div> : <button
+                      disabled={data.loading || disabled}
+                      onClick={onClickHandler}
+                      style={{ width: "100%", background: "#5926F0" }}
+                    >
+                      {t("Next")}
+                    </button>}
+                    <button
+                      className={styles.transparent}
+                      disabled={data.loading}
+                      style={{
+                        width: "100%",
+                        background: "#EEEEEE",
+                        boxShadow: "0px 3.643px 30.052px 0px rgba(0, 0, 0, 0.09)",
+                        color: "black",
+                      }}
+                      onClick={onBackClickHandler}
+                    >
+                      {t("Go Back")}
+                    </button>
+                  </div>
                 </div>
-              </div>
+              }
             </div>
           </div>
         </div>
@@ -1159,99 +1180,4 @@ const RecipientDetails = ({ data, dataHandler, isShipping }) => {
   );
 };
 
-const PaymentDetails = ({ data, dataHandler }) => {
-  const { t } = useTranslation();
-  return (
-    <div style={{ height: "100%" }}>
-      <div className={styles.bot_top}>
-        <h5>{t("Review your payment details")}</h5>
-        <span>
-          {t(
-            "Please take a few moments to carefully review and verify the information to your payment details."
-          )}
-        </span>
-      </div>
-      <div className={styles.recipient_amount_details}>
-        <span>{t("You have to pay")}</span>
-        <h5>
-          {Number(data.exchange_rate?.total)?.toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}{" "}
-          <span>{data.exchange_rate?.sending?.currency}</span>
-        </h5>
-        <div>
-          <PaymentReviewSVG />
-        </div>
-      </div>
-      <div className={styles.other_details}>
-        {data.payment_type?.value === "card" && (
-          <div className={styles.card_dets} style={{ padding: "1rem" }}>
-            <div className={styles.cd_top} style={{ alignItems: "flex-start" }}>
-              <span>{t("You are using")}</span>
-              <div className={styles.cd_bot}>
-                <h5>
-                  {t("Card ending")} {" "}
-                  {data.cardNumber?.slice(
-                    data?.cardNumber?.length - 5,
-                    data?.cardNumber?.length
-                  )}
-                </h5>
-                <span>{t("Exp date")}: {data.expiry}</span>
-              </div>
-              <button onClick={() => dataHandler("step", 3)}>
-                {t("Change")}
-              </button>
-            </div>
-          </div>
-        )}
-        <div className={styles.aao_item}>
-          <span>{t("Sending")}</span>
-          <span>
-            {Number(data.exchange_rate?.sending?.amount)?.toLocaleString(
-              "en-US",
-              { minimumFractionDigits: 2, maximumFractionDigits: 2 }
-            )}{" "}
-            {data.exchange_rate?.sending?.currency}
-          </span>
-        </div>
-        <div className={styles.aao_item}>
-          <span>{t("Transfer Fees")}</span>
-          <span>
-            {Number(data.exchange_rate?.fee?.amount)?.toLocaleString("en-US", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}{" "}
-            {data.exchange_rate?.sending?.currency}
-          </span>
-        </div>
-        <div className={styles.aao_item}>
-          <span>{t("Estimated Time")}</span>
-          <span>{t("within minutes")}</span>
-        </div>
-        <div className={styles.aao_item}>
-          <span>
-            {t("Receiver Gets")} {t("(Including fee)")}
-          </span>
-          <span>
-            {Number(data.exchange_rate?.receiver?.amount)?.toLocaleString(
-              "en-US",
-              { minimumFractionDigits: 2, maximumFractionDigits: 2 }
-            )}{" "}
-            {data.exchange_rate?.sending?.currency}
-          </span>
-        </div>
-        <div className={styles.total}>
-          <span>{t("Total")}</span>
-          <span>
-            {Number(data.exchange_rate?.total)?.toLocaleString("en-US", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}{" "}
-            {data.exchange_rate?.sending?.currency}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-};
+

@@ -73,7 +73,7 @@ const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds,
                     {addFunds && (
                         <>
                             <div className={styles.feeInfo}>
-                                <h3>{t("Fee:")}</h3>
+                                <h3>{t("Fee")}:</h3>
                                 <h3>{getCurrencySymbol(cardDets?.currency)}{feeDetails?.feeDetails?.fee}</h3>
                             </div>
                             <div className={styles.feeInfo}>

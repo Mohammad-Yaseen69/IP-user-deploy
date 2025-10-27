@@ -9,13 +9,15 @@ import { ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import { formatCurrency } from '../../../Helper/AmountFormat'
+import InstaPayLoader from '../../Loader'
+import PaymentDetails from '../../PaymentAddressPublic/PayAsGuest/PaymentDetails'
 
-const BankDeposit = ({ data, dataHandler }) => {
+const BankDeposit = ({ data, dataHandler, type = "add_funds", guestDetails, toggle }) => {
     const { userDetails } = useContext(UserContext)
     const [selectedBank, setSelectedBank] = useState({})
     const { data: bankList, isLoading } = useQuery({
         queryKey: ['bankListForUser', userDetails?._id],
-        queryFn: () => apiWrapper({ endpoint: `/api/bank-deposit/get-user-banks/${userDetails?._id}` }).then(res => res?.data)
+        queryFn: () => apiWrapper({ endpoint: `/api/bank-deposit/get-user-banks/${userDetails?._id}/${type}?guest_iso=${guestDetails.iso_code}` }).then(res => res?.data)
     })
     const { isPending, mutateAsync } = useMutation({
         mutationFn: () => apiWrapper({ endpoint: `/api/wallet/get-plain-exchange-rate?from=${data.wallet?.currency?.code}&to=${selectedBank.Currency}&amount=${1}` }),
@@ -26,7 +28,7 @@ const BankDeposit = ({ data, dataHandler }) => {
                 fee: { amount: data?.exchange_rate_backup?.fee?.amount * dec.exchangeRate?.result },
                 sending: { currency: selectedBank.Currency, amount: data.exchange_rate_backup?.total * dec?.exchangeRate?.result },
                 receiver: { currency: data.exchange_rate?.receiver?.currency, amount: data.exchange_rate?.receiver?.amount },
-                total: parseFloat(data.exchange_rate?.receiver?.amount),
+                total: parseFloat(type === "payment_address" ? data.exchange_rate_backup?.total * dec?.exchangeRate?.result : data.exchange_rate?.receiver?.amount),
                 exchange_rate: {
                     exchange_rate_currency: selectedBank.Currency,
                     exchange_rate_sending_currency: data.exchange_rate?.receiver?.currency,
@@ -40,6 +42,7 @@ const BankDeposit = ({ data, dataHandler }) => {
             toast.error("We can't proceed with your request at the moment. please try again.")
         }
     })
+
 
     const createDepositMutation = useMutation({
         mutationFn: async (formData) => {
@@ -57,6 +60,7 @@ const BankDeposit = ({ data, dataHandler }) => {
     const [file, setFile] = useState()
     const [copiedField, setCopiedField] = useState(null)
     const { t } = useTranslation()
+    const [showPaymentDets, setShowPaymentDets] = useState(false)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -78,8 +82,14 @@ const BankDeposit = ({ data, dataHandler }) => {
 
     const onBackClickHandler = () => {
         if (data.bankStep === 1) {
-            dataHandler("step", 3)
-        } else {
+            if (showPaymentDets === true) {
+                setShowPaymentDets(false)
+            } else {
+                dataHandler("step", 3)
+                dataHandler("exchange_rate", data.exchange_rate_backup)
+            }
+        }
+        else {
             if (data.bankStep === 3) {
                 setFile(null)
             }
@@ -103,6 +113,10 @@ const BankDeposit = ({ data, dataHandler }) => {
 
     const onClickHandler = async () => {
         if (data.bankStep === 1) {
+            if (showPaymentDets === true) {
+                dataHandler("bankStep", data.bankStep + 1)
+                return;
+            }
             if (data.wallet?.currency?.code !== selectedBank.Currency) {
                 await mutateAsync()
             }
@@ -110,10 +124,19 @@ const BankDeposit = ({ data, dataHandler }) => {
                 ...prev,
                 'Reference (Mandatory)': `AddFunds-${Date.now().toString().slice(3)}-${Math.floor(Math.random() * 100)}`
             }))
-            dataHandler("bankStep", data.bankStep + 1)
+
+            if (type === "payment_address") {
+                setShowPaymentDets(true)
+            } else {
+                dataHandler("bankStep", data.bankStep + 1)
+            }
         }
         else if (data.bankStep === 4) {
-            navigate(`/wallets`)
+            if (type === "payment_address") {
+                toggle()
+            } else {
+                navigate(`/wallets`)
+            }
             return;
         } else if (data.bankStep === 3) {
             if (!file) {
@@ -123,15 +146,17 @@ const BankDeposit = ({ data, dataHandler }) => {
 
             const formData = new FormData()
 
-            formData.append('amount', data.exchange_rate?.total || data.exchange_rate?.receiver?.amount || '')
-            formData.append('receiving_wallet', data.wallet?._id)
-            formData.append('account', userDetails._id || '')
-            formData.append('bank', selectedBank._id || '')
+            formData.append('amount', type === "payment_address" ? data.exchange_rate?.receiver?.amount : data.exchange_rate?.total)
+            formData.append('receiving_wallet', data.wallet?.wallet_id)
+            formData.append('account', userDetails?._id || '')
+            formData.append('bank', selectedBank?._id || '')
             formData.append('reference', selectedBank['Reference (Mandatory)'] || selectedBank.reference || '')
             formData.append('fee', data.exchange_rate?.fee?.amount)
             formData.append('exchange_rate', data.exchange_rate?.exchange_rate?.exchange_rate || 1)
             formData.append('sendingAmount', data.exchange_rate?.sending?.amount)
             formData.append('sendingCurrency', selectedBank.Currency || selectedBank['Currency'] || '')
+            formData.append("type", type)
+            formData.append("guest_details", JSON.stringify(guestDetails))
             formData.append('file', file)
 
             createDepositMutation.mutate(formData)
@@ -142,45 +167,58 @@ const BankDeposit = ({ data, dataHandler }) => {
     }
 
     return (
-        <div className={styles.container}>
+        <div style={{ minHeight: window.innerWidth < 1000 && type === "payment_address" && "70vh" }} className={styles.container}>
             {/* Bank Lists */}
             {data.bankStep === 1 &&
-                <div className={styles.bankList}>
-                    <h4>{t("Select the InstaPay bank account that you want to transfer the funds to")}:</h4>
-                    <div className={styles.list}>
-                        {bankList?.map((item, idx) => (
-                            <div
-                                key={idx}
-                                onClick={() =>
-                                    setSelectedBank({
-                                        'Bank Name': item.bank_name,
-                                        'Holder Name': item.holder_name,
-                                        'Account Number': item.account_number,
-                                        ...(item.iban && { IBAN: item.iban }),
-                                        ...(item.swift_code && { 'SWIFT/BIC': item.swift_code }),
-                                        'Address': item.bank_address,
-                                        'Country Name': item.country_name,
-                                        'Currency': item.currency,
-                                        _id: item?._id
-                                    })
-                                }
-                                className={`${styles.item} ${selectedBank?._id === item?._id && styles.selected}`}
-                            >
-                                <span>
-                                    {item.bank_name}, {item.country_name}
-                                </span>
+                <>
+                    {showPaymentDets ?
+                        <PaymentDetails
+                            data={data}
+                            dataHandler={dataHandler}
+                            isBankDeposit={true}
+                        />
+                        :
+                        <div className={styles.bankList}>
+                            <h4>{t("Select the InstaPay bank account that you want to transfer the funds to")}:</h4>
+                            {isLoading &&
+                                <div style={{ width: "200px", margin: "2rem auto" }}>
+                                    <InstaPayLoader />
+                                </div>
+                            }
+                            <div className={styles.list}>
+                                {bankList?.map((item, idx) => (
+                                    <div
+                                        key={idx}
+                                        onClick={() =>
+                                            setSelectedBank({
+                                                'Bank Name': item.bank_name,
+                                                'Holder Name': item.holder_name,
+                                                'Account Number': item.account_number,
+                                                ...(item.iban && { IBAN: item.iban }),
+                                                ...(item.swift_code && { 'SWIFT/BIC': item.swift_code }),
+                                                'Address': item.bank_address,
+                                                'Country Name': item.country_name,
+                                                'Currency': item.currency,
+                                                _id: item?._id
+                                            })
+                                        }
+                                        className={`${styles.item} ${selectedBank?._id === item?._id && styles.selected}`}
+                                    >
+                                        <span>
+                                            {item.bank_name}, {item.country_name}
+                                        </span>
 
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                    <path d="M6 12L10 8L6 4" stroke="#5926F0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                            <path d="M6 12L10 8L6 4" stroke="#5926F0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
-                </div>
+                        </div>}
+                </>
             }
 
 
-            {/* Bank Details */}
             {
                 data.bankStep === 2 &&
                 <div className={styles.bankDets}>
@@ -197,7 +235,7 @@ const BankDeposit = ({ data, dataHandler }) => {
                         />
                     </h4>
 
-                    <div style={{ height: "500px", overflow: "auto" }} className={styles.bankData}>
+                    <div style={{ height: window.innerWidth > 1000 && "500px", overflow: "auto" }} className={styles.bankData}>
                         {Object.keys(selectedBank)?.map((key, idx) => key !== "_id" && (
                             <div key={idx} className={styles.data}>
                                 <p>
@@ -256,13 +294,13 @@ const BankDeposit = ({ data, dataHandler }) => {
 
             <div className={styles.bottom}>
                 <div></div>
-                <div className={styles?.buttons}>
+                <div className={`${styles?.buttons} ${type === "payment_address" && window.innerWidth < 1000 && styles.mobileButtons}`}>
                     {data.bankStep < 4 && <button className={styles.transparent} onClick={onBackClickHandler} disabled={data.loading}>{t("Back")}</button>}
                     <button disabled={isLoading || (data.bankStep === 3 && !file) || isPending || createDepositMutation.isPending} onClick={onClickHandler}>
                         {
-                            data.bankStep === 4 ? t("Go back to wallets") : data.bankStep === 3 ? t("Continue") : t("Next")
+                            data.bankStep === 4 ? type === "payment_address" ? t("Close") : t("Go back to wallets") : data.bankStep === 3 ? t("Continue") : t("Next")
                         }
-                        <ChevronRight size={18} />
+                        {window.innerWidth > 1000 && <ChevronRight size={18} />}
                     </button>
                 </div>
             </div>

@@ -130,7 +130,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1rem;
 }
 
 .bottom a {
@@ -151,6 +150,27 @@
     gap: 1rem;
 }
 
+.buttons.mobileButtons{
+    flex-direction: column-reverse;
+    width: 100%;
+    align-items: stretch;
+}
+
+
+.buttons.mobileButtons button{
+    background: rgb(89, 38, 240);
+    padding: 1rem;
+    border-radius: 11px;
+    justify-content: center;
+    text-align: center;
+}
+
+.buttons.mobileButtons .transparent{
+    background: rgb(238, 238, 238);
+    box-shadow: rgba(0, 0, 0, 0.09) 0px 3.643px 30.052px 0px;
+    color: black;
+}
+
 .buttons button {
     display: flex;
     align-items: center;
@@ -163,9 +183,6 @@
     padding: .4rem 1rem;
     align-items: center;
     color: #FFF;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: Manrope;
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -181,6 +198,7 @@
     cursor: pointer;
     color: #808080;
     font-size: 14px;
+    font-weight: 600;
 }
 
 .bottom button:disabled {
