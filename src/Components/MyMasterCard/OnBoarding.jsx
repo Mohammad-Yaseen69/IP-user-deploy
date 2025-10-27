@@ -19,14 +19,14 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
     const [showPaymentModal, setShowPaymentModal] = useState(false)
     const navigate = useNavigate()
     const paymentModalRef = useRef(null)
-    const {t} = useTranslation()
+    const { t } = useTranslation()
 
 
     useEffect(() => {
-        if(cardType === "standard"){
+        if (cardType === "standard") {
             setApplePay(false)
-        } 
-    },[cardType])
+        }
+    }, [cardType])
     return (
         <div className={styles.container}>
             {step === 1 &&
@@ -106,7 +106,7 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
                                     setStep(prev => prev += 1)
                                 }
                                 else {
-                                    if (userDetails.user.kyc_status === "approved") {
+                                    if (userDetails?.account_type === "individual" ? userDetails.user.kyc_status === "approved" : userDetails.company.kyb_status === "approved") {
                                         setShowPaymentModal(true)
                                     }
                                     else {
