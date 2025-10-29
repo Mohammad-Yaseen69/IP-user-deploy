@@ -94,7 +94,7 @@ const PayWithCrypto = ({ user, data, dataHandler, type = "payment_address", invo
             handleClose()
             return;
         }
-        const paymentId = `Keabank_Instapay_${Date.now()}`
+        const paymentId = `keabank_instapay_${Date.now()}`
         console.log(data.cryptoDetails)
         const payload = {
             token: feeDetails?.token,
@@ -116,8 +116,10 @@ const PayWithCrypto = ({ user, data, dataHandler, type = "payment_address", invo
             amount: feeDetails?.totalCryptoAmount,
             orderId: createdTransaction.payment_id,
             paymentPurpose: reasons[data.cryptoDetails?.reason],
-            currency: 'USDT',
+            currency: 'USDT_TRC20',
         };
+
+        console.log(paymentConfig)
 
 
         const paymentStatus = sdk.init(paymentConfig);
