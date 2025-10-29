@@ -49,7 +49,7 @@ const PayWithCrypto = ({ user, data, dataHandler, type = "payment_address", invo
         mutationFn: (payload) => apiWrapper({
             endpoint: "/api/transaction/transaction-flag",
             payload: payload,
-            method: "POST",
+            method: "PUT",
             isEncrypted: true
         }),
         onError: (res) => {
