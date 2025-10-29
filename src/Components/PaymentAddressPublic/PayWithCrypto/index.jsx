@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
 import styles from "./styles/index.module.scss"
 import { useTranslation } from 'react-i18next'
@@ -9,20 +9,70 @@ import clockSvg from './clock.svg'
 import copy from "./copy.svg"
 import qr from "./qr.png"
 import { toast } from "react-toastify"
-import axios from 'axios'
-import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { formatCurrency } from '../../../Helper/AmountFormat'
 import useWindowWidth from '../../../utils/useWindowWidth'
 import "./styles/modal.css"
 import { sdk } from '../../..'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { apiWrapper } from '../../../utils/Functions/apiWrapper'
+import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
+import ErrorModal from '../../PaymentsNewer/InternationalFlow/ErrorModal'
+import countriesData from "../../PaymentsNewer/CountriesData.json"
 
-const PayWithCrypto = ({ user, data, dataHandler }) => {
+const PayWithCrypto = ({ user, data, dataHandler, type = "payment_address", invoiceId }) => {
     const { t } = useTranslation()
     const [step, setStep] = useState(1)
     const [secondsLeft, setSecondsLeft] = useState(30 * 60)
-    const [usdtAmount, setUsdtAmount] = useState(null)
-    const [amtLoading, setAmtLoading] = useState(false)
+    const [error, setError] = useState()
+    const [status, setStatus] = useState("Not Completed")
+    const [country, setCountry] = useState({})
+
+    const { data: feeDetails } = useQuery({
+        queryKey: ['CryptoFee', data.amount, data.currentWallet?.wallet_id],
+        queryFn: () => apiWrapper({ endpoint: `/api/guest-pay/crypto-fee/${data?.currentWallet?.wallet_id}/${Number(String(data.amount)?.replace(",", ""))}?payment_type=${type}&invoice_id=${invoiceId}` }).then(res => res),
+        retry: 2,
+    })
+
+    const mutation = useMutation({
+        mutationFn: (payload) => apiWrapper({
+            endpoint: "/api/guest-pay/initiate-crypto-payment",
+            payload: payload,
+            method: "POST",
+        }),
+        onError: (res) => {
+            const dec = decryptData(res.data.data)
+            setError(dec?.message ?? "We are unable to process your request at the moment, please try again later.")
+        }
+    })
+
+    const flagTransaction = useMutation({
+        mutationFn: (payload) => apiWrapper({
+            endpoint: "/api/transaction/transaction-flag",
+            payload: payload,
+            method: "POST",
+            isEncrypted: true
+        }),
+        onError: (res) => {
+            const dec = decryptData(res.data.data)
+            setError(dec?.message ?? "We are unable to process your request at the moment, please try again later.")
+        },
+    })
+
     const width = useWindowWidth()
+
+    const handleClose = () => {
+        dataHandler("showCryptoModal", false)
+        setStep(1)
+        setSecondsLeft(30 * 60)
+        setStatus("Not Completed")
+        setError("")
+        dataHandler("cryptoDetails", {
+            name: "",
+            phone: "",
+            reason: "",
+            email: "",
+        })
+    }
 
     useEffect(() => {
         if (step !== 2) return;
@@ -39,56 +89,77 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
 
 
 
+    const cryptoTransactionHandler = async () => {
+        if (status !== "Not Completed") {
+            handleClose()
+            return;
+        }
+        const paymentId = `Keabank_Instapay_${Date.now()}`
+        console.log(data.cryptoDetails)
+        const payload = {
+            token: feeDetails?.token,
+            shipping_details: data?.shipping_details,
+            payment_id: paymentId,
+            client_reference: data?.cryptoDetails?.paymentRef || '',
+            email: data?.cryptoDetails.email,
+            phone: data.cryptoDetails.phone,
+            name: data?.cryptoDetails?.name,
+            invoice_id: invoiceId,
+            payment_type: type,
+            reason: data?.cryptoDetails?.reason,
+            iso_code: country?.alpha3
+        }
+
+        const createdTransaction = await mutation.mutateAsync(payload)
+
+        const paymentConfig = {
+            amount: feeDetails?.totalCryptoAmount,
+            orderId: createdTransaction.payment_id,
+            paymentPurpose: reasons[data.cryptoDetails?.reason],
+            currency: 'USDT',
+        };
 
 
-    useEffect(() => {
-        let cancelled = false
-        const fetchAmount = async () => {
-            try {
-                setAmtLoading(true)
-                const url = `${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=${data.currentWallet?.currency?.code || data.currencyCode}&to=${"USD"}&amount=${data?.amount}`
-                const res = await axios.get(url)
-                const dec = decryptData(res?.data?.data)
-                if (!cancelled) setUsdtAmount(dec?.exchangeRate?.exchanged_amount ?? 0)
-            } catch (_) {
-                if (!cancelled) setUsdtAmount(0)
-            } finally {
-                if (!cancelled) setAmtLoading(false)
+        const paymentStatus = sdk.init(paymentConfig);
+
+        paymentStatus.then(async (status) => {
+            console.log(status)
+            if (status === 'success') {
+                await flagTransaction.mutateAsync({
+                    transaction_id: createdTransaction.transaction_id,
+                    flag: true,
+                })
+                setStatus("Completed")
+            } else {
+                await flagTransaction.mutateAsync({
+                    transaction_id: createdTransaction.transaction_id,
+                    flag: false,
+                })
+                setStatus("Canceled")
             }
-        }
-        if (data?.amount && (data.currentWallet?.currency?.code || data.currencyCode)) {
-            fetchAmount()
-        }
-        return () => { cancelled = true }
-    }, [data.currentWallet?.currency?.code, data.currencyCode, data.amount])
+        })
+    }
 
-
-    const clickHandler = () => {
+    const clickHandler = async () => {
         if (step === 1) {
             setStep(2)
         } else {
-            const paymentConfig = {
-                amount: 1.5,
-                orderId: Date.now(),
-                paymentPurpose: "Crypt Transfer",
-                currency: 'USDT',
-            };
-
-
-            const paymentStatus = sdk.init(paymentConfig);
-
-            paymentStatus.then(status => {
-                console.log(status)
-                if (status === 'success') {
-                    console.log('Payment success');
-                }
-            }).catch(error => {
-                console.log(error)
-            });
+            cryptoTransactionHandler()
         }
     }
+
+
+    useEffect(() => {
+        const iso = localStorage.getItem("ip_country") ?? "USA"
+        const country = countriesData.find(item => item.alpha3 === iso)
+        console.log('Setting initial country:', country)
+        setCountry(country)
+    }, [])
+
+
+
     return (
-        <Modal centered isOpen={data.showCryptoModal} style={{ minWidth: window.innerWidth > 850 && "800px", overflow: "hidden", margin: "0px auto" }} toggle={() => dataHandler("showCryptoModal", false)} >
+        <Modal centered isOpen={data.showCryptoModal} style={{ minWidth: window.innerWidth > 850 && "800px", overflow: "hidden", margin: "0px auto" }} toggle={handleClose} >
             <ModalBody style={{ minHeight: width < 850 && "100vh", background: width < 850 && "#fafafafa" }}>
                 <div className={styles.container}>
                     {width > 850 &&
@@ -132,7 +203,13 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                                         phone={data?.cryptoDetails?.phone}
                                         setPhone={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, phone: e })}
                                         country={localStorage.getItem("ip_country") ?? "USA"}
-                                        setCountry={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, country: e })}
+                                        setCountry={(e) => {
+                                            console.log('Phone country changed:', e)
+                                            const country = countriesData.find(item => item.alpha3 === e)
+                                            if (country) {
+                                                setCountry(country)
+                                            }
+                                        }}
                                         customStyles={{
                                             background: "#f7f7f7",
                                             boxShadow: "none",
@@ -195,7 +272,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                                     <div style={{ padding: "0px" }} className={styles.left}>
                                         <span>{t("Total amount to pay")}</span>
                                         <div>
-                                            <h2>{amtLoading ? "..." : (formatCurrency(usdtAmount) ?? 0)}</h2>
+                                            <h2>{(formatCurrency(feeDetails?.totalCryptoAmount) ?? 0)}</h2>
                                             <span>USDT(TRC20)</span>
                                         </div>
                                     </div>
@@ -225,7 +302,7 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                                 <div className={styles.statusDiv}>
                                     <div>
                                         <p>{t("Status")}</p>
-                                        <span>{t("Not Completed")}</span>
+                                        <span>{t(status)}</span>
                                     </div>
                                     <div>
                                         <p>{t("Payment purpose")}</p>
@@ -251,13 +328,20 @@ const PayWithCrypto = ({ user, data, dataHandler }) => {
                                 {step === 2 ? t("Back") : t("Cancel")}
                             </button>
 
-                            <ButtonForRequests style={{ borderRadius: "4px" }} onClick={clickHandler} isLoading={!data.cryptoDetails?.reason || !data.cryptoDetails?.phone || !data.cryptoDetails?.name}>
-                                {t("Next")}
+                            <ButtonForRequests style={{ borderRadius: "4px" }} onClick={clickHandler} isLoading={!data.cryptoDetails?.reason || !data.cryptoDetails?.phone || !data.cryptoDetails?.name || mutation.isPending}>
+                                {status === "Not Completed" ? t("Next") : t("Close")}
                             </ButtonForRequests>
 
                         </div>
                     </div>
                 </div>
+
+                <ErrorModal
+                    isOpen={error}
+                    toggle={() => setError(null)}
+                    message={error}
+                    heading={"Crypto Transaction Failed!"}
+                />
             </ModalBody>
         </Modal>
     )
