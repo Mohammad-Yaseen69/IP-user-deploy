@@ -113,7 +113,7 @@ const PayWithCrypto = ({ user, data, dataHandler, type = "payment_address", invo
         const createdTransaction = await mutation.mutateAsync(payload)
 
         const paymentConfig = {
-            amount: feeDetails?.totalCryptoAmount,
+            amount: feeDetails?.total,
             orderId: createdTransaction.payment_id,
             paymentPurpose: reasons[data.cryptoDetails?.reason],
             currency: 'USDT_TRC20',
@@ -274,7 +274,7 @@ const PayWithCrypto = ({ user, data, dataHandler, type = "payment_address", invo
                                     <div style={{ padding: "0px" }} className={styles.left}>
                                         <span>{t("Total amount to pay")}</span>
                                         <div>
-                                            <h2>{(formatCurrency(feeDetails?.totalCryptoAmount) ?? 0)}</h2>
+                                            <h2>{(formatCurrency(feeDetails?.total) ?? 0)}</h2>
                                             <span>USDT(TRC20)</span>
                                         </div>
                                     </div>
