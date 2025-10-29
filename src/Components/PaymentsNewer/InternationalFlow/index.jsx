@@ -59,7 +59,8 @@ const apiErrors = {
     "insufficient_funds": "You don't have enough funds for this transaction.",
     "invoice_not_found_or_inactive": "The invoice you're trying to pay is either inactive or the invoice id is not correct!",
     "invoice_not_found": "The invoice you're trying to pay is either inactive or the invoice id is not correct!",
-    "invoice_already_paid": "This invoice is already paid!"
+    "invoice_already_paid": "This invoice is already paid!",
+    'receiver_wallet_not_found': "Recipient wallet is either disabled, blocked or does not exists."
 }
 
 
