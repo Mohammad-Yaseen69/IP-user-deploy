@@ -51,6 +51,7 @@ const initialState = {
   guestPayError: "",
   showVerTT: false,
   showCryptoModal: false,
+  cryptoStatus: "Not Completed",
   cryptoDetails: {
     name: "",
     phone: "",
@@ -442,8 +443,10 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                     state={state}
                     toggleCreditModal={toggleCreditModal}
                     url={url}
-                    toggleCryptoModal={() =>
+                    toggleCryptoModal={() => {
                       dataHandler("showCryptoModal", true)
+                      dataHandler("cryptoStatus", "Not Completed")
+                    }
                     }
                   />
 

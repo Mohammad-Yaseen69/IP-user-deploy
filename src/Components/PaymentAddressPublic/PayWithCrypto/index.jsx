@@ -24,7 +24,6 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
     const [step, setStep] = useState(1)
     const [secondsLeft, setSecondsLeft] = useState(30 * 60)
     const [error, setError] = useState()
-    const [status, setStatus] = useState("Not Completed")
     const [country, setCountry] = useState({})
 
 
@@ -66,7 +65,7 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
         dataHandler("showCryptoModal", false)
         setStep(1)
         setSecondsLeft(30 * 60)
-        setStatus("Not Completed")
+        dataHandler("cryptoStatus", "Not Completed")
         setError("")
         dataHandler("cryptoDetails", {
             name: "",
@@ -92,7 +91,7 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
 
 
     const cryptoTransactionHandler = async () => {
-        if (status !== "Not Completed") {
+        if (data.cryptoStatus !== "Not Completed") {
             handleClose()
             return;
         }
@@ -114,8 +113,7 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
 
         const createdTransaction = await mutation.mutateAsync(payload)
 
-        setStatus("Processing")
-        dataHandler("showCryptoModal", false)
+        dataHandler("cryptoStatus", "Processing")
 
         const paymentConfig = {
             amount: feeDetails?.total,
@@ -129,21 +127,19 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
 
         paymentStatus.then(async (status) => {
             console.log(status)
-            dataHandler("showCryptoModal", true)
 
             if (status === 'paid' || status === "success") {
                 await flagTransaction.mutateAsync({
-                     transaction_id: createdTransaction.transaction_id,
+                    transaction_id: createdTransaction.transaction_id,
                     flag: true,
                 })
-                setStatus("Completed")
-                handleClose()
+                dataHandler("cryptoStatus", "Completed")
             } else {
                 await flagTransaction.mutateAsync({
                     transaction_id: createdTransaction.transaction_id,
                     flag: false,
                 })
-                setStatus("Canceled")
+                dataHandler("cryptoStatus", "Canceled")
             }
         })
     }
@@ -271,7 +267,7 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
                         {step === 2 && (
                             <div style={{ width: "100%" }}>
 
-                                {status === "Not Completed" &&
+                                {data.cryptoStatus === "Not Completed" &&
                                     <div className={styles.timer}>
                                         <img src={clockSvg} alt="clock" width={16} height={16} />
                                         {formatTime(secondsLeft)} {t("Left")}
@@ -312,7 +308,7 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
                                 <div className={styles.statusDiv}>
                                     <div>
                                         <p>{t("Status")}</p>
-                                        <span style={{ background: status === "Completed" ? "rgb(105 247 8 / 19%)" : status === "Canceled" ? "rgb(247 8 8 / 8%)" : "rgba(247, 144, 8, 0.08)", color: status === "Completed" ? "green" : status === "Canceled" ? "red" : "#F79008" }}>{t(status)}</span>
+                                        <span style={{ background: data.cryptoStatus === "Completed" ? "rgb(105 247 8 / 19%)" : data.cryptoStatus === "Canceled" ? "rgb(247 8 8 / 8%)" : "rgba(247, 144, 8, 0.08)", color: data.cryptoStatus === "Completed" ? "green" : data.cryptoStatus === "Canceled" ? "red" : "#F79008" }}>{t(data.cryptoStatus)}</span>
                                     </div>
                                     <div>
                                         <p>{t("Payment purpose")}</p>
@@ -324,7 +320,7 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
 
 
                         <div style={{ display: width > 840 ? "grid" : "flex", gridTemplateColumns: "1fr 1fr", gap: "15px", width: "100%", flexDirection: "column-reverse" }}>
-                            {status === "Not Completed" &&
+                            {data.cryptoStatus === "Not Completed" &&
                                 <button
                                     style={{
                                         width: "100%",
@@ -341,7 +337,7 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
                             }
 
                             <ButtonForRequests style={{ borderRadius: "4px" }} onClick={clickHandler} isLoading={!data.cryptoDetails?.reason || !data.cryptoDetails?.phone || !data.cryptoDetails?.name || mutation.isPending}>
-                                {status === "Not Completed" ? t("Next") : t("Close")}
+                                {data.cryptoStatus === "Not Completed" ? t("Next") : t("Close")}
                             </ButtonForRequests>
 
                         </div>
