@@ -11,12 +11,12 @@ import { useQuery } from "@tanstack/react-query"
 import { getUserPlans } from "../PaymentAddress/queries/pricings"
 
 
-const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, userCountry, setShowVerTT, showVerTT, invoicePaid, AmountComponent, paymentAddress, invoice }) => {
+const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, userCountry, setShowVerTT, showVerTT, invoicePaid, AmountComponent, paymentAddress, invoice, user, data, dataHandler }) => {
     const width = useWindowWidth()
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [showPlansModal, setShowPlansModal] = useState(false)
-    const { data, isLoading } = useQuery({
+    const { data: plansData, isLoading } = useQuery({
         queryKey: ['PublicUserPlans', user_name],
         queryFn: () => getUserPlans(user_name),
         enabled: !!user_name
@@ -41,7 +41,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
 
 
     useEffect(() => {
-        if (data && data?.length > 0) {
+        if (plansData && plansData?.length > 0) {
             setActionsButtons([...actionButtons, {
                 label: "View Plans",
                 onClick: () => setShowPlansModal(true),
@@ -49,7 +49,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                 purple: false,
             },])
         }
-    }, [data])
+    }, [plansData])
 
 
 
@@ -169,8 +169,12 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
             <PlansModal
                 isOpen={showPlansModal}
                 toggle={() => setShowPlansModal(false)}
-                data={data}
+                plansData={plansData}
                 isLoading={isLoading}
+                user_name={user_name}
+                user={user}
+                data={data}
+                dataHandler={dataHandler}
             />
         </div>
     )

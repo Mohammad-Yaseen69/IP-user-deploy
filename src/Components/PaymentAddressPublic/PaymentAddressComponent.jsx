@@ -400,6 +400,8 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
               <PayWithCrypto
                 user={userDetails}
                 data={state}
+                isOpen={state.showCryptoModal}
+                toggle={() => dataHandler("showCryptoModal", false)}
                 dataHandler={dataHandler}
               />
             )}
@@ -432,7 +434,11 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                     userCountry={state.userCountry}
                     userDetails={userDetails}
                     user_name={user_name}
+                    user={userDetails}
                     paymentAddress={true}
+                    data={state}
+                    dataHandler={dataHandler}
+
                   />
 
                   <AmountContainer

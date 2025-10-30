@@ -82,6 +82,8 @@ const PayAsGuest = ({
   username,
   isShipping,
   invoiceId,
+  type = "payment_address",
+  planId
 }) => {
   const { t } = useTranslation();
   const [data, dispatch] = useReducer(reducer, initialState);
@@ -105,11 +107,15 @@ const PayAsGuest = ({
         dob: formattedDob,
         client_reference: data.paymentRef,
         iso_code: data.country?.alpha3,
+        payment_type: type
       };
 
+      if (planId) {
+        payload.planId = planId
+      }
       if (invoiceId) {
         payload.invoice_id = invoiceId;
-        payload.payment_type = "invoice";
+
         if (isShipping) {
           payload.shipping_details = {
             ...data.shippingDetails,
@@ -167,11 +173,15 @@ const PayAsGuest = ({
         iso_code: data.country?.alpha3,
         dob: formattedDob,
         client_reference: data.paymentRef,
+        payment_type: type
       };
 
+      if (planId) {
+        payload.planId = planId
+      }
       if (invoiceId) {
         payload.invoice_id = invoiceId;
-        payload.payment_type = "invoice";
+
         if (isShipping) {
           payload.shipping_details = {
             ...data.shippingDetails,
@@ -376,7 +386,7 @@ const PayAsGuest = ({
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/paypal-fee/${wallet?.wallet_id
-        }/${amount}?payment_type=${invoiceId ? "invoice" : "payment_address"}`
+        }/${amount}?payment_type=${type}`
       );
       const dec = decryptData(res.data.data);
       console.log(dec);
@@ -417,7 +427,7 @@ const PayAsGuest = ({
     dataHandler("loading", true);
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/card-fee/${wallet?.wallet_id}/${amount}?payment_type=${invoiceId ? "invoice" : "payment_address"}&isBank=${data.payment_type?.value === "bank" ? true : false} `
+        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/card-fee/${wallet?.wallet_id}/${amount}?payment_type=${type}&isBank=${data.payment_type?.value === "bank" ? true : false} `
       );
       const dec = decryptData(res.data.data);
       console.log(dec);

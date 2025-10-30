@@ -16,7 +16,7 @@ import ErrorModal from '../../PaymentsNewer/InternationalFlow/ErrorModal'
 import countriesData from "../../PaymentsNewer/CountriesData.json"
 import { verifyPhoneNumber } from '../../../utils/Functions/phoneVerification'
 
-const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId }) => {
+const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId, isOpen, toggle }) => {
     const { t } = useTranslation()
     const [error, setError] = useState()
     const [loading, setLoading] = useState(false)
@@ -56,7 +56,7 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
     const width = useWindowWidth()
 
     const handleClose = () => {
-        dataHandler("showCryptoModal", false)
+        toggle()
         setError("")
         dataHandler("cryptoDetails", {
             name: "",
@@ -134,7 +134,7 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
     }, [])
 
     return (
-        <Modal centered isOpen={data.showCryptoModal} style={{ minWidth: window.innerWidth > 850 && "800px", overflow: "hidden", margin: "0px auto" }} toggle={handleClose} >
+        <Modal centered isOpen={isOpen} style={{ minWidth: window.innerWidth > 850 && "800px", overflow: "hidden", margin: "0px auto" }} toggle={handleClose} >
             <ModalBody style={{ minHeight: width < 850 && "100vh", background: width < 850 && "#fafafafa" }}>
                 <div className={styles.container}>
                     {width > 850 &&

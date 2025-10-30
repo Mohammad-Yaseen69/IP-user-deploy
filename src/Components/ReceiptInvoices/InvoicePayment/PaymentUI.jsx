@@ -15,6 +15,7 @@ import { isInIframe } from '../../../utils/Functions'
 import { useNavigate } from 'react-router'
 import AnimatedHeader from '../../PaymentAddressPublic/AnimatedHeader'
 import useWindowWidth from '../../../utils/useWindowWidth'
+import PaymentActionsButtons from './PaymentActionsButtons'
 
 
 
@@ -52,7 +53,8 @@ const PaymentUI = ({ data, dataHandler, user_name, state, url, toggleCreditModal
                     sessionStorage.setItem("path", path);
                     navigate(path)
                 }
-            }
+            },
+            width: "15px"
         },
         {
             label: "Pay with Crypto",
@@ -81,6 +83,7 @@ const PaymentUI = ({ data, dataHandler, user_name, state, url, toggleCreditModal
                     username={user_name}
                     isShipping={data.shippingAddress}
                     invoiceId={data.invoiceId}
+                    type='invoice'
                 />
             }
             <div className={styles.left}>
@@ -96,6 +99,7 @@ const PaymentUI = ({ data, dataHandler, user_name, state, url, toggleCreditModal
                     }}
                     user_name={user_name}
                     invoice={true}
+
                 />
 
                 <div className={styles.buttons}>
@@ -156,19 +160,8 @@ const PaymentUI = ({ data, dataHandler, user_name, state, url, toggleCreditModal
                 </div>
 
                 {!data.paid ?
-                    <div className={styles.actions}>
-                        {actionButtons.map((btn, idx) => (
-                            <button className={styles.button} key={idx} onClick={btn.onClick} style={{ background: !btn.purple && "white" }} >
-                                <div style={{ background: !btn.purple && "radial-gradient(124.63% 259.09% at 48.48% 152.15%, rgba(230, 64, 103, 0.10) 0%, rgba(89, 38, 240, 0.10) 55.65%, rgba(72, 40, 160, 0.10) 100%), #FFF" }}>
-                                    <img style={{ width: btn.purple && "15px" }} src={btn.logo} alt="" />
-                                </div>
-
-                                <span style={{ color: !btn.purple ? "black" : "white" }}>
-                                    {t(btn.label)}
-                                </span>
-                            </button>
-                        ))}
-                    </div> :
+                    <PaymentActionsButtons actionButtons={actionButtons} />
+                    :
                     <div className={styles.paidInvoice}>
                         <p>
                             {("This invoice is paid!")}
