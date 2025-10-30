@@ -5,11 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { ButtonForRequests, Select, TextInput } from '../../ReceiptInvoices/UI/FormElements'
 import PhoneInput from '../../PhoneInput'
 import { reasons } from '../../PaymentsNewer/AmountAndCurrency'
-import clockSvg from './clock.svg'
-import copy from "./copy.svg"
-import qr from "./qr.png"
 import { toast } from "react-toastify"
-import { formatCurrency } from '../../../Helper/AmountFormat'
 import useWindowWidth from '../../../utils/useWindowWidth'
 import "./styles/modal.css"
 import { sdk } from '../../..'
@@ -22,12 +18,9 @@ import { verifyPhoneNumber } from '../../../utils/Functions/phoneVerification'
 
 const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId }) => {
     const { t } = useTranslation()
-    const [step, setStep] = useState(1)
-    const [secondsLeft, setSecondsLeft] = useState(30 * 60)
     const [error, setError] = useState()
+    const [loading, setLoading] = useState(false)
     const [country, setCountry] = useState({})
-
-
 
     const { data: feeDetails } = useQuery({
         queryKey: ['CryptoFee', data.amount, data.currentWallet?.wallet_id],
@@ -64,9 +57,6 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
 
     const handleClose = () => {
         dataHandler("showCryptoModal", false)
-        setStep(1)
-        setSecondsLeft(30 * 60)
-        dataHandler("cryptoStatus", "Not Completed")
         setError("")
         dataHandler("cryptoDetails", {
             name: "",
@@ -76,26 +66,7 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
         })
     }
 
-    useEffect(() => {
-        if (step !== 2) return;
-        if (secondsLeft <= 0) return;
-        const id = setInterval(() => setSecondsLeft((s) => (s > 0 ? s - 1 : 0)), 1000)
-        return () => clearInterval(id)
-    }, [step, secondsLeft])
-
-    const formatTime = (s) => {
-        const m = Math.floor(s / 60)
-        const ss = s % 60
-        return `${String(m).padStart(2, '0')}:${String(ss).padStart(2, '0')}`
-    }
-
-
-
     const cryptoTransactionHandler = async () => {
-        if (data.cryptoStatus !== "Not Completed") {
-            handleClose()
-            return;
-        }
         const paymentId = `keabank_instapay_${Date.now()}`
         console.log(data.cryptoDetails)
         const payload = {
@@ -114,7 +85,6 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
 
         const createdTransaction = await mutation.mutateAsync(payload)
 
-        dataHandler("cryptoStatus", "Processing")
 
         const paymentConfig = {
             amount: feeDetails?.total,
@@ -125,6 +95,7 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
 
 
         const paymentStatus = sdk.init(paymentConfig);
+        handleClose()
 
         paymentStatus.then(async (status) => {
             console.log(status)
@@ -134,30 +105,26 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
                     transaction_id: createdTransaction.transaction_id,
                     flag: true,
                 })
-                dataHandler("cryptoStatus", "Completed")
             } else {
                 await flagTransaction.mutateAsync({
                     transaction_id: createdTransaction.transaction_id,
                     flag: false,
                 })
-                dataHandler("cryptoStatus", "Canceled")
             }
         })
     }
 
     const clickHandler = async () => {
-        if (step === 1) {
-            const numberCheck = await verifyPhoneNumber(data?.cryptoDetails?.phone)
-            if (numberCheck === "Verified") {
-                setStep(2)
-            } else {
-                toast.error("Incorrect phone number, please enter a correct phone number")
-            }
-        } else {
+
+        setLoading(true)
+        const numberCheck = await verifyPhoneNumber(data?.cryptoDetails?.phone)
+        setLoading(false)
+        if (numberCheck === "Verified") {
             cryptoTransactionHandler()
+        } else {
+            toast.error("Incorrect phone number, please enter a correct phone number")
         }
     }
-
 
     useEffect(() => {
         const iso = localStorage.getItem("ip_country") ?? "USA"
@@ -166,10 +133,8 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
         setCountry(country)
     }, [])
 
-
-
     return (
-        <Modal centered isOpen={data.showCryptoModal && data.cryptoStatus !== "Processing"} style={{ minWidth: window.innerWidth > 850 && "800px", overflow: "hidden", margin: "0px auto" }} toggle={handleClose} >
+        <Modal centered isOpen={data.showCryptoModal} style={{ minWidth: window.innerWidth > 850 && "800px", overflow: "hidden", margin: "0px auto" }} toggle={handleClose} >
             <ModalBody style={{ minHeight: width < 850 && "100vh", background: width < 850 && "#fafafafa" }}>
                 <div className={styles.container}>
                     {width > 850 &&
@@ -187,163 +152,106 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
                         </div>
                     }
                     <div className={styles.right}>
-                        {
-                            step === 1 &&
+
+                        <div>
+                            <h3>
+                                {t("Personal details")}
+                            </h3>
+                            <p>
+                                {t("Please finalize your payment by entering the required personal information.")}
+                            </p>
+
                             <div>
-                                <h3>
-                                    {t("Personal details")}
-                                </h3>
-                                <p>
-                                    {t("Please finalize your payment by entering the required personal information.")}
-                                </p>
-
-                                <div>
-                                    <label htmlFor="name">{t("Full Name")}{"*:"}</label>
-                                    <TextInput
-                                        styles={{ background: "#f7f7f7" }}
-                                        id='name'
-                                        placeholder={t("Enter your Name")}
-                                        value={data?.cryptoDetails?.name}
-                                        onChange={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, name: e.target.value })}
-                                    />
-                                </div>
-                                <div>
-                                    <label htmlFor="">{t("Phone Number with country code")}{"*:"}</label>
-                                    <PhoneInput
-                                        phone={data?.cryptoDetails?.phone}
-                                        setPhone={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, phone: e })}
-                                        country={localStorage.getItem("ip_country") ?? "USA"}
-                                        setCountry={(e) => {
-                                            console.log('Phone country changed:', e)
-                                            const country = countriesData.find(item => item.alpha3 === e)
-                                            if (country) {
-                                                setCountry(country)
-                                            }
-                                        }}
-                                        customStyles={{
-                                            background: "#f7f7f7",
-                                            boxShadow: "none",
-                                            border: "1px solid rgb(229, 231, 235)",
-                                            padding: "12px"
-                                        }}
-                                    />
-                                </div>
-                                <div>
-                                    <label htmlFor="email">{t("Email (Optional)")}</label>
-                                    <TextInput
-                                        styles={{ background: "#f7f7f7" }}
-                                        id='email'
-                                        placeholder={"eg: info@google.com"}
-                                        value={data?.cryptoDetails?.email}
-                                        onChange={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, email: e.target.value })}
-                                    />
-                                </div>
-
-                                <div>
-                                    <label htmlFor="purpose">{t("Payment Purpose")}{"*:"}</label>
-                                    <Select
-                                        placeholder={t("Select Purpose of Payment")}
-                                        value={data?.cryptoDetails?.reason}
-                                        onChange={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, reason: e.target.value })}
-                                        options={Object.keys(reasons).map(i => (
-                                            {
-                                                value: i,
-                                                label: t(reasons[i])
-                                            }
-                                        ))}
-                                        id='purpose'
-                                        style={{
-                                            background: "#f7f7f7"
-                                        }}
-                                    />
-                                </div>
-
-                                <div style={{ marginBottom: "1.5rem" }}>
-                                    <label htmlFor="paymentRef">{t("Payment Reference (Optional)")}</label>
-                                    <TextInput
-                                        styles={{ background: "#f7f7f7" }}
-                                        id='paymentRef'
-                                        value={data?.cryptoDetails?.paymentRef}
-                                        onChange={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, paymentRef: e.target.value })}
-                                    />
-                                </div>
+                                <label htmlFor="name">{t("Full Name")}{"*:"}</label>
+                                <TextInput
+                                    styles={{ background: "#f7f7f7" }}
+                                    id='name'
+                                    placeholder={t("Enter your Name")}
+                                    value={data?.cryptoDetails?.name}
+                                    onChange={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, name: e.target.value })}
+                                />
                             </div>
-                        }
-
-                        {step === 2 && (
-                            <div style={{ width: "100%" }}>
-
-                                {data.cryptoStatus === "Not Completed" &&
-                                    <div className={styles.timer}>
-                                        <img src={clockSvg} alt="clock" width={16} height={16} />
-                                        {formatTime(secondsLeft)} {t("Left")}
-                                    </div>
-                                }
-
-                                <div className={styles.amount}>
-                                    <div style={{ padding: "0px" }} className={styles.left}>
-                                        <span>{t("Total amount to pay")}</span>
-                                        <div>
-                                            <h2>{(formatCurrency(feeDetails?.total) ?? 0)}</h2>
-                                            <span>USDT(TRC20)</span>
-                                        </div>
-                                    </div>
-                                    <div className={styles.qr}>
-                                        <img src={qr} alt="" />
-                                        <p>{t("Scan to pay")}</p>
-                                    </div>
-                                </div>
-
-                                <p style={{ margin: "20px 0 10px 0", fontWeight: 700, color: "black", textAlign: "center" }}>{t("TRC20 Network only")}</p>
-                                <div className={styles.id}>
-                                    <span id="crypto-address" style={{ flex: 1, wordBreak: "break-all" }}>TKBYYHJmpQjkBELSJTpmiEJE78K7F9ov7f</span>
-                                    <img
-                                        src={copy}
-                                        alt="copy"
-                                        style={{ cursor: "pointer" }}
-                                        onClick={() => {
-                                            const addr = document.getElementById("crypto-address")?.textContent || ""
-                                            if (!addr) return
-                                            navigator.clipboard.writeText(addr)
-                                                .then(() => toast.success(t("Copied to clipboard")))
-                                                .catch(() => toast.error(t("Failed to copy")))
-                                        }}
-                                    />
-                                </div>
-
-                                <div className={styles.statusDiv}>
-                                    <div>
-                                        <p>{t("Status")}</p>
-                                        <span style={{ background: data.cryptoStatus === "Completed" ? "rgb(105 247 8 / 19%)" : data.cryptoStatus === "Canceled" ? "rgb(247 8 8 / 8%)" : "rgba(247, 144, 8, 0.08)", color: data.cryptoStatus === "Completed" ? "green" : data.cryptoStatus === "Canceled" ? "red" : "#F79008" }}>{t(data.cryptoStatus)}</span>
-                                    </div>
-                                    <div>
-                                        <p>{t("Payment purpose")}</p>
-                                        <p style={{ marginBottom: 0 }}>{reasons[data.cryptoDetails?.reason]}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-
-                        <div style={{ display: width > 840 ? "grid" : "flex", gridTemplateColumns: data.cryptoStatus === "Not Completed" ? "1fr 1fr" : "1fr", gap: "15px", width: "100%", flexDirection: "column-reverse" }}>
-                            {data.cryptoStatus === "Not Completed" &&
-                                <button
-                                    style={{
-                                        width: "100%",
-                                        background: "#e9ecef",
-                                        border: "none",
-                                        outline: "none",
-                                        borderRadius: "4px",
+                            <div>
+                                <label htmlFor="">{t("Phone Number with country code")}{"*:"}</label>
+                                <PhoneInput
+                                    phone={data?.cryptoDetails?.phone}
+                                    setPhone={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, phone: e })}
+                                    country={localStorage.getItem("ip_country") ?? "USA"}
+                                    setCountry={(e) => {
+                                        console.log('Phone country changed:', e)
+                                        const country = countriesData.find(item => item.alpha3 === e)
+                                        if (country) {
+                                            setCountry(country)
+                                        }
+                                    }}
+                                    customStyles={{
+                                        background: "#f7f7f7",
+                                        boxShadow: "none",
+                                        border: "1px solid rgb(229, 231, 235)",
                                         padding: "12px"
                                     }}
-                                    onClick={() => (step === 2 ? setStep(1) : dataHandler("showCryptoModal", false))}
-                                >
-                                    {step === 2 ? t("Back") : t("Cancel")}
-                                </button>
-                            }
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="email">{t("Email (Optional)")}</label>
+                                <TextInput
+                                    styles={{ background: "#f7f7f7" }}
+                                    id='email'
+                                    placeholder={"eg: info@google.com"}
+                                    value={data?.cryptoDetails?.email}
+                                    onChange={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, email: e.target.value })}
+                                />
+                            </div>
 
-                            <ButtonForRequests style={{ borderRadius: "4px" }} onClick={clickHandler} isLoading={!data.cryptoDetails?.reason || !data.cryptoDetails?.phone || !data.cryptoDetails?.name || mutation.isPending}>
-                                {data.cryptoStatus === "Not Completed" ? t("Next") : t("Close")}
+                            <div>
+                                <label htmlFor="purpose">{t("Payment Purpose")}{"*:"}</label>
+                                <Select
+                                    placeholder={t("Select Purpose of Payment")}
+                                    value={data?.cryptoDetails?.reason}
+                                    onChange={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, reason: e.target.value })}
+                                    options={Object.keys(reasons).map(i => (
+                                        {
+                                            value: i,
+                                            label: t(reasons[i])
+                                        }
+                                    ))}
+                                    id='purpose'
+                                    style={{
+                                        background: "#f7f7f7"
+                                    }}
+                                />
+                            </div>
+
+                            <div style={{ marginBottom: "1.5rem" }}>
+                                <label htmlFor="paymentRef">{t("Payment Reference (Optional)")}</label>
+                                <TextInput
+                                    styles={{ background: "#f7f7f7" }}
+                                    id='paymentRef'
+                                    value={data?.cryptoDetails?.paymentRef}
+                                    onChange={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, paymentRef: e.target.value })}
+                                />
+                            </div>
+                        </div>
+
+
+                        <div style={{ display: width > 840 ? "grid" : "flex", gridTemplateColumns: "1fr 1fr", gap: "15px", width: "100%", flexDirection: "column-reverse" }}>
+                            <button
+                                style={{
+                                    width: "100%",
+                                    background: "#e9ecef",
+                                    border: "none",
+                                    outline: "none",
+                                    borderRadius: "4px",
+                                    padding: "12px"
+                                }}
+                                onClick={() => handleClose()}
+                            >
+                                {t("Cancel")}
+                            </button>
+
+
+                            <ButtonForRequests style={{ borderRadius: "4px" }} onClick={clickHandler} isLoading={!data.cryptoDetails?.reason || !data.cryptoDetails?.phone || !data.cryptoDetails?.name || mutation.isPending || loading}>
+                                {t("Next")}
                             </ButtonForRequests>
 
                         </div>
