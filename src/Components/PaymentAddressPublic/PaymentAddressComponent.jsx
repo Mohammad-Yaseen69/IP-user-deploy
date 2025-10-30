@@ -17,20 +17,19 @@ import { FreeMode, Mousewheel, Pagination } from "swiper";
 import { useQuery } from "@tanstack/react-query";
 import useWindowWidth from "../../utils/useWindowWidth";
 import ip from "./instapay_black.svg";
+import PayWithCrypto from "./PayWithCrypto"
 
-// Lazy-loaded components
+
 const QrDetails = lazy(() => import("./QrDetails"));
 const PayAsGuest = lazy(() => import("./PayAsGuest"));
 const InstaPayLoader = lazy(() => import("../Loader"));
 const PortfolioCard = lazy(() => import("../Portfolio/PortfolioCard"));
 const UserDets = lazy(() => import("./UserDets"));
 const AmountContainer = lazy(() => import("./AmountContainer"));
-const PayWithCrypto = lazy(() => import("./PayWithCrypto"));
 const LanguagePicker = lazy(() => import("../LanguagePicker"));
 const AnimatedHeader = lazy(() => import("./AnimatedHeader"));
 
 
-// Initial state
 const initialState = {
   userCountry: {},
   paymentAddressDetails: null,

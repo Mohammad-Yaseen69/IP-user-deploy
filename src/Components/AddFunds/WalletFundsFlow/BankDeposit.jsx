@@ -12,7 +12,7 @@ import { formatCurrency } from '../../../Helper/AmountFormat'
 import InstaPayLoader from '../../Loader'
 import PaymentDetails from '../../PaymentAddressPublic/PayAsGuest/PaymentDetails'
 
-const BankDeposit = ({ data, dataHandler, type = "add_funds", guestDetails, toggle }) => {
+const BankDeposit = ({ data, dataHandler, type = "add_funds", guestDetails, toggle, client_reference }) => {
     const { userDetails } = useContext(UserContext)
     const [selectedBank, setSelectedBank] = useState({})
     const { data: bankList, isLoading } = useQuery({
@@ -157,6 +157,7 @@ const BankDeposit = ({ data, dataHandler, type = "add_funds", guestDetails, togg
             formData.append('sendingCurrency', selectedBank.Currency || selectedBank['Currency'] || '')
             formData.append("type", type)
             formData.append("guest_details", JSON.stringify(guestDetails))
+            formData.append("client_reference", client_reference)
             formData.append('file', file)
 
             createDepositMutation.mutate(formData)

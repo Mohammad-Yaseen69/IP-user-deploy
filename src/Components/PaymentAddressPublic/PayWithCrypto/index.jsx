@@ -19,13 +19,15 @@ import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import ErrorModal from '../../PaymentsNewer/InternationalFlow/ErrorModal'
 import countriesData from "../../PaymentsNewer/CountriesData.json"
 
-const PayWithCrypto = ({ user, data, dataHandler, type = "payment_address", invoiceId }) => {
+const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId }) => {
     const { t } = useTranslation()
     const [step, setStep] = useState(1)
     const [secondsLeft, setSecondsLeft] = useState(30 * 60)
     const [error, setError] = useState()
     const [status, setStatus] = useState("Not Completed")
     const [country, setCountry] = useState({})
+
+
 
     const { data: feeDetails } = useQuery({
         queryKey: ['CryptoFee', data.amount, data.currentWallet?.wallet_id],
@@ -112,6 +114,9 @@ const PayWithCrypto = ({ user, data, dataHandler, type = "payment_address", invo
 
         const createdTransaction = await mutation.mutateAsync(payload)
 
+        setStatus("Processing")
+        dataHandler("showCryptoModal", false)
+
         const paymentConfig = {
             amount: feeDetails?.total,
             orderId: createdTransaction.payment_id,
@@ -119,19 +124,20 @@ const PayWithCrypto = ({ user, data, dataHandler, type = "payment_address", invo
             currency: 'USDT_TRC20',
         };
 
-        console.log(paymentConfig)
-
 
         const paymentStatus = sdk.init(paymentConfig);
 
         paymentStatus.then(async (status) => {
             console.log(status)
-            if (status === 'success') {
+            dataHandler("showCryptoModal", true)
+
+            if (status === 'paid' || status === "success") {
                 await flagTransaction.mutateAsync({
-                    transaction_id: createdTransaction.transaction_id,
+                     transaction_id: createdTransaction.transaction_id,
                     flag: true,
                 })
                 setStatus("Completed")
+                handleClose()
             } else {
                 await flagTransaction.mutateAsync({
                     transaction_id: createdTransaction.transaction_id,
@@ -265,10 +271,12 @@ const PayWithCrypto = ({ user, data, dataHandler, type = "payment_address", invo
                         {step === 2 && (
                             <div style={{ width: "100%" }}>
 
-                                <div className={styles.timer}>
-                                    <img src={clockSvg} alt="clock" width={16} height={16} />
-                                    {formatTime(secondsLeft)} {t("Left")}
-                                </div>
+                                {status === "Not Completed" &&
+                                    <div className={styles.timer}>
+                                        <img src={clockSvg} alt="clock" width={16} height={16} />
+                                        {formatTime(secondsLeft)} {t("Left")}
+                                    </div>
+                                }
 
                                 <div className={styles.amount}>
                                     <div style={{ padding: "0px" }} className={styles.left}>
@@ -304,7 +312,7 @@ const PayWithCrypto = ({ user, data, dataHandler, type = "payment_address", invo
                                 <div className={styles.statusDiv}>
                                     <div>
                                         <p>{t("Status")}</p>
-                                        <span>{t(status)}</span>
+                                        <span style={{ background: status === "Completed" ? "rgb(105 247 8 / 19%)" : status === "Canceled" ? "rgb(247 8 8 / 8%)" : "rgba(247, 144, 8, 0.08)", color: status === "Completed" ? "green" : status === "Canceled" ? "red" : "#F79008" }}>{t(status)}</span>
                                     </div>
                                     <div>
                                         <p>{t("Payment purpose")}</p>
@@ -316,19 +324,21 @@ const PayWithCrypto = ({ user, data, dataHandler, type = "payment_address", invo
 
 
                         <div style={{ display: width > 840 ? "grid" : "flex", gridTemplateColumns: "1fr 1fr", gap: "15px", width: "100%", flexDirection: "column-reverse" }}>
-                            <button
-                                style={{
-                                    width: "100%",
-                                    background: "#e9ecef",
-                                    border: "none",
-                                    outline: "none",
-                                    borderRadius: "4px",
-                                    padding: "12px"
-                                }}
-                                onClick={() => (step === 2 ? setStep(1) : dataHandler("showCryptoModal", false))}
-                            >
-                                {step === 2 ? t("Back") : t("Cancel")}
-                            </button>
+                            {status === "Not Completed" &&
+                                <button
+                                    style={{
+                                        width: "100%",
+                                        background: "#e9ecef",
+                                        border: "none",
+                                        outline: "none",
+                                        borderRadius: "4px",
+                                        padding: "12px"
+                                    }}
+                                    onClick={() => (step === 2 ? setStep(1) : dataHandler("showCryptoModal", false))}
+                                >
+                                    {step === 2 ? t("Back") : t("Cancel")}
+                                </button>
+                            }
 
                             <ButtonForRequests style={{ borderRadius: "4px" }} onClick={clickHandler} isLoading={!data.cryptoDetails?.reason || !data.cryptoDetails?.phone || !data.cryptoDetails?.name || mutation.isPending}>
                                 {status === "Not Completed" ? t("Next") : t("Close")}

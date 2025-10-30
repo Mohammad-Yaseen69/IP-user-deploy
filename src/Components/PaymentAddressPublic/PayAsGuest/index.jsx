@@ -647,6 +647,7 @@ const PayAsGuest = ({
                           email: data.email,
                           iso_code: data.country?.alpha3
                         }}
+                        client_reference={data.paymentRef}
                         toggle={toggle}
                       />
                 )
@@ -965,6 +966,7 @@ const PayAsGuest = ({
                           email: data.email,
                           iso_code: data.country?.alpha3
                         }}
+                        client_reference={data.paymentRef}
                         toggle={toggle}
                       />
                   )
