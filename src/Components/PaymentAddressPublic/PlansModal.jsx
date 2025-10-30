@@ -241,13 +241,13 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
                 username={user_name}
                 user={user}
                 planId={selectedPlan?.planId}
-                type='plans'
+                type='plan'
             />
 
             <PayWithCrypto
                 data={data}
                 dataHandler={dataHandler}
-                type='plans'
+                type='plan'
                 isOpen={showCryptoModal}
                 toggle={() => setShowCryptoModal(false)}
             />

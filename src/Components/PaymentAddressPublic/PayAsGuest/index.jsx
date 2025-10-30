@@ -111,7 +111,7 @@ const PayAsGuest = ({
       };
 
       if (planId) {
-        payload.planId = planId
+        payload.plan_id = planId
       }
       if (invoiceId) {
         payload.invoice_id = invoiceId;
@@ -177,7 +177,7 @@ const PayAsGuest = ({
       };
 
       if (planId) {
-        payload.planId = planId
+        payload.plan_id = planId
       }
       if (invoiceId) {
         payload.invoice_id = invoiceId;
