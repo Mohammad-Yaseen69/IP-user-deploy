@@ -32,8 +32,10 @@ window.addEventListener("error", (e) => {
 
 // In index.js or App.js (dev only)
 if (import.meta.env.NODE_ENV === "development") {
-  window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = () => {};
+  window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = () => { };
 }
+
+console.log(import.meta.env)
 
 Sentry.init({
   dsn: "https://448eafaae4776c67a2f5831cf64a23e5@o4509485673349120.ingest.us.sentry.io/4509485675118592",
@@ -55,10 +57,10 @@ Sentry.init({
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
   environment:
-    import.meta.env.NODE_ENV === "development" ? "development" : "production",
+    import.meta.env.DEV ? "development" : "production",
   beforeSend(event) {
     console.log(event, "Sentry Event");
-    if (import.meta.env.NODE_ENV === "development") {
+    if (import.meta.env.DEV) {
       return null;
     }
     return event;

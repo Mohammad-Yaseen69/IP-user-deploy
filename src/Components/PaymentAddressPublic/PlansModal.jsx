@@ -90,7 +90,6 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
         }
     }
 
-    console.log(selectedPlan)
 
     return (
         <>
@@ -243,6 +242,7 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
                 planId={selectedPlan?.planId}
                 type='plan'
             />
+
 
             <PayWithCrypto
                 data={data}
