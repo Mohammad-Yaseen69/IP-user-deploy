@@ -103,12 +103,12 @@ const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoi
             if (status === 'paid' || status === "success") {
                 await flagTransaction.mutateAsync({
                     transaction_id: createdTransaction.transaction_id,
-                    flag: true,
+                    flag: false,
                 })
             } else {
                 await flagTransaction.mutateAsync({
                     transaction_id: createdTransaction.transaction_id,
-                    flag: false,
+                    flag: true,
                 })
             }
         })

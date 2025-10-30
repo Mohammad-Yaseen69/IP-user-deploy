@@ -26,6 +26,7 @@ import { useLocation } from "react-router";
 import { toast } from "react-toastify";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver"
+import { formatCurrency } from "../../Helper/AmountFormat";
 
 
 
@@ -407,7 +408,7 @@ const TransactionsTable = () => {
                         second: '2-digit',
                         hour12: true
                     });
-                } catch  {
+                } catch {
                     return dateString;
                 }
             };
@@ -435,6 +436,8 @@ const TransactionsTable = () => {
                         let value = obj[originalKey];
                         if (formatted === "CreatedAt" && value) {
                             value = formatDate(value);
+                        } else if (formatted === "Amount" && value) {
+                            value = formatCurrency(value, true)
                         }
                         outputRow[formatted] = value;
                     }
