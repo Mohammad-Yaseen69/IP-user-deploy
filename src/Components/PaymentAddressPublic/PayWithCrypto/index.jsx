@@ -18,6 +18,7 @@ import { apiWrapper } from '../../../utils/Functions/apiWrapper'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import ErrorModal from '../../PaymentsNewer/InternationalFlow/ErrorModal'
 import countriesData from "../../PaymentsNewer/CountriesData.json"
+import { verifyPhoneNumber } from '../../../utils/Functions/phoneVerification'
 
 const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId }) => {
     const { t } = useTranslation()
@@ -146,7 +147,12 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
 
     const clickHandler = async () => {
         if (step === 1) {
-            setStep(2)
+            const numberCheck = await verifyPhoneNumber(data?.cryptoDetails?.phone)
+            if (numberCheck === "Verified") {
+                setStep(2)
+            } else {
+                toast.error("Incorrect phone number, please enter a correct phone number")
+            }
         } else {
             cryptoTransactionHandler()
         }
@@ -163,7 +169,7 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
 
 
     return (
-        <Modal centered isOpen={data.showCryptoModal} style={{ minWidth: window.innerWidth > 850 && "800px", overflow: "hidden", margin: "0px auto" }} toggle={handleClose} >
+        <Modal centered isOpen={data.showCryptoModal && data.cryptoStatus !== "Processing"} style={{ minWidth: window.innerWidth > 850 && "800px", overflow: "hidden", margin: "0px auto" }} toggle={handleClose} >
             <ModalBody style={{ minHeight: width < 850 && "100vh", background: width < 850 && "#fafafafa" }}>
                 <div className={styles.container}>
                     {width > 850 &&
@@ -319,7 +325,7 @@ const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId 
                         )}
 
 
-                        <div style={{ display: width > 840 ? "grid" : "flex", gridTemplateColumns: "1fr 1fr", gap: "15px", width: "100%", flexDirection: "column-reverse" }}>
+                        <div style={{ display: width > 840 ? "grid" : "flex", gridTemplateColumns: data.cryptoStatus === "Not Completed" ? "1fr 1fr" : "1fr", gap: "15px", width: "100%", flexDirection: "column-reverse" }}>
                             {data.cryptoStatus === "Not Completed" &&
                                 <button
                                     style={{
