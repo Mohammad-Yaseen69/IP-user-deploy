@@ -12,6 +12,7 @@ import { Check } from "react-feather"
 import { Button } from "reactstrap"
 import ImageSwiperView from "../ImageSwiperView"
 import { UserContext } from "../../Context/UserContext"
+import { formatCurrency } from "../../Helper/AmountFormat"
 
 const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver, selectedCategory, setSelectedCategory, isEditMode, showCategories = false, addCategoriesToTransaction, message, setMessage, setIsEditMode, isSaving, note, setNote, fromReferral = false, vvc, amount, cardNo }) => {
     const { t } = useTranslation()
@@ -132,7 +133,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                         </div>
                 }
                 <div className={styles.er_item}>
-                    <span>{t("Fees")}: {Number(item?.fee ?? 0)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {item?.currency?.code || item?.currency} </span>
+                    <span>{t("Fees")}: {formatCurrency(item?.fee, true)} {item?.currency?.code || item?.currency} </span>
                 </div>
                 {
                     item?.payment_type?.toLowerCase() === "commission" && item?.replacement_currency?.value
