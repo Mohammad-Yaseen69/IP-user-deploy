@@ -16,7 +16,7 @@ import ErrorModal from '../../PaymentsNewer/InternationalFlow/ErrorModal'
 import countriesData from "../../PaymentsNewer/CountriesData.json"
 import { verifyPhoneNumber } from '../../../utils/Functions/phoneVerification'
 
-const PayWithCrypto = ({ data, dataHandler, type = "payment_address", invoiceId, isOpen, toggle }) => {
+const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoiceId, isOpen, toggle }) => {
     const { t } = useTranslation()
     const [error, setError] = useState()
     const [loading, setLoading] = useState(false)

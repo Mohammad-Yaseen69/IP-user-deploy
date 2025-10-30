@@ -379,7 +379,7 @@ const PayAsGuest = ({
       }
     }
     return disabled;
-  }, [data]);
+  }, [data, isShipping]);
 
   const getFeesPaypal = async () => {
     dataHandler("loading", true);

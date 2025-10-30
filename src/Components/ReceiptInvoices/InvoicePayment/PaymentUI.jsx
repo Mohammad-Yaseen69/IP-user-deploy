@@ -60,7 +60,7 @@ const PaymentUI = ({ data, dataHandler, user_name, state, url, toggleCreditModal
             label: "Pay with Crypto",
             logo: CryptoPay,
             onClick: () => {
-                dataHandler("showCreditModal", true)
+                dataHandler("showCryptoModal", true)
             }
         },
         {

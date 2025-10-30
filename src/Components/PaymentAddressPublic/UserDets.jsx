@@ -166,16 +166,18 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
             }
 
 
-            <PlansModal
-                isOpen={showPlansModal}
-                toggle={() => setShowPlansModal(false)}
-                plansData={plansData}
-                isLoading={isLoading}
-                user_name={user_name}
-                user={user}
-                data={data}
-                dataHandler={dataHandler}
-            />
+            {!invoice &&
+                <PlansModal
+                    isOpen={showPlansModal}
+                    toggle={() => setShowPlansModal(false)}
+                    plansData={plansData}
+                    isLoading={isLoading}
+                    user_name={user_name}
+                    user={user}
+                    data={data}
+                    dataHandler={dataHandler}
+                />
+            }
         </div>
     )
 }

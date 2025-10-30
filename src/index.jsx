@@ -35,8 +35,6 @@ if (import.meta.env.NODE_ENV === "development") {
   window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = () => { };
 }
 
-console.log(import.meta.env)
-
 Sentry.init({
   dsn: "https://448eafaae4776c67a2f5831cf64a23e5@o4509485673349120.ingest.us.sentry.io/4509485675118592",
   sendDefaultPii: true,
