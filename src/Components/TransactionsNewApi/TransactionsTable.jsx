@@ -23,10 +23,8 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import InstaPayLoader from "../Loader";
 import TransactionItemMobile from "./Mobile/TransactionItemMobile";
 import { useLocation } from "react-router";
-import { toast } from "react-toastify";
-import * as XLSX from "xlsx";
-import { saveAs } from "file-saver"
-import { formatCurrency } from "../../Helper/AmountFormat";
+import { exportToExcel } from "../../utils/Functions/csvExport";
+
 
 
 
@@ -335,148 +333,7 @@ const TransactionsTable = () => {
     }, [])
 
 
-    const formatHeader = (header) => {
-        return header
-            .split(".")
-            .map((part) => part?.split("_")?.map((word) => word[0]?.toUpperCase() + word?.slice(1)).filter(word => !word.includes("undefined"))?.join(" "))
-            .join(" ");
-    };
 
-    const flattenObject = (obj, prefix = '') => {
-        return Object.keys(obj).reduce((acc, key) => {
-            const propName = prefix ? `${prefix}.${key}` : key;
-            if (typeof obj[key] === 'object' && obj[key] !== null) {
-                if (Array.isArray(obj[key])) {
-                    acc[propName] = obj[key].map(item => {
-                        if (typeof item === 'object' && item !== null) {
-                            return JSON.stringify(item);
-                        }
-                        return item;
-                    }).join(' | ');
-                } else {
-                    Object.assign(acc, flattenObject(obj[key], propName));
-                }
-            } else {
-                acc[propName] = obj[key];
-            }
-            return acc;
-        }, {});
-    };
-
-    const exportToExcel = async () => {
-        setExportLoading(true)
-        if (!transactions || transactions.length === 0) {
-            toast.error("No Transactions to import")
-            setExportLoading(false)
-            return;
-        }
-        try {
-
-            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/account-transactions/${userDetails?._id}/1/99999999999`, {
-                headers: authHeader
-            });
-            const dec = decryptData(res.data.data);
-
-            const allTransactions = dec?.transactionList || [];
-
-            const desiredHeaders = [
-                "CreatedAt",
-                "Reference Id",
-                "Currency Code",
-                "Recipient Name",
-                "Payment Type",
-                'Transaction Type',
-                "Type",
-                "Status",
-                "Amount",
-                "Payment Reference",
-                "Wallet Id",
-            ];
-
-            const flatTransactions = allTransactions.map(transaction => flattenObject(transaction));
-
-            const formatDate = (dateString) => {
-                if (!dateString) return "";
-                try {
-                    const date = new Date(dateString);
-                    return date.toLocaleString('en-US', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                        hour12: true
-                    });
-                } catch {
-                    return dateString;
-                }
-            };
-
-            const rowsWithDesiredHeaders = flatTransactions.map(obj => {
-                const outputRow = {};
-
-                const receiverFirstName = obj["receiver.user.first_name"] || obj["receiver.user.firstName"] || obj["receiver.company.company_name"] || obj["account.user.first_name"];
-                const receiverLastName = obj["receiver.user.last_name"] || obj["receiver.user.lastName"] || obj["account.user.first_name"]
-                const guestDetailsName = obj["guest_details.name"] || obj["guestDetails.name"];
-
-                if (receiverFirstName) {
-                    outputRow["Recipient Name"] = receiverFirstName + "" + (receiverLastName ?? "");
-                } else if (guestDetailsName) {
-                    outputRow["Recipient Name"] = guestDetailsName;
-                } else {
-                    outputRow["Recipient Name"] = "";
-                }
-
-                outputRow["Payment Reference"] = obj['client_reference'] || "-"
-
-                Object.keys(obj).forEach(originalKey => {
-                    const formatted = formatHeader(originalKey);
-                    if (desiredHeaders.includes(formatted) && formatted !== "Recipient Name") {
-                        let value = obj[originalKey];
-                        if (formatted === "CreatedAt" && value) {
-                            value = formatDate(value);
-                        } else if (formatted === "Amount" && value) {
-                            value = formatCurrency(value, true)
-                        }
-                        outputRow[formatted] = value;
-                    }
-                });
-                desiredHeaders.forEach(h => {
-                    if (!(h in outputRow)) outputRow[h] = undefined;
-                });
-                return outputRow;
-            });
-
-            const worksheet = XLSX.utils.json_to_sheet(rowsWithDesiredHeaders, { header: desiredHeaders });
-
-            const range = XLSX.utils.decode_range(worksheet["!ref"]);
-            for (let C = range.s.c; C <= range.e.c; ++C) {
-                const address = XLSX.utils.encode_cell({ r: range.s.r, c: C });
-                if (!worksheet[address]) continue;
-                worksheet[address].v = desiredHeaders[C] || worksheet[address].v;
-                worksheet[address].s = {
-                    font: { bold: true },
-                    alignment: { horizontal: "center" },
-                    fill: { fgColor: { rgb: "D3D3D3" } },
-                };
-            }
-
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
-
-            const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-            const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
-            saveAs(blob, "transactions.xlsx");
-
-            toast.success("Transaction export successfully")
-        } catch {
-            toast.error("Something went wrong while exporting Please Try again!")
-        }
-        setExportLoading(false)
-
-
-    };
     return (
         <div className={styles.table}>
             <div className={styles.menu}>
@@ -506,7 +363,7 @@ const TransactionsTable = () => {
                         <Input placeholder={t("Search Transactions")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
                     </div>
                     <img src={calendar} alt="c" onClick={handleDatePickerClick} />
-                    <span onClick={exportToExcel} style={{ background: "linear-gradient(346deg, rgb(230, 64, 103) 0%, rgb(89, 38, 240) 55.65%, rgb(72, 40, 160) 100%), rgb(217, 217, 217)", borderRadius: "8px", padding: "4px", marginBottom: "3px", pointerEvents: exportLoading && "none", opacity: exportLoading && .6, display: "flex" }}>
+                    <span onClick={() => exportToExcel(transactions, userDetails, setExportLoading)} style={{ background: "linear-gradient(346deg, rgb(230, 64, 103) 0%, rgb(89, 38, 240) 55.65%, rgb(72, 40, 160) 100%), rgb(217, 217, 217)", borderRadius: "8px", padding: "4px", marginBottom: "3px", pointerEvents: exportLoading && "none", opacity: exportLoading && .6, display: "flex" }}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
                             <path d="M21 6H17.8C16.1198 6 15.2798 6 14.638 6.32698C14.0735 6.6146 13.6146 7.07354 13.327 7.63803C13 8.27976 13 9.11984 13 10.8V12M21 6L18 3M21 6L18 9M10 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V16.2C3 17.8802 3 18.7202 3.32698 19.362C3.6146 19.9265 4.07354 20.3854 4.63803 20.673C5.27976 21 6.11984 21 7.8 21H16.2C17.8802 21 18.7202 21 19.362 20.673C19.9265 20.3854 20.3854 19.9265 20.673 19.362C21 18.7202 21 17.8802 21 16.2V14" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>

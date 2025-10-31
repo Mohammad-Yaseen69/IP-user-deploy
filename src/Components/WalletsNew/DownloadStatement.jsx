@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { DateRangePicker } from 'react-date-range'
 import { useTranslation } from 'react-i18next'
 import { Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
@@ -12,6 +12,7 @@ import img from "../../assets/images/logo/logo2.png"
 import { toast } from 'react-toastify'
 import "jspdf-autotable";
 import { service_name_formatter } from '../TransactionsNewApi/TransactionItem'
+import { exportToExcel } from '../../utils/Functions/csvExport'
 
 const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
     const { userDetails, authHeader, beneficiaries } = useContext(UserContext)
@@ -79,7 +80,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
-                callback(decrypted.transactionList)
+                callback(decrypted.transactionList, userDetails, () => { }, false)
                 setShowModal(false)
                 setApiDates(null)
                 setFileType("")
@@ -153,6 +154,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
         }
         return service_name_formatter(item?.payment_type)
     }
+
 
     const generatePDF = () => {
         setDownloading(true);
@@ -292,7 +294,13 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
             <ModalFooter>
                 <Button
                     disabled={!fileType || !apiDates || downlaoding}
-                    onClick={generatePDF}
+                    onClick={() => {
+                        if (fileType === "PDF") {
+                            generatePDF();
+                        } else if (fileType === "CSV") {
+                            getTransactions(exportToExcel);
+                        }
+                    }}
                     style={{
                         border: "none",
                         outline: "none",
