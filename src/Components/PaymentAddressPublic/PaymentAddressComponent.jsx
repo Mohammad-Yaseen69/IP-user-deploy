@@ -18,13 +18,13 @@ import { useQuery } from "@tanstack/react-query";
 import useWindowWidth from "../../utils/useWindowWidth";
 import ip from "./instapay_black.svg";
 import PayWithCrypto from "./PayWithCrypto"
+import UserDets from "./UserDets"
 
 
 const QrDetails = lazy(() => import("./QrDetails"));
 const PayAsGuest = lazy(() => import("./PayAsGuest"));
 const InstaPayLoader = lazy(() => import("../Loader"));
 const PortfolioCard = lazy(() => import("../Portfolio/PortfolioCard"));
-const UserDets = lazy(() => import("./UserDets"));
 const AmountContainer = lazy(() => import("./AmountContainer"));
 const LanguagePicker = lazy(() => import("../LanguagePicker"));
 const AnimatedHeader = lazy(() => import("./AnimatedHeader"));
@@ -370,6 +370,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
 
   const url = `/payments?payment_action=send_money&payment_type=payment_address&send_type=wallet&wallet_id=${state.currentWallet?.wallet_id}&currency=${state.currency}&amount=${state.amount}`;
 
+  console.log(state)
   return (
     <>
       {state.loading ? (

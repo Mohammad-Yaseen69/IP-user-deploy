@@ -147,7 +147,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                     {actionButtons.map((button, idx) => (
                         <button
                             key={idx}
-                            onClick={button.onClick}
+                            onClick={() => button.onClick()}
                             disabled={button.disable}
                             style={{
                                 padding: "10px 20px",
@@ -166,7 +166,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
             }
 
 
-            {!invoice &&
+            {!invoice && showPlansModal &&
                 <PlansModal
                     isOpen={showPlansModal}
                     toggle={() => setShowPlansModal(false)}
