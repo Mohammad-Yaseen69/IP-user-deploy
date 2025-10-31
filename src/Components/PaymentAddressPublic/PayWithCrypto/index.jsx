@@ -15,8 +15,9 @@ import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import ErrorModal from '../../PaymentsNewer/InternationalFlow/ErrorModal'
 import countriesData from "../../PaymentsNewer/CountriesData.json"
 import { verifyPhoneNumber } from '../../../utils/Functions/phoneVerification'
+import ShippingDetails from '../../ReceiptInvoices/InvoicePaymentQr/ShippingDetails'
 
-const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoiceId, isOpen, toggle }) => {
+const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoiceId, isOpen, toggle, isShipping }) => {
     const { t } = useTranslation()
     const [error, setError] = useState()
     const [loading, setLoading] = useState(false)
@@ -35,7 +36,7 @@ const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoi
             method: "POST",
         }),
         onError: (res) => {
-            const dec = decryptData(res.data.data)
+            const dec = decryptData(res.response?.data?.data)
             setError(dec?.message ?? "We are unable to process your request at the moment, please try again later.")
         }
     })
@@ -71,7 +72,7 @@ const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoi
         console.log(data.cryptoDetails)
         const payload = {
             token: feeDetails?.token,
-            shipping_details: data?.shipping_details,
+            shipping_details: data?.shippingDetails,
             payment_id: paymentId,
             client_reference: data?.cryptoDetails?.paymentRef || '',
             email: data?.cryptoDetails.email,
@@ -153,7 +154,7 @@ const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoi
                     }
                     <div className={styles.right}>
 
-                        <div>
+                        <div className={styles.form}>
                             <h3>
                                 {t("Personal details")}
                             </h3>
@@ -222,7 +223,7 @@ const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoi
                                 />
                             </div>
 
-                            <div style={{ marginBottom: "1.5rem" }}>
+                            <div>
                                 <label htmlFor="paymentRef">{t("Payment Reference (Optional)")}</label>
                                 <TextInput
                                     styles={{ background: "#f7f7f7" }}
@@ -231,6 +232,8 @@ const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoi
                                     onChange={(e) => dataHandler("cryptoDetails", { ...data.cryptoDetails, paymentRef: e.target.value })}
                                 />
                             </div>
+
+                            {isShipping && <ShippingDetails data={data} dataHandler={dataHandler} />}
                         </div>
 
 
@@ -250,7 +253,18 @@ const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoi
                             </button>
 
 
-                            <ButtonForRequests style={{ borderRadius: "4px" }} onClick={clickHandler} isLoading={!data.cryptoDetails?.reason || !data.cryptoDetails?.phone || !data.cryptoDetails?.name || mutation.isPending || loading}>
+                            <ButtonForRequests
+                                style={{ borderRadius: "4px" }}
+                                onClick={clickHandler}
+                                isLoading={
+                                    mutation.isPending ||
+                                    loading ||
+                                    !data.cryptoDetails?.reason ||
+                                    !data.cryptoDetails?.phone ||
+                                    !data.cryptoDetails?.name ||
+                                    (isShipping ? Object.values(data.shippingDetails || {}).some(val => !val) : false)
+                                }
+                            >
                                 {t("Next")}
                             </ButtonForRequests>
 

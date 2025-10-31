@@ -456,7 +456,6 @@ const WalletFundsFlow = ({ setAction }) => {
                         transition: "500ms",
                         position: "relative",
                         order: 1,
-                        height: "95vh"
                     }}>
                         <SendActionCard
                             bg={money}

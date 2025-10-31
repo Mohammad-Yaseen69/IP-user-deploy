@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router'
 import AnimatedHeader from '../../PaymentAddressPublic/AnimatedHeader'
 import useWindowWidth from '../../../utils/useWindowWidth'
 import PaymentActionsButtons from './PaymentActionsButtons'
+import PayWithCrypto from '../../PaymentAddressPublic/PayWithCrypto'
 
 
 
@@ -84,6 +85,21 @@ const PaymentUI = ({ data, dataHandler, user_name, state, url, toggleCreditModal
                     isShipping={data.shippingAddress}
                     invoiceId={data.invoiceId}
                     type='invoice'
+                />
+            }
+
+            {state.showCryptoModal &&
+                <PayWithCrypto
+                    data={{
+                        ...state,
+                        currentWallet: data.receivingWallet
+                    }}
+                    dataHandler={dataHandler}
+                    type='invoice'
+                    isOpen={state.showCryptoModal}
+                    toggle={() => dataHandler("showCryptoModal", false)}
+                    invoiceId={data.invoiceId}
+                    isShipping={data.shippingAddress}
                 />
             }
             <div className={styles.left}>

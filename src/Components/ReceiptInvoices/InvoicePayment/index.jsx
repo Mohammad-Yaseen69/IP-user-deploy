@@ -19,7 +19,21 @@ const initialState = {
   guestPayError: "",
   showVerTT: false,
   amount: "",
-  currentWallet: {}
+  currentWallet: {},
+  cryptoDetails: {
+    name: "",
+    phone: "",
+    reason: "",
+    email: "",
+  },
+  shippingDetails: {
+    houseNo: "",
+    street: "",
+    city: "",
+    state: "",
+    country: null,
+    zipCode: "",
+  },
 }
 
 function reducer(state, action) {
