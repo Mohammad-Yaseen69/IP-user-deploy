@@ -8,7 +8,6 @@ import { reasons } from '../../PaymentsNewer/AmountAndCurrency'
 import { toast } from "react-toastify"
 import useWindowWidth from '../../../utils/useWindowWidth'
 import "./styles/modal.css"
-import { sdk } from '../../..'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { apiWrapper } from '../../../utils/Functions/apiWrapper'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
@@ -16,6 +15,13 @@ import ErrorModal from '../../PaymentsNewer/InternationalFlow/ErrorModal'
 import countriesData from "../../PaymentsNewer/CountriesData.json"
 import { verifyPhoneNumber } from '../../../utils/Functions/phoneVerification'
 import ShippingDetails from '../../ReceiptInvoices/InvoicePaymentQr/ShippingDetails'
+import { WidgetSDK } from "@keabank/websdk";
+
+
+const sdk = new WidgetSDK({
+    integrationId: import.meta.env.VITE_KEABANK_INTEGRATION_ID,
+    merchantId: import.meta.env.VITE_KEABANK_MERCHANT_ID,
+});
 
 const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoiceId, isOpen, toggle, isShipping }) => {
     const { t } = useTranslation()

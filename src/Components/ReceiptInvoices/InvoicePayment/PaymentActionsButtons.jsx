@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import styles from './index.module.scss'
+import styles from './styles/index.module.scss'
 
 const PaymentActionsButtons = ({ actionButtons, inPlans, isRow, selectedAction, setSelectedAction }) => {
     const { t } = useTranslation()

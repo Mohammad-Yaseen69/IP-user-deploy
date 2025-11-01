@@ -4,7 +4,6 @@ import "./index.scss";
 import App from "./App";
 // import reportWebVitals from './reportWebVitals';
 import "./i18n";
-import { WidgetSDK } from "@keabank/websdk";
 
 // import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
@@ -67,10 +66,6 @@ Sentry.init({
   defaultIntegrations: false,
 });
 
-export const sdk = new WidgetSDK({
-  integrationId: import.meta.env.VITE_KEABANK_INTEGRATION_ID,
-  merchantId: import.meta.env.VITE_KEABANK_MERCHANT_ID,
-});
 
 const container = document.getElementById("root");
 const root = createRoot(container);

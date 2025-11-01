@@ -326,7 +326,7 @@ const UserState = ({ children }) => {
         }
     }
     useEffect(() => {
-        if (userDetails /*&& userWallets.length === 0*/) {
+        if (userDetails?._id /*&& userWallets.length === 0*/) {
             getUserWallets()
             getPAddressDets()
         }
@@ -429,7 +429,7 @@ const UserState = ({ children }) => {
 
     }
     useEffect(() => {
-        if (userDetails) {
+        if (userDetails?._id) {
             getProfileCompletionDetails()
         }
     }, [userDetails])
@@ -493,7 +493,7 @@ const UserState = ({ children }) => {
 
 
     useEffect(() => {
-        if (userDetails) {
+        if (userDetails?._id) {
             getWithdrawals()
         }
     }, [userDetails])
@@ -562,7 +562,7 @@ const UserState = ({ children }) => {
     const [threeDaysReminderInfo, set3DaysReminderInfo] = useState(false)
 
     useEffect(() => {
-        if (userDetails) {
+        if (userDetails?._id) {
             if (!userDetails?.user?.answer1 || !userDetails?.user?.answer2 || !userDetails?.user?.answer3) {
                 const getSecurityQuestionDetails = async () => {
                     try {

@@ -1,44 +1,28 @@
-import React from 'react'
-import styles from './index.module.scss'
+import styles from './styles/index.module.scss'
 import UserDets from '../../PaymentAddressPublic/UserDets'
 import { formatCurrency } from '../../../Helper/AmountFormat'
 import CountriesData from "../../PaymentsNewer/CountriesData.json"
 import PayAsGuest from '../../PaymentAddressPublic/PayAsGuest'
 import ip from "../../PaymentAddressPublic/instapay_black.svg";
 import { useTranslation } from 'react-i18next'
-import borderline from "./borderline.png"
 import LanguagePicker from '../../LanguagePicker'
 import addFunds from "../../HomeNewUpdated/files/AddFunds.png"
 import CryptoPay from "../../HomeNewUpdated/files/CryptoPay.svg"
 import logo from "../../../assets/images/logo/logo.png"
-import { isInIframe } from '../../../utils/Functions'
+import { isInIframe, openInNewTab } from '../../../utils/Functions'
 import { useNavigate } from 'react-router'
 import AnimatedHeader from '../../PaymentAddressPublic/AnimatedHeader'
 import useWindowWidth from '../../../utils/useWindowWidth'
 import PaymentActionsButtons from './PaymentActionsButtons'
 import PayWithCrypto from '../../PaymentAddressPublic/PayWithCrypto'
+import InvoiceDetails from './InvoiceDetails'
+import { useState } from 'react'
 
-
-
-
-
-const PaymentUI = ({ data, dataHandler, user_name, state, url, toggleCreditModal }) => {
+const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const width = useWindowWidth()
-    const openInNewTab = (url) => {
-        const newWindow = window.open(url, "_blank", "noopener,noreferrer");
-        if (!newWindow || newWindow.closed || typeof newWindow.closed === "undefined") {
-            const a = document.createElement("a");
-            a.href = url;
-            a.target = "_blank";
-            a.rel = "noopener noreferrer";
-            a.style.display = "none";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-    };
+    const [verificationBadge, setShowVerificationBadge] = useState(false)
 
     const actionButtons = [
         {
@@ -76,7 +60,7 @@ const PaymentUI = ({ data, dataHandler, user_name, state, url, toggleCreditModal
                 state.showCreditModal
                 &&
                 <PayAsGuest
-                    amount={formatCurrency(data.amount, true)}
+                    amount={formatCurrency(data.amount || data.price, true)}
                     isOpen={state.showCreditModal}
                     toggle={toggleCreditModal}
                     user={data.account}
@@ -92,7 +76,8 @@ const PaymentUI = ({ data, dataHandler, user_name, state, url, toggleCreditModal
                 <PayWithCrypto
                     data={{
                         ...state,
-                        currentWallet: data.receivingWallet
+                        currentWallet: data.receivingWallet,
+                        amount: data.amount || data.price
                     }}
                     dataHandler={dataHandler}
                     type='invoice'
@@ -106,8 +91,8 @@ const PaymentUI = ({ data, dataHandler, user_name, state, url, toggleCreditModal
                 <UserDets
                     cover={data?.account?.coverImage?.url}
                     dp={data?.account?.profileImage?.url}
-                    setShowVerTT={(value) => dataHandler("showVerTT", value)}
-                    showVerTT={state.showVerTT}
+                    setShowVerTT={(value) => setShowVerificationBadge(value)}
+                    showVerTT={verificationBadge}
                     userCountry={CountriesData.find(c => c.alpha3 === data?.account?.country?.country_iso_code)}
                     userDetails={{
                         ...data.account,
@@ -133,46 +118,12 @@ const PaymentUI = ({ data, dataHandler, user_name, state, url, toggleCreditModal
             </div>
 
             <div className={styles.right}>
-                <div className={styles.top}>
-                    <div className={styles.top_content}>
-                        <img src={ip} style={{ width: "150px" }} alt="" />
-                        <h1>{t("Invoice")?.toUpperCase()} </h1>
-                    </div>
 
-                    <img style={{ width: "100%" }} src={borderline} alt="" />
-                </div>
-
-                <div className={styles.details}>
-                    <div>
-                        <span>
-                            {t("Invoice Title")}
-                        </span>
-                        <h2>
-                            {data.title}
-                        </h2>
-                    </div>
-                    <div>
-                        <span>
-                            {t("Invoice ID")}
-                        </span>
-                        <h4>
-                            {data.invoiceId}
-                        </h4>
-                    </div>
-                    <div>
-                        <span>
-                            {t("Invoice Description")}
-                        </span>
-                        <h2>
-                            {data.description}
-                        </h2>
-                    </div>
-                </div>
-
+                <InvoiceDetails data={data} />
 
                 <div className={styles.amount}>
                     <span> {t("Amount")} </span>
-                    <h1>{data.currency} {formatCurrency(data.amount, true)}</h1>
+                    <h1>{data.currency} {formatCurrency(data.amount || data.price, true)}</h1>
                 </div>
 
                 {!data.paid ?

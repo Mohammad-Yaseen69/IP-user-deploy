@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from 'react'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import { UserContext } from '../../Context/UserContext';
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
+import { toast } from 'react-toastify';
 
 
 const neemaMethodIDs = {
@@ -81,6 +82,7 @@ const useChannels = ({ setLoading, setActive, countryIsoCode, countryId, setCurr
                                     setMobileProviders(dec)
                                 })
                                 .catch(err => {
+                                    toast.error(decryptData(err.response.data.data))
                                 })
                         }
                     })

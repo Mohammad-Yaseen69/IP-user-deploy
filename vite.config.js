@@ -35,6 +35,14 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
+    },
+    hmr: {
+      overlay: true,
+      log: true
+    },
+    watch: {
+      usePolling: true,
+      interval: 100
     }
   },
   build: {

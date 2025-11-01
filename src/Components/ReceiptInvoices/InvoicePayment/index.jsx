@@ -1,6 +1,6 @@
 import { useEffect, useReducer } from 'react'
-import styles from './index.module.scss'
-import background from "./bg.jpg"
+import styles from './styles/index.module.scss'
+import background from "./files/bg.jpg"
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { getInvoiceUsingId } from '../queries'
@@ -17,7 +17,6 @@ const initialState = {
   showAboutModal: false,
   showCreditModal: false,
   guestPayError: "",
-  showVerTT: false,
   amount: "",
   currentWallet: {},
   cryptoDetails: {
@@ -49,7 +48,7 @@ function reducer(state, action) {
 }
 
 
-const Wrapper = ({ children, isPaid }) => (
+const Wrapper = ({ children }) => (
   <div style={{ background: `url(${background})`, borderRadius: "none", minHeight: "100vh" }} className={styles.container}>
     <div className={styles.overlay} />
     <Card style={{ marginBottom: "0px" }} className={styles.sub_container}>
@@ -126,7 +125,7 @@ const InvoicePayment = () => {
   if (!data) {
     return (
       <Wrapper>
-        <h3 style={{ textAlign: "center", color: "white", margin: "auto", zIndex: 100 }}>This Invoice Does not exist.</h3>
+        <h3 style={{ textAlign: "center", color: "white", margin: "auto", zIndex: 100 }}>{("This Invoice Does not exist.")}</h3>
       </Wrapper>
     )
   }
