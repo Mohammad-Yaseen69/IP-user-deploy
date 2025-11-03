@@ -67,7 +67,8 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             payload: {
                 currency: "USD",
                 amount: Number(amount.replace(",", ""))
-            }
+            },
+            isEncrypted: true,
         }),
         onError: (err) => {
             const dec = decryptData(err.response.data.data)
