@@ -66,6 +66,12 @@ Sentry.init({
   defaultIntegrations: false,
 });
 
+if (!import.meta.env.DEV) {
+  window.console.log = () => { };
+  window.console.warn = () => { };
+  window.console.error = () => { };
+}
+
 
 const container = document.getElementById("root");
 const root = createRoot(container);
