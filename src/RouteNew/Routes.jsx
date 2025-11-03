@@ -61,6 +61,7 @@ const QrQuickerPay = lazy(() => import("../Components/QrQuickerPay"))
 const ReceiptInvoice = lazy(() => import("../Components/ReceiptInvoices"))
 const InvoicePayment = lazy(() => import("../Components/ReceiptInvoices/InvoicePayment"))
 const InvoicePaymentQr = lazy(() => import("../Components/ReceiptInvoices/InvoicePaymentQr"))
+const PlansSubscription = lazy(() => import("../Components/PlansSubscriptions"))
 
 
 export const routes = [
@@ -138,6 +139,7 @@ export const publicRoutes = [
     { path: "/qr-quickerpay/:wallet_id", component: <QrQuickerPay /> },
     { path: "/invoice/:username/:invoiceId", component: <InvoicePayment /> },
     { path: "/invoice/qr/:username/:invoiceId", component: <InvoicePaymentQr /> },
+    { path: "/pay/subscription/:subscriptionId", component: <PlansSubscription /> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const authRoutes = [

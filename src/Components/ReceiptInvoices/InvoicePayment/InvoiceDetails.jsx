@@ -3,14 +3,14 @@ import borderline from "./files/borderline.png"
 import styles from './styles/index.module.scss'
 import ip from "../../PaymentAddressPublic/instapay_black.svg";
 
-const InvoiceDetails = ({ data }) => {
+const InvoiceDetails = ({ data, isSubscription = false }) => {
     const { t } = useTranslation()
     return (
         <>
             <div className={styles.top}>
                 <div className={styles.top_content}>
                     <img src={ip} style={{ width: "150px" }} alt="" />
-                    <h1>{t("Invoice")?.toUpperCase()} </h1>
+                    <h1>{isSubscription ? t("Subscription")?.toUpperCase() : t("Invoice")?.toUpperCase()} </h1>
                 </div>
 
                 <img style={{ width: "100%" }} src={borderline} alt="" />
@@ -19,28 +19,38 @@ const InvoiceDetails = ({ data }) => {
             <div className={styles.details}>
                 <div>
                     <span>
-                        {t("Invoice Title")}
+                        {isSubscription ? t("Plan Title") : t("Invoice Title")}
                     </span>
                     <h2>
-                        {data.title}
+                        {data?.plan?.title || data.title}
                     </h2>
                 </div>
                 <div>
                     <span>
-                        {t("Invoice ID")}
+                        {isSubscription ? t("Plan ID") : t("Invoice ID")}
                     </span>
                     <h4>
-                        {data.invoiceId}
+                        {data?.plan?.planId || data.invoiceId}
                     </h4>
                 </div>
                 <div>
                     <span>
-                        {t("Invoice Description")}
+                        {isSubscription ? t("Plan Description") : t("Invoice Description")}
                     </span>
                     <h2>
-                        {data.description}
+                        {data?.plan?.description || data.description}
                     </h2>
                 </div>
+                {isSubscription && (
+                    <div>
+                        <span>
+                            {t("Billing Cycle")}
+                        </span>
+                        <h2>
+                            {data?.plan?.billingCycle}
+                        </h2>
+                    </div>
+                )}
             </div>
         </>
     )

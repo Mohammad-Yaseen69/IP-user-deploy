@@ -80,7 +80,8 @@ const PayAsGuest = ({
   isShipping,
   invoiceId,
   type = "payment_address",
-  planId
+  planId,
+  subscriptionId
 }) => {
   const { t } = useTranslation();
   const [data, dispatch] = useReducer(reducer, initialState);
@@ -88,6 +89,12 @@ const PayAsGuest = ({
     dispatch({ type: "UPDATE_FIELD", field, value });
   };
 
+
+  useEffect(() => {
+    if (type === "subscription") {
+      dataHandler("step", 2)
+    }
+  }, [type])
   const initiatePaypalPayment = async () => {
     dataHandler("loading", true);
     let formattedDob = data.dob;
@@ -121,10 +128,14 @@ const PayAsGuest = ({
         }
       }
 
+      if (type === "subscription") {
+        payload.subscription_id = subscriptionId;
+      }
+
       const enc = encryptData(payload);
 
       const res = await axios.post(
-        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/initiate-paypal`,
+        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay${type === "subscription" ? "/initiate-subscription-paypal" : "/initiate-paypal"}`,
         {
           data: enc,
         }
@@ -176,6 +187,7 @@ const PayAsGuest = ({
       if (planId) {
         payload.plan_id = planId
       }
+
       if (invoiceId) {
         payload.invoice_id = invoiceId;
 
@@ -187,11 +199,15 @@ const PayAsGuest = ({
         }
       }
 
+      if (type === "subscription") {
+        payload.subscription_id = subscriptionId;
+      }
+
       const enc = encryptData(payload);
 
       const res = await axios.post(
         `${import.meta.env.VITE_IP_DEV_API
-        }/api/guest-pay/initiate-card-payment`,
+        }/api/guest-pay${type === "subscription" ? "/subscription/initiate-card-payment" : "/initiate-card-payment"}`,
         {
           data: enc,
         }
@@ -256,11 +272,21 @@ const PayAsGuest = ({
         dataHandler("step", 2);
         break;
       case 2:
-        dataHandler("step", 3);
+        if (type === "subscription" && data.payment_type?.value !== "card") {
+          dataHandler("step", 4);
+
+        } else {
+          dataHandler("step", 3);
+        }
         break;
       case 3:
         if (data.payment_type?.value === "card") {
-          dataHandler("step", 4);
+          if (type === "subscription") {
+            dataHandler("step", 5)
+          } else {
+            dataHandler("step", 4);
+          }
+
         } else {
           checkIfPhoneIsValid(() => {
             dataHandler("step", 4)
@@ -293,17 +319,29 @@ const PayAsGuest = ({
         toggle();
         break;
       case 2:
-        dataHandler("step", 1);
-        dataHandler("payment_type", {});
+        if (type === "subscription") {
+          toggle();
+        } else {
+          dataHandler("step", 1);
+          dataHandler("payment_type", {});
+        }
         break;
       case 3:
         dataHandler("step", 2);
         break;
       case 4:
-        dataHandler("step", 3);
+        if (type === "subscription") {
+          dataHandler("step", 2);
+        } else {
+          dataHandler("step", 3);
+        }
         break;
       case 5:
-        dataHandler("step", 4);
+        if (type === "subscription" && data.payment_type?.value === "card") {
+          dataHandler("step", 3);
+        } else {
+          dataHandler("step", 4);
+        }
         break;
 
       default:
@@ -383,7 +421,7 @@ const PayAsGuest = ({
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/paypal-fee/${wallet?.wallet_id
-        }/${amount}?payment_type=${type}`
+        }/${amount}?payment_type=${type === "subscription" ? "plan" : type}`
       );
       const dec = decryptData(res.data.data);
       console.log(dec);
@@ -424,7 +462,7 @@ const PayAsGuest = ({
     dataHandler("loading", true);
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/card-fee/${wallet?.wallet_id}/${amount}?payment_type=${type}&isBank=${data.payment_type?.value === "bank" ? true : false} `
+        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/card-fee/${wallet?.wallet_id}/${amount}?payment_type=${type === "subscription" ? "plan" : type}&isBank=${data.payment_type?.value === "bank" ? true : false} `
       );
       const dec = decryptData(res.data.data);
       console.log(dec);
@@ -514,7 +552,7 @@ const PayAsGuest = ({
           currency={wallet?.currency?.code}
           transaction={data.cardTransactionDetails}
           url={`${import.meta.env.VITE_IP_DEV_API
-            }/api/guest-pay/confirm-card-payment/${data.cardTransactionDetails?.transaction_ref
+            }/api/guest-pay${type === "subscription" ? "/subscription" : ""}/confirm-card-payment/${data.cardTransactionDetails?.transaction_ref
             }`}
           guestUserName={username}
           guestWallet={wallet}

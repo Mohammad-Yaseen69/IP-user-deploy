@@ -35,6 +35,9 @@ const getBalances = async (head) => {
 
 
 const UserState = ({ children }) => {
+    if(import.meta.env.PROD){   
+        console.clear()
+    }
     console.info(`%c Dear User, Please be aware that copying and pasting code or commands directly into your console(in this section) can pose significant security risks. Malicious code can compromise your account, steal sensitive information, or damage your system. \nFor your safety, never paste commands from untrusted or unknown sources.\nThank you for your attention to this matter.\nSincerely,\nInstaPay`, 'color: white; font-size: 20px; font-weight: 500; background: linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%); padding: .5rem; border-radius: 5px;');
 
     const token = localStorage.getItem("token")
