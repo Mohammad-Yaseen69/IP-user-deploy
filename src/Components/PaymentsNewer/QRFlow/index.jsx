@@ -572,7 +572,8 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
 
     useEffect(() => {
         let timeout;
-        if (data.payment_type?.value) {
+        console.log(data.payment_type, "payment type qr hello")
+        if (data.payment_type?.value && sendPaymentType === "qr_pay") {
             const getAmount = async () => {
                 let amount;
                 console.log(data.payment_type, data.wallet, data.currency_wallet, "shit")
@@ -591,7 +592,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             }, 100)
         }
         return () => clearTimeout(timeout)
-    }, [data.payment_type?.value, data.wallet?._id, userDetails, userWallets, currencies])
+    }, [data.payment_type?.value, data.wallet?._id, userDetails, userWallets, currencies, sendPaymentType])
 
     const handleClick = () => {
         switch (data.step) {
