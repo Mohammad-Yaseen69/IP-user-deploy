@@ -28,7 +28,7 @@ import PricingsAndPlan from './PricingsAndPlan'
 const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const { t } = useTranslation()
     const [userCountry, setUserCountry] = useState({})
-    const { authHeader, userWallets, getUserVideos, verifyToken, userVideos } = useContext(UserContext)
+    const { authHeader, userWallets, getUserVideos, verifyToken, userVideos, setUserVideos } = useContext(UserContext)
     const [paymentAddressDetails, setPaymentAddressDetails] = useState(null)
     const [title, setTitle] = useState('');
     const [currency, setCurrency] = useState('');
@@ -44,6 +44,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const [apiDescription, setApiDescription] = useState("")
     const [qrFile, setQrFile] = useState(null)
     const width = useWindowWidth()
+    const [loading, setLoading] = useState(false)
 
     const getPaymentAddress = () => {
         axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/get-payment-address/${userDetails?.username}`, {
@@ -142,8 +143,13 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
 
 
     const handleChangeStatus = async () => {
+        if (loading === true) {
+            return;
+        }
         try {
+            setLoading(true)
             const encrypted = encryptData({ status: !isActive })
+
             console.log(encrypted)
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/update-payment-address-status-user/${userDetails?.username}`, {
                 data: encrypted
@@ -156,11 +162,11 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
             if (!paymentAddressDetails.title) {
                 addUpdatePaymentAddress()
             }
-
-            verifyToken()
         } catch (error) {
             console.log(decryptData(error?.response?.data?.data))
             toast.error("We cannot process your request at the moment, please try again later.")
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -453,7 +459,6 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                                 key={item?._id}
                                                                 index={index}
                                                                 pAddress={true}
-                                                            // handleSort={handleSort}
                                                             />
                                                         ))
                                                     ) : (
