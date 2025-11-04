@@ -102,7 +102,7 @@ const PaypalTransactions = () => {
             </CustomDatePickerContainer>
             :
             <div style={{ height: "100vh", width: "100vw" }}>
-                <InstaPayLoader />
+                <InstaPayLoader  fallback={true}/>
             </div>
     )
 }

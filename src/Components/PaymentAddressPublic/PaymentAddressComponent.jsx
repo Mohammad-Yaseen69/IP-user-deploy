@@ -381,7 +381,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
             zIndex: 999
           }}
         >
-          <InstaPayLoader />
+          <InstaPayLoader fallback />
         </div>
       ) : <div className={styles.container}>
         {state.paymentAddressDetails ? (

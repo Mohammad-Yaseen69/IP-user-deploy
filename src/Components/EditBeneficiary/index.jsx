@@ -532,7 +532,7 @@ const EditBeneficiary = () => {
                                     loading
                                         ?
                                         <div style={{ height: "60vh", width: "100%", opacity: 1 }}>
-                                            <InstaPayLoader />
+                                            <InstaPayLoader fallback fullHeight/>
                                         </div>
                                         :
                                         <CardBody>

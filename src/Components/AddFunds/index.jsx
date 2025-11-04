@@ -175,7 +175,7 @@ const AddFunds = () => {
                 aspectRatio: 1,
 
             }}>
-                <InstaPayLoader />
+                <InstaPayLoader fallback={true} />
             </div>
             :
             <>
