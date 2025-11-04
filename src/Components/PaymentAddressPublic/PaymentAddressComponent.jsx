@@ -19,6 +19,7 @@ import useWindowWidth from "../../utils/useWindowWidth";
 import ip from "./instapay_black.svg";
 import PayWithCrypto from "./PayWithCrypto"
 import UserDets from "./UserDets"
+import { paymentAddressFlagCheck } from "../../utils/Functions";
 
 
 const QrDetails = lazy(() => import("./QrDetails"));
@@ -116,7 +117,7 @@ export const LeftJsx = ({
     >
       {width > 1000 &&
         <div style={{ position: "absolute", bottom: "10px", right: "10px" }}>
-          <LanguagePicker defaultLanguage={userDetails.langauge} newUI={true} />
+          {paymentAddressFlagCheck("allowMultiLanguage", userDetails) && <LanguagePicker defaultLanguage={userDetails.langauge} newUI={true} />}
         </div>
       }
       {width > 1000 && (
@@ -455,6 +456,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                       dataHandler("cryptoStatus", "Not Completed")
                     }
                     }
+                    userDetails={userDetails}
                   />
 
                   {width < 1000 && (

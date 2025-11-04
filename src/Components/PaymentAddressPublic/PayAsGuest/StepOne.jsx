@@ -33,7 +33,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
             id: 2,
             icon: pagSvgs.wallet,
             active_icon: pagSvgs.wallet_a,
-            api_val: "bank"
+            api_val: "bank_deposit"
         },
         {
             name: "Mobile Wallet",
@@ -41,7 +41,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
             id: 1,
             coming_soon: true,
             icon: pagSvgs.wallet,
-            active_icon: pagSvgs.wallet_a,
+            active_icon: pagSvgs.wallet_a,  
             api_val: "mobile_money"
         },
 

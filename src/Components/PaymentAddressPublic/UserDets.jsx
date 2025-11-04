@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 import PlansModal from "./PlansModal"
 import { useQuery } from "@tanstack/react-query"
 import { getUserPlans } from "../PaymentAddress/queries/pricings"
+import { paymentAddressFlagCheck } from "../../utils/Functions"
 
 
 const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, userCountry, setShowVerTT, showVerTT, invoicePaid, AmountComponent, paymentAddress, invoice, user, data, dataHandler }) => {
@@ -23,33 +24,37 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
     })
 
     const [actionButtons, setActionsButtons] = useState([
-        {
+        paymentAddressFlagCheck("allowViewProfile", userDetails) ? {
             label: "View Profile",
             onClick: () => navigate(`/profile/${user_name}`),
             disable: false,
             purple: true,
-        },
+        } : null,
 
-        // {
-        //     label: "Explore eShop",
-        //     onClick: () => { },
-        //     disable: true,
-        //     purple: false,
-        // },
-    ])
+        paymentAddressFlagCheck("allowEcommerce", userDetails) ? {
+            label: "Explore eShop",
+            onClick: () => { },
+            disable: true,
+            purple: false,
+        } : null,
+    ].filter(btn => btn !== null))
 
 
 
     useEffect(() => {
-        if (plansData && plansData?.length > 0) {
-            setActionsButtons([...actionButtons, {
-                label: "View Plans",
-                onClick: () => setShowPlansModal(true),
-                disable: false,
-                purple: false,
-            },])
+        if (plansData && plansData.length > 0) {
+            setActionsButtons(prev => [
+                ...prev,
+                {
+                    label: "View Plans",
+                    onClick: () => setShowPlansModal(true),
+                    disable: false,
+                    purple: false,
+                },
+            ]);
         }
-    }, [plansData])
+    }, [plansData]);
+
 
 
 
@@ -88,7 +93,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                                         }}
                                     >
                                         {userDetails?.first_name || userDetails?.company_name} {userDetails?.last_name}
-                                        {(userDetails?.kyc_status === "approved" || userDetails?.kyb_status === "approved") && (
+                                        {(userDetails?.kyc_status === "approved" || userDetails?.kyb_status === "approved") && paymentAddressFlagCheck("allowVerificationBadge", userDetails) && (
                                             <>
                                                 <img
                                                     onMouseEnter={() => setShowVerTT(true)}

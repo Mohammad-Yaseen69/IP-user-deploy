@@ -63,3 +63,18 @@ export const openInNewTab = (url) => {
         document.body.removeChild(a);
     }
 };
+
+
+export const paymentAddressFlagCheck = (destination = "", details = {}) => {
+    console.log(details, "flags ")
+    const parts = destination.split(".");
+    let cursor = details?.paymentAddressFlags;
+
+    for (let i = 0; i < parts.length - 1; i++) {
+        cursor = cursor?.[parts[i]];
+        if (!cursor) return true;
+    }
+
+    const lastKey = parts[parts.length - 1];
+    return !(typeof cursor?.[lastKey] === "boolean" && cursor[lastKey] === false);
+};

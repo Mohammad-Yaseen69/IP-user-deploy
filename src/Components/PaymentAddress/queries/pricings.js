@@ -33,7 +33,7 @@ export const deletePlan = async (planId) => {
 }
 
 export const getUserPlans = async (username) => {
-    const response = await axios.get(`${path}/get-user-plans/${username}`, {
+    const response = await axios.get(`${path}/get-user-plans/${username}?type=private`, {
         headers: getAuthHeader(),
     })
     return decryptData(response.data.data)?.data

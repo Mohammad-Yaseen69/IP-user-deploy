@@ -116,7 +116,7 @@ const PricingsAddModal = ({ isOpen, toggle, editMode = false, plan = null, onEdi
                             <select
                                 value={receivingWallet}
                                 onChange={(e) => setReceivingWallet(e.target.value)}
-                                style={{ minWidth: 70, padding: '10px 12px', borderRadius: 8, border: '1px solid #e5e7eb', outline: 'none' }}
+                                style={{ minWidth: 170, padding: '10px 12px', borderRadius: 8, border: '1px solid #e5e7eb', outline: 'none' }}
                             >
                                 <option value="">{t("Select Currency")}</option>
                                 {userWallets?.filter(w => w.wallet_type === "insta")?.map((w, idx) => (

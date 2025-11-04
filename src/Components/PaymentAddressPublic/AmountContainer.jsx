@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import useWindowWidth from '../../utils/useWindowWidth'
 import { useTranslation } from 'react-i18next'
@@ -7,11 +7,11 @@ import addFunds from "../HomeNewUpdated/files/AddFunds.png"
 import CryptoPay from "../HomeNewUpdated/files/CryptoPay.svg"
 import logo from "../../assets/images/logo/logo.png"
 import { formatCurrency } from '../../Helper/AmountFormat'
-import { isInIframe } from '../../utils/Functions'
+import { isInIframe, paymentAddressFlagCheck } from '../../utils/Functions'
 
 
 
-const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlur, handleKeyUp, isEditable, paidInvoice = false, toggleCryptoModal = () => { } }) => {
+const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlur, handleKeyUp, isEditable, paidInvoice = false, toggleCryptoModal = () => { }, userDetails }) => {
     const width = useWindowWidth()
     const { t } = useTranslation()
 
@@ -28,6 +28,14 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
             document.body.removeChild(a);
         }
     };
+
+
+    const allMethodsDisabled = useMemo(() => {
+        if (!userDetails) return false
+        return !paymentAddressFlagCheck("payments.allowGuestPay", userDetails) &&
+            !paymentAddressFlagCheck("payments.allowCrypto", userDetails) &&
+            !paymentAddressFlagCheck("payments.allowInstapay", userDetails)
+    }, [userDetails])
 
     return (
         <div style={{ backgroundColor: 'white', borderRadius: "16px", maxHeight: "100%" }}>
@@ -71,80 +79,88 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                 style={{
                                     margin: '0',
                                     display: width > 1000 && width < 1350 && "grid",
-                                    gridTemplateColumns: width > 1000 && width < 1350 && "1fr 1fr 1fr"
+                                    gridTemplateColumns: allMethodsDisabled ? "1fr" : width > 1000 && width < 1350 && "1fr 1fr 1fr"
                                 }}
                                 className={vpa_styles.buttons}
                             >
-                                <Link onClick={toggleCreditModal} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
-                                    style={{
-                                        opacity: state.amount <= 0 ? .7 : 1,
-                                        pointerEvents: state.amount <= 0 ? "none" : "all",
-                                        position: "relative",
-                                    }}
-                                >
-                                    <div>
-                                        <img src={addFunds} alt="A" />
-                                    </div>
-                                    <span>{t("Pay As Guest")}</span>
-                                    {
-                                        state.guestPayError
-                                        &&
-                                        <div
-                                            style={{
-                                                position: "absolute",
-                                                top: "100%",
-                                                left: 0,
-                                                background: "white",
-                                                color: "red",
-                                                maxHeight: "unset",
-                                                height: "fit-content",
-                                                padding: "1rem",
-                                                whiteSpace: "nowrap"
-                                            }}
-                                            className={vpa_styles.gperror}
-                                        >
-                                            {state.guestPayError}
+                                {paymentAddressFlagCheck("payments.allowGuestPay", userDetails) &&
+                                    <Link onClick={toggleCreditModal} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
+                                        style={{
+                                            opacity: state.amount <= 0 ? .7 : 1,
+                                            pointerEvents: state.amount <= 0 ? "none" : "all",
+                                            position: "relative",
+                                        }}
+                                    >
+                                        <div>
+                                            <img src={addFunds} alt="A" />
                                         </div>
-                                    }
-                                </Link>
-
-                                <Link to={"#"} onClick={toggleCryptoModal} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
-                                    style={{
-                                        opacity: state.amount <= 0 ? .7 : 1,
-                                        pointerEvents: state.amount <= 0 ? "none" : "all",
-                                        position: "relative"
-                                    }}
-                                >
-                                    <div>
-                                        <img src={CryptoPay} alt="A" />
-                                    </div>
-                                    <span>{t("Pay with Crypto")}</span>
-                                </Link>
-
-
-                                <Link onClick={(e) => {
-                                    if (state.amount > 0) {
-                                        if (isInIframe()) {
-                                            const toNavigate = `${import.meta.env.VITE_PUBLIC_URL}/login?redirect=${encodeURIComponent(url)}`
-                                            openInNewTab(toNavigate)
-                                        } else {
-                                            const path = url;
-                                            sessionStorage.setItem("path", path);
+                                        <span>{t("Pay As Guest")}</span>
+                                        {
+                                            state.guestPayError
+                                            &&
+                                            <div
+                                                style={{
+                                                    position: "absolute",
+                                                    top: "100%",
+                                                    left: 0,
+                                                    background: "white",
+                                                    color: "red",
+                                                    maxHeight: "unset",
+                                                    height: "fit-content",
+                                                    padding: "1rem",
+                                                    whiteSpace: "nowrap"
+                                                }}
+                                                className={vpa_styles.gperror}
+                                            >
+                                                {state.guestPayError}
+                                            </div>
                                         }
-                                    } else {
-                                        e.preventDefault();
-                                    }
-                                }} to={state.amount > 0 && !isInIframe() ? url : ""} className={`${vpa_styles.button} ${vpa_styles.ipBtn}`}
-                                    style={{
-                                        opacity: state.amount <= 0 ? .7 : 1,
-                                        pointerEvents: state.amount <= 0 ? "none" : "all",
-                                    }}
-                                >
-                                    <div>
-                                        <img src={logo} alt="A" />
-                                    </div>
-                                    <span style={{ color: "white" }}>{t("Pay With InstaPay")}</span>
-                                </Link>
+                                    </Link>
+                                }
+
+                                {paymentAddressFlagCheck("payments.allowCrypto", userDetails) &&
+                                    <Link to={"#"} onClick={toggleCryptoModal} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
+                                        style={{
+                                            opacity: state.amount <= 0 ? .7 : 1,
+                                            pointerEvents: state.amount <= 0 ? "none" : "all",
+                                            position: "relative"
+                                        }}
+                                    >
+                                        <div>
+                                            <img src={CryptoPay} alt="A" />
+                                        </div>
+                                        <span>{t("Pay with Crypto")}</span>
+                                    </Link>
+                                }
+
+
+                                {paymentAddressFlagCheck("payments.allowInstapay", userDetails) &&
+                                    <Link onClick={(e) => {
+                                        if (state.amount > 0) {
+                                            if (isInIframe()) {
+                                                const toNavigate = `${import.meta.env.VITE_PUBLIC_URL}/login?redirect=${encodeURIComponent(url)}`
+                                                openInNewTab(toNavigate)
+                                            } else {
+                                                const path = url;
+                                                sessionStorage.setItem("path", path);
+                                            }
+                                        } else {
+                                            e.preventDefault();
+                                        }
+                                    }} to={state.amount > 0 && !isInIframe() ? url : ""} className={`${vpa_styles.button} ${vpa_styles.ipBtn}`}
+                                        style={{
+                                            opacity: state.amount <= 0 ? .7 : 1,
+                                            pointerEvents: state.amount <= 0 ? "none" : "all",
+                                        }}
+                                    >
+                                        <div>
+                                            <img src={logo} alt="A" />
+                                        </div>
+                                        <span style={{ color: "white" }}>{t("Pay With InstaPay")}</span>
+                                    </Link>
+                                }
+
+                                {allMethodsDisabled && <span style={{fontWeight: 600}}> {t("All payment options are disabled for this payment address by admin.")} </span>}
                             </div>
                         </>}
                 </div>
