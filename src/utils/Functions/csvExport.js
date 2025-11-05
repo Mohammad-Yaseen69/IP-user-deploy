@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { formatCurrency } from "../../Helper/AmountFormat";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver"
+import { service_name_formatter } from "../../Components/TransactionsNewApi/TransactionItem";
 
 const formatHeader = (header) => {
     return header
@@ -60,9 +61,11 @@ export const exportToExcel = async (transactions, userDetails, setExportLoading,
             "Reference Id",
             "Currency Code",
             "Recipient Name",
+            "Sender Email",
+            "Sender Phone",
             "Payment Type",
             'Transaction Type',
-            "Type",
+            "Service Type",
             "Status",
             "Amount",
             "Payment Reference",
@@ -96,15 +99,17 @@ export const exportToExcel = async (transactions, userDetails, setExportLoading,
             const receiverLastName = obj["receiver.user.last_name"] || obj["receiver.user.lastName"] || obj["account.user.first_name"]
             const guestDetailsName = obj["guest_details.name"] || obj["guestDetails.name"];
 
-            if (receiverFirstName) {
-                outputRow["Recipient Name"] = receiverFirstName + "" + (receiverLastName ?? "");
-            } else if (guestDetailsName) {
+            if (guestDetailsName) {
                 outputRow["Recipient Name"] = guestDetailsName;
+            } else if (receiverFirstName) {
+                outputRow["Recipient Name"] = receiverFirstName + "" + (receiverLastName ?? "");
             } else {
                 outputRow["Recipient Name"] = "";
             }
 
-            outputRow["Payment Reference"] = obj['client_reference'] || "-"
+            outputRow["Sender Email"] = obj['guest_details.email'] || "-"
+            outputRow["Sender Phone"] = obj['guest_details.phone'] || "-"
+
 
             Object.keys(obj).forEach(originalKey => {
                 const formatted = formatHeader(originalKey);
@@ -114,6 +119,8 @@ export const exportToExcel = async (transactions, userDetails, setExportLoading,
                         value = formatDate(value);
                     } else if (formatted === "Amount" && value) {
                         value = formatCurrency(value, true)
+                    } else if (formatted === "Service Type" && value) {
+                        value = service_name_formatter(value)
                     }
                     outputRow[formatted] = value;
                 }

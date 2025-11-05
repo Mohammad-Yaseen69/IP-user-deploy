@@ -189,6 +189,23 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                         </p>
                     </div>
                 }
+
+                {item?.guest_details?.email &&
+                    <div className={styles.er_item}>
+                        <span>{t("Sender Email")}</span>
+                        <p style={{wordBreak: "break-all"}}>
+                            {item?.guest_details?.email}
+                        </p>
+                    </div>
+                }
+                {item?.guest_details?.phone &&
+                    <div className={styles.er_item}>
+                        <span>{t("Sender Phone")}</span>
+                        <p style={{wordBreak: "break-all"}}>
+                            {item?.guest_details?.phone}
+                        </p>
+                    </div>
+                }
             </div>
             <div className={styles.right}>
                 <div className={styles.row}>

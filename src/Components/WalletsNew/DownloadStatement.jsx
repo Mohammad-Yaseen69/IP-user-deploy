@@ -167,7 +167,8 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
             textColor: [255, 255, 255],
         };
 
-        const doc = new jsPDF();
+        // Set landscape orientation by passing parameters to jsPDF
+        const doc = new jsPDF({ orientation: "landscape" });
 
 
         doc.addImage(img, "png", 14, 10, 46.5, 13)
@@ -222,6 +223,8 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
                         "Transaction ID",
                         "Payment Type",
                         "Recipient",
+                        "Sender Email",
+                        "Sender Phone",
                         "Type",
                         "Amount",
                         "Payment Reference",
@@ -236,9 +239,11 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
                         item?.reference_id,
                         renderPaymentType(item),
                         renderRecipientName(item, internationalReceiver),
+                        item?.guest_details?.email || "--",
+                        item?.guest_details?.phone || "--",
                         service_name_formatter(item?.service_type),
                         `${item?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}${item?.total ? Number(item?.total)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ""} ${item?.currency?.code} `,
-                        item?.client_reference || "---",
+                        item?.client_reference || "--",
                         item?.status,
                     ]
                 }),
