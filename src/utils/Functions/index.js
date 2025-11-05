@@ -1,4 +1,6 @@
 import CountryBasedPhone from "../../Components/PhoneInput/PhoneNumberBasedOnCountry.json"
+import CitiesData from "../../Components/CitiesDropDown/CitiesData.json"
+
 export const handleMonthKeyPress = (event) => {
     const { key } = event;
     const monthValue = event.target.value + key;
@@ -78,3 +80,8 @@ export const paymentAddressFlagCheck = (destination = "", details = {}) => {
     const lastKey = parts[parts.length - 1];
     return !(typeof cursor?.[lastKey] === "boolean" && cursor[lastKey] === false);
 };
+
+export const localCurrency = (userDetails) => {
+    const cont = CitiesData.find(item => item.iso3?.toUpperCase() === userDetails?.country_iso_code?.toUpperCase())
+    return cont.currency
+}
