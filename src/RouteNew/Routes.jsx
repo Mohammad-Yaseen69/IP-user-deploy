@@ -27,7 +27,7 @@ const PaymentAddress = lazy(() => import('../Components/PaymentAddress'));
 const PaymentAddressPublic = lazy(() => import('../Components/PaymentAddressPublic'));
 const PaymentsNewer = lazy(() => import('../Components/PaymentsNewer'));
 const PendingNew = lazy(() => import('../Components/PendingNew'));
-const Ecommerce = lazy(() => import('../Components/Ecommerce-store/Store'));
+const Ecommerce = lazy(() => import('../Components/Ecommerce-store/Store/Index.jsx'));
 const Portfolio = lazy(() => import('../Components/Portfolio'));
 const ProfileTest = lazy(() => import('../Components/Profile'));
 const Quotations = lazy(() => import('../Components/QuotationsNew'));
