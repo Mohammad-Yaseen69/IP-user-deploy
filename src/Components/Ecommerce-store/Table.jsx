@@ -50,7 +50,7 @@ const Table = () => {
         },
         {
             id: 4,
-            name: "AirPods Pro 2nd Gen",
+            name: "AirPods  Pro 2nd Gen",
             category: "Electronics",
             sku: "APP-2GEN",
             price: "$5,678",
