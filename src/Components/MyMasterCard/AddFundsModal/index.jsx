@@ -23,6 +23,9 @@ import { createShambeToken } from '../../../Helper/CreateToken'
 import TrustpaymentPage from '../../AddFunds/WalletFund/CreditTransaction'
 import { useTranslation } from 'react-i18next'
 import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow';
+import { useMutation } from '@tanstack/react-query'
+import { apiWrapper } from '../../../utils/Functions/apiWrapper'
+import ErrorModal from '../../PaymentsNewer/InternationalFlow/ErrorModal'
 
 const PLACEHOLDER_CARD_TYPE = {
     type: 'placeholder',
@@ -54,6 +57,25 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         cardExpiry: "",
         cardCVC: "",
         cardHolderName: "",
+    })
+    const [error, setError] = useState("")
+
+    const { mutateAsync, isPending } = useMutation({
+        mutationFn: (amount) => apiWrapper({
+            endpoint: "/api/mastercard/balance",
+            method: "POST",
+            payload: {
+                currency: "USD",
+                amount: Number(amount.replace(",", ""))
+            },
+            isEncrypted: true,
+        }),
+        onError: (err) => {
+            const dec = decryptData(err.response.data.data)
+            if (dec?.data?.isSufficient === false) {
+                setError(`Unable to process your top-up of ${amount} USD at the moment please enter amount lower then ${dec?.data?.availableBalance} USD or try again later`)
+            }
+        },
     })
 
     useEffect(() => {
@@ -153,6 +175,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
     const [disabled, setDisabled] = useState(false)
     const [cardTransactionDetails, setCardTransactionDetails] = useState({})
 
+
     const sendOtp = async () => {
         const data = {
             data: {
@@ -162,11 +185,10 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             type: codeType
         }
 
+        setDisabled(true)
+
         if (paymentType === "wallet") {
             data.data.sender_wallet_id = walletState?._id
-        }
-
-        if (paymentType === "paypal" || paymentType === "card") {
         }
 
         if (paymentType === "card") {
@@ -179,7 +201,6 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             }
         }
 
-        console.log(data)
         const encrypted = encryptData(data)
         try {
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
@@ -191,10 +212,11 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             const dec = decryptData(res.data.data)
             setshowOtpModal(true)
             setToken(dec?.token)
-        } catch (error) {
-            toast.error("Something went wrong while creating your virtual card! please try again.")
+        } catch {
+            toast.error("We couldn't process your request at the moment! please try again later.")
         }
         finally {
+            setDisabled(false)
             setLoading(false)
         }
     }
@@ -210,7 +232,9 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             return
         }
         if (paymentType === "paypal" && step === 2) {
-            setStep(prev => prev + 2)
+            mutateAsync(amount).then(() => setStep(prev => prev + 2))
+        } else if (step === 3) {
+            mutateAsync(amount).then(() => setStep(prev => prev + 1))
         } else {
             setStep(prev => prev + 1)
         }
@@ -395,6 +419,10 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             case 3:
                 setDisabled(!feeDetails.token && !walletState._id)
                 setSideText(width > 1000 ? t("Choose the method") : paymentType === 'wallet' ? t("Choose The Wallet") : t("Payment Details"))
+                if (paymentType === "card") {
+                    console.log(!cardDetail.cardCVC || !cardDetail.cardExpiry || !cardDetail.cardHolderName || !cardDetail.cardNumber,)
+                    setDisabled(!cardDetail.cardCVC || !cardDetail.cardExpiry || !cardDetail.cardHolderName || !cardDetail.cardNumber)
+                }
                 break;
             case 4:
                 setDisabled(false)
@@ -407,7 +435,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
                 setDisabled(false)
                 break;
         }
-    }, [step, amount, feeDetails, walletState, paymentType, width])
+    }, [step, amount, feeDetails, walletState, paymentType, width, cardDetail])
 
 
     const handleBack = () => {
@@ -558,7 +586,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
                     {((step !== 1 && step !== 5) && (width > 1000)) && <button onClick={handleBack} className={styles.cancel}>{t("Cancel")}</button>}
                     {width < 1000 && <ContactBox />}
 
-                    <button disabled={disabled} style={{ padding: width < 1000 && "18px", marginTop: width < 1000 && "12px", width: width < 1000 && "100%", opacity: disabled && 0.6 }} onClick={handleNext} className={styles.continue}>
+                    <button disabled={disabled || isPending} style={{ padding: width < 1000 && "18px", marginTop: width < 1000 && "12px", width: width < 1000 && "100%", opacity: disabled && 0.6 }} onClick={handleNext} className={styles.continue}>
                         {step !== 5 ? t("Continue") : t("Close")}
                     </button>
 
@@ -594,6 +622,13 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
                 </div >
             }
 
+
+            <ErrorModal
+                isOpen={error}
+                toggle={() => setError("")}
+                heading='Topup Failed!'
+                message={error}
+            />
 
             <Modal isOpen={showOtpModal}>
                 <ModalHeader toggle={() => setshowOtpModal(false)}> {t("Confirm")} </ModalHeader>

@@ -135,7 +135,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         getData()
     }, [])
 
-    console.log(loginData, email, loginMethod, "quick login")
 
 
     const setData = async (data) => {
@@ -153,7 +152,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         if (method) {
             setMethodLoading(true)
         }
-        console.log(currentOtpMethod, method)
         const isAuth = method ? (method === "auth") : (currentOtpMethod === "auth");
         const isInsta = method ? (method === "insta") : (currentOtpMethod === "insta" || currentOtpMethod !== "sms");
         const isWp = method ? (method === "wp") : (currentOtpMethod === "wp");
@@ -176,7 +174,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             };
         const encrypted = encryptData(credentials)
 
-        console.log(credentials)
 
 
 
@@ -228,9 +225,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
                 setCurrentOtpMethod(handleMethods())
 
-                console.log(handleMethods())
                 if ((handleMethods() === "insta" || handleMethods() === "sms" || handleMethods() === "wp")) {
-                    console.log("RESET")
                     setResendTimer(120)
                 }
                 // console.log(decrypted)
@@ -251,7 +246,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 setIsPressed(false)
                 setMethodLoading(false)
                 const decrypted = decryptData(error?.response?.data?.data)
-                console.log(decrypted)
                 if (decrypted.message === "Account not found!" || decrypted.message === "Incorrect Password!" || decrypted.message?.toLowerCase()?.includes("incorrect") || decrypted.message === "User not found!") {
                     setIsLoginError(`Uh-Oh! The password/${isEmail.test(email) ? "email" : "phone number"} you entered is wrong.`)
                 }

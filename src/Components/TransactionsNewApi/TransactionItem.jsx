@@ -67,7 +67,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
             case "failed":
                 return "#C82333"
             case "processing":
-                return "#ADD8E6"    
+                return "#ADD8E6"
             default:
                 break;
         }
@@ -226,8 +226,8 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                         <div>{item?.service_type === "topup" && "Wallet"} {service_name_formatter(item?.service_type)}</div>
                         <div>{item?.reference_id}</div>
                         <div>{displayAsText}</div>
-                        <div>{displayName?.slice(0, 20)}</div>
-                        <div style={{ color: item?.transaction_type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234" }} >{item?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}{item?.payment_type?.toLowerCase() === "commission" && fromReferral ? "$" : item?.currency?.code} {item?.payment_type?.toLowerCase() === "commission" && fromReferral ? item?.replacement_currency?.value?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : item?.total?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                        <div>{displayName?.slice(0, 20)}</div>  
+                        <div style={{ color: item?.transaction_type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234" }} >{item?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}{item?.payment_type?.toLowerCase() === "commission" && fromReferral ? "$" : item.service_type === "topup" && item.payment_type === 'bank' ? item.recipient_received_currency : item?.currency?.code} {item?.payment_type?.toLowerCase() === "commission" && fromReferral ? item?.replacement_currency?.value?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : (item.service_type === "topup" && item.payment_type === "bank" ? item.recipient_received_amount : item?.total)?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                     </>
                 }
 
@@ -252,15 +252,15 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                 </div>
 
 
-                {true &&
-                    <div style={{ maxWidth: "15px" }}>{
-                        activeItem === index + 1
-                            ?
-                            <ChevronDown />
-                            :
-                            <ChevronRight />
-                    }
-                    </div>}
+
+                <div style={{ maxWidth: "15px" }}>{
+                    activeItem === index + 1
+                        ?
+                        <ChevronDown />
+                        :
+                        <ChevronRight />
+                }
+                </div>
 
             </div>
             {

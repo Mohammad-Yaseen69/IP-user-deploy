@@ -4,7 +4,6 @@ import "./index.scss";
 import App from "./App";
 // import reportWebVitals from './reportWebVitals';
 import "./i18n";
-import { WidgetSDK } from "@keabank/websdk";
 
 // import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
@@ -32,7 +31,7 @@ window.addEventListener("error", (e) => {
 
 // In index.js or App.js (dev only)
 if (import.meta.env.NODE_ENV === "development") {
-  window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = () => {};
+  window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = () => { };
 }
 
 Sentry.init({
@@ -40,10 +39,10 @@ Sentry.init({
   sendDefaultPii: true,
   integrations: [
     Sentry.browserTracingIntegration(),
-    // Sentry.replayIntegration({
-    //     maskAllText: false,
-    //     blockAllMedia: false,
-    // }),
+    Sentry.replayIntegration({
+        maskAllText: false,
+        blockAllMedia: false,
+    }),
     Sentry.browserProfilingIntegration(),
   ],
   tracesSampleRate: 1.0,
@@ -55,10 +54,10 @@ Sentry.init({
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
   environment:
-    import.meta.env.NODE_ENV === "development" ? "development" : "production",
+    import.meta.env.DEV ? "development" : "production",
   beforeSend(event) {
     console.log(event, "Sentry Event");
-    if (import.meta.env.NODE_ENV === "development") {
+    if (import.meta.env.DEV) {
       return null;
     }
     return event;
@@ -67,10 +66,12 @@ Sentry.init({
   defaultIntegrations: false,
 });
 
-export const sdk = new WidgetSDK({
-  integrationId: import.meta.env.VITE_KEABANK_INTEGRATION_ID,
-  merchantId: import.meta.env.VITE_KEABANK_MERCHANT_ID,
-});
+if (!import.meta.env.DEV) {
+  window.console.log = () => { };
+  window.console.warn = () => { };
+  window.console.error = () => { };
+}
+
 
 const container = document.getElementById("root");
 const root = createRoot(container);

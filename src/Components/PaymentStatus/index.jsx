@@ -34,7 +34,7 @@ const PaymentStatus = () => {
                 getUserBeneficiaries()
                     .then(() => {
                         const benef = beneficiaries.find(item => item._id === code)
-                        navigate(`/payments?payment_action=send_money&send_type=${type}&transaction_status=${status}&transaction_id=test&code=${code}&title=${benef?.first_name || benef?.company_name || "Recipient's"} ${benef?.last_name || ""}`)
+                        navigate(`/payments?payment_action=send_money&send_type=${type}&transaction_status=${status}&transaction_id=test&code=${code}&title=${benef?.first_name || benef?.company_name || "Recipient"} ${benef?.last_name || ""}`)
                     })
             } else {
                 searchUser()

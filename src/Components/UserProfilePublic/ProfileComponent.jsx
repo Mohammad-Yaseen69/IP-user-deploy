@@ -260,7 +260,7 @@ const ProfileComponent = () => {
                                                 <div style={{ /*display: "flex", gap: ".5rem", alignItems: "center",*/ position: "relative" }}>
                                                     <h4 style={{ marginBottom: 0, display: "inline", marginRight: ".3rem" }}>{userDetails?.first_name || userDetails?.company_name} {userDetails?.last_name || ''}</h4>
                                                     {
-                                                        userDetails?.kyc_status === "approved"
+                                                        (userDetails?.kyc_status === "approved" || userDetails?.kyb_status === "approved")
                                                         &&
                                                         <>
                                                             <img onMouseEnter={() => setShowVerTT(true)} onMouseLeave={() => setShowVerTT(false)} src={verified} alt="" style={{ height: window.innerWidth > 780 ? "25px" : "17px", width: window.innerWidth > 780 ? "25px" : "17px", objectFit: "contain", transform: "translateY(-2px)" }} />
@@ -278,7 +278,7 @@ const ProfileComponent = () => {
                                                                     padding: window.innerWidth > 780 ? "6px 18px" : "3px 10px",
                                                                     borderRadius: window.innerWidth > 780 ? "8px" : "4px",
                                                                     whiteSpace: "nowrap"
-                                                                }}>{t("User Identity Verified")}</div>
+                                                                }}>{t(`${userDetails?.kyc_status === "approved" ? "User" : "Business"} Identity Verified`)}</div>
                                                             }
                                                         </>
                                                     }
@@ -386,7 +386,7 @@ const ProfileComponent = () => {
                                                     />
                                                 </div>
                                                 <div className={styles.qr_info}>
-                                                    <h5>{t("InstaPay ID:")}</h5>
+                                                    <h5>{t("Wallet ID")}:</h5>
                                                     <div className={`${styles.qri_box} ${styles.qri_box_p}`}>
                                                         <span>INSTA-{userWallet?.wallet_id}</span>
                                                         <img src={copy} alt="c" style={{ cursor: "pointer" }} onClick={() => {

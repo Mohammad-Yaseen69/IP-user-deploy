@@ -22,6 +22,7 @@ import { getDecimalPointIndex } from '../../Helper/getDecimalIndex';
 import CardtoWallet from './CardtoWallet';
 import { useTranslation } from 'react-i18next';
 import { DateRangePicker } from 'react-date-range';
+import CountriesData from "../PaymentsNewer/CountriesData.json"
 import "./styles/modal.reset.css"
 // Add PDF and DOCX generation imports
 import jsPDF from 'jspdf';
@@ -39,6 +40,10 @@ import {
 } from "docx";
 import * as FileSaver from "file-saver";
 import img from "../../assets/images/logo/logo2.png"
+import { useQuery } from '@tanstack/react-query';
+import { apiWrapper } from '../../utils/Functions/apiWrapper';
+import { localCurrency } from '../../utils/Functions';
+import { formatCurrency } from '../../Helper/AmountFormat';
 
 export const Toggle = ({ checked, onChange, isCheckbox = false }) => (
     <label className={isCheckbox ? styles.checkbox : styles.toggle}>
@@ -144,6 +149,14 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
     });
     const [cardStatus, setCardStatus] = useState("active")
     const [freezeLoading, setFreezeLoading] = useState(false);
+    const { data: balanceInLocal } = useQuery({
+        queryKey: ["MasterCardBalanceConversion", currentCardDetails?.balance],
+        queryFn: () => apiWrapper({
+            endpoint: `/api/wallet/get-plain-exchange-rate?from=${currentCardDetails?.currency}&to=${localCurrency(userDetails)}&amount=${currentCardDetails?.balance}`
+        }).then(dec => dec.exchangeRate?.result),
+        enabled: !!currentCardDetails?.balance,
+        staleTime: 100000,
+    })
 
     const handleCardFlip = (cardId) => {
         setFlippedCards(prev => ({
@@ -774,9 +787,19 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                             <div className={styles.bottom}>
                                 {!cardLoading &&
-                                    <h2>
-                                        ${currentCardDetails?.balance >= 0.01 ? Number(currentCardDetails?.balance)?.toFixed(2) : Number(currentCardDetails?.balance).toFixed(getDecimalPointIndex(+currentCardDetails?.balance))}
-                                    </h2>}
+                                    <>
+                                        <h2>
+                                            ${currentCardDetails?.balance >= 0.01 ? Number(currentCardDetails?.balance)?.toFixed(2) : Number(currentCardDetails?.balance).toFixed(getDecimalPointIndex(+currentCardDetails?.balance))}
+                                        </h2>
+
+                                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                                            <img style={{ width: "25px", borderRadius: "3px", boxShadow: "0px 0px 3px #00000066" }} src={CountriesData.find(c => c.alpha3 === userDetails?.country_iso_code).file_url} alt="" />
+                                            <p style={{ fontSize: "20px", color: "#848484", fontWeight: 600, marginBottom: "0px" }}>
+                                                {localCurrency(userDetails)} {formatCurrency(balanceInLocal, true   )}
+                                            </p>
+                                        </div>
+                                    </>
+                                }
                                 {cardLoading &&
                                     <div style={{ width: '150px' }}>
                                         <InstaPayLoader />

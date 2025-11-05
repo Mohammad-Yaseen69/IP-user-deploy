@@ -827,8 +827,8 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                                     <div className={styles.channel_details}>
                                         <div className={styles.left}>
                                             {
-                                                channels?.map(item => (
-                                                    <div className={`${styles.channel} ${current?.name === item?.name ? styles.active : ""}`}
+                                                channels?.map((item, idx) => (
+                                                    <div key={idx} className={`${styles.channel} ${current?.name === item?.name ? styles.active : ""}`}
                                                         onClick={() => {
                                                             setCurrent(item)
                                                             setIsEditMode(true)

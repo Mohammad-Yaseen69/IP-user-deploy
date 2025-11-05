@@ -1,33 +1,36 @@
-import { useEffect, useRef, useReducer, } from "react";
+import { useEffect, useRef, useReducer, lazy } from "react";
 import styles from "./styles/PAC.module.scss";
-import { Card, CardBody, CardText } from "reactstrap";
 import countries from "../PaymentsNewer/CountriesData.json";
-import axios from "axios";
-import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
-import { useParams, Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import QrDetails from "./QrDetails";
-import PayAsGuest from "./PayAsGuest";
-import { formatCurrency } from "../../Helper/AmountFormat";
-import { toast } from "react-toastify";
-import InstaPayLoader from "../Loader";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, Mousewheel, Pagination } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 import "./styles/swiper.reset.css";
-import PortfolioCard from "../Portfolio/PortfolioCard";
+import axios from "axios";
+import { getCroppedImg } from "../../Context/UserContext";
+import { formatCurrency } from "../../Helper/AmountFormat";
+import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
+import { Card, CardBody, CardText } from "reactstrap";
+import { useParams, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode, Mousewheel, Pagination } from "swiper";
+import { useQuery } from "@tanstack/react-query";
 import useWindowWidth from "../../utils/useWindowWidth";
 import ip from "./instapay_black.svg";
-import { getCroppedImg } from "../../Context/UserContext";
-import UserDets from "./UserDets";
-import AmountContainer from "./AmountContainer";
-import PayWithCrypto from "./PayWithCrypto";
-import LanguagePicker from "../LanguagePicker";
-import AnimatedHeader from "./AnimatedHeader";
-import { useQuery } from "@tanstack/react-query";
+import PayWithCrypto from "./PayWithCrypto"
+import UserDets from "./UserDets"
+import { paymentAddressFlagCheck } from "../../utils/Functions";
 
-// Initial state
+
+const QrDetails = lazy(() => import("./QrDetails"));
+const PayAsGuest = lazy(() => import("./PayAsGuest"));
+const InstaPayLoader = lazy(() => import("../Loader"));
+const PortfolioCard = lazy(() => import("../Portfolio/PortfolioCard"));
+const AmountContainer = lazy(() => import("./AmountContainer"));
+const LanguagePicker = lazy(() => import("../LanguagePicker"));
+const AnimatedHeader = lazy(() => import("./AnimatedHeader"));
+
+
 const initialState = {
   userCountry: {},
   paymentAddressDetails: null,
@@ -49,6 +52,7 @@ const initialState = {
   guestPayError: "",
   showVerTT: false,
   showCryptoModal: false,
+  cryptoStatus: "Not Completed",
   cryptoDetails: {
     name: "",
     phone: "",
@@ -113,7 +117,7 @@ export const LeftJsx = ({
     >
       {width > 1000 &&
         <div style={{ position: "absolute", bottom: "10px", right: "10px" }}>
-          <LanguagePicker newUI={true} />
+          {paymentAddressFlagCheck("allowMultiLanguage", userDetails) && <LanguagePicker defaultLanguage={userDetails.langauge} newUI={true} />}
         </div>
       }
       {width > 1000 && (
@@ -367,6 +371,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
 
   const url = `/payments?payment_action=send_money&payment_type=payment_address&send_type=wallet&wallet_id=${state.currentWallet?.wallet_id}&currency=${state.currency}&amount=${state.amount}`;
 
+  console.log(state)
   return (
     <>
       {state.loading ? (
@@ -377,7 +382,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
             zIndex: 999
           }}
         >
-          <InstaPayLoader />
+          <InstaPayLoader fallback />
         </div>
       ) : <div className={styles.container}>
         {state.paymentAddressDetails ? (
@@ -397,6 +402,8 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
               <PayWithCrypto
                 user={userDetails}
                 data={state}
+                isOpen={state.showCryptoModal}
+                toggle={() => dataHandler("showCryptoModal", false)}
                 dataHandler={dataHandler}
               />
             )}
@@ -429,7 +436,11 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                     userCountry={state.userCountry}
                     userDetails={userDetails}
                     user_name={user_name}
+                    user={userDetails}
                     paymentAddress={true}
+                    data={state}
+                    dataHandler={dataHandler}
+
                   />
 
                   <AmountContainer
@@ -440,9 +451,12 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                     state={state}
                     toggleCreditModal={toggleCreditModal}
                     url={url}
-                    toggleCryptoModal={() =>
+                    toggleCryptoModal={() => {
                       dataHandler("showCryptoModal", true)
+                      dataHandler("cryptoStatus", "Not Completed")
                     }
+                    }
+                    userDetails={userDetails}
                   />
 
                   {width < 1000 && (

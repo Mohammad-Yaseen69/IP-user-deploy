@@ -44,6 +44,12 @@
         border-radius: 8px;
         background: #FAFAFA;
 
+        .form {
+            max-height: 80vh;
+            overflow: auto;
+            margin-bottom: 1.5rem;
+            padding-right: 10px;
+        }
 
         h3 {
             color: #000;
@@ -274,7 +280,7 @@
                     width: 100%;
                     align-items: center;
 
-                    div{
+                    div {
                         align-items: center;
                     }
                 }

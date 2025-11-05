@@ -12,7 +12,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Modal, ModalBody, ModalFooter, ModalHeader, Button } from "reactstrap";
 import { ButtonForRequests } from "./UI/FormElements";
 
-const InvoiceItem = ({ sn, inv, badgeClass, setEditModal,setMenuOpenFor,menuOpenFor }) => {
+const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOpenFor }) => {
   const [expanded, setExpanded] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
   const { t } = useTranslation();
@@ -41,7 +41,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal,setMenuOpenFor,menuOpen
   const isPhone = width <= 700;
 
 
-  
+
   return (
     <React.Fragment key={inv.invoiceId}>
       <div
@@ -115,7 +115,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal,setMenuOpenFor,menuOpen
 
           {menuOpenFor === inv.invoiceId && (
             <div className={styles.actionsMenu}
-            onClick={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
             >
               <div
                 className={styles.menuItem}
@@ -138,7 +138,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal,setMenuOpenFor,menuOpen
               >
                 {t("Edit")}
               </div>
-              <div className={styles.menuItem} onClick={() => {}}>
+              <div className={styles.menuItem} onClick={() => { }}>
                 {t("Download")}
               </div>
               <div

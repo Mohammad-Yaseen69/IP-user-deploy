@@ -172,7 +172,7 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
                                 width: activeItem === index + 1 ? "fit-content" : "30vw"
                             }}
                         >
-                            {displayInitial?.slice(0, 20)}
+                            {displayName}
                         </h5>
                         <span>{new Date(item?.createdAt)?.toLocaleString()}</span>
                     </div>

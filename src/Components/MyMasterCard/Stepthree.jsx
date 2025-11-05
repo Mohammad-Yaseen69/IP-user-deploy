@@ -10,7 +10,7 @@ const Stepthree = () => {
     const { t } = useTranslation();
 
     useEffect(() => {
-        if (userDetails?.account_type === "individual" ? userDetails.user.kyc_status === "approved" : userDetails?.user?.kyb_status) {
+        if (userDetails?.account_type === "individual" ? userDetails.user.kyc_status === "approved" : userDetails?.company?.kyb_status === "approved") {
             setIsKycVerified(true)
         }
     }, [userDetails])

@@ -7,34 +7,6 @@ import { useEffect, useRef, useState } from "react";
 import QRCodeStyling from "qr-code-styling";
 import logo from "../../assets/images/logo/logo.png";
 
-const qrCode = new QRCodeStyling({
-  width: 300,
-  height: 300,
-  qrOptions: {
-    typeNumber: "0",
-    mode: "Byte",
-    errorCorrectionLevel: "Q",
-  },
-  image: logo,
-  imageOptions: {
-    hideBackgroundDots: true,
-    imageSize: 0.2,
-    margin: 10,
-  },
-  dotsOptions: {
-    type: "extra-rounded",
-    color: "#6a1a4c",
-    gradient: {
-      type: "linear",
-      rotation: 0.3141592653589793,
-      colorStops: [
-        { offset: 0, color: "#4b1135" },
-        { offset: 1, color: "#3c087d" },
-      ],
-    },
-  },
-  backgroundOptions: { color: "#ffffff" },
-});
 
 const QrDetails = ({
   wallet,
@@ -50,8 +22,46 @@ const QrDetails = ({
   const { t } = useTranslation();
   const ref = useRef(null);
   const [qrLink, setQrLink] = useState("");
+  const [logoReady, setLogoReady] = useState(false);
+  const [qrCode] = useState(new QRCodeStyling({
+    width: 300,
+    height: 300,
+    qrOptions: {
+      typeNumber: "0",
+      mode: "Byte",
+      errorCorrectionLevel: "Q",
+    },
+    image: undefined, // set later when preloaded
+    imageOptions: {
+      hideBackgroundDots: true,
+      imageSize: 0.2,
+      margin: 10,
+    },
+    dotsOptions: {
+      type: "extra-rounded",
+      color: "#6a1a4c",
+      gradient: {
+        type: "linear",
+        rotation: 0.3141592653589793,
+        colorStops: [
+          { offset: 0, color: "#4b1135" },
+          { offset: 1, color: "#3c087d" },
+        ],
+      },
+    },
+    backgroundOptions: { color: "#ffffff" },
+  }))
   useEffect(() => {
     qrCode.append(ref.current);
+  }, []);
+
+  // Preload the center logo once
+  useEffect(() => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => setLogoReady(true);
+    img.onerror = () => setLogoReady(false);
+    img.src = logo;
   }, []);
 
   useEffect(() => {
@@ -61,20 +71,43 @@ const QrDetails = ({
     } else {
       url = `/payments?payment_action=send_money&payment_type=payment_address&send_type=wallet&wallet_id=${currentWallet?.wallet_id}&currency=${currency}&amount=${amount}`;
     }
-    qrCode.update({ data: `https://my.insta-pay.ch${url}` });
+    // Always update data
+    try {
+      qrCode.update({ data: `https://my.insta-pay.ch${url}` });
+    } catch (_) { }
+
+    // If logo is ready, set it now
+    if (logoReady) {
+      try {
+        qrCode.update({ image: logo });
+      } catch (_) {
+        // fallback: remove logo if it still fails
+        try { qrCode.update({ image: undefined }); } catch (_) { }
+      }
+    }
+
+    // render PNG
     qrCode
       .getRawData("png")
       .then((dataUrl) => {
-        const file = new File([dataUrl], "abc.png", { type: "image/png" });
+        const file = new File([dataUrl], "qr.png", { type: "image/png" });
         const reader = new FileReader();
         reader.onload = () => {
           setQrLink(reader.result);
         };
-
         reader.readAsDataURL(file);
       })
-      .catch((err) => console.log(err));
-  }, [amount, invoiceId]);
+      .catch(() => {
+        // retry once without logo
+        try { qrCode.update({ image: undefined }); } catch (_) { }
+        qrCode.getRawData("png").then((dataUrl) => {
+          const file = new File([dataUrl], "qr.png", { type: "image/png" });
+          const reader = new FileReader();
+          reader.onload = () => setQrLink(reader.result);
+          reader.readAsDataURL(file);
+        });
+      });
+  }, [amount, invoiceId, logoReady]);
   return (
     <div
       style={{
@@ -107,8 +140,8 @@ const QrDetails = ({
                 address && window.innerWidth > 1000
                   ? "150px"
                   : inInvoice
-                  ? ""
-                  : "221px",
+                    ? ""
+                    : "221px",
               padding: inInvoice && "10px",
             }}
           />

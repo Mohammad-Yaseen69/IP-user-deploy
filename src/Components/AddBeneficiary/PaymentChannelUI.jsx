@@ -471,8 +471,8 @@ const PaymentChannelUI = ({
                         <Input disabled={!isEditMode} type="select" className="form-control" style={{ flex: 1, minWidth: "250px" }} value={formData.mobile_wallet_provider} onChange={inputChangeHandler} name="mobile_wallet_provider">
                             <option value="">{t("Select Provider")}</option>
                             {
-                                mobileProviders?.map(item => (
-                                    <option value={item?.id}>{item?.name}</option>
+                                (mobileProviders || [])?.map((item, idx) => (
+                                    <option key={idx} value={item?.id}>{item?.name}</option>
                                 ))
                             }
                         </Input>

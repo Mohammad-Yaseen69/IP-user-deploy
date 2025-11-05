@@ -1,4 +1,6 @@
 import CountryBasedPhone from "../../Components/PhoneInput/PhoneNumberBasedOnCountry.json"
+import CitiesData from "../../Components/CitiesDropDown/CitiesData.json"
+
 export const handleMonthKeyPress = (event) => {
     const { key } = event;
     const monthValue = event.target.value + key;
@@ -42,8 +44,10 @@ export const serviceFieldInfoValidate = (service, field_name, sub_field_name, fi
 
 
 export const getExtractedPhone = (formData, countryIsoCode) => {
+    if (!formData.mobile_wallet_account_number) return ""
     const dialCode = CountryBasedPhone[countryIsoCode]?.dial_code?.replace("+", "") ?? ""
-    const extractWalletNum = formData.mobile_wallet_account_number?.slice(dialCode.length)
+    const cleanNumber = formData.mobile_wallet_account_number.replace("+", "")
+    const extractWalletNum = cleanNumber?.slice(dialCode.length)
 
     return extractWalletNum
 }
@@ -61,3 +65,23 @@ export const openInNewTab = (url) => {
         document.body.removeChild(a);
     }
 };
+
+
+export const paymentAddressFlagCheck = (destination = "", details = {}) => {
+    console.log(details, "flags ")
+    const parts = destination.split(".");
+    let cursor = details?.paymentAddressFlags;
+
+    for (let i = 0; i < parts.length - 1; i++) {
+        cursor = cursor?.[parts[i]];
+        if (!cursor) return true;
+    }
+
+    const lastKey = parts[parts.length - 1];
+    return !(typeof cursor?.[lastKey] === "boolean" && cursor[lastKey] === false);
+};
+
+export const localCurrency = (userDetails) => {
+    const cont = CitiesData.find(item => item.iso3?.toUpperCase() === userDetails?.country_iso_code?.toUpperCase())
+    return cont.currency
+}

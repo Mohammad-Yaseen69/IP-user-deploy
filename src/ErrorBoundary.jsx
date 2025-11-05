@@ -47,7 +47,7 @@ class ErrorBoundary extends Component {
         if (this.state.isRefreshing) {
             return (
                 <div className="container">
-                    <InstaPayLoader />
+                    <InstaPayLoader fallback={true} />
                 </div>
             );
         }
@@ -57,7 +57,7 @@ class ErrorBoundary extends Component {
                     <div className="error-box">
                         <div>
                             <h1>Oops! We cannot process your request at the moment, please try again later.</h1>
-                            <p>We <address></address>re working to fix it. Please try refreshing the page or clear your browsing data for smooth experience.</p>
+                            <p>We are working to fix it. Please try refreshing the page or clear your browsing data for smooth experience.</p>
                             <div className='error-id'>
                                 Error ID: {this.state.eventId}
                             </div>

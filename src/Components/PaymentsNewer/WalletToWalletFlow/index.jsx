@@ -950,10 +950,10 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
         const error_message = () => {
             return errors.find(item => item?.code === code)?.message
         }
-        if (transaction_status === "error") {
+        if (transaction_status === "error" && sendPaymentType === "wallet") {
             dataHandler("error", error_message() ?? error_in_funds?.toLowerCase() === "true" ? "We encountered an issue processing your selected payment method. Please try again later." : "We encountered an issue processing your wallet to wallet transfer, but your funds have been securely added to your wallet. Kindly check your transaction record, and when ready, you may retry the transfer at your convenience.")
         }
-        if (transaction_status === "aborted") {
+        if (transaction_status === "aborted" && sendPaymentType === "wallet") {
             dataHandler("error", error_message() ?? "It appears that the add funds request was canceled. Please try again later when you're ready.")
         }
     }, [transaction_status])

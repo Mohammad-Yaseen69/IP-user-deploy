@@ -12,11 +12,11 @@ const BroadcastPage = () => {
                             InstaPay is open on another tab/window.
                         </h1>
                         <p>
-                            Please close this tab, or close other tabs and then refresh this page.
+                            Please close this tab, or click the button below
                         </p>
                     </div>
 
-                    <button>Close this Tab</button>
+                    <button onClick={() => window.location.reload()}>Open here</button>
                 </div>
             </div>
         </div>

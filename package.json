@@ -7,7 +7,11 @@
     "dev": "node --max-old-space-size=12288 node_modules/vite/bin/vite.js",
     "build": "node --max-old-space-size=12288 node_modules/vite/bin/vite.js build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@asseinfo/react-kanban": "^2.2.0",
@@ -28,8 +32,6 @@
     "@sentry/react": "^9.31.0",
     "@simplewebauthn/browser": "^9.0.1",
     "@tanstack/react-query": "^5.90.1",
-    "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/user-event": "^13.5.0",
     "@yudiel/react-qr-scanner": "^1.2.10",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
@@ -125,6 +127,10 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/html2canvas": "^1.0.0",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
@@ -136,8 +142,10 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "jsdom": "^26.1.0",
     "rollup-plugin-visualizer": "^6.0.3",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vitest": "^3.2.4"
   },
   "browserslist": {
     "production": [

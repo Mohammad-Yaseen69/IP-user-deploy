@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import styles from "./styles/stepthree.module.css";
 import { reasons } from "../AmountAndCurrency";
 import file from "../files/file.svg";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 const StepThree = ({ data, dataHandler }) => {
     const { t } = useTranslation();
@@ -30,21 +30,26 @@ const StepThree = ({ data, dataHandler }) => {
             dataHandler("files", files);
         }
     };
-    
-    console.log(reasons)
+
+    const dynamicReasons = useMemo(() => {
+        if (data?.payoutChannel?.vendor === "thunes" || !data.neemaReasons) {
+            return reasons
+        }
+        return Object.keys(data.neemaReasons).length === 0 ? reasons : data.neemaReasons
+    }, [data?.payoutChannel])
 
     return (
         <div className={styles.container}>
             <select value={data.reason} onChange={e => dataHandler("reason", e.target.value)}>
                 <option value="" disabled>{t("Select Purpose of Payment")}</option>
                 {
-                    Object.keys(reasons).map(item => (
-                        <option value={item} key={item}>{t(reasons[item])}</option>
+                    Object.keys(dynamicReasons).map(item => (
+                        <option value={item} key={item}>{t(dynamicReasons[item])}</option>
                     ))
                 }
             </select>
             <div className={styles.comment_files}>
-                <input type="text" placeholder={t("Transfer Note")} value={data.comment} 
+                <input type="text" placeholder={t("Transfer Note")} value={data.comment}
                     onChange={e => {
                         if (e.target.value.length <= 120) dataHandler("comment", e.target.value)
                     }}
@@ -65,8 +70,8 @@ const StepThree = ({ data, dataHandler }) => {
                 {
                     data.files.length > 0
                         ?
-                        data.files.map(item => (
-                            <span><strong>{t("File Name")}</strong>: {item?.name}</span>
+                        data.files.map((item, idx) => (
+                            <span key={idx}><strong>{t("File Name")}</strong>: {item?.name}</span>
                         ))
                         :
                         ""

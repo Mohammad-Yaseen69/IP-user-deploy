@@ -37,13 +37,16 @@ const NeemaBenExtrasFields = ({ fieldInfoValidate, country, basicExtras, country
                 {fieldInfoValidate("credit_party_identifiers_accepted", "houseNumber") &&
                     <FormGroup style={{ flex: 1, margin: 0 }}>
                         <Label className="col-form-label" htmlFor="houseNumber">{t("House Number")} <span className="req_star">*</span></Label>
-                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="houseNumber" id="houseNumber" type="number" placeholder='House Number' value={basicExtras.houseNumber} onChange={handleBasicExtraChange} />
+                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="houseNumber" id="houseNumber"  placeholder='House Number' value={basicExtras.houseNumber} onChange={handleBasicExtraChange} />
                     </FormGroup>
                 }
                 {fieldInfoValidate("credit_party_identifiers_accepted", "street") &&
                     <FormGroup style={{ flex: 1, margin: 0 }}>
                         <Label className="col-form-label" htmlFor="street">{t("Street")} <span className="req_star">*</span></Label>
-                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="street" id="street" type="text" placeholder='Street' value={basicExtras.street} onChange={handleBasicExtraChange} />
+                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="street" id="street" type="text" placeholder='Street' value={basicExtras.street} onChange={(e) => {
+                            console.log(e.target.value, e.target.name)
+                            handleBasicExtraChange(e)
+                        }} />
                     </FormGroup>
                 }
                 {(fieldInfoValidate("credit_party_identifiers_accepted", "province_state") || (fieldInfoValidate("required_receiving_entity_fields", "province_state"))) &&

@@ -139,7 +139,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
     const [savedWallet, setSavedWalelt] = useState({})
 
     const blockedWallet = useMemo(() => {
-        return currentWallet?.wallet_type !== "insta" || currentWallet?.blocked || currentWallet?.admin_blocked || currentWallet?.blocked || currentWallet?.admin_blocked || currentWallet?.status !== "active"
+        return   currentWallet?.blocked || currentWallet?.admin_blocked || currentWallet?.blocked || currentWallet?.admin_blocked || currentWallet?.status !== "active"
     }, [currentWallet])
 
     const [tooltips, setTooltips] = useState({

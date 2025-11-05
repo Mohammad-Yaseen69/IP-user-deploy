@@ -35,6 +35,9 @@ const getBalances = async (head) => {
 
 
 const UserState = ({ children }) => {
+    if(import.meta.env.PROD){   
+        console.clear()
+    }
     console.info(`%c Dear User, Please be aware that copying and pasting code or commands directly into your console(in this section) can pose significant security risks. Malicious code can compromise your account, steal sensitive information, or damage your system. \nFor your safety, never paste commands from untrusted or unknown sources.\nThank you for your attention to this matter.\nSincerely,\nInstaPay`, 'color: white; font-size: 20px; font-weight: 500; background: linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%); padding: .5rem; border-radius: 5px;');
 
     const token = localStorage.getItem("token")
@@ -326,7 +329,7 @@ const UserState = ({ children }) => {
         }
     }
     useEffect(() => {
-        if (userDetails /*&& userWallets.length === 0*/) {
+        if (userDetails?._id /*&& userWallets.length === 0*/) {
             getUserWallets()
             getPAddressDets()
         }
@@ -429,7 +432,7 @@ const UserState = ({ children }) => {
 
     }
     useEffect(() => {
-        if (userDetails) {
+        if (userDetails?._id) {
             getProfileCompletionDetails()
         }
     }, [userDetails])
@@ -493,7 +496,7 @@ const UserState = ({ children }) => {
 
 
     useEffect(() => {
-        if (userDetails) {
+        if (userDetails?._id) {
             getWithdrawals()
         }
     }, [userDetails])
@@ -562,7 +565,7 @@ const UserState = ({ children }) => {
     const [threeDaysReminderInfo, set3DaysReminderInfo] = useState(false)
 
     useEffect(() => {
-        if (userDetails) {
+        if (userDetails?._id) {
             if (!userDetails?.user?.answer1 || !userDetails?.user?.answer2 || !userDetails?.user?.answer3) {
                 const getSecurityQuestionDetails = async () => {
                     try {

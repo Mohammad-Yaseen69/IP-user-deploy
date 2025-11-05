@@ -28,22 +28,21 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
             api_val: "paypal"
         },
         {
+            name: "Bank Deposit",
+            value: "bank",
+            id: 2,
+            icon: pagSvgs.wallet,
+            active_icon: pagSvgs.wallet_a,
+            api_val: "bank_deposit"
+        },
+        {
             name: "Mobile Wallet",
             value: "mobile",
             id: 1,
             coming_soon: true,
             icon: pagSvgs.wallet,
-            active_icon: pagSvgs.wallet_a,
+            active_icon: pagSvgs.wallet_a,  
             api_val: "mobile_money"
-        },
-        {
-            name: "Bank Deposit",
-            value: "bank",
-            id: 2,
-            coming_soon: true,
-            icon: pagSvgs.wallet,
-            active_icon: pagSvgs.wallet_a,
-            api_val: "bank"
         },
 
     ].filter(item => allowed.some(it => it === item.api_val))
@@ -51,25 +50,25 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
         <div className={styles.container}>
             {
                 !data?.payment_type?.value ?
-                        payouts.map(item => (
-                            <div
-                                key={item?.id}
-                                className={`${styles.item} ${data?.payment_type?.id === item?.id ? styles.active : ''}`}
-                                style={{ cursor: item.coming_soon ? "not-allowed" : "pointer", opacity: item.coming_soon ? .8 : 1 }}
-                                onClick={() => item.coming_soon ? console.log("") : dataHandler("payment_type", item)}
-                            >
-                                {/* <img src={data?.payment_type?.id === item?.id ? item.active_icon : item.icon} alt="" /> */}
-                                {data?.payment_type?.id === item?.id ? item.active_icon : item.icon}
-                                <span>{t(item?.name)}</span>
-                                {
-                                    item.coming_soon
-                                    &&
-                                    <div className={styles.badge}>
-                                        {t("Coming Soon")}
-                                    </div>
-                                }
-                            </div>
-                        )) :
+                    payouts.map(item => (
+                        <div
+                            key={item?.id}
+                            className={`${styles.item} ${data?.payment_type?.id === item?.id ? styles.active : ''}`}
+                            style={{ cursor: item.coming_soon ? "not-allowed" : "pointer", opacity: item.coming_soon ? .8 : 1 }}
+                            onClick={() => item.coming_soon ? console.log("") : dataHandler("payment_type", item)}
+                        >
+                            {/* <img src={data?.payment_type?.id === item?.id ? item.active_icon : item.icon} alt="" /> */}
+                            {data?.payment_type?.id === item?.id ? item.active_icon : item.icon}
+                            <span>{t(item?.name)}</span>
+                            {
+                                item.coming_soon
+                                &&
+                                <div className={styles.badge}>
+                                    {t("Coming Soon")}
+                                </div>
+                            }
+                        </div>
+                    )) :
                     <div
                         className={`${styles.item}`}
                         style={{ justifyContent: 'space-between' }}
@@ -79,7 +78,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                             <span>{t(data.payment_type?.name)}</span>
                         </div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
-                            <path d="M13.3332 4.68896L5.99984 12.0223L2.6665 8.68896" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M13.3332 4.68896L5.99984 12.0223L2.6665 8.68896" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </div>
             }
@@ -113,8 +112,8 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                                             <button onClick={() => dataHandler("step", 3)}>{t("Change")}</button>
                                         </div>
                                         <div className={styles.cd_bot}>
-                                            <h5>Card ending {data.cardNumber?.slice(data?.cardNumber?.length - 5, data?.cardNumber?.length)}</h5>
-                                            <span>Exp date: {data.expiry}</span>
+                                            <h5>{t("Card ending")} {data.cardNumber?.slice(data?.cardNumber?.length - 5, data?.cardNumber?.length)}</h5>
+                                            <span>{("Exp date")}: {data.expiry}</span>
                                         </div>
                                     </div>
                                     :

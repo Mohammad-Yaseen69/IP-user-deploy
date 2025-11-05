@@ -35,6 +35,14 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
+    },
+    hmr: {
+      overlay: true,
+      log: true
+    },
+    watch: {
+      usePolling: true,
+      interval: 100
     }
   },
   build: {
@@ -48,5 +56,23 @@ export default defineConfig({
         }
       }
     }
-  }
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.js',
+    css: true,
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        'node_modules/',
+        'src/test/',
+        '**/*.d.ts',
+        '**/*.config.js',
+        'dist/',
+        'public/'
+      ]
+    }
+  },
 })

@@ -53,7 +53,7 @@ const ProfileComponent = () => {
     const [totalReviewsAsBuyer, setTotalReviewsAsBuyer] = useState(0)
     const toggleAddPortfolio = () => setShowAddPortfolio(!showAddPortfolio)
     const [isLoading, setIsLoading] = useState(true)
-    const {t} = useTranslation() 
+    const { t } = useTranslation()
 
     useEffect(() => {
         const fetchData = async () => {

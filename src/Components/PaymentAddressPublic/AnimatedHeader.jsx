@@ -73,7 +73,8 @@ const AnimatedHeader = ({ mobileUI }) => {
                             fontWeight: 600,
                             marginBottom: "0px",
                             fontSize: "14px",
-                            textAlign: mobileUI && "center"
+                            textAlign: mobileUI && "center",
+                            width: !mobileUI && "75%"
                         }}
                     >
                         {t(headerContents[index].para)}

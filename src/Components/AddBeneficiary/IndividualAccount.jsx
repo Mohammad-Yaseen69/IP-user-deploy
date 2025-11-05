@@ -308,7 +308,7 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
                 loading
                     ?
                     <div style={{ height: "60vh", width: "100%", opacity: 1 }}>
-                        <InstaPayLoader />
+                        <InstaPayLoader fallback={true} />
                     </div>
                     :
                     <>
@@ -584,7 +584,7 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
                                         country={country}
                                         countryIsoCode={countryIsoCode}
                                         fieldInfoValidate={fieldInfoValidate}
-                                        handleBasicExtraChange={handleBankExtraChange}
+                                        handleBasicExtraChange={handleBasicExtraChange}
                                         setBasicExtras={setBasicExtras}
                                     />
                                     <FormGroup className="mb-3">
@@ -637,7 +637,7 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
                                         pointerEvents: showAdditional ? "all" : "none"
                                     }}>
                                         {
-                                            Object.keys(additionFields).map((item,key) => (
+                                            Object.keys(additionFields).map((item, key) => (
                                                 item === "gender"
                                                     ?
                                                     <FormGroup key={key} FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
@@ -707,8 +707,8 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
                                                                 <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} type="select" value={additionFields[item]} name={item} onChange={handleAddtionalFieldChange}>
                                                                     <option value="">--{t("Select Occupation")}--</option>
                                                                     {
-                                                                        Object.keys(occupations).map(item => (
-                                                                            <option value={item}>{t(item)}</option>
+                                                                        Object.keys(occupations).map((item, key) => (
+                                                                            <option key={key} value={item}>{t(item)}</option>
                                                                         ))
                                                                     }
                                                                 </Input>

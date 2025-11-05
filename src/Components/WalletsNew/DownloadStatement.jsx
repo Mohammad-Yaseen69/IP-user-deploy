@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { DateRangePicker } from 'react-date-range'
 import { useTranslation } from 'react-i18next'
 import { Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
@@ -12,6 +12,7 @@ import img from "../../assets/images/logo/logo2.png"
 import { toast } from 'react-toastify'
 import "jspdf-autotable";
 import { service_name_formatter } from '../TransactionsNewApi/TransactionItem'
+import { exportToExcel } from '../../utils/Functions/csvExport'
 
 const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
     const { userDetails, authHeader, beneficiaries } = useContext(UserContext)
@@ -79,7 +80,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
-                callback(decrypted.transactionList)
+                callback(decrypted.transactionList, userDetails, () => { }, false)
                 setShowModal(false)
                 setApiDates(null)
                 setFileType("")
@@ -96,10 +97,69 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
             })
     }
 
+
+    const renderRecipientName = (item, internationalReceiver) => {
+        if (item?.service_type === "payment_address" && item?.guest_details) {
+            return item?.guest_details?.name ?? ""
+        }
+
+        if (item?.service_type === "airtime") {
+            return item?.airtime_number ?? ""
+        }
+
+        if (item?.payment_type === "conversion") {
+            return item?.wallet_id ?? ""
+        }
+
+        const isDebit = (item?.transaction_type ?? "")?.toLowerCase() === "debit"
+        if (isDebit) {
+            if (item?.service_type === "withdraw_by_admin") return "Admin"
+            if (item?.service_type === "kyc_verification") return "InstaPay"
+            if (item?.service_type === "withdrawal") {
+                const first = item?.sender?.user?.first_name
+                const last = item?.sender?.user?.last_name
+                return [first, last].filter(Boolean).join(" ")
+            }
+            if (item?.receiver?.user) {
+                const first = item?.receiver?.user?.first_name
+                const last = item?.receiver?.user?.last_name
+                return [first, last].filter(Boolean).join(" ")
+            }
+
+            const first = internationalReceiver?.first_name ?? item?.account?.user?.first_name ?? internationalReceiver?.company_name ?? item?.account?.user?.company_name
+            const last = internationalReceiver?.last_name ?? item?.account?.user?.last_name
+            return [first, last].filter(Boolean).join(" ")
+        }
+
+        if (item?.service_type === "topup") {
+            const first = item?.receiver?.user?.first_name
+            const last = item?.receiver?.user?.last_name
+            return [first, last].filter(Boolean).join(" ")
+        }
+
+        const first = item?.sender?.user?.first_name ?? item?.mastercard?.account?.first_name ?? item?.sender?.user?.company_name
+        const last = item?.sender?.user?.last_name ?? item?.mastercard?.account?.last_name
+        return [first, last].filter(Boolean).join(" ")
+    }
+
+    const renderPaymentType = (item) => {
+        if (item?.service_type === "withdraw_by_admin" || item?.service_type === "deposite_by_admin") {
+            return "Admin Funds"
+        }
+        if (item?.payment_type?.includes("bank")) {
+            return "Bank Transfer"
+        }
+        if (item?.payment_type?.includes("mobile")) {
+            return "Mobile Money"
+        }
+        return service_name_formatter(item?.payment_type)
+    }
+
+
     const generatePDF = () => {
         setDownloading(true);
         const tableStyles = {
-            fontSize: 7,
+            fontSize: 5.5,
         };
         const tableHeaderStyles = {
             fontSize: 7,
@@ -107,7 +167,8 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
             textColor: [255, 255, 255],
         };
 
-        const doc = new jsPDF();
+        // Set landscape orientation by passing parameters to jsPDF
+        const doc = new jsPDF({ orientation: "landscape" });
 
 
         doc.addImage(img, "png", 14, 10, 46.5, 13)
@@ -162,8 +223,11 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
                         "Transaction ID",
                         "Payment Type",
                         "Recipient",
+                        "Sender Email",
+                        "Sender Phone",
                         "Type",
                         "Amount",
+                        "Payment Reference",
                         "Status",
                     ],
                 ],
@@ -173,55 +237,13 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
                     return [
                         new Date(item?.createdAt)?.toLocaleString(),
                         item?.reference_id,
-                        item?.service_type === "withdraw_by_admin" || item?.service_type === "deposite_by_admin"
-                            ?
-                            "Admin Funds"
-                            :
-                            item?.payment_type?.includes("bank")
-                                ?
-                                "Bank"
-                                :
-                                item?.payment_type?.includes("mobile")
-                                    ?
-                                    "mobile"
-                                    :
-                                    service_name_formatter(item?.payment_type),
-                        item?.service_type === "airtime"
-                            ?
-                            item?.airtime_number
-                            :
-                            item?.payment_type === "conversion" || item?.service_type === "withdrawal"
-                                ?
-                                item?.wallet_id
-                                :
-                                item?.transaction_type?.toLowerCase() === "debit"
-                                    ?
-                                    item?.service_type === "withdraw_by_admin"
-                                        ?
-                                        "Admin"
-                                        :
-                                        item?.service_type === "kyc_verification"
-                                            ?
-                                            "InstaPay"
-                                            :
-                                            item?.service_type === "withdrawal"
-                                                ?
-                                                `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20)
-                                                :
-                                                item?.receiver
-                                                    ?
-                                                    `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)
-                                                    :
-                                                    `${internationalReceiver?.first_name?? item?.account?.user?.first_name} ${internationalReceiver?.last_name?? item?.account?.user?.last_name}`.slice(0, 20)
-
-                                    :
-                                    item?.service_type === "topup"
-                                        ?
-                                        `${item?.receiver?.user?.first_name} ${item?.receiver?.user?.last_name}`.slice(0, 20)
-                                        :
-                                        `${item?.sender?.user?.first_name} ${item?.sender?.user?.last_name}`.slice(0, 20),
+                        renderPaymentType(item),
+                        renderRecipientName(item, internationalReceiver),
+                        item?.guest_details?.email || "--",
+                        item?.guest_details?.phone || "--",
                         service_name_formatter(item?.service_type),
                         `${item?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}${item?.total ? Number(item?.total)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ""} ${item?.currency?.code} `,
+                        item?.client_reference || "--",
                         item?.status,
                     ]
                 }),
@@ -277,7 +299,13 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
             <ModalFooter>
                 <Button
                     disabled={!fileType || !apiDates || downlaoding}
-                    onClick={generatePDF}
+                    onClick={() => {
+                        if (fileType === "PDF") {
+                            generatePDF();
+                        } else if (fileType === "CSV") {
+                            getTransactions(exportToExcel);
+                        }
+                    }}
                     style={{
                         border: "none",
                         outline: "none",

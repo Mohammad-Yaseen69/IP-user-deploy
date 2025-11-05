@@ -258,18 +258,18 @@ const Layout = ({ children, classNames, ...rest }) => {
           toggle={() => setShowInactivityModal(!showInactivityModal)}
         />
         {
-          (is30DaysInfo && profileCompleted === true)
+          (is30DaysInfo && profileCompleted === true && userDetails?.account_type === "individual")
           &&
           <FinancialInfoModal
-            isOpen={is30DaysInfo && profileCompleted === true}
+            isOpen={is30DaysInfo && userDetails?.account_type === "individual" && profileCompleted === true}
             toggleOnSuccess={() => setIs30DaysInfo(!is30DaysInfo)}
             setShowSuccessModal={setShowSuccessModal}
           />
         }
 
-        {(threeDaysReminderInfo && profileCompleted === true) &&
+        {(threeDaysReminderInfo && profileCompleted === true && userDetails?.account_type === "individual") &&
           <FinancialInfoModal
-            isOpen={threeDaysReminderInfo && profileCompleted === true}
+            isOpen={threeDaysReminderInfo && userDetails?.account_type === "individual" && profileCompleted === true}
             toggle={() => set3DaysReminderInfo(!threeDaysReminderInfo)}
             toggleOnSuccess={() => set3DaysReminderInfo(!threeDaysReminderInfo)}
             setShowSuccessModal={setShowSuccessModal}
@@ -290,12 +290,12 @@ const Layout = ({ children, classNames, ...rest }) => {
         }
         <Modal toggle={() => setShowSuccessModal(false)} isOpen={showSuccessModal}>
           <ModalHeader toggle={() => setShowSuccessModal(false)}>
-            Questions Added
+            {("Questions Added")}
           </ModalHeader>
           <ModalBody>
             <div style={{ display: "flex", alignItems: "center", justifyContent: 'center', flexDirection: 'column' }}>
               <img width={300} src={success} alt="" />
-              <h4 style={{ textAlign: "center" }}>Your Financial Questions are all added successfully.</h4>
+              <h4 style={{ textAlign: "center" }}>{("Your Financial Questions are all added successfully.")}</h4>
             </div>
           </ModalBody>
         </Modal>
@@ -311,7 +311,7 @@ const Layout = ({ children, classNames, ...rest }) => {
               <Loader />
               <TapTop />
               <div style={{
-                pointerEvents: (is30Days || showModal) && !window.location.pathname.toLowerCase().includes("/profile/") ? "none" : "all"
+                pointerEvents: ((is30Days || showModal) && userDetails?.account_type === "individual") && !window.location.pathname.toLowerCase().includes("/profile/") ? "none" : "all"
               }} className={`page-wrapper ${sidebar_types1} `} id="pageWrapper">
                 {/* <Header /> */}
                 <div className="page-body-wrapper">

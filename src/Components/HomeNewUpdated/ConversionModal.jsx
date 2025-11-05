@@ -167,13 +167,16 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
 
     const confirmConversion = () => {
         setSaving(true)
+        if(currentWallet.wallet_type === "crypto"){
+            setStep(2)
+            return;
+        }
         if (+currentWallet.balance.available > +amount) {
             const data = {
                 sender_wallet_id: currentWallet._id,
                 receiver_wallet_id: exchangedWallet._id,
                 amount: +amount
             }
-            console.log(data)
             const encrpted = encryptData(data)
             axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/insta-wallet-conversion`, { data: encrpted }, {
                 headers: authHeader

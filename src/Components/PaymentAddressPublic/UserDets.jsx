@@ -5,33 +5,58 @@ import { useNavigate } from "react-router"
 import verified from "../../assets/verified.png"
 import { useTranslation } from "react-i18next"
 import LanguagePicker from "../LanguagePicker"
+import { useEffect, useState } from "react"
+import PlansModal from "./PlansModal"
+import { useQuery } from "@tanstack/react-query"
+import { getUserPlans } from "../PaymentAddress/queries/pricings"
+import { paymentAddressFlagCheck } from "../../utils/Functions"
 
 
-const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, userCountry, setShowVerTT, showVerTT, invoicePaid, AmountComponent, paymentAddress, invoice }) => {
+const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, userCountry, setShowVerTT, showVerTT, invoicePaid, AmountComponent, paymentAddress, invoice, user, data, dataHandler }) => {
     const width = useWindowWidth()
     const navigate = useNavigate()
     const { t } = useTranslation()
+    const [showPlansModal, setShowPlansModal] = useState(false)
+    const { data: plansData, isLoading } = useQuery({
+        queryKey: ['PublicUserPlans', user_name],
+        queryFn: () => getUserPlans(user_name),
+        enabled: !!user_name
+    })
 
-    const actionButtons = [
-        {
-            label: t("View Profile"),
+    const [actionButtons, setActionsButtons] = useState([
+        paymentAddressFlagCheck("allowViewProfile", userDetails) ? {
+            label: "View Profile",
             onClick: () => navigate(`/profile/${user_name}`),
             disable: false,
             purple: true,
-        },
-        // {
-        //     label: "View Plans",
-        //     onClick: () => { },
-        //     disable: true,
-        //     purple: false,
-        // },
-        // {
-        //     label: "Explore eShop",
-        //     onClick: () => { },
-        //     disable: true,
-        //     purple: false,
-        // },
-    ]
+        } : null,
+
+        paymentAddressFlagCheck("allowEcommerce", userDetails) ? {
+            label: "Explore eShop",
+            onClick: () => { },
+            disable: true,
+            purple: false,
+        } : null,
+    ].filter(btn => btn !== null))
+
+
+
+    useEffect(() => {
+        if (plansData && plansData.length > 0) {
+            setActionsButtons(prev => [
+                ...prev,
+                {
+                    label: "View Plans",
+                    onClick: () => setShowPlansModal(true),
+                    disable: false,
+                    purple: false,
+                },
+            ]);
+        }
+    }, [plansData]);
+
+
+
 
     return (
         <div className={styles.userDets} style={{ position: "relative" }} >
@@ -68,7 +93,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                                         }}
                                     >
                                         {userDetails?.first_name || userDetails?.company_name} {userDetails?.last_name}
-                                        {(userDetails?.kyc_status === "approved" || userDetails?.kyb_status === "approved") && (
+                                        {(userDetails?.kyc_status === "approved" || userDetails?.kyb_status === "approved") && paymentAddressFlagCheck("allowVerificationBadge", userDetails) && (
                                             <>
                                                 <img
                                                     onMouseEnter={() => setShowVerTT(true)}
@@ -112,7 +137,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                             </div>
                             {width < 1000 &&
                                 <div style={{ position: "absolute", top: "0px", right: invoice ? "0px" : "-13px" }}>
-                                    <LanguagePicker newUI={true} backgroundWhite={true} />
+                                    <LanguagePicker defaultLanguage={userDetails?.language} newUI={true} backgroundWhite={true} />
                                 </div>
                             }
 
@@ -127,7 +152,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                     {actionButtons.map((button, idx) => (
                         <button
                             key={idx}
-                            onClick={button.onClick}
+                            onClick={() => button.onClick()}
                             disabled={button.disable}
                             style={{
                                 padding: "10px 20px",
@@ -139,10 +164,24 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                                 color: button.purple ? "white" : "black"
                             }}
                         >
-                            {button.label}
+                            {t(button.label)}
                         </button>
                     ))}
                 </div>
+            }
+
+
+            {!invoice && showPlansModal &&
+                <PlansModal
+                    isOpen={showPlansModal}
+                    toggle={() => setShowPlansModal(false)}
+                    plansData={plansData}
+                    isLoading={isLoading}
+                    user_name={user_name}
+                    user={user}
+                    data={data}
+                    dataHandler={dataHandler}
+                />
             }
         </div>
     )

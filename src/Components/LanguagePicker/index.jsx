@@ -8,7 +8,7 @@ import axios from "axios"
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import { UserContext } from "../../Context/UserContext"
 
-const LanguagePicker = ({ size = "24", backgroundWhite, newUI }) => {
+const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }) => {
     const { i18n, t } = useTranslation()
     const [showDropDown, setShowDropDown] = useState()
     const [currentLang, setCurrentLang] = useState(localStorage.getItem("i18nextLng"))
@@ -156,7 +156,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI }) => {
     // }, [profileCompletedPercentage, lang])
 
     const setLanguage = async (lang) => {
-        if (!userDetails?.language) return;
+        if (!userDetails?._id) return;
         try {
             const data = {
                 account_id: userDetails?._id,
@@ -182,6 +182,12 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI }) => {
         const localStorageLang = localStorage.getItem("i18nextLng")
         if (userDetails?.language) {
             const lng = languageCountries.find(item => item.lang.toLowerCase() === userDetails.language)
+            i18n.changeLanguage(lng.lang)
+            setCurrentLang(lng.lang)
+            localStorage.setItem("i18nextLng", lng.lang)
+        }
+        else if (defaultLanguage) {
+            const lng = languageCountries.find(item => item.lang.toLowerCase() === defaultLanguage)
             i18n.changeLanguage(lng.lang)
             setCurrentLang(lng.lang)
             localStorage.setItem("i18nextLng", lng.lang)
@@ -377,7 +383,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI }) => {
                         }} onClick={(e) => {
                             e.stopPropagation()
                             setShowDropDown(!showDropDown)
-                            }}>
+                        }}>
                             <GlobeSVG size={size} />
                         </Col>
                     )
