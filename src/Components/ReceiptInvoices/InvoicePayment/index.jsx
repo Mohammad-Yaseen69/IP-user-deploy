@@ -125,13 +125,20 @@ const InvoicePayment = () => {
   if (!data) {
     return (
       <Wrapper>
-        <h3 style={{ textAlign: "center", color: "white", margin: "auto", zIndex: 100 }}>{("This Invoice Does not exist.")}</h3>
+        <h3 style={{ textAlign: "center", margin: "auto", zIndex: 100,padding: "24px" }}>{("This Invoice Does not exist")}</h3>
       </Wrapper>
     )
   }
 
 
 
+  if (!data.active) {
+    return (
+      <Wrapper>
+        <h3 style={{ textAlign: "center", margin: "auto", zIndex: 100,padding: "24px" }}>{("This Invoice is inactive!")}</h3>
+      </Wrapper>
+    )
+  }
 
   const url = data ? `/payments?payment_action=send_money&send_type=wallet&wallet_id=${data.receivingWallet?.wallet_id}&currency=${data.currency}&amount=${data.amount}&invoiceId=${invoiceId}&isShipping=${data.shippingAddress}&payment_type=invoice` : "/"
 

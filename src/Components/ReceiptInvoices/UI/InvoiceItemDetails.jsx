@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import styles from "../styles/index.module.scss";
 import { useTranslation } from "react-i18next";
 import QrDetails from "../../PaymentAddressPublic/QrDetails";
@@ -9,12 +9,31 @@ import { formatDateTime } from "../InvoiceTable";
 import { Toggle } from "../../MyMasterCard/CardPurchased";
 import { ChevronDown } from "react-feather";
 import useWindowWidth from "../../../utils/useWindowWidth";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiWrapper } from "../../../utils/Functions/apiWrapper";
+import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
+import { toast } from "react-toastify";
 
 const InvoiceItemDetails = ({ inv }) => {
   const { t } = useTranslation();
   const { userDetails } = useContext(UserContext);
   const [openRecipientIds, setOpenRecipientIds] = useState(new Set());
+  const queryClient = useQueryClient();
   const width = useWindowWidth();
+  const [active, setActive] = useState(inv.active)
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: () => apiWrapper({
+      endpoint: `/api/invoice/toggle-active/${inv._id}`,
+      method: "PUT"
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["GetInvoicesList"] });
+    },
+    onError: (res) => {
+      const dec = decryptData(res.response?.data?.data)
+      toast.error(dec.message || "We are unable to process your request at the moment.")
+    }
+  })
 
   const toggleRecipient = (id) => {
     setOpenRecipientIds((prev) => {
@@ -26,7 +45,16 @@ const InvoiceItemDetails = ({ inv }) => {
   };
 
   return (
-    <div className={`${styles.expandRow}`}>
+    <div style={{ paddingTop: "0px" }} className={`${styles.expandRow}`}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+        <span style={{ fontWeight: 600, fontSize: "20px" }}>
+          {t("Active")}
+        </span>
+        <Toggle
+          checked={active}
+          onChange={() => !isPending && mutateAsync().then(() => setActive(!active))}
+        />
+      </div>
       <div className={`${styles.expandItem} ${styles.amount} `}>
         <div
           style={{
@@ -43,7 +71,6 @@ const InvoiceItemDetails = ({ inv }) => {
           {inv.currency} {Number(inv.amount).toFixed(2)}
         </h2>
       </div>
-
       <InfoItem label="Invoice Link">
         <ShareableLink
           style={{ padding: "0px", background: "none" }}
