@@ -1,9 +1,9 @@
 import React from 'react'
 import UploadComponent from './Upload'
-import Toogle from './Toogle'
 import style from "./styles/AddProduct.module.scss"
 import { useTranslation } from 'react-i18next'
 import { FolderPlus, Plus } from 'react-feather'
+import { Toggle } from '../../MyMasterCard/CardPurchased'
 const ProductsForm = ({
     files,
     handleFileChange,
@@ -49,7 +49,7 @@ const ProductsForm = ({
             </div>
 
             <div className={style.variantBox}>
-                <Toogle props={{ click: () => setInventoryEnabled(!inventoryEnabled) }} />
+                <Toggle checked={inventoryEnabled} onChange={() => setInventoryEnabled(prev => !prev)} />
                 <div>
                     <h6>{t("Inventory Stock")}</h6>
                     <p>
@@ -66,7 +66,7 @@ const ProductsForm = ({
                 </label>
             )}
             <div className={style.variantBox}>
-                <Toogle props={{ click: () => setVariantEnabled(!variantEnabled) }} />
+                <Toggle checked={inventoryEnabled} onChange={() => setInventoryEnabled(prev => !prev)} />
                 <div>
                     <h6>{t("Create Product Variants")}</h6>
                     <p>
@@ -95,7 +95,7 @@ const ProductsForm = ({
                         {t(`Variant ${index + 1}`)}
                         <div className={style.priceBox}>
                             <input type="text" placeholder="Color" />
-                           <span>{t("$8465")}</span>
+                            <span>{t("$8465")}</span>
                         </div>
                     </label>
                 ))
