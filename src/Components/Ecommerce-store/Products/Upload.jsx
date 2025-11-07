@@ -32,7 +32,7 @@ const UploadComponent = ({ files, handleFileChange }) => {
 
                     <div
                         className={style.uploadBox}
-                        onClick={() => document.getElementById("fileInput").click()}
+                        // onClick={() => document.getElementById("fileInput").click()}
                     >
                         <input
                             id="fileInput"
@@ -43,7 +43,7 @@ const UploadComponent = ({ files, handleFileChange }) => {
                         />
                         <Plus />
                     </div>
-                    <div className={style.uploadedBox}>
+                    <div className={style.uploadedBox2}>
                         {files.map((file, index) => (
                             <div key={index}>
                                 {file.type.startsWith("image/") ? (

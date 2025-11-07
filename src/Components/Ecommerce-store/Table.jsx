@@ -6,6 +6,7 @@ import { FaSort } from "react-icons/fa6";
 import styles from "./styles/Table.module.scss";
 import AddProducts from "./Products/AddProducts";
 import ProductDetails from "./Products";
+import Arrowsvg, { SortSvg } from "./assets/icons/svg/svg";
 const Table = () => {
     const { t } = useTranslation()
     const [openDropdownId, setOpenDropdownId] = useState(null);
@@ -101,7 +102,7 @@ const Table = () => {
                         <Filter size={16} /> {t("Filter")}
                     </button>
                     <button className={styles.SortBtn}>
-                        <FaSort size={16} /> {t("Sort By")}
+                        <SortSvg height={20} width={20} /> {t("Sort By")}
                     </button>
                     <button
                         className={styles.AddBtn}
@@ -113,8 +114,7 @@ const Table = () => {
                     >      <Plus size={16} /> {t("Add New Product")}
                     </button>
                     <button className={styles.ExpandBtn}>
-                        <ArrowUpRight size={14} />
-                        <ArrowDownLeft size={14} />
+                        <Arrowsvg height={20} width={20} />
                     </button>
                 </div>
             </header>
@@ -191,11 +191,14 @@ const Table = () => {
 
             <div className={styles.TableFooter}>
                 <p>
-                    {t("  1 - 10 of 1,676 Entries")}
+                <span>1-10</span> {t("of")}   <span>1,676</span> {t( "Entries")}
                 </p>
                 <div className={styles.Pagination}>
                     <select>
-                        <option>1-4</option>
+                        <option style={{
+                            color: "#000",
+                            fontWeight: 700
+                        }} >1-4</option>
                         <option>5-8</option>
                     </select>
                     <button>{t("Previous")}</button>

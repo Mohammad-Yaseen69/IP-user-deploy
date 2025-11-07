@@ -25,7 +25,7 @@ function AddProducts({ setExpandDrower }) {
         <div className={style.DrawerContainer}>
             <div className={style.Header}>
                 <div>
-                    <h5>{t("Product Details")}</h5>
+                    <p>{t("Product Details")}</p>
                     <span>#PRD-98716253-9</span>
                 </div>
                 <IconButton onClick={() => setExpandDrower(false)}>

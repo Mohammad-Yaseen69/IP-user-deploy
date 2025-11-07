@@ -17,7 +17,7 @@ const ProductsForm = ({
     const { t } = useTranslation();
     return (
         <div className={style.Content}>
-            <h4>{t("Product Images")}</h4>
+            <span>{t("Product Images")}</span>
             <UploadComponent files={files} handleFileChange={handleFileChange} />
 
             <label>
