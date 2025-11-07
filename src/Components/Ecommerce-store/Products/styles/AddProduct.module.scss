@@ -219,12 +219,27 @@
   flex-direction: row;
   gap: 5px;
   width: 100%;
+  margin-bottom: 5px;
+  .Togle {
+    width: 35px;
+  }
+  .Togle2 {
+    width: 44px;
+  }
+  .span {
+    color: #141414;
+    font-family: Manrope;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 600;
+    margin: 0;
+  }
   p {
     color: var(--text-dark-8, #595959);
     font-family: Manrope;
-    font-size: 9px;
+    font-size: 12px;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 600;
     margin: 0;
   }
 }
@@ -264,9 +279,11 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 8px 10px;
+    padding: 8px 8px;
     cursor: pointer;
     margin-right: 10px;
+    font-weight: 600;
+
     svg {
       width: 20px;
       height: 20px;
@@ -284,12 +301,14 @@
   width: 100%;
   margin-top: 10vh;
   margin-bottom: 10px;
+  font-weight: 600;
   .cancel {
     border: none;
     background: #f8f8f8;
     color: #333;
     padding: 8px 18px;
     border-radius: 8px;
+    font-weight: 600;
 
     cursor: pointer;
   }
@@ -301,6 +320,7 @@
     padding: 8px 18px;
     border-radius: 8px;
     cursor: pointer;
+    font-weight: 600;
 
     &:hover {
       background: #6938f5;

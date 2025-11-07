@@ -1,9 +1,8 @@
-import React from 'react'
+import { FolderPlus, Plus } from 'react-feather'
+import { useTranslation } from 'react-i18next'
+import { Toggle } from '../../MyMasterCard/CardPurchased'
 import UploadComponent from './Upload'
 import style from "./styles/AddProduct.module.scss"
-import { useTranslation } from 'react-i18next'
-import { FolderPlus, Plus } from 'react-feather'
-import { Toggle } from '../../MyMasterCard/CardPurchased'
 const ProductsForm = ({
     files,
     handleFileChange,
@@ -13,6 +12,7 @@ const ProductsForm = ({
     setVariantEnabled,
     variants,
     handleAddVariant,
+    handleCreate
 }) => {
     const { t } = useTranslation();
     return (
@@ -49,9 +49,10 @@ const ProductsForm = ({
             </div>
 
             <div className={style.variantBox}>
-                <Toggle checked={inventoryEnabled} onChange={() => setInventoryEnabled(prev => !prev)} />
+                <div className={style.Togle}>
+                    <Toggle checked={inventoryEnabled} onChange={() => setInventoryEnabled(prev => !prev)} /></div>
                 <div>
-                    <h6>{t("Inventory Stock")}</h6>
+                    <span>{t("Inventory Stock")}</span>
                     <p>
                         {t(
                             "Enable this to add product stock in the inventory."
@@ -66,9 +67,9 @@ const ProductsForm = ({
                 </label>
             )}
             <div className={style.variantBox}>
-                <Toggle checked={inventoryEnabled} onChange={() => setInventoryEnabled(prev => !prev)} />
+                <div className={style.Togle2}><Toggle checked={variantEnabled} onChange={() => setVariantEnabled(prev => !prev)} /></div>
                 <div>
-                    <h6>{t("Create Product Variants")}</h6>
+                    <span>{t("Create Product Variants")}</span>
                     <p>
                         {t(
                             "Enable this to add product variations such as color, size, or other attributes."
@@ -112,7 +113,7 @@ const ProductsForm = ({
             }
             <div className={style.footer}>
                 <button className={style.cancel}>{t("Cancel")}</button>
-                <button className={style.create}>{t("Create")}</button>
+                <button className={style.create} onClick={handleCreate}>{t("Create")}</button>
             </div>
         </div>
     )

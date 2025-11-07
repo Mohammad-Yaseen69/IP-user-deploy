@@ -1,0 +1,117 @@
+.ModalWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    overflow: hidden;
+}
+
+.ModalContent {
+    position: relative;
+    border-radius: 16px;
+    padding: var(--rad-base, 25px) var(--rad-l, 16px);
+    border: none;
+    box-shadow: 0 24px 48px rgba(28, 28, 28, 0.12);
+    text-align: center;
+    background: #ffffff;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.CloseButton {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1f1f1f;
+}
+
+.IconWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.IconCircle {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(95% 95% at 50% 10%, #a87bff 0%, #5e41f4 100%);
+    box-shadow: 0 12px 32px rgba(94, 65, 244, 0.35);
+}
+
+.IconCircle svg {
+    width: 36px;
+    height: 36px;
+}
+
+.Title {
+    font-size: 1rem !important;
+    font-weight: 700;
+    color: #121212;
+    margin-bottom: 12px;
+}
+
+.Description {
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: #6f6f6f;
+    font-weight: 600;
+    margin: 0;
+    margin-bottom: 32px;
+}
+
+.Actions {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.SecondaryButton,
+.PrimaryButton {
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.SecondaryButton {
+    background: #f5f5f5;
+    color: #1f1f1f;
+    border: 1px solid #e6e6e6;
+}
+
+.SecondaryButton:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 16px rgba(31, 31, 31, 0.08);
+}
+
+.PrimaryButton {
+    background: #6046f9;
+    color: #ffffff;
+    min-width: 140px;
+
+    box-shadow: 0 10px 22px rgba(96, 70, 249, 0.35);
+}
+
+.PrimaryButton:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 30px rgba(96, 70, 249, 0.4);
+}
+
+.Backdrop {
+    background: rgba(18, 18, 18, 0.35);
+}

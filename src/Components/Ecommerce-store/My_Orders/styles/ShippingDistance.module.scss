@@ -1,0 +1,69 @@
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex: 1;
+}
+
+.metrics {
+  flex: 1;
+}
+
+.valueContainer {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #121212;
+  line-height: 1;
+}
+
+.unit {
+  font-size: 16px;
+  font-weight: 600;
+  color: #6f6f6f;
+}
+
+.percentage {
+  font-size: 16px;
+  font-weight: 600;
+  color: #6f6f6f;
+}
+
+.description {
+  font-size: 12px;
+  color: #6f6f6f;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.iconContainer {
+  flex-shrink: 0;
+  margin-left: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+}
+
+.worldMap {
+  width: 100%;
+  height: auto;
+  max-width: 120px;
+}
+

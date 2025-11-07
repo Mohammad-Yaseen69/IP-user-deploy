@@ -5,13 +5,12 @@ import { useTranslation } from "react-i18next";
 import ProductsForm from "./ProductsForm";
 import style from "./styles/AddProduct.module.scss";
 
-function AddProducts({ setExpandDrower }) {
+function AddProducts({ setExpandDrower, onCreate }) {
     const { t } = useTranslation();
     const [files, setFiles] = useState([]);
     const [inventoryEnabled, setInventoryEnabled] = useState(false);
     const [variantEnabled, setVariantEnabled] = useState(false);
     const [variants, setVariants] = useState([{ id: 1 }]);
-
     const handleFileChange = (e) => {
         const newFiles = Array.from(e.target.files);
         setFiles((prev) => [...prev, ...newFiles]);
@@ -20,7 +19,10 @@ function AddProducts({ setExpandDrower }) {
     const handleAddVariant = () => {
         setVariants([...variants, { id: variants.length + 1 }]);
     };
-
+    const handleCreate = () => {
+        setExpandDrower(false)
+        onCreate?.()
+    }
     return (
         <div className={style.DrawerContainer}>
             <div className={style.Header}>
@@ -43,7 +45,11 @@ function AddProducts({ setExpandDrower }) {
                 setVariantEnabled={setVariantEnabled}
                 variants={variants}
                 handleAddVariant={handleAddVariant}
-            />        </div>
+                handleCreate={handleCreate}
+            />
+
+        </div>
+
     );
 }
 
