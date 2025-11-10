@@ -135,6 +135,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
   }, [filteredWallets])
 
 
+  console.log(googlePay, applePay)
 
   const sendOtp = async (e) => {
 
@@ -318,7 +319,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
     const getFee = async (method) => {
 
       try {
-        const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/get-vvc-fee/${walletState?.wallet_id ? walletState?.wallet_id : defaultWallet?.wallet_id}/${vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual"}/${method}`, {
+        const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/mastercard/get-vvc-fee/${walletState?.wallet_id ? walletState?.wallet_id : defaultWallet?.wallet_id}/${(applePay || googlePay) ? "vcc_premium_plus_virtual" : vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual"}/${method}`, {
           headers: authHeader
         })
 
@@ -501,6 +502,8 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
             walletState={walletState}
             setCards={setCards}
             selectedSaveCard={selectedSaveCard}
+            applePay={applePay}
+            googlePay={googlePay}
           />
         }
 

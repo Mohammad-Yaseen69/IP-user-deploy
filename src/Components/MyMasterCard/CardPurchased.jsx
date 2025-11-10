@@ -4,7 +4,7 @@ import Giftpng from "./files/gift-png.png"
 import IpLogo from "./files/ip.svg"
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from 'swiper'
-import { Freeze, plus, CreditCardR, Wallet2, FileDown, CreditCardP, Notification, Speaker, Apay, Gpay, Samsung, Copy, checktoggle, ApayWhite } from "./files"
+import { Freeze, plus, CreditCardR, Wallet2, FileDown, CreditCardP, Notification, Speaker, Apay, Gpay, Samsung, Copy, checktoggle, ApayWhite, GpayWhite } from "./files"
 import axios from 'axios';
 import { UserContext } from '../../Context/UserContext';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
@@ -672,7 +672,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                 }}
                             >
 
-                                {cards?.map((card, idx) => (
+                                {cards?.map((card) => (
                                     <SwiperSlide key={card._id}>
                                         <div
 
@@ -702,7 +702,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                                                     <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: '4px' }}>
                                                         {card?.premium_features?.apple_pay === true && <img src={ApayWhite} alt="" />}
-                                                        {card?.premium_features?.google_pay === true && <img src={Gpay} alt="" />}
+                                                        {card?.premium_features?.google_pay === true && <img src={GpayWhite} alt="" />}
                                                         <h3>
                                                             {t('Virtual')} <br /> {t('Card')}
                                                         </h3>
