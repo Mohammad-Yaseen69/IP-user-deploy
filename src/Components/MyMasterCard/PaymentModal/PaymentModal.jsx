@@ -30,7 +30,7 @@ const PLACEHOLDER_CARD_TYPE = {
 
 
 
-const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay }) => {
+const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay, googlePay }) => {
   const [step, setStep] = useState(1)
   const { userWallets, getUserWallets, userDetails, authHeader, setProfileLockTime } = useContext(UserContext)
   const [walletState, setWalletState] = useState({})
@@ -158,14 +158,21 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
           expdate: formattedDate,
           token: feeDetails?.token,
           cardType: vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual",
+          apple_pay: false,
+          google_pay: false
         },
         type: codeType
       }
 
-      if (applePay === true) {
+      if (applePay === true || googlePay === true) {
         cardData.data.cardType = "vcc_premium_plus_virtual"
-        cardData.data.apple_pay = true
-        cardData.data.google_pay = false
+
+        if (applePay) {
+          cardData.data.apple_pay = true
+        }
+        if (googlePay) {
+          cardData.data.google_pay = true
+        }
       }
 
       if (paymentType === "card") {
@@ -184,7 +191,9 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
           wallet_id: walletState?.wallet_id,
           cardType: vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual",
           currency: "USD",
-          expdate: formattedDate
+          expdate: formattedDate,
+          apple_pay: false,
+          google_pay: false
 
         },
         type: codeType
@@ -194,10 +203,15 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
         data.data.token = feeDetails?.token
       }
 
-      if (applePay === true) {
+      if (applePay === true || googlePay === true) {
         data.data.cardType = "vcc_premium_plus_virtual"
-        data.data.apple_pay = true
-        data.data.google_pay = false
+
+        if (applePay) {
+          data.data.apple_pay = true
+        }
+        if (googlePay) {
+          data.data.google_pay = true
+        }
       }
 
       const encrypted = encryptData(paymentType === "card" ? cardData : data)
@@ -319,7 +333,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
     }
 
 
-    if(walletState.wallet_id){
+    if (walletState.wallet_id) {
       if (paymentType === "card") {
         getFee("card")
       }
@@ -366,15 +380,21 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
         expdate: formattedDate,
         token: feeDetails?.token,
         cardType: vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual",
+        apple_pay: false,
+        google_pay: false
       }
     }
 
-    if (applePay === true) {
+    if (applePay === true || googlePay === true) {
       data.panData.cardType = "vcc_premium_plus_virtual"
-      data.panData.apple_pay = true
-      data.panData.google_pay = false
-    }
 
+      if (applePay) {
+        data.panData.apple_pay = true
+      }
+      if (googlePay) {
+        data.panData.google_pay = true
+      }
+    }
 
 
 
@@ -445,7 +465,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
           <div className={styles.contact}>
             <div className={styles.circle}>
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
-                <path d="M7.39898 7.36508C7.56628 6.88948 7.89651 6.48843 8.33118 6.23297C8.76585 5.97751 9.2769 5.88413 9.77381 5.96937C10.2707 6.0546 10.7214 6.31295 11.0461 6.69866C11.3708 7.08437 11.5485 7.57254 11.5478 8.07671C11.5478 9.49997 9.41289 10.2116 9.41289 10.2116M9.46982 13.0581H9.47694M16.5861 9.49997C16.5861 13.4302 13.4 16.6163 9.46982 16.6163C5.53959 16.6163 2.35352 13.4302 2.35352 9.49997C2.35352 5.56975 5.53959 2.38367 9.46982 2.38367C13.4 2.38367 16.5861 5.56975 16.5861 9.49997Z" stroke="#5926F0" stroke-width="1.42326" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M7.39898 7.36508C7.56628 6.88948 7.89651 6.48843 8.33118 6.23297C8.76585 5.97751 9.2769 5.88413 9.77381 5.96937C10.2707 6.0546 10.7214 6.31295 11.0461 6.69866C11.3708 7.08437 11.5485 7.57254 11.5478 8.07671C11.5478 9.49997 9.41289 10.2116 9.41289 10.2116M9.46982 13.0581H9.47694M16.5861 9.49997C16.5861 13.4302 13.4 16.6163 9.46982 16.6163C5.53959 16.6163 2.35352 13.4302 2.35352 9.49997C2.35352 5.56975 5.53959 2.38367 9.46982 2.38367C13.4 2.38367 16.5861 5.56975 16.5861 9.49997Z" stroke="#5926F0" strokeWidth="1.42326" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
@@ -529,7 +549,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay 
           <div className={styles.contact}>
             <div className={styles.circle}>
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
-                <path d="M7.39898 7.36508C7.56628 6.88948 7.89651 6.48843 8.33118 6.23297C8.76585 5.97751 9.2769 5.88413 9.77381 5.96937C10.2707 6.0546 10.7214 6.31295 11.0461 6.69866C11.3708 7.08437 11.5485 7.57254 11.5478 8.07671C11.5478 9.49997 9.41289 10.2116 9.41289 10.2116M9.46982 13.0581H9.47694M16.5861 9.49997C16.5861 13.4302 13.4 16.6163 9.46982 16.6163C5.53959 16.6163 2.35352 13.4302 2.35352 9.49997C2.35352 5.56975 5.53959 2.38367 9.46982 2.38367C13.4 2.38367 16.5861 5.56975 16.5861 9.49997Z" stroke="#5926F0" stroke-width="1.42326" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M7.39898 7.36508C7.56628 6.88948 7.89651 6.48843 8.33118 6.23297C8.76585 5.97751 9.2769 5.88413 9.77381 5.96937C10.2707 6.0546 10.7214 6.31295 11.0461 6.69866C11.3708 7.08437 11.5485 7.57254 11.5478 8.07671C11.5478 9.49997 9.41289 10.2116 9.41289 10.2116M9.46982 13.0581H9.47694M16.5861 9.49997C16.5861 13.4302 13.4 16.6163 9.46982 16.6163C5.53959 16.6163 2.35352 13.4302 2.35352 9.49997C2.35352 5.56975 5.53959 2.38367 9.46982 2.38367C13.4 2.38367 16.5861 5.56975 16.5861 9.49997Z" stroke="#5926F0" strokeWidth="1.42326" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>

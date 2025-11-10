@@ -3,7 +3,7 @@ import styles from "./styles/onboard.module.scss";
 import CardIcon from "./files/card.svg"
 import { standardFeatures, premiumFeatures } from "./files/data.js"
 import IpLogo from "./files/ip.svg"
-import { Gb, Euro, USD, Apay } from "./files"
+import { Gb, Euro, USD, Apay, Gpay } from "./files"
 
 const Toggle = ({ checked, onChange, isCheckbox = false }) => (
     <label style={{ borderRadius: "999px" }} className={isCheckbox ? styles.checkbox : styles.toggle}>
@@ -16,7 +16,7 @@ const Toggle = ({ checked, onChange, isCheckbox = false }) => (
     </label>
 );
 
-const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApplePay }) => {
+const Stepone = ({ cardType, setCardType, userDetails, applePay, setApplePay, googlePay, setGooglePay }) => {
     const { t } = useTranslation();
     const cardTypes = [
         {
@@ -85,18 +85,34 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApp
 
                         <div className={styles.seprationLine} style={{ background: "var(--COLORS-Neutral-300, #D2D2D2)", height: ".5px", width: "100%", display: "block" }}></div>
 
-                        <div className={styles.applePay} style={{ display: "flex", alignItems: "center", gap: "8px", width: "55%" }}>
-                            <span style={{ width: "100%", padding: "15px" }}>
-                                <div>
-                                    <p>{t("Enable")}</p>
-                                    <img src={Apay} alt="" />
-                                    <p>{t("Support")}</p>
-                                    <div>+$2.00</div>
-                                </div>
+                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "20px", flexDirection: window.innerWidth < 1000 && "column" }}>
+                            <div className={styles.applePay} style={{ display: "flex", alignItems: "center", gap: "8px", width: window.innerWidth < 1000 ? "100%" : "55%" }}>
+                                <span style={{ width: "100%", padding: "15px" }}>
+                                    <div>
+                                        <p>{t("Enable")}</p>
+                                        <img src={Apay} alt="" />
+                                        <p>{t("Support")}</p>
+                                        <div>+$2.00</div>
+                                    </div>
 
 
-                                <Toggle checked={applePay} onChange={() => setApplePay(prev => !prev)} isCheckbox={false} />
-                            </span>
+                                    <Toggle checked={applePay} onChange={() => setApplePay(prev => !prev)} isCheckbox={false} />
+                                </span>
+                            </div>
+
+                            <div className={styles.applePay} style={{ display: "flex", alignItems: "center", gap: "8px", width: window.innerWidth < 1000 ? "100%" : "55%" }}>
+                                <span style={{ width: "100%", padding: "15px" }}>
+                                    <div>
+                                        <p>{t("Enable")}</p>
+                                        <img src={Gpay} alt="" />
+                                        <p>{t("Support")}</p>
+                                        <div>+$2.00</div>
+                                    </div>
+
+
+                                    <Toggle checked={googlePay} onChange={() => setGooglePay(prev => !prev)} isCheckbox={false} />
+                                </span>
+                            </div>
                         </div>
 
                     </>)}
@@ -151,7 +167,7 @@ const Stepone = ({ cardType, setCardType, setStep, userDetails, applePay, setApp
                     <div className={styles.features}>
                         {cardType === "premium"
                             ?
-                            premiumFeatures.map((feat,idx) => (
+                            premiumFeatures.map((feat, idx) => (
                                 <div key={idx}>
                                     <span style={{ fontSize: "12px", fontWeight: 600, color: "#9E9E9E" }}>{t(feat.label)}</span>
                                     {feat.text && <p style={{ fontSize: "14px", fontWeight: '600', marginBottom: "0" }}>{t(feat.text)}</p>}
