@@ -201,14 +201,19 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp }) => {
                             pointerEvents: isAnyFieldEmpty || isSaving ? 'none' : 'auto'
                         }}
                             className="i_t_button"
-                            onClick={() => {
-                                setIsSaving(true)
-                                callback(setVerified)
-                                setIsSaving(false)
+                            onClick={async () => {
+                                if (isSaving) return;
+
+                                setIsSaving(true);
+                                try {
+                                    await callback(setVerified);
+                                } finally {
+                                    setIsSaving(false);
+                                }
                             }}
                             disabled={isAnyFieldEmpty || isSaving}
                         >
-                            Verify <ChevronRight size={24} />
+                            {t("Verify")} <ChevronRight size={24} />
                         </Button>
                     </>
                 </div>

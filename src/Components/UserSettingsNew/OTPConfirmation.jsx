@@ -118,12 +118,18 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
 
     return (
         <form
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
                 e.preventDefault()
+                if (isSaving) return
                 setIsSaving(true)
-                callback(setVerified, type, otpValues.join(""), setOtpError)
-                setIsSaving(false)
+
+                try {
+                    await callback(setVerified, type, otpValues.join(""), setOtpError)
+                } finally {
+                    setIsSaving(false)
+                }
             }}
+
             style={{
                 height: '450px',
                 marginBottom: 0,

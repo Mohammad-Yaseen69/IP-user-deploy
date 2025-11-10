@@ -102,6 +102,7 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
         <>
             <form onSubmit={(e) => {
                 e.preventDefault()
+                if (data.loading) return;
                 verifyOTpHandler(otpValues.join(""), setOTPValues, numberOfFields)
             }} className={styles.otp} style={{ marginTop: 0 }}>
                 <div className={styles.left}>
@@ -179,7 +180,7 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                                     onMouseLeave={() => {
                                         setShowTooltip(false)
                                     }}
-                                    style={{ display: 'flex', alignItems: "center", gap: "7px", padding: '10px 15px', boxShadow: "0px 0px 4px #0000002e", borderRadius: "6px", cursor: resendTimer !== 0 ? "not-allowed": "pointer" }}>
+                                    style={{ display: 'flex', alignItems: "center", gap: "7px", padding: '10px 15px', boxShadow: "0px 0px 4px #0000002e", borderRadius: "6px", cursor: resendTimer !== 0 ? "not-allowed" : "pointer" }}>
                                     <img style={{ width: '24px' }} src={currentMethod === "sms" ? whatsappIcon : smsIcon} alt="" />
                                     <span style={{ fontWeight: 600, color: 'black' }}>
                                         Verify Using {currentMethod === "sms" ? "Whatsapp" : "SMS"}
