@@ -29,7 +29,7 @@
     "@mui/material": "^5.15.11",
     "@mui/x-date-pickers": "^6.19.5",
     "@reduxjs/toolkit": "^1.9.5",
-    "@sentry/react": "^9.31.0",
+    "@sentry/react": "^9.41.0",
     "@simplewebauthn/browser": "^9.0.1",
     "@tanstack/react-query": "^5.90.1",
     "@yudiel/react-qr-scanner": "^1.2.10",
