@@ -189,7 +189,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                         </p>
                     </div>
                 }
-re
+
                 {item?.guest_details?.email &&
                     <div className={styles.er_item}>
                         <span>{t("Sender Email")}</span>
