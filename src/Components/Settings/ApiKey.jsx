@@ -1,11 +1,18 @@
 import { useContext, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Card, CardBody, CardHeader, Col, FormGroup, Input, Label, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
+import { Button, Card, CardBody, CardHeader, Col, Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import { toast } from 'react-toastify'
 import { UserContext } from '../../Context/UserContext'
-import { useCreateUserKey, useGetApiKey, useRegenerateUserKey, useDeleteUserKey, useUpdateWebhookUrl, useUpdateUserKeyStatus } from '../../hooks/GeneralUse/useApiKey'
+import { useCreateUserKey, useGetApiKey, useRegenerateUserKey, useDeleteUserKey, useUpdateWebhookUrl, useUpdateUserKeyStatus, useUpdateFeatures } from '../../hooks/GeneralUse/useApiKey'
 import InstaPayLoader from '../Loader'
 import styles from './styles/apiKey.module.css'
+import { Toggle } from "../MyMasterCard/CardPurchased"
+
+const FEATURE_LIST = [
+    { id: 'international', label: 'International Transfers' },
+    { id: 'local', label: 'Local Transfers' },
+    { id: 'external_payment', label: 'External Payments' }
+]
 
 const ApiKey = () => {
     const { t } = useTranslation()
@@ -13,6 +20,18 @@ const ApiKey = () => {
     const [webhookUrl, setWebHookUrl] = useState("")
     const [showKey, setShowKey] = useState(false)
     const [selectedStatus, setSelectedStatus] = useState("enabled")
+    const [features, setFeatures] = useState({
+        international: false,
+        local: false,
+        external_payment: false
+    })
+    const [adminFeatures, setAdminFeatures] = useState({
+        international: false,
+        local: false,
+        external_payment: false
+    })
+    const [showCreateModal, setShowCreateModal] = useState(false)
+
 
     const accountId = userDetails?._id
     const { data, isLoading, isFetching } = useGetApiKey({ accountId, headers: authHeader, enabled: !!accountId })
@@ -21,7 +40,7 @@ const ApiKey = () => {
     const updateWebhookMutation = useUpdateWebhookUrl({ headers: authHeader, accountId })
     const deleteKeyMutation = useDeleteUserKey({ headers: authHeader, accountId })
     const updateStatusMutation = useUpdateUserKeyStatus({ headers: authHeader, accountId })
-
+    const updateFeatures = useUpdateFeatures({ headers: authHeader, accountId })
     const apiKey = data?.userKey?.api_key ?? ""
     const featureStatus = data?.userKey?.status ?? ""
 
@@ -31,7 +50,26 @@ const ApiKey = () => {
 
     const handleCreate = () => {
         if (!accountId) return
-        createMutation.mutate({ webhook_url: webhookUrl || " ", account: accountId })
+        createMutation.mutate({ webhook_url: webhookUrl || " ", account: accountId, features }, {
+            onSuccess: () => {
+                setShowCreateModal(false)
+                toast.success(t("API Key created successfully"))
+            }
+        })
+    }
+
+    const handleFeatureToggle = (featureId) => {
+        setFeatures(prev => ({
+            ...prev,
+            [featureId]: !prev[featureId]
+        }))
+    }
+
+    const handleUpdateFeatureToggle = (featureId) => {
+        setFeatures(prev => ({
+            ...prev,
+            [featureId]: !prev[featureId]
+        }))
     }
 
     const handleRegenerate = () => {
@@ -42,6 +80,13 @@ const ApiKey = () => {
         updateWebhookMutation.mutate({ webhook_url: webhookUrl }, {
             onSuccess: () => toast.success(t("Webhook URL updated")),
             onError: () => toast.error(t("Failed to update webhook URL"))
+        })
+    }
+
+    const handleUpdateFeatures = () => {
+        updateFeatures.mutate({ features }, {
+            onSuccess: () => toast.success(t("Features updated!")),
+            onError: () => toast.error(t("Failed to Features"))
         })
     }
 
@@ -77,6 +122,8 @@ const ApiKey = () => {
 
     useEffect(() => {
         if (data) {
+            setFeatures(data?.userKey?.features?.user_selected)
+            setAdminFeatures(data?.userKey?.features?.admin_enabled || data?.userKey?.features?.user_selected)
             setWebHookUrl(data.userKey?.webhook_url)
         }
     }, [data])
@@ -100,8 +147,8 @@ const ApiKey = () => {
                     {(!data) && (
                         <Col md="12" className={styles.centerCol}>
                             <p style={{ fontWeight: 600, marginBottom: "0px", fontSize: "15px" }}>{t("Create your API Key")}</p>
-                            <Button onClick={handleCreate} disabled={isBusy} className={styles.btnRound}>
-                                {createMutation.isPending ? t("Creating...") : t("Create API Key")}
+                            <Button onClick={() => setShowCreateModal(true)} disabled={isBusy} className={styles.btnRound}>
+                                {t("Create API Key")}
                             </Button>
                         </Col>
                     )}
@@ -138,7 +185,7 @@ const ApiKey = () => {
                             </Col>
 
                             <Col md="12" className={styles.sectionRow}>
-                                <h5 className={styles.sectionTitle}>Api Key Status</h5>
+                                <h5 className={styles.sectionTitle}>{t("Api Key Status")}</h5>
 
                                 <div className={styles.inlineControls} style={{ flex: 1, maxWidth: '100%' }}>
 
@@ -148,6 +195,42 @@ const ApiKey = () => {
                                     </Input>
                                     <Button color='secondary' outline className={styles.btnRound} style={{ flexShrink: 0 }} onClick={() => handleSetStatus(selectedStatus)} disabled={isBusy}>
                                         {t("Update Status")}
+                                    </Button>
+                                </div>
+                            </Col>
+
+                            <Col md="12" className={styles.sectionRow}>
+                                <h5 className={styles.sectionTitle}>{t("Features")}</h5>
+                                <div className={styles.columnFlex} style={{ flex: 1 }}>
+                                    {FEATURE_LIST.map(feature => {
+                                        const isAdminEnabled = adminFeatures[feature.id]
+                                        const isEnabled = features[feature.id]
+                                        const isLocked = !isAdminEnabled
+
+                                        return (
+                                            <div key={feature.id} className={styles.featureRow}>
+                                                <div className={styles.featureContent}>
+                                                    <span className={styles.featureLabel}>
+                                                        {feature.label}
+                                                        {!isAdminEnabled && <span className={styles.adminBadge}>{t("Admin Disabled")}</span>}
+                                                    </span>
+                                                </div>
+                                                <Toggle
+                                                    checked={isEnabled && isAdminEnabled}
+                                                    onChange={() => !isLocked && handleUpdateFeatureToggle(feature.id)}
+                                                    style={{ pointerEvents: isLocked ? 'none' : 'auto', opacity: isLocked ? 0.5 : 1 }}
+                                                />
+                                            </div>
+                                        )
+                                    })}
+                                    <Button
+                                        color='primary'
+                                        className={styles.btnRound}
+                                        onClick={handleUpdateFeatures}
+                                        disabled={updateFeatures.isPending || featureStatus !== "enabled"}
+                                        style={{ alignSelf: 'flex-end', marginTop: '0.5rem' }}
+                                    >
+                                        {updateFeatures.isPending ? t("Saving...") : t("Save Features")}
                                     </Button>
                                 </div>
                             </Col>
@@ -164,15 +247,43 @@ const ApiKey = () => {
                     }
                 </CardBody>
             }
-            {/* Delete Confirmation Modal */}
-            <Modal isOpen={false} toggle={() => { }}>
-                <ModalHeader>{t("Delete API Key")}</ModalHeader>
+            {/* Create API Key Modal */}
+            <Modal isOpen={showCreateModal} toggle={() => setShowCreateModal(false)}>
+                <ModalHeader toggle={() => setShowCreateModal(false)}>
+                    {t("Create API Key")}
+                </ModalHeader>
                 <ModalBody>
-                    {t("Are you sure you want to delete your API Key? This action cannot be undone.")}
+                    <div style={{ marginBottom: '1.5rem' }}>
+                        <label style={{ fontWeight: 600, marginBottom: '0.5rem', display: 'block' }}>{t("Webhook URL (Optional)")}</label>
+                        <Input
+                            type="text"
+                            placeholder="https://example.com/webhook"
+                            value={webhookUrl}
+                            onChange={e => setWebHookUrl(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label style={{ fontWeight: 600, marginBottom: '0.75rem', display: 'block' }}>{t("Select Features")}</label>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            {FEATURE_LIST.map(feature => (
+                                <div key={feature.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <span>{feature.label}</span>
+                                    <Toggle
+                                        isActive={features[feature.id]}
+                                        onChange={() => handleFeatureToggle(feature.id)}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </ModalBody>
                 <ModalFooter>
-                    <Button className={styles.btnRound} onClick={() => { }}>{t("Cancel")}</Button>
-                    <Button className={styles.btnRound + " " + styles.btnDeleteOutline} onClick={() => { }}>{t("Delete")}</Button>
+                    <Button className={styles.btnRound} onClick={() => setShowCreateModal(false)} disabled={createMutation.isPending}>
+                        {t("Cancel")}
+                    </Button>
+                    <Button color='primary' className={styles.btnRound} onClick={handleCreate} disabled={createMutation.isPending || Object.values(features).every(f => f === false)}>
+                        {createMutation.isPending ? t("Creating...") : t("Create")}
+                    </Button>
                 </ModalFooter>
             </Modal>
         </Card>

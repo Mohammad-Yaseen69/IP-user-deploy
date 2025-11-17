@@ -85,32 +85,26 @@ const Stepone = ({ cardType, setCardType, userDetails, applePay, setApplePay, go
 
                         <div className={styles.seprationLine} style={{ background: "var(--COLORS-Neutral-300, #D2D2D2)", height: ".5px", width: "100%", display: "block" }}></div>
 
-                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "20px", flexDirection: window.innerWidth < 1000 && "column" }}>
+                        <div>
                             <div className={styles.applePay} style={{ display: "flex", alignItems: "center", gap: "8px", width: window.innerWidth < 1000 ? "100%" : "55%" }}>
                                 <span style={{ width: "100%", padding: "15px" }}>
                                     <div>
                                         <p>{t("Enable")}</p>
                                         <img src={Apay} alt="" />
-                                        <p>{t("Support")}</p>
-                                        <div>+$2.00</div>
-                                    </div>
-
-
-                                    <Toggle checked={applePay} onChange={() => setApplePay(prev => !prev)} isCheckbox={false} />
-                                </span>
-                            </div>
-
-                            <div className={styles.applePay} style={{ display: "flex", alignItems: "center", gap: "8px", width: window.innerWidth < 1000 ? "100%" : "55%" }}>
-                                <span style={{ width: "100%", padding: "15px" }}>
-                                    <div>
-                                        <p>{t("Enable")}</p>
                                         <img src={Gpay} alt="" />
                                         <p>{t("Support")}</p>
                                         <div>+$2.00</div>
                                     </div>
 
 
-                                    <Toggle checked={googlePay} onChange={() => setGooglePay(prev => !prev)} isCheckbox={false} />
+                                    <Toggle
+                                        checked={applePay}
+                                        onChange={() => {
+                                            setApplePay(prev => !prev)
+                                            setGooglePay(prev => !prev)
+                                        }}
+                                        isCheckbox={false}
+                                    />
                                 </span>
                             </div>
                         </div>
