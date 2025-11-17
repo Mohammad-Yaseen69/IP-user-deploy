@@ -8,7 +8,7 @@ const AnimatedHeader = ({ mobileUI }) => {
 
     const headerContents = [
         {
-            heading: "Get Paid Instantly Worldwide.",
+            heading: "Get paid instantly, sell, and stream — all from one link.",
             para: "Your socials are now your bank—Receive money straight to your bank, wallet, crypto, or cash pick-up in 180+ countries"
         },
         {
@@ -24,7 +24,7 @@ const AnimatedHeader = ({ mobileUI }) => {
     useEffect(() => {
         const interval = setInterval(() => {
             setIndex((prev) => (prev + 1) % headerContents.length);
-        }, 6000);
+        }, 8000);
 
         return () => clearInterval(interval); // cleanup
     }, []);
