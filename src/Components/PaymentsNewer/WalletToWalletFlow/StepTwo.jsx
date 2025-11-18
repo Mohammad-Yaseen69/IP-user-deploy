@@ -215,7 +215,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee }) => {
                             {
                                 data?.exchange_rate_error === "sww"
                                 &&
-                                t("Something went wrong while fetching exchange rate details.")
+                                t("We are unable to process your request at the moment. please try again later")
                             }
                             {
                                 data?.exchange_rate_error === "payer_unavailable"

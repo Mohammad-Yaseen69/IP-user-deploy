@@ -584,7 +584,7 @@ const AmountAndCurrency = ({ setStep, amount, setAmount, currency, setCurrency, 
                                             {
                                                 exchangeError === "sww"
                                                 &&
-                                                <p style={{ marginBottom: 0, textAlign: "center" }}>{t("Something went wrong while fetching exchange rate details.")}</p>
+                                                <p style={{ marginBottom: 0, textAlign: "center" }}>{t("We are unable to process your request at the moment. please try again later")}</p>
                                             }
                                             {
                                                 exchangeError === "payer_unavailable"
