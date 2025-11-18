@@ -13,6 +13,7 @@ import { UserContext } from "../../../Context/UserContext";
 import axios from "axios";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { LimitsErrorMessage } from "../../PaymentsNewer/OTPConfirmation";
+import { toast } from "react-toastify";
 
 const initialState = {
     step: 1,
@@ -198,6 +199,7 @@ const PaymentsFlow = ({ item }) => {
                 }
                 else {
                     updateData("exchange_rate_error", "sww")
+                    toast.error("We are unable to process your request at the moment please try again later!")
                 }
             }
         }
@@ -379,7 +381,7 @@ const PaymentsFlow = ({ item }) => {
                         <span>{t("Trouble Sending Money?")}</span>
                     </Link>
 
-                    <button disabled={!data.payment_type?.name}>
+                    <button disabled={!data.payment_type?.name || data.exchange_rate_error}>
                         <span>{t("Proceed")}</span>
                         <ChevronRight size={20} color="white" />
                     </button>

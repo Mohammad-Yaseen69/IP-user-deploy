@@ -565,8 +565,8 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                     {t("Trouble Sending Money")}
                                                 </Link>
                                                 <div className={styles?.buttons}>
-                                                    <button className={styles.transparent} disabled={data.loading} onClick={handleBackClick}>{t("Back")}</button>
-                                                    <button disabled={disabledButton || data.loading} onClick={handleClick}>
+                                                    <button className={styles.transparent} disabled={data.loading } onClick={handleBackClick}>{t("Back")}</button>
+                                                    <button disabled={disabledButton || data.loading || data.exchange_rate_error} onClick={handleClick}>
                                                         {
                                                             // userDetails?.user?.kyc_status === "approved"
                                                             //     ?
@@ -724,7 +724,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                         <button disabled={data.loading} onClick={handleBackClick}>
                                             <ChevronLeft />
                                         </button>
-                                        <button disabled={disabledButton || data.loading} className={paym_styles.full} onClick={handleClick}>
+                                        <button disabled={disabledButton || data.loading || data.exchange_rate_error} className={paym_styles.full} onClick={handleClick}>
                                             {
                                                 // userDetails?.user?.kyc_status === "approved"
                                                 //     ?
