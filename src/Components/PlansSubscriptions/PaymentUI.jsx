@@ -39,14 +39,16 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
                     navigate(path)
                 }
             },
-            width: "15px"
+            width: "15px",
+            disabled: true
         },
         {
             label: "Pay with Crypto",
             logo: CryptoPay,
             onClick: () => {
                 dataHandler("showCryptoModal", true)
-            }
+            },
+            disabled: true
         },
         {
             label: "Pay As Guest",
@@ -104,7 +106,7 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
                 <div className={styles.buttons}>
                     <div>
                         <button style={{ color: "white", background: "#5926F0" }} onClick={() => navigate(`/profile/${data?.plan?.account?.username}`)}>
-                            {t("View Profile")  }
+                            {t("View Profile")}
                         </button>
                         <button onClick={() => navigate(`/pay/${data?.plan?.account?.username}`)}>
                             {t("View Payment Address")}

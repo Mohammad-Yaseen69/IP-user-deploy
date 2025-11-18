@@ -7,14 +7,17 @@ const PaymentActionsButtons = ({ actionButtons, inPlans, isRow, selectedAction, 
     return (
         <div className={`${styles.actions} ${isRow && styles.plans}`}>
             {actionButtons.map((btn, idx) => (
-                <button 
-                    className={styles.button} 
-                    key={idx} 
-                    onClick={() => inPlans ? setSelectedAction(btn) : btn.onClick()} 
-                    style={{ 
+                <button
+                    className={styles.button}
+                    key={idx}
+                    onClick={() => inPlans ? setSelectedAction(btn) : btn.onClick()}
+                    style={{
                         background: (inPlans && selectedAction?.label === btn.label) ? "#5926F0" : !btn.purple && "white",
-                        border: (inPlans && selectedAction?.label === btn.label) ? "none" : "1px solid #e5e7eb"
-                    }} 
+                        border: (inPlans && selectedAction?.label === btn.label) ? "none" : "1px solid #e5e7eb",
+                        opacity: btn.disabled && 0.6,
+                        cursor: btn.disabled && "not-allowed"
+                    }}
+                    disabled={btn.disabled}
                 >
                     <div style={{ background: (!btn.purple && selectedAction?.label !== btn.label) && "radial-gradient(124.63% 259.09% at 48.48% 152.15%, rgba(230, 64, 103, 0.10) 0%, rgba(89, 38, 240, 0.10) 55.65%, rgba(72, 40, 160, 0.10) 100%), #FFF" }}>
                         <img style={{ width: btn.width }} src={btn.logo} alt="" />
