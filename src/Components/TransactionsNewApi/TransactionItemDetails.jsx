@@ -39,7 +39,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
     }, [item])
 
     const recipientName = useMemo(() => {
-        if (item?.service_type === "payment_address" && item?.guest_details) return item?.guest_details?.name
+        if (item?.guest_details?.name && item?.guest_details) return item?.guest_details?.name
         if (item?.service_type === "airtime") return item?.airtime_number
         if (item?.payment_type === "conversion" || item?.service_type === "withdrawal") return item?.wallet_id
 
@@ -63,7 +63,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
     }, [item, internationalReceiver, userDetails])
 
     const recipientInitial = useMemo(() => {
-        if (item?.service_type === "payment_address" && item?.guest_details) return item?.guest_details?.name?.[0]
+        if (item?.guest_details?.name && item?.guest_details) return item?.guest_details?.name?.[0]
         if (item?.service_type === "airtime") return item?.airtime_number?.[1]
         if (item?.payment_type === "conversion" || item?.service_type === "withdrawal") return item?.wallet_id?.[0]
 
@@ -193,7 +193,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                 {item?.guest_details?.email &&
                     <div className={styles.er_item}>
                         <span>{t("Sender Email")}</span>
-                        <p style={{wordBreak: "break-all"}}>
+                        <p style={{ wordBreak: "break-all" }}>
                             {item?.guest_details?.email}
                         </p>
                     </div>
@@ -201,7 +201,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                 {item?.guest_details?.phone &&
                     <div className={styles.er_item}>
                         <span>{t("Sender Phone")}</span>
-                        <p style={{wordBreak: "break-all"}}>
+                        <p style={{ wordBreak: "break-all" }}>
                             {item?.guest_details?.phone}
                         </p>
                     </div>

@@ -99,7 +99,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
 
 
     const renderRecipientName = (item, internationalReceiver) => {
-        if (item?.service_type === "payment_address" && item?.guest_details) {
+        if (item?.guest_details?.name && item?.guest_details) {
             return item?.guest_details?.name ?? ""
         }
 
