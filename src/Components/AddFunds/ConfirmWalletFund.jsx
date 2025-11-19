@@ -208,6 +208,8 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                     } else {
                         setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
                     }
+                }finally{
+                    setLoading(false)
                 }
 
 
