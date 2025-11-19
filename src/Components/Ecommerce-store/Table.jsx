@@ -1,11 +1,12 @@
 import { SwipeableDrawer } from "@mui/material";
 import { useState } from "react";
-import { ArrowDownLeft, ArrowUpRight, ChevronRight, Edit3, Eye, Filter, MoreVertical, Plus, RefreshCw, Trash2, Upload } from "react-feather";
+import { ChevronRight, Edit3, Eye, Filter, MoreVertical, Plus, RefreshCw, Trash2, Upload } from "react-feather";
 import { useTranslation } from "react-i18next";
-import { FaSort } from "react-icons/fa6";
-import styles from "./styles/Table.module.scss";
-import AddProducts from "./Products/AddProducts";
 import ProductDetails from "./Products";
+import AddProducts from "./Products/AddProducts";
+import ModalComponent from "./Products/Modal";
+import Arrowsvg, { SortSvg, TickSvg } from "./assets/icons/svg/svg";
+import styles from "./styles/Table.module.scss";
 const Table = () => {
     const { t } = useTranslation()
     const [openDropdownId, setOpenDropdownId] = useState(null);
@@ -13,6 +14,7 @@ const Table = () => {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [Addproducts, setAddProducts] = useState([]);
     const [drawerType, setDrawerType] = useState("");
+    const [showCreateModal, setShowCreateModal] = useState(false);
 
     const products = [
         {
@@ -101,7 +103,7 @@ const Table = () => {
                         <Filter size={16} /> {t("Filter")}
                     </button>
                     <button className={styles.SortBtn}>
-                        <FaSort size={16} /> {t("Sort By")}
+                        <SortSvg height={20} width={20} /> {t("Sort By")}
                     </button>
                     <button
                         className={styles.AddBtn}
@@ -113,8 +115,7 @@ const Table = () => {
                     >      <Plus size={16} /> {t("Add New Product")}
                     </button>
                     <button className={styles.ExpandBtn}>
-                        <ArrowUpRight size={14} />
-                        <ArrowDownLeft size={14} />
+                        <Arrowsvg height={20} width={20} />
                     </button>
                 </div>
             </header>
@@ -191,11 +192,14 @@ const Table = () => {
 
             <div className={styles.TableFooter}>
                 <p>
-                    {t("  1 - 10 of 1,676 Entries")}
+                    <span>1-10</span> {t("of")}   <span>1,676</span> {t("Entries")}
                 </p>
                 <div className={styles.Pagination}>
                     <select>
-                        <option>1-4</option>
+                        <option style={{
+                            color: "#000",
+                            fontWeight: 700
+                        }} >1-4</option>
                         <option>5-8</option>
                     </select>
                     <button>{t("Previous")}</button>
@@ -225,12 +229,25 @@ const Table = () => {
                     }}
                 >
                     {drawerType === "add" ? (
-                        <AddProducts setExpandDrawer={setExpandDrower} />
+                        <AddProducts
+                            setExpandDrower={setExpandDrower}
+                            onCreate={() => setShowCreateModal(true)}
+                        />
                     ) : (
                         <ProductDetails ExpandDrower={ExpandDrower} setExpandDrower={setExpandDrower} product={selectedProduct} />
                     )}
                 </SwipeableDrawer>
             )}
+
+            <ModalComponent
+                open={showCreateModal}
+                onClose={() => setShowCreateModal(false)}
+                icon={<TickSvg />}
+                title={t("Product has successfully added to your product list!")}
+                description={t("Your product is ready. Head to the product list to make changes or view details.")}
+                secondaryLabel={t("Done")}
+                primaryLabel={t("View Product")}
+            />
 
         </div >
     );

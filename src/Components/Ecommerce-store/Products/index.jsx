@@ -15,7 +15,7 @@ const ProductDetails = ({ ExpandDrower, setExpandDrower, product }) => {
             <div className={style.DrawerContainer}>
                 <div className={style.Header}>
                     <div>
-                        <h5>{t("Product Details")}</h5> <span>#PRD-98716253-9</span>
+                        <p>{t("Product Details")}</p> <span>#PRD-98716253-9</span>
                     </div>
                     <IconButton onClick={() => setExpandDrower(false)}>
                         <X />
@@ -26,7 +26,7 @@ const ProductDetails = ({ ExpandDrower, setExpandDrower, product }) => {
                     <div className={style.introBox}>
                         <div className={style.introLeft}>
                             <img src={product?.img} alt="" width={20} />
-                            <div><h4>{product?.title || "iPhone 15 Pro Max"}</h4>
+                            <div><strong>{product?.title || "iPhone 15 Pro Max"}</strong>
                                 <p className={style.Price}>{t("Created at January 28, 2025")}</p></div>
                         </div>
                         <div className={style.introRiht}>
@@ -65,6 +65,8 @@ const ProductDetails = ({ ExpandDrower, setExpandDrower, product }) => {
                         value={activeTab}
                         onChange={(e, newVal) => setActiveTab(newVal)}
                         className={style.tabBar}
+                        TabIndicatorProps={{ style: { display: 'none', fontWeight: 600 } }}
+
                     >
                         <Tab
                             label={t("General Information")}
@@ -73,6 +75,7 @@ const ProductDetails = ({ ExpandDrower, setExpandDrower, product }) => {
                         <Tab
                             label={t("Order History")}
                             className={`${style.customTab} ${activeTab === 1 ? style.active : ""}`}
+
                         />
                     </Tabs>
 

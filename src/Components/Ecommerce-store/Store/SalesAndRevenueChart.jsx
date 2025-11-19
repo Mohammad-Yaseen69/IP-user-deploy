@@ -1,96 +1,146 @@
 import Chart from "react-apexcharts";
 import { ChevronDown } from "react-feather";
 import { useTranslation } from "react-i18next";
+import styles from "./style/SalesAndRevenueChart.module.scss";
 
 const SalesAndRevenueChart = () => {
     const { t } = useTranslation()
+
     const options = {
         chart: {
             type: "area",
             toolbar: { show: false },
             zoom: { enabled: false },
+            fontFamily: "'Inter', 'Roboto', 'Arial', 'Helvetica Neue', sans-serif",
         },
         legend: {
-            show: false, 
+            show: false,
         },
-        colors: ["#5926F0", "#3D0EC9"],
+        colors: ["rgba(147, 112, 219, 0.4)", "rgba(106, 62, 235, 0.5)"],
         fill: {
             type: "gradient",
             gradient: {
                 shadeIntensity: 1,
-                opacityFrom: 0.8,
-                opacityTo: 0.1,
+                opacityFrom: 0.4,
+                opacityTo: 1,
                 stops: [0, 100],
-                gradientToColors: ["#5926F0", "#33168A", "#33168A"],
             },
         },
         dataLabels: { enabled: false },
         stroke: {
             curve: "smooth",
-            width: 3,
+            width: 2,
+            colors: ["rgba(147, 112, 219, 0.6)", "rgba(106, 62, 235, 0.7)"],
         },
         grid: {
-            borderColor: "#E5E7EB",
+            borderColor: "#E0E0E0",
             strokeDashArray: 4,
+            xaxis: {
+                lines: {
+                    show: true,
+                },
+            },
+            yaxis: {
+                lines: {
+                    show: true,
+                },
+            },
+            padding: {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+            },
         },
         xaxis: {
-            categories: [
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
-            ],
+            categories: ["May", "June", "July", "August", "September", "November", "December"],
             axisBorder: { show: false },
             axisTicks: { show: false },
             labels: {
-                style: { colors: "#6c757d", fontSize: "12px" },
+                style: {
+                    colors: "#868686",
+                    fontSize: "13px",
+                    fontFamily: "'Inter', 'Roboto', 'Arial', 'Helvetica Neue', sans-serif",
+                    fontWeight: 400,
+                },
             },
         },
         yaxis: {
             labels: {
-                formatter: (val) => `$${val}k`,
-                style: { colors: "#6c757d", fontSize: "12px" },
+                formatter: (val) => {
+                    if (val === 0) return "$0K";
+                    if (val === 100) return "$100K";
+                    if (val === 300) return "$300K";
+                    if (val === 500) return "$500K";
+                    return "";
+                },
+                style: {
+                    colors: "#868686",
+                    fontSize: "13px",
+                    fontFamily: "'Inter', 'Roboto', 'Arial', 'Helvetica Neue', sans-serif",
+                    fontWeight: 400,
+                },
             },
+            min: 0,
+            max: 500,
+            tickAmount: 5,
         },
         tooltip: {
             theme: "light",
             y: {
-                formatter: (val) => `$${val}k`,
+                formatter: (val) => `$${val}K`,
             },
+        },
+        annotations: {
+            yaxis: [
+                {
+                    y: 220,
+                    borderColor: "rgba(106, 62, 235, 0.3)",
+                    borderWidth: 1,
+                    strokeDashArray: 5,
+                    label: {
+                        show: false,
+                    },
+                },
+                {
+                    y: 120,
+                    borderColor: "rgba(106, 62, 235, 0.3)",
+                    borderWidth: 1,
+                    strokeDashArray: 5,
+                    label: {
+                        show: false,
+                    },
+                },
+            ],
         },
     };
 
     const series = [
         {
             name: "Revenue",
-            data: [1000, 10, 600, 140, 2000, 100, 1020, 460, 100, 540, 580, 200],
+            data: [180, 320, 280, 350, 420, 380, 480],
         },
         {
             name: "Sales",
-            data: [10, 600, 10, 1000, 100, 1000, 370, 410, 460, 1090, 520, 550],
+            data: [100, 200, 150, 220, 280, 240, 320],
         },
     ];
 
     return (
-        <div className="w-full rounded-4 p-3 bg-white ">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <h5 className="fw-semibold mb-0">{t("Sales & Revenue Trend")}</h5>
-                <div className="d-flex align-items-center btn btn-light rounded-4  gap-1">
-                    {t("yearly")}
-                    <ChevronDown size={15} />
+        <div className={styles.chartCard}>
+            <div className={styles.chartHeader}>
+                <h5 className={styles.chartTitle}>{t("Sales & Revenue Trend")}</h5>
+                <div className={styles.dropdown}>
+                    {t("Yearly")}
+                    <ChevronDown size={14} />
                 </div>
             </div>
-            <Chart options={options} series={series} type="area" height={160} />
+            <div className={styles.chartWrapper}>
+                <Chart options={options} series={series} type="area" height={280} />
+            </div>
         </div>
     );
 };
 
 export default SalesAndRevenueChart;
+

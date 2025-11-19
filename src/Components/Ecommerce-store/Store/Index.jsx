@@ -13,7 +13,9 @@ const Index = () => {
         <div className={styles.sales_chart}>
           <SalesAndRevenueChart />
         </div>
-        <BarChart />
+        <div className={styles.bar_chart}>
+          <BarChart />
+        </div>
       </div>
       <Table />
     </div>
