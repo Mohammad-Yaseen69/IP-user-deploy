@@ -90,6 +90,15 @@ const PayAsGuest = ({
   };
 
 
+  const isReferenceRequired = useMemo(() => {
+    const usernamesList = ["spmfrance", "usharellc"]
+    if (usernamesList.includes(username)) {
+      return true
+    } else {
+      return false
+    }
+  }, [username])
+
   useEffect(() => {
     if (type === "subscription") {
       dataHandler("step", 2)
@@ -366,6 +375,7 @@ const PayAsGuest = ({
           data.fullName.length < 3 ||
           data.phone.length < 9 ||
           !data.dob ||
+          (isReferenceRequired ? !data.paymentRef : false) ||
           (data.email?.length > 0
             ? !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
               data.email
@@ -626,7 +636,7 @@ const PayAsGuest = ({
             </div>
             <div className={styles.right}>
               {data.step === 1 && (
-                <Country data={data} dataHandler={dataHandler} />
+                <Country username={username} data={data} dataHandler={dataHandler} />
               )}
               {data.step === 2 && (
                 <StepOne
@@ -663,6 +673,7 @@ const PayAsGuest = ({
                     data={data}
                     dataHandler={dataHandler}
                     isShipping={isShipping}
+                    isReferenceRequired={isReferenceRequired}
                   />
                 )
               }
@@ -679,6 +690,7 @@ const PayAsGuest = ({
                       <RecipientDetails
                         data={data}
                         dataHandler={dataHandler}
+                        isReferenceRequired={isReferenceRequired}
                         isShipping={isShipping}
                       />
                       :
@@ -800,7 +812,7 @@ const PayAsGuest = ({
                 style={{ minHeight: "41vh" }}
               >
                 {data.step === 1 && (
-                  <Country data={data} dataHandler={dataHandler} />
+                  <Country username={username} data={data} dataHandler={dataHandler} />
                 )}
                 {data.step === 2 && (
                   <StepOne
@@ -847,6 +859,8 @@ const PayAsGuest = ({
                         data={data}
                         dataHandler={dataHandler}
                         isShipping={isShipping}
+                        isReferenceRequired={isReferenceRequired}
+
                       />
                     ))
                 }
@@ -870,6 +884,7 @@ const PayAsGuest = ({
                         data={data}
                         dataHandler={dataHandler}
                         isShipping={isShipping}
+                        isReferenceRequired={isReferenceRequired}
                       />
                       :
 

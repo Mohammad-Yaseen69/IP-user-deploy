@@ -7,8 +7,11 @@ import styles from "./styles/index.module.css";
 import { toast } from "react-toastify";
 
 
-const RecipientDetails = ({ data, dataHandler, isShipping }) => {
+const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }) => {
     const { t } = useTranslation();
+
+
+
     const handleDateChange = (date) => {
         if (date) {
             const selected = new Date(date);
@@ -101,6 +104,17 @@ const RecipientDetails = ({ data, dataHandler, isShipping }) => {
                     </div>
                     <div className={styles.inpt_co}>
                         <label>
+                            {isReferenceRequired ? t("Ucard Number or Sharer ID") : t("Payment Reference")} {!isReferenceRequired && `(${t("Optional")})`}{" "}
+                        </label>
+                        <input
+                            type="text"
+                            value={data.paymentRef}
+                            onChange={(e) => dataHandler("paymentRef", e.target.value.trim())}
+                            required={isReferenceRequired}
+                        />
+                    </div>
+                    <div className={styles.inpt_co}>
+                        <label>
                             {t("Email")} ({t("Optional")}){" "}
                         </label>
                         <input
@@ -125,16 +139,6 @@ const RecipientDetails = ({ data, dataHandler, isShipping }) => {
                         ) : (
                             ""
                         )}
-                    </div>
-                    <div className={styles.inpt_co}>
-                        <label>
-                            {t("Payment Reference")} ({t("Optional")}){" "}
-                        </label>
-                        <input
-                            type="text"
-                            value={data.paymentRef}
-                            onChange={(e) => dataHandler("paymentRef", e.target.value.trim())}
-                        />
                     </div>
                 </div>
                 {isShipping && <ShippingDetails data={data} dataHandler={dataHandler} />}
