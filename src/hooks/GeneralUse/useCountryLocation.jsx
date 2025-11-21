@@ -25,8 +25,9 @@ const useCountryLocation = () => {
                         data: location
                     })
                     if (location) {
-
-
+                        if ((location?.privacy?.is_proxy === true || location?.privacy?.is_tor === true || location?.privacy?.is_vpn === true)) {
+                            setShowNoticeModal(true);
+                        }
                         const foundCount = allowedCountries?.find(item => item?.country_name?.toLowerCase() === location?.country?.toLowerCase() || item?.country_name?.toLowerCase()?.includes(location?.country?.toLowerCase()))
                         if (foundCount?.country_iso_code) {
                             localStorage.setItem("ip_country", foundCount?.country_iso_code)
