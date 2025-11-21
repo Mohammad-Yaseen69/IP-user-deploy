@@ -252,6 +252,7 @@ const WalletFundsFlow = ({ setAction }) => {
 
     useEffect(() => {
         const getFees = async () => {
+            dataHandler("exchange_rate_error", null)
             dataHandler("loading", true)
             if (data.channel?.value === "card" || data.channel?.value === "bank") {
                 try {

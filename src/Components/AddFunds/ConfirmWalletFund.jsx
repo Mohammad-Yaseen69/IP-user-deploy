@@ -1,6 +1,6 @@
 import { Card, CardBody, Modal, ModalBody } from "reactstrap";
 import { Check, ChevronRight, XCircle } from "react-feather";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import { useTranslation } from "react-i18next";
 import faded_lines from "../PaymentsNewer/files/faded_lines.png"
@@ -38,9 +38,13 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
     const svgRef = useRef(null)
     const chevRef = useRef(null)
     const [transDetails, setTransDetails] = useState(null)
-    const { userDetails, authHeader, userWallets, setUserDetails } = useContext(UserContext)
+    const { userDetails, authHeader, userWallets } = useContext(UserContext)
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
+
+    const isCrypto = useMemo(() => {
+        return wallet.wallet_type === "crypto"
+    }, [wallet])
 
     const handleDrag = (e, ui) => {
         const { x } = ui;
@@ -178,7 +182,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
 
                 try {
                     const response = await apiWrapper({
-                        endpoint: "/api/crypto/wallet-topup",
+                        endpoint: `/api/crypto/${isCrypto ? "crypto" : "wallet"}-topup`,
                         isEncrypted: true,
                         method: "POST",
                         payload
@@ -190,7 +194,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                         payment_id,
                         amount: exchangeRate.total,
                         currency: "USDT_TRC20",
-                        paymentPurpose: "Wallet Topup"
+                        paymentPurpose: `${isCrypto ? "Crypto" : "Wallet"} Topup`
                     }
 
                     sdk.init(paymentConfig);
@@ -208,7 +212,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                     } else {
                         setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
                     }
-                }finally{
+                } finally {
                     setLoading(false)
                 }
 
@@ -364,9 +368,9 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                                 transform: "translate(-50%, -50%)",
                                 zIndex: 10000
                             }}>
-                                <div class="d-flex justify-content-center">
-                                    <div class="spinner-border" color='primary' role="status">
-                                        <span class="sr-only">Loading...</span>
+                                <div className="d-flex justify-content-center">
+                                    <div className="spinner-border" color='primary' role="status">
+                                        <span className="sr-only">Loading...</span>
                                     </div>
                                 </div>
                             </div>

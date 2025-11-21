@@ -18,7 +18,7 @@ const Wallets = ({ data, dataHandler }) => {
     return (
         <div className={styles.container}>
             {
-                userWallets?.filter(item => item?.wallet_type === "insta" && !item?.blocked && !item?.admin_blocked && item?.status === "active")?.map(item => (
+                userWallets?.filter(item => !item?.blocked && !item?.admin_blocked && item?.status === "active")?.map(item => (
                     <WalletCard
                         item={item}
                         key={item?._id}
