@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FormGroup, Input, Label } from 'reactstrap'
 import { service_name_formatter } from '../../TransactionsNewApi/TransactionItem';
@@ -56,8 +56,8 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
                                 <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ minWidth: "150px", width: "100%" }} type="select" value={values.bank_payer} onChange={changeHandler} name='bank_payer'>
                                     <option value="">{t("Select your bank")}</option>
                                     {
-                                        payers.map(item => (
-                                            <option value={item?.id || item.destinationId}>{item?.name || item?.destinationName}</option>
+                                        payers.map((item, idx) => (
+                                            <option key={idx} value={item?.id || item.destinationId}>{item?.name || item?.destinationName}</option>
                                         ))
                                     }
                                 </Input>
@@ -92,7 +92,7 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
                                             name={"bank_iban"}
                                             value={values.bank_iban}
                                             id="bank_iban"
-                                            maxLength={34} 
+                                            maxLength={34}
                                             min={8}
                                             // onChange={changeHandler} 
                                             onChange={getBankDetails}
@@ -158,7 +158,8 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
                                     {
                                         Object.keys(bankExtras).map(item => {
                                             return (
-                                                serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("bank")), "credit_party_identifiers_accepted", item)
+                                                serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("bank")), "credit_party_identifiers_accepted", item) &&
+                                                ((item !== 'iban' && item !== "swift_bic_code") || (item === "iban" && states.accNumType === "Swift") || (item === "swift_bic_code" && states.accNumType === "IBAN"))
                                                 &&
                                                 <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                     <Label className="col-form-label">{t(service_name_formatter(item))} <span className="req_star">*</span></Label>
@@ -168,8 +169,8 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
                                                             <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} disabled={!isEditMode} type="select" value={bankExtras[item]} name={item} onChange={handleBankExtraChange}>
                                                                 <option value="">{t("Select Account Type")}</option>
                                                                 {
-                                                                    Object.keys(AccountTypeData).map(item => (
-                                                                        <option value={item}>{AccountTypeData?.[item]}</option>
+                                                                    Object.keys(AccountTypeData).map((item, idx) => (
+                                                                        <option key={idx} value={item}>{AccountTypeData?.[item]}</option>
                                                                     ))
                                                                 }
                                                             </Input>

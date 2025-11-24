@@ -165,9 +165,6 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             if (tab?.toLowerCase()?.includes("security")) {
                 setCurrentTab("Security Questions")
             }
-            if (tab?.toLowerCase()?.includes("withdrawal")) {
-                setCurrentTab("Receiving Accounts")
-            }
             if (tab?.toLowerCase()?.includes("social")) {
                 setCurrentTab("My Social Network Accounts")
             }

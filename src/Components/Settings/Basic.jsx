@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { UserContext } from '../../Context/UserContext';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
@@ -25,7 +25,7 @@ let timeout;
 
 const Basic = ({ setCurrentTab }) => {
     const { t } = useTranslation()
-    const { userDetails, authHeader, verifyToken, missingTabsData, userWallets } = useContext(UserContext);
+    const { userDetails, authHeader, missingTabsData, userWallets, setUserDetails } = useContext(UserContext);
     const [company, setCompany] = useState('');
     const [username, setUsername] = useState(userDetails?.username ?? "");
     const [phone, setPhone] = useState(userDetails?.phone ?? "");
@@ -57,6 +57,27 @@ const Basic = ({ setCurrentTab }) => {
 
     const isVerified = useMemo(() => userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "verified", [userDetails])
 
+    const refreshUserState = useCallback((field, value) => {
+        setUserDetails(prev => {
+            if (!prev) return prev;
+            const next = { ...prev };
+
+            const nestedUserFields = ["first_name", "last_name", "dob"];
+
+            if (nestedUserFields.includes(field)) {
+                next.first_name = value
+                next.last_name = value
+                next.user = { ...(next.user || {}), [field]: value };
+            } else if (field === "company_name") {
+                next.company_name = value
+                next.company = { ...(next.company || {}), company_name: value };
+            } else {
+                next[field] = value;
+            }
+
+            return next;
+        });
+    }, [setUserDetails]);
 
     const handleDateChange = (date) => {
         if (date) {
@@ -142,6 +163,7 @@ const Basic = ({ setCurrentTab }) => {
             })
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
+                    refreshUserState("username", username)
                     // console.log(decrypted)
                 })
                 .catch(err => {
@@ -193,7 +215,7 @@ const Basic = ({ setCurrentTab }) => {
 
     const editProfileHandler = () => {
         setIsSaving(true)
-        if (!usernameError && usernameValid && !isVerified) {
+        if (!usernameError && usernameValid && !isVerified && userDetails.username !== username) {
             updateUsername()
         }
 
@@ -208,7 +230,7 @@ const Basic = ({ setCurrentTab }) => {
                 // gender,
                 dob: dateOfBirth !== userDetails?.dob ? dateOfBirth?.split("-")?.reverse()?.join("-") : dateOfBirth,
                 timezone: timezone
-        
+
             }
             const encrypted = encryptData(data)
 
@@ -220,10 +242,20 @@ const Basic = ({ setCurrentTab }) => {
                 .then(res => {
                     setIsEditMode(false)
                     setIsSaving(false)
+
+                    refreshUserState("first_name", firstName)
+                    refreshUserState("last_name", lastName)
+                    refreshUserState("address", address)
+                    refreshUserState("city", city)
+                    refreshUserState("postal_code", postalCode)
+                    refreshUserState("about_me", aboutMe)
+                    const newDob = dateOfBirth ? dateOfBirth.split("-").reverse().join("-") : "";
+                    refreshUserState("dob", newDob)
+                    refreshUserState("timezone", timezone)
+
                     if (missingTabsData.length > 0) {
                         setShowNextStepModal(true)
                     }
-                    verifyToken()
                 })
                 .catch(err => {
                     setIsSaving(false)
@@ -250,11 +282,18 @@ const Basic = ({ setCurrentTab }) => {
             })
                 .then(res => {
                     setIsEditMode(false)
+                    setIsSaving(false)
+
+                    refreshUserState("company_name", company)
+                    refreshUserState("address", address)
+                    refreshUserState("city", city)
+                    refreshUserState("postal_code", postalCode)
+                    refreshUserState("about_me", aboutMe)
+                    refreshUserState("timezone", timezone)
+
                     if (missingTabsData.length > 0) {
                         setShowNextStepModal(true)
                     }
-                    setIsSaving(false)
-                    verifyToken()
                 })
                 .catch(err => {
                     setIsSaving(false)
@@ -300,6 +339,14 @@ const Basic = ({ setCurrentTab }) => {
             })
 
             const dec = decryptData(res.data.data)
+            // Backend should have updated email/phone; mirror it into local context
+            if (type === "email") {
+                refreshUserState("email", email)
+            } else if (type === "phone") {
+                refreshUserState("phone", phone)
+            }
+
+            // proceed to update other profile fields if necessary
             editProfileHandler()
             setter(true)
             // console.log(dec)
@@ -698,7 +745,7 @@ const Basic = ({ setCurrentTab }) => {
                             <Label>{t("Address")}  {
                                 !address
                                 && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
-                            <Input disabled={!isEditMode || (userDetails?.address && isVerified )} readOnly={!isEditMode || (isVerified && userDetails?.address)} value={address} onChange={e => setAddress(e.target.value)} />
+                            <Input disabled={!isEditMode || (userDetails?.address && isVerified)} readOnly={!isEditMode || (isVerified && userDetails?.address)} value={address} onChange={e => setAddress(e.target.value)} />
                         </FormGroup>
                     }
                     <FormGroup style={{ position: "relative" }}>
