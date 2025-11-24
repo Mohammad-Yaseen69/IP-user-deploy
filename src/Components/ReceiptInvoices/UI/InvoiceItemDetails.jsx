@@ -216,7 +216,7 @@ const InvoiceItemDetails = ({ inv }) => {
           <InfoItem label={"Is Payable"}>
             <h5>
               {t(inv.paid
-                ? "Paid."
+                ? "Paid"
                 : "This Invoice is payable.")}
             </h5>
           </InfoItem>
