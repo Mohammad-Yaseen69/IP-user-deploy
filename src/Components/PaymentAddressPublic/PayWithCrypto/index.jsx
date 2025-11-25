@@ -40,6 +40,7 @@ const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoi
             endpoint: "/api/guest-pay/initiate-crypto-payment",
             payload: payload,
             method: "POST",
+            isEncrypted: true
         }),
         onError: (res) => {
             const dec = decryptData(res.response?.data?.data)
