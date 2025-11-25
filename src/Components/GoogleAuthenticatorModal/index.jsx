@@ -151,7 +151,7 @@ const GoogleAuthenticatorModal = ({
 
     return (
         <div className="auth-modal">
-            <Modal isOpen={isOpen} style={{ maxWidth: step !== 2 ? "800px" : "900px", width: "100vw", transition: "250ms", margin: window.innerWidth < 1000 && "0 auto" }} contentClassName={styles.content}>
+            <Modal isOpen={isOpen} style={{ maxWidth: step !== 2 ? "800px" : "900px", width: "calc(100% - 2rem)", transition: "250ms", margin: "1rem auto", justifyContent: "center" }} contentClassName={styles.content}>
                 <ModalBody className={styles.container}>
                     <div className={styles.left}>
                         <h1>
