@@ -48,6 +48,7 @@ import checktoggle from "./check-toggle.svg"
 import ctw_white from "./ctw_white.svg"
 
 import ApayWhite from "./Apaywhite.svg"
+import GpayWhite from "./g-pay-white.svg"
 
 export  {
     Payment,
@@ -91,5 +92,6 @@ export  {
     ctc,
     checktoggle,
     ctw_white,
-    ApayWhite
+    ApayWhite,
+    GpayWhite
 }

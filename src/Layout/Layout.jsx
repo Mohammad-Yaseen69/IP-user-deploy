@@ -128,7 +128,7 @@ const Layout = ({ children, classNames, ...rest }) => {
   }, [profileCompleted])
 
 
-
+  
 
 
   useEffect(() => {
@@ -237,7 +237,6 @@ const Layout = ({ children, classNames, ...rest }) => {
           </div>
         </ModalBody>
       </Modal>
-
 
       {
         showSourceModal

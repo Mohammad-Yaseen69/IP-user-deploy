@@ -23,8 +23,8 @@ export const useGetApiKey = ({ accountId, headers, enabled = true }) => {
 export const useCreateUserKey = ({ headers, accountId }) => {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: async ({ webhook_url, account }) => {
-            const payload = { webhook_url, account };
+        mutationFn: async ({ webhook_url, account, features }) => {
+            const payload = { webhook_url, account, features };
             const data = encryptData(payload);
             const res = await axios.post(`${BASE}/api/userkey/create-user-key`, { data }, { headers });
             return decryptData(res.data.data);
@@ -69,6 +69,24 @@ export const useUpdateWebhookUrl = ({ headers, accountId }) => {
                 qc.setQueryData(["userApiKey", accountId], (prev) => {
                     const prevKey = prev?.userKey || {};
                     return { ...prev, userKey: { ...prevKey, webhook_url: data?.userKey?.webhook_url } };
+                });
+            }
+        }
+    });
+};
+export const useUpdateFeatures = ({ headers, accountId }) => {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ features }) => {
+            const data = encryptData({ features });
+            const res = await axios.put(`${BASE}/api/userkey/update-features`, { data }, { headers });
+            return decryptData(res.data.data);
+        },
+        onSuccess: (data) => {
+            if (accountId) {
+                qc.setQueryData(["userApiKey", accountId], (prev) => {
+                    const prevKey = prev?.userKey || {};
+                    return { ...prev, userKey: { ...prevKey, features: data?.userKey?.features } };
                 });
             }
         }

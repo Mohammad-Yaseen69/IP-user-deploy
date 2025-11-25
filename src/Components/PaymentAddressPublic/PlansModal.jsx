@@ -68,14 +68,16 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
                     navigate(path)
                 }
             },
-            width: "13px"
+            width: "13px",
+            disabled: true
         },
         {
             label: "Pay with Crypto",
             logo: CryptoPay,
             action: () => {
                 setShowCryptoModal(true)
-            }
+            },
+            disabled: true
         },
         {
             label: "Pay As Guest",

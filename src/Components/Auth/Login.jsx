@@ -23,6 +23,7 @@ import i18next from "i18next";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import localforage from "localforage"
 import InstaPayLoader from "../Loader";
+import { logger } from "@sentry/react";
 const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
@@ -311,12 +312,17 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     // }, [step])
 
 
-    const getUserInfo = async () => {
+    const getUserInfo = async (username) => {
         try {
             const res = await fetch(`https://iplocate.io/api/lookup?apikey=${import.meta.env.VITE_IP_LOCATE_API_KEY}`)
             const location = await res.json()
 
-            console.log("locate api", location)
+            logger.info(`IP Locate api called for user: ${username} `, {
+                data: location
+            })
+
+            
+
             if (location) {
                 return {
                     browser_name: rdd.browserName ?? "N/A",
@@ -336,6 +342,10 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             }
 
         } catch (error) {
+            logger.error(`IP Locate api failed at ${Date.now().toLocaleString()} for user: ${username}`, {
+                error: error
+            })
+            console.log("ip locate failed")
             try {
                 const res = await fetch("https://geolocation-db.com/json")
                 const location = await res.json()
@@ -431,7 +441,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         const dec = decryptData(res.data.data)
                         setShowInactivityModal(false)
                         if (dec?.country?.status) {
-                            const data = await getUserInfo()
+                            const data = await getUserInfo(dec?.username)
                                 .catch(() => {
                                     const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
                                     localStorage.setItem("login", true)
@@ -614,7 +624,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     const dec = decryptData(res.data.data)
                     setShowInactivityModal(false)
                     if (dec?.country?.status) {
-                        const data = await getUserInfo()
+                        const data = await getUserInfo(dec?.username)
                             .catch(() => {
                                 const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
                                 localStorage.setItem("login", true)

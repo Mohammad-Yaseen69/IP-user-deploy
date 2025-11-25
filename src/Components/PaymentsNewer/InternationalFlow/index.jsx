@@ -626,7 +626,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     return
                 }
 
-                updateInternationalData("error", `Balance check failed: ${errorMessage}. Please try refreshing the page.`)
+                updateInternationalData("error", `${errorMessage}. Please try refreshing the page.`)
                 updateInternationalData("thunesBalanceError", errorMessage)
             } finally {
                 updateInternationalData("thunesBalanceLoading", false)

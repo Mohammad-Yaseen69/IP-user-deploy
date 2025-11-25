@@ -40,8 +40,8 @@ Sentry.init({
   integrations: [
     Sentry.browserTracingIntegration(),
     Sentry.replayIntegration({
-        maskAllText: false,
-        blockAllMedia: false,
+      maskAllText: false,
+      blockAllMedia: false,
     }),
     Sentry.browserProfilingIntegration(),
   ],
@@ -64,7 +64,12 @@ Sentry.init({
   },
   profilesSampleRate: 1.0,
   defaultIntegrations: false,
+  enableLogs: true,
 });
+
+
+
+
 
 if (!import.meta.env.DEV) {
   window.console.log = () => { };

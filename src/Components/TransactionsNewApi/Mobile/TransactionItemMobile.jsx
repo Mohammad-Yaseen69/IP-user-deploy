@@ -102,7 +102,7 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
     }, [item, i18n])
 
     const displayName = useMemo(() => {
-        if (item?.service_type === "payment_address" && item?.guest_details) {
+        if (item?.guest_details?.name && item?.guest_details) {
             return item?.guest_details?.name ?? ""
         }
 
@@ -146,7 +146,7 @@ const TransactionItemMobile = ({ item, activeItem, setActiveItem, index, fromRef
     }, [item, internationalReceiver])
 
     const displayInitial = useMemo(() => {
-        if (item?.service_type === "payment_address" && item?.guest_details) {
+        if (item?.guest_details?.name && item?.guest_details) {
             return item?.guest_details?.name?.[0]
         }
         if (item?.service_type === "airtime") {

@@ -98,7 +98,7 @@ const PendingNew = () => {
                     // console.log(decryptData(err.response.data.data))
                 })
         }
-    }, [])
+    }, [userDetails])
     useEffect(() => {
         setIsLoading(true)
         if (userDetails) {
@@ -115,7 +115,7 @@ const PendingNew = () => {
                     setIsLoading(false)
                 })
         }
-    }, [])
+    }, [userDetails])
 
 
     useEffect(() => {

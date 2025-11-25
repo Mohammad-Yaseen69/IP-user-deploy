@@ -12,6 +12,7 @@ import { toast } from 'react-toastify'
 import InstaPayLoader from '../Loader'
 import { Link } from 'react-router-dom'
 import { LimitsErrorMessage } from '../PaymentsNewer/OTPConfirmation'
+import ErrorModal from '../PaymentsNewer/InternationalFlow/ErrorModal'
 
 const AcceptModal = ({ isOpen, toggle, item }) => {
     const { userWallets, authHeader, userDetails, verifyToken } = useContext(UserContext)
@@ -23,6 +24,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
     const [showSuccess, setShowSuccess] = useState(false)
     const [showOtp, setShowOtp] = useState(false)
     const [codeType, setCodeType] = useState("sms")
+    const [error, setError] = useState("")
 
     useEffect(() => {
         setCodeType(userDetails?.tfa ? "authenticator" : "sms")
@@ -68,7 +70,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
                 toast.error("Receiver's receiving limit has been reached!")
             }
             else {
-                toast.error("Something went wrong while sending otp.")
+                toast.error("We are unable to process your request at the moment")
             }
         }
         finally {
@@ -138,6 +140,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
                     })
                     .catch(err => {
                         const decrypted = decryptData(err.response.data.data)
+                        setError(decrypted?.message ?? "We are unable to process your request at the moment.")
                         console.log(decrypted)
                     })
                     .finally(() => setSaving(false))
@@ -162,6 +165,12 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
                     setShowSuccess(false)
                     verifyToken()
                 }}
+            />
+            <ErrorModal
+                isOpen={error}
+                toggle={toggle}
+                heading='Transaction failed!'
+                message={error}
             />
             <Modal isOpen={isOpen}>
                 <ModalHeader toggle={toggle}>Accept Request</ModalHeader>

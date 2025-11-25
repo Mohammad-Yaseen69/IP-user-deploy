@@ -1,4 +1,3 @@
-import React, { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import useWindowWidth from '../../utils/useWindowWidth'
 import { useTranslation } from 'react-i18next'
@@ -28,14 +27,6 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
             document.body.removeChild(a);
         }
     };
-
-
-    const allMethodsDisabled = useMemo(() => {
-        if (!userDetails) return false
-        return !paymentAddressFlagCheck("payments.allowGuestPay", userDetails) &&
-            !paymentAddressFlagCheck("payments.allowCrypto", userDetails) &&
-            !paymentAddressFlagCheck("payments.allowInstapay", userDetails)
-    }, [userDetails])
 
     return (
         <div style={{ backgroundColor: 'white', borderRadius: "16px", maxHeight: "100%" }}>
@@ -79,16 +70,17 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                 style={{
                                     margin: '0',
                                     display: width > 1000 && width < 1350 && "grid",
-                                    gridTemplateColumns: allMethodsDisabled ? "1fr" : width > 1000 && width < 1350 && "1fr 1fr 1fr"
+                                    gridTemplateColumns: width > 1000 && width < 1350 && "1fr 1fr 1fr"
                                 }}
                                 className={vpa_styles.buttons}
                             >
-                                {paymentAddressFlagCheck("payments.allowGuestPay", userDetails) &&
-                                    <Link onClick={toggleCreditModal} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
+                                <div title={!paymentAddressFlagCheck("payments.allowGuestPay", userDetails) ? t("This method is disabled for this payment address by admin.") : ""} style={{ position: "relative" }}>
+                                    <Link onClick={paymentAddressFlagCheck("payments.allowGuestPay", userDetails) ? toggleCreditModal : (e) => e.preventDefault()} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
                                         style={{
-                                            opacity: state.amount <= 0 ? .7 : 1,
-                                            pointerEvents: state.amount <= 0 ? "none" : "all",
+                                            opacity: !paymentAddressFlagCheck("payments.allowGuestPay", userDetails) ? 0.5 : (state.amount <= 0 ? 0.7 : 1),
+                                            pointerEvents: !paymentAddressFlagCheck("payments.allowGuestPay", userDetails) ? "none" : (state.amount <= 0 ? "none" : "all"),
                                             position: "relative",
+                                            cursor: !paymentAddressFlagCheck("payments.allowGuestPay", userDetails) ? "not-allowed" : (state.amount <= 0 ? "not-allowed" : "pointer")
                                         }}
                                     >
                                         <div>
@@ -116,14 +108,15 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                             </div>
                                         }
                                     </Link>
-                                }
+                                </div>
 
-                                {paymentAddressFlagCheck("payments.allowCrypto", userDetails) &&
-                                    <Link to={"#"} onClick={toggleCryptoModal} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
+                                <div title={!paymentAddressFlagCheck("payments.allowCrypto", userDetails) ? t("This method is disabled for this payment address by admin.") : ""} style={{ position: "relative" }}>
+                                    <Link to={paymentAddressFlagCheck("payments.allowCrypto", userDetails) ? "#" : ""} onClick={paymentAddressFlagCheck("payments.allowCrypto", userDetails) ? toggleCryptoModal : (e) => e.preventDefault()} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
                                         style={{
-                                            opacity: state.amount <= 0 ? .7 : 1,
-                                            pointerEvents: state.amount <= 0 ? "none" : "all",
-                                            position: "relative"
+                                            opacity: !paymentAddressFlagCheck("payments.allowCrypto", userDetails) ? 0.5 : (state.amount <= 0 ? 0.7 : 1),
+                                            pointerEvents: !paymentAddressFlagCheck("payments.allowCrypto", userDetails) ? "none" : (state.amount <= 0 ? "none" : "all"),
+                                            position: "relative",
+                                            cursor: !paymentAddressFlagCheck("payments.allowCrypto", userDetails) ? "not-allowed" : (state.amount <= 0 ? "not-allowed" : "pointer")
                                         }}
                                     >
                                         <div>
@@ -131,11 +124,15 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                         </div>
                                         <span>{t("Pay with Crypto")}</span>
                                     </Link>
-                                }
+                                </div>
 
 
-                                {paymentAddressFlagCheck("payments.allowInstapay", userDetails) &&
+                                <div title={!paymentAddressFlagCheck("payments.allowInstapay", userDetails) ? t("This method is disabled for this payment address by admin.") : ""} style={{ position: "relative" }}>
                                     <Link onClick={(e) => {
+                                        if (!paymentAddressFlagCheck("payments.allowInstapay", userDetails)) {
+                                            e.preventDefault();
+                                            return;
+                                        }
                                         if (state.amount > 0) {
                                             if (isInIframe()) {
                                                 const toNavigate = `${import.meta.env.VITE_PUBLIC_URL}/login?redirect=${encodeURIComponent(url)}`
@@ -147,10 +144,11 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                         } else {
                                             e.preventDefault();
                                         }
-                                    }} to={state.amount > 0 && !isInIframe() ? url : ""} className={`${vpa_styles.button} ${vpa_styles.ipBtn}`}
+                                    }} to={(paymentAddressFlagCheck("payments.allowInstapay", userDetails) && state.amount > 0 && !isInIframe()) ? url : ""} className={`${vpa_styles.button} ${vpa_styles.ipBtn}`}
                                         style={{
-                                            opacity: state.amount <= 0 ? .7 : 1,
-                                            pointerEvents: state.amount <= 0 ? "none" : "all",
+                                            opacity: !paymentAddressFlagCheck("payments.allowInstapay", userDetails) ? 0.5 : (state.amount <= 0 ? 0.7 : 1),
+                                            pointerEvents: !paymentAddressFlagCheck("payments.allowInstapay", userDetails) ? "none" : (state.amount <= 0 ? "none" : "all"),
+                                            cursor: !paymentAddressFlagCheck("payments.allowInstapay", userDetails) ? "not-allowed" : (state.amount <= 0 ? "not-allowed" : "pointer")
                                         }}
                                     >
                                         <div>
@@ -158,9 +156,7 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                         </div>
                                         <span style={{ color: "white" }}>{t("Pay With InstaPay")}</span>
                                     </Link>
-                                }
-
-                                {allMethodsDisabled && <span style={{fontWeight: 600}}> {t("All payment options are disabled for this payment address by admin.")} </span>}
+                                </div>
                             </div>
                         </>}
                 </div>

@@ -47,6 +47,17 @@ const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] })
             }
             :
             {},
+        userDetails?.level?.topup_channel?.crypto
+            ?
+            {
+                name: "Crypto Transfer",
+                id: 2,
+                icon: bd,
+                value: "crypto",
+                coming_soon: userDetails?.level?.topup_channel?.crypto === "coming_soon",
+            }
+            :
+            {},
     ]
 
     const thunesAllowed = [

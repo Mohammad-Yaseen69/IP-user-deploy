@@ -615,6 +615,7 @@ const OTPConfirmation = ({
             }}
             onSubmit={(e) => {
                 e.preventDefault()
+                if (isSaving) return;
                 completeTransaction()
             }}
 

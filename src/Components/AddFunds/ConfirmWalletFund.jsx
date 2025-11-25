@@ -1,6 +1,6 @@
 import { Card, CardBody, Modal, ModalBody } from "reactstrap";
 import { Check, ChevronRight, XCircle } from "react-feather";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import { useTranslation } from "react-i18next";
 import faded_lines from "../PaymentsNewer/files/faded_lines.png"
@@ -8,21 +8,28 @@ import SelectedPayoutChannel from "../PaymentsNewer/SelectedPayoutChannel";
 import SelectedAmountAndCurrency from "../PaymentsNewer/SelectedAmountAndCurrency";
 import SelectedWallet from "./WalletFund/SelectedWallet";
 import { UserContext } from "../../Context/UserContext";
-import { countries } from "country-list-json";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import axios from "axios";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import TrustpaymentPage from "./WalletFund/CreditTransaction";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import { createShambeToken } from "../../Helper/CreateToken";
 import NotFoundModal from "../NotFound/NotFoundModal";
 import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow";
 import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
 
+import { WidgetSDK } from "@keabank/websdk";
+import { apiWrapper } from "../../utils/Functions/apiWrapper";
+
+
+const sdk = new WidgetSDK({
+    integrationId: import.meta.env.VITE_KEABANK_INTEGRATION_ID,
+    merchantId: import.meta.env.VITE_KEABANK_MERCHANT_ID,
+});
+
 const isBig = window.innerWidth > 1000
 
-const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, limits, setLimits, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP, kybFeeDets, partnerId }) => {
+const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_number, card_expiry, card_cvc, saveCard, limits, setLimits, type = "add_fund", paymentWithSavedCard = false, currentCard, merchant = "", payer = {}, setExternalLink = () => { }, paypalAmount, token, rate, reEnterCallback = () => { }, sendKybWalletOTP, kybFeeDets, partnerId, exchangeRate }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [complete, setComplete] = useState(false);
@@ -31,9 +38,13 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
     const svgRef = useRef(null)
     const chevRef = useRef(null)
     const [transDetails, setTransDetails] = useState(null)
-    const { userDetails, authHeader, userWallets, setUserDetails } = useContext(UserContext)
+    const { userDetails, authHeader, userWallets } = useContext(UserContext)
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
+
+    const isCrypto = useMemo(() => {
+        return wallet.wallet_type === "crypto"
+    }, [wallet])
 
     const handleDrag = (e, ui) => {
         const { x } = ui;
@@ -159,6 +170,53 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                 finally {
                     setLoading(false)
                 }
+            } else if (payoutChannel?.value === "crypto") {
+                const payment_id = `keabank_instapay_topup_${Date.now()}`
+
+                const payload = {
+                    payment_id,
+                    wallet_id: wallet?.wallet_id,
+                    token: exchangeRate?.token,
+                    amount: amount,
+                }
+
+                try {
+                    const response = await apiWrapper({
+                        endpoint: `/api/crypto/${isCrypto ? "crypto" : "wallet"}-topup`,
+                        isEncrypted: true,
+                        method: "POST",
+                        payload
+                    })
+
+                    console.log(response)
+
+                    const paymentConfig = {
+                        payment_id,
+                        amount: exchangeRate.total,
+                        currency: "USDT_TRC20",
+                        paymentPurpose: `${isCrypto ? "Crypto" : "Wallet"} Topup`
+                    }
+
+                    sdk.init(paymentConfig);
+                } catch (error) {
+                    const dec = decryptData(error?.response?.data?.data)
+
+                    const error2 = apiErrorMessage(dec?.message)
+                    const error1 = LimitsErrorMessage(dec?.code)
+
+                    if (error1) {
+                        setError(t(error1))
+                    }
+                    else if (error2) {
+                        setError(t(error2))
+                    } else {
+                        setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                    }
+                } finally {
+                    setLoading(false)
+                }
+
+
             } else {
                 const data = type === "kyb" ? { wallet_id: wallet?._id } : {
                     wallet_id: wallet?._id,
@@ -274,7 +332,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                                 type === "add_fund" &&
                                 <SelectedWallet setSubStep={setSubStep} wallet={wallet} />
                             }
-                            <SelectedAmountAndCurrency amount={amount} currency={kybFeeDets ? "USD" : wallet?.currency?.code} setSubStep={setSubStep} step={2} />
+                            <SelectedAmountAndCurrency amount={payoutChannel?.value === "crypto" ? exchangeRate?.sending?.amount : amount} currency={kybFeeDets ? "USD" : payoutChannel?.value === "crypto" ? exchangeRate?.sending?.currency : wallet?.currency?.code} setSubStep={setSubStep} step={2} />
                             {
                                 payoutChannel?.icon
                                 &&
@@ -310,9 +368,9 @@ const ConfirmWalletFund = ({ setSubStep, wallet, amount, payoutChannel, card_num
                                 transform: "translate(-50%, -50%)",
                                 zIndex: 10000
                             }}>
-                                <div class="d-flex justify-content-center">
-                                    <div class="spinner-border" color='primary' role="status">
-                                        <span class="sr-only">Loading...</span>
+                                <div className="d-flex justify-content-center">
+                                    <div className="spinner-border" color='primary' role="status">
+                                        <span className="sr-only">Loading...</span>
                                     </div>
                                 </div>
                             </div>

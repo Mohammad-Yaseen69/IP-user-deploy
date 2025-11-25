@@ -252,6 +252,7 @@ const WalletFundsFlow = ({ setAction }) => {
 
     useEffect(() => {
         const getFees = async () => {
+            dataHandler("exchange_rate_error", null)
             dataHandler("loading", true)
             if (data.channel?.value === "card" || data.channel?.value === "bank") {
                 try {
@@ -302,6 +303,35 @@ const WalletFundsFlow = ({ setAction }) => {
                     dataHandler("loading", false)
                 }
             }
+            else if (data.channel?.value === "crypto") {
+                try {
+                    const enc = encryptData({
+                        from: data?.wallet?.currency?.code,
+                        to: "USDT",
+                        amount: Number(String(data?.amount)?.replace(",", ""))
+                    })
+                    const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/crypto/rates`, { data: enc }, {
+                        headers: authHeader,
+                    })
+                    const dec = decryptData(res.data.data)
+                    console.log(dec)
+                    dataHandler("exchange_rate", {
+                        fee: { amount: dec?.data?.fee?.value, currency: dec?.data?.fee?.currency },
+                        sending: { currency: dec?.data?.amount?.currency, amount: dec?.data?.amount?.value },
+                        receiver: { currency: data.wallet?.currency?.code, amount: dec?.data?.recipientReceives?.value },
+                        total: dec?.data?.amount?.value,
+                        token: dec?.data?.token,
+                        rate: dec?.data?.rate?.value
+                    })
+
+                } catch (error) {
+                    const dec = decryptData(error?.response?.data?.data);
+                    dataHandler("exchange_rate_error", dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                    console.log(dec)
+                } finally {
+                    dataHandler("loading", false)
+                }
+            }
             else {
                 dataHandler("exchange_rate", {
                     total: parseFloat(data.amount),
@@ -333,7 +363,7 @@ const WalletFundsFlow = ({ setAction }) => {
                 dataHandler("step", 3)
                 break;
             case 3:
-                if (data.channel?.value === "paypal") {
+                if (data.channel?.value === "paypal" || data?.channel?.value === "crypto") {
                     dataHandler("show_confirmation", true)
                 } else {
                     dataHandler("step", 4)
@@ -392,6 +422,7 @@ const WalletFundsFlow = ({ setAction }) => {
     //     }
     // }, [data.channel])
 
+    console.log(data.channel, data.exchange_rate_error, data.error)
     const disabledButton = useMemo(() => {
         switch (data.step) {
             case 1:
@@ -663,6 +694,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                                 paypalAmount={/*data.channel?.value === "paypal" && !PaypalCurrencies.some(item => item === data.wallet?.currency?.code) ? data.paypal_fx?.amount :*/ data.amount}
                                                 token={data.exchange_rate?.paypal_token}
                                                 rate={data.exchange_rate?.rate}
+                                                exchangeRate={data.exchange_rate}
                                             />
                                             :
                                             <>
@@ -732,7 +764,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                                                             dataHandler={dataHandler}
                                                                         />
                                                                         :
-                                                                        ""
+                                                                        null
                                                         )
                                                         :
                                                         ""
@@ -951,6 +983,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                                 paypalAmount={/*data.channel?.value === "paypal" && !PaypalCurrencies.some(item => item === data.wallet?.currency?.code) ? data.paypal_fx?.amount :*/ data.amount}
                                                 token={data.exchange_rate?.paypal_token}
                                                 rate={data.exchange_rate?.rate}
+                                                exchangeRate={data.exchange_rate}
                                             />
                                             :
                                             <>
@@ -1020,8 +1053,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                                                             dataHandler={dataHandler}
                                                                         />
                                                                         :
-                                                                        ""
-                                                        )
+                                                                        null)
                                                         :
                                                         ""
                                                 }

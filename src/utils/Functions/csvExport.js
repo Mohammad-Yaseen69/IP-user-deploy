@@ -109,7 +109,7 @@ export const exportToExcel = async (transactions, userDetails, setExportLoading,
 
             outputRow["Sender Email"] = obj['guest_details.email'] || "-"
             outputRow["Sender Phone"] = obj['guest_details.phone'] || "-"
-
+            outputRow["Payment Reference"] = obj['client_reference'] || "-"
 
             Object.keys(obj).forEach(originalKey => {
                 const formatted = formatHeader(originalKey);

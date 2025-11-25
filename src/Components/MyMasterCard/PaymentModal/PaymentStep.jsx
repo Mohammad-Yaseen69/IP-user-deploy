@@ -43,7 +43,9 @@ const PaymentStep = (
         amount,
         setCards,
         marginTop,
-        cardToWallet
+        cardToWallet,
+        applePay,
+        googlePay
     }) => {
     const { t } = useTranslation()
     const { authHeader } = useContext(UserContext)
@@ -143,7 +145,7 @@ const PaymentStep = (
                             <WalletCard
                                 wallet={wallet_l}
                                 isActive={true}
-                                cardType={vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual"}
+                                cardType={(applePay || googlePay) ? "vcc_premium_plus_virtual" : vvcCardType === "premium" ? "vcc_premium_virtual" : "vcc_standard_virtual"}
                                 isInVCard={true}
                                 dataHandler={(_, wallet) => setWalletState(wallet)}
                                 data={{ wallet: walletState }}

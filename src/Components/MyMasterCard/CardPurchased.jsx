@@ -4,7 +4,7 @@ import Giftpng from "./files/gift-png.png"
 import IpLogo from "./files/ip.svg"
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from 'swiper'
-import { Freeze, plus, CreditCardR, Wallet2, FileDown, CreditCardP, Notification, Speaker, Apay, Gpay, Samsung, Copy, checktoggle, ApayWhite } from "./files"
+import { Freeze, plus, CreditCardR, Wallet2, FileDown, CreditCardP, Notification, Speaker, Apay, Gpay, Samsung, Copy, checktoggle, ApayWhite, GpayWhite } from "./files"
 import axios from 'axios';
 import { UserContext } from '../../Context/UserContext';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
@@ -672,13 +672,13 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                 }}
                             >
 
-                                {cards?.map((card, idx) => (
+                                {cards?.map((card) => (
                                     <SwiperSlide key={card._id}>
                                         <div
 
                                             className={`${styles.card} ${card.type === "standard" ? styles.standard : styles.premium} ${flippedCards[card._id] ? styles.flipped : ''}`}
                                             onClick={() => {
-                                                if (cards[current]?.premium_features?.apple_pay === true && !userDetails.email) {
+                                                if ((cards[current]?.premium_features?.apple_pay === true || cards[current]?.premium_features?.google_pay === true) && !userDetails.email) {
                                                     setShowEmailModal(true)
                                                 } else {
                                                     handleCardFlip(card._id)
@@ -702,6 +702,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                                                     <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: '4px' }}>
                                                         {card?.premium_features?.apple_pay === true && <img src={ApayWhite} alt="" />}
+                                                        {card?.premium_features?.google_pay === true && <img src={GpayWhite} alt="" />}
                                                         <h3>
                                                             {t('Virtual')} <br /> {t('Card')}
                                                         </h3>
@@ -758,7 +759,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                         <span style={{ cursor: 'pointer' }}
                             onClick={() => {
-                                if (cards[current]?.premium_features?.apple_pay === true && !userDetails.email) {
+                                if ((cards[current]?.premium_features?.apple_pay === true || cards[current]?.premium_features?.google_pay === true) && !userDetails.email) {
                                     setShowEmailModal(true)
                                 } else {
                                     handleCardFlip(cards[current]._id)
@@ -795,7 +796,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                                             <img style={{ width: "25px", borderRadius: "3px", boxShadow: "0px 0px 3px #00000066" }} src={CountriesData.find(c => c.alpha3 === userDetails?.country_iso_code).file_url} alt="" />
                                             <p style={{ fontSize: "20px", color: "#848484", fontWeight: 600, marginBottom: "0px" }}>
-                                                {localCurrency(userDetails)} {formatCurrency(balanceInLocal, true   )}
+                                                {localCurrency(userDetails)} {formatCurrency(balanceInLocal, true)}
                                             </p>
                                         </div>
                                     </>

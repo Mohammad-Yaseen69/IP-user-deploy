@@ -59,7 +59,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                     &&
                     <div className={styles.fees}>
                         <Info color={bright ? "#BE9A08" : "white"} />
-                        <span>{t(feesLabel)} {Number(data?.exchange_rate?.fee?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 }) ?? "0.00"} {data.exchange_rate?.sending?.currency}</span>
+                        <span>{t(feesLabel)} {Number(data?.exchange_rate?.fee?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 }) ?? "0.00"} {data?.exchange_rate?.fee?.currency || data.exchange_rate?.sending?.currency}</span>
                     </div>
                 }
                 {
