@@ -1,4 +1,5 @@
 import { lazy } from 'react';
+import EcommerceSettings from '../Components/Ecommerce-store/EcommerceSettings/index.jsx';
 const QrCode = lazy(() => import("../Components/QrCode"));
 const QRScan = lazy(() => import("../Components/QrScan"));
 const ChatbotQrCode = lazy(() => import("../Components/ChatbotQrCode"));
@@ -86,6 +87,7 @@ export const routes = [
     { path: "/portfolio", component: <Portfolio /> },
     { path: "/ecommerce-store", component: <Ecommerce /> },
     { path: "/ecommerce-store/orders", component: <EcommerceStoreOrder /> },
+    { path: "/ecommerce-store/settings", component: <EcommerceSettings /> },
     { path: "/payment-address", component: <PaymentAddress /> },
     { path: "/analytics", component: <Analytics /> },
     { path: "/settings", component: <Settings /> },

@@ -86,10 +86,12 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
                                             item.menu ? item.menu.map((innerItem) => ActiveNavLinkUrl(innerItem.url)).includes(true) : ActiveNavLinkUrl(item.url) || isOpen[level] === item.title ? item?.activeIcon : item?.icon
                                         }
                                         {/* {item.icon ? item.icon : ""} */}
-                                        <span className={`${item.class ? item.class : ""}`}>
+                                        <span className={`${item.class ? item.class : ""}`}
+                                            style={{ color: "#848484", fontSize: " 0.7rem" }}
+                                        >
                                             {t(item.title)}
                                         </span>
-                                        {item.menu && (<div className="according-menu"><i className="fa fa-angle-right"></i></div>)}
+                                        {/* {item.menu && (<div className="according-menu"><i className="fa fa-angle-right"></i></div>)} */}
                                         {/* <div style={{ height: "6px", width: "6px", background: "white", borderRadius: "10px", position: "absolute", top: "19px", left: "85%", display: togglSidebar ? "none" : "inherit" }}></div> */}
                                     </Link>
                                     {item.menu && (
@@ -137,7 +139,7 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
                                     className={`${className ? '' : 'sidebar-link sidebar-title'}  ${(item.menu ? item.menu.map((innerItem) => ActiveNavLinkUrl(innerItem.url)).includes(true) : ActiveNavLinkUrl(item.url)) || isOpen[level] === item.title ? 'active' : ''}`}
                                 >
                                     <Link
-                                        className={`${className ? "" : "sidebar-link sidebar-title"}  ${(item.menu ? item.menu.map((innerItem) => ActiveNavLinkUrl(innerItem.url)).includes(true) : ActiveNavLinkUrl(item.url)) || isOpen[level] === item.title ? "active" : ""}`}
+                                        className={`${className ? "" : "sidebar-link sidebar-title"}  ${(item.menu ? item.menu.some(innerItem => ActiveNavLinkUrl(innerItem.url)) : ActiveNavLinkUrl(item.url)) || isOpen[level] === item.title ? "active" : ""}`}
                                         to={item.url ? item.url : Href}
                                         onClick={() => {
                                             const temp = isOpen;
@@ -145,16 +147,28 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
                                             setIsOpen(temp);
                                         }}
                                     >
+
                                         {
-                                            item.menu ? item.menu.map((innerItem) => ActiveNavLinkUrl(innerItem.url)).includes(true) : ActiveNavLinkUrl(item.url) || isOpen[level] === item.title ? item?.activeIcon : item?.icon
+                                            item.menu
+                                                ? (
+                                                    item.menu.some(inner => ActiveNavLinkUrl(inner.url))
+                                                        ? item.activeIcon
+                                                        : item.icon
+                                                )
+                                                : (
+                                                    ActiveNavLinkUrl(item.url) || isOpen[level] === item.title
+                                                        ? item.activeIcon
+                                                        : item.icon
+                                                )
                                         }
-                                        {/* {item.icon ? item.icon : ""} */}
+
                                         <span className={`${item.class ? item.class : ""}`}>
                                             {t(item.title)}
                                         </span>
+
                                         {item.menu && (<div className="according-menu"><i className="fa fa-angle-right"></i></div>)}
-                                        {/* <div style={{ height: "6px", width: "6px", background: "white", borderRadius: "10px", position: "absolute", top: "19px", left: "85%", display: togglSidebar ? "none" : "inherit" }}></div> */}
                                     </Link>
+
                                     {item.menu && (
                                         <SidebarSubMenu menu={item.menu} isOpen={isOpen} setIsOpen={setIsOpen} level={level + 1} className="sidebar-submenu "
                                         />
@@ -162,7 +176,7 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
                                 </li>
                         }
                     </>
-                )  
+                )
             })}
             {
                 !togglSidebar

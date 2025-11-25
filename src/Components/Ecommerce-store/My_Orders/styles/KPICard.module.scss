@@ -17,9 +17,9 @@
 }
 
 .title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #6f6f6f;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #130f0f;
   margin: 0;
 }
 
@@ -44,6 +44,10 @@
   justify-content: space-between;
   align-items: flex-end;
   flex: 1;
+  height: 150px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .metrics {
@@ -67,7 +71,7 @@
 .percentage {
   font-size: 16px;
   font-weight: 600;
-  color: #6f6f6f;
+  color: #f14437;
 }
 
 .description {
@@ -75,6 +79,7 @@
   color: #6f6f6f;
   margin: 0;
   line-height: 1.4;
+  font-weight: 600;
 }
 
 .iconContainer {
@@ -82,4 +87,3 @@
   margin-left: 16px;
   opacity: 0.6;
 }
-

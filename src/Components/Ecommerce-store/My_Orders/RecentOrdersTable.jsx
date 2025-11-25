@@ -1,14 +1,76 @@
 import { useState } from "react";
-import { Filter, Search } from "react-feather";
+import { ChevronRight, Edit3, Eye, Filter, MoreVertical, RefreshCw, Search, Trash2, Upload } from "react-feather";
 import { useTranslation } from "react-i18next";
 import Arrowsvg, { SortSvg } from "../assets/icons/svg/svg";
 import styles from "./styles/RecentOrdersTable.module.scss";
 
-const RecentOrdersTable = () => {
+const RecentOrdersTable = ({setExpandDrower,setSelectedProduct,setDrawerType}) => {
     const { t } = useTranslation();
     const [searchQuery, setSearchQuery] = useState("");
+    const [openDropdownId, setOpenDropdownId] = useState(null);
 
-    const orders = [];
+    const orders = [
+        {
+            id: "1",
+            date: "May 12, 2025, 09:00 AM",
+            customerName: "Greg Lau",
+            customerImg: "https://cdsassets.apple.com/live/7WUAS350/images/iphone/iphone-17-pro-max-colors.png",
+            Product: "iPhone 15 Pro Max 128GB",
+            quantity: "1",
+            ProductImg: "https://cdsassets.apple.com/live/7WUAS350/images/iphone/iphone-17-pro-max-colors.png",
+            status: "Shipped",
+            total: "$100.00",
+        },
+        {
+            id: "2",
+            date: "May 12, 2025, 09:00 AM",
+            customerName: "Greg Lau",
+            customerImg: "https://cdsassets.apple.com/live/7WUAS350/images/iphone/iphone-17-pro-max-colors.png",
+            Product: "iPhone 15 Pro Max 128GB",
+            quantity: "1",
+            ProductImg: "https://cdsassets.apple.com/live/7WUAS350/images/iphone/iphone-17-pro-max-colors.png",
+            status: "Delivered",
+            total: "$100.00",
+        },
+        {
+            id: "3",
+            date: "May 12, 2025, 09:00 AM",
+            customerName: "Greg Lau",
+            customerImg: "https://cdsassets.apple.com/live/7WUAS350/images/iphone/iphone-17-pro-max-colors.png",
+            Product: "iPhone 15 Pro Max 128GB",
+            quantity: "10",
+            ProductImg: "https://cdsassets.apple.com/live/7WUAS350/images/iphone/iphone-17-pro-max-colors.png",
+            status: "Shipped",
+            total: "$100.00",
+        },
+        {
+            id: "4",
+            date: "May 12, 2025, 09:00 AM",
+            customerName: "Greg Lau",
+            customerImg: "https://cdsassets.apple.com/live/7WUAS350/images/iphone/iphone-17-pro-max-colors.png",
+            Product: "iPhone 15 Pro Max 128GB",
+            quantity: "10",
+            ProductImg: "https://cdsassets.apple.com/live/7WUAS350/images/iphone/iphone-17-pro-max-colors.png",
+            status: "Delivered",
+            total: "$100.00",
+        },
+        {
+            id: "5",
+            date: "May 12, 2025, 09:00 AM",
+            customerName: "Greg Lau",
+            customerImg: "https://cdsassets.apple.com/live/7WUAS350/images/iphone/iphone-17-pro-max-colors.png",
+            Product: "iPhone 15 Pro Max 128GB",
+            quantity: "1",
+            ProductImg: "https://cdsassets.apple.com/live/7WUAS350/images/iphone/iphone-17-pro-max-colors.png",
+            status: "Shipped",
+            total: "$100.00",
+        },
+    ];
+    const handelDropDown = (id) => {
+        setOpenDropdownId(prev => prev === id ? null : id);
+        console.log(id)
+    };
+
 
     return (
         <div className={styles.container}>
@@ -53,28 +115,81 @@ const RecentOrdersTable = () => {
                     <thead>
                         <tr>
                             <th>{t("Order ID")}</th>
+                            <th>{t("Order Date")}</th>
                             <th>{t("Customer")}</th>
                             <th>{t("Product")}</th>
                             <th>{t("Amount")}</th>
                             <th>{t("Status")}</th>
-                            <th>{t("Date")}</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {orders.map((order) => (
                             <tr key={order.id}>
                                 <td>{order.id}</td>
-                                <td>{order.customer}</td>
-                                <td>{order.product}</td>
-                                <td>{order.amount}</td>
-                                <td>
-                                    <span className={styles.status}>{order.status}</span>
-                                </td>
                                 <td>{order.date}</td>
+
+                                <td className={styles.cutomerInfo}>
+                                    <img src={order.customerImg} alt={order.customerName} />
+                                    {order.customerName}
+                                </td>
+                                <td className={styles.productInfo}>
+                                    <div className={styles.productWrapper}>
+                                        <img src={order.ProductImg} alt={order.Product} className={styles.productImg} />
+                                        <div>
+                                            <p>{order.Product.slice(0, 8)}</p>
+                                            <span>{order.quantity} PCS</span>
+                                        </div>
+                                    </div>
+                                </td>
+
+
+
+                                <td>{order.total}</td>
+                                <td>
+                                    <span
+                                        className={`${styles.status} ${order.status === "Delivered"
+                                            ? styles.delivered
+                                            : order.status === "Shipped"
+                                                ? styles.shipment
+                                                : ""
+                                            }`}
+                                    >
+                                        {order.status}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div className={styles.DropdownWrapper}>
+                                        <MoreVertical
+                                            onClick={() => handelDropDown(order.id)}
+                                            size={20}
+                                            color="#999"
+                                            className={styles.MoreIcon}
+                                        />
+                                        {openDropdownId === order.id && (
+                                            <div className={styles.Dropdown}>
+                                                <div onClick={() => {
+                                                    setSelectedProduct(order);
+                                                    setDrawerType("view");
+                                                    setExpandDrower(true);
+                                                }}>
+                                                    <Eye size={20} /> {t("View Details")}
+                                                </div>
+                                                <div><RefreshCw size={20} /> {t("Change Status")} <ChevronRight size={20} /></div>
+                                                <div><Edit3 size={20} /> {t("Edit Product")}</div>
+                                                <div><Upload size={20} /> {t("Export")}</div>
+                                                <div><Trash2 size={20} /> {t("Delete Product")}</div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </td>
+
+
                             </tr>
                         ))}
                     </tbody>
-                </table>
+
+                </table >
             )}
 
             <div className={styles.footer}>
@@ -90,7 +205,7 @@ const RecentOrdersTable = () => {
                     <button className={styles.pageButton}>{t("Next")}</button>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 
