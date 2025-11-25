@@ -141,7 +141,6 @@ const beneficiaryRequiredFields = [
     "address",
     "postal_code",
     "country_iso_code",
-    "msisdn",
     "email",
     "id_type",
     "id_country_iso_code",
@@ -925,6 +924,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     field = field === "firstname" ? "first_name" : field === "lastname" ? "last_name" : field
 
                     if (field === "country_iso_code") return
+                    // if(field === "")
 
                     if (beneficiaryRequiredFields.includes(field)) {
                         if (field === "postal_code" && internationalData.beneficiary?.zip_code === "") {
