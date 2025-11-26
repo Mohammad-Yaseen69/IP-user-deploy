@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import styles from "./styles/stepthree.module.css";
-import { reasons } from "../AmountAndCurrency";
+import thunesReasons from "./thunesReasons.json";
 import file from "../files/file.svg";
 import { useMemo, useState } from "react";
 
@@ -33,9 +33,9 @@ const StepThree = ({ data, dataHandler }) => {
 
     const dynamicReasons = useMemo(() => {
         if (data?.payoutChannel?.vendor === "thunes" || !data.neemaReasons) {
-            return reasons
+            return thunesReasons
         }
-        return Object.keys(data.neemaReasons).length === 0 ? reasons : data.neemaReasons
+        return data.neemaReasons
     }, [data?.payoutChannel])
 
     return (

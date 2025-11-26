@@ -442,8 +442,8 @@ const PaymentChannelUI = ({
                                             <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} disabled={isEdit ? !isValidIban || !isEditMode : !isValidIban} type="select" value={bankExtras[item]} name={item} onChange={handleBankExtraChange}>
                                                 <option value="">{t("Select Account Type")}</option>
                                                 {
-                                                    Object.keys(AccountTypeData).map(item => (
-                                                        <option value={item}>{AccountTypeData?.[item]}</option>
+                                                    Object.keys(AccountTypeData).map((item, idx) => (
+                                                        <option key={idx} value={item}>{AccountTypeData?.[item]}</option>
                                                     ))
                                                 }
                                             </Input>
@@ -543,10 +543,10 @@ const PaymentChannelUI = ({
                             </div>
                         </FormGroup>
                         {
-                            Object.keys(cardExtras).map(item => (
+                            Object.keys(cardExtras).map((item, idx) => (
                                 serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("card")), "credit_party_identifiers_accepted", item, fieldsInfo)
                                 &&
-                                <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
+                                <FormGroup key={idx} style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                     <Label className="col-form-label">{t(service_name_formatter(item))} <span className="req_star">*</span></Label>
                                     <Input disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" value={cardExtras[item]} name={item} onChange={handleCardExtraChange} />
                                 </FormGroup>
@@ -682,7 +682,7 @@ const PaymentChannelUI = ({
                     {
                         instapayWallets.map((value, index) => {
                             return (
-                                <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+                                <div key={index} style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                         <Label className="col-form-label" htmlFor="card-holder-name">{t("Wallet ID")} <span className="req_star">*</span></Label>
                                         <Input
@@ -764,10 +764,10 @@ const PaymentChannelUI = ({
                             <Input className="form-control" value={cashPickupNumber} onChange={e => setCashPickupNumber(e.target.value.replace(/[^a-zA-Z0-9]/g, ''))} name="crypto_wallet_address" style={{ flex: 1, minWidth: "250px" }} placeholder="ABCD12345WAD2" disabled={!mobileNumber || mobileNumber.length < 9} readOnly={!mobileNumber || mobileNumber.length < 9} />
                         </FormGroup>
                         {
-                            Object.keys(cashExtras)?.map(item => (
+                            Object.keys(cashExtras)?.map((item, idx) => (
                                 serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("cash")), "credit_party_identifiers_accepted", item, fieldsInfo)
                                 &&
-                                <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
+                                <FormGroup key={idx} style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                     <Label className="col-form-label">{t(service_name_formatter(item))} <span className="req_star">*</span></Label>
                                     <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" value={cashExtras?.[item]} name={item} onChange={handleCashxtraChange} />
                                 </FormGroup>

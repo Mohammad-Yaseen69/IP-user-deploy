@@ -431,8 +431,8 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
             <CardHeader style={{ padding: "30px 30px 0" }}>
                 <h4>{t("Download Your Data")}</h4>
             </CardHeader>
-            <CardBody style={{ padding: "0px 30px 30px" }}>
-                <div className="container mt-5">
+            <CardBody style={{ padding: "30px" }}>
+                <div className="mt-5">
                     <div className="mt-5">
                         <h4>
                             {t("Request a Copy of Your Data")}
@@ -463,60 +463,60 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                                 )}
                             </span>
                         </div>
-                        <div className="mt-5">
+                        <div className="mt-3">
                             <ul className="list-unstyled">
-                                <li className="d-flex justify-content-between align-items-center">
-                                    <div className="d-flex align-items-center gap-3" onClick={_ => setNameDob(!nameDob)}>
-                                        <div className="flex-none h1 text-primary">
-                                            <Calendar />
+                                <li className="d-flex justify-content-between align-items-center mb-3">
+                                    <div className="d-flex align-items-center gap-3 flex-grow-1" onClick={() => setNameDob(!nameDob)} style={{ cursor: "pointer" }}>
+                                        <div className="h1 text-primary" style={{ marginBottom: 0, flexShrink: 0 }}>
+                                            <Calendar size={24} />
                                         </div>
-                                        <div className="flex-1">
-                                            <div className="text-secondary mb-1">
+                                        <div>
+                                            <div className="text-secondary">
                                                 {t("Name and Date Of Birth")}
                                             </div>
                                         </div>
                                     </div>
-                                    <Input type="checkbox" checked={nameDob} onChange={e => setNameDob(e.target.checked)} />
+                                    <Input type="checkbox" checked={nameDob} onChange={e => setNameDob(e.target.checked)} style={{ flexShrink: 0, marginLeft: "1rem" }} />
                                 </li>
 
-                                <li className="d-flex justify-content-between align-items-center">
-                                    <div className="d-flex align-items-center gap-3" onClick={_ => setAddress(!address)}>
-                                        <div className="flex-none h1 text-primary">
-                                            <Home />
+                                <li className="d-flex justify-content-between align-items-center mb-3">
+                                    <div className="d-flex align-items-center gap-3 flex-grow-1" onClick={() => setAddress(!address)} style={{ cursor: "pointer" }}>
+                                        <div className="h1 text-primary" style={{ marginBottom: 0, flexShrink: 0 }}>
+                                            <Home size={24} />
                                         </div>
-                                        <div className="flex-1">
-                                            <div className="text-secondary mb-1">
+                                        <div>
+                                            <div className="text-secondary">
                                                 {t("Address")}
                                             </div>
                                         </div>
                                     </div>
-                                    <Input type="checkbox" checked={address} onChange={e => setAddress(e.target.checked)} />
+                                    <Input type="checkbox" checked={address} onChange={e => setAddress(e.target.checked)} style={{ flexShrink: 0, marginLeft: "1rem" }} />
                                 </li>
-                                <li className="d-flex justify-content-between align-items-center">
-                                    <div className="d-flex align-items-center gap-3" onClick={_ => setEmail(!email)}>
-                                        <div className="flex-none h1 text-primary">
-                                            <Mail />
+                                <li className="d-flex justify-content-between align-items-center mb-3">
+                                    <div className="d-flex align-items-center gap-3 flex-grow-1" onClick={() => setEmail(!email)} style={{ cursor: "pointer" }}>
+                                        <div className="h1 text-primary" style={{ marginBottom: 0, flexShrink: 0 }}>
+                                            <Mail size={24} />
                                         </div>
-                                        <div className="flex-1">
-                                            <div className="text-secondary mb-1">
+                                        <div>
+                                            <div className="text-secondary">
                                                 {t("Email")}
                                             </div>
                                         </div>
                                     </div>
-                                    <Input type="checkbox" checked={email} onChange={e => setEmail(e.target.checked)} />
+                                    <Input type="checkbox" checked={email} onChange={e => setEmail(e.target.checked)} style={{ flexShrink: 0, marginLeft: "1rem" }} />
                                 </li>
                                 <li className="d-flex justify-content-between align-items-center">
-                                    <div className="d-flex align-items-center gap-3" onClick={_ => setNumber(!number)}>
-                                        <div className="flex-none h1 text-primary">
-                                            <Phone />
+                                    <div className="d-flex align-items-center gap-3 flex-grow-1" onClick={() => setNumber(!number)} style={{ cursor: "pointer" }}>
+                                        <div className="h1 text-primary" style={{ marginBottom: 0, flexShrink: 0 }}>
+                                            <Phone size={24} />
                                         </div>
-                                        <div className="flex-1">
-                                            <div className="text-secondary mb-1">
+                                        <div>
+                                            <div className="text-secondary">
                                                 {t("Phone number")}
                                             </div>
                                         </div>
                                     </div>
-                                    <Input type="checkbox" checked={number} onChange={e => setNumber(e.target.checked)} />
+                                    <Input type="checkbox" checked={number} onChange={e => setNumber(e.target.checked)} style={{ flexShrink: 0, marginLeft: "1rem" }} />
                                 </li>
                             </ul>
                         </div>
@@ -532,64 +532,66 @@ const DownloadData = ({ isCollapsed, setIsCollapsed }) => {
                             )}
                         </span>
                     </div>
-                    <div className="mt-5">
+                    <div className="mt-3">
                         <ul className="list-unstyled">
-                            <li className="d-flex justify-content-between align-items-center">
-                                <div className="d-flex align-items-center gap-3" onClick={_ => setBankAccount(!bankAccount)}>
-                                    <div className="flex-none h1 text-primary">
-                                        <User />
+                            <li className="d-flex justify-content-between align-items-center mb-3">
+                                <div className="d-flex align-items-center gap-3 flex-grow-1" onClick={() => setBankAccount(!bankAccount)} style={{ cursor: "pointer" }}>
+                                    <div className="h1 text-primary" style={{ marginBottom: 0, flexShrink: 0 }}>
+                                        <User size={24} />
                                     </div>
-                                    <div className="flex-1">
-                                        <div className="text-secondary mb-1">
+                                    <div>
+                                        <div className="text-secondary">
                                             {t("Bank accounts")}
                                         </div>
                                     </div>
                                 </div>
-                                <Input type="checkbox" checked={bankAccount} onChange={e => setBankAccount(e.target.checked)} />
+                                <Input type="checkbox" checked={bankAccount} onChange={e => setBankAccount(e.target.checked)} style={{ flexShrink: 0, marginLeft: "1rem" }} />
                             </li>
 
                             <li className="d-flex justify-content-between align-items-center">
-                                <div className="d-flex align-items-center gap-3" onClick={_ => setCards(!cards)}>
-                                    <div className="flex-none h1 text-primary">
-                                        <CreditCard />
+                                <div className="d-flex align-items-center gap-3 flex-grow-1" onClick={() => setCards(!cards)} style={{ cursor: "pointer" }}>
+                                    <div className="h1 text-primary" style={{ marginBottom: 0, flexShrink: 0 }}>
+                                        <CreditCard size={24} />
                                     </div>
-                                    <div className="flex-1">
-                                        <div className="text-secondary mb-1">
+                                    <div>
+                                        <div className="text-secondary">
                                             {t("Debit or credit cards")}
                                         </div>
                                     </div>
                                 </div>
-                                <Input type="checkbox" checked={cards} onChange={e => setCards(e.target.checked)} />
+                                <Input type="checkbox" checked={cards} onChange={e => setCards(e.target.checked)} style={{ flexShrink: 0, marginLeft: "1rem" }} />
                             </li>
                         </ul>
                     </div>
                     <hr className="my-5" />
-                    <div className="mt-5">
+                    <div className="mt-3">
                         <ul className="list-unstyled">
-                            <li className="d-flex flex-column gap-2">
-                                <div className="d-flex gap-2 justify-content-between align-items-center mb-2">
-                                    <div style={{ maxWidth: "90%" }} onClick={_ => setCreditInfo(!creditInfo)}>
-                                        <h6 style={{ marginBottom: 0 }}>
+                            <li className="mb-3">
+                                <div className="d-flex justify-content-between align-items-start gap-3">
+                                    <div className="flex-grow-1" onClick={() => setCreditInfo(!creditInfo)} style={{ cursor: "pointer" }}>
+                                        <h6 style={{ marginBottom: "0.5rem" }}>
                                             {t("Credit Information")}
                                         </h6>
-                                        <span>{t("Includes your credit application information")}</span>
+                                        <span className="text-secondary small d-block">{t("Includes your credit application information")}</span>
                                     </div>
-                                    <Input type="checkbox" checked={creditInfo} onChange={e => setCreditInfo(e.target.checked)} />
-                                </div>
-                                <div className="d-flex gap-2 justify-content-between align-items-center">
-                                    <div style={{ maxWidth: "90%" }} onClick={_ => setOtherInfo(!otherInfo)}>
-                                        <h6 style={{ marginBottom: 0 }}>
-                                            {t("Other Information (not included in file)")}
-                                        </h6>
-                                        <span className="text-secondary">
-                                            {t("Includes device info, technical usage data, geolocation information, marketing preferences, consent history, and data used for other services such as credit, \nidentity verification, communications with PayPal, and third-party processors.")}
-                                        </span>
-                                    </div>
-                                    <Input type="checkbox" checked={otherInfo} onChange={e => setOtherInfo(e.target.checked)} />
+                                    <Input type="checkbox" checked={creditInfo} onChange={e => setCreditInfo(e.target.checked)} style={{ flexShrink: 0, marginTop: "0.25rem" }} />
                                 </div>
                             </li>
-                        </ul >
-                    </div >
+                            <li>
+                                <div className="d-flex justify-content-between align-items-start gap-3">
+                                    <div className="flex-grow-1" onClick={() => setOtherInfo(!otherInfo)} style={{ cursor: "pointer" }}>
+                                        <h6 style={{ marginBottom: "0.5rem" }}>
+                                            {t("Other Information (not included in file)")}
+                                        </h6>
+                                        <span className="text-secondary small d-block">
+                                            {t("Includes device info, technical usage data, geolocation information, marketing preferences, consent history, and data used for other services such as credit, identity verification, communications with PayPal, and third-party processors.")}
+                                        </span>
+                                    </div>
+                                    <Input type="checkbox" checked={otherInfo} onChange={e => setOtherInfo(e.target.checked)} style={{ flexShrink: 0, marginTop: "0.25rem" }} />
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                     <div className="border-bottom border-dashed border-secondary mt-5">
                         <h5>
                             {t("Choose file type:")}

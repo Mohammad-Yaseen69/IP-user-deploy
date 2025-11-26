@@ -17,7 +17,7 @@ const BeneficiaryCard = ({ user }) => {
     const { t } = useTranslation()
     const normalizeName = (s) => (s || "").toLowerCase().replace(/[^a-z]/g, "")
     const exact = countries.find(c => normalizeName(c.name) === normalizeName(user?.country_name))
-    const loose = countries.find(c => normalizeName(c.name).includes(normalizeName(user?.country_name)) || normalizeName(user?.country_name).includes(normalizeName(c.name)))
+    const loose = countries.find(c => normalizeName(c.name).includes(normalizeName(user?.country_name)) || normalizeName(user?.country_name).includes(normalizeName(c.name)) || user?.country_iso_code === c.alpha3)
     const country = exact || loose
     const itemCheck = (item) => user?.account_type.some(acc => acc.toLowerCase() === item);
     const { verifyToken } = useContext(UserContext)

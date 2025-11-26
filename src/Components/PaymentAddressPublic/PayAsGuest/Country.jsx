@@ -6,81 +6,84 @@ import { BsSearch } from "react-icons/bs";
 import { ChevronDown } from "react-feather";
 import { useTranslation } from "react-i18next";
 
-const Country = ({ data, dataHandler }) => {
+const ushareCountries = [
+  "FRA", "GLP", "MTQ", "REU", "GUF", "MYT",
+  "PYF", "MAF", "BLM", "SPM", "WLF", "NCL"
+];
+
+const Country = ({ data, dataHandler, username }) => {
   const { allowedCountries } = useContext(UserContext);
   const [search, setSearch] = useState("");
+  const [showList, setShowList] = useState(false);
+  const [ipCountry, setIpCountry] = useState(null);
   const countryRef = useRef(null);
-  const [showList, setShowList] = useState();
   const { t } = useTranslation();
 
-  const [ipCountry, setIpCountry] = useState({});
-
+  // Step 1: Base filtered countries based on allowedCountries & username
   const countries = useMemo(() => {
-    return allCountries.filter((item) =>
-      allowedCountries?.some((it) => it?.country_iso_code === item.alpha3)
+    const base = allCountries.filter(item =>
+      allowedCountries?.some(it => it?.country_iso_code === item.alpha3)
     );
-  }, [allowedCountries]);
 
-  const filtered = useMemo(() => {
-    if (!search) {
-      if (ipCountry) {
-        const filteredCountries = countries.filter(
-          (item) => item.alpha3 !== ipCountry.alpha3
-        );
-        return [ipCountry, ...filteredCountries];
-      }
-      return countries;
+    if (username === "spmfrance") {
+      return base.filter(c => ushareCountries.includes(c.alpha3));
     }
-    return countries.filter((item) =>
-      item?.name?.toLowerCase()?.includes(search?.toLowerCase())
-    );
+    if (username === "usharellc") {
+      return base.filter(c => !ushareCountries.includes(c.alpha3));
+    }
+
+    return base;
+  }, [allowedCountries, username]);
+
+  // Step 2: Final filtered list based on search + ipCountry
+  const filtered = useMemo(() => {
+    let list = countries;
+
+    if (search) {
+      list = countries.filter(item =>
+        item.name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    // Only include IP country if it exists in filtered list
+    if (ipCountry && list.some(c => c.alpha3 === ipCountry.alpha3)) {
+      list = [ipCountry, ...list.filter(c => c.alpha3 !== ipCountry.alpha3)];
+    }
+
+    return list;
   }, [countries, search, ipCountry]);
 
+  // Step 3: Get IP country from allowedCountries (full list)
   const getCountry = async () => {
-    const res = await fetch("https://geolocation-db.com/json/");
-    const data = await res.json();
-    const filteredCountry = allowedCountries.filter((item) =>
-      item.country_name
-        .toLowerCase()
-        .includes(data?.country_name?.toLowerCase())
-    )?.[0]?.country_iso_code;
-    if (filteredCountry) {
-      localStorage.setItem("ip_country", filteredCountry);
-      const coun = countries.find((item) => item.alpha3 === filteredCountry);
-      if (coun) {
-        dataHandler("country", coun);
-        dataHandler("shippingDetails", {
-          ...data.shippingDetails,
-          country: {
-            name: coun.name,
-            iso: coun.alpha3,
-          },
-        });
-        setIpCountry(coun);
+    try {
+      const res = await fetch("https://geolocation-db.com/json/");
+      const dataGeo = await res.json();
+
+      const ipIso = allowedCountries.find(
+        it => it.country_name.toLowerCase() === dataGeo?.country_name?.toLowerCase()
+      )?.country_iso_code;
+
+      if (ipIso) {
+        localStorage.setItem("ip_country", ipIso);
+        const coun = countries.find(item => item.alpha3 === ipIso);
+        if (coun) setIpCountry(coun);
       }
+    } catch (err) {
+      console.error("Failed to get IP country", err);
     }
   };
 
   useEffect(() => {
     const alpha3 = localStorage.getItem("ip_country");
     if (alpha3) {
-      const coun = countries.find((item) => item.alpha3 === alpha3);
-      if (coun) {
-        dataHandler("country", coun);
-        dataHandler("shippingDetails", {
-          ...data.shippingDetails,
-          country: {
-            name: coun?.name,
-            iso: coun?.alpha3,
-          },
-        });
-        setIpCountry(coun);
-      }
+      const coun = countries.find(item => item.alpha3 === alpha3);
+      if (coun) setIpCountry(coun);
     } else {
       getCountry();
     }
   }, [countries]);
 
+  console.log(data.country)
   return (
     <>
       <div
@@ -88,7 +91,7 @@ const Country = ({ data, dataHandler }) => {
         onClick={() => setShowList(true)}
         className={styles.selectFromList}
       >
-        {data.country ? (
+        {(typeof data.country === "object" && Object.keys(data.country).length > 0) ? (
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <img src={data?.country?.file_url} alt="" />
             <h3>{data?.country?.name}</h3>
@@ -96,32 +99,25 @@ const Country = ({ data, dataHandler }) => {
         ) : (
           <h3>Select From The List</h3>
         )}
-
         <ChevronDown />
       </div>
 
-      <div
-        className={`${styles.container} ${
-          showList ? styles.show : styles.hide
-        } `}
-      >
+      <div className={`${styles.container} ${showList ? styles.show : styles.hide}`}>
         <div className={styles.search_con}>
           <BsSearch className={styles.icon} size={18} />
           <input
             type="text"
             placeholder={t("Search")}
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={e => setSearch(e.target.value)}
           />
         </div>
         <div className={styles.list}>
           {filtered.length > 0 ? (
-            filtered.map((item) => (
+            filtered.map(item => (
               <div
                 key={item?.alpha3}
-                className={`${styles.item} ${
-                  data?.country?.alpha3 === item?.alpha3 ? styles.active : ""
-                }`}
+                className={`${styles.item} ${data?.country?.alpha3 === item?.alpha3 ? styles.active : ""}`}
                 onClick={() => {
                   dataHandler("country", item);
                   setShowList(false);

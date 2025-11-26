@@ -167,7 +167,7 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
 
     const confirmConversion = () => {
         setSaving(true)
-        if(currentWallet.wallet_type === "crypto"){
+        if(currentWallet?.wallet_type === "crypto"){
             setStep(2)
             return;
         }

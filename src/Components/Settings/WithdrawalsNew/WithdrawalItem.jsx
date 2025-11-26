@@ -249,7 +249,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                         "credit_party_identifiers_accepted",
                         item
                     ))
-                    .every(item => bankExtras?.[item]?.length > 0);
+                    .every(item => item === "iban" && accNumType === "IBAN" ? true : item === "swift_bic_code" && accNumType === "Swift" ? true : bankExtras?.[item]?.length > 0);
 
             setBankCompleted(isAllBankFieldsFilled);
         }

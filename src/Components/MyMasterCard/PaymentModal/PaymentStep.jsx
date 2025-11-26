@@ -16,6 +16,8 @@ import { UserContext } from '../../../Context/UserContext';
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption';
 import { toast } from 'react-toastify';
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption';
+import lockIcon from "../../PaymentsNewer/InternationalFlow/files/lock-03.png"
+import mainIcon from "../../PaymentsNewer/InternationalFlow/files/PCI-DSS-1 1.png"
 
 
 
@@ -237,6 +239,15 @@ const PaymentStep = (
                         {(cards.length > 0 && window.innerWidth > 1000) &&
                             saveCardJSX()
                         }
+                    </div>
+
+                    <div className={styles.pcontainer}>
+                        <div className={styles.secure}>
+                            <div className={styles.sectio1}><img src={lockIcon} alt="lock" style={{ width: "20px", height: "20px" }} />
+                                <p>{t('Payments are secure and encrypted by')}</p></div>
+                            <img src={mainIcon} alt="pci" style={{ width: "60px", height: "25px" }} />
+
+                        </div>
                     </div>
                 </div>
             }

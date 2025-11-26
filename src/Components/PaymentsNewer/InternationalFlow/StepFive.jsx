@@ -28,6 +28,8 @@ const StepFive = ({ data, dataHandler }) => {
             getExchangedAmounts()
         }
     }, [data])
+
+    console.log(data.wallet, data.currency_wallet, data.currency)
     return (
         <div className={styles.container}>
             <h4>{data.beneficiary?.first_name} {data?.beneficiary?.last_name}</h4>
@@ -73,7 +75,7 @@ const StepFive = ({ data, dataHandler }) => {
                         </div>
                     }
                     {
-                        (data.wallet?.currency ? data.wallet?.currency?.code !== data.exchange_rate?.receiver?.currency : false)
+                        (data.wallet?.currency ? data.wallet?.currency?.code !== data.exchange_rate?.receiver?.currency : data?.currency !== data?.exchange_rate?.receiver?.currency)
                         &&
                         <div className={styles.aao_item}>
                             <span>{t("Exchange Rate")}</span>

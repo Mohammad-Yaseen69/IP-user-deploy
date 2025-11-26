@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "./styles/index.module.scss";
 import { useTranslation } from "react-i18next";
 import InvoiceItem from "./InvoiceItem";
@@ -84,8 +84,8 @@ const InvoiceTable = ({ filteredInvoices, setEditModal }) => {
             inv.status === "Accepted"
               ? styles.badgeAccepted
               : inv.status === "Declined"
-              ? styles.badgeDeclined
-              : styles.badgeRequested;
+                ? styles.badgeDeclined
+                : styles.badgeRequested;
 
           return (
             <InvoiceItem
@@ -95,7 +95,7 @@ const InvoiceTable = ({ filteredInvoices, setEditModal }) => {
               sn={sn}
               badgeClass={badgeClass}
               inv={inv}
-              idx={idx}
+              key={idx}
             />
           );
         })}

@@ -20,6 +20,8 @@ import ip from "./instapay_black.svg";
 import PayWithCrypto from "./PayWithCrypto"
 import UserDets from "./UserDets"
 import { paymentAddressFlagCheck } from "../../utils/Functions";
+import useCountryLocation from "../../hooks/GeneralUse/useCountryLocation";
+import VpnModal from "../Auth/VpnModal";
 
 
 const QrDetails = lazy(() => import("./QrDetails"));
@@ -197,6 +199,7 @@ const getLimits = async (userName, wallet_id) => {
 const PaymentAddressComponent = ({ userDetails, userVideos }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const width = useWindowWidth();
+  const { country, showNoticeModal } = useCountryLocation()
   const playerRefs = useRef({});
 
 
@@ -232,6 +235,8 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
   const normalizeText = (text) => {
     return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   };
+
+  console.log(country, "country")
 
   const getImage = async (img, c) => {
     try {
@@ -385,150 +390,153 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
           <InstaPayLoader fallback />
         </div>
       ) : <div className={styles.container}>
-        {state.paymentAddressDetails ? (
-          <>
-            {state.showCreditModal && (
-              <PayAsGuest
-                amount={state.amount}
-                isOpen={state.showCreditModal}
-                toggle={toggleCreditModal}
-                user={userDetails}
-                wallet={state.currentWallet}
-                username={user_name}
-              />
-            )}
 
-            {state.showCryptoModal && (
-              <PayWithCrypto
-                user={userDetails}
-                data={state}
-                isOpen={state.showCryptoModal}
-                toggle={() => dataHandler("showCryptoModal", false)}
-                dataHandler={dataHandler}
-              />
-            )}
+        {showNoticeModal ? <VpnModal showNoticeModal={showNoticeModal} /> :
+          state.paymentAddressDetails ? (
+            <>
+              {state.showCreditModal && (
+                <PayAsGuest
+                  amount={state.amount}
+                  isOpen={state.showCreditModal}
+                  toggle={toggleCreditModal}
+                  user={userDetails}
+                  wallet={state.currentWallet}
+                  username={user_name}
+                />
+              )}
 
-            <Card
-              style={{ marginBottom: "0", boxShadow: "unset", width: "100%" }}
-              className={styles.sub_container}
-            >
-              <CardBody className={styles.sc_body}>
-                <div
-                  style={{
-                    flex: width > 1000 && width > 1350 ? 0.7 : 1,
-                    borderRadius: "16px",
-                    background: "white",
-                    width: width < 1000 && "100%",
-                    overflow: width < 100 && "hidden",
-                    alignSelf: width > 1000 && "stretch",
-                    display: width > 1000 && "grid",
-                    gap: "0px",
-                  }}
-                  className={styles.right}
-                >
-                  <UserDets
-                    cover={state.cover}
-                    croppedCover={state.croppedCover}
-                    croppedDp={state.croppedDp}
-                    dp={state.dp}
-                    setShowVerTT={(value) => dataHandler("showVerTT", value)}
-                    showVerTT={state.showVerTT}
-                    userCountry={state.userCountry}
-                    userDetails={userDetails}
-                    user_name={user_name}
-                    user={userDetails}
-                    paymentAddress={true}
-                    data={state}
-                    dataHandler={dataHandler}
+              {state.showCryptoModal && (
+                <PayWithCrypto
+                  user={userDetails}
+                  data={state}
+                  isOpen={state.showCryptoModal}
+                  toggle={() => dataHandler("showCryptoModal", false)}
+                  dataHandler={dataHandler}
+                />
+              )}
 
-                  />
+              <Card
+                style={{ marginBottom: "0", boxShadow: "unset", width: "100%" }}
+                className={styles.sub_container}
+              >
+                <CardBody className={styles.sc_body}>
+                  <div
+                    style={{
+                      flex: width > 1000 && width > 1350 ? 0.7 : 1,
+                      borderRadius: "16px",
+                      background: "white",
+                      width: width < 1000 && "100%",
+                      overflow: width < 100 && "hidden",
+                      alignSelf: width > 1000 && "stretch",
+                      display: width > 1000 && "grid",
+                      gap: "0px",
+                    }}
+                    className={styles.right}
+                  >
+                    <UserDets
+                      cover={state.cover}
+                      croppedCover={state.croppedCover}
+                      croppedDp={state.croppedDp}
+                      dp={state.dp}
+                      setShowVerTT={(value) => dataHandler("showVerTT", value)}
+                      showVerTT={state.showVerTT}
+                      userCountry={state.userCountry}
+                      userDetails={userDetails}
+                      user_name={user_name}
+                      user={userDetails}
+                      paymentAddress={true}
+                      data={state}
+                      dataHandler={dataHandler}
 
-                  <AmountContainer
-                    dataHandler={dataHandler}
-                    handleBlur={handleBlur}
-                    handleKeyUp={handleKeyUp}
-                    isEditable={true}
-                    state={state}
-                    toggleCreditModal={toggleCreditModal}
-                    url={url}
-                    toggleCryptoModal={() => {
-                      dataHandler("showCryptoModal", true)
-                      dataHandler("cryptoStatus", "Not Completed")
+                    />
+
+                    <AmountContainer
+                      dataHandler={dataHandler}
+                      handleBlur={handleBlur}
+                      handleKeyUp={handleKeyUp}
+                      isEditable={true}
+                      state={state}
+                      toggleCreditModal={toggleCreditModal}
+                      url={url}
+                      toggleCryptoModal={() => {
+                        dataHandler("showCryptoModal", true)
+                        dataHandler("cryptoStatus", "Not Completed")
+                      }
+                      }
+                      userDetails={userDetails}
+                    />
+
+                    {width < 1000 && (
+                      <div>
+                        <LeftJsx
+                          amount={state.amount}
+                          currency={state.currency}
+                          currentWallet={state.currentWallet}
+                          description={state.description}
+                          playerRefs={playerRefs}
+                          playingMediaId={state.playingMediaId}
+                          setPlayingMediaId={(value) =>
+                            dataHandler("playingMediaId", value)
+                          }
+                          title={state.title}
+                          user_name={user_name}
+                          userDetails={userDetails}
+                          userVideos={userVideos}
+                          width={width}
+                        />
+                      </div>
+                    )}
+                    {width < 1000 &&
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          flexDirection: "column",
+                          marginTop: "3rem"
+                        }}
+                      >
+                        <AnimatedHeader mobileUI />
+                        <img src={ip} alt="" style={{ margin: "20px auto", width: "200px" }} />
+                      </div>
                     }
-                    }
-                    userDetails={userDetails}
-                  />
-
-                  {width < 1000 && (
-                    <div>
-                      <LeftJsx
-                        amount={state.amount}
-                        currency={state.currency}
-                        currentWallet={state.currentWallet}
-                        description={state.description}
-                        playerRefs={playerRefs}
-                        playingMediaId={state.playingMediaId}
-                        setPlayingMediaId={(value) =>
-                          dataHandler("playingMediaId", value)
-                        }
-                        title={state.title}
-                        user_name={user_name}
-                        userDetails={userDetails}
-                        userVideos={userVideos}
-                        width={width}
-                      />
-                    </div>
+                  </div>
+                  {width > 1000 && (
+                    <LeftJsx
+                      amount={state.amount}
+                      currency={state.currency}
+                      currentWallet={state.currentWallet}
+                      description={state.description}
+                      playerRefs={playerRefs}
+                      playingMediaId={state.playingMediaId}
+                      setPlayingMediaId={(value) =>
+                        dataHandler("playingMediaId", value)
+                      }
+                      title={state.title}
+                      user_name={user_name}
+                      userDetails={userDetails}
+                      userVideos={userVideos}
+                      width={width}
+                    />
                   )}
-                  {width < 1000 &&
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        flexDirection: "column",
-                        marginTop: "3rem"
-                      }}
-                    >
-                      <AnimatedHeader mobileUI />
-                      <img src={ip} alt="" style={{ margin: "20px auto", width: "200px" }} />
-                    </div>
-                  }
-                </div>
-                {width > 1000 && (
-                  <LeftJsx
-                    amount={state.amount}
-                    currency={state.currency}
-                    currentWallet={state.currentWallet}
-                    description={state.description}
-                    playerRefs={playerRefs}
-                    playingMediaId={state.playingMediaId}
-                    setPlayingMediaId={(value) =>
-                      dataHandler("playingMediaId", value)
-                    }
-                    title={state.title}
-                    user_name={user_name}
-                    userDetails={userDetails}
-                    userVideos={userVideos}
-                    width={width}
-                  />
-                )}
+                </CardBody>
+              </Card>
+            </>
+          ) : (
+            <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
+              <CardBody>
+                <CardText>
+                  {t("This user hasn't set their payment address yet.")}{" "}
+                  <Link
+                    to={"/"}
+                    style={{ textDecoration: "underline", fontWeight: 600 }}
+                  >
+                    {t("Go back to Home.")}
+                  </Link>
+                </CardText>
               </CardBody>
             </Card>
-          </>
-        ) : (
-          <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
-            <CardBody>
-              <CardText>
-                {t("This user hasn't set their payment address yet.")}{" "}
-                <Link
-                  to={"/"}
-                  style={{ textDecoration: "underline", fontWeight: 600 }}
-                >
-                  {t("Go back to Home.")}
-                </Link>
-              </CardText>
-            </CardBody>
-          </Card>
-        )}
+          )
+        }
       </div>
       }
     </>

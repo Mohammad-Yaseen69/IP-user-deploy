@@ -139,7 +139,7 @@ const ApiKey = () => {
             <CardHeader>
                 <h4>{t("API Key")}</h4>
             </CardHeader>
-            {isLoading ?
+            {userDetails?.company?.kyb_status !== "approved" ? <p style={{fontWeight: 600, textAlign: "center", padding: "18px", fontSize: "15px"}}>{t("Only verified accounts are allowed to have api key. Please verify your account from the 'Business Verification' Tab then you can access feature.")}</p> : isLoading ?
                 <div className={styles.centerLoader}>
                     <InstaPayLoader />
                 </div> :

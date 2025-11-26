@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import styles from "./styles/TransactionItemDetails.module.css"
-import { useContext, useMemo, useState } from "react"
+import React, { useContext, useMemo, useState, useRef, useEffect } from "react"
 import countries from "../PaymentsNewer/CountriesData.json"
 import { service_name_formatter } from "./TransactionItem"
 import CatDown from "./CatDown"
@@ -27,6 +27,39 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
         return str[0]?.toUpperCase() + str?.slice(1)?.toLowerCase()
     }
     const [showImgPreview, setShowImgPreview] = useState(false)
+    const timelineContainerRef = useRef(null)
+    const timelineLabelRef = useRef(null)
+    const [isHorizontalTimeline, setIsHorizontalTimeline] = useState(true)
+
+    useEffect(() => {
+        const ITEM_WIDTH = 179.481
+        const LINE_WIDTH = 179.481
+
+        const measure = () => {
+            const n = item?.timeline?.length || 0
+            if (!timelineContainerRef.current || n === 0) return
+            const containerEl = timelineContainerRef.current
+            const labelW = timelineLabelRef.current ? timelineLabelRef.current.offsetWidth : 0
+            const containerW = containerEl.clientWidth
+
+            const safety = 0
+            const available = containerW - labelW - safety
+
+            const totalNeeded = (ITEM_WIDTH * n) + (LINE_WIDTH * Math.max(0, n - 1))
+
+            setIsHorizontalTimeline(totalNeeded <= available)
+
+        }
+
+        measure()
+        const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(measure) : null
+        if (ro && timelineContainerRef.current) ro.observe(timelineContainerRef.current)
+        window.addEventListener('resize', measure)
+        return () => {
+            if (ro) ro.disconnect()
+            window.removeEventListener('resize', measure)
+        }
+    }, [item?.timeline])
 
     const reversedText = "The transaction has been reversed, and the funds have been added back to your CHF currency wallet."
 
@@ -346,11 +379,21 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                     &&
                     <div className={`${styles.r_item} ${styles.status}`}>
                         <span>{t("Status")}:</span>
-                        <div className={status_styles.td_bottom} style={{ flex: 1, width: "100%", justifyContent: "flex-start", gap: "5rem" }}>
+                        <div
+                            ref={timelineContainerRef}
+                            className={`${status_styles.td_bottom} ${!isHorizontalTimeline ? status_styles.vertical : ""}`}
+                            style={{ flex: 1, width: "100%", justifyContent: "flex-start", gap: "5rem" }}
+                        >
                             {
                                 item?.timeline?.map((it, i) => (
-                                    <>
-                                        <div key={it?._id} className={status_styles.status_item} style={{ backgroundColor: window.innerWidth > 1000 ? "white" : "inherit", "--width": "5rem" }}>
+                                    <React.Fragment key={it?._id}>
+                                        <div
+                                            className={status_styles.status_item}
+                                            style={{
+                                                backgroundColor: window.innerWidth > 1000 ? "white" : "inherit",
+                                                "--width": "5rem"
+                                            }}
+                                        >
                                             <h5>{t("Transfer created").replace("created", it?.status?.toLowerCase())}</h5>
                                             <p>{new Date(it?.date).toLocaleString()}</p>
                                         </div>
@@ -361,51 +404,12 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                                                 <Check color="white" size={10} />
                                             </div>
                                         }
-                                    </>
+                                    </React.Fragment>
                                 ))
                             }
                         </div>
                     </div>
                 }
-                {!item.cardNo &&
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        {
-                            message
-                                ?
-                                <span style={{ fontWeight: 700 }}>{message}</span>
-                                :
-                                <div></div>
-                        }
-                        {
-                            isEditMode
-                                ?
-                                <Button style={{
-                                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                                    border: "none",
-                                    outline: "none",
-                                    borderRadius: "10px"
-                                }}
-                                    onClick={addCategoriesToTransaction}
-                                    disabled={isSaving || (selectedCategory.length < 1 && !note)}
-                                >
-                                    {isSaving ? t("Saving") : t("Save")}
-                                </Button>
-                                :
-                                <Button style={{
-                                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                                    border: "none",
-                                    outline: "none",
-                                    borderRadius: "10px"
-                                }}
-                                    onClick={() => {
-                                        setIsEditMode(true)
-                                        setMessage("")
-                                    }}
-                                >
-                                    {t("Edit")}
-                                </Button>
-                        }
-                    </div>}
             </div>
         </div>
     )

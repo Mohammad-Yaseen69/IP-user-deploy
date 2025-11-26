@@ -38,6 +38,8 @@ import AddBeneficiaryAddressModal from "../../AddBeneficiaryAddressModal"
 import RecentTransactions from "../WalletToWalletFlow/RecentTransactions"
 import { useQuery } from "@tanstack/react-query"
 import { apiWrapper } from "../../../utils/Functions/apiWrapper"
+import { logger } from "@sentry/react"
+import { formatDateTime } from "../../ReceiptInvoices/InvoiceTable"
 
 const leftSideContent = [
     "Enter The Amount",
@@ -141,7 +143,6 @@ const beneficiaryRequiredFields = [
     "address",
     "postal_code",
     "country_iso_code",
-    "msisdn",
     "email",
     "id_type",
     "id_country_iso_code",
@@ -223,7 +224,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             });
             updateInternationalData("neemaReasons", res.data);
         },
-        enabled: !!internationalData.country?.alpha3 && internationalData.payoutChannel?.vendor?.toLowerCase() === "neema"
+        enabled: !!internationalData.country?.alpha3 && internationalData.payoutChannel?.vendor?.toLowerCase() === "neema",
+        retry: 3
     })
 
 
@@ -244,7 +246,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 if (userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status !== "approved" : userDetails?.company?.kyb_status !== "approved") {
                     return false
                 }
-                return !internationalData.amount || +String(internationalData.amount)?.replaceAll(",", "") < 1 || !internationalData.currency || !internationalData.currency_wallet?.currency?.code || !internationalData.country?.name || !internationalData?.payoutChannel?.name || !internationalData?.payer?.name || internationalData.error || internationalData.exchange_rate_error || !internationalData.exchange_rate?.receiver?.amount > 0
+                return !internationalData.amount || Number(String(internationalData.amount)?.replaceAll(",", "")) < 1 || !internationalData.currency || !internationalData.currency_wallet?.currency?.code || !internationalData.country?.name || !internationalData?.payoutChannel?.name || !internationalData?.payer?.name || internationalData.error || internationalData.exchange_rate_error || !internationalData.exchange_rate?.receiver?.amount > 0
 
             case 2:
                 return !internationalData.beneficiary?._id
@@ -407,6 +409,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const getExchangeRateNew = async (amount, setLimitType, wallet_id = "", currency_code = "", avoid_balance = true, setLoading = () => { }) => {
         setLoading(true)
         updateInternationalData("exchange_rate_error", "")
+        if (!amount) return;
         try {
             const dataa = {
                 wallet_id: wallet_id,
@@ -444,9 +447,14 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             }
 
             if (decrypted?.data?.result?.paypal) exchange_rate_details.paypal = decrypted?.data?.result?.paypal;
-            console.log(decrypted)
             updateInternationalData("exchange_rate", exchange_rate_details)
             updateInternationalData("quotation_details", decrypted?.data)
+
+            logger.info(`Exchange rate api called for user ${userDetails?.username} at ${formatDateTime(Date.now())} `, {
+                data: decrypted?.data,
+                currentState: internationalData,
+                userDetails: userDetails,
+            })
             if (+amount > exchange_rate_details?.limits_used?.daily_sending_limit_used) {
                 updateInternationalData("exchange_rate_error", "exceed send")
                 setLimitType("daily")
@@ -469,7 +477,12 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         } catch (err) {
             const dec = decryptData(err?.response.data.data)
             updateInternationalData("ex_extra_error", typeof dec?.message === "string" ? dec?.message : dec?.message?.[0]?.message ? "We were unable to process your request at the moment please try again later." : "")
-            console.log(dec)
+
+            logger.error(`Exchange rate api failed for user ${userDetails?.username} at ${formatDateTime(Date.now())} with error message: ${dec?.message || dec?.code}`, {
+                errorData: dec,
+                currentState: internationalData,
+                userDetails: userDetails
+            })
             if (typeof dec?.message == "object") {
                 if (dec?.message?.[0]?.code === "1003007") {
                     updateInternationalData("exchange_rate_error", "payer_unavailable")
@@ -566,13 +579,16 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         let timeout;
         if (internationalData.payment_type?.value) {
             if (internationalData.payment_type?.value !== "card") updateInternationalData("showCard", false)
+            if (internationalData.payment_type?.value === "wallet" && !internationalData?.wallet?._id) return;
+            if (internationalData?.payment_type?.value !== "wallet") {
+                updateInternationalData("wallet", {})
+            }
             const getAmount = async () => {
                 let amount;
                 if (internationalData.payment_type?.value === "wallet" && internationalData?.wallet?.currency /*&& internationalData?.wallet?.currency?.code !== internationalData?.currency_wallet?.currency?.code*/) {
                     amount = await getPlainExchangeRate(internationalData?.currency_wallet?.currency?.code, internationalData?.wallet?.currency?.code, Number(String(internationalData.amount)?.replaceAll(",", "")))
                 } else {
-
-                    amount = +String(internationalData?.amount)?.replaceAll(",", "")
+                    amount = Number(String(internationalData.amount)?.replaceAll(",", ""))
                 }
                 return amount
             }
@@ -738,7 +754,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         setLoading(true)
         try {
             const data = {
-                "amount": +String(internationalData.amount)?.replaceAll(",", ""),
+                "amount": Number(String(internationalData.amount)?.replaceAll(",", "")),
                 "token": internationalData.quotation_details?.token,
                 "payerId": internationalData.payer?.id,
                 "wallet_id": internationalData?.currency_wallet?._id,
@@ -887,7 +903,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
 
     const handleClick = () => {
-        console.log(+String(internationalData.amount)?.replaceAll(",", ""), internationalData.thunesBalance)
+        console.log(Number(String(internationalData.amount)?.replaceAll(",", "")), internationalData.thunesBalance)
         switch (subStep) {
             case 1:
                 {
@@ -903,7 +919,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                         updateInternationalData("error", internationalData.thunesBalanceError)
                         return
                     }
-                    const amount = +String(internationalData.amount)?.replaceAll(",", "")
+                    const amount = Number(String(internationalData.amount)?.replaceAll(",", ""))
                     if (amount <= internationalData.thunesBalance) {
                         setSubStep(prev => prev + 1)
                     } else {
@@ -925,6 +941,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     field = field === "firstname" ? "first_name" : field === "lastname" ? "last_name" : field
 
                     if (field === "country_iso_code") return
+                    // if(field === "")
 
                     if (beneficiaryRequiredFields.includes(field)) {
                         if (field === "postal_code" && internationalData.beneficiary?.zip_code === "") {
@@ -978,7 +995,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     updateInternationalData("showCard", true)
 
                     if (internationalData.payoutChannel?.vendor === "thunes") {
-                        createQuotation(+String(internationalData.amount)?.replaceAll(",", ""))
+                        createQuotation(Number(String(internationalData.amount)?.replaceAll(",", "")))
                     } else {
                         setSubStep(prev => prev + 1)
                     }
@@ -986,33 +1003,29 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 }
                 else if (internationalData.payment_type?.value === "paypal") {
                     if (internationalData.payoutChannel?.vendor === "thunes") {
-                        createQuotation(+String(internationalData.amount)?.replaceAll(",", ""))
+                        createQuotation(Number(String(internationalData.amount)?.replaceAll(",", "")))
                     } else {
                         setSubStep(prev => prev + 1)
                     }
                 }
                 // })
                 else {
-                    getPlainExchangeRate(internationalData.currency_wallet?.currency?.code, internationalData.wallet?.currency?.code, internationalData.amount)
-                        .then(res => {
-                            if (internationalData?.wallet?._id) {
-                                getExchangeRateNew(res, () => { }, internationalData.wallet?._id, internationalData?.wallet?.currency?.code, false, setLoading)
-                                    .then(() => {
-                                        setTimeout(() => {
-                                            if (internationalData.payoutChannel?.vendor === "thunes") {
-                                                createQuotation(res)
-                                            } else {
-                                                setSubStep(prev => prev + 1)
-                                            }
-                                        }, 100)
-                                    })
-                            }
-                        })
+                    if (internationalData?.wallet?._id) {
+                        if (internationalData.payoutChannel?.vendor === "thunes") {
+                            createQuotation(Number(String(internationalData.amount)?.replaceAll(",", "")))
+                        } else {
+                            setSubStep(prev => prev + 1)
+                        }
+                    }
+
                 }
                 break;
             case 5:
-                console.log("ADFADFASDF")
-                setSubStep(prev => prev + 1)
+                if (internationalData.showCard) {
+                    updateInternationalData("showCard", false)
+                } else {
+                    setSubStep(prev => prev + 1)
+                }
                 break;
             case 6:
                 if (internationalData.showCard) {
@@ -1239,7 +1252,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 internationalData.cardTransactionDetails?.intlToken || internationalData.cardTransactionDetails?.w2w_data
                     ?
                     <TrustpaymentPage
-                        amount={+String(internationalData.amount)?.replaceAll(",", "")}
+                        amount={Number(String(internationalData.amount)?.replaceAll(",", ""))}
                         card_cvc={internationalData.cvc}
                         card_expiry={internationalData.expiry}
                         card_number={internationalData.cardNumber}
