@@ -1067,9 +1067,60 @@
     }
 }
 
+.pcontainer {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 1rem;
+    width: 100%;
+}
+
+.secure {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+}
+
+.secure p {
+    color: #768EA7;
+    font-family: Manrope;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 18px;
+    letter-spacing: -0.12px;
+    padding: 0;
+    margin: 0;
+}
+
+.sectio1 {
+    display: flex;
+    align-items: center;
+    align-items: center;
+}
+
 @media screen and (max-width: 1000px) {
     .mobileView {
         display: block;
+    }
+
+    .pcontainer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+    }
+
+    .secure {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pcontainer img {
+        width: 55px;
+        height: 22px;
+        aspect-ratio: 5/2;
     }
 
     .container {
