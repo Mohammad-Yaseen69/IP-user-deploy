@@ -166,7 +166,7 @@ const Withdraw = ({ isOpen, toggle, wallet }) => {
                                             borderRadius: "8px",
                                             padding: ".7rem 2.5rem"
                                         }}
-                                            disabled={mainStep === 1 ? !withdrawType : (mainStep === 2 && withdrawType === "default")}
+                                            disabled={mainStep === 1 ? !withdrawType : !currentWithdrawal}
                                             onClick={() => (
                                                 (userDetails?.account_type === "individual"
                                                     ? userDetails?.user?.kyc_status === "approved"

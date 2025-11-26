@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from 'react'
 import { Check } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Card, CardBody } from 'reactstrap'
+import { Card, CardBody } from 'reactstrap' 
 import i from "../../PaymentsNewer/files/PaymentsNewFiles/i.svg"
 import { UserContext } from '../../../Context/UserContext'
 import countries from "../../PaymentsNewer/CountriesData.json"
@@ -36,6 +36,7 @@ const ChooseWithdrawal = ({ current, setCurrent, withdrawal }) => {
                     <div style={{}}>
                         {service_name_formatter(withdrawal?.account_type?.join("_"))}
                     </div>
+                    <span>{withdrawal.name}</span>
                 </div>
                 {
                     current === "default"
