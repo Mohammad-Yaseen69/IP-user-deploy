@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
 import styles from "../styles/cardToWallet.module.scss"
 import { ctw_white } from '../files'
@@ -26,7 +26,7 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
     // const [sideText, setSideText] = useState("")
     const [step, setStep] = useState(1)
     const [option, setOption] = useState("my")
-    const { userWallets, authHeader } = useContext(UserContext)
+    const { userWallets, authHeader, userDetails } = useContext(UserContext)
     const [userWallet, setUserWallet] = useState({})
     const [recipient, setRecipient] = useState({})
     const [amount, setAmount] = useState()
@@ -63,6 +63,16 @@ const CardtoWallet = ({ isOpen, setOpen, card, setCurrentCardDetails, currentCar
             navigate("/my-mastercard")
         }
     }
+
+    useEffect(() => {
+        if(userDetails){
+            if(userDetails?.tfa){
+                setCodeType("authenticator")
+            }else{
+                setCodeType("sms")
+            }
+        }
+    },[userDetails])
 
     const filteredWallets = useMemo(() => {
         return userWallets
