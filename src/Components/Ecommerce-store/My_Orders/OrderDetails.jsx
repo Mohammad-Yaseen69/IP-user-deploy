@@ -1,12 +1,11 @@
 import { Button, IconButton, Tab, Tabs } from '@mui/material'
 import { useState } from 'react'
-import { ChevronDown, Star, X } from 'react-feather'
+import { Star, X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import OrderHistory from '../Products/OrderHistory'
-import OrderOverView from './OrderOverView'
-import style from "./styles/Drawer.module.scss"
-import ShippingDetails from './ShippingDetails'
 import { FaMessage } from 'react-icons/fa6'
+import OrderOverView from './OrderOverView'
+import ShippingDetails from './ShippingDetails'
+import style from "./styles/Drawer.module.scss"
 const OrderDetials = ({ ExpandDrower, setExpandDrower, product }) => {
     const { t } = useTranslation()
     const [activeTab, setActiveTab] = useState(0);

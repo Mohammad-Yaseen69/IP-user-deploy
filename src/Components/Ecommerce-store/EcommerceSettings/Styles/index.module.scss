@@ -16,23 +16,20 @@
       margin-bottom: 8px;
       .btnhead {
         display: flex;
-        padding: var(--2, 8px) var(--4, 16px);
+        padding: 0px 15px;
         justify-content: center;
         align-items: center;
-        gap: var(--1, 4px);
-        border-radius: var(--rounded-LG, 8px);
+        border-radius: 8px;
         border: none;
-        color: #000;
         color: var(--Gray-500, #737373);
-        font-family: Manrope;
-        font-size: 16px;
-        font-style: normal;
+        font-size: 12px;
         font-weight: 600;
-        line-height: 130%;
       }
-      .btnhead:active {
-        color: #fff;
+
+      .active {
         background-color: var(--primary-500, #6366f1);
+        color: #fff !important;
+        border-radius: 8px;
       }
     }
   }

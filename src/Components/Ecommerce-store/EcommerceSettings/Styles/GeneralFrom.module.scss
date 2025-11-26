@@ -1,0 +1,341 @@
+.formContainer {
+  padding: 20px 5px;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  div h4 {
+    color: var(--text-black-12, #141414);
+    font-family: var(--font-family-heading, Geist);
+    font-size: var(--font-size-heading-H6, 20px);
+    font-style: normal;
+    font-weight: 600;
+    line-height: var(--font-line-height-heading-xxs, 28px); /* 140% */
+    letter-spacing: -0.2px;
+  }
+  .form {
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    flex-direction: column;
+    .logoSection {
+      display: flex;
+      justify-content: start;
+      width: 100%;
+      margin-bottom: 20px;
+      gap: 5%;
+      .logoPreview {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        span {
+          color: var(--text-black-12, #141414);
+          font-family: Manrope;
+          font-size: var(--font-size-text-med, 14px);
+          font-style: normal;
+          font-weight: 600;
+          line-height: var(--font-line-height-text-sm, 20px); /* 142.857% */
+        }
+        .logoSize {
+          color: #8a8a8a;
+          font-family: Manrope;
+        }
+        div {
+          position: relative;
+          img {
+            width: 70px;
+            height: 70px;
+            border-radius: 100%;
+            object-fit: cover;
+            border: 1px solid var(--Gray-200, #e5e5e5);
+            position: relative;
+          }
+          .trashIcon {
+            display: flex;
+            padding: 8px;
+            align-items: center;
+            gap: 10px;
+            position: absolute;
+            left: 50%;
+            top: 60%;
+            border-radius: var(--rad-full, 999px);
+            border: 1.5px solid var(--bg-white-card, #fff);
+            background: var(--bg-error-solid, #f14437);
+            color: #fff;
+          }
+        }
+        .UploadLogo {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          position: relative;
+          span {
+            color: var(--text-black-12, #141414);
+            font-family: Manrope;
+            font-size: var(--font-size-text-med, 14px);
+            font-style: normal;
+            font-weight: 600;
+            line-height: var(--font-line-height-text-sm, 20px); /* 142.857% */
+          }
+          img {
+            display: flex;
+            width: 50px;
+            height: 50px;
+            justify-content: center;
+            align-items: center;
+          }
+          .trashIcon1 {
+            display: flex;
+            padding: 4px;
+            align-items: center;
+            gap: 10px;
+            border-radius: var(--rad-full, 999px);
+            border: 1.5px solid var(--bg-white-card, #fff);
+            background: var(--bg-error-solid, #f14437);
+            color: #fff;
+          }
+        }
+        :nth-child(4) {
+          color: #8a8a8a;
+        }
+      }
+    }
+    $gap-12: 12px;
+    $gap-8: 8px;
+    $rad-med: 8px;
+    $stroke-mid-4: #f0f0f0;
+
+    .socialLinksContainer {
+      display: flex;
+      flex-direction: column;
+      gap: $gap-8;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .socialLinkRow {
+      display: flex;
+      align-items: center;
+      gap: $gap-12;
+      padding: 0;
+      .socialLinkName {
+        width: 150px;
+        display: flex;
+        padding: $gap-8 $gap-12;
+        align-items: center;
+        align-self: stretch;
+        border-radius: $rad-med;
+        border: 1px solid $stroke-mid-4;
+        background: #fff;
+        width: 100%;
+        height: 40px;
+        color: #555;
+        font-size: 14px;
+      }
+
+      .iconWrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 18px;
+        height: 18px;
+        border-radius: 2px;
+        padding: 13px;
+        background-color: #5926f0;
+        color: #fff;
+        margin-right: 10px;
+      }
+
+      .socialLinkInput {
+        flex-grow: 1;
+        width: 100%;
+      }
+
+      .socialLinkInput input {
+        display: flex;
+        padding: $gap-8 $gap-12;
+        align-items: center;
+        align-self: stretch;
+        border-radius: $rad-med;
+        border: 1px solid $stroke-mid-4;
+        background: #fff;
+        width: 100%;
+        height: 40px;
+        color: #555;
+        font-size: 14px;
+      }
+    }
+
+    .inputGroup {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+      margin-bottom: 10px;
+      label {
+        color: var(--text-black-12, #141414);
+        font-family: Manrope;
+        font-size: var(--font-size-text-med, 14px);
+        font-style: normal;
+        font-weight: 600;
+        line-height: var(--font-line-height-text-sm, 20px);
+      }
+      input,
+      select {
+        display: flex;
+        padding: var(--gap-gap-8, 8px) var(--gap-gap-12, 12px);
+        align-items: center;
+        gap: var(--gap-gap-8, 8px);
+        align-self: stretch;
+        border-radius: var(--rad-med, 8px);
+        border: 1px solid var(--stroke-mid-4, #f0f0f0);
+        background: var(--bg-white-card, #fff);
+        width: 100%;
+        cursor: pointer;
+      }
+      .ctaGroup {
+        display: flex;
+        gap: 10px;
+      }
+    }
+    $gap-16: 16px;
+    $gap-8: 8px;
+    $rad-med: 8px;
+    $color-border: #d1d5db;
+    $color-primary: #800080;
+
+    .UploadGroup {
+      display: flex;
+      flex-direction: column;
+      gap: $gap-8;
+      width: 100%;
+      margin-bottom: 20px;
+      label {
+        color: var(--text-black-12, #141414);
+        font-family: Manrope;
+        font-size: var(--font-size-text-med, 14px);
+        font-style: normal;
+        font-weight: 600;
+        line-height: var(--font-line-height-text-sm, 20px);
+      }
+      .DropZone {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 3px * 3 $gap-16;
+        border: 1px dashed $color-border;
+        border-radius: $rad-med;
+        background: #fafafa;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+          border-color: darken($color-border, 10%);
+        }
+      }
+
+      .FileInput {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 10;
+      }
+
+      .DropZoneContent {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: $gap-8;
+        z-index: 5;
+      }
+
+      .IconWrapper {
+        font-size: 24px;
+        color: #6b7280;
+        margin-bottom: $gap-8;
+      }
+
+      .DragDropText {
+        font-weight: 500;
+        color: #333;
+        font-size: 14px;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .BrowseLink {
+        color: $color-primary;
+        text-decoration: none;
+        font-weight: 600;
+        color: var(--COLORS-Primary-300, #5926f0);
+        font-family: Manrope;
+        font-size: var(--font-size-text-med, 14px);
+        font-style: normal;
+        font-weight: 600;
+        line-height: var(--font-line-height-text-sm, 20px);
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      .FormatInfo {
+        color: #9ca3af;
+        font-size: 12px;
+      }
+    }
+  }
+  .formContent {
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    gap: 2%;
+    width: 100%;
+    .leftCol {
+      width: 50%;
+      height: auto;
+      h2 {
+        color: var(--text-black-12, #141414);
+        font-family: Manrope;
+        font-size: var(--font-size-text-based, 16px);
+        font-style: normal;
+        font-weight: 700;
+        line-height: var(--font-line-height-text-based, 24px); /* 150% */
+        letter-spacing: -0.16px;
+      }
+      p {
+        color: var(--text-black-12, #8a8a8a);
+        font-family: Manrope;
+        font-size: var(--font-size-text-med, 14px);
+        font-style: normal;
+        font-weight: 500;
+        line-height: var(--font-line-height-text-sm, 20px); /* 142.857% */
+      }
+    }
+  }
+  .heroSection {
+    position: absolute;
+    top: 47%;
+    width: 29%;
+  }
+  .heroSection2 {
+    position: absolute;
+    top: 71%;
+    width: 29%;
+  }
+  .heroSection3 {
+    position: absolute;
+    top: 88.7%;
+    width: 29%;
+  }
+}
