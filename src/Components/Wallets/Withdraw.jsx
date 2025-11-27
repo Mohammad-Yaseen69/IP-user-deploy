@@ -101,6 +101,9 @@ const Withdraw = ({ isOpen, toggle, wallet }) => {
                                     userWithdrawals={currentWithdrawal}
                                     defaultId={defaultId}
                                     currentWithdrawal={currentWithdrawal}
+                                    setCurrentWithdrawal={setCurrentWithdrawal}
+                                    withdrawType={withdrawType}
+                                    setMainStep={setMainStep}
                                 />
                                 :
                                 <>
@@ -115,7 +118,8 @@ const Withdraw = ({ isOpen, toggle, wallet }) => {
                                         }
                                         {
                                             mainStep === 2
-                                                ? withdrawType === "specify"
+                                                ?
+                                                withdrawType === "specify"
                                                     ?
                                                     userWithdrawals?.length > 0
                                                         ?
@@ -161,12 +165,34 @@ const Withdraw = ({ isOpen, toggle, wallet }) => {
 
                                     </ModalBody>
                                     <ModalFooter>
+                                        {
+                                            mainStep > 1 &&
+                                            <Button color='transparent' style={{
+                                                borderRadius: "8px",
+                                                padding: ".6rem 1.25rem",
+                                                marginRight: "8px"
+                                            }}
+                                                onClick={() => {
+                                                    setMainStep(prev => {
+                                                        const next = Math.max(1, prev - 1)
+                                                        if (next === 1) {
+                                                            setWithdrawType("")
+                                                            setCurrentWithdrawal(null)
+                                                            setDefaultId(null)
+                                                        }
+                                                        return next
+                                                    })
+                                                }}
+                                            >
+                                                {t("Back")}
+                                            </Button>
+                                        }
                                         <Button color='primary' style={{
                                             backgroundColor: "#5926f0",
                                             borderRadius: "8px",
                                             padding: ".7rem 2.5rem"
                                         }}
-                                            disabled={mainStep === 1 ? !withdrawType : (mainStep === 2 && withdrawType === "default")}
+                                            disabled={mainStep === 1 ? !withdrawType : !currentWithdrawal}
                                             onClick={() => (
                                                 (userDetails?.account_type === "individual"
                                                     ? userDetails?.user?.kyc_status === "approved"
@@ -225,7 +251,10 @@ const WithdrawOldFlow = ({
     setTransactionDetails,
     userWithdrawals,
     defaultId,
-    currentWithdrawal
+    currentWithdrawal,
+    setCurrentWithdrawal,
+    withdrawType,
+    setMainStep
 }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
@@ -270,8 +299,8 @@ const WithdrawOldFlow = ({
                     }
                     setSubService(modifiedPayer)
                 })
-                .catch(err => {
-                    // console.log(err)
+                .catch(() => {
+                    // ignored
                 })
         }
     }, [payoutChannel])
@@ -361,6 +390,43 @@ const WithdrawOldFlow = ({
     useEffect(() => {
         setCodeType(userDetails?.tfa ? "authenticator" : "sms")
     }, [userDetails])
+
+    const handleBack = () => {
+        if (step === 1) {
+            setCurrentWithdrawal(null)
+            if(withdrawType !== "specify"){
+                setMainStep(1)
+            }
+            return;
+        }
+        const next = Math.max(1, step - 1)
+        setStep(next)
+
+        if (next === 1) {
+            setPayoutChannel("")
+            setAmount(1.00)
+            setAmountError("")
+            setQuotationDetails(null)
+            setSubService(null)
+            setCreatedQuotation(null)
+            setCreatedTransaction("")
+            setTransactionDetails("")
+            setConfirmed(false)
+            setIsExternalWithdrawal(false)
+            setExchangeRate(undefined)
+            setShowNotice(false)
+            setAgree(false)
+            setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        } else if (next === 2) {
+            // If stepping back to step 2, clear anything created in step 3/4
+            setCreatedQuotation(null)
+            setCreatedTransaction("")
+            setTransactionDetails("")
+            setConfirmed(false)
+            setShowNotice(false)
+            setAgree(false)
+        }
+    }
     return (
         <>
             <ModalBody style={{ padding: step === 4 && confirmed && window.innerWidth < 450 ? "0" : "25px" }}>
@@ -509,10 +575,22 @@ const WithdrawOldFlow = ({
                     />
                 }
             </ModalBody>
+
             {
                 step < 3
                 &&
                 <ModalFooter>
+
+                    <Button color='transparent' style={{
+                        borderRadius: "8px",
+                        padding: ".6rem 1.25rem",
+                        marginRight: "8px"
+                    }}
+                        onClick={handleBack}
+                    >
+                        {t("Back")}
+                    </Button>
+
                     {
                         validPayouts
                             ?

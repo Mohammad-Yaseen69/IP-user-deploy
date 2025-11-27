@@ -27,7 +27,8 @@ const PayoutChannel = ({
                 icon: bd,
                 value: "bank",
                 sub_value: "bank_details",
-                neemaId: 2
+                neemaId: 2,
+                withdrawalName: userWithdrawals?.bank_details?.[0]?.name
             } : { id: 1000 },
         userWithdrawals?.cash_pickup?.length > 0
             ?
@@ -37,7 +38,9 @@ const PayoutChannel = ({
                 icon: cp,
                 value: "cash",
                 sub_value: "cash_pickup",
-                neemaId: 1
+                neemaId: 1,
+                withdrawalName: userWithdrawals?.cash_pickup?.[0]?.document_number
+
             } : { id: 1000 },
         userWithdrawals?.mobile_wallet?.length > 0
             ?
@@ -47,7 +50,8 @@ const PayoutChannel = ({
                 icon: mw,
                 value: "mobile",
                 sub_value: "mobile_wallet",
-                neemaId: 3
+                neemaId: 3,
+                withdrawalName: userWithdrawals?.mobile_wallet?.[0]?.money_provider
             } : { id: 1000 },
         userWithdrawals?.payment_card?.length > 0
             ?
@@ -57,7 +61,9 @@ const PayoutChannel = ({
                 icon: pc,
                 value: "card",
                 sub_value: "payment_card",
-                neemaId: 4
+                neemaId: 4,
+                withdrawalName: userWithdrawals?.payment_card?.[0]?.card_name
+
             } : { id: 1000 },
         userWithdrawals?.crypto_wallet?.length > 0
             ?
@@ -66,6 +72,7 @@ const PayoutChannel = ({
                 id: 4,
                 icon: cw,
                 value: "crypto",
+                withdrawalName: userWithdrawals?.crypto_wallet?.[0]?.wallet_address
             } : { id: 1000 },
         userWithdrawals?.crypto_wallet?.length > 0
             ?
@@ -147,7 +154,10 @@ const PayoutChannel = ({
                                                 aspectRatio: 1
                                             }} />
                                         </div>
-                                        <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>{t(item?.name)}</h5>
+                                        <div style={{ display: "grid", gap: "5px" }}>
+                                            <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>{t(item?.name)}</h5>
+                                            <h5 style={{ marginBottom: 0, fontSize: "0.8rem" }}>{t(item?.withdrawalName)}</h5>
+                                        </div>
                                     </div>
                                     {
                                         payoutChannel?.name === item?.name
