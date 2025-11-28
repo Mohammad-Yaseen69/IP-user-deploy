@@ -6,7 +6,9 @@ import { UserContext } from "../../../Context/UserContext"
 import { Link } from "react-router-dom"
 import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem"
 import { useTranslation } from "react-i18next"
-import i18next from "i18next"   
+import i18next from "i18next"
+import { Modal, ModalBody } from "reactstrap"
+import AddBeneficiary from "../../AddBeneficiary"
 
 function levenshteinDistance(a, b) {
     const dp = Array(a.length + 1)
@@ -47,6 +49,8 @@ const StepTwo = ({ data, dataHandler }) => {
     const navigate = useNavigate()
     const [search, setSearch] = useState("")
     const [showOthers, setShowOthers] = useState(false)
+    const [showBeneficiaryAddModal, setShowBeneficiaryAddModal] = useState(false)
+    const [prevBeneficiaryIds, setPrevBeneficiaryIds] = useState([])
 
     useEffect(() => {
         getUserBeneficiaries()
@@ -187,12 +191,12 @@ const StepTwo = ({ data, dataHandler }) => {
                         ?
                         filterd?.map(item => (
                             <div key={item?._id} className={`${styles.ben_card} ${data?.beneficiary?._id === item?._id ? styles.active : ""}`} onClick={() => dataHandler("beneficiary", item)}>
-                                <div className={styles.dp}>
+                                <div style={{ flexShrink: 0 }} className={styles.dp}>
                                     {item?.first_name?.[0] ?? item?.company_name?.[0]}
                                 </div>
-                                <div className={styles.ben_details}>
+                                <div style={{ width: "100%" }} className={styles.ben_details}>
                                     <div className={styles.bd_top}>
-                                        <h5>{item?.first_name ?? item?.company_name} {item?.last_name}</h5>
+                                        <h5>{(item?.first_name || item?.company_name || "") + (item?.last_name ? ` ${item.last_name}` : "")}</h5>
                                         {/* {
                                             window.innerWidth > 1000 &&
                                             <div className={styles.badge}>
@@ -230,7 +234,14 @@ const StepTwo = ({ data, dataHandler }) => {
                             </div>
                         ))
                         :
-                        <div style={{ margin: "1rem auto", textAlign: "center", fontSize: ".8rem" }}>{message} <Link to={"/beneficiaries/add"}>{t("Add Now")}</Link></div>
+                        <div style={{ margin: "1rem auto", textAlign: "center", fontSize: ".8rem" }}>{message}
+                            <span onClick={() => {
+                                setPrevBeneficiaryIds(beneficiaries?.map(b => b?._id))
+                                setShowBeneficiaryAddModal(true)
+                            }} style={{ cursor: "pointer", color: "#3a04e2" }}>
+                                {t("Add Now")}
+                            </span>
+                        </div>
                 }
                 {
                     filterd.length > 0
@@ -262,7 +273,7 @@ const StepTwo = ({ data, dataHandler }) => {
                                         </div>
                                         <div className={styles.ben_details}>
                                             <div className={styles.bd_top}>
-                                                <h5>{item?.first_name ?? item?.company_name} {item?.last_name ?? ""}</h5>
+                                                <h5>{(item?.first_name || item?.company_name || "") + (item?.last_name ? ` ${item.last_name}` : "")}</h5>
                                                 {/* {
                                                     window.innerWidth > 1000 &&
                                                     <div className={styles.badge}>
@@ -274,7 +285,7 @@ const StepTwo = ({ data, dataHandler }) => {
                                                 } */}
                                             </div>
                                             <span>
-                                                {data?.payoutChannel?.value === "mobile" ? t("Mobile Wallet"): data?.payoutChannel?.value === "cash" ? t("Cash Point") : t("Bank")}
+                                                {data?.payoutChannel?.value === "mobile" ? t("Mobile Wallet") : data?.payoutChannel?.value === "cash" ? t("Cash Point") : t("Bank")}
                                                 :
                                                 {data?.payoutChannel?.value === "mobile" ? data?.payer?.name : data?.payoutChannel?.value === "cash" ? data?.payer?.name : service_name_formatter(item?.bank_details?.[0]?.bank_name ?? item?.bank_details?.[0]?.name ?? "N/A")}
                                             </span>
@@ -305,6 +316,20 @@ const StepTwo = ({ data, dataHandler }) => {
                         ""
                 }
             </div>
+
+
+            <Modal style={{ minWidth: "900px" }} toggle={() => setShowBeneficiaryAddModal(false)} isOpen={showBeneficiaryAddModal}>
+                <ModalBody style={{ padding: "0px" }}>
+                    <AddBeneficiary
+                        inInternationalModal={true}
+                        toggleHandler={async (addedBen) => {
+                            await getUserBeneficiaries()
+                            dataHandler("beneficiary", addedBen)
+                            setShowBeneficiaryAddModal(false)
+                        }}
+                    />
+                </ModalBody>
+            </Modal>
         </div>
     )
 }
