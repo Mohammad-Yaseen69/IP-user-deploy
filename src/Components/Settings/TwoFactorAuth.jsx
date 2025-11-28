@@ -394,7 +394,7 @@ const TwoFactorAuth = () => {
                                         setShowAuth(true)
                                         setCurrent("Email")
                                     }} disabled={isSaving} />
-                                </td> : <p style={{ marginBottom: "0px", fontWeight: 600 }}>{t("Please add your email first.")}</p>
+                                </td> : <p style={{ marginBottom: "0px", fontWeight: 600, textAlign: "end" }}>{t("Please add your email first.")}</p>
                             }
                         </tr>
                         <tr>
@@ -409,7 +409,7 @@ const TwoFactorAuth = () => {
                                         setCurrent("SMS")
                                     }} disabled={isSaving} />
                                 </td> :
-                                <p style={{ marginBottom: "0px", fontWeight: 600 ,textAlign:'end'}}>{t("Please add your phone first.")}</p>
+                                <p style={{ marginBottom: "0px", fontWeight: 600, textAlign: 'end' }}>{t("Please add your phone first.")}</p>
                             }
                         </tr>
                         <tr>
@@ -423,7 +423,7 @@ const TwoFactorAuth = () => {
                                         setShowAuth(true)
                                         setCurrent("WP")
                                     }} disabled={isSaving} />
-                                </td> : <p style={{ marginBottom: "0px", fontWeight: 600,textAlign:'end'}}>{t("Please add your phone first.")}</p>
+                                </td> : <p style={{ marginBottom: "0px", fontWeight: 600, textAlign: 'end' }}>{t("Please add your phone first.")}</p>
                             }
 
                         </tr>

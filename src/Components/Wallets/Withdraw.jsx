@@ -254,7 +254,7 @@ const WithdrawOldFlow = ({
     currentWithdrawal,
     setCurrentWithdrawal,
     withdrawType,
-    setMainStep
+    setMainStep,
 }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
@@ -394,7 +394,7 @@ const WithdrawOldFlow = ({
     const handleBack = () => {
         if (step === 1) {
             setCurrentWithdrawal(null)
-            if(withdrawType !== "specify"){
+            if (withdrawType !== "specify") {
                 setMainStep(1)
             }
             return;
@@ -446,7 +446,7 @@ const WithdrawOldFlow = ({
                     &&
 
                     <AmountAndCurrency
-                        amount={amount}
+                        amount={String(amount)?.replace(",", "")}
                         currency={wallet?.currency?.code}
                         payoutChannel={payoutChannel}
                         setAmount={setAmount}
@@ -489,7 +489,7 @@ const WithdrawOldFlow = ({
                     step === 3 && !confirmed
                     &&
                     <ConfirmSend
-                        amount={amount}
+                        amount={String(amount)?.replace(",", "")}
                         beneficiary={[userDetails]}
                         comment={"Withdrawal"}
                         country={country}
@@ -562,7 +562,7 @@ const WithdrawOldFlow = ({
                     &&
                     <Receipt
                         beneficiary={[userDetails]}
-                        amount={amount}
+                        amount={String(amount)?.replace(",", "")}
                         currency={wallet?.currency?.code}
                         country={country}
                         payoutChannel={payoutChannel}
