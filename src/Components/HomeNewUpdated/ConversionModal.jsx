@@ -16,7 +16,7 @@ import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
 const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency, exchangeCurrency, exchangePrice, setEnteredCurrency, setResultCurrency, setUserCurrency, setExchangedCurrency, exchangeFee, fxDet }) => {
     const { setIsExtended } = useContext(InactivityContext)
     const { t } = useTranslation()
-    const { userWallets, authHeader, verifyToken } = useContext(UserContext)
+    const { userWallets, authHeader, getUserWallets } = useContext(UserContext)
     const [complete, setComplete] = useState(false)
     const pRef = useRef(null)
     const divRef = useRef(null)
@@ -167,7 +167,7 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
 
     const confirmConversion = () => {
         setSaving(true)
-        if(currentWallet?.wallet_type === "crypto"){
+        if (currentWallet?.wallet_type === "crypto") {
             setStep(2)
             return;
         }
@@ -185,7 +185,7 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
                     const decrypted = decryptData(res.data.data)
                     console.log(decrypted)
                     // setTotal(decrypted?.data?.exchange_rate_markup * amount)
-                    verifyToken()
+                    getUserWallets()
                     setStep(2)
                 })
                 .catch(err => {
