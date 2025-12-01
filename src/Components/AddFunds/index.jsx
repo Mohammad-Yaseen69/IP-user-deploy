@@ -164,6 +164,8 @@ const AddFunds = () => {
     useEffect(() => {
         if (type === "wallet") {
             setAction("money")
+        } else if (type === "crypto") {
+            setAction("crypto")
         }
     }, [type])
 
@@ -196,27 +198,9 @@ const AddFunds = () => {
                                 <img src={money} alt="money" style={{ maxHeight: is_big ? "541px" : "430px" }} draggable="false" />
                             </div>
                             {/* <div style={{ cursor: "pointer", position: "relative" }} onClick={() => setAction("crypto")}> */}
-                                <div style={{ cursor: "not-allowed", position: "relative" }}>
-                                    <div style={{
-                                        position: "absolute",
-                                        top: 0,
-                                        left: 0,
-                                        right: 0,
-                                        bottom: 0,
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        fontSize: "2rem",
-                                        fontWeight: 700,
-                                        zIndex: 10,
-                                        background: "#1111118e",
-                                        color: "white",
-                                        borderRadius: "16px"
-                                    }}>
-                                        {t("Coming Soon")}
-                                    </div>
-                                    <img src={crypto} alt="crypto" style={{ maxHeight: is_big ? "541px" : "430px" }} draggable="false" />
-                                </div>
+                            <div onClick={() => setAction("crypto")} style={{ cursor: "pointer" }}>
+                                <img src={crypto} alt="crypto" style={{ maxHeight: is_big ? "541px" : "430px" }} draggable="false" />
+                            </div>
                             {/* </div> */}
                             {/* <Button style={{
                             border: "none",

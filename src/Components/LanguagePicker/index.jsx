@@ -220,7 +220,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
     }, [showDropDown])
 
     return (
-        <div ref={dropdownRef}>
+        <div style={{ zIndex: 9999 }} ref={dropdownRef}>
             {
                 showDropDown
                     ?

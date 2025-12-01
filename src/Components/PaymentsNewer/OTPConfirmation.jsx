@@ -60,7 +60,7 @@ const OTPConfirmation = ({
     requestObject,
     quotationDetails,
     externalWithdrawalPayload,
-    isExternalWithdrawal
+    isExternalWithdrawal,
 }) => {
     const { t } = useTranslation()
     const numberOfFields = 6;
@@ -405,14 +405,11 @@ const OTPConfirmation = ({
             axios.post(url, vendorSpecificBody, {
                 headers: authHeader
             })
-                .then(res => {
+                .then(async res => {
                     const decrypted = decryptData(res.data.data)
+                    await getUserWallets()
                     setTransactionDetails(decrypted)
-                    // console.log(decrypted)
                     setSubStep(prev => prev + 1)
-                    if (isExternalWithdrawal) {
-                        getUserWallets()
-                    }
                     if (decrypted.TransactionID) {
                         setVerified(true)
                     }

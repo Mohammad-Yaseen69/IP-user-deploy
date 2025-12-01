@@ -43,7 +43,6 @@ const CryptoFundReceipt = ({ cryptoCurrency, amount }) => {
                         <img src={cryptoCurrency.img} alt={cryptoCurrency.value} style={{ width: "30px", borderRadius: "10px" }} />
                         <h5 style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 600 }}>{cryptoCurrency.name}</h5>
                     </div>
-                    <h4 style={{ marginBottom: "0", fontSize: "2rem", fontWeight: 600 }}>{(+amount.split(",").join("") / +cryptoCurrency.price.split("$")[1].split(",").join("")).toFixed(5)}</h4>
                 </div>
 
                 <div style={{

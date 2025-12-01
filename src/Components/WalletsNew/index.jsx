@@ -21,7 +21,7 @@ export const getLimits = async (currentWallet, setData, authHeader, setLoading, 
     try {
         const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-account-limits/${currentWallet?._id}`, { headers: authHeader, cancelToken })
         const dec = decryptData(res?.data?.data)
-        const { topup_values, limits, limits_used } = dec?.data;
+        const { topup_values, limits, limits_used } = dec.data;
 
         setData({
             min_topup_amount: `${topup_values.topup_min_amount?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,

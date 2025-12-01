@@ -5,6 +5,7 @@ import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { UserContext } from '../../Context/UserContext'
 import { getExtractedPhone } from '../../utils/Functions'
 import { trimObjectValues } from '../../utils/Data'
+import { toast } from 'react-toastify'
 
 const useBenCreateFunc = ({
     services,
@@ -166,7 +167,7 @@ const useBenCreateFunc = ({
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     console.log(decrypted)
-                    toggleSuccess()
+                    toggleSuccess(decrypted.beneficiaryData)
                 })
                 .catch(err => {
                     const dec = decryptData(err.response.data.data)
@@ -183,6 +184,7 @@ const useBenCreateFunc = ({
         }).catch(err => {
             const dec = decryptData(err.response.data.data)
             setMobileError("Incorrect phone number, please enter a valid number.")
+            toast.error("Incorrect phone number, please enter a valid number.")
             console.log(dec)
             setBenLoading(false)
         })
@@ -203,6 +205,7 @@ const useBenCreateFunc = ({
                 addBenFunc();
             } catch {
                 setWalletMobileError("Incorrect phone number, please enter a valid number.");
+                toast.error("Incorrect phone number, please enter a valid number.")
             }
             finally {
                 setBenLoading(false)

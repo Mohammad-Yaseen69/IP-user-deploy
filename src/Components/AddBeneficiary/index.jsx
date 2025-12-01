@@ -12,7 +12,7 @@ import { UserContext } from "../../Context/UserContext";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
-const AddBeneficiary = () => {
+const AddBeneficiary = ({ inInternationalModal, toggleHandler }) => {
     const { t } = useTranslation()
     const [mobileView, setMobileView] = useState(window?.innerWidth < 600)
     const [isIndividual, setIsIndividual] = useState(true)
@@ -20,7 +20,13 @@ const AddBeneficiary = () => {
     const navigate = useNavigate()
     const { authHeader, allowedCountries } = useContext(UserContext)
 
-    const toggleSuccess = () => showSuccess ? navigate("/beneficiaries") : setShowSuccess(true)
+    const toggleSuccess = (benData) => {
+        if (toggleHandler) {
+            toggleHandler(benData)
+        } else {
+            showSuccess ? navigate("/beneficiaries") : setShowSuccess(true)
+        }
+    }
 
     const setWidth = () => {
         setMobileView(window.innerWidth < 600)
@@ -71,14 +77,14 @@ const AddBeneficiary = () => {
     }, [allowedCountries])
 
     return (
-        <div style={{ margin: "1rem 0 1rem 1rem" }}>
+        <div style={{ margin: !inInternationalModal ? "1rem 0 1rem 1rem" : "2rem 0 0 0" }}>
             <Form className="card" style={{
                 // border: "2px solid rgba(128,128,128,.5)"
                 minHeight: `calc(${100}vh - ${2}rem)`,
                 marginBottom: "0"
             }}>
                 <div style={{}}>
-                    <button onClick={() => navigate(-1)} style={{
+                    {!inInternationalModal && <button onClick={() => navigate(-1)} style={{
                         all: "unset",
                         color: "var(--theme-default)",
                         fontSize: "1rem",
@@ -86,7 +92,7 @@ const AddBeneficiary = () => {
                         marginLeft: "1rem",
                         paddingLeft: ".5rem",
                         cursor: "pointer"
-                    }}>&larr; &nbsp;</button>
+                    }}>&larr; &nbsp;</button>}
                     <CardHeader className="pb-0 pt-0" style={{
                         display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem"
                     }}>
@@ -142,7 +148,7 @@ const AddBeneficiary = () => {
                     isIndividual
                         ?
                         // <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <IndividualAccount mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} />
+                        <IndividualAccount mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} inInternationalModal={inInternationalModal} />
                         // </LocalizationProvider>
                         :
                         <Card style={{

@@ -596,11 +596,12 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             try {
                 credentials = await startAuthentication(dec1.options)
 
-            } catch {
+            } catch(err) {
                 credentials = null
                 setBiometricLoading(false)
                 setIsPressed(false)
-                setIsLoginError("Biometric verification failed")
+                console.log(err)
+                setIsLoginError("Biometric verification failed..")
                 return
             }
 
@@ -610,13 +611,39 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 credentials,
             }
 
+            console.log("biometric: challenge", dec1)
+            console.log("biometric: credentials (attempt 1)", credentials)
 
+            const tryVerify = async (attempt = 1) => {
+                try {
+                    const response2 = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/login-biometric-verify`, {
+                        data: encryptData(verificationData)
+                    })
+                    const dec2 = await decryptData(response2.data.data)
+                    return dec2
+                } catch (err) {
+                    const serverErr = err?.response?.data?.data ? decryptData(err.response.data.data) : err
+                    logger.error(`Biometric verification failed! for ${email}`, {
+                        credentials,
+                        serverError: serverErr,
+                        attempt,
+                    })
+                    if (attempt < 2) {
+                        try {
+                            await new Promise(r => setTimeout(r, 300))
+                            const freshCreds = await startAuthentication(dec1.options)
+                            verificationData.credentials = freshCreds
+                            return await tryVerify(attempt + 1)
+                        } catch (innerErr) {
+                            console.error('biometric retry startAuthentication failed:', innerErr)
+                            throw err
+                        }
+                    }
+                    throw err
+                }
+            }
 
-            const response2 = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/login-biometric-verify`, {
-                data: encryptData(verificationData)
-            })
-
-            const dec2 = await decryptData(response2.data.data)
+            const dec2 = await tryVerify()
 
             const token = dec2?.token
             axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${token}`)
