@@ -68,6 +68,8 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                 return "#C82333"
             case "processing":
                 return "#ADD8E6"
+            case "refunded":
+                return "#9f83f2"    
             default:
                 break;
         }
