@@ -139,7 +139,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
     const [savedWallet, setSavedWalelt] = useState({})
 
     const blockedWallet = useMemo(() => {
-        return   currentWallet?.blocked || currentWallet?.admin_blocked || currentWallet?.blocked || currentWallet?.admin_blocked || currentWallet?.status !== "active"
+        return currentWallet?.blocked || currentWallet?.admin_blocked || currentWallet?.blocked || currentWallet?.admin_blocked || currentWallet?.status !== "active"
     }, [currentWallet])
 
     const [tooltips, setTooltips] = useState({
@@ -278,7 +278,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                         }}
                         className={styles.action}
                         onClick={() => {
-                            navigate(`/add-funds?type=wallet&wallet_address=${currentWallet?.wallet_id}`)
+                            navigate(`/add-funds?type=${currentWallet?.wallet_type === "crypto" ? "crypto" : "wallet"}&wallet_address=${currentWallet?.wallet_id}`)
                         }}
                         id="add_funds"
                     >

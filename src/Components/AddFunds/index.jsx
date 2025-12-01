@@ -164,6 +164,8 @@ const AddFunds = () => {
     useEffect(() => {
         if (type === "wallet") {
             setAction("money")
+        } else if (type === "crypto") {
+            setAction("crypto")
         }
     }, [type])
 
@@ -196,7 +198,7 @@ const AddFunds = () => {
                                 <img src={money} alt="money" style={{ maxHeight: is_big ? "541px" : "430px" }} draggable="false" />
                             </div>
                             {/* <div style={{ cursor: "pointer", position: "relative" }} onClick={() => setAction("crypto")}> */}
-                            <div onClick={() => setAction("crypto")}  style={{cursor: "pointer"}}>
+                            <div onClick={() => setAction("crypto")} style={{ cursor: "pointer" }}>
                                 <img src={crypto} alt="crypto" style={{ maxHeight: is_big ? "541px" : "430px" }} draggable="false" />
                             </div>
                             {/* </div> */}

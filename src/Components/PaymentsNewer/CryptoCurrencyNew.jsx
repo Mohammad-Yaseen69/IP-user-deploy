@@ -12,15 +12,6 @@ const CryptoCurrencyNew = ({ cryptoCurrency, setCryptoCurrency }) => {
     const { userWallets } = useContext(UserContext)
     const cryptoWalletsUIData = [
         {
-            name: "Bitcoin",
-            img: btc,
-            value: "btc",
-            color: "#f39900",
-            item_bg: "#FFE1B4",
-            text_color: "#ff9921",
-            text_bg: "rgba(255, 153, 33, 0.20)",
-        },
-        {
             name: "Tether",
             img: usdt,
             value: "usdt",
@@ -30,6 +21,16 @@ const CryptoCurrencyNew = ({ cryptoCurrency, setCryptoCurrency }) => {
             text_bg: "rgba(0, 147, 147, 0.22)",
         },
         {
+            name: "Bitcoin",
+            img: btc,
+            value: "btc",
+            color: "#f39900",
+            item_bg: "#FFE1B4",
+            text_color: "#ff9921",
+            text_bg: "rgba(255, 153, 33, 0.20)",
+            disabled: true,
+        },
+        {
             name: "Ethereum",
             img: eth,
             value: "eth",
@@ -37,6 +38,7 @@ const CryptoCurrencyNew = ({ cryptoCurrency, setCryptoCurrency }) => {
             item_bg: "#ececec",
             text_color: "#a8a8a8",
             text_bg: "#a8a8a81e",
+            disabled: true
         },
     ]
 
@@ -45,8 +47,8 @@ const CryptoCurrencyNew = ({ cryptoCurrency, setCryptoCurrency }) => {
 
         const cryptoWallets = userWallets.filter(item => item.wallet_type === "crypto");
 
-        return cryptoWallets.map(wallet => {
-            const code = wallet?.currency?.code?.toLowerCase(); // "btc", "eth", "usdt"
+        const filtered = cryptoWallets.map(wallet => {
+            const code = wallet?.currency?.code?.toLowerCase();
 
             const ui = cryptoWalletsUIData.find(c => c.value === code);
 
@@ -54,6 +56,9 @@ const CryptoCurrencyNew = ({ cryptoCurrency, setCryptoCurrency }) => {
                 ...wallet,
                 ...ui
             };
+        });
+        return filtered.sort((a, b) => {
+            return (a.disabled === true) - (b.disabled === true);
         });
     }, [userWallets, cryptoWalletsUIData]);
 
@@ -81,15 +86,16 @@ const CryptoCurrencyNew = ({ cryptoCurrency, setCryptoCurrency }) => {
 
                 {currenciesData.map(item => {
                     return (
-                        <div onClick={() => setCryptoCurrency(item)} key={item.value} style={{
+                        <div onClick={() => !item.disabled && setCryptoCurrency(item)} key={item.value} style={{
                             background: item.item_bg,
                             borderRadius: "16px",
-                            cursor: "pointer",
+                            cursor: item.disabled ? "not-allowed" : "pointer",
                             transition: "250ms",
                             display: "flex",
                             height: "fit-content",
                             padding: "1rem",
                             boxShadow: item.value === cryptoCurrency.value ? `0 0 10px ${item.item_bg}` : "none",
+                            opacity: item.disabled && .5,
                         }}>
                             <div style={{ display: "flex", flexDirection: "column", gap: ".3rem", width: "fit-content" }}>
                                 <img src={item.img} alt={item.value} style={{ width: "40px", borderRadius: "17px" }} />
