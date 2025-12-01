@@ -93,7 +93,7 @@ const CryptoAmountNew = ({ setSubStep, amount, setAmount, cryptoCurrency }) => {
                     alignItems: "center",
                     width: "90%"
                 }} className="m_t_1_05">
-                    <span style={{ color: "#808080", fontWeight: 500 }}>Estimated Price: 1 {cryptoCurrency.value.toUpperCase()} = {cryptoCurrency.price}</span>
+
                 </div>
                 <div style={{
                     display: "flex",
@@ -106,20 +106,6 @@ const CryptoAmountNew = ({ setSubStep, amount, setAmount, cryptoCurrency }) => {
                     width: "90%"
                 }} className="m_t_1_05">
                     <span style={{ color: "#808080", fontWeight: 500 }}>Transaction Fee: 1.32 USD</span>
-                </div>
-                <div style={{
-                    display: "flex",
-                    padding: ".75rem 1rem",
-                    background: "#ffe3c2",
-                    justifyContent: "center",
-                    gap: "1rem",
-                    borderRadius: "10px",
-                    alignItems: "center",
-                    width: "90%",
-                    color: "#EB8C1D",
-                }} className="m_t_1_05">
-                    <AiFillInfoCircle size={30} />
-                    <p style={{ marginBottom: 0, lineHeight: "1.5" }} className="orange_warning">{t("Note: Crypto prices frequently change. Refer to the final quotation on the confirm order page.")}</p>
                 </div>
             </CardBody>
             <div style={{

@@ -16,6 +16,7 @@ const Amount = ({ data, dataHandler }) => {
     const { t } = useTranslation()
     const { userDetails, authHeader } = useContext(UserContext)
 
+    const _wallet = (data && typeof data.wallet === "object" && data.wallet !== null) ? data.wallet : {};
     const [formattedAmount, setFormattedAmount] = useState(data?.amount)
     const handleKeyUp = (e) => {
         formatCurrency(e.target.value, false, setFormattedAmount);
@@ -35,12 +36,13 @@ const Amount = ({ data, dataHandler }) => {
     const [walletData, setWalletData] = useState({})
     const [loading, setLoading] = useState(false)
 
+    console.log(data)
     useEffect(() => {
-        if (wallet_address && data.wallet?._id) {
+        if (wallet_address && _wallet?._id) {
             setLoading(true)
-            getLimits(data.wallet, setWalletData, authHeader, () => { }, () => { })
+            getLimits(_wallet, setWalletData, authHeader, () => { }, () => { })
         }
-    }, [wallet_address, data.wallet])
+    }, [wallet_address, _wallet])
 
 
     useEffect(() => {
@@ -55,6 +57,20 @@ const Amount = ({ data, dataHandler }) => {
         }
     }, [wallet_address, walletData])
 
+    const limits = data?.limits || { min: 0, max: 0 };
+
+    useEffect(() => {
+        let errorMsg = '';
+        if (!data.amount || +String(data.amount ?? "")?.replaceAll(",", "") < +formatCurrencyLocal(limits.min)) {
+            errorMsg = `Minimum transactional amount is ${limits.min}`;
+        } else if (+String(data.amount ?? "")?.replaceAll(",", "") > +formatCurrencyLocal(limits.max)) {
+            errorMsg = `Maximum transactional amount is ${limits.max}`;
+        } else if (userDetails.user.kyc_status !== "approved" && +String(data.amount ?? "").replaceAll(",", "") > +formatCurrencyLocal(limits.max)) {
+            errorMsg = "Invalid Amount: Your current identity verification level limits the maximum amount you can add. Please upgrade your identity verification to benefit from higher limits";
+        }
+        dataHandler && dataHandler('exchangeRateError', errorMsg);
+    }, [data.amount, limits, userDetails?.user?.kyc_status]);
+
     return (
         loading
             ?
@@ -66,7 +82,7 @@ const Amount = ({ data, dataHandler }) => {
                 <div className={styles.amount}>
                     <label>{t("Enter Amount")}</label>
                     <div style={{ display: "flex", gap: ".5rem" }}>
-                        <span style={{ width: "fit-content" }}>{data?.wallet?.currency?.code} </span>
+                        <span style={{ width: "fit-content" }}>{_wallet?.currency?.code} </span>
                         <input
                             type="text"
                             value={formattedAmount}
@@ -84,13 +100,13 @@ const Amount = ({ data, dataHandler }) => {
                     <span>
                         {
                             t(`⚠️ The transactional value should be between[Currency ISO code & Amount] - [Currency ISO code & Amount] `)
-                                .replace("[Currency ISO code & Amount] - [Currency ISO code & Amount]", ` ${data?.limits?.min ?? 0} - ${data?.limits?.max ?? 0} `)
+                                .replace("[Currency ISO code & Amount] - [Currency ISO code & Amount]", ` ${limits.min} - ${limits.max} `)
                                 .replace("⚠️ ", "")
                         }
                     </span>
                 </div>
                 {
-                    !data.amount || +String(data.amount ?? "")?.replaceAll(",", "") < +formatCurrencyLocal(data.limits.min) || +String(data.amount ?? "")?.replaceAll(",", "") > +formatCurrencyLocal(data.limits.max)
+                    !data.amount || +String(data.amount ?? "")?.replaceAll(",", "") < +formatCurrencyLocal(limits.min) || +String(data.amount ?? "")?.replaceAll(",", "") > +formatCurrencyLocal(limits.max)
                         ?
                         <div style={{
                             height: "100px",
@@ -102,21 +118,22 @@ const Amount = ({ data, dataHandler }) => {
                             fontWeight: 600,
                             color: "red"
                         }}>{
-                                userDetails?.user?.kyc_status !== "approved" && +String(data.amount ?? "")?.replaceAll(",", "") > +formatCurrencyLocal(data.limits.max)
+                                userDetails?.user?.kyc_status !== "approved" && +String(data.amount ?? "")?.replaceAll(",", "") > +formatCurrencyLocal(limits.max)
                                     ?
                                     t("⚠️ Invalid Amount: Your current  identity verification level limits the  maximum amount you can add. Please upgrade your identity verification to benefit from higher limits")
                                         .replace("⚠️ ", "")
                                     :
-                                    +String(data.amount ?? "")?.replaceAll(",", "") < +formatCurrencyLocal(data.limits.min)
+                                    +String(data.amount ?? "")?.replaceAll(",", "") < +formatCurrencyLocal(limits.min)
                                         ?
-                                        "Minimum transactional amount is " + data?.limits?.min
+                                        "Minimum transactional amount is " + limits.min
                                         :
-                                        +String(data.amount ?? "")?.replaceAll(",", "") > +formatCurrencyLocal(data.limits.max)
+                                        +String(data.amount ?? "")?.replaceAll(",", "") > +formatCurrencyLocal(limits.max)
                                             ?
-                                            "Maximum transactional amount is " + data?.limits?.max
+                                            "Maximum transactional amount is " + limits.max
                                             :
                                             formattedAmount ? t("Invalid Amount") : ""
-                            }</div>
+                            }
+                        </div>
                         :
                         ""
                 }
