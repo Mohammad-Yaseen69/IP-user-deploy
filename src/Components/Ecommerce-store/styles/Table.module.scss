@@ -136,7 +136,7 @@
     }
 
     span {
-      font-size: 12px;
+      font-size: 13px;
       color: #898988;
       font-weight: 600;
     }
@@ -228,10 +228,13 @@
       border-radius: 6px;
       padding: 4px 8px;
       outline: none;
-      color: #c4c4c4;
+      // color: #c4c4c4;
     }
 
     button {
+      display: flex;
+      align-items: center;
+      gap: 3px;
       border: 1px solid #ddd;
       border-radius: 8px;
       background: #fff;

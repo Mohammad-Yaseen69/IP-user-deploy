@@ -40,7 +40,7 @@ const OrderOverView = () => {
                     <div>
                         <img src="https://play-lh.googleusercontent.com/xOKbvDt362x1uzW-nnggP-PgO9HM4L1vwBl5HgHFHy_n1X3mqeBtOSoIyNJzTS3rrj70" alt="img" />
                         <div className={style.rightInfo}>
-                            <h5>Paypal</h5>
+                            <h5>{t("Paypal")}</h5>
                             <p>jasonsimmons@gmail.com</p>
                         </div>
                     </div>

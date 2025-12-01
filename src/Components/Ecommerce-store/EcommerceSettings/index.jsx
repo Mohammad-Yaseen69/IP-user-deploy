@@ -10,6 +10,7 @@ import ShippingForm from "./components/ShippingForm";
 import NotificationsForm from "./components/NotificationsForm";
 import style from "./Styles/GeneralFrom.module.scss";
 import { useTranslation } from "react-i18next";
+import { useForm } from "react-hook-form";
 
 
 const tabs = [
@@ -23,6 +24,8 @@ const tabs = [
 
 const EcommerceSettings = () => {
     const [activeTab, setActiveTab] = useState(0);
+    const { register, setValue, formState: { errors } } = useForm();
+
     const { t } = useTranslation()
     return (
         <div className={Styles.containermain}>
@@ -59,23 +62,71 @@ const EcommerceSettings = () => {
                     {activeTab === 1 &&
                         <div className={style.formContainer}>
                             <form className={style.formContent}>
-                                <div className={style.leftCol}>
-                                    <div>
-                                        <h4>{t("Store front")}</h4>
-                                        <div>   </div>
-                                        <h2>{t("Hero Section")}</h2>
-                                        <p>{t("Control what customers see first — customize your banner, message, and CTA.")}</p></div>
-                                </div>
+
                                 <div className={style.form}>
-                                    <StoreFrontForm register={() => { }} activeTab={activeTab}
-                                        errors={{}} />
+                                    <StoreFrontForm register={register}
+                                        activeTab={activeTab}
+                                        errors={errors}
+                                        setValue={setValue}
+                                    />
                                 </div>
                             </form>
                         </div>}
-                    {activeTab === 2 && <ProductsForm />}
-                    {activeTab === 3 && <CheckoutForm />}
-                    {activeTab === 4 && <ShippingForm />}
-                    {activeTab === 5 && <NotificationsForm />}
+                    {activeTab === 2 &&
+                        <div className={style.formContainer}>
+                            <form className={style.formContent}>
+
+                                <div className={style.form}>
+                                    <ProductsForm register={register}
+                                        activeTab={activeTab}
+                                        errors={errors}
+                                        setValue={setValue}
+                                    />
+                                </div>
+                            </form>
+                        </div>
+                    }
+                    {activeTab === 3 &&
+                        <div className={style.formContainer}>
+                            <form className={style.formContent}>
+
+                                <div className={style.form}> <CheckoutForm
+                                    register={register}
+                                    activeTab={activeTab}
+                                    errors={errors}
+                                    setValue={setValue}
+                                />     </div>
+                            </form>
+                        </div>}
+                    {activeTab === 4 &&
+                        <div className={style.formContainer}>
+                            <form className={style.formContent}>
+                                <div className={style.form}>
+                                    <ShippingForm
+                                        register={register}
+                                        activeTab={activeTab}
+                                        errors={errors}
+                                        setValue={setValue}
+                                    />
+                                </div>
+                            </form>
+                        </div>
+                    }
+                    {activeTab === 5 &&
+                        <div className={style.formContainer}>
+                            <form className={style.formContent}>
+                                <div className={style.form}>
+                                    <NotificationsForm
+                                        register={register}
+                                        activeTab={activeTab}
+                                        errors={errors}
+                                        setValue={setValue}
+
+                                    />
+                                </div>
+                            </form>
+                        </div>
+                    }
                 </div>
             </div >
         </div >

@@ -1,6 +1,6 @@
 import { SwipeableDrawer } from "@mui/material";
 import { useState } from "react";
-import { ChevronRight, Edit3, Eye, Filter, MoreVertical, Plus, RefreshCw, Trash2, Upload } from "react-feather";
+import { ArrowLeft, ArrowRight, ChevronRight, Edit3, Eye, Filter, MoreVertical, Plus, RefreshCw, Trash2, Upload } from "react-feather";
 import { useTranslation } from "react-i18next";
 import ProductDetails from "./Products";
 import AddProducts from "./Products/AddProducts";
@@ -202,8 +202,8 @@ const Table = () => {
                         }} >1-4</option>
                         <option>5-8</option>
                     </select>
-                    <button>{t("Previous")}</button>
-                    <button>{t("Next")}</button>
+                    <button><ArrowLeft size={18} /> {t("Previous")}</button>
+                    <button>{t("Next")} <ArrowRight size={18} /></button>
                 </div>
             </div>
             {ExpandDrower && (

@@ -50,7 +50,9 @@ const ProductsForm = ({
 
             <div className={style.variantBox}>
                 <div className={style.Togle}>
-                    <Toggle checked={inventoryEnabled} onChange={() => setInventoryEnabled(prev => !prev)} /></div>
+                    <Toggle checked={inventoryEnabled} onChange={() => setInventoryEnabled(prev => !prev)} />
+                        
+                    </div>
                 <div>
                     <span>{t("Inventory Stock")}</span>
                     <p>
