@@ -318,7 +318,7 @@ const StepTwo = ({ data, dataHandler }) => {
             </div>
 
 
-            <Modal style={{ minWidth: "900px" }} toggle={() => setShowBeneficiaryAddModal(false)} isOpen={showBeneficiaryAddModal}>
+            <Modal style={{ minWidth: window.innerWidth > 1000 && "900px" }} toggle={() => setShowBeneficiaryAddModal(false)} isOpen={showBeneficiaryAddModal}>
                 <ModalBody style={{ padding: "0px" }}>
                     <AddBeneficiary
                         inInternationalModal={true}

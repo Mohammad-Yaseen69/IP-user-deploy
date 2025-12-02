@@ -387,6 +387,36 @@ const EditBeneficiary = () => {
 
 
     useEffect(() => {
+        const handleDefaultActiveMethod = () => {
+            switch (formData.account_type[0]?.toLowerCase()) {
+                case "bank":
+                    setActive(1)
+                    break;
+                case "mobile":
+                    setActive(2)
+                    break;
+                case "card":
+                    setActive(3)
+                    break;
+                case "crypto":
+                    setActive(4)
+                    break;
+                case "cash":
+                    setActive(6)
+                    break;
+                default:
+                    setActive(5)
+            }
+        }
+
+
+
+        if (formData) {
+            handleDefaultActiveMethod()
+        }
+    }, [formData])
+
+    useEffect(() => {
         if (edit) {
             setIsEditMode(true)
         }
@@ -532,7 +562,7 @@ const EditBeneficiary = () => {
                                     loading
                                         ?
                                         <div style={{ height: "60vh", width: "100%", opacity: 1 }}>
-                                            <InstaPayLoader fallback fullHeight/>
+                                            <InstaPayLoader fallback fullHeight />
                                         </div>
                                         :
                                         <CardBody>

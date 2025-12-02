@@ -26,6 +26,7 @@ import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow';
 import { useMutation } from '@tanstack/react-query'
 import { apiWrapper } from '../../../utils/Functions/apiWrapper'
 import ErrorModal from '../../PaymentsNewer/InternationalFlow/ErrorModal'
+import { LimitsErrorMessage } from '../../PaymentsNewer/OTPConfirmation'
 
 const PLACEHOLDER_CARD_TYPE = {
     type: 'placeholder',
@@ -326,9 +327,13 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             console.log(dec)
         } catch (err) {
             const decrypted = decryptData(err.response.data.data);
+            const error1 = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
             const error2 = apiErrorMessage(decrypted?.message);
             if (error2) {
                 setError(error2);
+            }
+            else if (error1) {
+                setError(error1);
             } else {
                 errorHandler(err, setError);
             }
@@ -359,9 +364,13 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         }
         catch (err) {
             const decrypted = decryptData(err.response.data.data);
+            const error1 = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
             const error2 = apiErrorMessage(decrypted?.message);
             if (error2) {
                 setError(error2);
+            }
+            else if (error1) {
+                setError(error1);
             } else {
                 errorHandler(err, setError);
             }
@@ -393,9 +402,13 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             console.log(dec)
         } catch (err) {
             const decrypted = decryptData(err.response.data.data);
+            const error1 = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
             const error2 = apiErrorMessage(decrypted?.message);
             if (error2) {
                 setError(error2);
+            }
+            else if (error1) {
+                setError(error1);
             } else {
                 errorHandler(err, setError);
             }
