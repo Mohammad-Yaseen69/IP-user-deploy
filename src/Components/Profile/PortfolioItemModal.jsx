@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from 'react'
+import React from 'react'
 import { Modal, ModalBody, ModalHeader } from 'reactstrap'
 import styles from "./styles/PortfolioItem.module.css"
 import file_img from "../Portfolio/files/file.png"
@@ -8,20 +8,10 @@ import docPl from "../Portfolio/files/doc.jpeg"
 import { useTranslation } from 'react-i18next'
 
 const PortfolioItemModal = ({ showModal, setShowModal, item }) => {
-    const { t } = useTranslation()
-    const [isFullscreen, setIsFullscreen] = useState(false)
-    // When user tries to close modal (X or outside click), block it if in fullscreen
-    const safeToggle = useCallback(() => {
-        if (!isFullscreen) setShowModal(!showModal)
-    }, [setShowModal, showModal, isFullscreen])
-    // ReactJWPlayer's onFullscreen event
-    const handleJWFullscreen = (e) => {
-        // e.fullscreen === true/false
-        setIsFullscreen(e.fullscreen)
-    }
+    const {t} = useTranslation()
     return (
-        <Modal isOpen={showModal} toggle={safeToggle} contentClassName={styles.content_modal} className={styles.content_modal} backdrop={isFullscreen ? 'static' : true} keyboard={!isFullscreen}>
-            <ModalHeader toggle={safeToggle}>
+        <Modal isOpen={showModal} toggle={() => setShowModal(!showModal)} contentClassName={styles.content_modal} className={styles.content_modal}>
+            <ModalHeader toggle={() => setShowModal(!showModal)}>
                 {item?.title}
             </ModalHeader>
             <ModalBody>
@@ -43,7 +33,6 @@ const PortfolioItemModal = ({ showModal, setShowModal, item }) => {
                                         playerScript={import.meta.env.VITE_JW_PLAYER_URL}
                                         controls={true}
                                         playlist={`https://cdn.jwplayer.com/v2/media/${item?.jw_media?.mediaId}`}
-                                        onFullscreen={handleJWFullscreen}
                                     />
                                 </div>
                                 :
@@ -59,8 +48,6 @@ const PortfolioItemModal = ({ showModal, setShowModal, item }) => {
                                             playerScript={import.meta.env.VITE_JW_PLAYER_URL}
                                             controls={true}
                                             playlist={`https://cdn.jwplayer.com/v2/media/${item?.jw_media?.mediaId}`}
-                                            onFullscreen={handleJWFullscreen}
-
                                         />
                                     </div>
                                     :
