@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useMemo, useState } from "react"
 import styles from "./styles/index.module.scss"
 import TopRight from "../topRight"
 import { useTranslation } from "react-i18next"
@@ -11,14 +11,13 @@ import CryptoJS from "crypto-js"
 import Success from "./ResponseModals/Success"
 import Error from "./ResponseModals/Error"
 import Abort from "./ResponseModals/Abort"
-import { Button } from "reactstrap"
-import FundsHistory from "./FundsHistory"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import axios from "axios"
 import { UserContext } from "../../Context/UserContext"
 import InstaPayLoader from "../Loader"
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import WalletFundsFlow from "./WalletFundsFlow"
+import set from "date-fns/fp/set/index.js"
 
 const AddFunds = () => {
     const { t } = useTranslation()
@@ -26,18 +25,17 @@ const AddFunds = () => {
     const [action, setAction] = useState("")
     const params = useParams()
     const [currenctModal, setCurrentModal] = useState("")
-    const [showFunds, setShowFunds] = useState(false)
-    const toggleFunds = () => setShowFunds(!showFunds)
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const paymentId = queryParams.get("paymentId")
     const token = queryParams.get("token")
     const transaction_id = queryParams.get("transaction_id")
     const reference_id = queryParams.get("reference_id")
-    const { authHeader } = useContext(UserContext)
-
+    const { authHeader, userDetails } = useContext(UserContext)
     const [loading, setLoading] = useState(false)
     const [status, setStatus] = useState("")
+    const [isHovered, setIsHovered] = useState(false)
+
 
     useEffect(() => {
         setCurrentModal("")
@@ -161,13 +159,20 @@ const AddFunds = () => {
 
     const type = queryParams.get("type")
 
+    const isCryptoAllowed = useMemo(() => {
+        if (userDetails?._id) {
+            return userDetails.level?.topup_channel?.crypto
+        }
+    }, [userDetails])
+
     useEffect(() => {
         if (type === "wallet") {
             setAction("money")
-        } else if (type === "crypto") {
+        } else if (type === "crypto" && isCryptoAllowed) {
             setAction("crypto")
         }
-    }, [type])
+    }, [type, isCryptoAllowed])
+
 
     return (
         loading
@@ -198,7 +203,23 @@ const AddFunds = () => {
                                 <img src={money} alt="money" style={{ maxHeight: is_big ? "541px" : "430px" }} draggable="false" />
                             </div>
                             {/* <div style={{ cursor: "pointer", position: "relative" }} onClick={() => setAction("crypto")}> */}
-                            <div onClick={() => setAction("crypto")} style={{ cursor: "pointer" }}>
+                            <div
+                                onClick={() => isCryptoAllowed ? setAction("crypto") : null}
+                                style={{
+                                    cursor: isCryptoAllowed ? "pointer" : "not-allowed",
+                                    position: "relative",
+                                    overflow: "hidden"
+                                }}
+                                title={!isCryptoAllowed ? t("This feature is not allowed for your account.") : undefined}
+                                aria-disabled={!isCryptoAllowed}
+                                onMouseEnter={() => setIsHovered(true)}
+                                onMouseLeave={() => setIsHovered(false)}
+                            >
+                                {!isCryptoAllowed && isHovered &&
+                                    <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(0,0,0,0.7)", borderRadius: "12px", color: "white", display: "flex", justifyContent: "center", alignItems: "center", fontWeight: 600, fontSize: "1.2rem", textAlign: "center", padding: "14px" }}>
+                                        {t("This feature is not allowed in your account.")}
+                                    </div>
+                                }
                                 <img src={crypto} alt="crypto" style={{ maxHeight: is_big ? "541px" : "430px" }} draggable="false" />
                             </div>
                             {/* </div> */}
@@ -277,7 +298,19 @@ const AddFunds = () => {
                             <div style={{ cursor: "pointer", borderRadius: "16px", width: "100%", overflow: "hidden" }} onClick={() => setAction("money")}>
                                 <img src={money} alt="money" style={{ height: "100%", width: "100%", objectFit: "cover" }} draggable="false" />
                             </div>
-                            <div style={{ cursor: "pointer", borderRadius: "16px", width: "100%", overflow: "hidden" }} onClick={() => setAction("crypto")}>
+                            <div
+                                style={{
+                                    cursor: isCryptoAllowed ? "pointer" : "not-allowed",
+                                    borderRadius: "16px",
+                                    width: "100%",
+                                    overflow: "hidden",
+                                    opacity: isCryptoAllowed ? 1 : 0.6,
+                                    pointerEvents: isCryptoAllowed ? "auto" : "none"
+                                }}
+                                onClick={() => isCryptoAllowed ? setAction("crypto") : null}
+                                title={!isCryptoAllowed ? t("This feature is not allowed for your account.") : undefined}
+                                aria-disabled={!isCryptoAllowed}
+                            >
                                 <img src={crypto} alt="crypto" style={{ height: "100%", width: "100%", objectFit: "cover" }} draggable="false" />
                             </div>
                         </div>
