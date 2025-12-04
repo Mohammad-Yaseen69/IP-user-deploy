@@ -351,7 +351,8 @@ const Basic = ({ setCurrentTab }) => {
             setter(true)
             // console.log(dec)
         } catch (err) {
-            toast.error("Something went wrong while verifying otp!")
+            const dec = decryptData(err.response.data.data)
+            toast.error(dec?.message || "Something went wrong while verifying otp!")
             // console.log(decryptData(err.response.data.data))
         }
         setIsSaving(false)
