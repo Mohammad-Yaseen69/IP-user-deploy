@@ -410,6 +410,45 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                         </div>
                     </div>
                 }
+                        {!item.cardNo &&
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        {
+                            message
+                                ?
+                                <span style={{ fontWeight: 700 }}>{message}</span>
+                                :
+                                <div></div>
+                        }
+                        {
+                            isEditMode
+                                ?
+                                <Button style={{
+                                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                    border: "none",
+                                    outline: "none",
+                                    borderRadius: "10px"
+                                }}
+                                    onClick={addCategoriesToTransaction}
+                                    disabled={isSaving || (selectedCategory.length < 1 && !note)}
+                                >
+                                    {isSaving ? t("Saving") : t("Save")}
+                                </Button>
+                                :
+                                <Button style={{
+                                    background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                                    border: "none",
+                                    outline: "none",
+                                    borderRadius: "10px"
+                                }}
+                                    onClick={() => {
+                                        setIsEditMode(true)
+                                        setMessage("")
+                                    }}
+                                >
+                                    {t("Edit")}
+                                </Button>
+                        }
+                    </div>}
             </div>
         </div>
     )

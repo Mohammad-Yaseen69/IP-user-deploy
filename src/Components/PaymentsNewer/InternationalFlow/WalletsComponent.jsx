@@ -236,6 +236,13 @@ export const WalletCard = ({
         }
     }
 
+    useEffect(() => {
+        if ((!loading && !blocked) && (isSufficient)) {
+            if (wallet.default) {
+                dataHandler("wallet", wallet)
+            }
+        }
+    }, [wallet, loading, isSufficient])
 
     return (
         <div
