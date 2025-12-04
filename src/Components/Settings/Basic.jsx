@@ -37,7 +37,7 @@ const Basic = ({ setCurrentTab }) => {
     const [address, setAddress] = useState(userDetails?.address);
     const [city, setCity] = useState(userDetails?.city);
     const [postalCode, setPostalCode] = useState(userDetails?.postal_code);
-    const [country, setCountry] = useState(userDetails?.country_name);
+    const [country, setCountry] = useState(userDetails?.country_iso_code);
     const [aboutMe, setAboutMe] = useState(userDetails?.about_me);
     const [timezone, setTimezone] = useState(userDetails?.timezone)
     const [usernameValid, setUsernameValid] = useState(true)
@@ -136,7 +136,7 @@ const Basic = ({ setCurrentTab }) => {
         setAddress(userDetails?.address)
         setCity(userDetails?.city ?? "")
         setPostalCode(userDetails?.postal_code)
-        setCountry(userDetails?.country_name ?? "")
+        setCountry(userDetails?.country_iso_code ?? "")
         setAboutMe(userDetails?.about_me)
         setGender(userDetails?.gender)
         setTimezone(userDetails?.timezone)
@@ -352,6 +352,7 @@ const Basic = ({ setCurrentTab }) => {
             // console.log(dec)
         } catch (err) {
             const dec = decryptData(err.response.data.data)
+            console.log(err)
             toast.error(dec?.message || "Something went wrong while verifying otp!")
             // console.log(decryptData(err.response.data.data))
         }
@@ -716,7 +717,7 @@ const Basic = ({ setCurrentTab }) => {
                             && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
                         <PhoneInput
                             phone={phone}
-                            country={countriesData.find(item => item.name === country)?.alpha3}
+                            country={countriesData.find(item => item.alpha3 === country)?.alpha3}
                             disableDropdown={true}
                             setPhone={setPhone}
                             disabled={userDetails?.phone || isVerified}
