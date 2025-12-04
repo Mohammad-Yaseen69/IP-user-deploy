@@ -596,7 +596,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             try {
                 credentials = await startAuthentication(dec1.options)
 
-            } catch(err) {
+            } catch (err) {
                 credentials = null
                 setBiometricLoading(false)
                 setIsPressed(false)
