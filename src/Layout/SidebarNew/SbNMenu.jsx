@@ -173,42 +173,42 @@ export const MENU = [
                 type: "link",
                 url: `${window.location.origin}/analytics`,
             },
-            {
-                title: "Store",
-                icon: <img src={shopingcard} style={{ marginRight: "12px" }} />,
-                activeIcon: <img src={shopingcard} style={{ marginRight: "12px" }} />,
-                type: "submenu",
-                menu: [
-                    {
-                        title: "Store Dashboard",
-                        icon: <img src={dashboardStore} style={{ marginRight: "12px" }} />,
-                        activeIcon: <img src={dashboardStore} style={{ marginRight: "12px" }} />,
-                        type: "link",
-                        url: `${window.location.origin}/ecommerce-store`,
-                    },
-                    {
-                        title: "My Order",
-                        icon: <img src={orderMy} style={{ marginRight: "12px" }} />,
-                        activeIcon: <img src={orderMy} style={{ marginRight: "12px" }} />,
-                        type: "link",
-                        url: `${window.location.origin}/ecommerce-store/orders`,
-                    },
-                    {
-                        title: "Product",
-                        icon: <img src={storeProduct} style={{ marginRight: "12px" }} />,
-                        activeIcon: <img src={storeProduct} style={{ marginRight: "12px" }} />,
-                        type: "link",
-                        url: `${window.location.origin}/ecommerce-store`,
-                    },
-                    {
-                        title: "Store Settings",
-                        icon: <img src={storeSetting} style={{ marginRight: "12px" }} />,
-                        activeIcon: <img src={storeSetting} style={{ marginRight: "12px" }} />,
-                        type: "link",
-                        url: `/ecommerce-store/settings`,
-                    },
-                ]
-            },
+            // {
+            //     title: "Store",
+            //     icon: <img src={shopingcard} style={{ marginRight: "12px" }} />,
+            //     activeIcon: <img src={shopingcard} style={{ marginRight: "12px" }} />,
+            //     type: "submenu",
+            //     menu: [
+            //         {
+            //             title: "Store Dashboard",
+            //             icon: <img src={dashboardStore} style={{ marginRight: "12px" }} />,
+            //             activeIcon: <img src={dashboardStore} style={{ marginRight: "12px" }} />,
+            //             type: "link",
+            //             url: `${window.location.origin}/ecommerce-store`,
+            //         },
+            //         {
+            //             title: "My Order",
+            //             icon: <img src={orderMy} style={{ marginRight: "12px" }} />,
+            //             activeIcon: <img src={orderMy} style={{ marginRight: "12px" }} />,
+            //             type: "link",
+            //             url: `${window.location.origin}/ecommerce-store/orders`,
+            //         },
+            //         {
+            //             title: "Product",
+            //             icon: <img src={storeProduct} style={{ marginRight: "12px" }} />,
+            //             activeIcon: <img src={storeProduct} style={{ marginRight: "12px" }} />,
+            //             type: "link",
+            //             url: `${window.location.origin}/ecommerce-store`,
+            //         },
+            //         {
+            //             title: "Store Settings",
+            //             icon: <img src={storeSetting} style={{ marginRight: "12px" }} />,
+            //             activeIcon: <img src={storeSetting} style={{ marginRight: "12px" }} />,
+            //             type: "link",
+            //             url: `/ecommerce-store/settings`,
+            //         },
+            //     ]
+            // },
             {
                 title: "OTHERS",
                 type: "text"
