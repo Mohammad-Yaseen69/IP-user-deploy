@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { Button, Card, CardBody, CardFooter, CardHeader, FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import CitiesDropDown from '../CitiesDropDown';
 import { toast } from 'react-toastify';
-import { countries } from 'country-list-json';
 import SuccessModal from '../AddBeneficiary/SuccessModal';
 import OTPConfirmation from '../UserSettingsNew/OTPConfirmation';
 import { useLocation, useNavigate } from 'react-router';
@@ -17,6 +16,9 @@ import DateMomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import PhoneInput from '../PhoneInput';
 import countriesData from "../PaymentsNewer/CountriesData.json"
+import citiesData from "../CitiesDropDown/CitiesData.json"
+import CountryBasedPhone from "../PhoneInput/PhoneNumberBasedOnCountry.json"
+
 
 // dates
 export const currentDate = new Date();
@@ -109,7 +111,8 @@ const Basic = ({ setCurrentTab }) => {
         axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/username-check`, {
             data: encrypted
         }, {
-            headers: authHeader
+            headers: authHeader,
+            timeout: 15000
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
@@ -159,7 +162,8 @@ const Basic = ({ setCurrentTab }) => {
             axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-username/${userDetails?._id}`, {
                 data: encrypted
             }, {
-                headers: authHeader
+                headers: authHeader,
+                timeout: 15000
             })
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
@@ -198,7 +202,8 @@ const Basic = ({ setCurrentTab }) => {
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/set-${type}-otp`, {
                 data: encrypted
             }, {
-                headers: authHeader
+                headers: authHeader,
+                timeout: 15000
             })
 
             const data = decryptData(res.data.data)
@@ -237,7 +242,8 @@ const Basic = ({ setCurrentTab }) => {
             axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-individual/${userDetails?._id}`, {
                 data: encrypted
             }, {
-                headers: authHeader
+                headers: authHeader,
+                timeout: 15000
             })
                 .then(res => {
                     setIsEditMode(false)
@@ -278,7 +284,8 @@ const Basic = ({ setCurrentTab }) => {
             axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-business/${userDetails?._id}`, {
                 data: encrypted
             }, {
-                headers: authHeader
+                headers: authHeader,
+                timeout: 15000
             })
                 .then(res => {
                     setIsEditMode(false)
@@ -308,7 +315,8 @@ const Basic = ({ setCurrentTab }) => {
             const getCountryTimezones = async () => {
                 try {
                     const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/get-timezones/${userDetails?.country_iso_code}`, {
-                        headers: authHeader
+                        headers: authHeader,
+                        timeout: 15000
                     })
                     const data = decryptData(res.data.data)
                     setAvailableTimezones(data?.timezones)
@@ -335,7 +343,8 @@ const Basic = ({ setCurrentTab }) => {
             const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/verify-${type}-otp`, {
                 data: encryptData(data)
             }, {
-                headers: authHeader
+                headers: authHeader,
+                timeout: 15000
             })
 
             const dec = decryptData(res.data.data)
@@ -391,14 +400,35 @@ const Basic = ({ setCurrentTab }) => {
     const [showUsernameGuide, setShowUsernameGuide] = useState(false)
 
     const handleSaveClick = () => {
+        const dialCode = String(CountryBasedPhone[country].dial_code)?.replace("+", "")
+
+        const filterNumber = (num) => {
+            if (typeof num === "string") {
+                const withoutDialCode = num.replace(dialCode, "")
+                return withoutDialCode ? withoutDialCode : undefined
+            } else {
+                num ? num : undefined
+            }
+        }
+
+
+
         if (userDetails?.account_type === "individual") {
             if (!email) return editProfileHandler()
             return userDetails?.email === email ? editProfileHandler() : sendOtp("email")
         }
         if (userDetails?.account_type === "business") {
-            return userDetails?.phone === phone ? editProfileHandler() : sendOtp("phone")
+            return filterNumber(userDetails?.phone) === filterNumber(phone) ? editProfileHandler() : sendOtp("phone")
         }
     }
+
+
+    const isAfricanCountry = useMemo(() => {
+        if (country) {
+            return citiesData.find(item => item.iso3 === country).region === "Africa"
+        }
+    }, [country])
+
     return (
         <MuiPickersUtilsProvider utils={DateMomentUtils}>
             <Card>
@@ -720,7 +750,7 @@ const Basic = ({ setCurrentTab }) => {
                             country={countriesData.find(item => item.alpha3 === country)?.alpha3}
                             disableDropdown={true}
                             setPhone={setPhone}
-                            disabled={userDetails?.phone || isVerified}
+                            disabled={userDetails?.phone || isVerified || !isEditMode}
                             customStyles={{
                                 width: "100%",
                                 background: userDetails?.phone ? "#e9ecef" : "white",
@@ -786,7 +816,7 @@ const Basic = ({ setCurrentTab }) => {
                         <Label>{t("Country")}   {
                             !country
                             && <span style={{ color: "red" }}>{t("(Required)")}</span>}</Label>
-                        <Input disabled={1 + 1 === 2 || isVerified} readOnly={1 + 1 === 2 || isVerified} value={country} onChange={e => setCountry(e.target.value)} />
+                        <Input disabled={true} readOnly={true} value={countriesData.find(item => item.alpha3 === country).name} onChange={e => setCountry(e.target.value)} />
                     </FormGroup>
                     <FormGroup style={{ position: "relative" }}>
                         {
@@ -823,7 +853,7 @@ const Basic = ({ setCurrentTab }) => {
 
                     <FormGroup style={{ position: "relative" }}>
                         {
-                            !userDetails?.postal_code
+                            !userDetails?.postal_code && !isAfricanCountry
                             &&
                             <div style={{
                                 height: "9px",
@@ -837,7 +867,7 @@ const Basic = ({ setCurrentTab }) => {
                         }
                         <Label>
                             {t("Postal Code")}
-                            {!userDetails?.postal_code && <span style={{ color: "red" }}>{t("(Required)")}</span>}
+                            {(!userDetails?.postal_code && !isAfricanCountry) && <span style={{ color: "red" }}>{t("(Required)")}</span>}
                         </Label>
                         <Input disabled={!isEditMode || (isVerified && userDetails?.postal_code)} readOnly={!isEditMode || (isVerified && userDetails?.postal_code)} value={postalCode} onChange={e => setPostalCode(e.target.value)} />
                     </FormGroup>
