@@ -29,6 +29,7 @@ import { useLocation, useNavigate } from "react-router"
 import CountryBasedPhone from "../../PhoneInput/PhoneNumberBasedOnCountry.json"
 import useChannels from "../../../hooks/BeneficiaryHooks/useChannels"
 import { bankExtrasInitial, basicExtrasInitial, withdrawlsFields } from "../../../utils/Data"
+import citiesData from "../../CitiesDropDown/CitiesData.json"
 
 
 const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdrawal, index }) => {
@@ -189,6 +190,8 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
     const [cardCompleted, setCardCompleted] = useState(false)
     const [cryptoCompleted, setCryptoCompleted] = useState(false)
     const [bankError, setBankError] = useState("")
+    const [bankCountryCode, setBankCountryCode] = useState("")
+
 
     const [bankMobCrypto, setbankMobCrypto] = useState({
         ...withdrawlsFields,
@@ -229,7 +232,13 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
         })
     }
 
-    // Add this useEffect to validate bank details completion properly
+
+    const isAfricanBank = useMemo(() => {
+        if (bankCountryCode) {
+            return citiesData.find(item => item.iso3 === bankCountryCode)?.region === "Africa"
+        }
+    }, [bankCountryCode])
+
     useEffect(() => {
         if (current?.value === "bank") {
             const isAllBankFieldsFilled =
@@ -240,7 +249,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                 bankMobCrypto.bank_branch_street &&
                 bankMobCrypto.bank_city &&
                 bankMobCrypto.bank_province &&
-                bankMobCrypto.bank_postal_code &&
+                (isAfricanBank ? true : bankMobCrypto.bank_postal_code) &&
                 bankMobCrypto.bank_account_holder_name &&
                 bankMobCrypto.bank_payer &&
                 Object.keys(bankExtras)
@@ -253,7 +262,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
 
             setBankCompleted(isAllBankFieldsFilled);
         }
-    }, [bankMobCrypto, bankExtras, services, current]);
+    }, [bankMobCrypto, bankExtras, services, current, isAfricanBank]);
 
 
     useEffect(() => {
@@ -886,6 +895,8 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                                                 handleBasicExtraChange={handleBasicExtraChange}
                                                 setBasicExtras={setBasicExtras}
                                                 alpha3={countries.find(item => item.name.toLowerCase().includes(country?.name?.toLowerCase()))?.alpha3}
+                                                isAfricanBank={isAfricanBank}
+                                                setBankCountryCode={setBankCountryCode}
                                             />
                                         }
                                         {

@@ -8,14 +8,14 @@ import NeemaBenExtrasFields from '../../AddBeneficiary/NeemaBenExtrasFields';
 import useBankDetails from '../../../hooks/BeneficiaryHooks/useBankDetails';
 
 
-const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetails, setBankError, bankError, payers, bankExtras, serviceFieldInfoValidate, services, handleBankExtraChange, alpha3, payerLoading, basicExtras, fieldInfoValidate, setBasicExtras, handleBasicExtraChange }) => {
+const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetails, setBankError, bankError, payers, bankExtras, serviceFieldInfoValidate, services, handleBankExtraChange, alpha3, payerLoading, basicExtras, fieldInfoValidate, setBasicExtras, handleBasicExtraChange, setBankCountryCode, isAfricanBank }) => {
     const { t } = useTranslation()
 
 
     useEffect(() => {
         setBankError("")
     }, [])
-    const { getBankDetails } = useBankDetails({
+    const { getBankDetails, bankCountryCode } = useBankDetails({
         accNumType: states.accNumType,
         setFormData: setBankDetails,
         handleBankExtraChange,
@@ -24,8 +24,14 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
         alpha3,
         countryName: country,
         fieldKeyOverrides: { branch_name: 'bank_branch_name' },
-        debounceMs: 2000
+        debounceMs: 2000,
     })
+
+    useEffect(() => {
+        if (bankCountryCode) {
+            setBankCountryCode(bankCountryCode)
+        }
+    }, [bankCountryCode])
 
     useEffect(() => {
         if (payers.length === 1) {
@@ -149,7 +155,7 @@ const Bank = ({ country, states, values, changeHandler, isEditMode, setBankDetai
                                         <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" required name="bank_province" value={values.bank_province} onChange={changeHandler} />
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
-                                        <Label className="col-form-label" >{t("Postal Code")} <span className="req_star">*</span></Label>
+                                        <Label className="col-form-label" >{t("Postal Code")} {!isAfricanBank && <span className="req_star">*</span>}</Label>
                                         <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" required name="bank_postal_code" onChange={e => {
                                             const value = e.target.value.replace(/[^a-zA-Z0-9]/g, '')
                                             changeHandler({ target: { name: e.target.name, value } })
