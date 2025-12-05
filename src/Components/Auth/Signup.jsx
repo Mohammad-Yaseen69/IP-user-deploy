@@ -78,6 +78,17 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
         dataHandler("country", country)
     }, [country])
 
+
+    const isWhatsappDefault = useMemo(() => {
+        if (data.country) {
+            const whatsappDefaultCountries = ["KWT", "SAU", "ARE"]
+
+            if (whatsappDefaultCountries.includes(data.country)) {
+                return true
+            }
+        }
+    }, [data.country])
+
     useEffect(() => {
         if (code) {
             dataHandler("referral_code", code)
@@ -320,7 +331,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                 dataHandler("step", data.step + 1)
                 break;
             case 5:
-                signupHandler()
+                signupHandler(isWhatsappDefault ? "whatsapp" : "sms")
                 break;
 
             default:
@@ -385,6 +396,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                                             timer={120}
                                             type="phone"
                                             data={data}
+                                            isWhatsappDefault={isWhatsappDefault}
                                         />
                                         :
                                         <form className={styles.form_details} onSubmit={clickHandler} style={{ minHeight: "fit-content" }}>

@@ -6,7 +6,7 @@ import styles from "../styles/index.module.css"
 import { UserContext } from '../../../Context/UserContext'
 import { smsIcon, whatsappIcon } from "../files"
 
-const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = "phone", data, dataHandler }) => {
+const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = "phone", data, dataHandler, isWhatsappDefault }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
 
@@ -20,9 +20,16 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
         }
     }, [data])
     const [isAnyFieldEmpty, setIsAnyFieldEmpty] = useState(true);
-    const [currentMethod, setCurrentMethod] = useState("sms")
+    const [currentMethod, setCurrentMethod] = useState()
     const [showToolTip, setShowTooltip] = useState()
 
+    useEffect(() => {
+        if (isWhatsappDefault) {
+            setCurrentMethod("whatsapp")
+        } else {
+            setCurrentMethod("sms")
+        }
+    }, [isWhatsappDefault])
     const handleInputChange = (index, value) => {
         let numericValue = value.replace(/[^0-9]/g, '');
         if (numericValue < 0 || String(numericValue)?.includes("+") || String(numericValue)?.includes("-") || String(numericValue)?.includes("e")) {

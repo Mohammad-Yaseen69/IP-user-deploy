@@ -14,9 +14,15 @@ const Stepthree = ({ data, dataHandler }) => {
                         <label>{t("Phone Number")}</label>
                         <PhoneInput
                             country={data.country}
-                            setPhone={(e) => dataHandler("phone", e)}
+                            setPhone={(e) => {
+                                dataHandler("phone", e)
+                                dataHandler("phone_error", null)
+                            }}
                             phone={data.phone}
-                            setCountry={e => dataHandler("country", e?.alpha3 ?? "")}
+                            setCountry={e => {
+                                dataHandler("country", e?.alpha3 ?? "")
+                                dataHandler("phone_error", null)
+                            }}
                         />
 
                         {data.phone?.slice(0, 3) === "971" && <p style={{ margin: "0", fontSize: "14px", fontWeight: 600 }}>A verification code will be sent via <span style={{ color: "#25D366" }}>WhatsApp</span>.</p>}
