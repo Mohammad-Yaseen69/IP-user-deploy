@@ -2,7 +2,7 @@ import { CardBody, CardHeader, Form, FormGroup, Input, Label } from "reactstrap"
 import { countries } from "country-list-json";
 // import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { useLocation, useNavigate } from "react-router";
 import CountryDropDown from "../AddBeneficiary/CountryDropDown";
@@ -24,6 +24,7 @@ import useChannels from "../../hooks/BeneficiaryHooks/useChannels";
 import { getExtractedPhone, serviceFieldInfoValidate } from "../../utils/Functions";
 import useBenEditFunc from "../../hooks/BeneficiaryHooks/useBenEditFunc";
 import NeemaBenExtrasFields from "../AddBeneficiary/NeemaBenExtrasFields";
+import citiesData from "../CitiesDropDown/CitiesData.json"
 
 
 
@@ -246,6 +247,11 @@ const EditBeneficiary = () => {
 
 
     // bank details
+    const isAfricanBank = useMemo(() => {
+        if (bankCountryCode) {
+            return citiesData.find(item => item.iso3 === bankCountryCode)?.region === "Africa"
+        }
+    }, [bankCountryCode])
     useEffect(() => {
         const fields = services?.find(item =>
             item?.method?.toLowerCase()?.includes("bank")
@@ -264,7 +270,7 @@ const EditBeneficiary = () => {
                 if (item === "swift_bic_code" && accNumType === "Swift") return false
                 return true
             })
-        if (formData.bank_name && formData.branch_name && formData.bank_account_number && formData.bank_postal_code && formData.bank_branch_street && formData.bank_city && formData.bank_province && resultKeys.every(item => bankExtras?.[item]?.length > 0)) {
+        if (formData.bank_name && formData.branch_name && formData.bank_account_number && (isAfricanBank ? true : formData.bank_postal_code) && formData.bank_branch_street && formData.bank_city && formData.bank_province && resultKeys.every(item => bankExtras?.[item]?.length > 0)) {
             setCompletedBank(true)
         } else {
             setCompletedBank(false)
@@ -894,7 +900,8 @@ const EditBeneficiary = () => {
                                                 handleCashxtraChange,
                                                 isEdit: true,
                                                 walletNumberError,
-                                                isEditMode
+                                                isEditMode,
+                                                isAfricanBank
                                             }}
                                             />
 

@@ -81,7 +81,8 @@ const PaymentChannelUI = ({
     isEdit = false,
     walletNumberError,
     isEditMode = true,
-    completedCrypto
+    completedCrypto,
+    isAfricanBank
 }) => {
     const { userDetails } = useContext(UserContext)
     const { t } = useTranslation()
@@ -416,7 +417,7 @@ const PaymentChannelUI = ({
                         <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" required disabled={isEdit ? !isValidIban || !isEditMode : !isValidIban} name="bank_province" value={formData.bank_province} onChange={inputChangeHandler} />
                     </FormGroup>
                     <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
-                        <Label className="col-form-label" >{t("Postal Code")}<span className="req_star">*</span></Label>
+                        <Label className="col-form-label" >{t("Postal Code")}{!isAfricanBank && <span className="req_star">*</span>}</Label>
                         <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" required disabled={isEdit ? !isValidIban || !isEditMode : !isValidIban} value={formData.bank_postal_code} name="bank_postal_code" onChange={e => {
                             const value = e.target.value.replace(/[^a-zA-Z0-9]/g, '')
                             inputChangeHandler({ target: { name: e.target.name, value } })
