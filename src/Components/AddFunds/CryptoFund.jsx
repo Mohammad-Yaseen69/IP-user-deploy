@@ -122,7 +122,7 @@ const CryptoFund = ({ setAction }) => {
             console.log(response)
 
             const paymentConfig = {
-                payment_id,
+                orderId: payment_id,
                 amount: exchangeRate.total,
                 currency: "USDT_TRC20",
                 paymentPurpose: `Crypto Topup`
