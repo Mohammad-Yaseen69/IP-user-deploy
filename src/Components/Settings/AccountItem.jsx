@@ -12,6 +12,7 @@ import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
 import { useLocation, useNavigate } from 'react-router'
 import LinkToInstagramModal from '../LinkToInstagramModal'
 import LinktoTelegramModal from "../LinkToTelegramModal"
+import { Info } from 'react-feather'
 
 const AccountItem = ({ data }) => {
     const navigate = useNavigate()
@@ -143,14 +144,21 @@ const AccountItem = ({ data }) => {
     return (
         <div className={styles.card} ref={data.name.toLowerCase().includes("insta") ? conRef : null}>
             <div className={styles.top}>
-                <div className={styles.left}>
-                    <img src={data.img} alt={data.name} />
+                <div style={{ justifyContent: "space-between", width: "100%" }} className={styles.left}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <img src={data.img} alt={data.name} />
 
-                    <H4>{data.name}</H4>
+                        <H4>{data.name}</H4>
+                    </div>
 
+                    {(data.name.toLowerCase().includes("insta") || data.name.toLowerCase().includes("telegram")) &&
+                        <>
+                            {checked ? <></> : <Info style={{ cursor: "pointer" }} onClick={() => setShowModal(true)} />}
+                        </>
+                    }
 
                 </div>
-                <div className={styles.right}>
+                <div style={{ display: "none" }} className={styles.right}>
                     {
                         data.available
                             ?
@@ -158,9 +166,9 @@ const AccountItem = ({ data }) => {
                                 {
                                     saving
                                         ?
-                                        <div class="d-flex justify-content-center">
-                                            <div class="spinner-border" color='primary' role="status">
-                                                <span class="sr-only">{t("Loading...")}</span>
+                                        <div className="d-flex justify-content-center">
+                                            <div className="spinner-border" color='primary' role="status">
+                                                <span className="sr-only">{t("Loading...")}</span>
                                             </div>
                                         </div>
                                         :
@@ -200,9 +208,12 @@ const AccountItem = ({ data }) => {
                 <P>{
                     userDetails?.insta_username && data.name.toLowerCase().includes("insta")
                         ?
-                        userDetails?.insta_username
+                        `${userDetails?.insta_username}`
                         :
-                        t("Add Your Account")}
+                        userDetails?.telegram_username && data.name.toLowerCase().includes("telegram") ?
+                            `${userDetails?.telegram_username}`
+                            :
+                            t("Add Your Account")}
                 </P>
 
                 <span
