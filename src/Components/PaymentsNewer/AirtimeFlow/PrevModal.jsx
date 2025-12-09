@@ -10,7 +10,7 @@ import { IoScan } from 'react-icons/io5'
 import { BsQrCode } from 'react-icons/bs'
 import { useTranslation } from 'react-i18next'
 
-const PrevModal = ({ isOpen, toggle }) => {
+const PrevModal = ({ isOpen, toggle, isMobile }) => {
     const [esims, setEsims] = useState([])
     const [filteredEsims, setFilteredEsims] = useState([])
     const [searchTerm, setSearchTerm] = useState('')
@@ -81,7 +81,7 @@ const PrevModal = ({ isOpen, toggle }) => {
                             <p>{t("Loading eSIMs")}...</p>
                         ) : filteredEsims?.length > 0 ? (
                             filteredEsims?.map((esim) => (
-                                <div key={esim._id} className={styles.card}>
+                                <div style={{flexDirection: isMobile && "column"}} key={esim._id} className={styles.card}>
                                     <div style={{ justifyContent: "space-between", alignSelf: "stretch" }} className={styles.left}>
                                         <div>
                                             <h3>{esim.productName}</h3>
@@ -109,7 +109,7 @@ const PrevModal = ({ isOpen, toggle }) => {
                                             </button>
                                         </div>
                                     </div>
-                                    <div className={styles.right}>
+                                    <div style={{width: isMobile && "100%"}} className={styles.right}>
                                         <div className={styles.card}>
                                             <span>{t("Price")}</span>
                                             <p>{esim.currency} {esim.price}</p>

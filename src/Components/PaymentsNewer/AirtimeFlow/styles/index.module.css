@@ -47,7 +47,7 @@
     margin-bottom: 0;
 }
 
-.left .manageBtn {
+.manageBtn {
     display: flex;
     padding: 12px;
     white-space: nowrap;
