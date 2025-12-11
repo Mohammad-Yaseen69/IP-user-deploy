@@ -95,7 +95,7 @@ const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoi
 
 
         const paymentConfig = {
-            amount: feeDetails?.total,
+            amount: feeDetails?.totalCryptoAmount,
             orderId: createdTransaction.payment_id,
             paymentPurpose: reasons[data.cryptoDetails?.reason],
             currency: 'USDT_TRC20',
