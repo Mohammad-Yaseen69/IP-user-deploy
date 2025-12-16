@@ -9,7 +9,6 @@ import axios from "axios"
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import { useLocation } from "react-router"
 import RecentBeneficiary from "./RecentBeneficiary"
-import { AnimatePresence, motion } from "framer-motion"
 const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
     const { t } = useTranslation()
     const [search, setSearch] = useState("")
@@ -128,70 +127,66 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
 
 
 
-            <motion.div layout transition={{ layout: { duration: 0.5, ease: "linear" } }}>
-                <AnimatePresence>
-                    {!expandRecent &&
-                        <>
-                            {!cardToWallet &&
-                                <div className={styles.recipient_not}>
-                                    <p>{t("Recipient Not on InstaPay?")}</p>
-                                    <button onClick={() => setShowInviteModal(true)}>
-                                        <span>{t("Invite Them")}</span>
-                                    </button>
-                                    {
-                                        showInviteModal
-                                        &&
-                                        <InviteFriendModal
-                                            isOpen={showInviteModal}
-                                            toggle={() => setShowInviteModal(false)}
-                                        />
-                                    }
-                                </div>
-                            }
+            {!expandRecent &&
+                <>
+                    {!cardToWallet &&
+                        <div className={styles.recipient_not}>
+                            <p>{t("Recipient Not on InstaPay?")}</p>
+                            <button onClick={() => setShowInviteModal(true)}>
+                                <span>{t("Invite Them")}</span>
+                            </button>
                             {
-                                (searchedUsers.length === 0 && !error && (!data.loading && !benLoading))
+                                showInviteModal
                                 &&
-                                <div className={styles.guide}>
-                                    <p>{t("Please follow these examples:")}</p>
-                                    <p>{t("Wallet ID")}: <strong>GY68J782</strong></p>
-                                    <p>{t("InstaPay/Instagram Username")}: <strong>instauser</strong></p>
-                                    <p>{t("Email")}: <strong>user@email.com</strong></p>
-                                    <p>{t("Phone Number")}: <strong>44795396600 ({t("With Country code")})</strong></p>
-                                </div>
+                                <InviteFriendModal
+                                    isOpen={showInviteModal}
+                                    toggle={() => setShowInviteModal(false)}
+                                />
                             }
-
-                            <div className={styles.users}>
-                                {
-                                    ((data.loading || benLoading))
-                                        ?
-                                        <div className={styles.loader}>
-                                            <InstaPayLoader />
-                                        </div>
-                                        :
-                                        searchedUsers.length > 0
-                                            ?
-                                            searchedUsers.map(item => (
-                                                <BeneficiaryCard
-                                                    data={data}
-                                                    dataHandler={dataHandler}
-                                                    item={item}
-                                                    key={item?._id}
-                                                />
-                                            ))
-                                            :
-                                            error &&
-                                            (
-                                                <div className={styles.no_r}>{t("No Results")}</div>
-                                            )
-                                }
-                            </div>
-                        </>}
-
-                    {(!data.loading && !benLoading) &&
-                        <RecentBeneficiary expandRecent={expandRecent} data={data} dataHandler={dataHandler} setExpandRecent={setExpandRecent} />
+                        </div>
                     }
-                </AnimatePresence>
-            </motion.div>
+                    {
+                        (searchedUsers.length === 0 && !error && (!data.loading && !benLoading))
+                        &&
+                        <div className={styles.guide}>
+                            <p>{t("Please follow these examples:")}</p>
+                            <p>{t("Wallet ID")}: <strong>GY68J782</strong></p>
+                            <p>{t("InstaPay/Instagram Username")}: <strong>instauser</strong></p>
+                            <p>{t("Email")}: <strong>user@email.com</strong></p>
+                            <p>{t("Phone Number")}: <strong>44795396600 ({t("With Country code")})</strong></p>
+                        </div>
+                    }
+
+                    <div className={styles.users}>
+                        {
+                            ((data.loading || benLoading))
+                                ?
+                                <div className={styles.loader}>
+                                    <InstaPayLoader />
+                                </div>
+                                :
+                                searchedUsers.length > 0
+                                    ?
+                                    searchedUsers.map(item => (
+                                        <BeneficiaryCard
+                                            data={data}
+                                            dataHandler={dataHandler}
+                                            item={item}
+                                            key={item?._id}
+                                        />
+                                    ))
+                                    :
+                                    error &&
+                                    (
+                                        <div className={styles.no_r}>{t("No Results")}</div>
+                                    )
+                        }
+                    </div>
+                </>}
+
+            {(!data.loading && !benLoading) &&
+                <RecentBeneficiary expandRecent={expandRecent} data={data} dataHandler={dataHandler} setExpandRecent={setExpandRecent} />
+            }
         </div>
     )
 }
