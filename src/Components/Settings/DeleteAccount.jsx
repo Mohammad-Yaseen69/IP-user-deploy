@@ -29,12 +29,12 @@ const DeleteAccount = () => {
     }
 
     return (
-        <Card>
+        <Card style={{ flexDirection: "column" }}>
             <CardHeader style={{ padding: "30px 30px 0" }}>
                 <h4>{t("Delete Your Account")}</h4>
             </CardHeader>
             <CardBody style={{ padding: "0 30px 30px" }}>
-                <div className="container p-sm-5 p-0">
+                <div style={{flexDirection:"column"}} className="container p-sm-5 p-0">
                     <div className="mt-4">
                         <h4>
                             {t("Ask us to delete your data and close this account")}
@@ -48,17 +48,17 @@ const DeleteAccount = () => {
                     <div className="mt-4 mb-4">
                         {/* <h6>{t("Before you continue:")}</h6> */}
                         <ul className="list-unstyled p-3 d-flex flex-column text-sm" style={{ listStyleType: "disk" }}>
-                            <li>
+                            <li style={{textAlign: "left"}}>
                                 {t(
                                     "If your account is limited, go to the Resolution Center, select 'Go to Account Limitations', then click 'Resolve'."
                                 )}
                             </li>
-                            <li>
+                            <li style={{textAlign: "left"}}>
                                 {t(
                                     "Make sure any outstanding payments have cleared. We won't be able to close your account until they do."
                                 )}
                             </li>
-                            <li>
+                            <li style={{textAlign: "left"}}>
                                 {t(
                                     "If you have a negative balance, click the Resolve link next to your balance."
                                 )}
