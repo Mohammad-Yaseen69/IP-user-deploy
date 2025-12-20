@@ -10,6 +10,7 @@ import SocialModal from "../../ShareBtn/SocialModal"
 import { useLocation, useNavigate } from "react-router"
 import fail from "./files/fail.json"
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import success from "./files/success.gif"
 
 const Receipt = ({ data, showTrxBtn = true, transactionStatus }) => {
     const { t } = useTranslation()
@@ -20,6 +21,7 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus }) => {
     const queryParams = new URLSearchParams(location.search)
     const title = queryParams.get("title")
     return (
+
         <>
             {
                 data.error
@@ -53,7 +55,7 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus }) => {
                                 <p>{t("Thanks for Using InstaPay")}</p>
                             </div>
                             {/* <video src={confirm_vid} muted autoPlay loop controls={false} /> */}
-                            {/* <img src={success} alt="" /> */}
+                            <img src={success} alt="" />
                             <DotLottieReact
                                 src={transactionStatus !== "error" ? "https://lottie.host/dc9844a3-b41b-4ddc-97c8-0039376f3ac8/DGe7bLZyug.json" : fail}
                                 backgroundColor="transparent"
