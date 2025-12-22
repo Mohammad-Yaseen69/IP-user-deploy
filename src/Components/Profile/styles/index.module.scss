@@ -850,6 +850,7 @@
                         .qr_code {
                             height: 160px;
                             width: 160px;
+                            object-fit: contain;
                         }
 
                         .qr_info {
