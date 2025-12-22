@@ -66,7 +66,7 @@ const Qr = ({ currentRevTab, averageRatingAsBuyer, averageRatingAsSeller, totalR
                         width: "fit-content"
                     }}>
                         <img
-                            src={userWallet?.qrCode?.url}
+                            src={`${userWallet?.qrCode?.url}?debug=1`}
                             alt="QR Code"
                             className={styles.qr_code}
                         />
