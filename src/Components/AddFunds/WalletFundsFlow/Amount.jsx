@@ -65,7 +65,7 @@ const Amount = ({ data, dataHandler }) => {
             errorMsg = `Minimum transactional amount is ${limits.min}`;
         } else if (+String(data.amount ?? "")?.replaceAll(",", "") > +formatCurrencyLocal(limits.max)) {
             errorMsg = `Maximum transactional amount is ${limits.max}`;
-        } else if (userDetails.user.kyc_status !== "approved" && +String(data.amount ?? "").replaceAll(",", "") > +formatCurrencyLocal(limits.max)) {
+        } else if (userDetails?.user?.kyc_status !== "approved" && +String(data.amount ?? "").replaceAll(",", "") > +formatCurrencyLocal(limits.max)) {
             errorMsg = "Invalid Amount: Your current identity verification level limits the maximum amount you can add. Please upgrade your identity verification to benefit from higher limits";
         }
         dataHandler && dataHandler('exchangeRateError', errorMsg);
