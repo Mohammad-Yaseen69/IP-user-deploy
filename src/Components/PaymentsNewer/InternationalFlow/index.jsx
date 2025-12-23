@@ -40,6 +40,7 @@ import { useQuery } from "@tanstack/react-query"
 import { apiWrapper } from "../../../utils/Functions/apiWrapper"
 import { logger } from "@sentry/react"
 import { formatDateTime } from "../../ReceiptInvoices/InvoiceTable"
+import { formatCurrency } from "../../../Helper/AmountFormat"
 
 const leftSideContent = [
     "Enter The Amount",
@@ -1216,9 +1217,19 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                             {internationalData.thunesBalance === 0 ? (
                                 `We're currently unable to process transfers in ${internationalData.currency}. Please try again later or contact support for assistance.`
                             ) : (
-                                `We understand that your remaining sending limit is up to ${internationalData.exchange_rate?.limits_used?.daily_sending_limit_used?.toFixed(2) || 'N/A'} ${internationalData.currency}. However, at this time, we can only process a maximum of ${internationalData.thunesBalance} ${internationalData.currency}.
-                                    You may proceed with ${internationalData.thunesBalance} ${internationalData.currency} or try again later to be able to send ${internationalData.amount} ${internationalData.currency}.
-                                    Thank you for your understanding.`
+                                <>
+                                    {"We understand that your remaining sending limit is up to"}{" "}
+                                    {formatCurrency(internationalData.exchange_rate?.limits_used?.daily_sending_limit_used, true) || "N/A"}{" "}
+                                    {internationalData.currency}. {"However, at this time, we can only process a maximum of"}{" "}
+                                    {formatCurrency(internationalData.thunesBalance, true)} {internationalData.currency}.
+                                    <br /><br />
+                                    {"You may proceed with"}{" "}
+                                    {formatCurrency(internationalData.thunesBalance, true)} {internationalData.currency}{" "}
+                                   {" at the moment or try again later to be able to send"}{" "}
+                                    {formatCurrency(internationalData.amount, true)} {internationalData.currency}.
+                                    <br /><br />
+                                    {"Thank you for your understanding."}
+                                </> 
                             )}
                         </h3>
                     </ModalBody>
