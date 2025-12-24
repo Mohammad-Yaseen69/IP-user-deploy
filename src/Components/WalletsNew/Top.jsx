@@ -174,7 +174,7 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
                 <div className={styles.top} >
                     <h2 >{currentWallet?.currency?.code}  {t("Wallet")}</h2>
 
-                    {currentWallet?.wallet_type !== "crypto" ?
+                    {(currentWallet?.wallet_type !== "crypto" && !(currentWallet?.blocked || currentWallet?.admin_blocked || currentWallet?.status !== "active")) ?
 
                         <div className={styles.default}>
                             <span style={{ textAlign: "right" }}>
