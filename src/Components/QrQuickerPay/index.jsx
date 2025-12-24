@@ -21,6 +21,7 @@ import FeeScreen from "./components/FeeScreen"
 import { getWalletDetails, sendOtpSkip, confirmTransaction } from "./queries"
 import useBiometricVerifications from "../../hooks/GeneralUse/useBiometricVerfications"
 import useFXNew from "../../hooks/Payments/useFXNew"
+import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow"
 
 const initialData = {
   step: 1,
@@ -97,7 +98,13 @@ const QrQuickerPay = () => {
 
 
   const { mutateAsync: confirmTransactionMutation } = useMutation({
-    mutationFn: ({ payload, apiHeaders }) => confirmTransaction(apiHeaders, payload)
+    mutationFn: ({ payload, apiHeaders }) => confirmTransaction(apiHeaders, payload),
+    onError: (error) => {
+      const dec = decryptData(error?.response?.data?.data)
+      const err = apiErrorMessage(dec.message)
+      dataHandler("error", err || dec?.message || "We are unable to process your request at the moment.")
+      dataHandler("showModal", true)
+    }
   })
 
   const handleConfirmTransaction = async (token, apiHeaders) => {
@@ -173,6 +180,7 @@ const QrQuickerPay = () => {
 
   const { t } = useTranslation()
 
+  console.log(data.error)
   return (
     <div style={{ position: 'relative' }} className={styles.cont}>
 
@@ -280,16 +288,7 @@ const QrQuickerPay = () => {
                     onClick={async () => {
                       if (data.step === 1) {
                         if (!data.userDetails._id) {
-                          const result = await handleBiometricVerification()
-                          if (result) {
-                            handleGetFeeDetails(
-                              result?.user?.walletDetails?._id,
-                              result?.user?.walletDetails?.currency?.code,
-                              result?.token,
-                              result?.user?._id,
-                              result?.user?.level_id
-                            )
-                          }
+                          await handleBiometricVerification()
                         }
                         else {
                           handleGetFeeDetails(

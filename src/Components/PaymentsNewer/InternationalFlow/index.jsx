@@ -63,7 +63,8 @@ const apiErrors = {
     "invoice_not_found_or_inactive": "The invoice you're trying to pay is either inactive or the invoice id is not correct!",
     "invoice_not_found": "The invoice you're trying to pay is either inactive or the invoice id is not correct!",
     "invoice_already_paid": "This invoice is already paid!",
-    'receiver_wallet_not_found': "Recipient wallet is either disabled, blocked or does not exists."
+    'receiver_wallet_not_found': "Recipient wallet is either disabled, blocked or does not exists.",
+    "insufficient_funds": "You don't have sufficient funds to complete this transaction."
 }
 
 
@@ -1225,11 +1226,11 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                     <br /><br />
                                     {"You may proceed with"}{" "}
                                     {formatCurrency(internationalData.thunesBalance, true)} {internationalData.currency}{" "}
-                                   {" at the moment or try again later to be able to send"}{" "}
+                                    {" at the moment or try again later to be able to send"}{" "}
                                     {formatCurrency(internationalData.amount, true)} {internationalData.currency}.
                                     <br /><br />
                                     {"Thank you for your understanding."}
-                                </> 
+                                </>
                             )}
                         </h3>
                     </ModalBody>
