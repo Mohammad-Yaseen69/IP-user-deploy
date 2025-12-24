@@ -33,7 +33,6 @@ const WalletsComponent = ({ data, dataHandler, loading = false, inEsim }) => {
 
     // const width = useWindowWidth()
 
-    console.log(data)
     return (
         <>
             {
@@ -242,7 +241,7 @@ export const WalletCard = ({
                 dataHandler("wallet", wallet)
             }
         }
-    }, [wallet, loading, isSufficient])
+    }, [wallet, loading, isSufficient, blocked])
 
     return (
         <div
