@@ -102,7 +102,8 @@ const QrQuickerPay = () => {
     onError: (error) => {
       const dec = decryptData(error?.response?.data?.data)
       const err = apiErrorMessage(dec.message)
-      dataHandler("error", err || dec?.message || "We are unable to process your request at the moment.")
+      const err2 = LimitsErrorMessage(dec.message)
+      dataHandler("error",err2 ||  err || dec?.message || "We are unable to process your request at the moment.")
       dataHandler("showModal", true)
     }
   })
