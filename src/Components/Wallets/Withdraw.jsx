@@ -17,7 +17,9 @@ import ChooseType from './withdrawal/ChooseType'
 import ChooseWithdrawal from './withdrawal/ChooseWithdrawal'
 import DefaultWithdrawal from './withdrawal/DefaultWithdrawal'
 import { Link } from 'react-router-dom'
-import { Toggle } from '../MyMasterCard/CardPurchased'
+import useVendorBalance from "../../hooks/Payments/useVendorBalance"
+import VendorBalanceModal from '../PaymentsNewer/InternationalFlow/VendorBalanceModal'
+
 
 
 const Withdraw = ({ isOpen, toggle, wallet }) => {
@@ -263,7 +265,7 @@ const WithdrawOldFlow = ({
     const [exchangeRate, setExchangeRate] = useState()
     const [showNotice, setShowNotice] = useState(false)
     const [agree, setAgree] = useState(false)
-
+    const [showBalanceModal, setShowBalanceModal] = useState(false)
 
 
     const getVendor = () => {
@@ -273,6 +275,8 @@ const WithdrawOldFlow = ({
         if (payoutChannel?.value === "cash") return currentWithdrawal?.cash_pickup?.[0]?.vendor || "thunes"
         return ""
     }
+
+    const { vendorBalance, vendorBalanceInUSD, vendorBalanceLoading } = useVendorBalance(wallet?.currency?.code, getVendor(), (err) => setAmountError(err))
 
     useEffect(() => {
         if (payoutChannel) {
@@ -355,6 +359,14 @@ const WithdrawOldFlow = ({
 
             case 2:
                 if (amountError || !amount) break;
+                console.log(amount, vendorBalance)
+                if (vendorBalanceInUSD < 4) {
+                    setShowBalanceModal(true)
+                    break;
+                } else if (Number(String(amount)?.replace(",", "")) >= vendorBalance) {
+                    setShowBalanceModal(true)
+                    break;
+                }
                 if (isExternalWithdrawal) {
                     if (showNotice) {
                         setStep(prev => prev + 1)
@@ -430,6 +442,16 @@ const WithdrawOldFlow = ({
     return (
         <>
             <ModalBody style={{ padding: step === 4 && confirmed && window.innerWidth < 450 ? "0" : "25px" }}>
+                <VendorBalanceModal
+                    currency={wallet.currency.code}
+                    isOpen={showBalanceModal}
+                    sendingAmount={amount}
+                    toggle={() => setShowBalanceModal(false)}
+                    vendorBalance={vendorBalance}
+                    vendorBalanceInUSD={vendorBalanceInUSD}
+                    vendorBalanceLoading={vendorBalanceLoading}
+                    sendingLimit={exchangeRate?.daily_receiving_limit_used || 0}
+                />
                 {
                     step === 1
                     &&
