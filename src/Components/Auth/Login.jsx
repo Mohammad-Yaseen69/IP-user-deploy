@@ -49,6 +49,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [isOtpCorrect, setIsOtpCorrect] = useState(false)
     const [otpVerified, setOtpVerified] = useState(false)
     const [currentOtpMethod, setCurrentOtpMethod] = useState("auth")
+    const [pendingOtpMethod, setPendingOtpMethod] = useState(null)
     const [isMobile] = useState(((rdd.isMobile || rdd.isMobileSafari) && (!rdd.isAndroid || !rdd.isIOS)) ?? false)
     const [isInstagramBrowser, setisInstagramBrowser] = useState()
     const [lastOtpSentTo, setLastOtpSentTo] = useState(null);
@@ -566,7 +567,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         inputRefs?.current?.[0]?.focus()
 
         if (resendTimer > 0 && lastOtpSentTo && (method === 'sms' || method === 'insta' || method === "wp")) {
-            setCurrentOtpMethod(method);
+            setPendingOtpMethod(method);
             return;
         }
 
@@ -575,6 +576,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
 
         setCurrentOtpMethod(method);
+        setPendingOtpMethod(null);
     }
 
     const handleBiometricVerification = async () => {
@@ -741,6 +743,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     };
 
 
+    console.log(resendTimer, pendingOtpMethod, currentOtpMethod, lastOtpSentTo)
     useEffect(() => {
         let timeout;
         if (resendTimer > 0) {
@@ -779,6 +782,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         setLastOtpSentTo(null) // Reset last OTP method
         setIsLoginError('') // Reset login error message
         setResendTimer(0) // Reset resend timer
+        setPendingOtpMethod(null) // Reset pending OTP method
         setStep(1) // Reset step to 1
     }
 
@@ -1178,22 +1182,30 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         )}
                                     </div>
                                     {
-                                        (currentOtpMethod !== "auth" && currentOtpMethod !== "biometric")
-                                        &&
                                         <span>
                                             {
                                                 resendTimer > 0
-                                                    ? (lastOtpSentTo && ['sms', 'insta', 'wp'].includes(currentOtpMethod) && lastOtpSentTo !== currentOtpMethod)
-                                                        ? <span> {t(`You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : lastOtpSentTo === "wp" ? "Whatsapp" : 'Instagram'}, wait ${resendTimer} seconds to get code on ${currentOtpMethod}`)} </span>
+                                                    ? ((lastOtpSentTo && ['sms', 'insta', 'wp'].includes(pendingOtpMethod || currentOtpMethod) && lastOtpSentTo !== (pendingOtpMethod || currentOtpMethod)) || (pendingOtpMethod && lastOtpSentTo !== currentOtpMethod))
+                                                        ? <span> {t(`You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : lastOtpSentTo === "wp" ? "Whatsapp" : 'Instagram'}, wait ${resendTimer} seconds to get code on ${(pendingOtpMethod || currentOtpMethod) === 'sms' ? 'SMS' : (pendingOtpMethod || currentOtpMethod) === "wp" ? "Whatsapp" : 'Instagram'}`)} </span>
                                                         :
-                                                        <span>{t("Resend code in 30 seconds").replace("30", resendTimer)}</span>
+                                                        currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" && <span>{t("Resend code in 30 seconds").replace("30", resendTimer)}</span>
                                                     :
-                                                    <> <span>{t("Didn't receive OTP?") + " "}</span> <span style={{ color: "#5926f0", cursor: "pointer" }} onClick={() => {
-                                                        setLastOtpSentTo(currentOtpMethod);
-                                                        setOTPValues(Array(numberOfFields).fill(''))
-                                                        loginHandler({ preventDefault: () => { } }, currentOtpMethod)
-                                                        setResendTimer(120)
-                                                    }}>{t("Resend Now")}</span></>
+                                                    <>
+                                                        {currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" &&
+                                                            <>
+                                                                <span>{t("Didn't receive OTP?") + " "}</span>
+                                                                <span
+                                                                    style={{ color: "#5926f0", cursor: "pointer" }}
+                                                                    onClick={() => {
+                                                                        setLastOtpSentTo(currentOtpMethod);
+                                                                        setOTPValues(Array(numberOfFields).fill(''))
+                                                                        loginHandler({ preventDefault: () => { } }, currentOtpMethod)
+                                                                        setResendTimer(120)
+                                                                    }}>{t("Resend Now")}
+                                                                </span>
+                                                            </>
+                                                        }
+                                                    </>
                                             }
                                         </span>
                                     }
