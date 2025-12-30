@@ -67,14 +67,14 @@ const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] })
                 name: "Mobile Wallet",
                 id: 1,
                 icon: mw,
-                value: "sofort",
+                value: "mobile",
                 // coming_soon: userDetails?.level?.topup_channel?.mobile_money === "coming_soon",
-                coming_soon: true,
                 sub_name: "wallet"
             }
             :
             {},
-    ].map(item => thunesServices.some(it => it?.id == item.id) ? item : { ...item, coming_soon: true })
+    ]
+    // .map(item => thunesServices.some(it => it?.id == item.id) ? item : { ...item, coming_soon: true })
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem", maxHeight: "550px", overflowY: "auto" }}>
             {

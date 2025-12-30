@@ -78,6 +78,72 @@ const headings = [
     "Add Funds to Wallet"
 ]
 
+const ExtraContentOnFee = ({ data, fxRate, fxCurrency }) => {
+    const { t } = useTranslation()
+
+    return (
+        <div style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: ".9rem",
+            padding: ".8rem",
+            background: "#EBEBEB",
+            borderRadius: "6px"
+        }}>
+            <div style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+                justifyContent: "space-between"
+            }}>
+                <span style={{
+                    color: '#8A8A8A',
+                    fontFamily: 'Manrope',
+                    fontSize: ".7rem",
+                    fontStyle: 'normal',
+                    fontWeight: 600,
+                    lineHeight: 1.5,
+                    letterSpacing: '-0.14px'
+                }}>{t("Exchange Rate")}</span>
+                <strong
+                    style={{
+                        color: '#000',
+                        fontFamily: 'Manrope',
+                        fontSize: ".7rem",
+                        fontStyle: 'normal',
+                        lineHeight: 1.5,
+                        letterSpacing: '-0.14px'
+                    }}>1.00 {data.wallet?.currency?.code}  = {Number(fxRate || data.paypal_fx?.exchange_rate)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 })} {fxCurrency || "USD"}</strong>
+            </div>
+            <div style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+                justifyContent: "space-between"
+            }}>
+                <span style={{
+                    color: '#8A8A8A',
+                    fontFamily: 'Manrope',
+                    fontSize: ".7rem",
+                    fontStyle: 'normal',
+                    fontWeight: 600,
+                    lineHeight: 1.5,
+                    letterSpacing: '-0.14px'
+                }}>{t("Amount in USD").replace("USD", data?.exchange_rate?.sendFromMobileWallet?.currency || "USD")}</span>
+                <strong style={{
+                    color: '#000',
+                    fontFamily: 'Manrope',
+                    fontSize: "1.2rem",
+                    fontStyle: 'normal',
+                    fontWeight: 700,
+                    lineHeight: 1.7,
+                    letterSpacing: '-0.8px'
+                }}>{Number(data?.exchange_rate?.sendFromMobileWallet?.amount || data.paypal_fx?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data?.exchange_rate?.sendFromMobileWallet?.currency || "USD"}</strong>
+            </div>
+        </div>
+    )
+}
+
 const WalletFundsFlow = ({ setAction }) => {
     const { t } = useTranslation()
     const [data, dispatch] = useReducer(reducer, initialState);
@@ -332,6 +398,36 @@ const WalletFundsFlow = ({ setAction }) => {
                     dataHandler("loading", false)
                 }
             }
+            else if (data.channel?.value === "mobile") {
+                try {
+                    const enc = encryptData({
+                        wallet_id: data?.wallet?.wallet_id,
+                        amount: Number(String(data?.amount)?.replace(",", "")),
+                        accountId: userDetails?._id
+                    })
+                    const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/collection/rate`, { data: enc }, {
+                        headers: authHeader,
+                    })
+                    const dec = decryptData(res.data.data)
+                    console.log(dec)
+                    dataHandler("exchange_rate", {
+                        fee: { amount: dec?.data?.fee?.value, currency: dec?.data?.fee?.currency },
+                        sending: { currency: dec?.data?.amount?.currency, amount: dec?.data?.amount?.value },
+                        receiver: { currency: data?.wallet?.currency?.code, amount: dec?.data?.sending?.value },
+                        rate: { amount: dec?.data?.exchangeRate?.value, currency: dec?.data?.exchangeRate?.currency },
+                        sendFromMobileWallet: { amount: dec?.data?.recipient?.value, currency: dec?.data?.recipient?.currency, isConverted: dec?.data?.isConverted },
+                        total: dec?.data?.amount?.value,
+                        token: dec?.data?.token,
+                    })
+
+                } catch (error) {
+                    const dec = decryptData(error?.response?.data?.data);
+                    dataHandler("exchange_rate_error", dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                    console.log(dec)
+                } finally {
+                    dataHandler("loading", false)
+                }
+            }
             else {
                 dataHandler("exchange_rate", {
                     total: parseFloat(data.amount),
@@ -363,7 +459,7 @@ const WalletFundsFlow = ({ setAction }) => {
                 dataHandler("step", 3)
                 break;
             case 3:
-                if (data.channel?.value === "paypal" || data?.channel?.value === "crypto") {
+                if (data.channel?.value === "paypal" || data?.channel?.value === "crypto" || data?.channel?.value === "mobile") {
                     dataHandler("show_confirmation", true)
                 } else {
                     dataHandler("step", 4)
@@ -589,68 +685,14 @@ const WalletFundsFlow = ({ setAction }) => {
                                                                             {t(`PKR is not supported by Paypal, USD will be used as the default currency.`).replace("PKR", data.wallet?.currency?.code)}
                                                                         </span>
                                                                     </div>
-                                                                    <div style={{
-                                                                        display: "flex",
-                                                                        flexDirection: "column",
-                                                                        gap: ".9rem",
-                                                                        padding: ".8rem",
-                                                                        background: "#EBEBEB",
-                                                                        borderRadius: "6px"
-                                                                    }}>
-                                                                        <div style={{
-                                                                            display: "flex",
-                                                                            alignItems: "center",
-                                                                            gap: "1rem",
-                                                                            justifyContent: "space-between"
-                                                                        }}>
-                                                                            <span style={{
-                                                                                color: '#8A8A8A',
-                                                                                fontFamily: 'Manrope',
-                                                                                fontSize: ".7rem",
-                                                                                fontStyle: 'normal',
-                                                                                fontWeight: 600,
-                                                                                lineHeight: 1.5,
-                                                                                letterSpacing: '-0.14px'
-                                                                            }}>{t("Exchange Rate")}</span>
-                                                                            <strong
-                                                                                style={{
-                                                                                    color: '#000',
-                                                                                    fontFamily: 'Manrope',
-                                                                                    fontSize: ".7rem",
-                                                                                    fontStyle: 'normal',
-                                                                                    lineHeight: 1.5,
-                                                                                    letterSpacing: '-0.14px'
-                                                                                }}>1.00 {data.wallet?.currency?.code}  = {Number(data.paypal_fx?.exchange_rate)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 })} USD</strong>
-                                                                        </div>
-                                                                        <div style={{
-                                                                            display: "flex",
-                                                                            alignItems: "center",
-                                                                            gap: "1rem",
-                                                                            justifyContent: "space-between"
-                                                                        }}>
-                                                                            <span style={{
-                                                                                color: '#8A8A8A',
-                                                                                fontFamily: 'Manrope',
-                                                                                fontSize: ".7rem",
-                                                                                fontStyle: 'normal',
-                                                                                fontWeight: 600,
-                                                                                lineHeight: 1.5,
-                                                                                letterSpacing: '-0.14px'
-                                                                            }}>{t("Amount in USD")}</span>
-                                                                            <strong style={{
-                                                                                color: '#000',
-                                                                                fontFamily: 'Manrope',
-                                                                                fontSize: "1.2rem",
-                                                                                fontStyle: 'normal',
-                                                                                fontWeight: 700,
-                                                                                lineHeight: 1.7,
-                                                                                letterSpacing: '-0.8px'
-                                                                            }}>{Number(data.paypal_fx?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</strong>
-                                                                        </div>
-                                                                    </div>
+                                                                    <ExtraContentOnFee data={data} />
                                                                 </>
                                                                 :
-                                                                ""
+                                                                data.channel?.value === "mobile" && data?.exchange_rate?.sendFromMobileWallet?.isConverted
+                                                                    ?
+                                                                    <ExtraContentOnFee data={data} fxRate={data.exchange_rate?.rate?.amount} fxCurrency={data.exchange_rate?.rate?.currency} />
+                                                                    :
+                                                                    ""
                                                         }
                                                     </>
                                             )
