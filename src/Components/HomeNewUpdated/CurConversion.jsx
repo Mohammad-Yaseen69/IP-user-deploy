@@ -185,7 +185,7 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
                                 {
                                     filteredWallets?.filter(item => item?.status && !item?.blocked && !item?.admin_blocked && !item?.blocked && !item?.admin_blocked && item?.currency?.code !== exchangedCurrency)?.map(item => (
                                         <option key={item?._id} value={item?.currency?.code} style={{ display: userCurrency === item?.currency?.code ? "none" : "inherit" }}>
-                                            {item?.currency?.symbol}
+                                            {item?.currency?.code}
                                         </option>
                                     ))
                                 }
@@ -208,9 +208,9 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
                         <div className={styles.input_con}>
                             <select value={exchangedCurrency} onChange={e => setExchangedCurrency(e.target.value)}>
                                 {
-                                    userWallets?.filter(item => item?.status && !item?.blocked && !item?.admin_blocked && !item?.blocked && !item?.admin_blocked && item?.currency?.code !== userCurrency)?.map(item => (
+                                    filteredWallets?.filter(item => item?.status && !item?.blocked && !item?.admin_blocked && !item?.blocked && !item?.admin_blocked && item?.currency?.code !== userCurrency)?.map(item => (
                                         <option key={item._id} value={item?.currency?.code} style={{ fontSize: "1rem", fontWeight: 900, display: exchangedCurrency === item?.currency?.code ? "none" : "inherit" }}>
-                                            {item?.currency?.symbol}
+                                            {item?.currency?.code}
                                         </option>
                                     ))
                                 }
