@@ -323,7 +323,7 @@ const AddFunds = () => {
                     {
                         action === "money"
                         &&
-                        <WalletFund setAction={setAction} />
+                        <WalletFundsFlow setAction={setAction} />
                     }
 
                     {

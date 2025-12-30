@@ -196,12 +196,33 @@
         gap: 1rem;
     }
 }
+.top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: .5rem;
+    margin-bottom: 1rem;
+}
+
+.back_btn {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.25rem;
+    padding-top: .1rem;
+}
+
+.top h5 {
+    font-size: 1.1rem;
+    color: #5926f0;
+    margin-bottom: 0;
+}
 
 @media screen and (max-width: 1000px) {
-    .mobile {
-        padding: 1rem;
-        margin-top: 1.5rem;
-    }
 
     .m_top {
         display: flex;

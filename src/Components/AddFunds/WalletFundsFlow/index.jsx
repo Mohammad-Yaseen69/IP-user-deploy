@@ -23,6 +23,7 @@ import CreditCard from "../../PaymentsNewer/InternationalFlow/CreditCard";
 import PaypalCurrencies from "../PaypalCurrencies.json"
 import wallet_ic from "../files/add_f_ic.png"
 import BankDeposit from "./BankDeposit";
+import TopIcon from "../../PaymentsNewer/Mobile/files/Top";
 const initialState = {
     step: 1,
     bankStep: 1,
@@ -840,6 +841,15 @@ const WalletFundsFlow = ({ setAction }) => {
                     </div>
                     :
                     <div className={styles.mobile}>
+                        <div className={styles.top}>
+                            <button className={styles.back_btn}>
+                                <ChevronLeft />
+                            </button>
+                            <h5>{t("Add Funds")}</h5>
+                            <div>
+                                <TopIcon fill={data.step > 1 ? "#5926f0" : "black"} />
+                            </div>
+                        </div>
                         <div className={styles.m_top}>
                             <h1>{t("Top-Up Wallet")}</h1>
                             <h2>
@@ -872,7 +882,7 @@ const WalletFundsFlow = ({ setAction }) => {
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", gap: ".7rem" }}>
                             {
-                                data.step >= 3
+                                data.step === 3 && !data.show_confirmation 
                                     ?
                                     (
                                         data.loading
@@ -1100,30 +1110,12 @@ const WalletFundsFlow = ({ setAction }) => {
                                                         ""
                                                 }
 
-                                                <div className={styles.bottom}>
-                                                    <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
-                                                        <HelpCircle size={16} />
-                                                        {t("Trouble Sending Money")}
-                                                    </Link>
-                                                    <div className={styles?.buttons}>
-                                                        {/* {
-                                                            data.step > 1
-                                                            && */}
-                                                        <button className={styles.transparent} onClick={onBackClickHandler} disabled={data.loading}>{t("Back")}</button>
-                                                        {/* } */}
-                                                        <button disabled={data.loading || disabledButton} onClick={onClickHandler}>
-                                                            {
-                                                                t("Next")
-                                                            }
-                                                            <ChevronRight size={18} />
-                                                        </button>
-                                                    </div>
-                                                </div>
+
                                             </>
                                 }
                             </div>
 
-                            {(data.channel?.value !== "bank" || data.step < 4) &&
+                            {((data.channel?.value !== "bank" || data.step < 4) && !data.show_confirmation) &&
                                 <div className={styles.bottom}>
                                     <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
                                         <HelpCircle size={16} />
