@@ -62,7 +62,7 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
         getCountries()
     }, [])
 
-    const phoneLookup = async () => {
+    const phoneLookup = async (navigate) => {
         dataHandler("loading", true)
         dataHandler("providers", [])
         try {
@@ -72,9 +72,13 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
             if (dec?.length === 0) {
                 dataHandler("error", "We don't have any available operators for the entered mobile number, please try again later")
                 return;
+            } else {
+                dataHandler("providers", dec)
+                setLookedUp(true)
+                if (navigate) {
+                    dataHandler("step", 3)
+                }
             }
-            dataHandler("providers", dec)
-            setLookedUp(true)
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
             dataHandler("error", dec?.message || "Make sure you have entered a correct Phone Number.")
@@ -187,12 +191,10 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
                             <button
                                 disabled={data.loading || data.providers.length === 0}
                                 onClick={() => {
-                                    if (lookedup === false) {
+                                    if (lookedup === true) {
                                         dataHandler("step", 3)
                                     } else {
-                                        phoneLookup().then(() => {
-                                            dataHandler("step", 3)
-                                        })
+                                        phoneLookup(true)
                                     }
                                 }}
                             >
