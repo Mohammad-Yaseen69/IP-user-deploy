@@ -75,7 +75,7 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
             } else {
                 dataHandler("providers", dec)
                 setLookedUp(true)
-                if (navigate) {
+                if (navigate === true) {
                     dataHandler("step", 3)
                 }
             }
@@ -134,6 +134,9 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
                                             setPhone={e => {
                                                 dataHandler("providers", [])
                                                 dataHandler("recipient", e)
+                                                if (lookedup) {
+                                                    setLookedUp(false)
+                                                }
                                             }}
                                             disabledDropdown={true}
                                             phone={data.recipient}
