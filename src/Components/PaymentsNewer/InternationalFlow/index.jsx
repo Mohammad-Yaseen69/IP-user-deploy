@@ -578,9 +578,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         }
     }, [internationalData.payment_type])
 
+    console.log(internationalData.payment_type?.value)
     useEffect(() => {
         let timeout;
-        if (internationalData.payment_type?.value) {
+        if (internationalData.payment_type?.value && subStep === 4) {
             if (internationalData.payment_type?.value !== "card") updateInternationalData("showCard", false)
             if (internationalData.payment_type?.value === "wallet" && !internationalData?.wallet?._id) return;
             if (internationalData?.payment_type?.value !== "wallet") {
@@ -607,7 +608,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             }, 100)
         }
         return () => clearTimeout(timeout)
-    }, [internationalData.payment_type?.value, internationalData.wallet?._id])
+    }, [internationalData.payment_type?.value, internationalData.wallet?._id, subStep])
 
 
 
@@ -1145,6 +1146,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         }
     }, [transaction_status, code])
 
+    console.log(internationalData.exchange_rate)
     return (
         <>
             {
@@ -1324,7 +1326,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                         <SelectedCard
                                                                             title="Name"
                                                                             list={[{ text: internationalData.country?.name, url: internationalData.country?.file_url, flag: true }]}
-                                                                            changeHandler={() => setSubStep(1)}
+                                                                            changeHandler={() => {
+
+                                                                                setSubStep(1)
+                                                                            }}
                                                                         />
                                                                     }
                                                                     {
