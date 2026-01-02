@@ -20,7 +20,7 @@ import { authIcon, instaIcon, smsIcon, whatsappIcon } from "./files"
 import "./styles/index.module.css";
 import useWindowWidth from "../../utils/useWindowWidth";
 import i18next from "i18next";
-import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import localforage from "localforage"
 import InstaPayLoader from "../Loader";
 import { logger } from "@sentry/react";
@@ -62,6 +62,9 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [showQuickLogin, setShowQuickLogin] = useState(false)
     const [biometricLoading, setBiometricLoading] = useState(false)
     const [biometricSuccessfull, setBiometricSuccessfull] = useState(false)
+    const [showRestoreModal, setShowRestoreModal] = useState(false)
+    const [accountRestoreDetails, setAccountRestoreDetails] = useState(null)
+    const [restoreLoading, setRestoreLoading] = useState(false)
 
     // convert this object into an array of object it should just have a type property which should tell like whatsapp insta biometric instead of a object property
 
@@ -147,13 +150,16 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
 
 
-    const loginHandler = (e, method = undefined) => {
+    const loginHandler = (e, method = undefined, restoreAccount = false) => {
         e.preventDefault()
         setIsPressed(true)
         setConsecutiveCount(1)
         setIsLoginError("")
         if (method) {
             setMethodLoading(true)
+        }
+        if (restoreAccount) {
+            setRestoreLoading(true)
         }
         const isAuth = method ? (method === "auth") : (currentOtpMethod === "auth");
         const isInsta = method ? (method === "insta") : (currentOtpMethod === "insta" || currentOtpMethod !== "sms");
@@ -166,14 +172,16 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 password,
                 authenticator: isAuth,
                 platform: (isInsta && !isInstagramBrowser) ? "instagram" : isWp ? "whatsapp" : "",
-                first_time: firstTime
+                first_time: firstTime,
+                ...(restoreAccount && { restoreAccount: true })
             }
             : {
                 phone: email,
                 password,
                 authenticator: isAuth,
                 platform: (isInsta && !isInstagramBrowser) ? "instagram" : isWp ? "whatsapp" : "",
-                first_time: firstTime
+                first_time: firstTime,
+                ...(restoreAccount && { restoreAccount: true })
             };
         const encrypted = encryptData(credentials)
 
@@ -186,6 +194,16 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             .then(async (res) => {
                 const decrypted = decryptData(res.data.data)
                 setFirstTime(false)
+                
+                // Check if account requires restoration (only if not already restoring)
+                if (!restoreAccount && decrypted?.status === false && decrypted?.accountDetails?.requiresConfirmation === true) {
+                    setAccountRestoreDetails(decrypted)
+                    setShowRestoreModal(true)
+                    setIsPressed(false)
+                    setMethodLoading(false)
+                    return
+                }
+                
                 // console.log(decrypted)
                 setMethods(prevMethods => prevMethods.map(method => {
                     switch (method.attr) {
@@ -243,11 +261,19 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 setStep(2)
                 setIsPressed(false)
                 setMethodLoading(false)
+                if (restoreAccount) {
+                    setShowRestoreModal(false)
+                    setAccountRestoreDetails(null)
+                    setRestoreLoading(false)
+                }
 
             })
             .catch(error => {
                 setIsPressed(false)
                 setMethodLoading(false)
+                if (restoreAccount) {
+                    setRestoreLoading(false)
+                }
                 const decrypted = decryptData(error?.response?.data?.data)
                 if (decrypted.message === "Account not found!" || decrypted.message === "Incorrect Password!" || decrypted.message?.toLowerCase()?.includes("incorrect") || decrypted.message === "User not found!") {
                     setIsLoginError(`Uh-Oh! The password/${isEmail.test(email) ? "email" : "phone number"} you entered is wrong.`)
@@ -259,7 +285,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     setIsLoginError(`Uh-Oh! Your account is onhold.`)
                 }
                 if (decrypted.message?.toLowerCase()?.includes("delete")) {
-                    setIsLoginError(`Uh-Oh! Your account is currently on delete status.`)
+                    setIsLoginError(decrypted?.message)
                 }
                 if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                     const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
@@ -786,11 +812,75 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         setStep(1) // Reset step to 1
     }
 
+    const resetLoginStates = () => {
+        setEmail("")
+        setPassword("")
+        setEmailVerified(false)
+        setIsPressed(false)
+        setIsLoginError("")
+        setLoginToken("")
+        setStep(1)
+        setCurrentOtpMethod("auth")
+        resetOtpStates()
+        setShowRestoreModal(false)
+        setAccountRestoreDetails(null)
+    }
+
+
 
     return (
         <>
 
             <VpnModal showNoticeModal={showNoticeModal} />
+
+            <Modal isOpen={showRestoreModal} toggle={() => setShowRestoreModal(false)} centered>
+                <ModalHeader toggle={() => setShowRestoreModal(false)}>
+                    {t("Account Restoration")}
+                </ModalHeader>
+                <ModalBody>
+                    <p style={{ marginBottom: "1.5rem", lineHeight: "1.6" }}>
+                        {accountRestoreDetails?.message || t("Your account was deleted. If you sign in now, your account will be restored from the deletion state. Do you want to proceed?")}
+                    </p>
+                    {accountRestoreDetails?.accountDetails && (
+                        <div style={{ marginBottom: "1.5rem", fontSize: "0.9rem", color: "#666" }}>
+                            <p style={{ margin: "0.5rem 0" }}>
+                                {t("Days since deletion")}: {accountRestoreDetails.accountDetails.daysSinceDeletion}
+                            </p>
+                            <p style={{ margin: "0.5rem 0" }}>
+                                {t("Days remaining")}: {accountRestoreDetails.accountDetails.daysRemaining}
+                            </p>
+                        </div>
+                    )}
+                </ModalBody>
+                <ModalFooter style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
+                    <Button
+                        color="secondary"
+                        onClick={resetLoginStates}
+                        disabled={restoreLoading}
+                        style={{
+                            background: "#f5f5f5",
+                            border: "1px solid #e6e6e6",
+                            color: "white",
+                            borderRadius: "10px",
+                            padding: "10px 20px"
+                        }}
+                    >
+                        {t("Cancel")}
+                    </Button>
+                    <Button
+                        onClick={(e) => loginHandler(e, undefined, true)}
+                        disabled={restoreLoading}
+                        style={{
+                            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                            border: "none",
+                            borderRadius: "10px",
+                            padding: "10px 20px"
+                        }}
+                    >
+                        {restoreLoading ? t("Processing...") : t("Restore")}
+                    </Button>
+                </ModalFooter>
+            </Modal>
 
             <form onSubmit={emailVerified ? loginHandler : checkEmailHandler} className={styles.form_details} style={width > 1000 ? { opacity: step === 1 ? 1 : 0, pointerEvents: step === 1 ? "all" : "none" } : { display: step === 1 ? "inherit" : "none" }}>
                 <div className={styles.left}>
