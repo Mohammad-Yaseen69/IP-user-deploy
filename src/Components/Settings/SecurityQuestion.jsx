@@ -47,11 +47,11 @@ const SecurityQuestions = () => {
         const data = {
             data: {
                 question1: selectedQuesOne,
-                answer1: answerOne,
+                answer1: answerOne?.trim() || "",
                 question2: selectedQuesTwo,
-                answer2: answerTwo,
+                answer2: answerTwo?.trim() || "",
                 question3: selectedQuesThree,
-                answer3: answerThree,
+                answer3: answerThree?.trim() || "",
             },
             type: codeType
         }
@@ -146,7 +146,9 @@ const SecurityQuestions = () => {
             }).finally(() => setSaving(false))
     }
 
-    const isValidAnswer = (answer) => !answer?.startsWith(" ") && !answer?.endsWith(" ")
+    const isValidAnswer = () => {
+        return true
+    }
 
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
@@ -190,7 +192,13 @@ const SecurityQuestions = () => {
                                     ))
                                 }
                             </Input>
-                            <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder="Answer To The Question" value={answerOne} onChange={e => setAnswerOne(e.target.value)} style={{ borderColor: isValidAnswer(answerOne) ? "#eeeeee" : "red" }} />
+                            <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder="Answer To The Question" value={answerOne} onChange={e => {
+                                const value = e.target.value.slice(0, 50);
+                                setAnswerOne(value);
+                            }} maxLength={50} style={{ borderColor: isValidAnswer(answerOne) ? "#eeeeee" : "red" }} />
+                            <div style={{ fontSize: "12px", color: "#666", marginTop: "4px", textAlign: "right" }}>
+                                {(answerOne?.length || 0)}/50
+                            </div>
                         </FormGroup>
                     </Col>
                     <Col md="12">
@@ -220,7 +228,13 @@ const SecurityQuestions = () => {
                                     ))
                                 }
                             </Input>
-                            <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder="Answer To The Question" value={answerTwo} onChange={e => setAnswerTwo(e.target.value)} style={{ borderColor: isValidAnswer(answerTwo) ? "#eeeeee" : "red" }} />
+                            <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder="Answer To The Question" value={answerTwo} onChange={e => {
+                                const value = e.target.value.slice(0, 50);
+                                setAnswerTwo(value);
+                            }} maxLength={50} style={{ borderColor: isValidAnswer(answerTwo) ? "#eeeeee" : "red" }} />
+                            <div style={{ fontSize: "12px", color: "#666", marginTop: "4px", textAlign: "right" }}>
+                                {(answerTwo?.length || 0)}/50
+                            </div>
                         </FormGroup>
                     </Col>
                     <Col md="12">
@@ -250,7 +264,13 @@ const SecurityQuestions = () => {
                                     ))
                                 }
                             </Input>
-                            <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder="Answer To The Question" value={answerThree} onChange={e => setAnswerThree(e.target.value)} style={{ borderColor: isValidAnswer(answerThree) ? "#eeeeee" : "red" }} />
+                            <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder="Answer To The Question" value={answerThree} onChange={e => {
+                                const value = e.target.value.slice(0, 50);
+                                setAnswerThree(value);
+                            }} maxLength={50} style={{ borderColor: isValidAnswer(answerThree) ? "#eeeeee" : "red" }} />
+                            <div style={{ fontSize: "12px", color: "#666", marginTop: "4px", textAlign: "right" }}>
+                                {(answerThree?.length || 0)}/50
+                            </div>
                         </FormGroup>
                     </Col>
                 </Row>
