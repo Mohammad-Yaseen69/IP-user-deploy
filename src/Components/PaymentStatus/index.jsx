@@ -49,9 +49,9 @@ const PaymentStatus = () => {
         } else {
             const url = type === "airtime"
                 ?
-                `/payments?payment_action=airtime&transaction_status=${status}&transaction_id=test&code=${code}&title=nope&error_in_funds=${!add_funds ? true : false}`
+                `/payments?payment_action=airtime&transaction_status=${status}&transaction_id=test&code=${code}&title=your&error_in_funds=${!add_funds ? true : false}`
                 :
-                `/payments?payment_action=send_money&send_type=${type}&transaction_status=${status}&transaction_id=test&code=${code}&title=nope&error_in_funds=${!add_funds ? true : false}`
+                `/payments?payment_action=send_money&send_type=${type}&transaction_status=${status}&transaction_id=test&code=${code}&title=your&error_in_funds=${!add_funds ? true : false}`
             navigate(url)
         }
     }, [type, status])
