@@ -34,7 +34,6 @@ const CryptoCurrency = ({ cryptoCurrency, setSubStep, setCryptoCurrency, action 
         },
     ]
 
-    useEffect(() => "a") // console.log(cryptoCurrency?.value))
 
     return (
         <Card style={{
