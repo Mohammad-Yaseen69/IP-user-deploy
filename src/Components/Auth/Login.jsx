@@ -194,7 +194,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             .then(async (res) => {
                 const decrypted = decryptData(res.data.data)
                 setFirstTime(false)
-                
+
                 // Check if account requires restoration (only if not already restoring)
                 if (!restoreAccount && decrypted?.status === false && decrypted?.accountDetails?.requiresConfirmation === true) {
                     setAccountRestoreDetails(decrypted)
@@ -203,7 +203,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     setMethodLoading(false)
                     return
                 }
-                
+
                 // console.log(decrypted)
                 setMethods(prevMethods => prevMethods.map(method => {
                     switch (method.attr) {
@@ -839,18 +839,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 </ModalHeader>
                 <ModalBody>
                     <p style={{ marginBottom: "1.5rem", lineHeight: "1.6" }}>
-                        {accountRestoreDetails?.message || t("Your account was deleted. If you sign in now, your account will be restored from the deletion state. Do you want to proceed?")}
+                        {t("Your account is currently in the process of being deleted, as per your request. If you continue with the login, the deletion process will be canceled.")}
                     </p>
-                    {accountRestoreDetails?.accountDetails && (
-                        <div style={{ marginBottom: "1.5rem", fontSize: "0.9rem", color: "#666" }}>
-                            <p style={{ margin: "0.5rem 0" }}>
-                                {t("Days since deletion")}: {accountRestoreDetails.accountDetails.daysSinceDeletion}
-                            </p>
-                            <p style={{ margin: "0.5rem 0" }}>
-                                {t("Days remaining")}: {accountRestoreDetails.accountDetails.daysRemaining}
-                            </p>
-                        </div>
-                    )}
                 </ModalBody>
                 <ModalFooter style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
                     <Button
@@ -865,7 +855,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                             padding: "10px 20px"
                         }}
                     >
-                        {t("Cancel")}
+                        {t("Logout")}
                     </Button>
                     <Button
                         onClick={(e) => loginHandler(e, undefined, true)}
@@ -877,7 +867,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                             padding: "10px 20px"
                         }}
                     >
-                        {restoreLoading ? t("Processing...") : t("Restore")}
+                        {restoreLoading ? t("Proceeding...") : t("Proceed with login")}
                     </Button>
                 </ModalFooter>
             </Modal>
