@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { HelpCircle } from "react-feather";
 import { Button, Card, CardBody, CardHeader, Input } from "reactstrap";
@@ -11,8 +11,14 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 const DeleteAccount = () => {
     const [check, setCheck] = useState(false);
     const { t } = useTranslation();
+    const navigate = useNavigate("")
 
     const { userDetails, authHeader } = useContext(UserContext)
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/login");
+    };
 
     const deleteAccountHandler = async () => {
         axios.delete(`${import.meta.env.VITE_IP_DEV_API}/api/account/delete-account/${userDetails?._id}`, {
@@ -20,6 +26,7 @@ const DeleteAccount = () => {
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
+                handleLogout()
                 // console.log(decrypted)
             })
             .catch(err => {
@@ -34,7 +41,7 @@ const DeleteAccount = () => {
                 <h4>{t("Delete Your Account")}</h4>
             </CardHeader>
             <CardBody style={{ padding: "0 30px 30px" }}>
-                <div style={{flexDirection:"column"}} className="container p-sm-5 p-0">
+                <div style={{ flexDirection: "column" }} className="container p-sm-5 p-0">
                     <div className="mt-4">
                         <h4>
                             {t("Ask us to delete your data and close this account")}
@@ -48,17 +55,17 @@ const DeleteAccount = () => {
                     <div className="mt-4 mb-4">
                         {/* <h6>{t("Before you continue:")}</h6> */}
                         <ul className="list-unstyled p-3 d-flex flex-column text-sm" style={{ listStyleType: "disk" }}>
-                            <li style={{textAlign: "left"}}>
+                            <li style={{ textAlign: "left" }}>
                                 {t(
                                     "If your account is limited, go to the Resolution Center, select 'Go to Account Limitations', then click 'Resolve'."
                                 )}
                             </li>
-                            <li style={{textAlign: "left"}}>
+                            <li style={{ textAlign: "left" }}>
                                 {t(
                                     "Make sure any outstanding payments have cleared. We won't be able to close your account until they do."
                                 )}
                             </li>
-                            <li style={{textAlign: "left"}}>
+                            <li style={{ textAlign: "left" }}>
                                 {t(
                                     "If you have a negative balance, click the Resolve link next to your balance."
                                 )}
