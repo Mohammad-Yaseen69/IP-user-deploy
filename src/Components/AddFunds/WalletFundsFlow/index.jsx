@@ -423,6 +423,9 @@ const WalletFundsFlow = ({ setAction }) => {
 
                 } catch (error) {
                     const dec = decryptData(error?.response?.data?.data);
+                    if (dec?.message?.toLowerCase()?.includes("can not find fee configuration")) {
+                        dataHandler("error", "This Payment method is unavailable for this country at the moment. Please try again later or choose a different method.")
+                    }
                     dataHandler("exchange_rate_error", dec?.message ?? "We cannot process your request at the moment, please try again later.")
                     console.log(dec)
                 } finally {
@@ -882,7 +885,7 @@ const WalletFundsFlow = ({ setAction }) => {
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", gap: ".7rem" }}>
                             {
-                                data.step === 3 && !data.show_confirmation 
+                                data.step === 3 && !data.show_confirmation
                                     ?
                                     (
                                         data.loading
