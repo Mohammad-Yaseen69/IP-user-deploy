@@ -788,7 +788,7 @@
         "dial_code": "+298"
     },
     "PYF": {
-        "maxLength": 6,
+        "maxLength": 9,
         "dial_code": "+689"
     },
     "ATF": {
