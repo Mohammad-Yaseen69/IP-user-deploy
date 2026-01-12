@@ -39,7 +39,7 @@ const PaymentStatus = () => {
             } else {
                 searchUser()
                     .then(res => {
-                        navigate(`/payments?payment_action=send_money&send_type=${type === "wallet_to_wallet" ? "wallet" : type}&transaction_status=${status}&transaction_id=test&code=${code}&title=${res}`)
+                        navigate(`/payments?payment_action=${type === "airtime" ? "airtime" : "send_money"}&send_type=${type === "wallet_to_wallet" ? "wallet" : type}&transaction_status=${status}&transaction_id=test&code=${code}&title=${res}`)
                     })
             }
         }
