@@ -1032,7 +1032,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     {t("Back")}
                                 </button>
                             }
-                            <button type="submit" className={styles.form_btn} disabled={isLoginError || isPressed || (emailVerified ? !password || (!isPhoneNumber.test(email) && !isEmail.test(email)) : (!isPhoneNumber.test(email) && !isEmail.test(email)))}>
+                            <button type="submit" className={styles.form_btn} disabled={isLoginError || isPressed || (showQuickLogin ? emailVerified ? !password : false : emailVerified ? !password || (!isPhoneNumber.test(email) && !isEmail.test(email)) : (!isPhoneNumber.test(email) && !isEmail.test(email)))}>
                                 <span>{
                                     !emailVerified
                                         ?
