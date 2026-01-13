@@ -159,7 +159,7 @@ const ConfirmQuote = ({ beneficiary, amount, currency, setConfirmed, setSubStep,
                             >{t("edit")}</span>
                         </div>
                         <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
-                            <span style={{ fontWeight: 700, fontSize: "1.4rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{title}</span>
+                            <span style={{ fontWeight: 700, fontSize: "1.4rem"}}>{title}</span>
                         </div>
                     </div>
                     {/* desciption */}
@@ -182,7 +182,7 @@ const ConfirmQuote = ({ beneficiary, amount, currency, setConfirmed, setSubStep,
                             >{t("edit")}</span>
                         </div>
                         <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
-                            <span style={{ fontWeight: 700, fontSize: "1.4rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{description}</span>
+                            <span style={{ fontWeight: 700, fontSize: "1.4rem" }}>{description?.length > 100 ? `${description.slice(0, 100)}...` : description}</span>
                         </div>
                     </div>
                     {/* files */}
@@ -195,7 +195,7 @@ const ConfirmQuote = ({ beneficiary, amount, currency, setConfirmed, setSubStep,
                                 {files.map((file, index) => {
                                     const previewURL = URL.createObjectURL(file);
                                     return (
-                                        <div title={file?.name} style={{ height: '50px', width: '50px', borderRadius: '5px', boxShadow: '0 0 3px #1111113e', position: "relative", overflow: "hidden" }}>
+                                        <div key={index} title={file?.name} style={{ height: '50px', width: '50px', borderRadius: '5px', boxShadow: '0 0 3px #1111113e', position: "relative", overflow: "hidden" }}>
                                             {
                                                 file?.type?.toLowerCase()?.includes("image")
                                                 &&

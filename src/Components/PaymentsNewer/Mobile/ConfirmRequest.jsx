@@ -15,6 +15,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import RequestLocation from "../../RequestLocation";
 import CitiesData from '../../CitiesDropDown/CitiesData.json';
+import useWindowWidth from "../../../utils/useWindowWidth";
 
 const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, paymentType, setConfirmed, setSubStep, setPaymentType, scheduleDate, scheduleTime, recStartDate, recCycle, setNotInstant, requestObject, setToken, totalBalance, coords, setCoords, preferences, prefrencesFunc, isPreferencesCheck }) => {
     const { t } = useTranslation()
@@ -23,6 +24,7 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
     const divRef = useRef(null)
     const svgRef = useRef(null)
     const chevRef = useRef(null)
+    const width = useWindowWidth()
     const { userDetails, profileCompleted, authHeader, userWallets } = useContext(UserContext)
     const [showCompletionModal, setShowCompletionModal] = useState(false)
     const [showVerificationModal, setShowVerificationModal] = useState(false)
@@ -238,7 +240,7 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
                         boxShadow: "0px 6px 13px -5.4094px rgba(89, 38, 240, 0.17)",
                         borderRadius: "16px",
                         padding: "1rem",
-                        width: "85%",
+                        width: width > 600 ? "85%" : "100%",
                         margin: "1rem auto 0",
                         overflow: "hidden"
                     }}
@@ -248,7 +250,7 @@ const ConfirmRequest = ({ setBeneficiary, beneficiary, amount, currency, payment
                         <div
                             style={{
                                 position: "absolute",
-                                top: "10px",
+                                top: width > 490 ? "10px" : "6px",
                                 left: "10px",
                                 display: "flex",
                                 justifyContent: "center",

@@ -25,15 +25,8 @@ const SendQuote = ({ step, setStep, setCurrentFlow, setAction }) => {
   const [description, setDescription] = useState("")
   const [isBargainable, setIsBargainable] = useState(false)
   const [completed, setCompleted] = useState(false)
-  const [extra, setExtra] = useState("")
-  const [transactionDetails, setTransactionDetails] = useState(null)
   const [token, setToken] = useState("")
 
-  const handleRemoveBeneficiary = (index) => {
-    const updatedBeneficiaries = [...beneficiary];
-    updatedBeneficiaries.splice(index, 1);
-    setBeneficiary(updatedBeneficiaries);
-  };
 
   const { userDetails, userWallets, authHeader } = useContext(UserContext)
   const [codeType, setCodeType] = useState("sms")
@@ -158,7 +151,7 @@ const SendQuote = ({ step, setStep, setCurrentFlow, setAction }) => {
           &&
           <OTPConfirmation
             setSubStep={setStep}
-            setTransactionDetails={setTransactionDetails}
+            setTransactionDetails={() => {}}
             type="quoting"
             quotationDetails={{
               files: files,

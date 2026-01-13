@@ -13,6 +13,7 @@ import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
 import axios from "axios";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { toast } from "react-toastify";
+import useWindowWidth from "../../../utils/useWindowWidth";
 
 const ConfirmRequest = ({ beneficiary, amount, currency, setConfirmed, setSubStep, title, description, isBargainable, files, setBeneficiary, quotationDetails, setToken, totalBalance }) => {
     const { t } = useTranslation()
@@ -21,6 +22,7 @@ const ConfirmRequest = ({ beneficiary, amount, currency, setConfirmed, setSubSte
     const divRef = useRef(null)
     const svgRef = useRef(null)
     const chevRef = useRef(null)
+    const width = useWindowWidth()
     const { userDetails, profileCompleted } = useContext(UserContext)
     const [showCompletionModal, setShowCompletionModal] = useState(false)
     const [showVerificationModal, setShowVerificationModal] = useState(false)
@@ -131,18 +133,48 @@ const ConfirmRequest = ({ beneficiary, amount, currency, setConfirmed, setSubSte
                 <div style={{ background: "rgba(89, 38, 240, 0.08)", borderRadius: "16px" }} className="i_t_selected">
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                         <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem", fontWeight: 700 }}>{t(`Title`)}</span>
+                        <span style={{
+                            background: "white",
+                            boxShadow: "0px 3.3496174812316895px 11.723660469055176px -3.3496174812316895px rgba(89, 38, 240, 0.25)",
+                            borderRadius: "30px",
+                            fontSize: ".6rem",
+                            padding: '3px 7px',
+                            cursor: "pointer",
+                            width: "60px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            color: "black"
+                        }}
+                            onClick={_ => setSubStep(3)}
+                        >{t("edit")}</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
-                        <span style={{ fontWeight: 700, fontSize: "1.4rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{title}</span>
+                        <span style={{ fontWeight: 700, fontSize: "1.4rem", overflow: "hidden", textOverflow: "ellipsis" }}>{title?.length > 100 ? `${title.slice(0, 100)}...` : title}</span>
                     </div>
                 </div>
                 {/* desciption */}
                 <div style={{ background: "rgba(89, 38, 240, 0.08)", borderRadius: "16px" }} className="i_t_selected">
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                         <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem", fontWeight: 700 }}>{t(`Description`)}</span>
+                        <span style={{
+                            background: "white",
+                            boxShadow: "0px 3.3496174812316895px 11.723660469055176px -3.3496174812316895px rgba(89, 38, 240, 0.25)",
+                            borderRadius: "30px",
+                            fontSize: ".6rem",
+                            padding: '3px 7px',
+                            cursor: "pointer",
+                            width: "60px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            color: "black"
+                        }}
+                            onClick={_ => setSubStep(3)}
+                        >{t("edit")}</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
-                        <span style={{ fontWeight: 700, fontSize: "1.4rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{description}</span>
+                        <span style={{ fontWeight: 700, fontSize: "1.4rem", overflow: "hidden", textOverflow: "ellipsis" }}>{description?.length > 100 ? `${description.slice(0, 100)}...` : description}</span>
                     </div>
                 </div>
 
@@ -155,7 +187,7 @@ const ConfirmRequest = ({ beneficiary, amount, currency, setConfirmed, setSubSte
                         boxShadow: "0px 6px 13px -5.4094px rgba(89, 38, 240, 0.17)",
                         borderRadius: "16px",
                         padding: "1rem",
-                        width: "85%",
+                        width: width > 600 ? "85%" : "100%",
                         margin: "1rem auto 0",
                         overflow: "hidden"
                     }}
@@ -165,7 +197,7 @@ const ConfirmRequest = ({ beneficiary, amount, currency, setConfirmed, setSubSte
                         <div
                             style={{
                                 position: "absolute",
-                                top: "10px",
+                                top: width > 490 ? "10px" : "6px",
                                 left: "10px",
                                 display: "flex",
                                 justifyContent: "center",
