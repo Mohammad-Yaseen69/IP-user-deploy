@@ -138,8 +138,8 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
                                                     setLookedUp(false)
                                                 }
                                             }}
-                                            disabledDropdown={true}
                                             phone={data.recipient}
+                                            disableDropdown
                                         />
                                         <button onClick={phoneLookup} className={data.loading ? styles.searching : ""} disabled={data.loading || data.recipient?.length < 9}>
                                             <div style={{ whiteSpace: "nowrap" }}>
