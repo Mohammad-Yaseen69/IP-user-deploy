@@ -14,6 +14,7 @@ import axios from "axios";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { LimitsErrorMessage } from "../../PaymentsNewer/OTPConfirmation";
 import { toast } from "react-toastify";
+import ErrorModal from "../../PaymentsNewer/InternationalFlow/ErrorModal";
 
 const initialState = {
     step: 1,
@@ -154,23 +155,19 @@ const PaymentsFlow = ({ item }) => {
 
             updateData("exchange_rate", exchange_rate_details)
             if (+item?.amount > exchange_rate_details?.limits_used?.daily_sending_limit_used) {
-                updateData("exchange_rate_error", "exceed send")
+                updateData("exchange_rate_error", "Daily sending limit exceed.")
                 setLimitType("daily")
             }
             else if (+item?.amount > exchange_rate_details?.limits_used?.monthly_sending_limit_used) {
-                updateData("exchange_rate_error", "exceed send")
+                updateData("exchange_rate_error", "Monthly sending limit exceed.")
                 setLimitType("monthly")
             }
             else if (+item?.amount > exchange_rate_details?.limits_used?.yearly_sending_limit_used) {
-                updateData("exchange_rate_error", "exceed send")
+                updateData("exchange_rate_error", "Yearly sending limit exceed")
                 setLimitType("yearly")
             }
             else {
-                if (item?.amount <= exchange_rate_details?.fee?.amount) {
-                    updateData("exchange_rate_error", "Invalid Amount Fee")
-                } else {
-                    updateData("exchange_rate_error", "")
-                }
+                updateData("exchange_rate_error", "")
             }
             return exchange_rate_details
         }
@@ -179,9 +176,9 @@ const PaymentsFlow = ({ item }) => {
             console.log(dec)
             if (typeof dec?.message == "object") {
                 if (dec?.message?.[0]?.code === "1003007") {
-                    updateData("exchange_rate_error", "payer_unavailable")
+                    updateData("exchange_rate_error", "Payer not available.")
                 } else {
-                    updateData("exchange_rate_error", "sww")
+                    updateData("exchange_rate_error", "We are unable to process your request at the moment. please try again later.")
                 }
             } else {
                 const error = LimitsErrorMessage(dec?.code ?? dec?.message)
@@ -189,7 +186,7 @@ const PaymentsFlow = ({ item }) => {
                     updateData("exchange_rate_error", error)
                 }
                 else if (dec?.message?.toLowerCase()?.includes("insufficient")) {
-                    updateData("exchange_rate_error", "insufficient balance payer")
+                    updateData("exchange_rate_error", "Insufficient balance payer")
                 }
                 else if (dec?.message?.toLowerCase()?.includes("exceeds max")) {
                     updateData("exchange_rate_error", "max payer")
@@ -255,9 +252,13 @@ const PaymentsFlow = ({ item }) => {
 
     useEffect(() => {
         if (data.payment_type?.value) {
-            getExchangeRate()
+            if (data.payment_type?.value !== "wallet") {
+                getExchangeRate()
+            } else if (data?.wallet && Object.keys(data?.wallet)?.length > 0) {
+                getExchangeRate()
+            }
         }
-    }, [data.payment_type, data.wallet])
+    }, [data.payment_type, data.wallet, data.currency_wallet])
 
     return (
         <div className={styles.container}>
@@ -387,6 +388,12 @@ const PaymentsFlow = ({ item }) => {
                     </button>
                 </div>
             </div>
+
+            <ErrorModal
+                isOpen={data.exchange_rate_error}
+                message={data.exchange_rate_error}
+                toggle={() => updateData("exchange_rate_error", "")}
+            />
         </div>
     )
 }

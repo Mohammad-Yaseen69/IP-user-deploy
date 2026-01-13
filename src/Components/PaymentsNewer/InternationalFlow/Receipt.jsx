@@ -12,7 +12,7 @@ import fail from "./files/fail.json"
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import success from "./files/success.gif"
 
-const Receipt = ({ data, showTrxBtn = true, transactionStatus }) => {
+const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = false }) => {
     const { t } = useTranslation()
     const [showShare, setShowShare] = useState(false)
     const navigate = useNavigate()
@@ -28,7 +28,7 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus }) => {
                     ?
                     ""
                     :
-                    <div className={styles.container}>
+                    <div style={{width: isFullWidth && "100%"}} className={styles.container}>
                         {
                             showShare
                             &&
