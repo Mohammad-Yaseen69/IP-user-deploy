@@ -147,11 +147,11 @@ const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "re
                             ?
                             <>
                                 {/* {`${item?.sender?.user?.first_name || item?.sender?.user?.company_name} ${item?.sender?.user?.last_name}`.length > 15 ? `${item?.sender?.user?.first_name || item?.sender?.user?.company_name} ${item?.sender?.user?.last_name}`?.slice(0, 15) + ".." : `${item?.sender?.user?.first_name || item?.sender?.user?.company_name} ${item?.sender?.user?.last_name}`} */}
-                                {`${item?.sender?.user?.first_name || item?.sender?.company?.company_name || item?.sender?.company_name} ${item?.sender?.user?.last_name}`.slice(0, 24)}
+                                {`${item?.sender?.user?.first_name || item?.sender?.company?.company_name || item?.sender?.company_name} ${item?.sender?.user?.last_name ?? ""}`.slice(0, 24)}
                             </>
                             :
                             <>
-                                {`${item?.receiver?.user?.first_name || item?.receiver?.company?.company_name || item?.receiver?.company_name} ${item?.receiver?.user?.last_name}`.slice(0, 24)}
+                                {`${item?.receiver?.user?.first_name || item?.receiver?.company?.company_name || item?.receiver?.company_name} ${item?.receiver?.user?.last_name ?? ""}`.slice(0, 24)}
                                 {/* {`${item?.receiver?.user?.first_name || item?.receiver?.user?.company_name} ${item?.receiver?.user?.last_name}`?.length > 15 ? `${item?.receiver?.user?.first_name || item?.receiver?.user?.company_name} ${item?.receiver?.user?.last_name}`?.slice(0, 15) + ".." : `${item?.receiver?.user?.first_name || item?.receiver?.user?.company_name} ${item?.receiver?.user?.last_name}`} */}
                             </>
                     }
