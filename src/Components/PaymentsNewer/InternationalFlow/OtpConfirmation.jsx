@@ -109,8 +109,8 @@ const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHa
         };
     }, []);
     return (
-        <Modal isOpen={isOpen} style={{ borderRadius: "1rem", width: "100vw", maxWidth: window.innerWidth > 1000 ? "fit-content" : "96vw" }}>
-            <ModalBody className={styles.body}>
+        <Modal isOpen={isOpen} contentClassName="overflow-hidden" style={{ borderRadius: "1rem", width: "100vw", maxWidth: window.innerWidth > 1000 ? "800px" : "96vw", overflow: "hidden" }}>
+            <ModalBody  className={styles.body}>
                 <div className={styles.left}>
                     <h5>
                         {
