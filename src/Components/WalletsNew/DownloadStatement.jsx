@@ -72,7 +72,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
         }
         const encrypted = encryptData(data)
 
-        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-wallet-by-date/${wallet?.wallet_id}/0/0`,
+        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-wallet-by-date/${wallet?.wallet_id}/0/0?isSenderExtraInfoRequired=${userDetails?.username === "usharellc" || userDetails?.username === "spmfrance" || userDetails?.username === "yaseen123" ? true : ""}`,
             {
                 data: encrypted
             }, {
@@ -116,18 +116,18 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
             if (item?.service_type === "withdraw_by_admin") return "Admin"
             if (item?.service_type === "kyc_verification") return "InstaPay"
             if (item?.service_type === "withdrawal") {
-                const first = item?.sender?.user?.first_name
-                const last = item?.sender?.user?.last_name
+                const first = item?.sender?.user?.first_name ?? item?.sender?.company?.company_name
+                const last = item?.sender?.user?.last_name ?? ''
                 return [first, last].filter(Boolean).join(" ")
             }
             if (item?.receiver?.user) {
-                const first = item?.receiver?.user?.first_name
-                const last = item?.receiver?.user?.last_name
+                const first = item?.receiver?.user?.first_name ?? item?.receiver?.company?.company_name
+                const last = item?.receiver?.user?.last_name ?? ""
                 return [first, last].filter(Boolean).join(" ")
             }
 
-            const first = internationalReceiver?.first_name ?? item?.account?.user?.first_name ?? internationalReceiver?.company_name ?? item?.account?.user?.company_name
-            const last = internationalReceiver?.last_name ?? item?.account?.user?.last_name
+            const first = internationalReceiver?.first_name ?? item?.account?.user?.first_name ?? internationalReceiver?.company_name ?? item?.account?.company?.company_name
+            const last = internationalReceiver?.last_name ?? item?.account?.user?.last_name ?? ""
             return [first, last].filter(Boolean).join(" ")
         }
 
@@ -137,8 +137,8 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
             return [first, last].filter(Boolean).join(" ")
         }
 
-        const first = item?.sender?.user?.first_name ?? item?.mastercard?.account?.first_name ?? item?.sender?.user?.company_name
-        const last = item?.sender?.user?.last_name ?? item?.mastercard?.account?.last_name
+        const first = item?.sender?.user?.first_name ?? item?.mastercard?.account?.first_name ?? item?.sender?.company?.company_name
+        const last = item?.sender?.user?.last_name ?? item?.mastercard?.account?.last_name ?? ""
         return [first, last].filter(Boolean).join(" ")
     }
 
@@ -239,8 +239,8 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
                         item?.reference_id,
                         renderPaymentType(item),
                         renderRecipientName(item, internationalReceiver),
-                        item?.guest_details?.email || "--",
-                        item?.guest_details?.phone || "--",
+                        item?.guest_details?.email || item?.sender?.email || "--",
+                        item?.guest_details?.phone || item?.sender?.phone || "--",
                         service_name_formatter(item?.service_type),
                         `${item?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}${item?.total ? Number(item?.total)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ""} ${item?.currency?.code} `,
                         item?.client_reference || "--",
