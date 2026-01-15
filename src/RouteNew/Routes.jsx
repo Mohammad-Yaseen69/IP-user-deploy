@@ -1,5 +1,4 @@
 import { lazy } from 'react';
-import EcommerceSettings from '../Components/Ecommerce-store/EcommerceSettings/index.jsx';
 const QrCode = lazy(() => import("../Components/QrCode"));
 const QRScan = lazy(() => import("../Components/QrScan"));
 const ChatbotQrCode = lazy(() => import("../Components/ChatbotQrCode"));
@@ -28,8 +27,6 @@ const PaymentAddress = lazy(() => import('../Components/PaymentAddress'));
 const PaymentAddressPublic = lazy(() => import('../Components/PaymentAddressPublic'));
 const PaymentsNewer = lazy(() => import('../Components/PaymentsNewer'));
 const PendingNew = lazy(() => import('../Components/PendingNew'));
-const Ecommerce = lazy(() => import('../Components/Ecommerce-store/Store/Index.jsx'));
-const EcommerceStoreOrder = lazy(() => import('../Components/Ecommerce-store/My_Orders/index.jsx'));
 const Portfolio = lazy(() => import('../Components/Portfolio'));
 const ProfileTest = lazy(() => import('../Components/Profile'));
 const Quotations = lazy(() => import('../Components/QuotationsNew'));
@@ -85,9 +82,7 @@ export const routes = [
     { path: "/payment-requests", component: <PendingNew /> },
     { path: "/chips-in", component: <ChipsInNew /> },
     { path: "/portfolio", component: <Portfolio /> },
-    { path: "/ecommerce-store", component: <Ecommerce /> },
-    { path: "/ecommerce-store/orders", component: <EcommerceStoreOrder /> },
-    { path: "/ecommerce-store/settings", component: <EcommerceSettings /> },
+    
     { path: "/payment-address", component: <PaymentAddress /> },
     { path: "/analytics", component: <Analytics /> },
     { path: "/settings", component: <Settings /> },
