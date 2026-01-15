@@ -603,6 +603,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                 dataHandler("step", 3)
                 break;
             case 3:
+                dataHandler("payment_type",{})
                 dataHandler("step", 4)
                 break;
             case 4:

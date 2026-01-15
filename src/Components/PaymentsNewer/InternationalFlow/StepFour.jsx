@@ -35,20 +35,19 @@ export const typesData = [
         status: "Active"
     },
     {
+        name: "Mobile Wallet",
+        value: "mobile_wallet",
+        icon: mobile_wallet,
+        id: 1,
+        status: "Active"
+    },
+    {
         name: "Bank Transfer",
         value: "bank",
         icon: bank,
         status: "Coming Soon",
         sub_name: "bank",
         id: 2
-    },
-    {
-        name: "Mobile Wallet",
-        value: "mobile",
-        icon: mobile_wallet,
-        status: "Coming Soon",
-        sub_name: "wallet",
-        id: 1
     },
     {
         name: "Crypto",

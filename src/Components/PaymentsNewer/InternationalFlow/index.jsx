@@ -53,7 +53,7 @@ const leftSideContent = [
 ]
 
 const apiErrors = {
-    "internal_server_error": "Something went wrong on our end. Please try again later.",
+    "internal_server_error": "We are unable to process your request at the moment please try again later.",
     "invalid_token": "You waited too long to complete this transaction. Please try again",
     "token_expired": "You waited too long to complete this transaction. Please try again",
     "invalid_card_details": "The card details you entered don’t match your selected country.",
@@ -67,7 +67,8 @@ const apiErrors = {
     "invoice_already_paid": "This invoice is already paid!",
     'receiver_wallet_not_found': "Recipient wallet is either disabled, blocked or does not exists.",
     "insufficient_funds": "You don't have sufficient funds to complete this transaction.",
-    "shipping_details_required": "Please fill all the required shipping details before proceeding with the transaction."
+    "shipping_details_required": "Please fill all the required shipping details before proceeding with the transaction.",
+    "Onafriq API failed": "Mobile wallet payment method is currently not available for your account. please select a different method."
 }
 
 
