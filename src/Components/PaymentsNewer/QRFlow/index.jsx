@@ -249,7 +249,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                 dataHandler("showOtpModal", true)
             }
             else {
-                data.payment_type?.value === "card" ? initiateCardPayment("1222", dec?.token) : data.payment_type?.value === "paypal" ? initiatePaypalPayment("1222", dec?.token) : verifyOtp("1222", dec?.token)
+                data.payment_type?.value === "card" ? initiateCardPayment("otp_skipped", dec?.token) : data.payment_type?.value === "paypal" ? initiatePaypalPayment("otp_skipped", dec?.token) : verifyOtp("otp_skipped", dec?.token)
             }
             dataHandler("otp_token", dec?.token)
         } catch (error) {
@@ -273,8 +273,8 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             payload.append("token", token || data.otp_token)
 
             console.log(data.new_amoount)
-            const urlEnds = data.payment_duration?.value === "instant" ? "insta-wallet-to-wallet" : data.payment_duration?.value === "subscription" ? "subscribe-payment-w2w" : "schedule-payment-w2w"
-            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/${urlEnds}`,
+            const url = data.payment_type?.value === "mobile_wallet" ? "/api/collection/wallet-to-wallet" : `/api/wallet/${data.payment_duration?.value === "instant" ? "insta-wallet-to-wallet" : data.payment_duration?.value === "subscription" ? "subscribe-payment-w2w" : "schedule-payment-w2w"}`
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}${url}`,
                 payload,
                 {
                     headers: authHeader
@@ -291,9 +291,15 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
 
             if (error2) {
                 dataHandler("otpError", error2)
+                if (otp === "otp_skipped") {
+                    dataHandler("error", error2)
+                }
             }
             else if (error) {
                 dataHandler("otpError", error)
+                if (otp === "otp_skipped") {
+                    dataHandler("error", error)
+                }
             } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                 const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                 const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
@@ -304,6 +310,9 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                 navigate("/login")
             } else {
                 dataHandler("otpError", decrypted?.message ?? "You have entered wrong OTP.")
+                if (otp === "otp_skipped") {
+                    dataHandler("error", decrypted?.message ?? "We are unable to process your request.")
+                }
             }
         } finally {
             dataHandler("loading", false)
@@ -372,9 +381,15 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
 
                 if (error2) {
                     dataHandler("otpError", t(error2))
+                    if (otp === "otp_skipped") {
+                        dataHandler("error", t(error2))
+                    }
                 }
                 else if (error) {
                     dataHandler("otpError", error)
+                    if (otp === "otp_skipped") {
+                        dataHandler("error", t(error))
+                    }
                 } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                     const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                     const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
@@ -386,6 +401,10 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                 }
                 else {
                     dataHandler("otpError", decrypted?.message ?? "You have entered wrong OTP.")
+                    dataHandler("otpError", error)
+                    if (otp === "otp_skipped") {
+                        dataHandler("error", decrypted?.message)
+                    }
                 }
             }
         }
@@ -411,13 +430,20 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             const dec = decryptData(res.data.data)
             window.location.href = dec?.url
         } catch (err) {
-            console.log(err)
             const decrypted = decryptData(err.response.data.data)
-            console.log(decrypted)
             const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-            dataHandler("otpError", decrypted?.message ?? "You have entered wrong OTP.")
+            const error2 = apiErrorMessage(decrypted?.message)
             if (error) {
                 dataHandler("otpError", error)
+                if (otp === "otp_skipped") {
+                    dataHandler("error", error)
+                }
+            }
+            else if (error2) {
+                dataHandler("otpError", error2)
+                if (otp === "otp_skipped") {
+                    dataHandler("error", error2)
+                }
             } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                 const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                 const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
@@ -426,6 +452,11 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                 localStorage.clear()
                 localStorage.setItem("ip_country", coun)
                 navigate("/login")
+            } else {
+                dataHandler("otpError", decrypted?.message ?? "You have entered wrong OTP.")
+                if (otp === "otp_skipped") {
+                    dataHandler("error", decrypted?.message)
+                }
             }
         }
         finally {
@@ -603,12 +634,12 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                 dataHandler("step", 3)
                 break;
             case 3:
-                dataHandler("payment_type",{})
+                dataHandler("payment_type", {})
                 dataHandler("step", 4)
                 break;
             case 4:
-                if (data.payment_type?.value === "mobile") {
-                    console.log("")
+                if (data.payment_type?.value === "mobile_wallet") {
+                    dataHandler("step", 5)
                 }
                 else if (data.payment_type?.value === "wallet") {
                     // dataHandler("show_payment_type", true)

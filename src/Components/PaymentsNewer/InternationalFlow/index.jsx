@@ -66,7 +66,6 @@ const apiErrors = {
     "invoice_not_found": "The invoice you're trying to pay is either inactive or the invoice id is not correct!",
     "invoice_already_paid": "This invoice is already paid!",
     'receiver_wallet_not_found': "Recipient wallet is either disabled, blocked or does not exists.",
-    "insufficient_funds": "You don't have sufficient funds to complete this transaction.",
     "shipping_details_required": "Please fill all the required shipping details before proceeding with the transaction.",
     "Onafriq API failed": "Mobile wallet payment method is currently not available for your account. please select a different method."
 }
