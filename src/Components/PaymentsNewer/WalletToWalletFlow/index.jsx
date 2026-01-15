@@ -392,8 +392,8 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
             payload.append("token", data.otp_token)
 
             console.log(data.new_amoount)
-            const urlEnds = data.payment_duration?.value === "instant" ? "insta-wallet-to-wallet" : data.payment_duration?.value === "subscription" ? "subscribe-payment-w2w" : "schedule-payment-w2w"
-            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/${urlEnds}`,
+            const url = data.payment_type?.value === "mobile_wallet" ? "/api/collection/wallet-to-wallet" : `/api/wallet/${data.payment_duration?.value === "instant" ? "insta-wallet-to-wallet" : data.payment_duration?.value === "subscription" ? "subscribe-payment-w2w" : "schedule-payment-w2w"}`
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}${url}`,
                 payload,
                 {
                     headers: authHeader
@@ -855,8 +855,9 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                 if (invoiceId && isShipping && !data.showShippingAddress) {
                     dataHandler("showShippingAddress", true)
                 }
-                else if (data.payment_type?.value === "mobile") {
-                    console.log("")
+                else if (data.payment_type?.value === "mobile_wallet") {
+                    dataHandler("showShippingAddress", false)
+                    dataHandler("step", 5)
                 }
                 else if (data.payment_type?.value === "wallet") {
                     if (!invoiceId) {
