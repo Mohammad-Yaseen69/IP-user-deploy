@@ -20,7 +20,7 @@ import { authIcon, instaIcon, smsIcon, whatsappIcon } from "./files"
 import "./styles/index.module.css";
 import useWindowWidth from "../../utils/useWindowWidth";
 import i18next from "i18next";
-import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import localforage from "localforage"
 import InstaPayLoader from "../Loader";
 import { logger } from "@sentry/react";
@@ -49,6 +49,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [isOtpCorrect, setIsOtpCorrect] = useState(false)
     const [otpVerified, setOtpVerified] = useState(false)
     const [currentOtpMethod, setCurrentOtpMethod] = useState("auth")
+    const [pendingOtpMethod, setPendingOtpMethod] = useState(null)
     const [isMobile] = useState(((rdd.isMobile || rdd.isMobileSafari) && (!rdd.isAndroid || !rdd.isIOS)) ?? false)
     const [isInstagramBrowser, setisInstagramBrowser] = useState()
     const [lastOtpSentTo, setLastOtpSentTo] = useState(null);
@@ -61,6 +62,9 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [showQuickLogin, setShowQuickLogin] = useState(false)
     const [biometricLoading, setBiometricLoading] = useState(false)
     const [biometricSuccessfull, setBiometricSuccessfull] = useState(false)
+    const [showRestoreModal, setShowRestoreModal] = useState(false)
+    const [accountRestoreDetails, setAccountRestoreDetails] = useState(null)
+    const [restoreLoading, setRestoreLoading] = useState(false)
 
     // convert this object into an array of object it should just have a type property which should tell like whatsapp insta biometric instead of a object property
 
@@ -146,13 +150,16 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
 
 
-    const loginHandler = (e, method = undefined) => {
+    const loginHandler = (e, method = undefined, restoreAccount = false) => {
         e.preventDefault()
         setIsPressed(true)
         setConsecutiveCount(1)
         setIsLoginError("")
         if (method) {
             setMethodLoading(true)
+        }
+        if (restoreAccount) {
+            setRestoreLoading(true)
         }
         const isAuth = method ? (method === "auth") : (currentOtpMethod === "auth");
         const isInsta = method ? (method === "insta") : (currentOtpMethod === "insta" || currentOtpMethod !== "sms");
@@ -165,14 +172,16 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 password,
                 authenticator: isAuth,
                 platform: (isInsta && !isInstagramBrowser) ? "instagram" : isWp ? "whatsapp" : "",
-                first_time: firstTime
+                first_time: firstTime,
+                ...(restoreAccount && { restoreAccount: true })
             }
             : {
                 phone: email,
                 password,
                 authenticator: isAuth,
                 platform: (isInsta && !isInstagramBrowser) ? "instagram" : isWp ? "whatsapp" : "",
-                first_time: firstTime
+                first_time: firstTime,
+                ...(restoreAccount && { restoreAccount: true })
             };
         const encrypted = encryptData(credentials)
 
@@ -185,6 +194,16 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             .then(async (res) => {
                 const decrypted = decryptData(res.data.data)
                 setFirstTime(false)
+
+                // Check if account requires restoration (only if not already restoring)
+                if (!restoreAccount && decrypted?.status === false && decrypted?.accountDetails?.requiresConfirmation === true) {
+                    setAccountRestoreDetails(decrypted)
+                    setShowRestoreModal(true)
+                    setIsPressed(false)
+                    setMethodLoading(false)
+                    return
+                }
+
                 // console.log(decrypted)
                 setMethods(prevMethods => prevMethods.map(method => {
                     switch (method.attr) {
@@ -242,11 +261,19 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 setStep(2)
                 setIsPressed(false)
                 setMethodLoading(false)
+                if (restoreAccount) {
+                    setShowRestoreModal(false)
+                    setAccountRestoreDetails(null)
+                    setRestoreLoading(false)
+                }
 
             })
             .catch(error => {
                 setIsPressed(false)
                 setMethodLoading(false)
+                if (restoreAccount) {
+                    setRestoreLoading(false)
+                }
                 const decrypted = decryptData(error?.response?.data?.data)
                 if (decrypted.message === "Account not found!" || decrypted.message === "Incorrect Password!" || decrypted.message?.toLowerCase()?.includes("incorrect") || decrypted.message === "User not found!") {
                     setIsLoginError(`Uh-Oh! The password/${isEmail.test(email) ? "email" : "phone number"} you entered is wrong.`)
@@ -258,7 +285,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     setIsLoginError(`Uh-Oh! Your account is onhold.`)
                 }
                 if (decrypted.message?.toLowerCase()?.includes("delete")) {
-                    setIsLoginError(`Uh-Oh! Your account is currently on delete status.`)
+                    setIsLoginError(decrypted?.message)
                 }
                 if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                     const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
@@ -566,7 +593,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         inputRefs?.current?.[0]?.focus()
 
         if (resendTimer > 0 && lastOtpSentTo && (method === 'sms' || method === 'insta' || method === "wp")) {
-            setCurrentOtpMethod(method);
+            setPendingOtpMethod(method);
             return;
         }
 
@@ -575,6 +602,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
 
         setCurrentOtpMethod(method);
+        setPendingOtpMethod(null);
     }
 
     const handleBiometricVerification = async () => {
@@ -596,11 +624,12 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             try {
                 credentials = await startAuthentication(dec1.options)
 
-            } catch {
+            } catch (err) {
                 credentials = null
                 setBiometricLoading(false)
                 setIsPressed(false)
-                setIsLoginError("Biometric verification failed")
+                console.log(err)
+                setIsLoginError("Biometric verification failed..")
                 return
             }
 
@@ -610,13 +639,39 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 credentials,
             }
 
+            console.log("biometric: challenge", dec1)
+            console.log("biometric: credentials (attempt 1)", credentials)
 
+            const tryVerify = async (attempt = 1) => {
+                try {
+                    const response2 = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/login-biometric-verify`, {
+                        data: encryptData(verificationData)
+                    })
+                    const dec2 = await decryptData(response2.data.data)
+                    return dec2
+                } catch (err) {
+                    const serverErr = err?.response?.data?.data ? decryptData(err.response.data.data) : err
+                    logger.error(`Biometric verification failed! for ${email}`, {
+                        credentials,
+                        serverError: serverErr,
+                        attempt,
+                    })
+                    if (attempt < 2) {
+                        try {
+                            await new Promise(r => setTimeout(r, 300))
+                            const freshCreds = await startAuthentication(dec1.options)
+                            verificationData.credentials = freshCreds
+                            return await tryVerify(attempt + 1)
+                        } catch (innerErr) {
+                            console.error('biometric retry startAuthentication failed:', innerErr)
+                            throw err
+                        }
+                    }
+                    throw err
+                }
+            }
 
-            const response2 = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/login-biometric-verify`, {
-                data: encryptData(verificationData)
-            })
-
-            const dec2 = await decryptData(response2.data.data)
+            const dec2 = await tryVerify()
 
             const token = dec2?.token
             axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${token}`)
@@ -714,6 +769,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     };
 
 
+    console.log(resendTimer, pendingOtpMethod, currentOtpMethod, lastOtpSentTo)
     useEffect(() => {
         let timeout;
         if (resendTimer > 0) {
@@ -752,14 +808,69 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         setLastOtpSentTo(null) // Reset last OTP method
         setIsLoginError('') // Reset login error message
         setResendTimer(0) // Reset resend timer
+        setPendingOtpMethod(null) // Reset pending OTP method
         setStep(1) // Reset step to 1
     }
+
+    const resetLoginStates = () => {
+        setEmail("")
+        setPassword("")
+        setEmailVerified(false)
+        setIsPressed(false)
+        setIsLoginError("")
+        setLoginToken("")
+        setStep(1)
+        setCurrentOtpMethod("auth")
+        resetOtpStates()
+        setShowRestoreModal(false)
+        setAccountRestoreDetails(null)
+    }
+
 
 
     return (
         <>
 
             <VpnModal showNoticeModal={showNoticeModal} />
+
+            <Modal isOpen={showRestoreModal} toggle={() => setShowRestoreModal(false)} centered>
+                <ModalHeader toggle={() => setShowRestoreModal(false)}>
+                    {t("Account Restoration")}
+                </ModalHeader>
+                <ModalBody>
+                    <p style={{ marginBottom: "1.5rem", lineHeight: "1.6" }}>
+                        {t("Your account is currently in the process of being deleted, as per your request. If you continue with the login, the deletion process will be canceled.")}
+                    </p>
+                </ModalBody>
+                <ModalFooter style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
+                    <Button
+                        color="secondary"
+                        onClick={resetLoginStates}
+                        disabled={restoreLoading}
+                        style={{
+                            background: "#f5f5f5",
+                            border: "1px solid #e6e6e6",
+                            color: "white",
+                            borderRadius: "10px",
+                            padding: "10px 20px"
+                        }}
+                    >
+                        {t("Logout")}
+                    </Button>
+                    <Button
+                        onClick={(e) => loginHandler(e, undefined, true)}
+                        disabled={restoreLoading}
+                        style={{
+                            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                            border: "none",
+                            borderRadius: "10px",
+                            padding: "10px 20px"
+                        }}
+                    >
+                        {restoreLoading ? t("Proceeding...") : t("Proceed with login")}
+                    </Button>
+                </ModalFooter>
+            </Modal>
 
             <form onSubmit={emailVerified ? loginHandler : checkEmailHandler} className={styles.form_details} style={width > 1000 ? { opacity: step === 1 ? 1 : 0, pointerEvents: step === 1 ? "all" : "none" } : { display: step === 1 ? "inherit" : "none" }}>
                 <div className={styles.left}>
@@ -921,7 +1032,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     {t("Back")}
                                 </button>
                             }
-                            <button type="submit" className={styles.form_btn} disabled={isLoginError || isPressed || (emailVerified ? !password || (!isPhoneNumber.test(email) && !isEmail.test(email)) : (!isPhoneNumber.test(email) && !isEmail.test(email)))}>
+                            <button type="submit" className={styles.form_btn} disabled={isLoginError || isPressed || (showQuickLogin ? emailVerified ? !password : false : emailVerified ? !password || (!isPhoneNumber.test(email) && !isEmail.test(email)) : (!isPhoneNumber.test(email) && !isEmail.test(email)))}>
                                 <span>{
                                     !emailVerified
                                         ?
@@ -1151,22 +1262,30 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         )}
                                     </div>
                                     {
-                                        (currentOtpMethod !== "auth" && currentOtpMethod !== "biometric")
-                                        &&
                                         <span>
                                             {
                                                 resendTimer > 0
-                                                    ? (lastOtpSentTo && ['sms', 'insta', 'wp'].includes(currentOtpMethod) && lastOtpSentTo !== currentOtpMethod)
-                                                        ? <span> {t(`You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : lastOtpSentTo === "wp" ? "Whatsapp" : 'Instagram'}, wait ${resendTimer} seconds to get code on ${currentOtpMethod}`)} </span>
+                                                    ? ((lastOtpSentTo && ['sms', 'insta', 'wp'].includes(pendingOtpMethod || currentOtpMethod) && lastOtpSentTo !== (pendingOtpMethod || currentOtpMethod)) || (pendingOtpMethod && lastOtpSentTo !== currentOtpMethod))
+                                                        ? <span> {t(`You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : lastOtpSentTo === "wp" ? "Whatsapp" : 'Instagram'}, wait ${resendTimer} seconds to get code on ${(pendingOtpMethod || currentOtpMethod) === 'sms' ? 'SMS' : (pendingOtpMethod || currentOtpMethod) === "wp" ? "Whatsapp" : 'Instagram'}`)} </span>
                                                         :
-                                                        <span>{t("Resend code in 30 seconds").replace("30", resendTimer)}</span>
+                                                        currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" && <span>{t("Resend code in 30 seconds").replace("30", resendTimer)}</span>
                                                     :
-                                                    <> <span>{t("Didn't receive OTP?") + " "}</span> <span style={{ color: "#5926f0", cursor: "pointer" }} onClick={() => {
-                                                        setLastOtpSentTo(currentOtpMethod);
-                                                        setOTPValues(Array(numberOfFields).fill(''))
-                                                        loginHandler({ preventDefault: () => { } }, currentOtpMethod)
-                                                        setResendTimer(120)
-                                                    }}>{t("Resend Now")}</span></>
+                                                    <>
+                                                        {currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" &&
+                                                            <>
+                                                                <span>{t("Didn't receive OTP?") + " "}</span>
+                                                                <span
+                                                                    style={{ color: "#5926f0", cursor: "pointer" }}
+                                                                    onClick={() => {
+                                                                        setLastOtpSentTo(currentOtpMethod);
+                                                                        setOTPValues(Array(numberOfFields).fill(''))
+                                                                        loginHandler({ preventDefault: () => { } }, currentOtpMethod)
+                                                                        setResendTimer(120)
+                                                                    }}>{t("Resend Now")}
+                                                                </span>
+                                                            </>
+                                                        }
+                                                    </>
                                             }
                                         </span>
                                     }

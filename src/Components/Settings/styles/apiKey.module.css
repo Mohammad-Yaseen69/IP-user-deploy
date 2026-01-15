@@ -1,24 +1,123 @@
-/* Layout containers mirroring previous inline styles */
 .sectionRow {
   display: flex;
   gap: 1rem;
-  align-items: center;
   margin-bottom: 1.5rem;
-  flex-direction: row;
+  width: 100%;
+  flex-direction: column;
 }
 
-@media (max-width: 1000px) {
-  .sectionRow {
-    align-items: stretch;
-    flex-direction: column;
-  }
-}
+
 
 .sectionTitle {
   margin-bottom: 0;
   white-space: nowrap;
   min-width: 110px;
 }
+
+
+
+.inlineControls {
+  display: grid;
+  grid-template-columns: 1fr .4fr;
+  gap: 15px;
+}
+
+.centerCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: flex-start;
+  align-self: stretch;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+}
+
+
+.centerCol .left {
+  display: flex;
+  padding: 32px;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex: 1 0 0;
+  align-self: stretch;
+  gap: 60px;
+  background: #FAFAFA;
+}
+
+.centerCol .right img {
+  width: 100%;
+}
+
+.centerCol .left div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.centerCol h3 {
+  color: #000;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.centerCol span {
+  color: var(--COLORS-Neutral-600, #8E8E8E);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+}
+
+
+.centerCol button {
+  border-radius: var(--Corner-Radius-Small-Roundness, 8px);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%), linear-gradient(259deg, #E64067 8.36%, #5926F0 54.71%, #4828A0 91.64%);
+  background-blend-mode: soft-light, normal;
+  display: flex;
+  padding: var(--Gaps-Gap-Large, 16px) var(--Gaps-Gap-XLarge, 30px);
+  justify-content: center;
+  align-items: center;
+  border: none;
+  color: white;
+  font-weight: 600;
+  border: none;
+  outline: none;
+  gap: 10px;
+}
+
+.centerCol .right {
+  align-self: stretch;
+}
+
+.centerCol .right img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+.btn {
+  padding: var(--SPACING-spacing-0, 8px) var(--gap-gap-16, 36px);
+  align-self: stretch;
+  border-radius: 6px;
+  background: var(--COLORS-Neutral-200, #E8E8E8);
+  color: var(--COLORS-Neutral-1000, #333);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600 !important;
+  border: none;
+  outline: none;
+  white-space: nowrap;
+}
+
+.btnPrimary {
+  border-radius: var(--RADIUS-radius-1, 4px);
+  background: var(--COLORS-Primary-300, #5926F0);
+  color: white;
+}
+
 
 .columnFlex {
   display: flex;
@@ -28,123 +127,31 @@
   max-width: 100%;
 }
 
-.inlineControls {
-  display: flex;
-  gap: .5rem;
-  align-items: center;
-}
 
 .centerLoader {
   width: 200px;
   margin: 0 auto;
 }
 
-.centerCol {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-direction: column;
-}
 
 .endActions {
   display: flex;
   gap: .5rem;
   flex-wrap: wrap;
   float: inline-end;
-}
-
-/* Buttons to replace inline radius and outlines */
-.btnRound {
-  border-radius: 5px;
-  flex-shrink: 0;
-}
-
-.btnDeleteOutline {
-  background: transparent !important;
-  background-color: transparent !important;
-  color: red;
-  border: 1px solid red;
-}
-/* Layout containers mirroring previous inline styles */
-.sectionRow {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  flex-direction: row;
-}
-
-@media (max-width: 1000px) {
-  .sectionRow {
-    align-items: stretch;
-    flex-direction: column;
-  }
-}
-
-.sectionTitle {
-  margin-bottom: 0;
-  white-space: nowrap;
-  min-width: 110px;
-}
-
-.columnFlex {
-  display: flex;
-  flex-direction: column;
-  gap: .65rem;
-  flex: 1;
-  max-width: 100%;
-}
-
-.inlineControls {
-  display: flex;
-  gap: .5rem;
-  align-items: center;
-}
-
-.centerLoader {
-  width: 200px;
-  margin: 0 auto;
-}
-
-.centerCol {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-direction: column;
-}
-
-.endActions {
-  display: flex;
-  gap: .5rem;
-  flex-wrap: wrap;
-  float: inline-end;
-}
-
-/* Buttons to replace inline radius and outlines */
-.btnRound {
-  border-radius: 5px;
-}
-
-.btnDeleteOutline {
-  background: transparent;
-  color: red;
-  border: 1px solid red;
 }
 
 .featureRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem;
-  border: 1px solid #e0e0e0;
+  padding: var(--SPACING-spacing-1, 12px);
   border-radius: 6px;
-  background-color: #fafafa;
+  border: 0 solid #EC9100;
+  background: #F9F9F9;
   transition: all 0.2s ease;
-}
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.13);
 
-.featureRow:hover {
-  border-color: #d0d0d0;
-  background-color: #f5f5f5;
 }
 
 .featureContent {
@@ -169,4 +176,44 @@
   border-radius: 3px;
   font-size: 0.75rem;
   font-weight: 600;
+}
+
+
+@media (max-width: 1000px) {
+  .sectionRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+
+}
+
+
+
+@media screen and (max-width: 1200px) {
+  .centerCol {
+    grid-template-columns: 1fr;
+  }
+
+  .centerCol .left {
+    margin-bottom: -30px;
+    z-index: 1111;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .inlineControls {
+    grid-template-columns: 1fr;
+  }
+
+
+  .endActions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+
+  .endActions > button:nth-child(3){
+    grid-column: 1 / -1;
+  }
 }

@@ -323,6 +323,7 @@ const PendingNew = () => {
                                                                     style={{
                                                                         border: id === item?._id ? "4px solid #afafaf1e" : "none"
                                                                     }}
+                                                                    key={index}
                                                                 >
                                                                     <PendingItem authHeader={authHeader} userDetails={userDetails} color={color} item={item} key={item._id} activeItem={activeItem} setActiveItem={setActiveItem} index={index} />
                                                                 </div>
@@ -351,6 +352,7 @@ const PendingNew = () => {
                                                                         border: id === item?._id ? "4px solid #afafaf1e" : "none",
                                                                         borderRadius: "10px"
                                                                     }}
+                                                                    key={index}
                                                                 >
                                                                     <PendingItem authHeader={authHeader} userDetails={userDetails} color={color} item={item} key={item._id} activeItem={activeItem} setActiveItem={setActiveItem} index={index} type="send" />
                                                                 </div>

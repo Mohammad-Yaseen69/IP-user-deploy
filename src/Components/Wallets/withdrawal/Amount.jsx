@@ -87,7 +87,8 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
                                 wholesale_fx_rate: decrypted?.data?.result?.exchanged_rate?.value,
                                 destination: { currency: decrypted?.data?.result?.recipient?.currency, amount: decrypted?.data?.result?.recipient?.value },
                                 fee: { amount: decrypted?.data?.result?.fee?.value },
-                                total: decrypted?.data?.result?.total?.value
+                                total: decrypted?.data?.result?.total?.value,
+                                daily_receiving_limit_used: decrypted?.data?.result?.limits?.daily_sending_limit - decrypted?.data?.result?.limits_used?.daily_sending_limit_used,
                             }
                             if (decrypted?.data?.result?.total?.inUSD >= 5000) {
                                 setIsExternalWithdrawal(true)

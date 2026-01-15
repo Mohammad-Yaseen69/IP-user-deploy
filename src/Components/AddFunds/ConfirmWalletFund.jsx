@@ -1,5 +1,5 @@
 import { Card, CardBody, Modal, ModalBody } from "reactstrap";
-import { Check, ChevronRight, XCircle } from "react-feather";
+import { Check, CheckCircle, ChevronRight, XCircle } from "react-feather";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import { useTranslation } from "react-i18next";
@@ -33,6 +33,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [complete, setComplete] = useState(false);
+    const [mobileSuccess, setMobileSuccess] = useState(false)
     const pRef = useRef(null)
     const divRef = useRef(null)
     const svgRef = useRef(null)
@@ -217,6 +218,41 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                 }
 
 
+            } else if (payoutChannel?.value === "mobile") {
+
+                const payload = {
+                    wallet_id: wallet?.wallet_id,
+                    token: exchangeRate?.token,
+                    payment_type: "topup_mobile_wallet"
+                }
+
+                try {
+                    const response = await apiWrapper({
+                        endpoint: `/api/collection/transfer`,
+                        isEncrypted: true,
+                        method: "POST",
+                        payload
+                    })
+
+                    setMobileSuccess(true)
+
+                } catch (error) {
+                    const dec = decryptData(error?.response?.data?.data)
+
+                    const error2 = apiErrorMessage(dec?.message)
+                    const error1 = LimitsErrorMessage(dec?.code)
+
+                    if (error1) {
+                        setError(t(error1))
+                    }
+                    else if (error2) {
+                        setError(t(error2))
+                    } else {
+                        setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
+                    }
+                } finally {
+                    setLoading(false)
+                }
             } else {
                 const data = type === "kyb" ? { wallet_id: wallet?._id } : {
                     wallet_id: wallet?._id,
@@ -342,78 +378,103 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                     </div>
 
 
-
-                    <div ref={divRef}
-                        style={{
-                            textAlign: "center",
-                            position: "relative",
-                            background: "linear-gradient(0deg, rgba(11, 13, 65, 0.16), rgba(11, 13, 65, 0.16)), radial-gradient(182.3% 794.57% at 91.57% -107.9%, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
-                            backgroundBlendMode: "color-burn,normal",
-                            boxShadow: "0px 6px 13px -5.4094px rgba(89, 38, 240, 0.17)",
-                            borderRadius: "16px",
-                            padding: "1rem",
-                            overflow: "hidden",
-                            marginTop: "1rem",
-                            pointerEvents: loading ? "none" : "all",
-                            opacity: loading ? .9 : 1
-                        }}
-                    >
-                        {
-                            loading
-                            &&
-                            <div style={{
-                                position: "absolute",
-                                top: "50%",
-                                left: "50%",
-                                transform: "translate(-50%, -50%)",
-                                zIndex: 10000
-                            }}>
-                                <div className="d-flex justify-content-center">
-                                    <div className="spinner-border" color='primary' role="status">
-                                        <span className="sr-only">Loading...</span>
+                    {mobileSuccess ?
+                        <div
+                            style={{
+                                textAlign: "center",
+                                position: "relative",
+                                background: "linear-gradient(0deg, rgba(11, 13, 65, 0.16), rgba(11, 13, 65, 0.16)), radial-gradient(182.3% 794.57% at 91.57% -107.9%, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
+                                backgroundBlendMode: "color-burn,normal",
+                                boxShadow: "0px 6px 13px -5.4094px rgba(89, 38, 240, 0.17)",
+                                borderRadius: "16px",
+                                padding: "1rem",
+                                overflow: "hidden",
+                                marginTop: "1rem",
+                                pointerEvents: loading ? "none" : "all",
+                                opacity: loading ? .9 : 1,
+                                display: "flex",
+                                alignItems: "center",
+                                flexDirection: "column"
+                            }}
+                        >
+                            <p style={{ margin: "0", fontWeight: "700", color: "white", fontSize: "16px" }}>{t("Transaction is in processing")}</p>
+                            <p style={{ margin: "0", fontWeight: "600", color: "white", fontSize: "12px" }}>
+                                {t("You will receive the funds in your wallet once the mobile money transfer is completed. You can close this page if you want.")}
+                            </p>
+                        </div>
+                        :
+                        <div ref={divRef}
+                            style={{
+                                textAlign: "center",
+                                position: "relative",
+                                background: "linear-gradient(0deg, rgba(11, 13, 65, 0.16), rgba(11, 13, 65, 0.16)), radial-gradient(182.3% 794.57% at 91.57% -107.9%, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
+                                backgroundBlendMode: "color-burn,normal",
+                                boxShadow: "0px 6px 13px -5.4094px rgba(89, 38, 240, 0.17)",
+                                borderRadius: "16px",
+                                padding: "1rem",
+                                overflow: "hidden",
+                                marginTop: "1rem",
+                                pointerEvents: loading ? "none" : "all",
+                                opacity: loading ? .9 : 1
+                            }}
+                        >
+                            {
+                                loading
+                                &&
+                                <div style={{
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                    zIndex: 10000
+                                }}>
+                                    <div className="d-flex justify-content-center">
+                                        <div className="spinner-border" color='primary' role="status">
+                                            <span className="sr-only">Loading...</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        }
-                        <img src={faded_lines} alt="faded" style={{ position: "absolute", left: "-130px", display: complete ? "none" : "inherit", width: "130px" }} ref={svgRef} />
-                        <Draggable axis="x" bounds="parent" onDrag={handleDrag}>
-                            <div
-                                style={{
-                                    position: "absolute",
-                                    top: "10px",
-                                    left: "10px",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    border: "3px solid white",
-                                    height: "40px",
-                                    width: "40px",
-                                    borderRadius: "16px",
-                                    cursor: "pointer",
-                                    zIndex: 1
-                                }}
-                                ref={chevRef}
-                            >
-                                {
-                                    complete
-                                        ?
-                                        <Check color="white" size={30} />
-                                        :
-                                        <ChevronRight color="white" size={30} />
-                                }
-                            </div>
-                        </Draggable>
-                        <p style={{ marginBottom: "0", fontSize: "1.1rem", fontWeight: 500, color: "white", display: complete ? "none" : "inherit" }} ref={pRef}>
-                            {t("Slide To Confirm")}
-                        </p>
-                        {
-                            complete
-                            &&
-                            <p style={{ marginBottom: "0", fontSize: "1.1rem", fontWeight: 500, color: "white" }}>
-                                {t("Detailed Confirmed")}
+                            }
+                            <img src={faded_lines} alt="faded" style={{ position: "absolute", left: "-130px", display: complete ? "none" : "inherit", width: "130px" }} ref={svgRef} />
+                            <Draggable axis="x" bounds="parent" onDrag={handleDrag}>
+                                <div
+                                    style={{
+                                        position: "absolute",
+                                        top: "10px",
+                                        left: "10px",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        border: "3px solid white",
+                                        height: "40px",
+                                        width: "40px",
+                                        borderRadius: "16px",
+                                        cursor: "pointer",
+                                        zIndex: 1
+                                    }}
+                                    ref={chevRef}
+                                >
+                                    {
+                                        complete
+                                            ?
+                                            <Check color="white" size={30} />
+                                            :
+                                            <ChevronRight color="white" size={30} />
+                                    }
+                                </div>
+                            </Draggable>
+                            <p style={{ marginBottom: "0", fontSize: "1.1rem", fontWeight: 500, color: "white", display: complete ? "none" : "inherit" }} ref={pRef}>
+                                {t("Slide To Confirm")}
                             </p>
-                        }
-                    </div>
+                            {
+                                complete
+                                &&
+                                <p style={{ marginBottom: "0", fontSize: "1.1rem", fontWeight: 500, color: "white" }}>
+                                    {t("Detailed Confirmed")}
+                                </p>
+                            }
+                        </div>
+                    }
                 </CardBody>
             </Card>
             {

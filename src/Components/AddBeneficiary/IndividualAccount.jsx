@@ -1,7 +1,7 @@
 import { Button, CardBody, CardFooter, FormGroup, Input, Label, Form } from "reactstrap";
 import 'react-phone-input-2/lib/style.css'
 import "./req_star.css"
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 import CountryDropDown from "./CountryDropDown";
 import CitiesDropDown from "../CitiesDropDown";
@@ -20,7 +20,7 @@ import useBenCreateFunc from "../../hooks/BeneficiaryHooks/useBenCreateFunc";
 import { BeneficiaryRelation, friendsAndFamily, gendersData, idTypeData, occupations, beneficiaryInitialFormData, bankExtrasInitial, basicExtrasInitial } from "../../utils/Data";
 import PaymentChannelUI from "./PaymentChannelUI";
 import NeemaBenExtrasFields from "./NeemaBenExtrasFields";
-
+import citiesData from "../CitiesDropDown/CitiesData.json"
 
 
 
@@ -194,6 +194,11 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
 
 
     // bank details
+    const isAfricanBank = useMemo(() => {
+        if (country) {
+            return citiesData.find(item => item.iso3 === bankCountryCode).region === "Africa"
+        }
+    }, [bankCountryCode])
     useEffect(() => {
         const fields = services?.find(item =>
             item?.method?.toLowerCase()?.includes("bank")
@@ -211,7 +216,7 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
                 if (item === "swift_bic_code" && accNumType === "Swift") return false
                 return true
             })
-        if (formData.bank_name && formData.branch_name && formData.bank_account_number && formData.bank_postal_code && formData.bank_branch_street && formData.bank_city && formData.bank_province && resultKeys?.every(item => bankExtras?.[item]?.length > 0)) {
+        if (formData.bank_name && formData.branch_name && formData.bank_account_number && (isAfricanBank ? true : formData.bank_postal_code) && formData.bank_branch_street && formData.bank_city && formData.bank_province && resultKeys?.every(item => bankExtras?.[item]?.length > 0)) {
             setCompletedBank(true)
         } else {
             setCompletedBank(false)
@@ -789,7 +794,8 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
                                         setCashPickupNumber,
                                         cashExtras,
                                         handleCashxtraChange,
-                                        completedCrypto
+                                        completedCrypto,
+                                        isAfricanBank
                                     }}
                                     />
                                 </CardBody >

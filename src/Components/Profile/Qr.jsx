@@ -52,6 +52,8 @@ const Qr = ({ currentRevTab, averageRatingAsBuyer, averageRatingAsSeller, totalR
         window.addEventListener("resize", resizeHandler)
         return () => window.removeEventListener("resize", resizeHandler)
     }, [])
+
+    console.log(userWallet?.qrCode?.url)
     return (
         <div className={styles.qr_rating}>
             <Card style={{ marginBottom: 0 }} className={styles.qr_container}>
@@ -63,14 +65,10 @@ const Qr = ({ currentRevTab, averageRatingAsBuyer, averageRatingAsSeller, totalR
                         // width: winWidth > 1780 ? "194px" : "160px",
                         width: "fit-content"
                     }}>
-                        <img src={userWallet?.qrCode?.url} alt="QR Code" className={styles.qr_code}
-                            style={{
-                                width: "100% !important",
-                                height: "100%",
-                                objectFit: "cover",
-                                borderRadius: "15px",
-                                alignSelf: "center"
-                            }}
+                        <img
+                            src={`${userWallet?.qrCode?.url}?debug=1`}
+                            alt="QR Code"
+                            className={styles.qr_code}
                         />
                     </div>
                     <div className={styles.qr_info}>
@@ -101,11 +99,11 @@ const Qr = ({ currentRevTab, averageRatingAsBuyer, averageRatingAsSeller, totalR
                     <span>{currentRevTab === "Seller" ? totalReviewsAsSeller?.toFixed(1) : totalReviewsAsBuyer?.toFixed(1)} {t("ratings")}</span>
                 </div>
                 <div className={styles.actions}>
-                    <Link style={{justifyContent: "space-between"}} to={"/quotations"} className={styles.action}>
+                    <Link style={{ justifyContent: "space-between" }} to={"/quotations"} className={styles.action}>
                         <span>{t("Pending")} {t("Quotations")}: </span>
                         <span>{profieInfo?.quotationCounts ?? 0}</span>
                     </Link>
-                    <Link style={{justifyContent: "space-between"}} to={"/payment-requests"} className={styles.action}>
+                    <Link style={{ justifyContent: "space-between" }} to={"/payment-requests"} className={styles.action}>
                         <span>{t("Pending")} {t("Payments")}: </span>
                         <span>{profieInfo?.paymentCounts ?? 0}</span>
                     </Link>

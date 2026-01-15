@@ -384,6 +384,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                             toggle()
                                         }}
                                         showBack={true}
+                                        isFullWidth={true}
                                     />
                                     :
                                     <>

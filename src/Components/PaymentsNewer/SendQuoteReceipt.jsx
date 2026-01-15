@@ -107,7 +107,7 @@ const SendQuoteReceipt = ({ beneficiary, amount, currency, title, description, f
                             <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem", fontWeight: 700 }}>{t(`Title`)}</span>
                         </div>
                         <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
-                            <span style={{ fontWeight: 700, fontSize: "1.4rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{title}</span>
+                            <span style={{ fontWeight: 700, fontSize: "1.4rem" }}>{title}</span>
                         </div>
                     </div>
                     {/* desciption */}
@@ -116,7 +116,7 @@ const SendQuoteReceipt = ({ beneficiary, amount, currency, title, description, f
                             <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem", fontWeight: 700 }}>{t(`Description`)}</span>
                         </div>
                         <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
-                            <span style={{ fontWeight: 700, fontSize: "1.4rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{description}</span>
+                            <span style={{ fontWeight: 700, fontSize: "1.4rem" }}>{description}</span>
                         </div>
                     </div>
                     {/* files */}
@@ -129,7 +129,7 @@ const SendQuoteReceipt = ({ beneficiary, amount, currency, title, description, f
                                 {files.map((file, index) => {
                                     const previewURL = URL.createObjectURL(file);
                                     return (
-                                        <div title={file?.name} style={{ height: '50px', width: '50px', borderRadius: '5px', boxShadow: '0 0 3px #1111113e', position: "relative", overflow: "hidden" }}>
+                                        <div key={index} title={file?.name} style={{ height: '50px', width: '50px', borderRadius: '5px', boxShadow: '0 0 3px #1111113e', position: "relative", overflow: "hidden" }}>
                                             {
                                                 file?.type?.toLowerCase()?.includes("image")
                                                 &&

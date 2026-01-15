@@ -94,7 +94,6 @@ const TransactionsTable = () => {
     }, [searchQuery]);
 
     const getAllTransactions = () => {
-        setActive("All")
         if (page === 1) {
             setIsLoading(true)
         }
@@ -322,7 +321,7 @@ const TransactionsTable = () => {
             const requestedTransactions = transactions?.filter(item => item?.payment_type === "payment_request")
             setFiltered(requestedTransactions)
         }
-    }, [active])
+    }, [active, transactions])
 
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)

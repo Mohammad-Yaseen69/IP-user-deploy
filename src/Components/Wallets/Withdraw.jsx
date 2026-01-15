@@ -17,7 +17,9 @@ import ChooseType from './withdrawal/ChooseType'
 import ChooseWithdrawal from './withdrawal/ChooseWithdrawal'
 import DefaultWithdrawal from './withdrawal/DefaultWithdrawal'
 import { Link } from 'react-router-dom'
-import { Toggle } from '../MyMasterCard/CardPurchased'
+import useVendorBalance from "../../hooks/Payments/useVendorBalance"
+import VendorBalanceModal from '../PaymentsNewer/InternationalFlow/VendorBalanceModal'
+
 
 
 const Withdraw = ({ isOpen, toggle, wallet }) => {
@@ -101,6 +103,9 @@ const Withdraw = ({ isOpen, toggle, wallet }) => {
                                     userWithdrawals={currentWithdrawal}
                                     defaultId={defaultId}
                                     currentWithdrawal={currentWithdrawal}
+                                    setCurrentWithdrawal={setCurrentWithdrawal}
+                                    withdrawType={withdrawType}
+                                    setMainStep={setMainStep}
                                 />
                                 :
                                 <>
@@ -115,7 +120,8 @@ const Withdraw = ({ isOpen, toggle, wallet }) => {
                                         }
                                         {
                                             mainStep === 2
-                                                ? withdrawType === "specify"
+                                                ?
+                                                withdrawType === "specify"
                                                     ?
                                                     userWithdrawals?.length > 0
                                                         ?
@@ -161,6 +167,28 @@ const Withdraw = ({ isOpen, toggle, wallet }) => {
 
                                     </ModalBody>
                                     <ModalFooter>
+                                        {
+                                            mainStep > 1 &&
+                                            <Button color='transparent' style={{
+                                                borderRadius: "8px",
+                                                padding: ".6rem 1.25rem",
+                                                marginRight: "8px"
+                                            }}
+                                                onClick={() => {
+                                                    setMainStep(prev => {
+                                                        const next = Math.max(1, prev - 1)
+                                                        if (next === 1) {
+                                                            setWithdrawType("")
+                                                            setCurrentWithdrawal(null)
+                                                            setDefaultId(null)
+                                                        }
+                                                        return next
+                                                    })
+                                                }}
+                                            >
+                                                {t("Back")}
+                                            </Button>
+                                        }
                                         <Button color='primary' style={{
                                             backgroundColor: "#5926f0",
                                             borderRadius: "8px",
@@ -225,7 +253,10 @@ const WithdrawOldFlow = ({
     setTransactionDetails,
     userWithdrawals,
     defaultId,
-    currentWithdrawal
+    currentWithdrawal,
+    setCurrentWithdrawal,
+    withdrawType,
+    setMainStep,
 }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
@@ -234,7 +265,7 @@ const WithdrawOldFlow = ({
     const [exchangeRate, setExchangeRate] = useState()
     const [showNotice, setShowNotice] = useState(false)
     const [agree, setAgree] = useState(false)
-
+    const [showBalanceModal, setShowBalanceModal] = useState(false)
 
 
     const getVendor = () => {
@@ -244,6 +275,8 @@ const WithdrawOldFlow = ({
         if (payoutChannel?.value === "cash") return currentWithdrawal?.cash_pickup?.[0]?.vendor || "thunes"
         return ""
     }
+
+    const { vendorBalance, vendorBalanceInUSD, vendorBalanceLoading } = useVendorBalance(wallet?.currency?.code, getVendor(), (err) => setAmountError(err))
 
     useEffect(() => {
         if (payoutChannel) {
@@ -270,8 +303,8 @@ const WithdrawOldFlow = ({
                     }
                     setSubService(modifiedPayer)
                 })
-                .catch(err => {
-                    // console.log(err)
+                .catch(() => {
+                    // ignored
                 })
         }
     }, [payoutChannel])
@@ -326,6 +359,14 @@ const WithdrawOldFlow = ({
 
             case 2:
                 if (amountError || !amount) break;
+                console.log(amount, vendorBalance)
+                if (vendorBalanceInUSD < 4) {
+                    setShowBalanceModal(true)
+                    break;
+                } else if (Number(String(amount)?.replace(",", "")) >= vendorBalance) {
+                    setShowBalanceModal(true)
+                    break;
+                }
                 if (isExternalWithdrawal) {
                     if (showNotice) {
                         setStep(prev => prev + 1)
@@ -361,9 +402,56 @@ const WithdrawOldFlow = ({
     useEffect(() => {
         setCodeType(userDetails?.tfa ? "authenticator" : "sms")
     }, [userDetails])
+
+    const handleBack = () => {
+        if (step === 1) {
+            setCurrentWithdrawal(null)
+            if (withdrawType !== "specify") {
+                setMainStep(1)
+            }
+            return;
+        }
+        const next = Math.max(1, step - 1)
+        setStep(next)
+
+        if (next === 1) {
+            setPayoutChannel("")
+            setAmount(1.00)
+            setAmountError("")
+            setQuotationDetails(null)
+            setSubService(null)
+            setCreatedQuotation(null)
+            setCreatedTransaction("")
+            setTransactionDetails("")
+            setConfirmed(false)
+            setIsExternalWithdrawal(false)
+            setExchangeRate(undefined)
+            setShowNotice(false)
+            setAgree(false)
+            setCodeType(userDetails?.tfa ? "authenticator" : "sms")
+        } else if (next === 2) {
+            // If stepping back to step 2, clear anything created in step 3/4
+            setCreatedQuotation(null)
+            setCreatedTransaction("")
+            setTransactionDetails("")
+            setConfirmed(false)
+            setShowNotice(false)
+            setAgree(false)
+        }
+    }
     return (
         <>
             <ModalBody style={{ padding: step === 4 && confirmed && window.innerWidth < 450 ? "0" : "25px" }}>
+                <VendorBalanceModal
+                    currency={wallet.currency.code}
+                    isOpen={showBalanceModal}
+                    sendingAmount={amount}
+                    toggle={() => setShowBalanceModal(false)}
+                    vendorBalance={vendorBalance}
+                    vendorBalanceInUSD={vendorBalanceInUSD}
+                    vendorBalanceLoading={vendorBalanceLoading}
+                    sendingLimit={exchangeRate?.daily_receiving_limit_used || 0}
+                />
                 {
                     step === 1
                     &&
@@ -380,7 +468,7 @@ const WithdrawOldFlow = ({
                     &&
 
                     <AmountAndCurrency
-                        amount={amount}
+                        amount={String(amount)?.replace(",", "")}
                         currency={wallet?.currency?.code}
                         payoutChannel={payoutChannel}
                         setAmount={setAmount}
@@ -423,7 +511,7 @@ const WithdrawOldFlow = ({
                     step === 3 && !confirmed
                     &&
                     <ConfirmSend
-                        amount={amount}
+                        amount={String(amount)?.replace(",", "")}
                         beneficiary={[userDetails]}
                         comment={"Withdrawal"}
                         country={country}
@@ -496,7 +584,7 @@ const WithdrawOldFlow = ({
                     &&
                     <Receipt
                         beneficiary={[userDetails]}
-                        amount={amount}
+                        amount={String(amount)?.replace(",", "")}
                         currency={wallet?.currency?.code}
                         country={country}
                         payoutChannel={payoutChannel}
@@ -509,10 +597,22 @@ const WithdrawOldFlow = ({
                     />
                 }
             </ModalBody>
+
             {
                 step < 3
                 &&
                 <ModalFooter>
+
+                    <Button color='transparent' style={{
+                        borderRadius: "8px",
+                        padding: ".6rem 1.25rem",
+                        marginRight: "8px"
+                    }}
+                        onClick={handleBack}
+                    >
+                        {t("Back")}
+                    </Button>
+
                     {
                         validPayouts
                             ?

@@ -79,7 +79,7 @@ const Stepfour = ({ data, dataHandler }) => {
                     </div>
                     <div className={styles.regex_item}>
                         {
-                            passwordRegex[1].test(data.password)
+                            passwordRegex[2].test(data.password)
                                 ?
                                 <div className={styles.check}>
                                     <Check size={9} color="white" />
@@ -93,7 +93,7 @@ const Stepfour = ({ data, dataHandler }) => {
                     </div>
                     <div className={styles.regex_item}>
                         {
-                            passwordRegex[2].test(data.password)
+                            passwordRegex[1].test(data.password)
                                 ?
                                 <div className={styles.check}>
                                     <Check size={9} color="white" />

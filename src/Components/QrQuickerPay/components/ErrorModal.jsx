@@ -31,7 +31,7 @@ const ErrorModal = ({ error, showModal, limitErrors, url, toggle, isInvoice, gue
 
                     :
                     <div style={{ display: "flex", gap: "10px", flexDirection: windowWidth < 400 && "column", marginTop: "2rem" }}>
-                        {(limitErrors || error.toLowerCase()?.includes("amount exceeds") || error.toLowerCase()?.includes("limit")) &&
+                        {(limitErrors || error.toLowerCase()?.includes("amount exceeds") || error.toLowerCase()?.includes("limit") || error?.toLowerCase()?.includes("funds")) &&
                             <button
                                 onClick={toggle} style={{ background: "#5926f0", color: "#fff", padding: "10px 20px", borderRadius: "5px", border: "none", cursor: "pointer", fontWeight: 600 }}>
                                 {t("Change Amount")}

@@ -33,7 +33,6 @@ const WalletsComponent = ({ data, dataHandler, loading = false, inEsim }) => {
 
     // const width = useWindowWidth()
 
-    console.log(data)
     return (
         <>
             {
@@ -236,6 +235,13 @@ export const WalletCard = ({
         }
     }
 
+    useEffect(() => {
+        if ((!loading && !blocked) && (isSufficient) && (!data?.wallet || Object.keys(data?.wallet).length === 0)) {
+            if (wallet.default) {
+                dataHandler("wallet", wallet)
+            }
+        }
+    }, [wallet, loading, isSufficient, blocked])
 
     return (
         <div
@@ -255,8 +261,8 @@ export const WalletCard = ({
                         ?
                         <div className={styles.top_badge}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
-                                <g clip-path="url(#clip0_2796_2328)">
-                                    <path d="M4.87502 7.37061L6.62502 9.12061L10.125 5.62061M13.3334 7.37061C13.3334 10.5923 10.7217 13.2039 7.50002 13.2039C4.27836 13.2039 1.66669 10.5923 1.66669 7.37061C1.66669 4.14895 4.27836 1.53728 7.50002 1.53728C10.7217 1.53728 13.3334 4.14895 13.3334 7.37061Z" stroke="#1FC16B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                <g clipPath="url(#clip0_2796_2328)">
+                                    <path d="M4.87502 7.37061L6.62502 9.12061L10.125 5.62061M13.3334 7.37061C13.3334 10.5923 10.7217 13.2039 7.50002 13.2039C4.27836 13.2039 1.66669 10.5923 1.66669 7.37061C1.66669 4.14895 4.27836 1.53728 7.50002 1.53728C10.7217 1.53728 13.3334 4.14895 13.3334 7.37061Z" stroke="#1FC16B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </g>
                                 <defs>
                                     <clipPath id="clip0_2796_2328">

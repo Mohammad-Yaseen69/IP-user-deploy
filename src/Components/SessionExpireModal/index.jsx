@@ -12,6 +12,7 @@ const SessionExpireModal = ({ isOpen, toggle }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
 
+
     const logoutHandler = () => {
         const coun = localStorage.getItem("ip_country")
         localStorage.clear()
@@ -23,18 +24,25 @@ const SessionExpireModal = ({ isOpen, toggle }) => {
     }
 
     useEffect(() => {
-        let timeout;
+        if (isOpen) {
+            let timeout;
 
-        if (timer === 0) {
-            logoutHandler()
-        } else {
-            timeout = setTimeout(() => {
-                setTimer(prev => prev - 1)
-            }, 1000)
+            if (timer === 0) {
+                logoutHandler()
+            } else {
+                timeout = setTimeout(() => {
+                    setTimer(prev => prev - 1)
+                }, 1000)
+            }
+
+            return () => clearTimeout(timeout)
         }
+    }, [timer, isOpen])
 
-        return () => clearTimeout(timeout)
-    }, [timer])
+
+    useEffect(() => {
+        setIsOpenState(isOpen)
+    }, [isOpen])
 
     return (
         <Modal isOpen={isOpenState}>

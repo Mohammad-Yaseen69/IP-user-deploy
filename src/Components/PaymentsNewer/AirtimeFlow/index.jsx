@@ -563,6 +563,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             <PrevModal
                 toggle={() => updateEsimHandler("simsModal", false)}
                 isOpen={data.eSimData.simsModal}
+                isMobile={window.innerWidth < 1000}
             />
             {
                 window.innerWidth > 1000
@@ -572,7 +573,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                             data.error
                             &&
                             <ErrorModal
-                                heading={data.step === 2 ? "Incorrect Phone Number" : "Transaction Failed"}
+                                heading={data.step === 2 ? data?.error?.includes("operator") ? "Operator not available" : "Incorrect Phone Number" : "Transaction Failed"}
                                 isOpen={data.error}
                                 toggle={() => {
                                     updateDataHandler("error", "")
@@ -825,6 +826,11 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                                     <div className={styles.flow}>
                                         {
                                             <>
+                                                {data.flow === "e-sim" &&
+                                                    <div style={{ width: "100%", marginBottom: "15px" }}>
+                                                        <button style={{ width: "100%" }} onClick={() => updateEsimHandler("simsModal", true)} className={styles.manageBtn}>{t("Manage purchased eSIM")}</button>
+                                                    </div>
+                                                }
                                                 {
                                                     data.step === 1
                                                     &&

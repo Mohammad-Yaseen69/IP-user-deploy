@@ -16,7 +16,7 @@ import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
 const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency, exchangeCurrency, exchangePrice, setEnteredCurrency, setResultCurrency, setUserCurrency, setExchangedCurrency, exchangeFee, fxDet }) => {
     const { setIsExtended } = useContext(InactivityContext)
     const { t } = useTranslation()
-    const { userWallets, authHeader, verifyToken } = useContext(UserContext)
+    const { userWallets, authHeader, getUserWallets } = useContext(UserContext)
     const [complete, setComplete] = useState(false)
     const pRef = useRef(null)
     const divRef = useRef(null)
@@ -167,25 +167,32 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
 
     const confirmConversion = () => {
         setSaving(true)
-        if(currentWallet?.wallet_type === "crypto"){
-            setStep(2)
-            return;
-        }
         if (+currentWallet.balance.available > +amount) {
             const data = {
                 sender_wallet_id: currentWallet._id,
                 receiver_wallet_id: exchangedWallet._id,
                 amount: +amount
             }
-            const encrpted = encryptData(data)
-            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/insta-wallet-conversion`, { data: encrpted }, {
+
+            const crypto_data = {
+                token: fxDet.token,
+                from_wallet_id: currentWallet?.wallet_id,
+                to_wallet_id: exchangedWallet?.wallet_id,
+                amount: +amount,
+                purpose: "FAMILY_SUPPORT",
+                description: "",
+                type: "crypto_to_fiat",
+                is_conversion: true
+            }
+
+            const encrpted = encryptData(currentWallet?.wallet_type === "crypto" ? crypto_data : data)
+            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/${currentWallet?.wallet_type === "crypto" ? "crypto" : "wallet/insta-wallet-conversion"}`, { data: encrpted }, {
                 headers: authHeader
             })
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     console.log(decrypted)
-                    // setTotal(decrypted?.data?.exchange_rate_markup * amount)
-                    verifyToken()
+                    getUserWallets()
                     setStep(2)
                 })
                 .catch(err => {

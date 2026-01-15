@@ -35,7 +35,7 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
             name: "Top Up",
             img: opt1,
             width: "31px",
-            link: `/add-funds?type=wallet&wallet_address=${userWallets?.[activeDot]?.wallet_id}`
+            link: `/add-funds?type=${userWallets?.[activeDot]?.wallet_type === "crypto" ? "crypto" : "wallet"}&wallet_address=${userWallets?.[activeDot]?.wallet_id}`
         },
         {
             name: "Summary",

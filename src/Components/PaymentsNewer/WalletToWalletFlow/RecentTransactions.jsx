@@ -10,6 +10,7 @@ import { toast } from "react-toastify"
 import useWindowWidth from "../../../utils/useWindowWidth"
 import countriesData from "../CountriesData.json"
 import repeat from "./repeat.svg"
+import { capitalizeStatus } from "../../PendingNew/ItemMobile"
 
 
 const getRecentTransaction = async (authHeader, account, type) => {
@@ -169,7 +170,7 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
 
                             <div className={styles.bottom}>
                                 <h4>
-                                    {t("Completed")} <span>- {createdAt}</span>
+                                    {t(capitalizeStatus(tx?.status))} <span>- {createdAt}</span>
                                 </h4>
                                 <h4>
                                     {tx?.amount?.toFixed(2)} {tx?.currency?.code}

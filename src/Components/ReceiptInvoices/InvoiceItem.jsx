@@ -141,7 +141,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
               <div className={styles.menuItem} onClick={() => { }}>
                 {t("Download")}
               </div>
-              <div
+              {inv.status?.toLowerCase() !== "accepted" && <div
                 className={`${styles.menuItem} ${styles.danger}`}
                 onClick={() => {
                   setMenuOpenFor(null);
@@ -150,7 +150,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
                 }}
               >
                 {t("Delete")}
-              </div>
+              </div>}
             </div>
           )}
         </div>
@@ -176,7 +176,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
           >
             {t("Cancel")}
           </button>
-          <ButtonForRequests
+          {inv.status?.toLowerCase() !== "accepted" && <ButtonForRequests
             onClick={() => {
               if (!isPending) {
                 mutateAsync(inv.invoiceId).finally(() => {
@@ -187,7 +187,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
             isLoading={isPending}
           >
             {t("Delete")}
-          </ButtonForRequests>
+          </ButtonForRequests>}
         </ModalFooter>
       </Modal>
 

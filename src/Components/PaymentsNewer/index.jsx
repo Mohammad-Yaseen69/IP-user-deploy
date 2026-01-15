@@ -342,14 +342,14 @@ const PaymentsNewer = () => {
                                                         userDetails?.level?.wallet_to_wallet?.crypto_to_fiat
                                                 )
                                                 &&
-                                                <button data-action="send_crypto" onClick={() => {
-                                                    setActionType("send_crypto")
-                                                    setCurrentFlow("send_crypto")
+                                                <button data-action="send_crypto" className={styles.disabled} disabled style={{ background: `url(${sc})`, padding: "0px" }} onClick={() => {
+                                                    // setActionType("send_crypto")
+                                                    // setCurrentFlow("send_crypto")
                                                 }}>
-                                                    <img src={sc} alt="payment types" />
+                                                    {/* <img src={sc} alt="payment types" /> */}
                                                 </button>
                                             }
-                                            <button className={styles.disabled} disabled data-action="placeholder">
+                                            <button className={styles.disabled} style={{padding: "0px"}} disabled data-action="placeholder">
                                                 <img src={rq} alt="payment types" />
                                             </button>
                                         </>

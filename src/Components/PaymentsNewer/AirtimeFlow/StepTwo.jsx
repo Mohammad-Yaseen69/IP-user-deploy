@@ -24,6 +24,7 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
     const [showModal, setShowModal] = useState(false)
     const { allowedCountries, authHeader, userDetails } = useContext(UserContext)
     const [loadingCountries, setLoadingCountries] = useState(false)
+    const [lookedup, setLookedUp] = useState(false)
 
     // country
     const [countries, setCountries] = useState([])
@@ -61,17 +62,26 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
         getCountries()
     }, [])
 
-    const phoneLookup = async () => {
+    const phoneLookup = async (navigate) => {
         dataHandler("loading", true)
         dataHandler("providers", [])
         try {
             const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/dt/check-number-airtime/+${data.recipient}`, { headers: authHeader })
             const dec = await decryptData(res.data.data)
             console.log("providers", dec)
-            dataHandler("providers", dec)
+            if (dec?.length === 0) {
+                dataHandler("error", "We don't have any available operators for the entered mobile number, please try again later")
+                return;
+            } else {
+                dataHandler("providers", dec)
+                setLookedUp(true)
+                if (navigate === true) {
+                    dataHandler("step", 3)
+                }
+            }
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
-            dataHandler("error", "Make sure you have entered a correct Phone Number.")
+            dataHandler("error", dec?.message || "Make sure you have entered a correct Phone Number.")
         }
         finally {
             dataHandler("loading", false)
@@ -124,9 +134,12 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
                                             setPhone={e => {
                                                 dataHandler("providers", [])
                                                 dataHandler("recipient", e)
+                                                if (lookedup) {
+                                                    setLookedUp(false)
+                                                }
                                             }}
-                                            disabledDropdown={true}
                                             phone={data.recipient}
+                                            disableDropdown
                                         />
                                         <button onClick={phoneLookup} className={data.loading ? styles.searching : ""} disabled={data.loading || data.recipient?.length < 9}>
                                             <div style={{ whiteSpace: "nowrap" }}>
@@ -178,7 +191,16 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
                         </div>
                         <div className={styles.buttons}>
                             <button disabled={data.loading} onClick={() => dataHandler("step", 1)} className={styles.trs}>{t("Back")}</button>
-                            <button disabled={data.loading || data.providers.length === 0} onClick={() => dataHandler("step", 3)}>
+                            <button
+                                disabled={data.loading || data.providers.length === 0}
+                                onClick={() => {
+                                    if (lookedup === true) {
+                                        dataHandler("step", 3)
+                                    } else {
+                                        phoneLookup(true)
+                                    }
+                                }}
+                            >
                                 {t("Next")}
                                 <ChevronRight color="white" size={17} />
                             </button>

@@ -7,6 +7,7 @@ import { useCreateUserKey, useGetApiKey, useRegenerateUserKey, useDeleteUserKey,
 import InstaPayLoader from '../Loader'
 import styles from './styles/apiKey.module.css'
 import { Toggle } from "../MyMasterCard/CardPurchased"
+import apiKeyImg from "./apiKeyCreate.png"
 
 const FEATURE_LIST = [
     { id: 'international', label: 'International Transfers' },
@@ -50,7 +51,7 @@ const ApiKey = () => {
 
     const handleCreate = () => {
         if (!accountId) return
-        createMutation.mutate({ webhook_url: webhookUrl || " ", account: accountId, features }, {
+        createMutation.mutate({ webhook_url: webhookUrl || " ", account: accountId, features: { ...features, external_payment: true } }, {
             onSuccess: () => {
                 setShowCreateModal(false)
                 toast.success(t("API Key created successfully"))
@@ -139,18 +140,34 @@ const ApiKey = () => {
             <CardHeader>
                 <h4>{t("API Key")}</h4>
             </CardHeader>
-            {userDetails?.company?.kyb_status !== "approved" ? <p style={{fontWeight: 600, textAlign: "center", padding: "18px", fontSize: "15px"}}>{t("Only verified accounts are allowed to have api key. Please verify your account from the 'Business Verification' Tab then you can access feature.")}</p> : isLoading ?
+            {userDetails?.company?.kyb_status !== "approved" ? <p style={{ fontWeight: 600, textAlign: "center", padding: "18px", fontSize: "15px" }}>{t("Only verified accounts are allowed to have api key. Please verify your account from the 'Business Verification' Tab then you can access feature.")}</p> : isLoading ?
                 <div className={styles.centerLoader}>
                     <InstaPayLoader />
                 </div> :
                 <CardBody>
                     {(!data) && (
-                        <Col md="12" className={styles.centerCol}>
-                            <p style={{ fontWeight: 600, marginBottom: "0px", fontSize: "15px" }}>{t("Create your API Key")}</p>
-                            <Button onClick={() => setShowCreateModal(true)} disabled={isBusy} className={styles.btnRound}>
-                                {t("Create API Key")}
-                            </Button>
-                        </Col>
+                        <div className={styles.centerCol}>
+                            <div className={styles.left}>
+                                <div>
+                                    <h3>
+                                        {t("You haven't created an API key yet.")}
+                                    </h3>
+
+                                    <span>
+                                        {t("Generate one to start using our APIs and receive webhooks.")}
+                                    </span>
+                                </div>
+
+                                <button onClick={handleCreate} style={{ opacity: createMutation.isPending && 0.6 }} disabled={createMutation.isPending}>
+                                    {createMutation.isPending ? t("Creating...") : t("Create Api Key")}
+                                </button>
+                            </div>
+
+
+                            <div className={styles.right}>
+                                <img src={apiKeyImg} alt="" />
+                            </div>
+                        </div>
                     )}
 
                     {
@@ -161,13 +178,15 @@ const ApiKey = () => {
                                 <h5 className={styles.sectionTitle}>API Key</h5>
                                 <div className={styles.columnFlex}>
                                     <div className={styles.inlineControls}>
-                                        <Input type={showKey ? 'text' : 'password'} placeholder={isBusy ? "Loading..." : 'API key will be rendered'} readOnly disabled value={apiKey || ''} />
-                                        <Button color='secondary' outline className={styles.btnRound} onClick={() => setShowKey(prev => !prev)} disabled={!apiKey || featureStatus !== "enabled"}>
-                                            {showKey ? t("Hide") : t("Reveal")}
-                                        </Button>
-                                        <Button color='info' className={styles.btnRound} onClick={handleCopy} disabled={!apiKey || featureStatus !== "enabled"}>
-                                            {t("Copy")}
-                                        </Button>
+                                        <Input style={{ background: "#F9F9F9", border: "none", boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.13)" }} type={showKey ? 'text' : 'password'} placeholder={isBusy ? "Loading..." : 'API key will be rendered'} readOnly disabled value={apiKey || ''} />
+                                        <div style={{ display: "grid", gap: "10px", width: "100%", gridTemplateColumns: "1fr 1fr" }}>
+                                            <button className={styles.btn} onClick={() => setShowKey(prev => !prev)} disabled={!apiKey || featureStatus !== "enabled"}>
+                                                {showKey ? t("Hide") : t("Reveal")}
+                                            </button>
+                                            <button className={styles.btn} onClick={handleCopy} disabled={!apiKey || featureStatus !== "enabled"}>
+                                                {t("Copy")}
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </Col>
@@ -176,10 +195,10 @@ const ApiKey = () => {
                                 <h5 className={styles.sectionTitle}>Webhook URL</h5>
                                 <div className={styles.columnFlex}>
                                     <div className={styles.inlineControls}>
-                                        <input className="form-control" value={webhookUrl} onChange={e => setWebHookUrl(e.target.value)} type="text" placeholder="https://example.com/webhook" />
-                                        <Button color='secondary' outline className={styles.btnRound} onClick={handleUpdateWebhook} disabled={featureStatus !== "enabled" || updateWebhookMutation.isPending}>
+                                        <input style={{ background: "#F9F9F9", border: "none", boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.13)" }} className="form-control" value={webhookUrl} onChange={e => setWebHookUrl(e.target.value)} type="text" placeholder="https://example.com/webhook" />
+                                        <button className={styles.btn} onClick={handleUpdateWebhook} disabled={featureStatus !== "enabled" || updateWebhookMutation.isPending}>
                                             {updateWebhookMutation.isPending ? t("Saving...") : t("Update URL")}
-                                        </Button>
+                                        </button >
                                     </div>
                                 </div>
                             </Col>
@@ -188,14 +207,23 @@ const ApiKey = () => {
                                 <h5 className={styles.sectionTitle}>{t("Api Key Status")}</h5>
 
                                 <div className={styles.inlineControls} style={{ flex: 1, maxWidth: '100%' }}>
+                                    <div style={{ width: "100%" }} className={styles.featureRow}>
+                                        <div className={styles.featureContent}>
+                                            <span className={styles.featureLabel}>
+                                                {t("Status")}
+                                            </span>
+                                        </div>
+                                        <Toggle
+                                            checked={selectedStatus === "enabled" ? true : false}
+                                            onChange={() => {
+                                                setSelectedStatus(prev => prev === "enabled" ? "disabled" : "enabled")
+                                            }}
+                                        />
+                                    </div>
 
-                                    <Input type="select" value={selectedStatus} onChange={(e) => setSelectedStatus(e.target.value)}>
-                                        <option value="enabled">{t("enabled")}</option>
-                                        <option value="disabled">{t("disabled")}</option>
-                                    </Input>
-                                    <Button color='secondary' outline className={styles.btnRound} style={{ flexShrink: 0 }} onClick={() => handleSetStatus(selectedStatus)} disabled={isBusy}>
+                                    <button className={styles.btn} style={{ flexShrink: 0 }} onClick={() => handleSetStatus(selectedStatus)} disabled={isBusy}>
                                         {t("Update Status")}
-                                    </Button>
+                                    </button>
                                 </div>
                             </Col>
 
@@ -223,69 +251,28 @@ const ApiKey = () => {
                                             </div>
                                         )
                                     })}
-                                    <Button
-                                        color='primary'
-                                        className={styles.btnRound}
-                                        onClick={handleUpdateFeatures}
-                                        disabled={updateFeatures.isPending || featureStatus !== "enabled"}
-                                        style={{ alignSelf: 'flex-end', marginTop: '0.5rem' }}
-                                    >
-                                        {updateFeatures.isPending ? t("Saving...") : t("Save Features")}
-                                    </Button>
                                 </div>
                             </Col>
 
-                            <div className={styles.endActions}>
-                                <Button className={styles.btnRound + " " + styles.btnDeleteOutline} onClick={handleDelete} disabled={deleteKeyMutation.isPending}>
-                                    {deleteKeyMutation.isPending ? t("Deleting...") : t("Delete API Key")}
-                                </Button>
-                                <Button color='primary' className={styles.btnRound} onClick={handleRegenerate} disabled={isBusy || featureStatus !== "enabled"}>
+                            <div style={{ marginTop: "2rem" }} className={styles.endActions}>
+                                <button className={styles.btn} style={{ padding: "13px 26px" }} onClick={handleDelete} disabled={deleteKeyMutation.isPending}>
+                                    {deleteKeyMutation.isPending ? t("Deleting...") : t("Delete Key")}
+                                </button>
+                                <button
+                                    className={styles.btn} style={{ padding: "13px 26px" }}
+                                    onClick={handleUpdateFeatures}
+                                    disabled={updateFeatures.isPending || featureStatus !== "enabled"}
+                                >
+                                    {updateFeatures.isPending ? t("Saving...") : t("Save")}
+                                </button>
+                                <button className={`${styles.btn} ${styles.btnPrimary}`} style={{ padding: "13px 26px" }} onClick={handleRegenerate} disabled={isBusy || featureStatus !== "enabled"}>
                                     {regenerateMutation.isPending ? "Regenerating..." : (apiKey ? "Regenerate API Key" : "Generate API Key")}
-                                </Button>
+                                </button>
                             </div>
                         </>
                     }
                 </CardBody>
             }
-            {/* Create API Key Modal */}
-            <Modal isOpen={showCreateModal} toggle={() => setShowCreateModal(false)}>
-                <ModalHeader toggle={() => setShowCreateModal(false)}>
-                    {t("Create API Key")}
-                </ModalHeader>
-                <ModalBody>
-                    <div style={{ marginBottom: '1.5rem' }}>
-                        <label style={{ fontWeight: 600, marginBottom: '0.5rem', display: 'block' }}>{t("Webhook URL (Optional)")}</label>
-                        <Input
-                            type="text"
-                            placeholder="https://example.com/webhook"
-                            value={webhookUrl}
-                            onChange={e => setWebHookUrl(e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <label style={{ fontWeight: 600, marginBottom: '0.75rem', display: 'block' }}>{t("Select Features")}</label>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                            {FEATURE_LIST.map(feature => (
-                                <div key={feature.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <span>{feature.label}</span>
-                                    <Toggle
-                                        isActive={features[feature.id]}
-                                        onChange={() => handleFeatureToggle(feature.id)}
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </ModalBody>
-                <ModalFooter>
-                    <Button className={styles.btnRound} onClick={() => setShowCreateModal(false)} disabled={createMutation.isPending}>
-                        {t("Cancel")}
-                    </Button>
-                    <Button color='primary' className={styles.btnRound} onClick={handleCreate} disabled={createMutation.isPending || Object.values(features).every(f => f === false)}>
-                        {createMutation.isPending ? t("Creating...") : t("Create")}
-                    </Button>
-                </ModalFooter>
-            </Modal>
         </Card>
     )
 }

@@ -111,7 +111,7 @@ const OnBoarding = ({ alreadyHaveCard, setCardPurchased, setReRender }) => {
                                     setStep(prev => prev += 1)
                                 }
                                 else {
-                                    if (userDetails?.account_type === "individual" ? userDetails.user.kyc_status === "approved" : userDetails.company.kyb_status === "approved") {
+                                    if (userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status === "approved" : userDetails.company.kyb_status === "approved") {
                                         setShowPaymentModal(true)
                                     }
                                     else {

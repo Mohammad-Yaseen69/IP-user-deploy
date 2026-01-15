@@ -90,20 +90,21 @@ const QuotationDetails = ({ amount, currency, setAmount, setCurrency, title, set
                     <input
                         type="text"
                         value={formattedAmount}
-                        maxLength={12}
                         onChange={(e) => setFormattedAmount(e.target.value)}
                         onKeyUp={handleKeyUp}
-                        onBlur={handleBlur} maxLength={12}
+                        onBlur={handleBlur}
                         placeholder="Enter Amount"
                         data-type="currency"
                     />
                 </div>
             </div>
-            <Input className='mb-4' value={title} onChange={e => setTitle(e.target.value)} placeholder={t('Enter the Title for Your Quotation.')} />
-            <Input className='mb-4' value={description} onChange={e => setDescription(e.target.value)} type='textarea' placeholder={t('Enter the Description for Your Quotation')} style={{
+            <Input className='mb-1' value={title} onChange={e => setTitle(e.target.value)} placeholder={t('Enter the Title for Your Quotation.')} maxLength={120} />
+            <div className="text-end" style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>{title.length}/120</div>
+            <Input className='mb-1' value={description} onChange={e => setDescription(e.target.value)} type='textarea' placeholder={t('Enter the Description for Your Quotation')} maxLength={500} style={{
                 resize: "none",
-                height: "100%"
+                height: "100%",
             }} />
+            <div className="text-end" style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>{description.length}/500</div>
             <div style={{ display: "flex", flexDirection: "column" }}>
                 <Label>{t("Attachments")}:</Label>
                 <div style={{ display: "flex", gap: "1rem", overflowX: "auto", background: "white", borderRadius: "10px", padding: "10px", minHeight: "75px", overflowY: "hidden" }}>
@@ -128,7 +129,7 @@ const QuotationDetails = ({ amount, currency, setAmount, setCurrency, title, set
                         const previewURL = URL.createObjectURL(file);
                         // console.log(file.type)
                         return (
-                            <div title={file?.name} style={{ height: '50px', width: '50px', borderRadius: '5px', boxShadow: '0 0 3px #1111113e', position: "relative", overflow: "hidden" }}>
+                            <div key={index} title={file?.name} style={{ height: '50px', width: '50px', borderRadius: '5px', boxShadow: '0 0 3px #1111113e', position: "relative", overflow: "hidden" }}>
                                 {
                                     file?.type?.toLowerCase()?.includes("image")
                                     &&

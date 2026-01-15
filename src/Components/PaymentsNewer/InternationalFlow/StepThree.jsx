@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import styles from "./styles/stepthree.module.css";
 import thunesReasons from "./thunesReasons.json";
 import file from "../files/file.svg";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const StepThree = ({ data, dataHandler }) => {
     const { t } = useTranslation();
@@ -37,6 +37,18 @@ const StepThree = ({ data, dataHandler }) => {
         }
         return data.neemaReasons
     }, [data?.payoutChannel])
+
+    useEffect(() => {
+        if (dynamicReasons) {
+            for (const key in dynamicReasons) {
+                if (key.toLowerCase().includes("other")) {
+                    console.log(key)
+                    dataHandler("reason", key)
+                    break;
+                }
+            }
+        }
+    }, [dynamicReasons])
 
     return (
         <div className={styles.container}>

@@ -105,7 +105,7 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal
 
                 <div className={styles.buttons}>
                     <div>
-                        <button style={{ color: "white", background: "#5926F0" }}>
+                        <button onClick={() => navigate(`/profile/${user_name}`)} style={{ color: "white", background: "#5926F0" }}>
                             {t("View Profile")}
                         </button>
                         <button>

@@ -40,6 +40,9 @@ import { useQuery } from "@tanstack/react-query"
 import { apiWrapper } from "../../../utils/Functions/apiWrapper"
 import { logger } from "@sentry/react"
 import { formatDateTime } from "../../ReceiptInvoices/InvoiceTable"
+import { formatCurrency } from "../../../Helper/AmountFormat"
+import useVendorBalance from "../../../hooks/Payments/useVendorBalance"
+import VendorBalanceModal from "./VendorBalanceModal"
 
 const leftSideContent = [
     "Enter The Amount",
@@ -62,7 +65,9 @@ const apiErrors = {
     "invoice_not_found_or_inactive": "The invoice you're trying to pay is either inactive or the invoice id is not correct!",
     "invoice_not_found": "The invoice you're trying to pay is either inactive or the invoice id is not correct!",
     "invoice_already_paid": "This invoice is already paid!",
-    'receiver_wallet_not_found': "Recipient wallet is either disabled, blocked or does not exists."
+    'receiver_wallet_not_found': "Recipient wallet is either disabled, blocked or does not exists.",
+    "insufficient_funds": "You don't have sufficient funds to complete this transaction.",
+    "shipping_details_required": "Please fill all the required shipping details before proceeding with the transaction."
 }
 
 
@@ -126,9 +131,6 @@ const initialState = {
     ex_extra_error: "",
     conversion_in: "",
     payerRequiredFields: {},
-    thunesBalance: 0,
-    thunesBalanceLoading: false,
-    thunesBalanceError: "",
     transactionStatus: false
 }
 
@@ -228,6 +230,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         retry: 3
     })
 
+    const { vendorBalance, vendorBalanceInUSD, vendorBalanceLoading } = useVendorBalance(internationalData.currency, internationalData.payoutChannel?.vendor?.toLowerCase(), (err) => updateInternationalData("error", err))
 
     const updateInternationalData = (field, value) => {
         dispatch({ type: "UPDATE_FIELD", field, value });
@@ -246,7 +249,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 if (userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status !== "approved" : userDetails?.company?.kyb_status !== "approved") {
                     return false
                 }
-                return !internationalData.amount || Number(String(internationalData.amount)?.replaceAll(",", "")) < 1 || !internationalData.currency || !internationalData.currency_wallet?.currency?.code || !internationalData.country?.name || !internationalData?.payoutChannel?.name || !internationalData?.payer?.name || internationalData.error || internationalData.exchange_rate_error || !internationalData.exchange_rate?.receiver?.amount > 0
+                return !internationalData.amount || Number(String(internationalData.amount)?.replaceAll(",", "")) < 1 || !internationalData.currency || !internationalData.currency_wallet?.currency?.code || !internationalData.country?.name || !internationalData?.payoutChannel?.name || !internationalData?.payer?.name || internationalData.error || internationalData.exchange_rate_error || !internationalData.exchange_rate?.receiver?.amount > 0 || vendorBalanceLoading
 
             case 2:
                 return !internationalData.beneficiary?._id
@@ -575,9 +578,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         }
     }, [internationalData.payment_type])
 
+    console.log(internationalData.payment_type?.value)
     useEffect(() => {
         let timeout;
-        if (internationalData.payment_type?.value) {
+        if (internationalData.payment_type?.value && subStep === 4) {
             if (internationalData.payment_type?.value !== "card") updateInternationalData("showCard", false)
             if (internationalData.payment_type?.value === "wallet" && !internationalData?.wallet?._id) return;
             if (internationalData?.payment_type?.value !== "wallet") {
@@ -604,53 +608,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             }, 100)
         }
         return () => clearTimeout(timeout)
-    }, [internationalData.payment_type?.value, internationalData.wallet?._id])
+    }, [internationalData.payment_type?.value, internationalData.wallet?._id, subStep])
 
-
-    useEffect(() => {
-        const getThunesBalance = async (retryCount = 0) => {
-            if (!internationalData?.currency) return;
-
-            const data = { currency: internationalData.currency }
-            const enc = encryptData(data)
-
-            updateInternationalData("thunesBalanceLoading", true)
-            updateInternationalData("thunesBalanceError", "")
-
-            try {
-                const res = await axios.post(
-                    `${import.meta.env.VITE_THUNES_API}/get-balance`,
-                    { data: enc },
-                    {
-                        headers: authHeader,
-                        data: enc,
-                    }
-                );
-
-                const dec = decryptData(res.data.data)
-                updateInternationalData("thunesBalance", dec.data.balance)
-                updateInternationalData("thunesBalanceError", "")
-            } catch (error) {
-                let errorMessage = "Unable to retrieve balance information"
-                const dec = decryptData(error?.response?.data?.data)
-                errorMessage = dec?.message || "Balance service temporarily unavailable"
-
-                if (retryCount < 2) {
-                    setTimeout(() => {
-                        getThunesBalance(retryCount + 1)
-                    }, 1000 * (retryCount + 1))
-                    return
-                }
-
-                updateInternationalData("error", `${errorMessage}. Please try refreshing the page.`)
-                updateInternationalData("thunesBalanceError", errorMessage)
-            } finally {
-                updateInternationalData("thunesBalanceLoading", false)
-            }
-        }
-
-        getThunesBalance()
-    }, [internationalData.currency])
 
 
     const createQuotation = async () => {
@@ -903,7 +862,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
 
     const handleClick = () => {
-        console.log(Number(String(internationalData.amount)?.replaceAll(",", "")), internationalData.thunesBalance)
+        console.log(Number(String(internationalData.amount)?.replaceAll(",", "")), internationalData.vendorBalance)
         switch (subStep) {
             case 1:
                 {
@@ -912,18 +871,20 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                         return
                     }
 
-                    if (internationalData.thunesBalanceLoading) {
+                    if (vendorBalanceLoading) {
                         return
                     }
-                    if (internationalData.thunesBalanceError) {
-                        updateInternationalData("error", internationalData.thunesBalanceError)
-                        return
-                    }
+
                     const amount = Number(String(internationalData.amount)?.replaceAll(",", ""))
-                    if (amount <= internationalData.thunesBalance) {
-                        setSubStep(prev => prev + 1)
-                    } else {
+
+                    if (vendorBalanceInUSD < 4) {
                         setShowBalanceModal(true)
+                    } else {
+                        if (amount <= vendorBalance) {
+                            setSubStep(prev => prev + 1)
+                        } else {
+                            setShowBalanceModal(true)
+                        }
                     }
                     break;
                 }
@@ -1185,7 +1146,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         }
     }, [transaction_status, code])
 
-
+    console.log(internationalData.exchange_rate)
     return (
         <>
             {
@@ -1207,22 +1168,16 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 />
             }
             {
-                <Modal isOpen={showBalanceModal} toggle={() => setShowBalanceModal(false)}>
-                    <ModalHeader style={{ paddingBottom: "6px" }} toggle={() => setShowBalanceModal(false)}>
-                        <h2 style={{ fontSize: "24px" }}>{("Notice")}</h2>
-                    </ModalHeader>
-                    <ModalBody>
-                        <h3 style={{ fontSize: "18px", fontWeight: 600 }}>
-                            {internationalData.thunesBalance === 0 ? (
-                                `We're currently unable to process transfers in ${internationalData.currency}. Please try again later or contact support for assistance.`
-                            ) : (
-                                `We understand that your remaining sending limit is up to ${internationalData.exchange_rate?.limits_used?.daily_sending_limit_used?.toFixed(2) || 'N/A'} ${internationalData.currency}. However, at this time, we can only process a maximum of ${internationalData.thunesBalance} ${internationalData.currency}.
-                                    You may proceed with ${internationalData.thunesBalance} ${internationalData.currency} or try again later to be able to send ${internationalData.amount} ${internationalData.currency}.
-                                    Thank you for your understanding.`
-                            )}
-                        </h3>
-                    </ModalBody>
-                </Modal>
+                <VendorBalanceModal
+                    vendorBalance={vendorBalance}
+                    vendorBalanceLoading={vendorBalanceLoading}
+                    vendorBalanceInUSD={vendorBalanceInUSD}
+                    sendingAmount={internationalData.amount}
+                    currency={internationalData.currency}
+                    sendingLimit={internationalData.exchange_rate?.limits_used?.daily_sending_limit_used}
+                    isOpen={showBalanceModal}
+                    toggle={() => setShowBalanceModal(false)}
+                />
             }
             {
                 showDetailsModal
@@ -1371,7 +1326,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                         <SelectedCard
                                                                             title="Name"
                                                                             list={[{ text: internationalData.country?.name, url: internationalData.country?.file_url, flag: true }]}
-                                                                            changeHandler={() => setSubStep(1)}
+                                                                            changeHandler={() => {
+
+                                                                                setSubStep(1)
+                                                                            }}
                                                                         />
                                                                     }
                                                                     {

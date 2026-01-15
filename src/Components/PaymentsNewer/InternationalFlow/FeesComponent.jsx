@@ -5,7 +5,7 @@ import { cleanString } from "../../../Helper/cleanString"
 
 const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Exchange Rate", feesLabel = "Transfer Fees", totalLabel = "Total Amount", error = "", receiverLabel = "They Receive", bright = false, extraContent, guest, receiverFee }) => {
     const { t } = useTranslation()
-   
+
 
     const _exObj = data?.exchange_rate?.exchange_rate
     const exchangeRateValue = _exObj && typeof _exObj === "object" ? _exObj.exchange_rate : _exObj ?? data?.exchange_rate
@@ -49,7 +49,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                         ?
                         <div className={styles.item}>
                             <span>{t(exchangeRateLabel)}</span>
-                                <p className={styles.sm}>1.00 {exchangeRateSendingCurrency} = {(exchangeRateValue || exchangeRateValue === 0) ? Number(exchangeRateValue).toLocaleString("en-US", { minimumFractionDigits: 4, maximumFractionDigits: 7 }) : "?"} {exchangeRateCurrency}</p>
+                            <p className={styles.sm}>1.00 {exchangeRateSendingCurrency} = {(exchangeRateValue || exchangeRateValue === 0) ? Number(exchangeRateValue).toLocaleString("en-US", { minimumFractionDigits: 4, maximumFractionDigits: 7 }) : "?"} {exchangeRateCurrency}</p>
                         </div>
                         :
                         ""
@@ -63,11 +63,11 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                     </div>
                 }
                 {
-                    data?.exchange_rate?.total
+                    Boolean(data?.exchange_rate?.total)
                     &&
                     <div className={styles.item}>
                         <span>{t(totalLabel)}</span>
-                        <p className={styles.lg}>{Number(cleanString(data?.exchange_rate?.total) ?? 0.00)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} {data.exchange_rate?.total_currency ?? data.exchange_rate?.sending?.currency}</p>
+                        <p className={styles.lg}>{Number(cleanString(data?.exchange_rate?.total))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} {data.exchange_rate?.total_currency ?? data.exchange_rate?.sending?.currency}</p>
                     </div>
                 }
                 {

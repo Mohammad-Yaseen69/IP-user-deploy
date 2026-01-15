@@ -1,4 +1,3 @@
-import { Modal } from "reactstrap";
 import { getCroppedImg, UserContext } from "./UserContext";
 import axios from "axios";
 import { decryptData } from "../Helper/EssentilaMethods/Decryption";
@@ -9,6 +8,7 @@ import { useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import questionsData from "../Components/Settings/questions.json"
 import SessionExpireModal from "../Components/SessionExpireModal";
+import { useSearchParams } from "react-router-dom";
 
 
 
@@ -38,7 +38,9 @@ const UserState = ({ children }) => {
     if (import.meta.env.PROD) {
         console.clear()
     }
-    console.info(`%c Dear User, Please be aware that copying and pasting code or commands directly into your console(in this section) can pose significant security risks. Malicious code can compromise your account, steal sensitive information, or damage your system. \nFor your safety, never paste commands from untrusted or unknown sources.\nThank you for your attention to this matter.\nSincerely,\nInstaPay`, 'color: white; font-size: 20px; font-weight: 500; background: linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%); padding: .5rem; border-radius: 5px;');
+    if (import.meta.env.PROD) {
+        console.info(`%c Dear User, Please be aware that copying and pasting code or commands directly into your console(in this section) can pose significant security risks. Malicious code can compromise your account, steal sensitive information, or damage your system. \nFor your safety, never paste commands from untrusted or unknown sources.\nThank you for your attention to this matter.\nSincerely,\nInstaPay`, 'color: white; font-size: 20px; font-weight: 500; background: linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%); padding: .5rem; border-radius: 5px;');
+    }
 
     const token = localStorage.getItem("token")
     const [userDetails, setUserDetails] = useState(null)
@@ -83,12 +85,14 @@ const UserState = ({ children }) => {
         enabled: !!userDetails?._id
     })
 
+    const [searchParams] = useSearchParams();
+    const isSessionExpired = searchParams.get("show_logout_modal");
+
+
     const authHeader = {
         "Authorization": `Bearer ${token}`,
         "source": "user"
     }
-
-
 
     useEffect(() => {
         const interceptor = axios.interceptors.response.use(
@@ -98,7 +102,8 @@ const UserState = ({ children }) => {
                     error.response?.status === 401 &&
                     decryptData(error?.response?.data?.data).message === "Unauthorize to access this route."
                 ) {
-                    window.history.replaceState(null, null, `?show_logout_modal=unauthorized`);
+                    // setSearchParams({ ...currentParams, show_logout_modal: "unauthorized" }, { replace: true });
+                    navigate(`${window.location.pathname}${window.location.search}${window.location.search ? "&" : "?"}show_logout_modal=unauthorized`)
                     setShowModalState(true);
                 }
                 return Promise.reject(error);
@@ -110,6 +115,7 @@ const UserState = ({ children }) => {
         };
     }, []);
 
+    console.log(window.location)
 
 
     const [profileLockTIme, setProfileLockTime] = useState(0)
@@ -607,7 +613,15 @@ const UserState = ({ children }) => {
 
     return (
         <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, showModalState, setShowModalState }}>
-            {showModalState && <SessionExpireModal isOpen={showModalState} toggle={() => window.history.replaceState(null, null, "")} />}
+            {(showModalState || Boolean(isSessionExpired)) &&
+                <SessionExpireModal
+                    isOpen={(showModalState || Boolean(isSessionExpired))}
+                    toggle={() => {
+                        setShowModalState(false);
+                        window.history.replaceState(null, null, window.location.pathname);
+                    }}
+                />
+            }
             {children}
         </UserContext.Provider>
     )
