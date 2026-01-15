@@ -69,7 +69,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
             case "processing":
                 return "#ADD8E6"
             case "refunded":
-                return "#9f83f2"    
+                return "#9f83f2"
             default:
                 break;
         }
@@ -179,18 +179,18 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
             if (item?.service_type === "withdraw_by_admin") return "Admin"
             if (item?.service_type === "kyc_verification") return "InstaPay"
             if (item?.service_type === "withdrawal") {
-                const first = item?.sender?.user?.first_name
-                const last = item?.sender?.user?.last_name
+                const first = item?.sender?.user?.first_name ?? item?.sender?.company?.company_name
+                const last = item?.sender?.user?.last_name ?? ''
                 return [first, last].filter(Boolean).join(" ")
             }
             if (item?.receiver?.user) {
-                const first = item?.receiver?.user?.first_name
-                const last = item?.receiver?.user?.last_name
+                const first = item?.receiver?.user?.first_name ?? item?.receiver?.company?.company_name
+                const last = item?.receiver?.user?.last_name ?? ""
                 return [first, last].filter(Boolean).join(" ")
             }
 
-            const first = internationalReceiver?.first_name ?? item?.account?.user?.first_name ?? internationalReceiver?.company_name ?? item?.account?.user?.company_name
-            const last = internationalReceiver?.last_name ?? item?.account?.user?.last_name
+            const first = internationalReceiver?.first_name ?? item?.account?.user?.first_name ?? internationalReceiver?.company_name ?? item?.account?.company?.company_name
+            const last = internationalReceiver?.last_name ?? item?.account?.user?.last_name ?? ""
             return [first, last].filter(Boolean).join(" ")
         }
 
@@ -200,12 +200,11 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
             return [first, last].filter(Boolean).join(" ")
         }
 
-        const first = item?.sender?.user?.first_name ?? item?.mastercard?.account?.first_name ?? item?.sender?.user?.company_name
-        const last = item?.sender?.user?.last_name ?? item?.mastercard?.account?.last_name
+        const first = item?.sender?.user?.first_name ?? item?.mastercard?.account?.first_name ?? item?.sender?.company?.company_name
+        const last = item?.sender?.user?.last_name ?? item?.mastercard?.account?.last_name ?? ""
         return [first, last].filter(Boolean).join(" ")
     }, [item, internationalReceiver])
 
-    console.log(item)
     return (
         <div>
             <div className={styles.body_item} onClick={() => {
@@ -228,7 +227,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                         <div>{item?.service_type === "topup" && "Wallet"} {service_name_formatter(item?.service_type)}</div>
                         <div>{item?.reference_id}</div>
                         <div>{displayAsText}</div>
-                        <div>{displayName?.slice(0, 20)}</div>  
+                        <div>{displayName?.slice(0, 20)}</div>
                         <div style={{ color: item?.transaction_type?.toLowerCase() === "debit" ? "#FF7293" : "#1CB234" }} >{item?.transaction_type?.toLowerCase() === "debit" ? "-" : "+"}{item?.payment_type?.toLowerCase() === "commission" && fromReferral ? "$" : item.service_type === "topup" && item.payment_type === 'bank' ? item.recipient_received_currency : item?.currency?.code} {item?.payment_type?.toLowerCase() === "commission" && fromReferral ? item?.replacement_currency?.value?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : (item.service_type === "topup" && item.payment_type === "bank" ? item.recipient_received_amount : item?.total)?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                     </>
                 }
