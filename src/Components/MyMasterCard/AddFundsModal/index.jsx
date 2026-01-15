@@ -71,12 +71,12 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             },
             isEncrypted: true,
         }),
-        onError: (err) => {
-            const dec = decryptData(err.response.data.data)
-            if (dec?.data?.isSufficient === false) {
-                setError(`Unable to process your top-up of ${amount} USD at the moment please enter amount lower then ${dec?.data?.availableBalance} USD or try again later`)
-            }
-        },
+        // onError: (err) => {
+        //     const dec = decryptData(err.response.data.data)
+        //     if (dec?.data?.isSufficient === false) {
+        //         setError(`Unable to process your top-up of ${amount} USD at the moment please enter amount lower then ${dec?.data?.availableBalance} USD or try again later`)
+        //     }
+        // },
     })
 
     useEffect(() => {
@@ -233,9 +233,9 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             return
         }
         if (paymentType === "paypal" && step === 2) {
-            mutateAsync(amount).then(() => setStep(prev => prev + 2))
+            mutateAsync(amount).finally(() => setStep(prev => prev + 2))
         } else if (step === 3) {
-            mutateAsync(amount).then(() => setStep(prev => prev + 1))
+            mutateAsync(amount).finally(() => setStep(prev => prev + 1))
         } else {
             setStep(prev => prev + 1)
         }
