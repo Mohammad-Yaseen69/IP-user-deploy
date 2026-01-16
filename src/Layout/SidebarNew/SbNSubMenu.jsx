@@ -87,7 +87,7 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
                                         }
                                         {/* {item.icon ? item.icon : ""} */}
                                         <span className={`${item.class ? item.class : ""}`}
-                                            style={{ color: "#848484", fontSize: " 0.7rem" }}
+                                            style={{ color: "#848484", }}
                                         >
                                             {t(item.title)}
                                         </span>
