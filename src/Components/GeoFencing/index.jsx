@@ -98,7 +98,7 @@ const GeoFencing = () => {
         };
 
         getChecks();
-    }, [userDetails?._id, authHeader]);
+    }, [userDetails?._id]);
 
     useEffect(() => {
         if (!Object.keys(countriesWithRegion).length) return;
