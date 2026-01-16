@@ -150,7 +150,7 @@ const RequestMoneyMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
                 }))
             }
         } catch (error) {
-
+            // 
         } finally {
             SetIsPreferencesCheck(true)
         }
@@ -160,10 +160,10 @@ const RequestMoneyMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
 
     const NoAccessWarning = () => (
         <Modal
-            isOpen={isPreferencesCheck && (preferences.live || preferences.origin)} 
-            backdrop="static" 
+            isOpen={isPreferencesCheck && (preferences.live || preferences.origin)}
+            backdrop="static"
             keyboard={false}
-            className="modal-dialog-centered" 
+            className="modal-dialog-centered"
             style={{
                 maxWidth: '600px',  // Increased from default
                 width: '95%',
@@ -181,16 +181,16 @@ const RequestMoneyMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
                 borderRadius: "8px",  // Added border radius
                 boxShadow: "0 5px 15px rgba(0,0,0,0.2)"  // Added shadow
             }}>
-                <img src={Icon} style={{width: "70px", marginBottom: "7px"}} alt="" />
-                <h4 style={{ 
-                    color: "#D92D20", 
+                <img src={Icon} style={{ width: "70px", marginBottom: "7px" }} alt="" />
+                <h4 style={{
+                    color: "#D92D20",
                     fontSize: "22px",  // Increased font size
                     fontWeight: "600",
                     marginBottom: "0"
                 }}>
                     {t("Unsupported Recipient")}
                 </h4>
-                <p style={{ 
+                <p style={{
                     color: "#667085",
                     fontSize: "16px",  // Increased font size
                     lineHeight: "1.5",  // Added line height
@@ -198,7 +198,7 @@ const RequestMoneyMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
                 }}>
                     {t(`It looks like ${beneficiary?.[0]?.username || beneficiary?.[0]?.user?.name || "this recipient"} has chosen to receive payments only from certain countries and locations, and your account's country or location isn't on the list. You may want to check with them to proceed with the payment request.`)}
                 </p>
-                <button 
+                <button
                     onClick={() => {
                         navigate("/payments?payment_action=req_money")
                         SetIsPreferencesCheck(false)
@@ -230,7 +230,7 @@ const RequestMoneyMobile = ({ step, setStep, setCurrentFlow, setAction }) => {
 
     return (
         <div className={styles.container}>
-                        <NoAccessWarning />
+            <NoAccessWarning />
             <div className={styles.top}>
                 <button className={styles.back_btn} disabled={step === 8 && completed} onClick={() => {
                     if (step === 6) {

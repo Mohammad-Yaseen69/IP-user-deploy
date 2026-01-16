@@ -182,7 +182,6 @@ const RequestMoney = ({ setAction, setStep }) => {
                 }))
             }
         } catch (error) {
-
             console.log(error.response.data)
         } finally {
             SetIsPreferencesCheck(true)
@@ -232,7 +231,7 @@ const RequestMoney = ({ setAction, setStep }) => {
                     {t(`It looks like ${beneficiary?.[0]?.username || beneficiary?.[0]?.user?.name || "this recipient"} has chosen to receive payments only from certain countries and locations, and your account's country or location isn't on the list. You may want to check with them to proceed with the payment request.`)}
                 </p>
                 <button
-                    onClick={() => navigate("/payments?payment_action=req_money")}
+                    onClick={() => navigate("/payments")}
                     style={{
                         background: "#D92D20",
                         color: "white",
