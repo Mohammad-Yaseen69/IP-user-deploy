@@ -27,13 +27,17 @@ import { createShambeToken } from '../../../Helper/CreateToken'
 import NotFoundModal from '../../NotFound/NotFoundModal'
 import TrustpaymentPage from '../../AddFunds/WalletFund/CreditTransaction'
 import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow'
+import useTopupLimitCheck from '../../../hooks/Payments/useTopupLimitCheck'
+import GeneralNoticeModal from '../../PaymentsNewer/GeneralNoticeModal'
 
 const headings = ["Select Payment Type", "Review Payment"]
 
 const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
     const { t } = useTranslation()
+    const { limitStatus, clearStatus } = useTopupLimitCheck(data?.currency?.currency?.code, +String(data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
     const { userDetails, authHeader, setProfileLockTime, verifyToken } = useContext(UserContext)
     const navigate = useNavigate()
+
     const disabledButton = useMemo(() => {
         switch (data.step) {
             case 1:
@@ -365,6 +369,17 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                     />
                     :
                     <></>
+            }
+            {
+                !limitStatus.status &&
+                <GeneralNoticeModal
+                    isOpen={!limitStatus.status}
+                    toggle={() => {
+                        dataHandler("payment_type", {})
+                        clearStatus()
+                    }}
+                    message={limitStatus.message}
+                />
             }
             {
                 window.innerWidth > 1000
