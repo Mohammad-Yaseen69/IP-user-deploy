@@ -27,6 +27,8 @@ import { createShambeToken } from "../../Helper/CreateToken";
 import NotFoundModal from "../NotFound/NotFoundModal";
 import TrustpaymentPage from "../AddFunds/WalletFund/CreditTransaction";
 import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow";
+import useTopupLimitCheck from "../../hooks/Payments/useTopupLimitCheck";
+import GeneralNoticeModal from "../PaymentsNewer/GeneralNoticeModal";
 
 const initialState = {
     step: 1,
@@ -88,6 +90,8 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
     const { t } = useTranslation()
     const [data, dispatch] = useReducer(reducer, initialState);
     const { userWallets, userDetails, authHeader, setProfileLockTime, verifyToken } = useContext(UserContext)
+    const { limitStatus, clearStatus } = useTopupLimitCheck(data?.currency?.currency?.code, +String(data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
+
     const navigate = useNavigate()
     const dataHandler = (field, value) => {
         dispatch({ type: "UPDATE_FIELD", field, value });
@@ -582,6 +586,17 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                     />
                     :
                     <></>
+            }
+            {
+                !limitStatus.status &&
+                <GeneralNoticeModal
+                    isOpen={!limitStatus.status}
+                    toggle={() => {
+                        dataHandler("payment_type", {})
+                        clearStatus()
+                    }}
+                    message={limitStatus.message}
+                />
             }
             {
                 window.innerWidth > 1000
