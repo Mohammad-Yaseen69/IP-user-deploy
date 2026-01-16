@@ -59,25 +59,24 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
             {sn}
           </div>
         )}
-        <div style={{ flex: isPhone ? 0.28 : 0.18 }} className={styles.td}>
+        <div style={{ flex: isPhone ? 0.25 : 0.18 }} className={styles.td}>
           {formatDateTime(inv.createdAt)}
         </div>
         <div
-          style={{ flex: isPhone ? 0.62 : 0.24, ...ellipsisStyle }}
+          style={{ flex: isPhone ? 0.40 : 0.24, ...ellipsisStyle }}
           className={styles.td}
         >
-          {truncate(inv.title, 50)}
+          {truncate(inv.title, 20)}
         </div>
         {width > 700 && (
           <div style={{ flex: 0.26, ...ellipsisStyle }} className={styles.td}>
             {truncate(inv.description, 30)}
           </div>
         )}
-        {width > 700 && (
-          <div style={{ flex: 0.12 }} className={`${styles.td}`}>
-            {inv.currency} {Number(inv.amount).toFixed(2)}
-          </div>
-        )}
+        <div style={{ flex: isPhone ? 0.20 : 0.12 }} className={`${styles.td}`}>
+          {inv.currency} {Number(inv.amount).toFixed(2)}
+        </div>
+
         {width > 700 && (
           <div style={{ flex: 0.17, ...ellipsisStyle }} className={styles.td}>
             {inv.receivingWallet?.wallet_id}
@@ -91,7 +90,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
           </div>
         )}
         <div
-          style={{ flex: 0.1, display: "flex", justifyContent: "flex-end" }}
+          style={{ flex: isPhone ? 0.15 : 0.1, display: "flex", justifyContent: "flex-end" }}
           className={`${styles.td} ${styles.actions}`}
           onClick={(e) => e.stopPropagation()}
         >

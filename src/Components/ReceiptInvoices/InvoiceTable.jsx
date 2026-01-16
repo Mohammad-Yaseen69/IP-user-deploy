@@ -36,13 +36,13 @@ const InvoiceTable = ({ filteredInvoices, setEditModal }) => {
             </div>
           )}
           <div
-            style={{ flex: width <= 700 ? 0.28 : 0.18 }}
+            style={{ flex: width <= 700 ? 0.25 : 0.18 }}
             className={styles.th}
           >
-            {t("  ")}
+            {t("Date")}
           </div>
           <div
-            style={{ flex: width <= 700 ? 0.62 : 0.24 }}
+            style={{ flex: width <= 700 ? 0.40 : 0.24 }}
             className={styles.th}
           >
             {t("Title")}
@@ -52,14 +52,13 @@ const InvoiceTable = ({ filteredInvoices, setEditModal }) => {
               {t("Description")}
             </div>
           )}
-          {width > 700 && (
+          
             <div
-              style={{ flex: 0.12 }}
+              style={{ flex: width <= 700 ? 0.20 : 0.12 }}
               className={`${styles.th} ${styles.amount}`}
             >
               {t("Amount")}
             </div>
-          )}
           {width > 700 && (
             <div style={{ flex: 0.17 }} className={styles.th}>
               {t("Receiving Wallet")}
@@ -71,7 +70,7 @@ const InvoiceTable = ({ filteredInvoices, setEditModal }) => {
             </div>
           )}
           <div
-            style={{ flex: 0.1 }}
+            style={{ flex: width <= 700 ? 0.15 : 0.1 }}
             className={`${styles.th} ${styles.actions}`}
           >
             {t("Actions")}
