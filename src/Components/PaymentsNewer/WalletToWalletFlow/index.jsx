@@ -39,6 +39,8 @@ import { getDecimalPointIndex } from "../../../Helper/getDecimalIndex";
 import RecentTransactions from "./RecentTransactions";
 import { SwipeableDrawer } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
+import useTopupLimitCheck from "../../../hooks/Payments/useTopupLimitCheck";
+import GeneralNoticeModal from "../GeneralNoticeModal";
 
 
 
@@ -138,6 +140,8 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
     const navigate = useNavigate()
     const { userDetails, authHeader, setProfileLockTime, userWallets } = useContext(UserContext)
     const [data, dispatch] = useReducer(reducer, initialState)
+    const { limitStatus, clearStatus } = useTopupLimitCheck(data?.currency?.currency?.code, +String(data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
+
     const dataHandler = (field, value) => {
         dispatch({ type: "UPDATE_FIELD", field, value });
     };
@@ -277,7 +281,6 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
         }
     }, [data.payment_type])
 
-    console.log(data.codeType, "code-type")
     const sendOtp = async (codeType = "") => {
         dataHandler("loading", true)
         try {
@@ -1005,6 +1008,8 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
         }
     }
 
+
+    console.log(limitStatus)
     return (
         <>
             {
@@ -1055,6 +1060,17 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                     />
                     :
                     <></>
+            }
+            {
+                !limitStatus.status &&
+                <GeneralNoticeModal
+                    isOpen={!limitStatus.status}
+                    toggle={() => {
+                        dataHandler("payment_type", {})
+                        clearStatus()
+                    }}
+                    message={limitStatus.message}
+                />
             }
             {
                 window.innerWidth > 1000
