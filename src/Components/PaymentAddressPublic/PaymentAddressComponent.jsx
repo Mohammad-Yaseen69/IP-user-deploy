@@ -249,10 +249,10 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
   };
   useEffect(() => {
 
-    if (userDetails?.country_name) {
-      const normalize = normalizeText(userDetails?.country_name);
+    if (userDetails?.country_iso_code) {
+      const code = userDetails?.country_iso_code;
       const filteredCountry = countries.find((item) =>
-        item.name.toLowerCase().includes(normalize.toLowerCase())
+        item.alpha3?.toLowerCase() === code?.toLowerCase()
       );
 
       dataHandler("userCountry", filteredCountry);
