@@ -145,7 +145,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                     dataHandler("wallet", {})
                     dataHandler("payment_type", {})
                 }
-                else if (data.payment_type?.value === "mobile") {
+                else if (data.payment_type?.value === "mobile_wallet") {
                     dataHandler("wallet", {})
                     dataHandler("payment_type", {})
                 }
@@ -321,7 +321,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                 data: {
                     receiver_wallet_id: data.payment_type?.value !== "wallet" ? data.currency_wallet?._id : data.wallet?._id,
                     quotation_id: item?._id,
-                    "token": data.payment_type?.value === "paypal" ? data.exchange_rate?.token : ""
+                    "token": data.payment_type?.value === "paypal" || data?.payment_type?.value === "mobile_wallet" ? data.exchange_rate?.token : ""
                 },
                 type: codeType || data.codeType
             }
@@ -474,20 +474,24 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
             formdata.append("token", data.payment_token)
             formdata.append("otp", otp)
             formdata.append("type", data.codeType)
-            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/quotation/quotation-wallet-to-wallet`, formdata, {
+
+            const url = data.payment_type?.value === "mobile_wallet" ? "/api/collection/wallet-to-wallet" : "/api/quotation/quotation-wallet-to-wallet"
+
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}${url}`, formdata, {
                 headers: authHeader
             })
 
             const dec = decryptData(res.data.data)
             dataHandler("verified", true)
         } catch (err) {
-            console.log(err)
             const decrypted = decryptData(err.response.data.data)
-            console.log(decrypted)
             const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-            dataHandler("otp_error", decrypted?.message ?? "You have entered wrong OTP.")
+            const error2 = apiErrorMessage(decrypted?.message)
+
             if (error) {
                 dataHandler("otp_error", error)
+            } else if (error2) {
+                dataHandler("otp_error", error2)
             } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                 const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                 const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
@@ -496,6 +500,8 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                 localStorage.clear()
                 localStorage.setItem("ip_country", coun)
                 navigate("/login")
+            } else {
+                dataHandler("otp_error", decrypted?.message ?? "You have entered wrong OTP.")
             }
         }
         finally {
@@ -510,7 +516,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                     dataHandler("step", data.step + 1)
                     dataHandler("show_receipt", true)
                 }
-                if (data.payment_type?.value === "mobile") {
+                if (data.payment_type?.value === "mobile_wallet") {
                     dataHandler("step", data.step + 1)
                     dataHandler("show_receipt", true)
                 }
