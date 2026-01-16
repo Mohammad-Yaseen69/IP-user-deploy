@@ -40,6 +40,8 @@ import NotFoundModal from "../../NotFound/NotFoundModal";
 import { cleanString } from "../../../Helper/cleanString";
 import { currencies } from "../InternationalFlow/StepOne";
 import { apiErrorMessage } from "../InternationalFlow";
+import useTopupLimitCheck from "../../../hooks/Payments/useTopupLimitCheck";
+import GeneralNoticeModal from "../GeneralNoticeModal";
 
 const leftSideContent = [
     "Choose the beneficiary!",
@@ -116,6 +118,8 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
     const navigate = useNavigate()
     const { userDetails, authHeader, setProfileLockTime, userWallets, getUserWallets } = useContext(UserContext)
     const [data, dispatch] = useReducer(reducer, initialState)
+    const { limitStatus, clearStatus } = useTopupLimitCheck(data?.currency?.currency?.code, +String(data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
+
     useEffect(() => {
         getUserWallets()
     }, [])
@@ -743,6 +747,17 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                     />
                     :
                     <></>
+            }
+            {
+                !limitStatus.status &&
+                <GeneralNoticeModal
+                    isOpen={!limitStatus.status}
+                    toggle={() => {
+                        dataHandler("payment_type", {})
+                        clearStatus()
+                    }}
+                    message={limitStatus.message}
+                />
             }
             {
                 window.innerWidth > 1000
