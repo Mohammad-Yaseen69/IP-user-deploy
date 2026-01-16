@@ -68,7 +68,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                     dataHandler("wallet", {})
                     dataHandler("payment_type", {})
                 }
-                else if (data.payment_type?.value === "mobile") {
+                else if (data.payment_type?.value === "mobile_wallet") {
                     dataHandler("wallet", {})
                     dataHandler("payment_type", {})
                 }
@@ -102,7 +102,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                     sender_wallet_id: data.payment_type?.value !== "wallet" ? data.currency_wallet?._id : data.wallet?._id,
                     purpose: "xyz",
                     payment_type: "payment_request",
-                    "token": data.payment_type?.value === "paypal" ? data.exchange_rate?.token : ""
+                    "token": data.payment_type?.value === "paypal" || data?.payment_type?.value === 'mobile_wallet' ? data.exchange_rate?.token : ""
                 },
                 type: codeType || data.codeType
             }
@@ -256,7 +256,10 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
             formdata.append("token", data.payment_token)
             formdata.append("otp", otp)
             formdata.append("type", data.codeType)
-            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/accept-payment-request`, formdata, {
+
+            const url = data.payment_type?.value === "mobile_wallet" ? "/api/collection/wallet-to-wallet" : "/api/wallet/accept-payment-request"
+
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}${url}`, formdata, {
                 headers: authHeader
             })
 
@@ -265,11 +268,13 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
         } catch (err) {
             console.log(err)
             const decrypted = decryptData(err.response.data.data)
-            console.log(decrypted)
             const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
-            dataHandler("otp_error", decrypted?.message ?? "You have entered wrong OTP.")
+            const error2 = apiErrorMessage(decrypted?.message)
+
             if (error) {
                 dataHandler("otp_error", error)
+            } else if (error2) {
+                dataHandler("otp_error", error2)
             } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                 const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                 const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
@@ -278,6 +283,8 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                 localStorage.clear()
                 localStorage.setItem("ip_country", coun)
                 navigate("/login")
+            } else {
+                dataHandler("otp_error", decrypted?.message ?? "You have entered wrong OTP.")
             }
         }
         finally {
@@ -292,7 +299,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                     dataHandler("step", data.step + 1)
                     dataHandler("show_receipt", true)
                 }
-                if (data.payment_type?.value === "mobile") {
+                if (data.payment_type?.value === "mobile_wallet") {
                     dataHandler("step", data.step + 1)
                     dataHandler("show_receipt", true)
                 }
@@ -566,7 +573,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                     {t("Trouble Sending Money")}
                                                 </Link>
                                                 <div className={styles?.buttons}>
-                                                    <button className={styles.transparent} disabled={data.loading } onClick={handleBackClick}>{t("Back")}</button>
+                                                    <button className={styles.transparent} disabled={data.loading} onClick={handleBackClick}>{t("Back")}</button>
                                                     <button disabled={disabledButton || data.loading || data.exchange_rate_error} onClick={handleClick}>
                                                         {
                                                             // userDetails?.user?.kyc_status === "approved"
