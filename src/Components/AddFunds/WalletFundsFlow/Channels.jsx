@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { UserContext } from '../../../Context/UserContext'
 import bd from "../../PaymentsNewer/files/bd.png"
@@ -8,11 +8,20 @@ import i from "../../PaymentsNewer/files/i.svg"
 import { Badge, Card, CardBody } from 'reactstrap'
 import TypingSpan from '../../TypingSpan'
 import { Check } from 'react-feather'
+import { useQuery } from '@tanstack/react-query'
+import { apiWrapper } from '../../../utils/Functions/apiWrapper'
 
 
 const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
+    const { data: methods, isLoading } = useQuery({
+        queryKey: ["AvailableMethods"],
+        queryFn: () => apiWrapper({
+            endpoint: `/api/payment/get-available-methods/${userDetails?._id}/${userDetails?.country_iso_code}`
+        }).then(dec => dec?.data),
+        retry: 3
+    })
     const payoutChannelData = [
         userDetails?.level?.topup_channel?.card_payment
             ?
@@ -36,14 +45,14 @@ const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] })
             }
             :
             {},
-        userDetails?.level?.topup_channel?.bank
+        userDetails?.level?.topup_channel?.bank_deposit
             ?
             {
-                name: "Bank Transfer",
+                name: "Bank Deposit",
                 id: 2,
                 icon: bd,
                 value: "bank",
-                coming_soon: userDetails?.level?.topup_channel?.bank === "coming_soon",
+                coming_soon: userDetails?.level?.topup_channel?.bank_deposit === "coming_soon",
             }
             :
             {},
@@ -67,18 +76,27 @@ const Channels = ({ setChannel, channel, thunesServices, thunesProviders = [] })
                 name: "Mobile Wallet",
                 id: 1,
                 icon: mw,
-                value: "mobile",
+                value: "mobile_wallet",
                 // coming_soon: userDetails?.level?.topup_channel?.mobile_money === "coming_soon",
                 sub_name: "wallet"
             }
             :
             {},
     ]
-    // .map(item => thunesServices.some(it => it?.id == item.id) ? item : { ...item, coming_soon: true })
+
+    const filteredChannels = useMemo(() => {
+        const allChannels = [...thunesAllowed, ...payoutChannelData].filter(item => item?.name)
+        
+        if (!methods || isLoading) return allChannels
+        
+        return allChannels.filter(item => 
+            methods?.includes(item.value)
+        )
+    }, [payoutChannelData, thunesAllowed, methods, isLoading])
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem", maxHeight: "550px", overflowY: "auto" }}>
             {
-                [...thunesAllowed, ...payoutChannelData].filter(item => item?.name).map(item => (
+                filteredChannels.map(item => (
                     <Card key={item?.name} style={{ marginBottom: 0, borderRadius: "12px" }} onClick={() => {
                         if (item?.coming_soon) return;
                         setChannel(item)
