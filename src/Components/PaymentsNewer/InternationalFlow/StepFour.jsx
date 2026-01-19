@@ -14,6 +14,8 @@ import FeesComponent from "./FeesComponent"
 import InstaPayLoader from "../../Loader"
 import TypingSpan from "../../TypingSpan"
 import { UserContext } from "../../../Context/UserContext"
+import { useQuery } from "@tanstack/react-query"
+import { apiWrapper } from "../../../utils/Functions/apiWrapper"
 
 export const typesData = [
     {
@@ -59,6 +61,14 @@ export const typesData = [
 
 const StepFour = ({ data, dataHandler, callback = () => { }, loading = false, error = "", filteringValue = "dummy", customStyles = {}, isAirtime }) => {
     const { t } = useTranslation()
+    const { userDetails } = useContext(UserContext)
+    const { data: methods, isLoading } = useQuery({
+        queryKey: ["AvailableMethods"],
+        queryFn: () => apiWrapper({
+            endpoint: `/api/payment/get-available-methods/${userDetails?._id}/${userDetails?.country_iso_code}`
+        }).then(dec => dec?.data),
+        retry: 3
+    })
 
     const types = useMemo(() => {
         if (data?.mobile_wallet_services?.length > 0) {
@@ -205,8 +215,15 @@ const StepFour = ({ data, dataHandler, callback = () => { }, loading = false, er
                     ""
             }
             <div className={styles.container} style={customStyles}>
-                {
-                    types.filter(i => i.value !== filteringValue).map(item => (
+
+                {isLoading ?
+                    <div style={{ height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                        <div style={{ height: "100px", width: "100px" }}>
+                            <InstaPayLoader />
+                        </div>
+                    </div>
+                    :
+                    types.filter(i => i.value !== filteringValue && (methods?.includes(i.value) || i.value === "wallet" || i.value === "bank")).map(item => (
                         <div className={`${styles.item} ${item.status !== "Active" ? styles.disabled : ""}`} key={item.name}
                             onClick={() => {
                                 if (item.value !== "wallet") {
