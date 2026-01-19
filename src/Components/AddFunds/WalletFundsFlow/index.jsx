@@ -399,7 +399,7 @@ const WalletFundsFlow = ({ setAction }) => {
                     dataHandler("loading", false)
                 }
             }
-            else if (data.channel?.value === "mobile") {
+            else if (data.channel?.value === "mobile_wallet") {
                 try {
                     const enc = encryptData({
                         wallet_id: data?.wallet?.wallet_id,
@@ -463,7 +463,7 @@ const WalletFundsFlow = ({ setAction }) => {
                 dataHandler("step", 3)
                 break;
             case 3:
-                if (data.channel?.value === "paypal" || data?.channel?.value === "crypto" || data?.channel?.value === "mobile") {
+                if (data.channel?.value === "paypal" || data?.channel?.value === "crypto" || data?.channel?.value === "mobile_wallet") {
                     dataHandler("show_confirmation", true)
                 } else {
                     dataHandler("step", 4)
@@ -692,7 +692,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                                                     <ExtraContentOnFee data={data} />
                                                                 </>
                                                                 :
-                                                                data.channel?.value === "mobile" && data?.exchange_rate?.sendFromMobileWallet?.isConverted
+                                                                data.channel?.value === "mobile_wallet" && data?.exchange_rate?.sendFromMobileWallet?.isConverted
                                                                     ?
                                                                     <ExtraContentOnFee data={data} fxRate={data.exchange_rate?.rate?.amount} fxCurrency={data.exchange_rate?.rate?.currency} />
                                                                     :
@@ -1083,7 +1083,7 @@ const WalletFundsFlow = ({ setAction }) => {
                                                     data.step === 4
                                                         ?
                                                         (
-                                                            data.channel?.value === "mobile"
+                                                            data.channel?.value === "mobile_wallet"
                                                                 ?
                                                                 <Providers
                                                                     channel={data.channel}

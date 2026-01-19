@@ -218,7 +218,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                 }
 
 
-            } else if (payoutChannel?.value === "mobile") {
+            } else if (payoutChannel?.value === "mobile_wallet") {
 
                 const payload = {
                     wallet_id: wallet?.wallet_id,
