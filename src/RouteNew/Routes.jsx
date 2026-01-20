@@ -103,11 +103,10 @@ export const routes = [
     { path: "/create-password/:token", component: <CreatePassword /> },
     { path: "/geo-fencing", component: <GeoFencing /> },
     { path: "/my-mastercard", component: <MyMasterCard /> },
+    { path: "/my-mastercard/:status/:code", component: <MyMasterCard /> },
     { path: "/create-pin", component: <CreatePin /> },
     { path: "/update-pin", component: <UpdatePin /> },
     { path: "/invoices", component: <ReceiptInvoice /> },
-
-
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const publicRoutes = [

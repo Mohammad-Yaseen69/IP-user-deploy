@@ -11,8 +11,10 @@ import InstaPayLoader from '../Loader';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption';
 import useWindowWidth from '../../utils/useWindowWidth';
-import { useLocation } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import Success from '../AddFunds/ResponseModals/Success';
+import Error from '../AddFunds/ResponseModals/Error';
 
 const MyMasterCard = () => {
   const [cardPurchased, setCardPurchased] = useState(false)
@@ -31,8 +33,11 @@ const MyMasterCard = () => {
   const ctcMobile = queryParams.get("ctcMobile")
   const ctwMobile = queryParams.get("ctwMobile")
   const showT = queryParams.get("showT")
+  const { status } = useParams()
+  const paymentThrough = queryParams.get("payment_through")
   const ref = useRef(null)
-  const {t} = useTranslation()
+  const { t } = useTranslation()
+
 
   useEffect(() => {
     if (cardPurchased) {
@@ -41,10 +46,10 @@ const MyMasterCard = () => {
   }, [userDetails, cardPurchased])
 
   useEffect(() => {
-    if(showT){
+    if (showT) {
       ref.current.scrollIntoView({ behavior: "smooth" })
     }
-  },[showT])
+  }, [showT])
 
   useEffect(() => {
     const getCard = async () => {
@@ -57,7 +62,7 @@ const MyMasterCard = () => {
         console.log(dec)
         // dec?.data?.pop()
 
-        if(dec?.data?.length === 1){
+        if (dec?.data?.length === 1) {
           setCurrent(0)
         }
         setCards(dec?.data ?? [])
@@ -106,10 +111,19 @@ const MyMasterCard = () => {
   return (
     <div style={{ minHeight: "100vh" }} className={styles.container}>
       <div className={styles.top}>
-        <h4 style={{ display: (width < 1000 && (addFundsMobile || ctcMobile || ctwMobile) ) && "none" }}>{t("My Mastercard")}</h4>
+        <h4 style={{ display: (width < 1000 && (addFundsMobile || ctcMobile || ctwMobile)) && "none" }}>{t("My Mastercard")}</h4>
         {width > 1000 && <TopRight />}
       </div>
 
+      {status ?
+        status === "success" && paymentThrough !== "paypal" ?
+          <Success page='' linkText='' link='/my-mastercard' message='Your transaction has been completed successfully.You may now close this window or continue.' />
+          :
+          status === "failed" ?
+            <Error linkText='' link='/my-mastercard' /> :
+            <Success page='' linkText='' link='/my-mastercard' type='pending' message='Your transaction is currently being processed. Please try refreshing the page in a moment. If the status remains pending for an extended period, please contact support for assistance.' />
+        : null
+      }
 
       <>
         {!loading ?
@@ -126,14 +140,14 @@ const MyMasterCard = () => {
                   setCardPurchased={setCardPurchased}
                   transactions={transactions}
                 />
-                {((!addFundsMobile && !ctcMobile && !ctwMobile) || width > 1000)  && <TransactionsTable ref={ref} cardNo={currentCardDetails?.card_number} transactions={transactions} isLoading={loading} />}
+                {((!addFundsMobile && !ctcMobile && !ctwMobile) || width > 1000) && <TransactionsTable ref={ref} cardNo={currentCardDetails?.card_number} transactions={transactions} isLoading={loading} />}
               </>
               : <OnBoarding alreadyHaveCard={cards.length !== 0} setReRender={setReRender} setCardPurchased={setCardPurchased} />
 
             }
           </>
 
-          : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}> <InstaPayLoader  /> </div>
+          : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}> <InstaPayLoader /> </div>
         }
       </>
 
