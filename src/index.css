@@ -23,3 +23,7 @@ code {
 .overflow-hidden{
   overflow: hidden;
 }
+
+.removeAllOverflowHidden  > *{
+  overflow: visible !important;
+}
