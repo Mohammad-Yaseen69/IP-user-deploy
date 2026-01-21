@@ -251,14 +251,14 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                 &&
                 <Modal isOpen={isOpen}>
                     <ModalHeader toggle={toggle}>
-                        Payment For {isKYB ? "KYB" : t("KYC")} Verification
+                        {t("Payment For {{type}} Verification", { type: isKYB ? "KYB" : "KYC" })}
                     </ModalHeader>
                     <ModalBody>
                         {
                             step === 1
                             &&
                             <>
-                                <h5>Select Payment Method: </h5>
+                                <h5>{t("Select Payment Method")}</h5>
                                 <div style={{ margin: "1rem 0", display: "flex", flexDirection: "column", gap: "1rem" }}>
                                     {
                                         paymentChannels
@@ -330,7 +330,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                             (step === 2 && payoutChannel?.value === "wallet")
                             &&
                             <>
-                                <h5>Select Your Wallet: </h5>
+                                <h5>{t("Select Your Wallet")}</h5>
                                 <div style={{ margin: "1rem 0", display: "flex", flexDirection: "column", gap: "1rem" }}>
                                     {
                                         wallets?.map((item, index) => (
@@ -456,7 +456,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                         {
                             step < 3 && !isKYB
                             &&
-                            <h5 style={{ marginTop: "1rem" }}>A fee of ${userDetails?.country?.kyc_fee} will be charged for the verification process.</h5>
+                            <h5 style={{ marginTop: "1rem" }}>{t("A fee of {{amount}} will be charged for the verification process.", { amount: `$${userDetails?.country?.kyc_fee}` })}</h5>
                         }
                     </ModalBody>
                     {
@@ -478,7 +478,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                         alignItems: "center",
                                     }}
                                     onClick={() => setStep(prev => prev - 1)}
-                                >Back</Button>
+                                >{t("Back")}</Button>
                             }
                             <Button
                                 style={{
@@ -507,13 +507,13 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                     saving
                                 }
                                 onClick={handleClick}
-                            >Next</Button>
+                            >{t("Next")}</Button>
                         </ModalFooter>
                     }
                 </Modal>
             }
             <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-                <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
+                <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation
                         callback={chargeKYC}
@@ -536,7 +536,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                     setShowSuccess(false)
                 }}
                 >
-                    {t(`${isKYB ? "KYB" : "KYC"} Fee Payment`)}
+                    {t("{{type}} Fee Payment", { type: isKYB ? "KYB" : "KYC" })}
                 </ModalHeader>
                 <ModalBody>
                     <h5 className='modal-title' style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -545,7 +545,11 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                     </h5>
                     <div className="text-center">
                         <p className="mb-0">
-                            {t("The KYC fee payment is successful.")} {isKYB ? t("Partner kyb pending, documents verification going on") : t("Please proceed to verify your account.")}
+                            {isKYB ?
+                                t(`Thank you for submitting the required documents for business verification. An email has been sent to the business directors to complete their KYC verification.
+                                    Once the business documents and directors’ KYC are successfully validated, your business account will be verified.`) :
+                                t("The KYC fee payment is successful. Please proceed to verify your account.")
+                            }
                         </p>
                         <Button
                             style={{
@@ -557,10 +561,10 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                 borderRadius: "6px",
                                 marginTop: "1.5rem"
                             }}
-                            onClick={verify}
+                            onClick={isKYB ? verify : toggle}
                             disabled={loading}
                         >
-                            Proceed
+                            {isKYB ? t("Close") : t("Proceed")}
                         </Button>
                     </div>
                 </ModalBody>
