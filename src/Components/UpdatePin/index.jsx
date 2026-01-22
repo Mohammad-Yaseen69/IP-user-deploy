@@ -183,7 +183,6 @@ const CreatePin = () => {
 
     const { t } = useTranslation()
 
-    console.log(test.hello())
     return (
         <>
             {!success ? (
