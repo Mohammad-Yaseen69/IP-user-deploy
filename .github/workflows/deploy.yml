@@ -17,6 +17,9 @@ jobs:
         run: git config --global url."https://oauth2:${{ secrets.YOUR_GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
 
 
+      - name: Set Sentry release
+        run: |
+          echo "SENTRY_RELEASE=instapay@$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Switch Nginx port to Blue
         run: bash /home/ubuntu/switch-to-blue.sh

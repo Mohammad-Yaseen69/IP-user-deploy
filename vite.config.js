@@ -1,15 +1,25 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { visualizer } from 'rollup-plugin-visualizer'
+import { sentryVitePlugin } from '@sentry/vite-plugin'
 
 
 export default defineConfig({
   plugins: [
     react(),
     visualizer({
-      open: true, // build bana na ke baad browser me graph khol dega
+      open: true,
       gzipSize: true,
       brotliSize: true
+    }),
+    sentryVitePlugin({
+      org: process.env.SENTRY_ORG,  // eslint-disable-line no-undef
+      project: process.env.SENTRY_PROJECT,  // eslint-disable-line no-undef
+      authToken: process.env.SENTRY_AUTH_TOKEN,  // eslint-disable-line no-undef
+      release: process.env.SENTRY_RELEASE || process.env.VERCEL_GIT_COMMIT_SHA,  // eslint-disable-line no-undef
+      include: "./dist",
+      urlPrefix: "~/",
+      setCommits: { auto: true },
     })
   ],
   css: {
@@ -55,7 +65,8 @@ export default defineConfig({
           excel: ['xlsx'],
         }
       }
-    }
+    },
+    sourcemap: true
   },
   test: {
     globals: true,
