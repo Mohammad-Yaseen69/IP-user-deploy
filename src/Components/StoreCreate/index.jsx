@@ -27,12 +27,12 @@ const StoreCreate = () => {
 
     useEffect(() => {
         if (data?.data && !isError) {
-            openInNewTab("https://instapay-ecommerce.vercel.app/?showStore=true")
+            openInNewTab("https://instapay-ecommerce.vercel.app/dashboard/seller?fromMain=true")
         }
     }, [data, isError])
 
     const handleCreateStore = () => {
-        const eShopUrl = "https://instapay-ecommerce.vercel.app/?showStore=true"
+        const eShopUrl = "https://instapay-ecommerce.vercel.app/dashboard/seller?fromMain=true"
         openInNewTab(eShopUrl)
     }
 
@@ -60,10 +60,10 @@ const StoreCreate = () => {
                 <div className={styles.left}>
                     <div>
                         <h3>
-                            {t("You haven't created any store yet.")}
+                            {t("You haven't created your store yet.")}
                         </h3>
                         <p>
-                            {t("Start by creating your first store in just a few steps.")}
+                            {t("Click on the button below to create your own eShop Store.")}
                         </p>
                     </div>
 
