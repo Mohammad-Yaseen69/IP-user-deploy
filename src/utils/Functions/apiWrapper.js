@@ -3,6 +3,7 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 
 const BASE_URL = import.meta.env.VITE_IP_DEV_API;
+const ECOM_BASE_URL = import.meta.env.VITE_IP_ECOM_API
 
 const METHODS = {
     GET: "GET",
@@ -24,26 +25,36 @@ export const apiWrapper = async ({
     isPublic = false,
     isDecrypted = true,
     isFormData = false,
+    server = "main"
 }) => {
     try {
         let dataToSend;
 
         if (isFormData) {
-            dataToSend = payload; 
+            dataToSend = payload;
         } else if (isEncrypted) {
             dataToSend = { data: encryptData(payload) };
         } else {
             dataToSend = payload;
         }
 
+        const authHeader = getAuthHeader()
+
+        if (server === "ecommerce") {
+            authHeader.source = "ecommerce"
+        }
+
         const res = await axios({
-            url: `${BASE_URL}${endpoint}`,
+            url: `${server === "main" ? BASE_URL : ECOM_BASE_URL}${endpoint}`,
             method,
             headers: {
-                ...(isPublic ? {} : getAuthHeader()),
+                ...(isPublic ? {} : authHeader),
                 ...(isFormData ? { "Content-Type": "multipart/form-data" } : {}),
             },
             data: method === METHODS.GET ? undefined : dataToSend,
+            ...(server === "ecommerce" ? {
+                withCredentials: false
+            } : {})
         });
 
         return isDecrypted ? decryptData(res.data.data) : res.data;
