@@ -62,6 +62,7 @@ const ReceiptInvoice = lazy(() => import("../Components/ReceiptInvoices"))
 const InvoicePayment = lazy(() => import("../Components/ReceiptInvoices/InvoicePayment"))
 const InvoicePaymentQr = lazy(() => import("../Components/ReceiptInvoices/InvoicePaymentQr"))
 const PlansSubscription = lazy(() => import("../Components/PlansSubscriptions"))
+const StoreCreate = lazy(() => import("../Components/StoreCreate"))
 
 
 export const routes = [
@@ -107,6 +108,7 @@ export const routes = [
     { path: "/create-pin", component: <CreatePin /> },
     { path: "/update-pin", component: <UpdatePin /> },
     { path: "/invoices", component: <ReceiptInvoice /> },
+    { path: "/store-create", component: <StoreCreate /> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const publicRoutes = [

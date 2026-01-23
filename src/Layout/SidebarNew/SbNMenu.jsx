@@ -102,6 +102,12 @@ export const MENU = [
                 url: `${window.location.origin}/invoices`,
             },
             {
+                title: "My eShop",
+                icon: <img src={paym} style={{ marginRight: "12px" }} />,
+                activeIcon: <img src={paym_a} style={{ marginRight: "12px" }} />,
+                type: "external_eshop",
+            },
+            {
                 title: "Payments",
                 icon: <img src={paym} style={{ marginRight: "12px" }} />,
                 activeIcon: <img src={paym_a} style={{ marginRight: "12px" }} />,
