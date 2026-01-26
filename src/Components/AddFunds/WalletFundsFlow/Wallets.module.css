@@ -48,6 +48,7 @@
 
 .active {
     box-shadow: 0px 2px 20.1px 0px rgba(89, 38, 240, 0.20);
+    border: 2px solid #5726ea;
 }
 
 .card_view {
