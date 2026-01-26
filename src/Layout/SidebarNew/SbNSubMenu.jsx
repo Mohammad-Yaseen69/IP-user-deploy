@@ -54,7 +54,7 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
     }, []);
 
     const handleEshopClick = () => {
-        const eShopUrl = "https://instapay-ecommerce.vercel.app/dashboard/seller?fromMain=true"
+        const eShopUrl = `${import.meta.env.VITE_IP_ECOM_URL}/dashboard/seller?fromMain=true`
 
         if (data?.data && !isError) {
             openInNewTab(eShopUrl)

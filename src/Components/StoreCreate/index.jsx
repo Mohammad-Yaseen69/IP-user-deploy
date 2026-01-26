@@ -27,12 +27,12 @@ const StoreCreate = () => {
 
     useEffect(() => {
         if (data?.data && !isError) {
-            openInNewTab("https://instapay-ecommerce.vercel.app/dashboard/seller?fromMain=true")
+            openInNewTab(`${import.meta.env.VITE_IP_ECOM_URL}/dashboard/seller?fromMain=true`)
         }
     }, [data, isError])
 
     const handleCreateStore = () => {
-        const eShopUrl = "https://instapay-ecommerce.vercel.app/dashboard/seller?fromMain=true"
+        const eShopUrl = `${import.meta.env.VITE_IP_ECOM_URL}/dashboard/seller?fromMain=true`
         openInNewTab(eShopUrl)
     }
 
