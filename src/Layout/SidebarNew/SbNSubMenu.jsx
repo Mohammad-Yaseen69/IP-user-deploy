@@ -63,7 +63,6 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
         }
     }
 
-    console.log(menu)
 
     return (
         // <ul className={`${className ? className : ""}`} onClick={verifyToken}>

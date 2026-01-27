@@ -7,7 +7,7 @@ import int from "../files/int.svg"
 import international from "../files/international.png"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { UserContext } from "../../../Context/UserContext"
-import { ChevronLeft, ChevronRight, HelpCircle, Info } from "react-feather"
+import { ChevronLeft, ChevronRight, HelpCircle } from "react-feather"
 import StepTwo from "./StepTwo"
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption"
 import axios from "axios"
@@ -33,14 +33,12 @@ import { createShambeToken } from "../../../Helper/CreateToken"
 import NotFoundModal from "../../NotFound/NotFoundModal"
 import errors from "../../AddFunds/TrustPaymentErrors.json"
 import AddBeneficiaryRequiredFields from "../../AddBeneficiaryRequiredFields"
-import { Modal, ModalBody, ModalHeader } from "reactstrap"
 import AddBeneficiaryAddressModal from "../../AddBeneficiaryAddressModal"
 import RecentTransactions from "../WalletToWalletFlow/RecentTransactions"
 import { useQuery } from "@tanstack/react-query"
 import { apiWrapper } from "../../../utils/Functions/apiWrapper"
 import { logger } from "@sentry/react"
 import { formatDateTime } from "../../ReceiptInvoices/InvoiceTable"
-import { formatCurrency } from "../../../Helper/AmountFormat"
 import useVendorBalance from "../../../hooks/Payments/useVendorBalance"
 import VendorBalanceModal from "./VendorBalanceModal"
 
@@ -299,7 +297,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             setLoading(true)
             const destinationCurrency = await getCurrency()
             try {
-                const service_name = internationalData?.payoutChannel?.value === "bank" ? "international_bank_transfer" : internationalData?.payoutChannel?.value === "mobile" ? "international_mobile_wallet" : internationalData?.payoutChannel?.value === "card" ? "international_card_payment" : internationalData?.payoutChannel?.value === "cash" ? "international_cash_pickup" : ""
+                const service_name = internationalData?.payoutChannel?.value === "bank" ? "international_bank_transfer" : internationalData?.payoutChannel?.value === "mobile_wallet" ? "international_mobile_wallet" : internationalData?.payoutChannel?.value === "card" ? "international_card_payment" : internationalData?.payoutChannel?.value === "cash" ? "international_cash_pickup" : ""
 
                 const url = `${import.meta.env.VITE_IP_DEV_API}/api/payment/markup-rates?from=${internationalData.currency_wallet?.currency?.code}&to=${destinationCurrency}&amount=${+String(amount)?.replaceAll(",", "")}&fromOrTo=${fromOrTo}&service_name=${service_name}&account_id=${userDetails?._id}&payer_id=${internationalData.payer?.id}&service_id=${internationalData.payoutChannel?.id}&vendor=${internationalData.payoutChannel?.vendor}`
 
@@ -418,9 +416,9 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 wallet_id: wallet_id,
                 transaction_type: "C2C",
                 amount: amount,
-                service_name: internationalData?.payoutChannel?.value === "bank" ? "international_bank_transfer" : internationalData?.payoutChannel?.value === "mobile" ? "international_mobile_wallet" : internationalData?.payoutChannel?.value === "card" ? "international_card_payment" : internationalData?.payoutChannel?.value === "cash" ? "international_cash_pickup" : "",
+                service_name: internationalData?.payoutChannel?.value === "bank" ? "international_bank_transfer" : internationalData?.payoutChannel?.value === "mobile_wallet" ? "international_mobile_wallet" : internationalData?.payoutChannel?.value === "card" ? "international_card_payment" : internationalData?.payoutChannel?.value === "cash" ? "international_cash_pickup" : "",
                 service_id: internationalData?.payoutChannel?.id,
-                channel_name: internationalData?.payoutChannel?.value === "bank" ? "bank_account" : internationalData?.payoutChannel?.value === "mobile" ? "mobile_money" : internationalData?.payoutChannel?.value === "card" ? "card_payment" : internationalData?.payoutChannel?.value === "cash" ? "cash_pickup" : "",
+                channel_name: internationalData?.payoutChannel?.value === "bank" ? "bank_account" : internationalData?.payoutChannel?.value === "mobile_wallet" ? "mobile_money" : internationalData?.payoutChannel?.value === "card" ? "card_payment" : internationalData?.payoutChannel?.value === "cash" ? "cash_pickup" : "",
                 iso_code: internationalData?.country?.alpha3,
                 account_id: userDetails?._id,
                 currency_code: currency_code,
@@ -439,7 +437,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             })
 
             const decrypted = decryptData(res.data.data)
-            // console.log(decrypted)
+            console.log(decrypted)
             const exchange_rate_details = {
                 exchange_rate: decrypted?.data?.result?.exchanged_rate?.value,
                 receiver: { currency: decrypted?.data?.result?.recipient?.currency, amount: decrypted?.data?.result?.recipient?.value },
@@ -447,7 +445,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 sending: { amount: decrypted?.data?.result?.sending?.value, currency: decrypted?.data?.result?.sending?.currency },
                 total: decrypted?.data?.result?.total?.value,
                 token: internationalData?.exchange_rate?.token,
-                external_transaction_data: decrypted?.data?.external_transaction_data
+                external_transaction_data: decrypted?.data?.result?.external_transaction_data
             }
 
             if (decrypted?.data?.result?.paypal) exchange_rate_details.paypal = decrypted?.data?.result?.paypal;
@@ -715,50 +713,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         }
     }
 
-    const handleMobileWalletPayment = async () => {
-        setLoading(true)
-        try {
-            const data = {
-                "amount": Number(String(internationalData.amount)?.replaceAll(",", "")),
-                "token": internationalData.quotation_details?.token,
-                "payerId": internationalData.payer?.id,
-                "wallet_id": internationalData?.currency_wallet?._id,
-                "transaction_type": internationalData.beneficiary?.beneficiary_type === "individual" ? "C2C" : "C2B",
-                "service_name": internationalData.payoutChannel?.value === "bank" ? "international_bank_transfer" : internationalData.payoutChannel?.value === "mobile" ? "international_mobile_wallet" : internationalData.payoutChannel?.value === "card" ? "international_card_payment" : internationalData.payoutChannel?.value === "cash" ? "international_cash_pickup" : "",
-                "channel_name": internationalData.payoutChannel?.value === "bank" ? "bank_account" : internationalData.payoutChannel?.value === "mobile" ? "mobile_money" : internationalData.payoutChannel?.value === "card" ? "card_payment" : internationalData.payoutChannel?.value === "cash" ? "cash_pickup" : "",
-                "iso_code": internationalData.country?.alpha3,
-                "currency_code": internationalData.currency,
-                "account_id": userDetails?._id,
-                "additional_information": internationalData.comment,
-                "purpose_of_remittance": internationalData.reason,
-                "beneficiary_id": internationalData.beneficiary._id,
-                "service_id": internationalData.payoutChannel?._id,
-                "type": internationalData.codeType,
-            }
-            internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank") ? data.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id : data.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id
-            console.log(data)
-            const enc = encryptData(data)
-
-            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/collection/create-payment-thunes-accept`,
-                {
-                    data: enc
-                },
-                {
-                    headers: authHeader
-                }
-            )
-            const dec = decryptData(res.data.data)
-            console.log(dec)
-            window.location.href = dec?.external_link
-        } catch (error) {
-            const dec = decryptData(error?.response?.data?.data)
-            updateInternationalData("error", typeof dec === "string" ? dec : dec?.message ?? "We cannot process your request at the moment, please try again later.!")
-        }
-        finally {
-            setLoading(false)
-        }
-    }
-
     const [showCardModal, setShowCardModal] = useState(false)
 
     const initiateCardPayment = async (otp) => {
@@ -837,6 +791,60 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             )
             const dec = decryptData(res.data.data)
             window.location.href = dec?.url
+        } catch (err) {
+            const decrypted = decryptData(err.response.data.data)
+            console.log(decrypted)
+            const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
+            updateInternationalData("otpError", decrypted?.message ?? "You have entered wrong OTP.")
+            const error2 = apiErrorMessage(decrypted?.message)
+
+
+            if (error2) {
+                updateInternationalData("otpError", t(error2))
+            }
+            else if (error) {
+                updateInternationalData("otpError", error)
+            } else if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
+                const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
+                const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
+                setProfileLockTime(timeInSec)
+                const coun = localStorage.getItem("ip_country")
+                localStorage.clear()
+                localStorage.setItem("ip_country", coun)
+                navigate("/login")
+            }
+        }
+        finally {
+            setLoading(false)
+        }
+    }
+
+    const initiateMobileWalletPayment = async (otp) => {
+        setLoading(true)
+        try {
+            const data = {
+                token: internationalData.created_transaction?.token,
+                otp: otp,
+                type: internationalData.codeType,
+            }
+            console.log(data)
+            const enc = encryptData(data)
+
+            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/collection/international`,
+                { data: enc },
+                { headers: authHeader }
+            )
+            const decrypted = decryptData(res.data.data)
+
+            console.log(decrypted)
+            updateInternationalData("transaction_details", {
+                ...decrypted?.data ?? decrypted,
+                pending: true
+            })
+            updateInternationalData("transactionStatus", true)
+            updateInternationalData("otpError", "")
+            setSubStep(prev => prev + 1)
+            updateInternationalData("showOtpModal", false)
         } catch (err) {
             const decrypted = decryptData(err.response.data.data)
             console.log(decrypted)
@@ -955,12 +963,17 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 setSubStep(prev => prev + 1)
                 break;
             case 4:
-                if (internationalData.payment_type?.value === "mobile") {
-                    handleMobileWalletPayment()
-                }
-                else if (internationalData.payment_type?.value === "card") {
+                if (internationalData.payment_type?.value === "card") {
                     updateInternationalData("showCard", true)
 
+                    if (internationalData.payoutChannel?.vendor === "thunes") {
+                        createQuotation(Number(String(internationalData.amount)?.replaceAll(",", "")))
+                    } else {
+                        setSubStep(prev => prev + 1)
+                    }
+
+                }
+                else if (internationalData.payment_type?.value === "mobile_wallet") {
                     if (internationalData.payoutChannel?.vendor === "thunes") {
                         createQuotation(Number(String(internationalData.amount)?.replaceAll(",", "")))
                     } else {
@@ -1481,7 +1494,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                             internationalData.showOtpModal
                                                             &&
                                                             <OtpConfirmation
-                                                                callback={internationalData.payment_type?.value === "card" ? initiateCardPayment : internationalData.payment_type?.value === "paypal" ? initiatePaypalPayment : verifyOtp}
+                                                                callback={internationalData.payment_type?.value === "card" ? initiateCardPayment : internationalData.payment_type?.value === "paypal" ? initiatePaypalPayment : internationalData?.payment_type?.value === "mobile_wallet" ? initiateMobileWalletPayment : verifyOtp}
                                                                 data={internationalData}
                                                                 dataHandler={updateInternationalData}
                                                                 isLoading={loading}
@@ -1718,7 +1731,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                                 internationalData.showOtpModal
                                                                                 &&
                                                                                 <OtpConfirmation
-                                                                                    callback={internationalData.payment_type?.value === "card" ? initiateCardPayment : internationalData.payment_type?.value === "paypal" ? initiatePaypalPayment : verifyOtp}
+                                                                                    callback={internationalData.payment_type?.value === "card" ? initiateCardPayment : internationalData.payment_type?.value === "paypal" ? initiatePaypalPayment : internationalData?.payment_type?.value === "mobile_wallet" ? initiateMobileWalletPayment : verifyOtp}
                                                                                     data={internationalData}
                                                                                     dataHandler={updateInternationalData}
                                                                                     isLoading={loading}

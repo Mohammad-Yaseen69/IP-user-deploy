@@ -11,6 +11,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
     const exchangeRateValue = _exObj && typeof _exObj === "object" ? _exObj.exchange_rate : _exObj ?? data?.exchange_rate
     const exchangeRateSendingCurrency = data?.exchange_rate?.exchange_rate?.exchange_rate_sending_currency || data?.exchange_rate?.sending?.currency
     const exchangeRateCurrency = data?.exchange_rate?.exchange_rate?.exchange_rate_currency || data?.exchange_rate?.receiver?.currency
+
     return (
         error
             ?
@@ -175,14 +176,14 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                 }
 
                 {
-                    data.payment_type?.value === "mobile_wallet" && !data?.exchange_rate?.external_transaction_data
+                    data.payment_type?.value === "mobile_wallet" && data?.exchange_rate?.external_transaction_data
                         ?
-                        <>
+                        <div style={{display: "flex", flexDirection: "column", gap: "10px"}}>
                             <div
                                 style={{
                                     display: "flex",
                                     alignItems: "flex-start",
-                                    gap: ".7rem",
+                                    gap: ".3rem",
                                     padding: "12px",
                                     borderRadius: "6px",
                                     background: "rgba(255, 218, 68, 0.24)",
@@ -203,7 +204,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                                     letterSpacing: '-0.28px'
                                 }}>
                                     <strong>
-                                        {t("You'll pay the following about through your mobile wallet.")}
+                                        {t("You'll pay the following amout through your mobile wallet.")}
                                     </strong>
                                 </span>
                             </div>
@@ -242,7 +243,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                                     }}>{Number(data?.exchange_rate?.external_transaction_data?.total?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data?.exchange_rate?.external_transaction_data?.total?.currency}</strong>
                                 </div>
                             </div>
-                        </>
+                        </div>
                         :
                         ""
                 }

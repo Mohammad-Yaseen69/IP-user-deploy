@@ -102,8 +102,8 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                 return cont.currency
             }
             const getWallet = () => {
-                const wallet = userWallets?.find(item => item?.currency?.code === localCurrency())
-                console.log(wallet)
+                const wallet = userWallets?.find(item => item?.currency?.code === localCurrency()) || userWallets.find(wallet => wallet.default)
+                
                 if (wallet?.currency?.code) {
                     return { ...currencies.find(item => item.currency_code === wallet?.currency?.code), ...wallet }
                 }
