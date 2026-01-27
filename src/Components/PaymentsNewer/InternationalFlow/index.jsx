@@ -446,7 +446,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 fee: { amount: decrypted?.data?.result?.fee?.value },
                 sending: { amount: decrypted?.data?.result?.sending?.value, currency: decrypted?.data?.result?.sending?.currency },
                 total: decrypted?.data?.result?.total?.value,
-                token: internationalData?.exchange_rate?.token
+                token: internationalData?.exchange_rate?.token,
+                external_transaction_data: decrypted?.data?.external_transaction_data
             }
 
             if (decrypted?.data?.result?.paypal) exchange_rate_details.paypal = decrypted?.data?.result?.paypal;
@@ -578,7 +579,6 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         }
     }, [internationalData.payment_type])
 
-    console.log(internationalData.payment_type?.value)
     useEffect(() => {
         let timeout;
         if (internationalData.payment_type?.value && subStep === 4) {
@@ -587,15 +587,21 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             if (internationalData?.payment_type?.value !== "wallet") {
                 updateInternationalData("wallet", {})
             }
+
             const getAmount = async () => {
-                let amount;
-                if (internationalData.payment_type?.value === "wallet" && internationalData?.wallet?.currency /*&& internationalData?.wallet?.currency?.code !== internationalData?.currency_wallet?.currency?.code*/) {
-                    amount = await getPlainExchangeRate(internationalData?.currency_wallet?.currency?.code, internationalData?.wallet?.currency?.code, Number(String(internationalData.amount)?.replaceAll(",", "")))
-                } else {
-                    amount = Number(String(internationalData.amount)?.replaceAll(",", ""))
+                try {
+                    let amount;
+                    if (internationalData.payment_type?.value === "wallet" && internationalData?.wallet?.currency /*&& internationalData?.wallet?.currency?.code !== internationalData?.currency_wallet?.currency?.code*/) {
+                        amount = await getPlainExchangeRate(internationalData?.currency_wallet?.currency?.code, internationalData?.wallet?.currency?.code, Number(String(internationalData.amount)?.replaceAll(",", "")))
+                    } else {
+                        amount = Number(String(internationalData.amount)?.replaceAll(",", ""))
+                    }
+                    return amount
+                } catch (error) {
+                    console.log("Error :", error)
                 }
-                return amount
             }
+
             timeout = setTimeout(() => {
                 const wallet_id = internationalData.payment_type?.value === "wallet" ? internationalData.wallet?._id ?? internationalData?.currency_wallet?._id : internationalData?.currency_wallet?._id
                 const currency_code = internationalData.payment_type?.value === "wallet" ? internationalData?.wallet?.currency?.code ?? internationalData?.currency : internationalData?.currency;
@@ -1384,102 +1390,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                 <FeesComponent
                                                                     error={internationalData.ex_extra_error}
                                                                     data={internationalData}
+                                                                    paypalValues
                                                                 />
-                                                                {
-                                                                    internationalData.payment_type?.value === "paypal" && !internationalData?.exchange_rate?.paypal?.paypal_currency_supported
-                                                                        ?
-                                                                        <>
-                                                                            <div
-                                                                                style={{
-                                                                                    display: "flex",
-                                                                                    alignItems: "flex-start",
-                                                                                    gap: ".7rem",
-                                                                                    padding: "12px",
-                                                                                    borderRadius: "6px",
-                                                                                    background: "rgba(255, 218, 68, 0.24)",
-                                                                                    marginTop: "1rem"
-                                                                                }}
-                                                                            >
-                                                                                <Info
-                                                                                    color="#BE9A08"
-                                                                                    size={20}
-                                                                                />
-                                                                                <span style={{
-                                                                                    color: '#BE9A08',
-                                                                                    fontFamily: 'Manrope',
-                                                                                    fontSize: ".7rem",
-                                                                                    fontStyle: 'normal',
-                                                                                    fontWeight: 700,
-                                                                                    lineHeight: 1.3,
-                                                                                    letterSpacing: '-0.28px'
-                                                                                }}>
-                                                                                    <strong>{internationalData?.exchange_rate?.paypal?.fee?.currency}</strong> {t("is not supported by Paypal,")} <strong>USD</strong> {t("will be used as the default currency.")}
-                                                                                </span>
-                                                                            </div>
-                                                                            <div style={{
-                                                                                display: "flex",
-                                                                                flexDirection: "column",
-                                                                                gap: ".9rem",
-                                                                                padding: ".8rem",
-                                                                                background: "#fff",
-                                                                                borderRadius: "6px",
-                                                                                boxShadow: "0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11)"
-                                                                            }}>
-                                                                                <div style={{
-                                                                                    display: "flex",
-                                                                                    alignItems: "center",
-                                                                                    gap: "1rem",
-                                                                                    justifyContent: "space-between"
-                                                                                }}>
-                                                                                    <span style={{
-                                                                                        color: '#8A8A8A',
-                                                                                        fontFamily: 'Manrope',
-                                                                                        fontSize: ".7rem",
-                                                                                        fontStyle: 'normal',
-                                                                                        fontWeight: 600,
-                                                                                        lineHeight: 1.5,
-                                                                                        letterSpacing: '-0.14px'
-                                                                                    }}>{t("Exchange Rate")}</span>
-                                                                                    <strong
-                                                                                        style={{
-                                                                                            color: '#000',
-                                                                                            fontFamily: 'Manrope',
-                                                                                            fontSize: ".7rem",
-                                                                                            fontStyle: 'normal',
-                                                                                            lineHeight: 1.5,
-                                                                                            letterSpacing: '-0.14px'
-                                                                                        }}>1.00 {internationalData?.exchange_rate?.paypal?.fee?.currency} = {Number(internationalData?.exchange_rate?.paypal?.paypal_rate?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 })} USD</strong>
-                                                                                </div>
-                                                                                <div style={{
-                                                                                    display: "flex",
-                                                                                    alignItems: "center",
-                                                                                    gap: "1rem",
-                                                                                    justifyContent: "space-between"
-                                                                                }}>
-                                                                                    <span style={{
-                                                                                        color: '#8A8A8A',
-                                                                                        fontFamily: 'Manrope',
-                                                                                        fontSize: ".7rem",
-                                                                                        fontStyle: 'normal',
-                                                                                        fontWeight: 600,
-                                                                                        lineHeight: 1.5,
-                                                                                        letterSpacing: '-0.14px'
-                                                                                    }}>{t("Amount in USD")}</span>
-                                                                                    <strong style={{
-                                                                                        color: '#000',
-                                                                                        fontFamily: 'Manrope',
-                                                                                        fontSize: "1.2rem",
-                                                                                        fontStyle: 'normal',
-                                                                                        fontWeight: 700,
-                                                                                        lineHeight: 1.7,
-                                                                                        letterSpacing: '-0.8px'
-                                                                                    }}>{Number(internationalData?.exchange_rate?.paypal?.paypal_converted?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</strong>
-                                                                                </div>
-                                                                            </div>
-                                                                        </>
-                                                                        :
-                                                                        ""
-                                                                }
                                                             </>
                                                             :
                                                             ""
