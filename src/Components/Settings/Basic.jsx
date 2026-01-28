@@ -460,7 +460,21 @@ const Basic = ({ setCurrentTab }) => {
                 <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
                     <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
                     <ModalBody>
-                        <OTPConfirmation type={userDetails?.account_type === "individual" ? "email" : "phone"} callback={verifyOTP} setter={setShowSuccess} setterValue={true} hideOtp={() => setShowOtp(false)} processing={isSaving} resendHandler={sendOtp} authType={codeType} setAuthType={setCodeType} showAuthToggle={false} hideTfaSwitch={true} otpTypeOnProfile={otpType} />
+                        <OTPConfirmation
+                            type={userDetails?.account_type === "individual" ? "email" : "phone"}
+                            callback={verifyOTP}
+                            setter={setShowSuccess}
+                            setterValue={true}
+                            hideOtp={() => setShowOtp(false)}
+                            processing={isSaving}
+                            resendHandler={sendOtp}
+                            authType={codeType}
+                            setAuthType={setCodeType}
+                            showAuthToggle={false}
+                            hideTfaSwitch={true}
+                            otpTypeOnProfile={otpType}
+                            inBasic={true}
+                        />
                     </ModalBody>
                 </Modal>
                 <CardHeader style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "2rem" }}>

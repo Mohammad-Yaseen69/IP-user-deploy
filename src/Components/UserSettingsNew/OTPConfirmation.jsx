@@ -14,7 +14,7 @@ const formatTime = (seconds) => {
     const remainingSeconds = seconds % 60;
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
-const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", processing = false, resendHandler = () => { }, authType, setAuthType, hideTfaSwitch = false, showAuthToggle = true, otpTypeOnProfile }) => {
+const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", processing = false, resendHandler = () => { }, authType, setAuthType, hideTfaSwitch = false, showAuthToggle = true, inBasic }) => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext)
     const navigate = useNavigate()
@@ -227,7 +227,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                     (
                                         authType === "sms"
                                             ?
-                                            t(`A one-time verification code has been sent to your ${(userDetails?.email || type === "email") ? "email address" : ""} and phone number.`).replace("phone", userDetails.phone?.slice(0, 3) === "971" ? "whatsapp" : "phone")
+                                            t(`A one-time verification code has been sent to your ${(userDetails?.email || type === "email") ? "email address" : ""} ${!inBasic ? "and" : ""} ${type === "phone" ? "phone number." : ""}`).replace("phone", userDetails.phone?.slice(0, 3) === "971" ? "whatsapp" : "phone")
                                             :
                                             t("Enter a code shown in the app to make sure everything works fine.")
                                     )
