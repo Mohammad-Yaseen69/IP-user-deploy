@@ -250,12 +250,12 @@ const PrivateCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileSta
             <div>
                 <FormGroup>
                     <Label>
-                        Additional Documents
+                        Proof of Address
                         <Info className={styles.info_icon} size={16} onClick={() => setModalFive(!modalFive)} />
                     </Label>
                     <FileUploadWithPreview
-                        label="Additional Documents"
-                        docName="Additional Documents"
+                        label="Proof of Address"
+                        docName="Proof of Address"
                         modalToggle={() => setModalFive(!modalFive)}
                         modalOpen={modalFive}
                         setCompanyFiles={setCompanyFiles}

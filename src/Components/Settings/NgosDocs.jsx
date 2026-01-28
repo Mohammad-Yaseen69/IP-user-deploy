@@ -279,9 +279,9 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => 
             </div>
             <div>
                 <FormGroup>
-                    <Label>Additional Documents <Info className={styles.info_icon} size={16} onClick={() => setModalSix(!modalSix)} /></Label>
+                    <Label>Proof of Address <Info className={styles.info_icon} size={16} onClick={() => setModalSix(!modalSix)} /></Label>
                     <FileUploadWithPreview
-                        docName={`Additional Documents`}
+                        docName={`Proof of Address`}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
                         userDetails={userDetails}

@@ -244,7 +244,7 @@ const StepTwo = ({ data, dataHandler }) => {
                         </div>
                 }
                 {
-                    filterd.length > 0
+                    filterd.length > 0 && data.payoutChannel?.value === "bank" && bankBens?.length > 0
                     &&
                     <div onClick={() => setShowOthers(!showOthers)} style={{ margin: "1rem 0", textAlign: "center", color: "#5926f0", textDecoration: "underline", fontSize: ".7rem", cursor: "pointer" }}>
                         {
