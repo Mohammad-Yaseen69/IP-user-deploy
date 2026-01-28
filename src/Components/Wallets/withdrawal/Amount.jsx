@@ -69,7 +69,6 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
                         vendor: vendor
                     }
 
-                    console.log(data)
 
                     const encrypted = encryptData(data)
 
@@ -90,9 +89,8 @@ const AmountAndCurrency = ({ amount, setAmount, currency, subService = "", setQu
                                 total: decrypted?.data?.result?.total?.value,
                                 daily_receiving_limit_used: decrypted?.data?.result?.limits?.daily_sending_limit - decrypted?.data?.result?.limits_used?.daily_sending_limit_used,
                             }
-                            if (decrypted?.data?.result?.total?.inUSD >= 5000) {
-                                setIsExternalWithdrawal(true)
-                            }
+                           
+                            console.log(data)
                             if (amount <= data.fee.amount) {
                                 setExchangeError("Invalid Amount Fee")
                             }
