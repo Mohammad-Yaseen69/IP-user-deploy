@@ -32,7 +32,7 @@
     width: 100%;
 }
 
-.comment_files>input {
+.comment_files>textarea {
     border: none;
     outline: none;
     background: transparent;
@@ -44,8 +44,10 @@
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
+    resize: none;
     line-height: 150%;
     width: 100%;
+    min-height: 100px;
     /* 24px */
 }
 

@@ -38,18 +38,6 @@ const StepThree = ({ data, dataHandler }) => {
         return data.neemaReasons
     }, [data?.payoutChannel])
 
-    useEffect(() => {
-        if (dynamicReasons) {
-            for (const key in dynamicReasons) {
-                if (key.toLowerCase().includes("other")) {
-                    console.log(key)
-                    dataHandler("reason", key)
-                    break;
-                }
-            }
-        }
-    }, [dynamicReasons])
-
     return (
         <div className={styles.container}>
             <select value={data.reason} onChange={e => dataHandler("reason", e.target.value)}>
@@ -60,21 +48,32 @@ const StepThree = ({ data, dataHandler }) => {
                     ))
                 }
             </select>
-            <div className={styles.comment_files}>
-                <input type="text" placeholder={t("Transfer Note")} value={data.comment}
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-end"
+                }}
+                className={styles.comment_files}
+            >
+                <textarea
+                    type="text"
+                    placeholder={t("Transfer Note")} value={data.comment}
                     onChange={e => {
                         if (e.target.value.length <= 120) dataHandler("comment", e.target.value)
                     }}
                     maxLength={120}
                 />
-                <div style={{ textAlign: "right", fontSize: ".8rem", color: data.comment.length === 120 ? "#E64067" : "#888", }}>
-                    {data.comment.length}/120
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    <div style={{ textAlign: "right", fontSize: ".8rem", color: data.comment.length === 120 ? "#E64067" : "#888", }}>
+                        {data.comment.length}/120
+                    </div>
+                    <label htmlFor="files" className={styles.files}>
+                        <span style={{ whiteSpace: "nowrap" }}>{t("Attach Files")}</span>
+                        <img src={file} alt="" />
+                        <input type="file" id="files" hidden multiple accept="image/*,video/*" onChange={handleFileChange} />
+                    </label>
                 </div>
-                <label htmlFor="files" className={styles.files}>
-                    <span style={{ whiteSpace: "nowrap" }}>{t("Attach Files")}</span>
-                    <img src={file} alt="" />
-                    <input type="file" id="files" hidden multiple accept="image/*,video/*" onChange={handleFileChange} />
-                </label>
             </div>
             {error && <p className={styles.error}>{error}</p>}
 
