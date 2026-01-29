@@ -81,6 +81,10 @@ const Top = ({ currentWallet, setCurrentWallet, data }) => {
     const [showConversionModal, setShowConversionModal] = useState(false)
     const [showDownloadStatementModal, setShowDownloadStatementModal] = useState(false)
 
+    useEffect(() => {
+        getUserWallets()
+    }, [])
+
     const handleChangeStatus = () => {
         if (currentActive) {
             axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/deactivate-wallet/${currentWallet?._id}`, {

@@ -22,9 +22,13 @@ import { isSafari } from "react-device-detect"
 const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessModal }) => {
     const [activeDot, setActiveDot] = useState(0)
     const { t } = useTranslation()
-    const { userWallets } = useContext(UserContext)
+    const { userWallets, getUserWallets } = useContext(UserContext)
     const { userDetails } = useContext(UserContext)
     const swiperRef = useRef(null)
+
+    useEffect(() => {
+        getUserWallets()
+    }, [])
 
     useEffect(() => {
         setCurrentWallet(userWallets?.[activeDot])
