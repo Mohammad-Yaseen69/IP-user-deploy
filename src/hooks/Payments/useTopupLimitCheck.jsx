@@ -15,7 +15,7 @@ const useTopupLimitCheck = (sendingCurrency, amount, paymentMethod) => {
             if (!userDetails) return
 
             let thresholdLimit = userDetails?.is_external_limit
-                ? userDetails?.external_limits?.topup_min_amount
+                ? userDetails?.external_limits?.topup_min_amount || userDetails?.level?.topup_min_amount
                 : userDetails?.level?.topup_min_amount
 
             let sendingAmount = amount
