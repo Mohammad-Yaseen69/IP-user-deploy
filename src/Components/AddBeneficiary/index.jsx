@@ -18,8 +18,9 @@ const AddBeneficiary = ({ inInternationalModal, toggleHandler }) => {
     const [isIndividual, setIsIndividual] = useState(true)
     const [showSuccess, setShowSuccess] = useState(false)
     const navigate = useNavigate()
-    const { authHeader, allowedCountries } = useContext(UserContext)
+    const { authHeader, allowedCountries, userDetails } = useContext(UserContext)
 
+    const allowedBusiness = userDetails.username === "yaseen123" || userDetails.username === "ahmed"
     const toggleSuccess = (benData) => {
         if (toggleHandler) {
             toggleHandler(benData)
@@ -151,14 +152,15 @@ const AddBeneficiary = ({ inInternationalModal, toggleHandler }) => {
                         <IndividualAccount mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} inInternationalModal={inInternationalModal} />
                         // </LocalizationProvider>
                         :
-                        <Card style={{
-                            margin: "6rem auto 0",
-                            maxWidth: "80ch", textAlign: "center",
-                            fontSize: ".9rem", fontWeight: 600,
-                            padding: "30px"
-                        }}>{t("Business beneficiaries are next in our pipeline. Soon, you'll be able to conduct business transactions globally, expanding your reach worldwide.")}
-                        </Card>
-                    // <BusinessAccount mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} />
+                        !allowedBusiness ?
+                            <Card style={{
+                                margin: "6rem auto 0",
+                                maxWidth: "80ch", textAlign: "center",
+                                fontSize: ".9rem", fontWeight: 600,
+                                padding: "30px"
+                            }}>{t("Business beneficiaries are next in our pipeline. Soon, you'll be able to conduct business transactions globally, expanding your reach worldwide.")}
+                            </Card> :
+                            <BusinessAccount mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} />
                 }
             </Form >
             <SuccessModal isOpen={showSuccess} toggle={toggleSuccess} message={t("Beneficiary has been successfully added.")} subMessage={t("Beneficiary Updated.")} />

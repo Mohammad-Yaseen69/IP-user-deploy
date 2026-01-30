@@ -619,6 +619,8 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                 receiver: { currency: decrypted?.data?.recipient?.currency, amount: decrypted?.data?.recipient?.value },
                 fee: { amount: decrypted?.data?.fee?.value ?? 0.00, currency: decrypted?.data?.fee?.currency },
                 sending: { amount: decrypted?.data?.sending?.value, currency: decrypted?.data?.sending?.currency },
+                topup_fee: { amount: decrypted?.data?.topup_fee?.value, currency: decrypted?.data?.topup_fee?.currency },
+                service_fee: { amount: decrypted?.data?.service_fee?.value, currency: decrypted?.data?.service_fee?.currency },
                 total: decrypted?.data?.total?.value,
                 limits_used: {
                     daily_receiving_limit_used: decrypted?.data?.limits?.daily_receiving_limit - decrypted?.data?.limits_used?.daily_receiving_limit_used,
@@ -1142,6 +1144,8 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                             <>
                                                                 <FeesComponent
                                                                     data={data}
+                                                                    isInvoice={invoiceId ? true : false}
+                                                                    receiverFee={invoiceId & data.exchange_rate?.service_fee?.amount ? true : false}
                                                                 />
                                                                 {
                                                                     data.payment_type?.value === "paypal" && !data?.exchange_rate?.paypal?.paypal_currency_supported
