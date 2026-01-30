@@ -3,7 +3,7 @@ import styles from "./styles/feescomp.module.css"
 import { Info } from "react-feather"
 import { cleanString } from "../../../Helper/cleanString"
 
-const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Exchange Rate", feesLabel = "Transfer Fees", totalLabel = "Total Amount", error = "", receiverLabel = "They Receive", bright = false, extraContent, guest, receiverFee }) => {
+const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Exchange Rate", feesLabel = "Transfer Fees", totalLabel = "Total Amount", error = "", receiverLabel = "They Receive", bright = false, extraContent, guest, receiverFee, isInvoice }) => {
     const { t } = useTranslation()
 
 
@@ -34,7 +34,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                         <span>{t(receiverLabel)}</span>
                         <p>{Number(cleanString(data?.exchange_rate?.receiver?.amount))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })}
                             {data.exchange_rate?.receiver?.currency}
-                            {receiverFee && ` (fee ${Number(cleanString(data?.exchange_rate?.fee?.paymentAddressFee))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} ${data.exchange_rate?.sending?.currency})`}
+                            {receiverFee && ` (fee ${Number(cleanString(isInvoice ? data.exchange_rate?.service_fee?.amount : data?.exchange_rate?.fee?.paymentAddressFee))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} ${isInvoice ? data.exchange_rate?.service_fee?.currency : data.exchange_rate?.sending?.currency})`}
                         </p>
                     </div>
                 }
@@ -59,7 +59,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                     &&
                     <div className={styles.fees}>
                         <Info color={bright ? "#BE9A08" : "white"} />
-                        <span>{t(feesLabel)} {Number(data?.exchange_rate?.fee?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 }) ?? "0.00"} {data?.exchange_rate?.fee?.currency || data.exchange_rate?.sending?.currency}</span>
+                        <span>{t(feesLabel)} {Number(isInvoice && data.exchange_rate?.topup_fee?.amount ? data.exchange_rate?.topup_fee?.amount : data?.exchange_rate?.fee?.amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 }) ?? "0.00"} {isInvoice && data.exchange_rate?.topup_fee?.currency ? data.exchange_rate?.topup_fee?.currency : data?.exchange_rate?.fee?.currency || data.exchange_rate?.sending?.currency}</span>
                     </div>
                 }
                 {
