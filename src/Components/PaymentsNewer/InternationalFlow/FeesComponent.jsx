@@ -6,7 +6,6 @@ import { cleanString } from "../../../Helper/cleanString"
 const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Exchange Rate", feesLabel = "Transfer Fees", totalLabel = "Total Amount", error = "", receiverLabel = "They Receive", bright = false, extraContent, guest, receiverFee, isInvoice }) => {
     const { t } = useTranslation()
 
-
     const _exObj = data?.exchange_rate?.exchange_rate
     const exchangeRateValue = _exObj && typeof _exObj === "object" ? _exObj.exchange_rate : _exObj ?? data?.exchange_rate
     const exchangeRateSendingCurrency = data?.exchange_rate?.exchange_rate?.exchange_rate_sending_currency || data?.exchange_rate?.sending?.currency
@@ -34,7 +33,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                         <span>{t(receiverLabel)}</span>
                         <p>{Number(cleanString(data?.exchange_rate?.receiver?.amount))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })}
                             {data.exchange_rate?.receiver?.currency}
-                            {receiverFee && ` (fee ${Number(cleanString(isInvoice ? data.exchange_rate?.service_fee?.amount : data?.exchange_rate?.fee?.paymentAddressFee))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} ${isInvoice ? data.exchange_rate?.service_fee?.currency : data.exchange_rate?.sending?.currency})`}
+                            {(receiverFee || isInvoice) && ` (fee ${Number(cleanString(isInvoice ? data.exchange_rate?.service_fee?.amount : data?.exchange_rate?.fee?.paymentAddressFee))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} ${isInvoice ? data.exchange_rate?.service_fee?.currency : data.exchange_rate?.sending?.currency})`}
                         </p>
                     </div>
                 }
