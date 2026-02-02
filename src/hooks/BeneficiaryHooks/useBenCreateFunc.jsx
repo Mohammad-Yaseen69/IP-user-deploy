@@ -34,7 +34,10 @@ const useBenCreateFunc = ({
     cashPickupType,
     cashPickupNumber,
     walletError,
-    toggleSuccess
+    toggleSuccess,
+    companyName,
+    inBusiness,
+    representativeFields
 }) => {
     const [mobileExtras] = useState({
         msisdn: "",
@@ -71,7 +74,7 @@ const useBenCreateFunc = ({
         const data = {
             first_name: firstName,
             last_name: lastName,
-            company_name: "",
+            company_name: inBusiness ? companyName : "",
             email: formData.email,
             phone: mobileNumber,
             address: formData.address,
@@ -80,9 +83,10 @@ const useBenCreateFunc = ({
             country_name: country,
             country: countryId,
             country_iso_code: countryIsoCode,
+            representativeDetails: representativeFields || {},
             relation: formData.relation,
             account: userDetails._id,
-            beneficiary_type: "individual",
+            beneficiary_type: inBusiness ? "business" : "individual",
             account_type: account_types.filter(item => item !== null),
             isUsaBank: false,
             wallet: walletIds,

@@ -176,6 +176,19 @@ export const withdrawlsFields = {
     cash_payer: "",
 }
 
+export const BUSINESS_RELATIONSHIPS = {
+  EMPLOYEE: "Employee",
+  CUSTOMER: "Customer",
+  VENDOR_SERVICE: "Vendor Service",
+  PROVIDER: "Provider",
+  BUSINESS_PARTNER: "Business Partner",
+  INVESTOR: "Investor",
+  THIRD_PARTY: "Third Party",
+  AFFILIATED_ENTITY: "Affiliated Entity",
+  AFFILIATED_BUSINESS: "Affiliated Business"
+};
+
+
 export const iso2Toiso3Convert = (iso2 = "") => {
     const country = countries.find(item => item.code.toLowerCase() === iso2?.toLowerCase())
     const alpha3 = countriesjson.find(item => item.name.toLowerCase() === country?.name?.toLowerCase() || item.name.toLowerCase().includes(country?.name?.toLowerCase()))?.alpha3
