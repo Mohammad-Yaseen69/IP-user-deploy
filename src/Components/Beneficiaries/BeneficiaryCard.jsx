@@ -57,7 +57,7 @@ const BeneficiaryCard = ({ user }) => {
                                 color: "white",
                                 fontWeight: 800,
                                 flexShrink: 0
-                            }} className={styles.dp}>{user?.beneficiary_type === "individual" ? user?.first_name[0]?.toUpperCase() : user?.company ? user?.company_name[0]?.toUpperCase() : ""}</div>
+                            }} className={styles.dp}>{user?.beneficiary_type === "individual" ? user?.first_name[0]?.toUpperCase() : user?.company_name[0]?.toUpperCase() ?? ""}</div>
                             {/* <Link to={`/beneficiaries/edit?user_id=${user._id}`} onClick={verifyToken}> */}
                             {
                                 user?.beneficiary_type === "individual"
@@ -72,7 +72,7 @@ const BeneficiaryCard = ({ user }) => {
                             {
                                 user?.beneficiary_type === "business"
                                 &&
-                                user?.company
+                                user?.company_name
                                 &&
                                 <h5>{user?.company_name?.split(" ")[0].slice(0, 10)}</h5>
                             }
@@ -106,7 +106,7 @@ const BeneficiaryCard = ({ user }) => {
                                             background: "linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%)",
                                             color: "white",
                                             fontWeight: 800
-                                        }} className={styles.dp}>{user?.beneficiary_type === "individual" ? user?.first_name[0]?.toUpperCase() : user?.company ? user?.company_name[0]?.toUpperCase() : ""}</div>
+                                        }} className={styles.dp}>{user?.beneficiary_type === "individual" ? user?.first_name[0]?.toUpperCase() : user?.company_name[0]?.toUpperCase() ?? ""}</div>
                                         {/* <Link to={`/beneficiaries/edit?user_id=${user._id}`} onClick={verifyToken}> */}
                                         {
                                             user?.beneficiary_type === "individual"
@@ -116,7 +116,7 @@ const BeneficiaryCard = ({ user }) => {
                                         {
                                             user?.beneficiary_type === "business"
                                             &&
-                                            user?.company
+                                            user?.company_name
                                             &&
                                             <h5 style={{ maxWidth: showFull ? "fit-content" : "23vw" }}>{user?.company_name?.split(" ")[0].slice(0, 10)}</h5>
                                         }
@@ -141,7 +141,7 @@ const BeneficiaryCard = ({ user }) => {
                                         background: "linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%)",
                                         color: "white",
                                         fontWeight: 800
-                                    }} className={styles.dp}>{user?.beneficiary_type === "individual" ? user?.first_name[0]?.toUpperCase() : user?.company ? user?.company_name[0]?.toUpperCase() : ""}</div>
+                                    }} className={styles.dp}>{user?.beneficiary_type === "individual" ? user?.first_name[0]?.toUpperCase() : user?.company_name[0]?.toUpperCase() ?? ""}</div>
                                     {/* <Link to={`/beneficiaries/edit?user_id=${user._id}`} onClick={verifyToken}> */}
                                     {
                                         user?.beneficiary_type === "individual"
@@ -151,7 +151,7 @@ const BeneficiaryCard = ({ user }) => {
                                     {
                                         user?.beneficiary_type === "business"
                                         &&
-                                        user?.company
+                                        user?.company_name
                                         &&
                                         <h5 style={{ maxWidth: showFull ? "fit-content" : "25vw" }}>{user?.company_name?.split(" ")[0].slice(0, 10)}</h5>
                                     }
