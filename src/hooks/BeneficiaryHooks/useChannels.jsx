@@ -14,7 +14,7 @@ const neemaMethodIDs = {
     // upi: 5,
     // pix: 6,
 }
-const useChannels = ({ setLoading, setActive, countryIsoCode, countryId, setCurrent }) => {
+const useChannels = ({ setLoading, setActive, countryIsoCode, countryId, setCurrent, isBusiness }) => {
     const { authHeader, userDetails } = useContext(UserContext)
     const [fieldsInfo, setFieldsInfo] = useState(null)
     const [services, setServices] = useState([])
@@ -22,8 +22,12 @@ const useChannels = ({ setLoading, setActive, countryIsoCode, countryId, setCurr
     const [selectedCountryDetails, setSelectedCountryDetails] = useState()
 
     const getCountryFields = async (alpha3, service, bankCountryIso) => {
+        const receivingType = isBusiness ? "B" : "C"
+        const sendingType = userDetails?.account_type === "individual" ? "C" : "B"
+        const type = `${sendingType}2${receivingType}` 
+        console.log(receivingType, isBusiness)
         try {
-            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment/get-required-fields/${bankCountryIso ? bankCountryIso : alpha3}/${service?.id}/C2C?destinationType=${neemaMethodIDs[service?.method?.split(" ")?.[0]?.toLowerCase()] ?? service?.id}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment/get-required-fields/${bankCountryIso ? bankCountryIso : alpha3}/${service?.id}/${type}?destinationType=${neemaMethodIDs[service?.method?.split(" ")?.[0]?.toLowerCase()] ?? service?.id}`, {
                 headers: authHeader
             });
 
