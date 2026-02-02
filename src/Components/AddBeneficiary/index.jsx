@@ -20,7 +20,7 @@ const AddBeneficiary = ({ inInternationalModal, toggleHandler }) => {
     const navigate = useNavigate()
     const { authHeader, allowedCountries, userDetails } = useContext(UserContext)
 
-    const allowedBusiness = userDetails.username === "yaseen123" || userDetails.username === "ahmed"
+    const allowedBusiness = userDetails?.username === "yaseen123" || userDetails?.username === "ahmed"
     const toggleSuccess = (benData) => {
         if (toggleHandler) {
             toggleHandler(benData)
