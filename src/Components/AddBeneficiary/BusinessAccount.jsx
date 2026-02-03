@@ -657,6 +657,8 @@ const BusinessAccount = () => {
                                             value={representativeFields[item]}
                                             name={item}
                                             onChange={handleRepresentativeFieldChange}
+                                            disabled={isFieldsDisabled}
+                                            readOnly={isFieldsDisabled}
                                         >
                                             <option value="">{t("Select Document")}</option>
                                             {
@@ -673,6 +675,8 @@ const BusinessAccount = () => {
                                             <Label className="col-form-label">{t(service_name_formatter(item))}</Label>
                                             <DatePicker
                                                 format="DD/MM/YYYY"
+                                                disabled={isFieldsDisabled}
+                                                readOnly={isFieldsDisabled}
                                                 className="form-control custom-datepicker"
                                                 style={{ flex: 1, minWidth: "250px", background: "#fff", border: "1px solid #e9e9e9", borderRadius: "6px", boxShadow: "none", padding: "0px", display: 'flex', justifyContent: "center", position: "static" }}
                                                 value={representativeFields[item] || null}
@@ -711,6 +715,8 @@ const BusinessAccount = () => {
                                                 type="text"
                                                 value={representativeFields[item]}
                                                 name={item}
+                                                disabled={isFieldsDisabled}
+                                                readOnly={isFieldsDisabled}
                                                 onChange={handleRepresentativeFieldChange}
                                             />
                                         </FormGroup>
@@ -739,6 +745,8 @@ const BusinessAccount = () => {
                                             value={additionFields[item] || null}
                                             onChange={e => handleAdditionalFieldChange({ target: { name: item, value: e ? e.format("YYYY-MM-DD") : "" } })}
                                             placeholder="DD/MM/YYYY"
+                                            disabled={isFieldsDisabled}
+                                            readOnly={isFieldsDisabled}
                                             InputProps={{
                                                 disableUnderline: true,
                                                 style: {
@@ -768,6 +776,8 @@ const BusinessAccount = () => {
                                     <FormGroup key={key} style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                         <Label className="col-form-label">{t(service_name_formatter(item))} <span className="req_star">*</span></Label>
                                         <Input
+                                            disabled={isFieldsDisabled}
+                                            readOnly={isFieldsDisabled}
                                             className="form-control"
                                             style={{ flex: 1, minWidth: "250px" }}
                                             type="text"
@@ -802,8 +812,8 @@ const BusinessAccount = () => {
                             id="address"
                             type="textarea"
                             placeholder={t('Address Line')}
-                            disabled={!country}
-                            readOnly={!country}
+                            disabled={!country || isFieldsDisabled}
+                            readOnly={!country || isFieldsDisabled}
                             value={formData.address}
                             onChange={inputChangeHandler}
                             onFocus={() => setAddressInFocus(true)}
@@ -930,7 +940,7 @@ const BusinessAccount = () => {
                         setCashPickupNumber,
                         completedCrypto,
                         isAfricanBank,
-                        isEditMode
+                        isEditMode: isFieldsDisabled
                     }} />
                 </CardBody>
                 <CardFooter style={{ display: "flex", justifyContent: "flex-end" }}>
