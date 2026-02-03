@@ -35,10 +35,12 @@ const useBenEditFunc = ({
     walletError,
     toggleSuccess,
     mobileExtras,
-    active,
+    inBusiness,
     setClicked,
     setMissingFields,
-    user
+    user,
+    companyName,
+    representativeFields
 }) => {
     const [mobileNumberError, setMobileNumberError] = useState("")
     const [walletNumberError, setWalletNumberError] = useState("")
@@ -67,7 +69,7 @@ const useBenEditFunc = ({
         const data = {
             first_name: firstName ?? "",
             last_name: lastName ?? "",
-            company_name: "" ?? "",
+            company_name: inBusiness ? companyName : "",
             email: formData.email ?? "",
             postal_code: formData.postal_code ?? "",
             phone: mobileNumber ?? "",
@@ -78,9 +80,10 @@ const useBenEditFunc = ({
             country_iso_code: countryIsoCode,
             relation: formData.relation ?? "",
             account: userDetails._id ?? "",
-            beneficiary_type: "individual" ?? "",
+            representativeDetails: representativeFields || {},
+            beneficiary_type: inBusiness ? "business" : "individual",
             account_type: account_types.filter(item => item !== null) ?? "",
-            isUsaBank: false ?? "",
+            isUsaBank: false,
             wallet: walletIds ?? "",
             extras: extras,
             bank_details: services.some(item => item?.method?.toLowerCase()?.includes("bank")) && completedBank ? [
@@ -150,7 +153,7 @@ const useBenEditFunc = ({
 
         const trimObj = trimObjectValues(data)
         const encrypted = encryptData(trimObj)
-        
+
         axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/update-beneficiary/${user._id}`, {
             data: encrypted
         }, {
@@ -176,8 +179,9 @@ const useBenEditFunc = ({
 
         console.log(firstName, lastName, mobileNumber, city)
         requiredFields.basic.forEach(field => {
-            if (!firstName?.trim() && field === "first_name") missing.push(field)
-            if (!lastName?.trim() && field === "last_name") missing.push(field)
+            if (!firstName?.trim() && field === "first_name" && !inBusiness) missing.push(field)
+            if (!lastName?.trim() && field === "last_name" && !inBusiness) missing.push(field)
+            if (!companyName?.trim() && field === "company_name" && inBusiness) missing.push(field)
             if (!mobileNumber?.trim() && field === "phone") missing.push(field)
             if (!formData[field]?.trim() && !country?.trim() && field === "country") missing.push(field)
             if (!formData[field]?.trim() && !city?.trim() && field === "city") missing.push(field)

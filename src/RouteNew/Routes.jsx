@@ -1,4 +1,5 @@
 import { lazy } from 'react';
+import BusinessAccount from '../Components/AddBeneficiary/BusinessAccount';
 const QrCode = lazy(() => import("../Components/QrCode"));
 const QRScan = lazy(() => import("../Components/QrScan"));
 const ChatbotQrCode = lazy(() => import("../Components/ChatbotQrCode"));
@@ -78,12 +79,13 @@ export const routes = [
     { path: "/beneficiaries", component: <Beneficiaries /> },
     { path: "/beneficiaries/add", component: <AddBeneficiary /> },
     { path: "/beneficiaries/edit", component: <EditBeneficiary /> },
+    { path: "/beneficiaries/edit/business", component: <BusinessAccount /> },
     { path: "/referrals", component: <ReferralsNew /> },
     { path: "/quotations", component: <Quotations /> },
     { path: "/payment-requests", component: <PendingNew /> },
     { path: "/chips-in", component: <ChipsInNew /> },
     { path: "/portfolio", component: <Portfolio /> },
-    
+
     { path: "/payment-address", component: <PaymentAddress /> },
     { path: "/analytics", component: <Analytics /> },
     { path: "/settings", component: <Settings /> },
