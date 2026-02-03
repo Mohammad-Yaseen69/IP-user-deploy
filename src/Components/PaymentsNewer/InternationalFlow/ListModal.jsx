@@ -8,6 +8,7 @@ import { BsSearch } from "react-icons/bs"
 import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem"
 import InstaPayLoader from "../../Loader"
 import Fuse from "fuse.js"
+import PayerTransactionTypePills from "./PayerTransactionTypePills"
 
 const ListModal = ({ isOpen, toggle, content, onSelectHandler, searchable = false, heading = "Send Money", isLoading = false }) => {
     const [current, setCurrent] = useState(null)
@@ -88,7 +89,10 @@ const ListModal = ({ isOpen, toggle, content, onSelectHandler, searchable = fals
                                                             &&
                                                             <img src={item?.file_url} alt="" />
                                                         }
-                                                        <span>{t(item?.name)}</span>
+                                                        <div >
+                                                            <span>{t(item?.name)}</span>
+                                                            <PayerTransactionTypePills item={item} />
+                                                        </div>
                                                         {
                                                             item?.icon
                                                                 ?
