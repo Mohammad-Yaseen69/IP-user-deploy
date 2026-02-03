@@ -29,6 +29,7 @@ import { possibleErrors } from "../OTPConfirmation"
 import { formatCurrency } from "../../../Helper/AmountFormat"
 import { countriesInDiffLangs } from "../../../Data/CountriesWithTranslations/countries"
 import CitiesData from "../../CitiesDropDown/CitiesData.json"
+import useGetPayers from "../../../hooks/Payments/International/useGetPayers"
 
 export const currencies = allCurrencies.map(item => {
     const country = allCountries.find(it => it.alpha3 === item.country_iso)
@@ -95,6 +96,8 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
         }))
     }
     const payoutChannelData = usePayoutChannel(userDetails)
+    const { isLoading } = useGetPayers({ data, dataHandler })
+
     useEffect(() => {
         if (userWallets.length > 0) {
             const localCurrency = () => {
@@ -103,7 +106,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
             }
             const getWallet = () => {
                 const wallet = userWallets?.find(item => item?.currency?.code === localCurrency()) || userWallets.find(wallet => wallet.default)
-                
+
                 if (wallet?.currency?.code) {
                     return { ...currencies.find(item => item.currency_code === wallet?.currency?.code), ...wallet }
                 }
@@ -201,49 +204,6 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
             dataHandler("payoutChannel", channels?.[0])
         }
     }, [channels])
-
-    // subservices
-    useEffect(() => {
-        const getPayers = async () => {
-            try {
-                const dataa = { country: data?.country.alpha3, service: data?.payoutChannel?.name, vendor: data.payoutChannel?.vendor }
-                const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/payment/payers`, dataa, { headers: authHeader })
-                const dec = decryptData(res.data.data)
-                console.log(dec)
-
-                if (Array.isArray(dec)) {
-                    dataHandler("payers", dec?.map(item => ({ ...item, icon: data?.payoutChannel?.icon })));
-                }
-                if (dec?.destinations) {
-                    const payers = dec?.destinations?.map(p => ({
-                        country_iso_code: p?.country,
-                        id: p?.destinationId,
-                        name: p?.destinationName,
-                        currency: p?.currencies[0],
-                        precision: p?.destinationType,
-                        icon: data?.payoutChannel?.icon
-                    }))
-
-                    console.log(payers)
-
-                    if (payers.length === 1) {
-                        dataHandler("payer", payers[0])
-                    }
-
-                    dataHandler("payers", payers);
-                }
-
-                if (dec.length === 1) {
-                    dataHandler("payer", { ...dec?.[0], icon: data?.payoutChannel?.icon })
-                }
-            } catch (error) {
-                dataHandler("payers", [])
-            }
-        }
-        if (data?.payoutChannel?.id) {
-            getPayers()
-        }
-    }, [data?.payoutChannel?.id])
 
 
     // exchange rate details
@@ -637,9 +597,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                                 <div className={styles.grad_icon}>
                                     <img src={data?.payoutChannel?.icon ?? channel} alt="" />
                                 </div>
-                                <span>{data?.payer?.name ??
-                                    t("Select the payer").replace("payer", data?.payoutChannel?.value === "mobile" ? "Mobile wallet" :
-                                        data?.payoutChannel?.value === "cash" ? "Cash Partner" : "Bank")}</span>
+                                <span>{isLoading ? "Loading Payers..." : data?.payer?.name ?? t("Select the payer").replace("payer", data?.payoutChannel?.value === "mobile" ? "Mobile wallet" :   data?.payoutChannel?.value === "cash" ? "Cash Partner" : "Bank")}</span>
                             </div>
                             <img className={styles.chev} src={chev_down} alt="" />
                         </div>
