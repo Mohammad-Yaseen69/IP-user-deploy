@@ -44,7 +44,7 @@ const BeneficiaryCard = ({ user }) => {
             {
                 window.innerWidth > 1000
                     ?
-                    <Link to={`/beneficiaries/edit?user_id=${user._id}`} className={styles.left} onClick={() => {
+                    <Link to={`/beneficiaries/edit${user.beneficiary_type === "business" ? "/business" : ""}?user_id=${user._id}`} className={styles.left} onClick={() => {
                         if (window.innerWidth < 1000) {
                             setShowFull(!showFull)
                         }
@@ -107,7 +107,6 @@ const BeneficiaryCard = ({ user }) => {
                                             color: "white",
                                             fontWeight: 800
                                         }} className={styles.dp}>{user?.beneficiary_type === "individual" ? user?.first_name[0]?.toUpperCase() : user?.company_name[0]?.toUpperCase() ?? ""}</div>
-                                        {/* <Link to={`/beneficiaries/edit?user_id=${user._id}`} onClick={verifyToken}> */}
                                         {
                                             user?.beneficiary_type === "individual"
                                             &&
@@ -142,7 +141,6 @@ const BeneficiaryCard = ({ user }) => {
                                         color: "white",
                                         fontWeight: 800
                                     }} className={styles.dp}>{user?.beneficiary_type === "individual" ? user?.first_name[0]?.toUpperCase() : user?.company_name[0]?.toUpperCase() ?? ""}</div>
-                                    {/* <Link to={`/beneficiaries/edit?user_id=${user._id}`} onClick={verifyToken}> */}
                                     {
                                         user?.beneficiary_type === "individual"
                                         &&
@@ -263,12 +261,12 @@ const BeneficiaryCard = ({ user }) => {
                             showMore
                             &&
                             <div style={{ top: window.innerWidth < 1000 && "inherit", bottom: window.innerWidth < 1000 && "100%", zIndex: 12 }} className={styles.showMore}>
-                                <Link to={`/beneficiaries/edit?user_id=${user._id}&edit=true`}>
+                                <Link to={`/beneficiaries/edit${user.beneficiary_type === "business" ? "/business" : ""}?user_id=${user._id}&edit=true`}>
                                     <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }}>
                                         {t("Edit") + " " + t("Beneficiary")}
                                     </Button>
                                 </Link>
-                                <Link to={`/beneficiaries/edit?user_id=${user._id}&view=true`}>
+                                <Link to={`/beneficiaries/edit${user.beneficiary_type === "business" ? "/business" : ""}?user_id=${user._id}&view=true`}>
                                     <Button color='transparent' className={styles.btn} style={{ padding: ".5rem 1rem" }}>
                                         {t("View") + " " + t("Beneficiary")}
                                     </Button>
