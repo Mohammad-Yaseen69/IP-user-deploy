@@ -11,7 +11,8 @@ const useGetPayers = ({ data, dataHandler }) => {
             payload: {
                 country: data?.country.alpha3,
                 service: data?.payoutChannel?.name,
-                vendor: data?.payoutChannel?.vendor
+                vendor: data?.payoutChannel?.vendor,
+                transaction_type: data?.flow
             }
         }).then((dec) => {
             console.log(dec)

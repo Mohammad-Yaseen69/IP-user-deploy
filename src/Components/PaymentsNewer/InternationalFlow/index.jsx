@@ -129,7 +129,10 @@ const initialState = {
     ex_extra_error: "",
     conversion_in: "",
     payerRequiredFields: {},
-    transactionStatus: false
+    transactionStatus: false,
+    transactionType: "C",
+    transactionTypeSelected: false,
+    flow: ""
 }
 
 const beneficiaryRequiredFields = [
@@ -183,7 +186,10 @@ function reducer(state, action) {
                 ...state,
                 [action.field]: action.value
             };
-        // other cases can be added here
+        case "RESET_FIRST_STEP_DATA":
+            return {
+                ...state
+            }
         default:
             return state;
     }
@@ -220,7 +226,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         queryKey: ['NeemaReasons', internationalData?.country?.alpha3, internationalData.payoutChannel?.vendor],
         queryFn: async () => {
             const res = await apiWrapper({
-                endpoint: `/api/payment/get-neema-reasons/${internationalData?.country?.alpha3}/${userDetails?.account_type === "individual" ? "C2C" : "B2B"}`
+                endpoint: `/api/payment/get-neema-reasons/${internationalData?.country?.alpha3}/${internationalData.flow}`
             });
             updateInternationalData("neemaReasons", res.data);
         },
@@ -247,6 +253,11 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 if (userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status !== "approved" : userDetails?.company?.kyb_status !== "approved") {
                     return false
                 }
+
+                if (!internationalData.transactionTypeSelected) {
+                    return !internationalData.transactionType
+                }
+
                 return !internationalData.amount || Number(String(internationalData.amount)?.replaceAll(",", "")) < 1 || !internationalData.currency || !internationalData.currency_wallet?.currency?.code || !internationalData.country?.name || !internationalData?.payoutChannel?.name || !internationalData?.payer?.name || internationalData.error || internationalData.exchange_rate_error || !internationalData.exchange_rate?.receiver?.amount > 0 || vendorBalanceLoading
 
             case 2:
@@ -279,7 +290,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
     const getCurrency = async () => {
         try {
-            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment/get-payer-details?payerId=${internationalData.payer?.id}&vendor=${internationalData.payoutChannel?.vendor} `, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment/get-payer-details?payerId=${internationalData.payer?.id}&vendor=${internationalData.payoutChannel?.vendor}&transaction_type${internationalData.flow}`, {
                 headers: authHeader
             })
             const dec = await decryptData(res.data.data)
@@ -299,7 +310,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             try {
                 const service_name = internationalData?.payoutChannel?.value === "bank" ? "international_bank_transfer" : internationalData?.payoutChannel?.value === "mobile" ? "international_mobile_wallet" : internationalData?.payoutChannel?.value === "card" ? "international_card_payment" : internationalData?.payoutChannel?.value === "cash" ? "international_cash_pickup" : ""
 
-                const url = `${import.meta.env.VITE_IP_DEV_API}/api/payment/markup-rates?from=${internationalData.currency_wallet?.currency?.code}&to=${destinationCurrency}&amount=${+String(amount)?.replaceAll(",", "")}&fromOrTo=${fromOrTo}&service_name=${service_name}&account_id=${userDetails?._id}&payer_id=${internationalData.payer?.id}&service_id=${internationalData.payoutChannel?.id}&vendor=${internationalData.payoutChannel?.vendor}`
+                const url = `${import.meta.env.VITE_IP_DEV_API}/api/payment/markup-rates?from=${internationalData.currency_wallet?.currency?.code}&to=${destinationCurrency}&amount=${+String(amount)?.replaceAll(",", "")}&fromOrTo=${fromOrTo}&service_name=${service_name}&account_id=${userDetails?._id}&payer_id=${internationalData.payer?.id}&service_id=${internationalData.payoutChannel?.id}&vendor=${internationalData.payoutChannel?.vendor}&transaction_type=${internationalData.flow}`
 
                 const res = await axios.get(url, { headers: authHeader })
 
@@ -414,7 +425,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         try {
             const dataa = {
                 wallet_id: wallet_id,
-                transaction_type: "C2C",
+                transaction_type: internationalData.flow,
                 amount: amount,
                 service_name: internationalData?.payoutChannel?.value === "bank" ? "international_bank_transfer" : internationalData?.payoutChannel?.value === "mobile" ? "international_mobile_wallet" : internationalData?.payoutChannel?.value === "card" ? "international_card_payment" : internationalData?.payoutChannel?.value === "cash" ? "international_cash_pickup" : "",
                 service_id: internationalData?.payoutChannel?.id,
@@ -427,6 +438,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 payment_method: internationalData.payment_type?.value,
                 vendor: internationalData.payoutChannel?.vendor,
                 token: internationalData?.exchange_rate?.token,
+                transaction_type: internationalData.flow
             }
             const encrypted = encryptData(dataa)
 
@@ -623,7 +635,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 token: internationalData.quotation_details?.token,
                 payerId: internationalData.payer?.id,
                 wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
-                transaction_type: internationalData.beneficiary?.beneficiary_type === "individual" ? "C2C" : "C2B",
+                transaction_type: internationalData.flow,
                 payment_method: internationalData.payment_type?.value
             }
             console.log(data)
@@ -661,7 +673,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 user_id: userDetails?.user?._id,
                 beneficiary_id: internationalData.beneficiary?._id,
                 service: { id: internationalData.payoutChannel?.id },
-                transaction_type: internationalData.beneficiary?.beneficiary_type === "individual" ? "C2C" : "C2B",
+                transaction_type: internationalData.flow,
                 wallet_id: internationalData.wallet?._id ?? internationalData.currency_wallet?._id,
                 token: internationalData.quotation_details?.token,
                 vendor: internationalData.payoutChannel?.vendor
@@ -886,6 +898,11 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     }
 
                     if (vendorBalanceLoading) {
+                        return
+                    }
+
+                    if (!internationalData.transactionTypeSelected) {
+                        updateInternationalData("transactionTypeSelected", true)
                         return
                     }
 
@@ -1517,7 +1534,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                 </Link>
                                                 <div className={styles?.buttons}>
                                                     {
-                                                        subStep > 1
+                                                        (internationalData.transactionTypeSelected)
                                                         &&
                                                         <button className={styles.transparent} disabled={loading} onClick={() => {
                                                             if (subStep === 4 && internationalData.payment_type?.value) {
@@ -1530,6 +1547,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                             }
                                                             else if (subStep === 5 && internationalData.payment_type?.value === "card" && !internationalData.showCard) {
                                                                 updateInternationalData("showCard", true)
+                                                            }
+                                                            else if (internationalData.transactionTypeSelected) {
+                                                                dispatch({ type: "RESET_FIRST_STEP_DATA" })
+                                                                updateInternationalData("transactionTypeSelected", false)
                                                             }
                                                             else {
                                                                 setSubStep(prev => prev - 1)
