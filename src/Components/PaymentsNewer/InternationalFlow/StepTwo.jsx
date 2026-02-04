@@ -107,6 +107,11 @@ const StepTwo = ({ data, dataHandler }) => {
             setMessage(t(`No beneficiary found from {{country}} having {{value}} details.`, { value: data.payer?.name, country: data.country?.name }))
         }
 
+
+        const type = data.transactionType === "C" ? "individual" : "business";
+        fil = fil.filter(ben => ben.beneficiary_type === type);
+
+
         return fil
     }, [beneficiaries, i18next.language])
 
