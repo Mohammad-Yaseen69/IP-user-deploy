@@ -1,0 +1,36 @@
+
+
+.cards {
+  display: grid;
+  gap: 20px;
+  margin-top: 30px;
+  width: 100%;
+}
+
+p{
+    font-weight: 600;
+}
+
+.card {
+  flex: 1;
+  padding: 30px 20px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  width: 100%;
+  text-align: center;
+}
+
+
+.active {
+  background: #5926f0;
+  color: white;
+}
+
+.flowLabel {
+  display: block;
+  margin-top: 25px;
+  font-weight: 600;
+  color: #5926f0;
+}

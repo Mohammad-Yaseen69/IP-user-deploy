@@ -30,6 +30,7 @@ import { formatCurrency } from "../../../Helper/AmountFormat"
 import { countriesInDiffLangs } from "../../../Data/CountriesWithTranslations/countries"
 import CitiesData from "../../CitiesDropDown/CitiesData.json"
 import useGetPayers from "../../../hooks/Payments/International/useGetPayers"
+import TransactionTypeSelection from "./TransactionTypeSelection"
 
 export const currencies = allCurrencies.map(item => {
     const country = allCountries.find(it => it.alpha3 === item.country_iso)
@@ -352,10 +353,12 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
 
     return (
         <div className={styles.container}>
-            <div className={styles.amount_and_currency}>
-                <div className={styles.amount}>
-                    <label>{t("You Send")}</label>
-                    {/* <CurrencyInput
+            {data.transactionTypeSelected ?
+                <>
+                    <div className={styles.amount_and_currency}>
+                        <div className={styles.amount}>
+                            <label>{t("You Send")}</label>
+                            {/* <CurrencyInput
                         allowNegativeValue={false}
                         placeholder="Enter the amount"
                         value={data?.amount}
@@ -369,261 +372,261 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                             padding: "1rem"
                         }}
                     /> */}
-                    {
-                        isAmountLoading
-                            ?
-                            <div style={{ height: "40px", width: "40px" }}>
-                                <InstaPayLoader />
-                            </div>
-                            :
-                            <input
-                                type="text"
-                                onKeyDown={(e) => {
-                                    if (!/^\d*\.?\d*$/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== "Tab" && e.key !== "Enter") {
-                                        e.preventDefault();
-                                    }
-                                }}
-                                value={data.amount}
-                                onChange={(e) => dataHandler("amount", e.target.value)}
-                                onKeyUp={handleKeyUp}
-                                onBlur={handleBlur}
-                                maxLength={14}
-                                placeholder={t("Enter the amount")}
-                                data-type="currency"
-                            />
-                    }
-                </div>
-                <div className={styles.currency} onClick={() => toggleModalHandler("currency")}>
-                    <img src={data.currency_wallet?.file_url} alt="" style={{ height: "15px", width: "15px", objectFit: "cover", boxShadow: "0 0 3px #1111111e", borderRadius: "4px", marginRight: "-.3rem" }} />
-                    <span>{data?.currency}</span>
-                    {/* <img className={styles.chev} src={chev_down} alt="" /> */}
-                </div>
-            </div>
-            {
-                loading
-                    ?
-                    <div style={{ height: "40px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                        <div style={{ height: "40px", width: "40px" }}>
-                            <InstaPayLoader />
+                            {
+                                isAmountLoading
+                                    ?
+                                    <div style={{ height: "40px", width: "40px" }}>
+                                        <InstaPayLoader />
+                                    </div>
+                                    :
+                                    <input
+                                        type="text"
+                                        onKeyDown={(e) => {
+                                            if (!/^\d*\.?\d*$/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== "Tab" && e.key !== "Enter") {
+                                                e.preventDefault();
+                                            }
+                                        }}
+                                        value={data.amount}
+                                        onChange={(e) => dataHandler("amount", e.target.value)}
+                                        onKeyUp={handleKeyUp}
+                                        onBlur={handleBlur}
+                                        maxLength={14}
+                                        placeholder={t("Enter the amount")}
+                                        data-type="currency"
+                                    />
+                            }
+                        </div>
+                        <div className={styles.currency} onClick={() => toggleModalHandler("currency")}>
+                            <img src={data.currency_wallet?.file_url} alt="" style={{ height: "15px", width: "15px", objectFit: "cover", boxShadow: "0 0 3px #1111111e", borderRadius: "4px", marginRight: "-.3rem" }} />
+                            <span>{data?.currency}</span>
+                            {/* <img className={styles.chev} src={chev_down} alt="" /> */}
                         </div>
                     </div>
-                    :
-                    data?.exchange_rate_error
-                        ?
-                        <div className={styles.er_item} style={{
-                            // height: "40px",
-                            // color: "red",
-                            // fontSize: ".8rem",
-                            // fontWeight: 600,
-                            // textAlign: "center"
-                        }}>
-                            {
-                                data?.exchange_rate_error === "zero"
-                                &&
-                                t(`Amount needs to be at least 1.00 ${data?.conversion_in}.`)
-                            }
-                            {
-                                data?.exchange_rate_error === "exceed send"
-                                &&
-                                t(`Amount needs to be maximum of ${data?.exchange_rate?.limits_used?.[`${limitType}_sending_limit_used`]?.toFixed(2)} ${data?.conversion_in}`)
-                            }
-                            {
-                                data?.exchange_rate_error === "exceed receive"
-                                &&
-                                t(`Amount needs to be maximum of ${userDetails?.used_limits?.daily_receiving_limit} ${data.conversion_in}`)
-                            }
-                            {
-                                data?.exchange_rate_error === "Invalid Amount Fee"
-                                &&
-                                t(`Amount needs to be greater than ${data?.exchange_rate?.fee?.amount} ${data?.conversion_in}`)
-                            }
-                            {
-                                data?.exchange_rate_error === "sww"
-                                &&
-                                t("We cannot process your request at the moment, please try again later.")
-                            }
-                            {
-                                data?.exchange_rate_error === "payer_unavailable"
-                                &&
-                                t(`Unable to conduct the transaction to ${data?.payer?.name} at the moment. Please try again later.`)
-                            }
-                            {
-                                data?.exchange_rate_error === "insufficient balance payer"
-                                &&
-                                t("Payer currently doesn't have sufficient balance.")
-                            }
-                            {
-                                data?.exchange_rate_error === "max payer"
-                                &&
-                                `${t("Maximum Amount")}:: ${data.exchange_rate_error_value} ${data?.conversion_in}`
-                            }
-                            {
-                                data?.exchange_rate_error === "min payer"
-                                &&
-                                `${t("Minimum Amount")}:: ${data.exchange_rate_error_value} ${data?.conversion_in}`
-                            }
-                            {
-                                data?.exchange_rate_error === "Invalid Amount.."
-                                &&
-                                t("Invalid Amount")
-                            }
-                            {
-                                possibleErrors?.[Object.keys(possibleErrors).find(item => possibleErrors[item] === data?.exchange_rate_error)] ?? ""
-                            }
-                        </div>
-                        :
-                        <div className={styles.exchange_rate}>
-                            {
-                                data?.exchange_rate?.receiver?.currency === data?.currency
-                                    ?
-                                    ""
-                                    :
-                                    <div className={styles.er_item}>
-                                        <img src={er_icon} alt="" />
-                                        <span>1.00 {data?.currency}= {data?.exchange_rate?.exchange_rate ?? "?"} {data?.exchange_rate?.receiver?.currency ?? ""}</span>
-                                    </div>
-                            }
-                            {/* <div className={styles.er_item}>
-                                <span>{t("Fees")}: {data?.exchange_rate?.fee?.amount ?? "0.00"} {data?.currency}</span>
-                            </div> */}
-                            {
-                                data?.exchange_rate?.min_amount
-                                    ?
-                                    <div className={styles.er_item}>
-                                        <span>{t("Min Amount")}: {Number(data?.exchange_rate?.min_amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data?.currency}</span>
-                                    </div>
-                                    :
-                                    ""
-                            }
-                            {
-                                data?.exchange_rate?.max_amount
-                                    ?
-                                    <div className={styles.er_item}>
-                                        <span>{t("Max Amount")}: {Number(data?.exchange_rate?.max_amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data?.currency}</span>
-                                    </div>
-                                    :
-                                    ""
-                            }
-                        </div>
-            }
-
-            <div className={styles.service_and_others}>
-                <div className={styles.country_and_total}>
-                    <div className={styles.total}>
-                        {
-                            isReceivingAmountLoading
+                    {
+                        loading
+                            ?
+                            <div style={{ height: "40px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                <div style={{ height: "40px", width: "40px" }}>
+                                    <InstaPayLoader />
+                                </div>
+                            </div>
+                            :
+                            data?.exchange_rate_error
                                 ?
-                                <div>
-                                    {countriesLoading ?
-                                        <div style={{ width: "40px", height: "40px" }}>
-                                            <InstaPayLoader />
-                                        </div>
-                                        :
-                                        <>
-                                            {
-                                                !data?.country?.name ?
-                                                    <span>{t("Select country to continue")}</span> :
-                                                    !data?.payoutChannel?.name ?
-                                                        <span>{t("Select Receiving Method")}</span> :
-                                                        !data?.payer?.name ?
-                                                            <span>{t("Select the Payer")}</span> :
-
-
-                                                            <div style={{ width: "40px", height: "40px" }}>
-                                                                <InstaPayLoader />
-                                                            </div>
-                                            }
-                                        </>
+                                <div className={styles.er_item} style={{
+                                    // height: "40px",
+                                    // color: "red",
+                                    // fontSize: ".8rem",
+                                    // fontWeight: 600,
+                                    // textAlign: "center"
+                                }}>
+                                    {
+                                        data?.exchange_rate_error === "zero"
+                                        &&
+                                        t(`Amount needs to be at least 1.00 ${data?.conversion_in}.`)
+                                    }
+                                    {
+                                        data?.exchange_rate_error === "exceed send"
+                                        &&
+                                        t(`Amount needs to be maximum of ${data?.exchange_rate?.limits_used?.[`${limitType}_sending_limit_used`]?.toFixed(2)} ${data?.conversion_in}`)
+                                    }
+                                    {
+                                        data?.exchange_rate_error === "exceed receive"
+                                        &&
+                                        t(`Amount needs to be maximum of ${userDetails?.used_limits?.daily_receiving_limit} ${data.conversion_in}`)
+                                    }
+                                    {
+                                        data?.exchange_rate_error === "Invalid Amount Fee"
+                                        &&
+                                        t(`Amount needs to be greater than ${data?.exchange_rate?.fee?.amount} ${data?.conversion_in}`)
+                                    }
+                                    {
+                                        data?.exchange_rate_error === "sww"
+                                        &&
+                                        t("We cannot process your request at the moment, please try again later.")
+                                    }
+                                    {
+                                        data?.exchange_rate_error === "payer_unavailable"
+                                        &&
+                                        t(`Unable to conduct the transaction to ${data?.payer?.name} at the moment. Please try again later.`)
+                                    }
+                                    {
+                                        data?.exchange_rate_error === "insufficient balance payer"
+                                        &&
+                                        t("Payer currently doesn't have sufficient balance.")
+                                    }
+                                    {
+                                        data?.exchange_rate_error === "max payer"
+                                        &&
+                                        `${t("Maximum Amount")}:: ${data.exchange_rate_error_value} ${data?.conversion_in}`
+                                    }
+                                    {
+                                        data?.exchange_rate_error === "min payer"
+                                        &&
+                                        `${t("Minimum Amount")}:: ${data.exchange_rate_error_value} ${data?.conversion_in}`
+                                    }
+                                    {
+                                        data?.exchange_rate_error === "Invalid Amount.."
+                                        &&
+                                        t("Invalid Amount")
+                                    }
+                                    {
+                                        possibleErrors?.[Object.keys(possibleErrors).find(item => possibleErrors[item] === data?.exchange_rate_error)] ?? ""
                                     }
                                 </div>
                                 :
-                                <>
-                                    <span>{t("They Receive")}</span>
-                                    <h5 style={{ display: "flex", gap: ".5rem" }}>
-                                        {data?.recipient_currency}
-                                        <input
-                                            disabled={!data?.currency || !data?.payer?.id || !data.country || !data?.payoutChannel?.id}
-                                            type="text"
-                                            onKeyDown={(e) => {
-                                                if (!/^\d*\.?\d*$/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== "Tab" && e.key !== "Enter") {
-                                                    e.preventDefault();
-                                                }
-                                            }}
-                                            value={data.receiving_amount ?? 0}
-                                            onChange={(e) => dataHandler("receiving_amount", e.target.value)}
-                                            onKeyUp={handleKeyUpR}
-                                            onBlur={handleBlurR} maxLength={12}
-                                            placeholder={t("Enter the Amount")}
-                                            data-type="currency"
-                                        />
-                                    </h5>
-                                    {/* <h5>{Number(data?.exchange_rate?.receiver?.amount ?? 0)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data?.exchange_rate?.receiver?.currency}</h5> */}
-                                </>
+                                <div className={styles.exchange_rate}>
+                                    {
+                                        data?.exchange_rate?.receiver?.currency === data?.currency
+                                            ?
+                                            ""
+                                            :
+                                            <div className={styles.er_item}>
+                                                <img src={er_icon} alt="" />
+                                                <span>1.00 {data?.currency}= {data?.exchange_rate?.exchange_rate ?? "?"} {data?.exchange_rate?.receiver?.currency ?? ""}</span>
+                                            </div>
+                                    }
+                                    {/* <div className={styles.er_item}>
+                                <span>{t("Fees")}: {data?.exchange_rate?.fee?.amount ?? "0.00"} {data?.currency}</span>
+                            </div> */}
+                                    {
+                                        data?.exchange_rate?.min_amount
+                                            ?
+                                            <div className={styles.er_item}>
+                                                <span>{t("Min Amount")}: {Number(data?.exchange_rate?.min_amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data?.currency}</span>
+                                            </div>
+                                            :
+                                            ""
+                                    }
+                                    {
+                                        data?.exchange_rate?.max_amount
+                                            ?
+                                            <div className={styles.er_item}>
+                                                <span>{t("Max Amount")}: {Number(data?.exchange_rate?.max_amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data?.currency}</span>
+                                            </div>
+                                            :
+                                            ""
+                                    }
+                                </div>
+                    }
+
+                    <div className={styles.service_and_others}>
+                        <div className={styles.country_and_total}>
+                            <div className={styles.total}>
+                                {
+                                    isReceivingAmountLoading
+                                        ?
+                                        <div>
+                                            {countriesLoading ?
+                                                <div style={{ width: "40px", height: "40px" }}>
+                                                    <InstaPayLoader />
+                                                </div>
+                                                :
+                                                <>
+                                                    {
+                                                        !data?.country?.name ?
+                                                            <span>{t("Select country to continue")}</span> :
+                                                            !data?.payoutChannel?.name ?
+                                                                <span>{t("Select Receiving Method")}</span> :
+                                                                !data?.payer?.name ?
+                                                                    <span>{t("Select the Payer")}</span> :
+
+
+                                                                    <div style={{ width: "40px", height: "40px" }}>
+                                                                        <InstaPayLoader />
+                                                                    </div>
+                                                    }
+                                                </>
+                                            }
+                                        </div>
+                                        :
+                                        <>
+                                            <span>{t("They Receive")}</span>
+                                            <h5 style={{ display: "flex", gap: ".5rem" }}>
+                                                {data?.recipient_currency}
+                                                <input
+                                                    disabled={!data?.currency || !data?.payer?.id || !data.country || !data?.payoutChannel?.id}
+                                                    type="text"
+                                                    onKeyDown={(e) => {
+                                                        if (!/^\d*\.?\d*$/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== "Tab" && e.key !== "Enter") {
+                                                            e.preventDefault();
+                                                        }
+                                                    }}
+                                                    value={data.receiving_amount ?? 0}
+                                                    onChange={(e) => dataHandler("receiving_amount", e.target.value)}
+                                                    onKeyUp={handleKeyUpR}
+                                                    onBlur={handleBlurR} maxLength={12}
+                                                    placeholder={t("Enter the Amount")}
+                                                    data-type="currency"
+                                                />
+                                            </h5>
+                                            {/* <h5>{Number(data?.exchange_rate?.receiver?.amount ?? 0)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data?.exchange_rate?.receiver?.currency}</h5> */}
+                                        </>
+                                }
+                            </div>
+                            <div className={styles.country} onClick={() => toggleModalHandler("country")}>
+                                <div className={styles.main}>
+                                    <div className={data?.country?.file_url ? "" : styles.grad_icon}>
+                                        <img src={data?.country?.file_url ?? country} alt="" />
+                                    </div>
+                                    <span>{countriesLoading ? t("Loading Countries") + "..." : data?.country?.name ? t(data?.country?.name)?.slice(0, 30) : t("Destination Country")}</span>
+                                </div>
+                                <img src={chev_down} alt="" />
+                            </div>
+                        </div>
+                        {
+                            data?.country?.name
+                            &&
+                            <div className={styles.receiving_method}>
+                                <span>{t("Receiving Method")}</span>
+                                <div className={styles.channel_con} onClick={() => toggleModalHandler("payout")}>
+                                    <div className={styles.channel}>
+                                        <div className={data?.payoutChannel?.icon ? styles.grad_icon : ""}>
+                                            <img src={data?.payoutChannel?.icon ?? channel} alt="" />
+                                        </div>
+                                        <span>{t(data?.payoutChannel?.name) || t("Select Method")}</span>
+                                    </div>
+                                    <img className={styles.chev} src={chev_down} alt="" />
+                                </div>
+                            </div>
+                        }
+                        {
+                            data?.payoutChannel?.name
+                            &&
+                            <div className={styles.receiving_method}>
+                                <span>{t("Payer")}</span>
+                                <div className={styles.channel_con} onClick={() => toggleModalHandler("payer")}>
+                                    <div className={styles.channel}>
+                                        <div className={styles.grad_icon}>
+                                            <img src={data?.payoutChannel?.icon ?? channel} alt="" />
+                                        </div>
+                                        <span>{isLoading ? "Loading Payers..." : data?.payer?.name ?? t("Select the payer").replace("payer", data?.payoutChannel?.value === "mobile" ? "Mobile wallet" : data?.payoutChannel?.value === "cash" ? "Cash Partner" : "Bank")}</span>
+                                    </div>
+                                    <img className={styles.chev} src={chev_down} alt="" />
+                                </div>
+                            </div>
                         }
                     </div>
-                    <div className={styles.country} onClick={() => toggleModalHandler("country")}>
-                        <div className={styles.main}>
-                            <div className={data?.country?.file_url ? "" : styles.grad_icon}>
-                                <img src={data?.country?.file_url ?? country} alt="" />
-                            </div>
-                            <span>{countriesLoading ? t("Loading Countries") + "..." : data?.country?.name ? t(data?.country?.name)?.slice(0, 30) : t("Destination Country")}</span>
-                        </div>
-                        <img src={chev_down} alt="" />
-                    </div>
-                </div>
-                {
-                    data?.country?.name
-                    &&
-                    <div className={styles.receiving_method}>
-                        <span>{t("Receiving Method")}</span>
-                        <div className={styles.channel_con} onClick={() => toggleModalHandler("payout")}>
-                            <div className={styles.channel}>
-                                <div className={data?.payoutChannel?.icon ? styles.grad_icon : ""}>
-                                    <img src={data?.payoutChannel?.icon ?? channel} alt="" />
-                                </div>
-                                <span>{t(data?.payoutChannel?.name) || t("Select Method")}</span>
-                            </div>
-                            <img className={styles.chev} src={chev_down} alt="" />
-                        </div>
-                    </div>
-                }
-                {
-                    data?.payoutChannel?.name
-                    &&
-                    <div className={styles.receiving_method}>
-                        <span>{t("Payer")}</span>
-                        <div className={styles.channel_con} onClick={() => toggleModalHandler("payer")}>
-                            <div className={styles.channel}>
-                                <div className={styles.grad_icon}>
-                                    <img src={data?.payoutChannel?.icon ?? channel} alt="" />
-                                </div>
-                                <span>{isLoading ? "Loading Payers..." : data?.payer?.name ?? t("Select the payer").replace("payer", data?.payoutChannel?.value === "mobile" ? "Mobile wallet" :   data?.payoutChannel?.value === "cash" ? "Cash Partner" : "Bank")}</span>
-                            </div>
-                            <img className={styles.chev} src={chev_down} alt="" />
-                        </div>
-                    </div>
-                }
-            </div>
-            {
-                data?.payer?.name
-                &&
-                <div className={styles.pt_note} style={{ cursor: "pointer" }}>
-                    {/* <img src={info} alt="" /> */}
-                    <Info size={20} color="white" />
-                    <span style={{ verticalAlign: "center" }} onClick={() => setShowTypesModal(!showTypesModal)}>{t("The Fee And The Received Amount May Vary Depending On The Chosen Payment Method.")}
-                        {/* <span style={{ fontWeight: 700, color: "white" }} onClick={() => setShowTypesModal(!showTypesModal)}>Payment Method</span> */}
-                    </span>
                     {
-                        showTypesModal
+                        data?.payer?.name
                         &&
-                        <PaymentTypesModal
-                            isOpen={showTypesModal}
-                            toggle={() => setShowTypesModal(!showTypesModal)}
-                        />
+                        <div className={styles.pt_note} style={{ cursor: "pointer" }}>
+                            {/* <img src={info} alt="" /> */}
+                            <Info size={20} color="white" />
+                            <span style={{ verticalAlign: "center" }} onClick={() => setShowTypesModal(!showTypesModal)}>{t("The Fee And The Received Amount May Vary Depending On The Chosen Payment Method.")}
+                                {/* <span style={{ fontWeight: 700, color: "white" }} onClick={() => setShowTypesModal(!showTypesModal)}>Payment Method</span> */}
+                            </span>
+                            {
+                                showTypesModal
+                                &&
+                                <PaymentTypesModal
+                                    isOpen={showTypesModal}
+                                    toggle={() => setShowTypesModal(!showTypesModal)}
+                                />
+                            }
+                        </div>
                     }
-                </div>
-            }
-            {/* {
+                    {/* {
                 modals.currency
                 &&
                 <ListModal
@@ -640,63 +643,65 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                     searchable={true}
                 />
             } */}
-            {
-                (modals.country && countries.length > 0)
-                    ?
-                    <ListModal
-                        content={{
-                            heading: "Where Do You Want To Send Money",
-                            list: countries
-                        }}
-                        isOpen={modals.country}
-                        onSelectHandler={(item) => {
-                            dataHandler("country", item)
-                            if (item?.alpha3 === data.country?.alpha3) {
-                                getServices(item?.alpha3)
-                            }
-                            dataHandler("payoutChannel", {})
-                            dataHandler("payer", {})
-                        }}
-                        toggle={() => toggleModalHandler("country")}
-                        searchable={true}
-                    />
-                    :
-                    ""
-            }
-            {
-                (modals.payout && channels.length > 0)
-                    ?
-                    <ListModal
-                        content={{
-                            heading: "Select Method",
-                            list: channels
-                        }}
-                        isOpen={modals.payout}
-                        onSelectHandler={(item) => {
-                            console.log(item)
-                            dataHandler("payoutChannel", item)
-                            dataHandler("payer", {})
-                        }}
-                        toggle={() => toggleModalHandler("payout")}
-                    />
-                    :
-                    ""
-            }
-            {
-                (modals.payer && data.payers?.length > 0)
-                    ?
-                    <ListModal
-                        content={{
-                            heading: t("Select The Payer"),
-                            list: data?.payers
-                        }}
-                        isOpen={modals.payer}
-                        onSelectHandler={(item) => dataHandler("payer", item)}
-                        toggle={() => toggleModalHandler("payer")}
-                        searchable={true}
-                    />
-                    :
-                    ""
+                    {
+                        (modals.country && countries.length > 0)
+                            ?
+                            <ListModal
+                                content={{
+                                    heading: "Where Do You Want To Send Money",
+                                    list: countries
+                                }}
+                                isOpen={modals.country}
+                                onSelectHandler={(item) => {
+                                    dataHandler("country", item)
+                                    if (item?.alpha3 === data.country?.alpha3) {
+                                        getServices(item?.alpha3)
+                                    }
+                                    dataHandler("payoutChannel", {})
+                                    dataHandler("payer", {})
+                                }}
+                                toggle={() => toggleModalHandler("country")}
+                                searchable={true}
+                            />
+                            :
+                            ""
+                    }
+                    {
+                        (modals.payout && channels.length > 0)
+                            ?
+                            <ListModal
+                                content={{
+                                    heading: "Select Method",
+                                    list: channels
+                                }}
+                                isOpen={modals.payout}
+                                onSelectHandler={(item) => {
+                                    console.log(item)
+                                    dataHandler("payoutChannel", item)
+                                    dataHandler("payer", {})
+                                }}
+                                toggle={() => toggleModalHandler("payout")}
+                            />
+                            :
+                            ""
+                    }
+                    {
+                        (modals.payer && data.payers?.length > 0)
+                            ?
+                            <ListModal
+                                content={{
+                                    heading: t("Select The Payer"),
+                                    list: data?.payers
+                                }}
+                                isOpen={modals.payer}
+                                onSelectHandler={(item) => dataHandler("payer", item)}
+                                toggle={() => toggleModalHandler("payer")}
+                                searchable={true}
+                            />
+                            :
+                            ""
+                    }
+                </> : <TransactionTypeSelection data={data} dataHandler={dataHandler} />
             }
         </div>
     )
