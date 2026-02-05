@@ -132,6 +132,9 @@ const StepTwo = ({ data, dataHandler }) => {
             return false
         })
 
+        const type = data.transactionType === "C" ? "individual" : "business";
+        fil = fil.filter(ben => ben.beneficiary_type === type);
+
         return fil
     }, [beneficiaries])
 
@@ -239,7 +242,7 @@ const StepTwo = ({ data, dataHandler }) => {
                             </div>
                         ))
                         :
-                        <div style={{ margin: "1rem auto", textAlign: "center", fontSize: ".8rem" }}>{message}
+                        <div style={{ margin: "1rem auto", textAlign: "center", fontSize: ".8rem" }}>{message?.replace("No", data.transactionType === "C" ? "No individual" : "No business")}
                             <span onClick={() => {
                                 setPrevBeneficiaryIds(beneficiaries?.map(b => b?._id))
                                 setShowBeneficiaryAddModal(true)
