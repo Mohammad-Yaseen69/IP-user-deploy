@@ -2,15 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import IndividualAccount from "./IndividualAccount";
 import BusinessAccount from "./BusinessAccount";
-import { Card, CardHeader, Form } from "reactstrap";
+import { CardHeader, Form } from "reactstrap";
 import { H4 } from "../../AbstractElements";
 import SuccessModal from "./SuccessModal";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
-import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { UserContext } from "../../Context/UserContext";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
 
 const AddBeneficiary = ({ inInternationalModal, toggleHandler }) => {
     const { t } = useTranslation()
@@ -18,9 +15,8 @@ const AddBeneficiary = ({ inInternationalModal, toggleHandler }) => {
     const [isIndividual, setIsIndividual] = useState(true)
     const [showSuccess, setShowSuccess] = useState(false)
     const navigate = useNavigate()
-    const { authHeader, allowedCountries, userDetails } = useContext(UserContext)
+    const { allowedCountries } = useContext(UserContext)
 
-    const allowedBusiness = userDetails?.username === "yaseen123" || userDetails?.username === "ahmed"
     const toggleSuccess = (benData) => {
         if (toggleHandler) {
             toggleHandler(benData)
@@ -152,15 +148,7 @@ const AddBeneficiary = ({ inInternationalModal, toggleHandler }) => {
                         <IndividualAccount mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} inInternationalModal={inInternationalModal} />
                         // </LocalizationProvider>
                         :
-                        !allowedBusiness ?
-                            <Card style={{
-                                margin: "6rem auto 0",
-                                maxWidth: "80ch", textAlign: "center",
-                                fontSize: ".9rem", fontWeight: 600,
-                                padding: "30px"
-                            }}>{t("Business beneficiaries are next in our pipeline. Soon, you'll be able to conduct business transactions globally, expanding your reach worldwide.")}
-                            </Card> :
-                            <BusinessAccount toggleHandler={toggleHandler} isInternational={inInternationalModal} mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} />
+                        <BusinessAccount toggleHandler={toggleHandler} isInternational={inInternationalModal} mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} />
                 }
             </Form >
             <SuccessModal isOpen={showSuccess} toggle={toggleSuccess} message={t("Beneficiary has been successfully added.")} subMessage={t("Beneficiary Updated.")} />
