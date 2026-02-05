@@ -18,6 +18,11 @@ const useGetPayers = ({ data, dataHandler }) => {
             console.log(dec)
 
             if (Array.isArray(dec)) {
+
+                if(dec.length === 0){
+                    dataHandler("error", `No ${data.flow} payers found in ${data.country?.name ?? "your selected country"} with ${data.payoutChannel?.name ?? ""}`)
+                }
+
                 dataHandler("payers", dec?.map(item => {
                     const types = Object.keys(item?.transaction_types)
 
