@@ -59,7 +59,7 @@ const BenefCard = ({ item, index, total }) => {
 
     useEffect(() => {
         if (item && item.wallet.length > 0) {
-            setWalletDetails(item?.wallet[0])
+            setWalletDetails(item?.wallet?.[0])
         }
     }, [item])
 
@@ -78,7 +78,7 @@ const BenefCard = ({ item, index, total }) => {
         setWalletDetails(null)
         setTransactionDetails("")
         if (item && item.wallet.length > 0) {
-            setWalletDetails(item?.wallet[0])
+            setWalletDetails(item?.wallet?.[0])
         }
     }, [showModal, item])
 
@@ -115,7 +115,7 @@ const BenefCard = ({ item, index, total }) => {
                         color: "white",
                         fontSize: "1.4rem",
                         fontWeight: 800,
-                    }}>{item?.beneficiary_type === "individual" ? item?.first_name[0]?.toUpperCase() : item?.company ? item?.company_name[0]?.toUpperCase() : ""}</div>
+                    }}>{item?.beneficiary_type === "individual" ? item?.first_name?.[0]?.toUpperCase() : item?.company ? item?.company_name?.[0]?.toUpperCase() : ""}</div>
                 </div>
                 <p
                     style={{
@@ -210,7 +210,7 @@ const BenefCard = ({ item, index, total }) => {
                             type={paymentMethod.value === "wallet" ? "wallet" : ""}
                             paymentDetails={{
                                 receiver_wallet_id: walletDetails?.wallet_id,
-                                sender_wallet_id: userWallets.filter(item => item.currency.code === currency)[0]?._id,
+                                sender_wallet_id: userWallets.filter(item => item.currency.code === currency)?.[0]?._id,
                                 purpose: reason,
                                 amount: +amount,
                                 type: paymentType?.value,
