@@ -130,9 +130,9 @@ const initialState = {
     conversion_in: "",
     payerRequiredFields: {},
     transactionStatus: false,
-    transactionType: "C",
+    transactionType: "",
+    flow: "",
     transactionTypeSelected: false,
-    flow: ""
 }
 
 const beneficiaryRequiredFields = [
@@ -290,7 +290,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
     const getCurrency = async () => {
         try {
-            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment/get-payer-details?payerId=${internationalData.payer?.id}&vendor=${internationalData.payoutChannel?.vendor}&transaction_type${internationalData.flow}`, {
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment/get-payer-details?payerId=${internationalData.payer?.id}&vendor=${internationalData.payoutChannel?.vendor}&transaction_type=${internationalData.flow}`, {
                 headers: authHeader
             })
             const dec = await decryptData(res.data.data)
@@ -1548,7 +1548,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                             else if (subStep === 5 && internationalData.payment_type?.value === "card" && !internationalData.showCard) {
                                                                 updateInternationalData("showCard", true)
                                                             }
-                                                            else if (internationalData.transactionTypeSelected) {
+                                                            else if (internationalData.transactionTypeSelected && subStep === 1) {
                                                                 dispatch({ type: "RESET_FIRST_STEP_DATA" })
                                                                 updateInternationalData("transactionTypeSelected", false)
                                                             }
