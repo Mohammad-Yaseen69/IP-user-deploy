@@ -160,7 +160,7 @@ const AddBeneficiary = ({ inInternationalModal, toggleHandler }) => {
                                 padding: "30px"
                             }}>{t("Business beneficiaries are next in our pipeline. Soon, you'll be able to conduct business transactions globally, expanding your reach worldwide.")}
                             </Card> :
-                            <BusinessAccount mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} />
+                            <BusinessAccount toggleHandler={toggleHandler} isInternational={inInternationalModal} mobileView={mobileView} handleChangeAlpha={handleChangeAlpha} handleChangeNumber={handleChangeNumber} sii={setIsIndividual} toggleSuccess={toggleSuccess} filteringCountries={filteringCountries} />
                 }
             </Form >
             <SuccessModal isOpen={showSuccess} toggle={toggleSuccess} message={t("Beneficiary has been successfully added.")} subMessage={t("Beneficiary Updated.")} />

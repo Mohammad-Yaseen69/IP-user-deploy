@@ -27,7 +27,7 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import SuccessModal from "./SuccessModal";
 
 
-const BusinessAccount = () => {
+const BusinessAccount = ({ isInternational, toggleHandler }) => {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const [active, setActive] = useState(1)
@@ -49,7 +49,7 @@ const BusinessAccount = () => {
     const [showSuccess, setShowSuccess] = useState(false)
     const location = useLocation()
     const [isEditMode, setIsEditMode] = useState(false)
-    const isAddBeneficiary = location.pathname === "/beneficiaries/add"
+    const isAddBeneficiary = location.pathname === "/beneficiaries/add" || isInternational
     const queryParams = new URLSearchParams(location.search)
     const user_id = queryParams.get("user_id")
     const edit = queryParams.get("edit")
@@ -286,8 +286,13 @@ const BusinessAccount = () => {
         }
     }
 
-    const toggleSuccess = () => showSuccess ? navigate("/beneficiaries") : setShowSuccess(true)
-
+    const toggleSuccess = (benData) => {
+        if (toggleHandler) {
+            toggleHandler(benData)
+        } else {
+            showSuccess ? navigate("/beneficiaries") : setShowSuccess(true)
+        }
+    }
     const {
         setIsCountryInFocus,
         addresses,
