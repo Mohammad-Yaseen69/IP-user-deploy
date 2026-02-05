@@ -188,7 +188,7 @@ function reducer(state, action) {
             };
         case "RESET_FIRST_STEP_DATA":
             return {
-                ...state
+                ...initialState
             }
         default:
             return state;
@@ -1385,7 +1385,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                             ?
                                                                             <SelectedCard
                                                                                 title="Name"
-                                                                                list={[{ text: `${internationalData.beneficiary?.first_name} ${internationalData.beneficiary?.last_name}` }]}
+                                                                                list={[{ text: `${internationalData.beneficiary?.first_name ?? internationalData?.beneficiary?.company_name} ${internationalData.beneficiary?.last_name ?? ""}` }]}
                                                                                 changeHandler={() => setSubStep(2)}
                                                                             />
                                                                             :
