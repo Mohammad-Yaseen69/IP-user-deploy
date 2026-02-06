@@ -4,18 +4,11 @@ import er_icon from "./files/exchange_rate.svg"
 import country from "./files/country.svg"
 import chev_down from "./files/chev_down.svg"
 import channel from "./files/receiving_channel.svg"
-// import info from "./files/info.svg"
 import { Info } from "react-feather"
 import allCountries from "../CountriesData.json"
 import ListModal from "./ListModal"
 import { useContext, useEffect, useMemo, useState } from "react"
 import { UserContext } from "../../../Context/UserContext"
-import axios from "axios"
-import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
-import bd from "../files/bd.png"
-import cp from "../files/cp.png"
-import mw from "../files/mw.png"
-import pc from "../files/pc.png"
 import InstaPayLoader from "../../Loader"
 import allCurrencies from "./Currencies.json"
 import PaymentTypesModal from "./PaymentTypesModal"
@@ -29,8 +22,14 @@ import { possibleErrors } from "../OTPConfirmation"
 import { formatCurrency } from "../../../Helper/AmountFormat"
 import { countriesInDiffLangs } from "../../../Data/CountriesWithTranslations/countries"
 import CitiesData from "../../CitiesDropDown/CitiesData.json"
-import useGetPayers from "../../../hooks/Payments/International/useGetPayers"
+import useGetAllChannelPayers from "../../../hooks/Payments/International/useGetAllChannelPayers"
 import TransactionTypeSelection from "./TransactionTypeSelection"
+import axios from "axios"
+import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
+import bd from "../files/bd.png"
+import cp from "../files/cp.png"
+import mw from "../files/mw.png"
+import pc from "../files/pc.png"
 
 export const currencies = allCurrencies.map(item => {
     const country = allCountries.find(it => it.alpha3 === item.country_iso)
@@ -43,7 +42,6 @@ export const currencies = allCurrencies.map(item => {
 })
 
 let api_timeout;
-
 
 export const usePayoutChannel = (userDetails) => {
     return [
@@ -90,14 +88,23 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     const [isAmountLoading, setIsAmountLoading] = useState(false)
     const [isReceivingAmountLoading, setIsReceivingAmountLoading] = useState(false)
     const [countriesLoading, setCountriesLoading] = useState(true)
+
     const toggleModalHandler = (key) => {
         setModals(prev => ({
             ...prev,
             [key]: !prev[key]
         }))
     }
+
     const payoutChannelData = usePayoutChannel(userDetails)
-    const { isLoading } = useGetPayers({ data, dataHandler })
+
+    const { services, isLoading: isLoadingServices } = useGetAllChannelPayers({
+        data: {
+            ...data,
+            userCountryCode: userDetails?.country?.country_iso_code
+        },
+        payoutChannelData,
+    })
 
     useEffect(() => {
         if (userWallets.length > 0) {
@@ -120,7 +127,6 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
         }
     }, [currencies, data.currency, data.currency_wallet, userWallets])
 
-    // country
     const [countries, setCountries] = useState([])
     useEffect(() => {
         const getCountries = async (call) => {
@@ -143,7 +149,6 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                     }
                 })
 
-                console.log(allowed)
                 setCountries(allowed?.sort((a, b) => String(a?.name)?.localeCompare(b?.name)))
             } catch (error) {
                 console.log(error)
@@ -172,42 +177,25 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
         }
     }, [i18n.language])
 
-
-    // services 
-    const getServices = async (country) => {
-        try {
-            const servicesResponse = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment/services/${country || data?.country?.alpha3}/${userDetails?.country?.country_iso_code}`, { headers: authHeader })
-            const decrypted = decryptData(servicesResponse.data.data)
-            console.log(decrypted)
-            dataHandler("services", decrypted?.services?.map(item => ({ ...item, ...payoutChannelData?.find(it => it?.name === item?.method?.split(" - ")[0]) })));
-        } catch (error) {
-            dataHandler("services", [])
+    useEffect(() => {
+        if (services.length === 1 && !data?.payoutChannel?.id) {
+            dataHandler("payoutChannel", services[0])
         }
-    }
+    }, [services])
 
     useEffect(() => {
+        if (data?.payoutChannel?.id) {
+            const selectedService = services.find(s => s.id === data.payoutChannel.id)
+            if (selectedService?.payers) {
+                dataHandler("payers", selectedService.payers)
 
-        if (data?.country?.name) {
-            getServices()
+                if (selectedService.payers.length === 1) {
+                    dataHandler("payer", selectedService.payers[0])
+                }
+            }
         }
-    }, [data?.country])
+    }, [data?.payoutChannel?.id, services])
 
-    const channels = useMemo(() => {
-        return payoutChannelData.filter(i => {
-            return data?.services.some(j => {
-                return j.id === i.id
-            })
-        }).map((item) => ({ ...item, vendor: data?.services?.find(s => s.id === item.id)?.method?.split(" - ")?.[1]?.toLowerCase() }))
-    }, [data?.services])
-
-    useEffect(() => {
-        if (channels.length === 1) {
-            dataHandler("payoutChannel", channels?.[0])
-        }
-    }, [channels])
-
-
-    // exchange rate details
     const [loading, setLoading] = useState(false)
     const [limitType, setLimitType] = useState("")
 
@@ -239,31 +227,6 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
         }
     }, [data?.currency, data?.payer, data.country, data?.payoutChannel])
 
-    // useEffect(() => {
-    //     if (timeout) {
-    //         clearTimeout(timeout);
-    //     }
-    //     timeout = setTimeout(() => {
-    //         if (data?.formatted_amount) {
-    //             let value = data?.formatted_amount;
-    //             if (!String(value).includes(".")) {
-    //                 value = `${value}.00`
-    //             }
-    //             if (String(value).endsWith(".")) {
-    //                 value = `${value}00`
-    //             }
-    //             if (String(value).split(".")?.[1]?.length === 1) {
-    //                 value = `${value}0`
-    //             }
-    //             dataHandler("formatted_amount", value)
-    //         }
-    //     }, 700) // 2 sec
-
-    //     return () => {
-    //         clearTimeout(timeout)
-    //     }
-    // }, [data?.formatted_amount])
-
     const [showTypesModal, setShowTypesModal] = useState(false)
 
     const location = useLocation()
@@ -280,12 +243,13 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     }, [countries, country_code])
 
     useEffect(() => {
-        if (service_id && channels.length > 0) {
-            const service = channels.find(item => item.id === service_id)
-            toast.success(service)
-            dataHandler("payoutChannel", service)
+        if (service_id && services.length > 0) {
+            const service = services.find(item => item.id === service_id)
+            if (service) {
+                dataHandler("payoutChannel", service)
+            }
         }
-    }, [service_id, channels, data.country])
+    }, [service_id, services])
 
     useEffect(() => {
         if (payer_id && data.payers?.length > 0) {
@@ -351,6 +315,8 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
         formatCurrency(e.target.value, true, setValueR);
     };
 
+    console.log(services)
+
     return (
         <div className={styles.container}>
             {data.transactionTypeSelected ?
@@ -358,20 +324,6 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                     <div className={styles.amount_and_currency}>
                         <div className={styles.amount}>
                             <label>{t("You Send")}</label>
-                            {/* <CurrencyInput
-                        allowNegativeValue={false}
-                        placeholder="Enter the amount"
-                        value={data?.amount}
-                        // fixedDecimalLength={2}
-                        decimalsLimit={2}
-                        onValueChange={(value, name, values) => {
-                            dataHandler("formatted_amount", values?.formatted)
-                            dataHandler("amount", values?.value)
-                        }}
-                        style={{
-                            padding: "1rem"
-                        }}
-                    /> */}
                             {
                                 isAmountLoading
                                     ?
@@ -399,7 +351,6 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                         <div className={styles.currency} onClick={() => toggleModalHandler("currency")}>
                             <img src={data.currency_wallet?.file_url} alt="" style={{ height: "15px", width: "15px", objectFit: "cover", boxShadow: "0 0 3px #1111111e", borderRadius: "4px", marginRight: "-.3rem" }} />
                             <span>{data?.currency}</span>
-                            {/* <img className={styles.chev} src={chev_down} alt="" /> */}
                         </div>
                     </div>
                     {
@@ -413,13 +364,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                             :
                             data?.exchange_rate_error
                                 ?
-                                <div className={styles.er_item} style={{
-                                    // height: "40px",
-                                    // color: "red",
-                                    // fontSize: ".8rem",
-                                    // fontWeight: 600,
-                                    // textAlign: "center"
-                                }}>
+                                <div className={styles.er_item}>
                                     {
                                         data?.exchange_rate_error === "zero"
                                         &&
@@ -443,7 +388,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                                     {
                                         data?.exchange_rate_error === "sww"
                                         &&
-                                        t("We cannot process your request at the moment, please try again later.")
+                                        t("We cannot process your request at the moment, please try again later.")
                                     }
                                     {
                                         data?.exchange_rate_error === "payer_unavailable"
@@ -486,9 +431,6 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                                                 <span>1.00 {data?.currency}= {data?.exchange_rate?.exchange_rate ?? "?"} {data?.exchange_rate?.receiver?.currency ?? ""}</span>
                                             </div>
                                     }
-                                    {/* <div className={styles.er_item}>
-                                <span>{t("Fees")}: {data?.exchange_rate?.fee?.amount ?? "0.00"} {data?.currency}</span>
-                            </div> */}
                                     {
                                         data?.exchange_rate?.min_amount
                                             ?
@@ -526,15 +468,17 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                                                     {
                                                         !data?.country?.name ?
                                                             <span>{t("Select country to continue")}</span> :
-                                                            !data?.payoutChannel?.name ?
-                                                                <span>{t("Select Receiving Method")}</span> :
-                                                                !data?.payer?.name ?
-                                                                    <span>{t("Select the Payer")}</span> :
-
-
-                                                                    <div style={{ width: "40px", height: "40px" }}>
-                                                                        <InstaPayLoader />
-                                                                    </div>
+                                                            isLoadingServices ?
+                                                                <div style={{ width: "40px", height: "40px" }}>
+                                                                    <InstaPayLoader />
+                                                                </div> :
+                                                                !data?.payoutChannel?.name ?
+                                                                    <span>{t("Select Receiving Method")}</span> :
+                                                                    !data?.payer?.name ?
+                                                                        <span>{t("Select the Payer")}</span> :
+                                                                        <div style={{ width: "40px", height: "40px" }}>
+                                                                            <InstaPayLoader />
+                                                                        </div>
                                                     }
                                                 </>
                                             }
@@ -555,12 +499,12 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                                                     value={data.receiving_amount ?? 0}
                                                     onChange={(e) => dataHandler("receiving_amount", e.target.value)}
                                                     onKeyUp={handleKeyUpR}
-                                                    onBlur={handleBlurR} maxLength={12}
+                                                    onBlur={handleBlurR}
+                                                    maxLength={12}
                                                     placeholder={t("Enter the Amount")}
                                                     data-type="currency"
                                                 />
                                             </h5>
-                                            {/* <h5>{Number(data?.exchange_rate?.receiver?.amount ?? 0)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data?.exchange_rate?.receiver?.currency}</h5> */}
                                         </>
                                 }
                             </div>
@@ -577,18 +521,25 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                         {
                             data?.country?.name
                             &&
-                            <div className={styles.receiving_method}>
-                                <span>{t("Receiving Method")}</span>
-                                <div className={styles.channel_con} onClick={() => toggleModalHandler("payout")}>
-                                    <div className={styles.channel}>
-                                        <div className={data?.payoutChannel?.icon ? styles.grad_icon : ""}>
-                                            <img src={data?.payoutChannel?.icon ?? channel} alt="" />
+                            <>
+                                {!isLoadingServices && services?.length === 0 ?
+                                    <span style={{ width: "100%", textAlign: 'center', fontSize: '16px', fontWeight: 700 }}>
+                                        {t(`${data.flow[2] === "C" ? "Individual" : "Business"} tranasction to ${data?.country?.name} coming soon!`)}
+                                    </span> :
+                                    <div className={styles.receiving_method}>
+                                        <span>{t("Receiving Method")}</span>
+                                        <div className={styles.channel_con} onClick={() => !isLoadingServices ? toggleModalHandler("payout") : () => { }}>
+                                            <div className={styles.channel}>
+                                                <div className={data?.payoutChannel?.icon ? styles.grad_icon : ""}>
+                                                    <img src={data?.payoutChannel?.icon ?? channel} alt="" />
+                                                </div>
+                                                <span>{isLoadingServices ? t("Loading Methods") + "..." : t(data?.payoutChannel?.name) || t("Select Method")}</span>
+                                            </div>
+                                            <img className={styles.chev} src={chev_down} alt="" />
                                         </div>
-                                        <span>{t(data?.payoutChannel?.name) || t("Select Method")}</span>
                                     </div>
-                                    <img className={styles.chev} src={chev_down} alt="" />
-                                </div>
-                            </div>
+                                }
+                            </>
                         }
                         {
                             data?.payoutChannel?.name
@@ -600,7 +551,7 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                                         <div className={styles.grad_icon}>
                                             <img src={data?.payoutChannel?.icon ?? channel} alt="" />
                                         </div>
-                                        <span>{isLoading ? "Loading Payers..." : data?.payer?.name ?? t("Select the payer").replace("payer", data?.payoutChannel?.value === "mobile" ? "Mobile wallet" : data?.payoutChannel?.value === "cash" ? "Cash Partner" : "Bank")}</span>
+                                        <span>{data?.payer?.name ?? t("Select the payer").replace("payer", data?.payoutChannel?.value === "mobile" ? "Mobile wallet" : data?.payoutChannel?.value === "cash" ? "Cash Partner" : "Bank")}</span>
                                     </div>
                                     <img className={styles.chev} src={chev_down} alt="" />
                                 </div>
@@ -611,10 +562,8 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                         data?.payer?.name
                         &&
                         <div className={styles.pt_note} style={{ cursor: "pointer" }}>
-                            {/* <img src={info} alt="" /> */}
                             <Info size={20} color="white" />
                             <span style={{ verticalAlign: "center" }} onClick={() => setShowTypesModal(!showTypesModal)}>{t("The Fee And The Received Amount May Vary Depending On The Chosen Payment Method.")}
-                                {/* <span style={{ fontWeight: 700, color: "white" }} onClick={() => setShowTypesModal(!showTypesModal)}>Payment Method</span> */}
                             </span>
                             {
                                 showTypesModal
@@ -626,23 +575,6 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                             }
                         </div>
                     }
-                    {/* {
-                modals.currency
-                &&
-                <ListModal
-                    content={{
-                        heading: "Select the currency that you want to send",
-                        list: currencies
-                    }}
-                    isOpen={modals.currency}
-                    onSelectHandler={(item) => {
-                        dataHandler("currency", item?.currency_code)
-                        dataHandler("currency_wallet", { ...item, currency: { code: item?.currency_code } })
-                    }}
-                    toggle={() => toggleModalHandler("currency")}
-                    searchable={true}
-                />
-            } */}
                     {
                         (modals.country && countries.length > 0)
                             ?
@@ -654,9 +586,6 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                                 isOpen={modals.country}
                                 onSelectHandler={(item) => {
                                     dataHandler("country", item)
-                                    if (item?.alpha3 === data.country?.alpha3) {
-                                        getServices(item?.alpha3)
-                                    }
                                     dataHandler("payoutChannel", {})
                                     dataHandler("payer", {})
                                 }}
@@ -667,18 +596,16 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                             ""
                     }
                     {
-                        (modals.payout && channels.length > 0)
+                        (modals.payout && services.length > 0)
                             ?
                             <ListModal
                                 content={{
                                     heading: "Select Method",
-                                    list: channels
+                                    list: services
                                 }}
                                 isOpen={modals.payout}
                                 onSelectHandler={(item) => {
-                                    console.log(item)
                                     dataHandler("payoutChannel", item)
-                                    dataHandler("payer", {})
                                 }}
                                 toggle={() => toggleModalHandler("payout")}
                             />
