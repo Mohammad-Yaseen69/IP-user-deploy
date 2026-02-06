@@ -306,7 +306,12 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
         const getPayers = async () => {
             setPayerLoading(true)
             try {
-                const data = { country: country?.alpha3, service: current?.name, vendor: current.vendor }
+                const data = {
+                    country: country?.alpha3,
+                    service: current?.name,
+                    vendor: current.vendor,
+                    transaction_type: userDetails?.account_type === "individual" ? "C2C" : "B2B"
+                }
                 // const encrypted = encryptData(data)
 
                 const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/payment/payers`, data, { headers: authHeader })

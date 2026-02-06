@@ -280,7 +280,12 @@ const WithdrawOldFlow = ({
 
     useEffect(() => {
         if (payoutChannel) {
-            const data = { country: currentWithdrawal?.iso_code, service: payoutChannel.name, vendor: getVendor() }
+            const data = {
+                country: currentWithdrawal?.iso_code,
+                service: payoutChannel.name,
+                vendor: getVendor(),
+                transaction_type: userDetails?.account_type === "individual" ? "C2C" : "B2B"
+            }
             const url = `${import.meta.env.VITE_IP_DEV_API}/api/payment/payers`
             axios.post(url, data, { headers: authHeader })
                 .then(res => {
@@ -319,7 +324,7 @@ const WithdrawOldFlow = ({
                 token: quotationDetails?.token,
                 payerId: subService?.id,
                 wallet_id: wallet?._id,
-                transaction_type: userDetails?.account_type === "individual" ? "C2C" : "C2B",
+                transaction_type: userDetails?.account_type === "individual" ? "C2C" : "B2B",
                 service_name: payoutChannel?.value === "bank" ? "withdrawal_bank_transfer" : payoutChannel?.value === "mobile" ? "withdrawal_mobile_wallet" : payoutChannel?.value === "card" ? "withdrawal_card_payment" : payoutChannel?.value === "cash" ? "withdrawal_cash_pickup" : "",
                 channel_name: payoutChannel?.value === "bank" ? "bank_account" : payoutChannel?.value === "mobile" ? "mobile_money" : payoutChannel?.value === "card" ? "card_payment" : payoutChannel?.value === "cash" ? "cash_pickup" : "",
                 iso_code: userDetails?.country_iso_code,
