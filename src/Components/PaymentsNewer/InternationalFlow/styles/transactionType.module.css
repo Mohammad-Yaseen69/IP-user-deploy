@@ -23,6 +23,12 @@ p{
 }
 
 
+.card:hover{
+  transform: translateY(-4px);
+  transform: scale(1.025);
+}
+
+
 .active {
   background: #5926f0;
   color: white;

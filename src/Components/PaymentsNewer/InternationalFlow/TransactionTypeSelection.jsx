@@ -36,9 +36,6 @@ const TransactionTypeSelection = ({ data, dataHandler }) => {
                 </div>
             </div>
 
-            {data?.flow && (
-                <span className={styles.flowLabel}>{t("Transaction Flow:")} {data.flow}</span>
-            )}
         </div>
     );
 };
