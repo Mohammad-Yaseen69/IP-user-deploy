@@ -29,7 +29,8 @@ const useGetAllChannelPayers = ({ data, payoutChannelData, toggleModalHandler })
 
             const mappedServices = decrypted?.services?.map(item => {
                 const serviceName = item?.method?.split(" - ")?.[0]?.toLowerCase()
-                const channelData = payoutChannelData?.find(it => it?.name?.toLowerCase() === serviceName === "cards" ? "payment card" : serviceName);
+                const updatedServiceName = serviceName === "cards" ? "payment card" : serviceName
+                const channelData = payoutChannelData?.find(it => it?.name?.toLowerCase() === updatedServiceName);
                 return {
                     ...item,
                     ...channelData,
