@@ -9,7 +9,7 @@ import CountryDropDown from "../AddBeneficiary/CountryDropDown";
 import SuccessModal from "../AddBeneficiary/SuccessModal";
 import CitiesDropDown from "../CitiesDropDown";
 import { useTranslation } from "react-i18next";
-import { bankExtrasInitial, beneficiaryInitialFormData, BeneficiaryRelation, friendsAndFamily, gendersData, idTypeData, occupations } from "../../utils/Data";
+import { bankExtrasInitial, beneficiaryInitialFormData, BeneficiaryRelation, friendsAndFamily, gendersData, idTypeData, occupations, BUSINESS_RELATIONSHIPS } from "../../utils/Data";
 import NestedDropdown from "../NestedDropdown";
 import InstaPayLoader from "../Loader";
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
@@ -720,22 +720,31 @@ const EditBeneficiary = () => {
                                                     </FormGroup>
                                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                                         <label className="col-form-label" htmlFor="relation">{t("Relationship With Beneficiary")}<span className="req_star">*</span></label>
-                                                        <NestedDropdown
-                                                            child={friendsAndFamily}
-                                                            parent={BeneficiaryRelation}
-                                                            value={formData.relation}
-                                                            setter={(val) => {
-                                                                inputChangeHandler({ target: { name: "relation", value: val } })
-                                                            }}
-                                                            subKey="Friends & Family"
-                                                            disabled={!isEditMode}
-                                                        />
+                                                        {userDetails?.account_type === "individual" ?
+                                                            <NestedDropdown
+                                                                child={friendsAndFamily}
+                                                                parent={BeneficiaryRelation}
+                                                                value={formData.relation}
+                                                                setter={(val) => {
+                                                                    inputChangeHandler({ target: { name: "relation", value: val } })
+                                                                }}
+                                                                subKey="Friends & Family"
+                                                                disabled={!isEditMode}
+                                                            />
+                                                            :
+                                                            <Input type="select" name="relation" disabled={!isEditMode} value={formData.relation} onChange={inputChangeHandler}>
+                                                                <option value="">{t("Select Relationship")}</option>
+                                                                {Object.keys(BUSINESS_RELATIONSHIPS).map((option, idx) => (
+                                                                    <option key={idx} value={option}> {BUSINESS_RELATIONSHIPS[option]} </option>
+                                                                ))}
+                                                            </Input>
+                                                        }
                                                     </FormGroup>
                                                 </div>
                                             </FormGroup>
                                             <div onClick={() => setShowAdditional(!showAdditional)} style={{ color: "red", fontSize: ".8rem", fontWeight: "500", margin: ".75rem 0 1.5rem", cursor: "pointer" }}>{showAdditional ? "-" : "+"} {t("Additional Information")}</div>
                                             <div style={{
-                                                display: "flex",
+                                                display: "flex", 
                                                 flexWrap: "wrap",
                                                 gap: "1rem",
                                                 opacity: showAdditional ? 1 : 0,

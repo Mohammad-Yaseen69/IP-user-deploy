@@ -17,7 +17,7 @@ import useChannels from "../../hooks/BeneficiaryHooks/useChannels";
 import DateMomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
-import { bankExtrasInitial, BUSINESS_RELATIONSHIPS, idTypeData } from "../../utils/Data";
+import { bankExtrasInitial, BUSINESS_RELATIONSHIPS, idTypeData, friendsAndFamily, BeneficiaryRelation } from "../../utils/Data";
 import useAddress from "../../hooks/BeneficiaryHooks/useAddress";
 import useBenCreateFunc from "../../hooks/BeneficiaryHooks/useBenCreateFunc";
 import useBenEditFunc from "../../hooks/BeneficiaryHooks/useBenEditFunc";
@@ -25,6 +25,7 @@ import citiesData from "../CitiesDropDown/CitiesData.json"
 import InstaPayLoader from "../Loader";
 import { useLocation, useNavigate, useParams } from "react-router";
 import SuccessModal from "./SuccessModal";
+import NestedDropdown from "../NestedDropdown";
 
 
 const BusinessAccount = ({ isInternational, toggleHandler }) => {
@@ -145,7 +146,7 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
     const [user, setUser] = useState(null)
     const [clicked, setClicked] = useState(false)
     const [missingFields, setMissingFields] = useState([])
-    const { allowedCountries, authHeader, beneficiaries } = useContext(UserContext)
+    const { allowedCountries, authHeader, beneficiaries, userDetails } = useContext(UserContext)
     const { getBankDetails, bankCountry, bankCountryCode, bankDetailsError, isValidIban, ibanSwift, } = useBankDetails({ accNumType, setFormData, handleBankExtraChange, bankExtras })
     const { fieldsInfo, services, mobileProviders, selectedCountryDetails, getCountryFields } = useChannels({ setLoading, setActive, countryIsoCode, countryId, isBusiness: true })
 
@@ -631,12 +632,25 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
 
                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                 <label className="col-form-label" htmlFor="relation">{t("Relationship With Beneficiary")}</label>
-                                <Input type="select" name="relation" value={formData.relation} onChange={inputChangeHandler} disabled={isFieldsDisabled}>
-                                    <option value="">{t("Select Relationship")}</option>
-                                    {Object.keys(BUSINESS_RELATIONSHIPS).map((option, idx) => (
-                                        <option key={idx} value={option}> {BUSINESS_RELATIONSHIPS[option]} </option>
-                                    ))}
-                                </Input>
+                                {userDetails?.account_type === "individual" ?
+                                    <NestedDropdown
+                                        child={friendsAndFamily}
+                                        parent={BeneficiaryRelation}
+                                        value={formData.relation}
+                                        setter={(val) => {
+                                            inputChangeHandler({ target: { name: "relation", value: val } })
+                                        }}
+                                        subKey="Friends & Family"
+                                        disabled={isFieldsDisabled}
+                                    />
+                                    :
+                                    <Input type="select" name="relation" disabled={isFieldsDisabled} value={formData.relation} onChange={inputChangeHandler}>
+                                        <option value="">{t("Select Relationship")}</option>
+                                        {Object.keys(BUSINESS_RELATIONSHIPS).map((option, idx) => (
+                                            <option key={idx} value={option}> {BUSINESS_RELATIONSHIPS[option]} </option>
+                                        ))}
+                                    </Input>
+                                }
                             </FormGroup>
                         </div>
                     </FormGroup>

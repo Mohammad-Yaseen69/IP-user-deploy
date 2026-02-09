@@ -17,7 +17,7 @@ import useBankDetails from "../../hooks/BeneficiaryHooks/useBankDetails";
 import useAddress from "../../hooks/BeneficiaryHooks/useAddress";
 import { serviceFieldInfoValidate } from "../../utils/Functions";
 import useBenCreateFunc from "../../hooks/BeneficiaryHooks/useBenCreateFunc";
-import { BeneficiaryRelation, friendsAndFamily, gendersData, idTypeData, occupations, beneficiaryInitialFormData, bankExtrasInitial, basicExtrasInitial } from "../../utils/Data";
+import { BeneficiaryRelation, friendsAndFamily, gendersData, idTypeData, occupations, beneficiaryInitialFormData, bankExtrasInitial, basicExtrasInitial, BUSINESS_RELATIONSHIPS } from "../../utils/Data";
 import PaymentChannelUI from "./PaymentChannelUI";
 import NeemaBenExtrasFields from "./NeemaBenExtrasFields";
 import citiesData from "../CitiesDropDown/CitiesData.json"
@@ -76,7 +76,7 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
     }
 
 
-    const { authHeader } = useContext(UserContext)
+    const { authHeader, userDetails } = useContext(UserContext)
 
     // basic extra fields
     const [basicExtras, setBasicExtras] = useState(basicExtrasInitial)
@@ -620,15 +620,23 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
                                             </FormGroup>
                                             <FormGroup style={{ flex: 1, margin: 0 }}>
                                                 <label className="col-form-label" htmlFor="relation">{t("Relationship With Beneficiary")} <span className="req_star">*</span></label>
-                                                <NestedDropdown
-                                                    child={friendsAndFamily}
-                                                    parent={BeneficiaryRelation}
-                                                    value={formData.relation}
-                                                    setter={(val) => {
-                                                        inputChangeHandler({ target: { name: "relation", value: val } })
-                                                    }}
-                                                    subKey="Friends & Family"
-                                                />
+                                                {userDetails?.account_type === "individual" ?
+                                                    <NestedDropdown
+                                                        child={friendsAndFamily}
+                                                        parent={BeneficiaryRelation}
+                                                        value={formData.relation}
+                                                        setter={(val) => {
+                                                            inputChangeHandler({ target: { name: "relation", value: val } })
+                                                        }}
+                                                        subKey="Friends & Family"
+                                                    /> :
+                                                    <Input type="select" name="relation" value={formData.relation} onChange={inputChangeHandler}>
+                                                        <option value="">{t("Select Relationship")}</option>
+                                                        {Object.keys(BUSINESS_RELATIONSHIPS).map((option, idx) => (
+                                                            <option key={idx} value={option}> {BUSINESS_RELATIONSHIPS[option]} </option>
+                                                        ))}
+                                                    </Input>
+                                                }
                                             </FormGroup>
                                         </div>
                                     </FormGroup>
