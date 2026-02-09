@@ -695,6 +695,8 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
                                             <DatePicker
                                                 format="DD/MM/YYYY"
                                                 disabled={isFieldsDisabled}
+                                                disableFuture={item?.toLowerCase()?.includes("delivery") ? true : false}
+                                                disablePast={item?.toLowerCase()?.includes("expiration") ? true : false}
                                                 readOnly={isFieldsDisabled}
                                                 className="form-control custom-datepicker"
                                                 style={{ flex: 1, minWidth: "250px", background: "#fff", border: "1px solid #e9e9e9", borderRadius: "6px", boxShadow: "none", padding: "0px", display: 'flex', justifyContent: "center", position: "static" }}
@@ -764,6 +766,7 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
                                             value={additionFields[item] || null}
                                             onChange={e => handleAdditionalFieldChange({ target: { name: item, value: e ? e.format("YYYY-MM-DD") : "" } })}
                                             placeholder="DD/MM/YYYY"
+                                            disableFuture
                                             disabled={isFieldsDisabled}
                                             readOnly={isFieldsDisabled}
                                             InputProps={{
