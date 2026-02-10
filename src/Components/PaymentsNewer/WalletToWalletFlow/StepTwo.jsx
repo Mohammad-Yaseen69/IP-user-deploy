@@ -13,7 +13,7 @@ import { cleanString } from "../../../Helper/cleanString"
 import useWindowWidth from "../../../utils/useWindowWidth"
 
 let api_timeout;
-const StepTwo = ({ data, dataHandler, getExchangeRate, showFee }) => {
+const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = false }) => {
     const { userDetails, userWallets } = useContext(UserContext)
     const { t } = useTranslation()
     const [limitType, setLimitType] = useState("")
@@ -245,6 +245,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee }) => {
                             {
                                 t(possibleErrors?.[Object.keys(possibleErrors).find(item => possibleErrors[item] === data?.exchange_rate_error)]) ?? ""
                             }
+                            {(data?.exchange_rate_error && inNonInstapay) && data?.exchange_rate_error}
                         </div>
                         :
                         <div className={styles.exchange_rate} style={{ justifyContent: width > 1000 ? "inherit" : "center" }}>
@@ -258,7 +259,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee }) => {
 
                                         <span>1.00 {data?.currency?.currency?.code} =
                                             {data?.exchange_rate?.exchange_rate ?? "?"}
-                                            {data?.exchange_rate?.receiver?.currency ?? ""}
+                                            {data?.receivingCurrency ?? data?.exchange_rate?.receiver?.currency ?? ""}
                                         </span>
                                     </div>
                             }
@@ -300,6 +301,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee }) => {
                                         <input
                                             type="text"
                                             value={data.recipient_amount}
+                                            disabled={inNonInstapay}
                                             onChange={(e) => {
                                                 if (e.target.value === "") {
                                                     dataHandler("amount", '')
@@ -307,7 +309,8 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee }) => {
                                                 dataHandler("recipient_amount", e.target.value)
                                             }}
                                             onKeyUp={handleKeyUpR}
-                                            onBlur={handleBlurR} maxLength={12}
+                                            onBlur={handleBlurR}
+                                            maxLength={12}
                                             placeholder={t("Enter the Amount")}
                                             data-type="currency"
                                         />

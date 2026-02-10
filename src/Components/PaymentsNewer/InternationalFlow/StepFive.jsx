@@ -29,7 +29,7 @@ const StepFive = ({ data, dataHandler }) => {
         }
     }, [data])
 
-    console.log(data.wallet, data.currency_wallet, data.currency)
+    console.log(data.wallet, data.exchange_rate, data.currency)
     return (
         <div className={styles.container}>
             <h4>{data.beneficiary?.first_name} {data?.beneficiary?.last_name}</h4>
@@ -48,7 +48,7 @@ const StepFive = ({ data, dataHandler }) => {
                         </div>
                         <div className={styles.er_details}>
                             <img src={er_icon} alt="" />
-                            <span>1.00 {data?.currency} = {Number(exchangedAmount / Number(String(data.amount)?.replace(/,/g, '')))?.toLocaleString("en-US", {minimumFractionDigits: 3, maximumFractionDigits: 4 })} {data.payment_type?.value !== "wallet" ? data.currency_wallet?.currency?.code : data.wallet?.currency?.code} </span>
+                            <span>1.00 {data?.currency?.currency?.code || data?.currency} = {Number(exchangedAmount / Number(String(data.amount)?.replace(/,/g, '')))?.toLocaleString("en-US", {minimumFractionDigits: 3, maximumFractionDigits: 4 })} {data.payment_type?.value !== "wallet" ? data.currency_wallet?.currency?.code : data.wallet?.currency?.code} </span>
                         </div>
                         <div className={styles.right}>
                             <div className={styles.wc_pt}>
@@ -75,7 +75,7 @@ const StepFive = ({ data, dataHandler }) => {
                         </div>
                     }
                     {
-                        (data.wallet?.currency ? data.wallet?.currency?.code !== data.exchange_rate?.receiver?.currency : data?.currency !== data?.exchange_rate?.receiver?.currency)
+                        (data.wallet?.currency ? data.wallet?.currency?.code !== data.exchange_rate?.receiver?.currency : (data?.currency?.currency?.code || data?.currency) !== data?.exchange_rate?.receiver?.currency)
                         &&
                         <div className={styles.aao_item}>
                             <span>{t("Exchange Rate")}</span>
@@ -94,7 +94,7 @@ const StepFive = ({ data, dataHandler }) => {
 
                 <div className={styles.total}>
                     <span>{t("Total")}</span>
-                    <span>{data.exchange_rate?.total?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data.wallet?.currency?.code !== data?.currency_wallet?.currency?.code ? data.wallet?.currency?.code ?? data?.currency_wallet?.currency?.code : data.currency}</span>
+                    <span>{data.exchange_rate?.total?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data.wallet?.currency?.code !== data?.currency_wallet?.currency?.code ? data.wallet?.currency?.code ?? data?.currency_wallet?.currency?.code : data.currency?.currency?.code || data?.currency}</span>
                 </div>
             </div>
         </div>
