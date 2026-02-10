@@ -3,7 +3,7 @@ import styles from "./styles/index.module.css"
 import man from "./files/man.webp"
 import woman from "./files/woman.webp"
 import overlay from "./files/overlay.svg"
-import {  useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import RegistrationCompleted from "../AuthNew/RegistrationCompleted"
 import LanguagePicker from "../LanguagePicker"
 import { useTranslation } from "react-i18next"
@@ -19,7 +19,7 @@ const swissFlag = coun.find(item => item.alpha3 === "CHE")?.file_url
 const Auth = () => {
     const { t } = useTranslation()
     const [isLoginForm, setIsLoginForm] = useState(window?.location?.href?.includes("login") ? true : false);
-    const { country, showNoticeModal } = useCountryLocation()
+    const { country } = useCountryLocation()
     const noticeMessage = `It appears that your connection is being made through a VPN, proxy, or TOR network. For security and compliance reasons, please disable any such services and refresh the page to continue using InstaPay.`;
     const location = useLocation()
     const redirect = new URLSearchParams(location.search).get("redirect")

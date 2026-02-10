@@ -168,16 +168,9 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
 
     useEffect(() => {
         if (userDetails?._id) {
-            console.log("TFA Debug:", {
-                tfa: userDetails?.tfa,
-                tfaType: typeof userDetails?.tfa,
-                isTruthy: !!userDetails?.tfa
-            })
             if (userDetails?.tfa) {
-                console.log("authcode-auth", userDetails?.tfa)
                 dataHandler("codeType", "authenticator")
             } else {
-                console.log("Setting codeType to SMS")
                 dataHandler("codeType", "sms")
             }
             dataHandler("timezone", userDetails?.timezone)

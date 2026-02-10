@@ -29,7 +29,7 @@ class ErrorBoundary extends Component {
         }
         localStorage.setItem(errorKey, JSON.stringify(stored));
 
-        if (stored[errorMessage] === 1) {
+        if (stored[errorMessage] === 1 && !import.meta.env.DEV) {
             this.setState({ isRefreshing: true }, () => {
                 window.location.reload();
             });

@@ -25,7 +25,7 @@ const BenefCard = ({ item, index, total }) => {
         setName(item?.beneficiary_type === "individual" ? `${item?.first_name} ${item?.last_name}` : item?.company_name)
     }
     const setHalfName = () => {
-        setName(item?.beneficiary_type === "individual" ? item?.first_name.slice(0, 8) + ".." : item?.company_name?.slice(0, 8) + ".." )
+        setName(item?.beneficiary_type === "individual" ? item?.first_name.slice(0, 8) + ".." : item?.company_name?.slice(0, 8) + "..")
     }
 
     useEffect(() => {
@@ -115,7 +115,7 @@ const BenefCard = ({ item, index, total }) => {
                         color: "white",
                         fontSize: "1.4rem",
                         fontWeight: 800,
-                    }}>{item?.beneficiary_type === "individual" ? item?.first_name?.[0]?.toUpperCase() : item?.company_name?.[0]?.toUpperCase() }</div>
+                    }}>{item?.beneficiary_type === "individual" ? item?.first_name?.[0]?.toUpperCase() : item?.company_name?.[0]?.toUpperCase()}</div>
                 </div>
                 <p
                     style={{
