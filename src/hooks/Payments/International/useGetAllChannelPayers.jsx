@@ -5,20 +5,9 @@ import { apiWrapper } from '../../../utils/Functions/apiWrapper';
 
 const useGetAllChannelPayers = ({ data, payoutChannelData, toggleModalHandler }) => {
 
-    console.log("useGetAllChannelPayers HOOK RENDER", {
-        country: data?.country?.alpha3,
-        flow: data?.flow,
-        userCountryCode: data?.userCountryCode,
-    });
-
     const { data: services = [], isLoading, isFetching } = useQuery({
         queryKey: ['ServicesWithPayers', data?.country?.alpha3, data?.flow],
         queryFn: async () => {
-            console.log("🚀 QUERY FN STARTED", {
-                country: data?.country?.alpha3,
-                flow: data?.flow,
-            });
-
             if (!data?.country?.alpha3 || !data?.flow) {
                 return [];
             }
