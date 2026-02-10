@@ -7,6 +7,7 @@ import QrPayment from "./QrPayment"
 import InternationFlow from "./InternationalFlow"
 import WalletToWalletFlow from "./WalletToWalletFlow"
 import QRFlow from "./QRFlow"
+import NonInstapayPayment from "./NonInstapay"
 
 
 const SendPaymentType = ({ sendPaymentType, setStep, setSendPaymentType }) => {
@@ -44,14 +45,7 @@ const SendPaymentType = ({ sendPaymentType, setStep, setSendPaymentType }) => {
                     : ""
             }
             {
-                !isInternational &&
-                (
-                    userDetails?.account_type === "individual"
-                        ?
-                        userDetails?.level?.wallet_to_wallet?.send
-                        :
-                        userDetails?.level?.wallet_to_wallet?.send
-                )
+                (!isInternational && userDetails?.level?.wallet_to_wallet?.send)
                 &&
                 // <WalletTransfer sendPaymentType={sendPaymentType} setStep={setStep} setSendPaymentType={setSendPaymentType} setIsWallet={setIsWallet} />
                 <WalletToWalletFlow
@@ -62,14 +56,7 @@ const SendPaymentType = ({ sendPaymentType, setStep, setSendPaymentType }) => {
                 />
             }
             {
-                !isInternational && !isWallet &&
-                    (
-                        userDetails?.account_type === "individual"
-                            ?
-                            userDetails?.level?.qr_pay?.send
-                            :
-                            userDetails?.level?.qr_pay?.send
-                    )
+                (!isInternational && !isWallet && userDetails?.level?.qr_pay?.send)
                     ?
                     // <QrPayment sendPaymentType={sendPaymentType} setStep={setStep} setSendPaymentType={setSendPaymentType} />
                     <QRFlow
@@ -79,6 +66,14 @@ const SendPaymentType = ({ sendPaymentType, setStep, setSendPaymentType }) => {
                         setIsWallet={setIsWallet}
                     />
                     : ""
+            }
+
+            {
+                <NonInstapayPayment
+                    sendPaymentType={sendPaymentType}
+                    setStep={setStep}
+                    setSendPaymentType={setSendPaymentType}
+                />
             }
         </div>
     )
