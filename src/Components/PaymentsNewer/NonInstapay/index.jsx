@@ -23,7 +23,7 @@ import StepOne from './StepOne'
 import useCountryLocation from '../../../hooks/GeneralUse/useCountryLocation'
 import countriesData from "../CountriesData.json"
 import StepTwo from '../WalletToWalletFlow/StepTwo'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiWrapper } from '../../../utils/Functions/apiWrapper'
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { LimitsErrorMessage } from '../OTPConfirmation'
@@ -104,6 +104,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
     const { country } = useCountryLocation()
     const [showCardModal, setShowCardModal] = useState(false)
     const { getExchangeRate: getPlainExchangeRate } = usePlainFx()
+    const queryClient = useQueryClient()
     const navigate = useNavigate()
 
     const { t } = useTranslation()
@@ -161,6 +162,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
             })
         },
         onSuccess: (dec) => {
+            queryClient.invalidateQueries(["pendingRequests"])
             dataHandler("transaction_details", dec?.data || {})
         },
         onError: (error) => {
@@ -223,12 +225,9 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
             const dec = decryptData(res?.response?.data?.data)
 
             console.log(dec)
-            const error = LimitsErrorMessage(dec?.code ?? dec?.message)
             const error2 = apiErrorMessage(dec?.message)
 
-            if (error) {
-                dataHandler("exchange_rate_error", error)
-            } else if (error2) {
+            if (error2) {
                 dataHandler("exchange_rate_error", error2)
             }
             else if (dec?.message?.toLowerCase()?.includes("insufficient")) {
@@ -391,7 +390,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
         switch (data.step) {
             case 1: {
                 const extractedPhone = getExtractedPhone(data, data.country?.alpha3, data.identifier)
-                return !data.identifier || !data.country?._id || !extractedPhone || extractedPhone.length < 9
+                return !data.identifier || !extractedPhone || !data?.country?.alpha3
             }
             case 2:
                 return !data.amount || !data.currency?._id || !data.exchange_rate?.exchange_rate || data.exchange_rate_error
@@ -521,12 +520,10 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
         </>
     )
 
-    // Helper function to render step content
     const renderStepContent = (isMobile = false) => {
-        // For desktop, WalletsComponent is rendered separately
-        if (data.step === 4 && data.payment_type?.value === "wallet" && !data.show_payment_type && !isMobile) {
-            return null;
-        }
+        // if (data.step === 4 && data.payment_type?.value === "wallet" && !data.show_payment_type && !isMobile) {
+        //     return null;
+        // }
 
         return (
             <>
@@ -632,7 +629,6 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
         )
     }
 
-    // Helper function to render bottom buttons
     const renderBottomButtons = (isMobile = false) => (
         <div className={styles.bottom}>
             <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
