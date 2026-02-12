@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next"
 import PhoneInput from "../../PhoneInput"
 import { Info } from "react-feather"
+import PendingRequests from "./PendingRequests"
 
 
 const StepOne = ({ data, dataHandler }) => {
@@ -45,6 +46,8 @@ const StepOne = ({ data, dataHandler }) => {
                     {t("If the recipient is already on Instapay, the transfer will continue to their wallet.")}
                 </p>
             </div>
+
+            <PendingRequests />
         </div>
     )
 }
