@@ -589,7 +589,7 @@ const OTPConfirmation = ({
                 intResend?.payoutChannel?.value?.toLowerCase()?.includes("bank") ? data.data.bank_id = intResend?.beneficiary?.bank_details?.[0]?._id : data.data.mobile_wallet_id = intResend?.beneficiary?.mobile_wallet?.[0]?._id
             }
         }
-        resendHandler(data, setToken, () => { }, authHeader, true)
+        resendHandler(data, setToken, () => { }, authHeader, vendor === "thunes" ? true : false)
     }
 
 
