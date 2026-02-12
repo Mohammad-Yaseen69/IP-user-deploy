@@ -541,37 +541,36 @@ const OTPConfirmation = ({
                 data: externalWithdrawalPayload
             }
         } else if (createdTransaction) {
-            data = intResend?.userWithdrawals ? {
-                data: {
-                    "additional_information": intResend?.comment,
-                    "purpose_of_remittance": intResend?.reason,
-                    "account_id": userDetails?._id,
-                    "service_id": intResend?.service_id,
-                    "payer_id": intResend?.payer_id,
-                    "transaction_type": userDetails?.account_type === "individual" ? "C2C" : "C2B",
-                    wallet_id: userWallets?.filter(it => it?.currency?.code?.toLowerCase() === intResend?.currency?.toLowerCase())[0]?._id,
-                    "token": intResend.token,
-                    type: typeOfAuth ?? "",
-                    user_id: userDetails?.user?._id,
-                    vendor: vendor ?? "",
-                    withdrawal_id: intResend.withdrawal_id
+            let withdrawalVendorSpecificData = {}
 
+            if (vendor === "thunes") {
+                withdrawalVendorSpecificData = {
+                    data: {
+                        token: createdTransaction?.token
+                    },
+                    type: typeOfAuth ?? ""
+                }
+            } else {
+                withdrawalVendorSpecificData = {
+                    data: {
+                        "additional_information": intResend?.comment,
+                        "purpose_of_remittance": intResend?.reason,
+                        "account_id": userDetails?._id,
+                        "service_id": intResend?.service_id,
+                        "payer_id": intResend?.payer_id,
+                        "transaction_type": userDetails?.account_type === "individual" ? "C2C" : "C2B",
+                        wallet_id: userWallets?.filter(it => it?.currency?.code?.toLowerCase() === intResend?.currency?.toLowerCase())[0]?._id,
+                        "token": intResend.token,
+                        type: typeOfAuth ?? "",
+                        user_id: userDetails?.user?._id,
+                        vendor: vendor ?? "",
+                        withdrawal_id: intResend.withdrawal_id
+                    },
+                    type: typeOfAuth ?? ""
+                }
+            }
 
-                    //     "additional_information": comment,
-                    // "purpose_of_remittance": reason,
-                    // "account_id": item?._id,
-                    // "service_id": payoutChannel?.id,
-                    // "payer_id": userWithdrawals?.[payoutChannel?.sub_value]?.[0]?.payer_id,
-                    // "transaction_type": item?.account_type === "individual" ? "C2C" : "C2B",
-                    // wallet_id: userWallets?.filter(it => it?.currency?.code?.toLowerCase() === currency?.toLowerCase())[0]?._id,
-                    // "token": quotationDetails.token,
-                    // type: userDetails?.tfa ? "authenticator" : "sms",
-                    // withdrawal_id: userWithdrawals?._id,
-                    // vendor: vendor,
-                    // user_id: item?.user?._id,
-                },
-                type: typeOfAuth ?? ""
-            } : {
+            data = intResend?.userWithdrawals ? withdrawalVendorSpecificData : {
                 data: {
                     additional_information: intResend?.comment,
                     purpose_of_remittance: intResend?.reason,
@@ -590,7 +589,7 @@ const OTPConfirmation = ({
                 intResend?.payoutChannel?.value?.toLowerCase()?.includes("bank") ? data.data.bank_id = intResend?.beneficiary?.bank_details?.[0]?._id : data.data.mobile_wallet_id = intResend?.beneficiary?.mobile_wallet?.[0]?._id
             }
         }
-        resendHandler(data, setToken, () => { }, authHeader)
+        resendHandler(data, setToken, () => { }, authHeader, true)
     }
 
 

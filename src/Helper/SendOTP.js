@@ -3,10 +3,10 @@ import { decryptData } from "./EssentilaMethods/Decryption"
 import { encryptData } from "./EssentilaMethods/Encryption"
 import axios from "axios"
 
-export const resendHandler = async (data, setToken, setter, authHeader) => {
+export const resendHandler = async (data, setToken, setter, authHeader, isThunes = false) => {
     try {
         const encrypted = encryptData(data)
-        const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`, {
+        const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/${isThunes ? "otp-send" : "send-otp"}`, {
             data: encrypted
         }, {
             headers: authHeader
