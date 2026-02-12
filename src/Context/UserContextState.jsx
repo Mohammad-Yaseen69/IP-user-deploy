@@ -5,10 +5,11 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { publicRoutes } from "../RouteNew/Routes";
 import { useNavigate } from "react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import questionsData from "../Components/Settings/questions.json"
 import SessionExpireModal from "../Components/SessionExpireModal";
 import { useSearchParams } from "react-router-dom";
+import { apiWrapper } from "../utils/Functions/apiWrapper";
 
 
 
@@ -28,10 +29,14 @@ const getBalances = async (head) => {
 }
 
 
+const processReceivingNonIpFundsFn = async () => {
+    const res = await apiWrapper({
+        endpoint: "/api/pre-wallet/proceed-receiving-funds",
+        method: "POST",
+    })
 
-
-
-
+    return res
+}
 
 
 const UserState = ({ children }) => {
@@ -74,6 +79,10 @@ const UserState = ({ children }) => {
     const [missingTabsData, setMissingTabsData] = useState([])
     const [available, setAvailable] = useState(0)
     const [blocked, setBlocked] = useState(0)
+
+
+
+    // mutations
     const { data: registeredBenApiData, isLoading: benLoading } = useQuery({
         queryKey: ["RegisteredBeneficiaries", userDetails?._id],
         queryFn: () => getRegisteredBeneficiariesFn(authHeader),
@@ -83,6 +92,10 @@ const UserState = ({ children }) => {
         queryKey: ["getBalancesIUSD", userDetails?._id],
         queryFn: () => getBalances(authHeader),
         enabled: !!userDetails?._id
+    })
+
+    const processReceivingNonIpFunds = useMutation({
+        mutationFn: () => processReceivingNonIpFundsFn(),
     })
 
     const [searchParams] = useSearchParams();
@@ -348,6 +361,11 @@ const UserState = ({ children }) => {
         }
     }, [balances])
 
+    useEffect(() => {
+        if (userDetails?._id && userDetails?.isPendingRequests) {
+            processReceivingNonIpFunds.mutateAsync()
+        }
+    }, [userDetails?._id, userDetails?.isPendingRequests])
 
 
 
@@ -612,7 +630,7 @@ const UserState = ({ children }) => {
 
 
     return (
-        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, showModalState, setShowModalState }}>
+        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, showModalState, setShowModalState, processReceivingNonIpFunds: processReceivingNonIpFunds.mutateAsync }}>
             {(showModalState || Boolean(isSessionExpired)) &&
                 <SessionExpireModal
                     isOpen={(showModalState || Boolean(isSessionExpired))}

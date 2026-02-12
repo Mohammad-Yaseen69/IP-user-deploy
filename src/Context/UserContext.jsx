@@ -101,6 +101,7 @@ const initialUserContext = {
     available: 0,
     setBlocked: () => { },
     blocked: 0,
+    processReceivingNonIpFunds: () => {},
 };
 
 const createImage = (url) =>

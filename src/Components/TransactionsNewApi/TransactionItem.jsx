@@ -57,6 +57,8 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                 return "#C82333"
             case "submitted":
                 return "#FFA500"
+            case "pending":
+                return "#FFA500"
             case "available":
                 return "#007BFF"
             case "confirmed":
@@ -120,6 +122,9 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
 
 
     const externalStatusDescription = useMemo(() => {
+        if (item?.payment_type === "external_funds") {
+            return item?.description || undefined
+        }
         return statuses?.[item?.external_status?.split("_")?.[1]]?.[i18n.language]?.message ?? ""
     }, [item, i18n])
 
