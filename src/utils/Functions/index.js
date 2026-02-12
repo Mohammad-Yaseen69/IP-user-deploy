@@ -43,10 +43,10 @@ export const serviceFieldInfoValidate = (service, field_name, sub_field_name, fi
 }
 
 
-export const getExtractedPhone = (formData, countryIsoCode) => {
-    if (!formData.mobile_wallet_account_number) return ""
+export const getExtractedPhone = (formData, countryIsoCode, phoneNumber) => {
+    if (!formData.mobile_wallet_account_number && !phoneNumber) return ""
     const dialCode = CountryBasedPhone[countryIsoCode]?.dial_code?.replace("+", "") ?? ""
-    const cleanNumber = formData.mobile_wallet_account_number.replace("+", "")
+    const cleanNumber = (formData.mobile_wallet_account_number || phoneNumber).replace("+", "")
     const extractWalletNum = cleanNumber?.slice(dialCode.length)
 
     return extractWalletNum

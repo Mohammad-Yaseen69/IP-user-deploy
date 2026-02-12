@@ -16,7 +16,7 @@ import WalletsComponent from '../InternationalFlow/WalletsComponent'
 import FeesComponent from '../InternationalFlow/FeesComponent'
 import StepThree from '../InternationalFlow/StepThree'
 import OtpConfirmation from '../InternationalFlow/OtpConfirmation'
-import { ChevronRight, CreditCard, HelpCircle, Link } from 'react-feather'
+import { ChevronLeft, ChevronRight, CreditCard, HelpCircle, Link } from 'react-feather'
 import StepFive from '../InternationalFlow/StepFive'
 import StepFour from '../InternationalFlow/StepFour'
 import StepOne from './StepOne'
@@ -33,6 +33,10 @@ import useSendOtp from '../../../hooks/GeneralUse/useSendOtp'
 import { useNavigate } from 'react-router'
 import { handlePaymentApiError } from '../../../utils/Functions/handlePaymentApiError'
 import Receipt from '../InternationalFlow/Receipt'
+import { getExtractedPhone } from '../../../utils/Functions'
+import { verifyPhoneNumber } from '../../../utils/Functions/phoneVerification'
+import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
+import axios from 'axios'
 
 
 const leftSideContent = [
@@ -246,6 +250,59 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
         }
     }
 
+    const checkIfPhoneIsValid = async () => {
+        dataHandler("loading", true)
+        try {
+            const result = await verifyPhoneNumber(data.identifier)
+
+            if (result === "Verified") {
+                return true
+            } else {
+                dataHandler("phone_error", "Incorrect phone number, please enter a valid number.")
+                return false
+            }
+        } catch {
+            dataHandler("phone_error", "Incorrect phone number, please enter a valid number.")
+            return false
+        } finally {
+            dataHandler("loading", false)
+        }
+    }
+
+    const checkAccountExists = async () => {
+        dataHandler("loading", true)
+        try {
+            const payload = { phone: data.identifier }
+            const enc = encryptData(payload)
+
+            const res = await axios.post(
+                `${import.meta.env.VITE_IP_DEV_API}/api/account/account-check/individual`,
+                { data: enc }
+            )
+
+            const decrypted = decryptData(res.data.data)
+
+            if (decrypted.message === "Account not found!") {
+                return true
+            } else {
+                dataHandler("error", "This phone number is already registered with InstaPay. Please use the Wallet-to-Wallet transfer option instead.")
+                // Example: setSendPaymentType("wallet-to-wallet")
+                return false
+            }
+        } catch (error) {
+            const dec = decryptData(error?.response?.data?.data)
+
+            if (dec?.message === "Account not found!") {
+                return true
+            } else {
+                dataHandler("error", dec?.message ?? "Unable to verify account status.")
+                return false
+            }
+        } finally {
+            dataHandler("loading", false)
+        }
+    }
+
     const sendOtp = async (codeType = "") => {
         const payload = {
             token: data?.exchange_rate?.token,
@@ -253,16 +310,26 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
             paymentType: data?.paymentType?.value
         }
 
-        console.log("ya call ho rha hai")
         await sendOtpFunction(payload, codeType || data?.codeType)
     }
 
-    const handleClick = () => {
+    const handleClick = async () => {
         switch (data.step) {
-            case 1:
+            case 1: {
+                const isPhoneValid = await checkIfPhoneIsValid()
+                if (!isPhoneValid) {
+                    return
+                }
+
+                const accountDoesNotExist = await checkAccountExists()
+                if (!accountDoesNotExist) {
+                    return
+                }
+
                 dataHandler("step", data.step + 1)
 
                 break;
+            }
             case 2:
                 dataHandler("step", 3)
                 break;
@@ -322,8 +389,10 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
 
     const disableNext = useMemo(() => {
         switch (data.step) {
-            case 1:
-                return !data.country?.alpha3
+            case 1: {
+                const extractedPhone = getExtractedPhone(data, data.country?.alpha3, data.identifier)
+                return !data.identifier || !data.country?._id || !extractedPhone || extractedPhone.length < 9
+            }
             case 2:
                 return !data.amount || !data.currency?._id || !data.exchange_rate?.exchange_rate || data.exchange_rate_error
             case 3:
@@ -347,12 +416,12 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
         }
     }, [data])
 
-    // useEffect(() => {
-    //     if (country) {
-    //         const countryObj = countriesData.find(c => c.alpha3 === country)
-    //         dataHandler("country", countryObj)
-    //     }
-    // }, [country])
+    useEffect(() => {
+        if (country) {
+            const countryObj = countriesData.find(c => c.alpha3 === country)
+            dataHandler("country", countryObj)
+        }
+    }, [country])
 
     useEffect(() => {
         if (userDetails?._id) {
@@ -388,8 +457,8 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
         return () => clearTimeout(timeout)
     }, [data.payment_type?.value, data.wallet?._id, data.payment_type, data.currency?._id, userWallets])
 
-
-    return (
+    // Helper function to render all modals
+    const renderModals = () => (
         <>
             {
                 showCardModal
@@ -402,7 +471,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                     }}
                     buttonText="Close"
                     messages={[
-                        `Oops! It looks like the card you entered isn’t recognized as being issued in ${userDetails?.country_name}.`,
+                        `Oops! It looks like the card you entered isn't recognized as being issued in ${userDetails?.country_name}.`,
                         `For security and compatibility, we currently accept only cards issued in the same country as your InstaPay account. Please use a card issued in ${userDetails?.country_name} to complete your transaction.`,
                         `Thank you for your understanding!`
                     ]}
@@ -449,6 +518,160 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                     message={limitStatus.message}
                 />
             }
+        </>
+    )
+
+    // Helper function to render step content
+    const renderStepContent = (isMobile = false) => {
+        // For desktop, WalletsComponent is rendered separately
+        if (data.step === 4 && data.payment_type?.value === "wallet" && !data.show_payment_type && !isMobile) {
+            return null;
+        }
+
+        return (
+            <>
+                {data.step === 1 &&
+                    <StepOne
+                        data={data}
+                        dataHandler={dataHandler}
+                    />
+                }
+
+                {data.step === 2 &&
+                    <StepTwo
+                        data={data}
+                        dataHandler={dataHandler}
+                        getExchangeRate={getExchangeRate}
+                        inNonInstapay
+                        showFee
+                    />
+                }
+
+                {
+                    data.step === 3
+                    &&
+                    <StepThree
+                        data={data}
+                        dataHandler={dataHandler}
+                    />
+                }
+
+                {
+                    data.step === 4
+                    &&
+                    <StepFour
+                        error={data.ex_extra_error}
+                        loading={loading}
+                        data={data}
+                        dataHandler={dataHandler}
+                    />
+                }
+                {
+                    data.step === 5
+                    &&
+                    (
+                        <>
+                            {
+                                !data.showCard
+                                    ?
+                                    <StepFive
+                                        data={data}
+                                        dataHandler={dataHandler}
+                                    />
+                                    :
+                                    <CreditCard
+                                        url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}`}
+                                        tokenUrl={() => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}`}
+                                        data={data}
+                                        dataHandler={dataHandler}
+                                    />
+                            }
+                        </>
+                    )
+                }
+                {
+                    data.step === 6
+                    &&
+                    (
+                        <div>
+                            <div className={styles.noticeDiv}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="49" height="48" viewBox="0 0 49 48" fill="none">
+                                        <path d="M24.1519 18V26M24.1519 34H24.1719M21.3825 7.78342L4.93272 36.1967C4.02031 37.7726 3.5641 38.5606 3.63153 39.2074C3.69034 39.7715 3.98588 40.2841 4.4446 40.6176C4.97051 41 5.88104 41 7.70209 41H40.6016C42.4227 41 43.3332 41 43.8591 40.6176C44.3178 40.2841 44.6134 39.7715 44.6722 39.2074C44.7396 38.5606 44.2834 37.7726 43.371 36.1967L26.9212 7.78341C26.0121 6.21309 25.5575 5.42793 24.9645 5.16422C24.4471 4.93419 23.8566 4.93419 23.3393 5.16422C22.7462 5.42793 22.2916 6.21309 21.3825 7.78342Z" stroke="#6039CD" strokeWidth="4" strokeLinecap="round" />
+                                    </svg>
+                                    <span className={styles.noticeHead}>{t("Notice!")}</span>
+                                </div>
+
+                                <div>
+                                    <p>{t("By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.")}</p>
+                                    <p style={{ marginTop: "8px" }}>{t("I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.")}</p>
+                                </div>
+                            </div>
+
+
+                            {
+                                data.showOtpModal
+                                &&
+                                <OtpConfirmation
+                                    callback={data.payment_type?.value === "card" ? () => { } : data.payment_type?.value === "paypal" ? () => { } : data?.payment_type?.value === "mobile_wallet" ? () => { } : confirmWalletPayment}
+                                    data={data}
+                                    dataHandler={dataHandler}
+                                    isLoading={loading}
+                                    isOpen={data.showOtpModal}
+                                    toggle={() => {
+                                        dataHandler("showOtpModal", false)
+                                    }}
+                                    resendHandler={sendOtp}
+                                    error={data.otpError}
+                                />
+                            }
+                        </div>
+                    )
+                }
+            </>
+        )
+    }
+
+    // Helper function to render bottom buttons
+    const renderBottomButtons = (isMobile = false) => (
+        <div className={styles.bottom}>
+            <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
+                <HelpCircle size={16} />
+                {t("Trouble Sending Money")}
+            </Link>
+            <div className={styles?.buttons}>
+                {
+                    data.step > 1
+                    &&
+                    <button
+                        className={isMobile ? "" : styles.transparent}
+                        disabled={data.loading}
+                        onClick={handleBack}
+                    >
+                        {isMobile ? <ChevronLeft /> : t("Back")}
+                    </button>
+                }
+                <button
+                    className={isMobile ? styles.full : ""}
+                    disabled={disableNext || data.loading}
+                    onClick={handleClick}
+                >
+                    {
+                        data.step === 5
+                            ?
+                            t("Confirm")
+                            :
+                            t("Next")
+                    }
+                    {!isMobile && <ChevronRight size={18} />}
+                </button>
+            </div>
+        </div>
+    )
+
+    return (
+        <>
+            {renderModals()}
 
             {width > 1000 ?
                 <div style={{
@@ -525,129 +748,9 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                                     </div>
 
                                     <div className={styles.right} style={{ "--color-white": "#fafafa" }}>
-                                        {data.step === 1 &&
-                                            <StepOne
-                                                data={data}
-                                                dataHandler={dataHandler}
-                                            />
-                                        }
+                                        {renderStepContent(false)}
 
-                                        {data.step === 2 &&
-                                            <StepTwo
-                                                data={data}
-                                                dataHandler={dataHandler}
-                                                getExchangeRate={getExchangeRate}
-                                                inNonInstapay
-                                                showFee
-                                            />
-                                        }
-
-                                        {
-                                            data.step === 3
-                                            &&
-                                            <StepThree
-                                                data={data}
-                                                dataHandler={dataHandler}
-                                            />
-                                        }
-
-                                        {
-                                            data.step === 4
-                                            &&
-                                            <StepFour
-                                                error={data.ex_extra_error}
-                                                loading={loading}
-                                                data={data}
-                                                dataHandler={dataHandler}
-                                            />
-                                        }
-                                        {
-                                            data.step === 5
-                                            &&
-                                            (
-                                                <>
-                                                    {
-                                                        !data.showCard
-                                                            ?
-                                                            <StepFive
-                                                                data={data}
-                                                                dataHandler={dataHandler}
-                                                            />
-                                                            :
-                                                            <CreditCard
-                                                                url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}`}
-                                                                tokenUrl={() => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}`}
-                                                                data={data}
-                                                                dataHandler={dataHandler}
-                                                            />
-                                                    }
-                                                </>
-                                            )
-                                        }
-                                        {
-                                            data.step === 6
-                                            &&
-                                            (
-                                                <div>
-                                                    <div className={styles.noticeDiv}>
-                                                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="49" height="48" viewBox="0 0 49 48" fill="none">
-                                                                <path d="M24.1519 18V26M24.1519 34H24.1719M21.3825 7.78342L4.93272 36.1967C4.02031 37.7726 3.5641 38.5606 3.63153 39.2074C3.69034 39.7715 3.98588 40.2841 4.4446 40.6176C4.97051 41 5.88104 41 7.70209 41H40.6016C42.4227 41 43.3332 41 43.8591 40.6176C44.3178 40.2841 44.6134 39.7715 44.6722 39.2074C44.7396 38.5606 44.2834 37.7726 43.371 36.1967L26.9212 7.78341C26.0121 6.21309 25.5575 5.42793 24.9645 5.16422C24.4471 4.93419 23.8566 4.93419 23.3393 5.16422C22.7462 5.42793 22.2916 6.21309 21.3825 7.78342Z" stroke="#6039CD" strokeWidth="4" strokeLinecap="round" />
-                                                            </svg>
-                                                            <span className={styles.noticeHead}>{t("Notice!")}</span>
-                                                        </div>
-
-                                                        <div>
-                                                            <p>{t("By proceeding with this transaction, I hereby confirm that I am acting independently and of my own free will. I affirm that I have not been influenced, coached, coerced, or persuaded by any third party to carry out this transaction for investment purposes or any other reason.")}</p>
-                                                            <p style={{ marginTop: "8px" }}>{t("I understand that this confirmation is required to ensure compliance and to safeguard my account and transactions.")}</p>
-                                                        </div>
-                                                    </div>
-
-
-                                                    {
-                                                        data.showOtpModal
-                                                        &&
-                                                        <OtpConfirmation
-                                                            callback={data.payment_type?.value === "card" ? () => { } : data.payment_type?.value === "paypal" ? () => { } : data?.payment_type?.value === "mobile_wallet" ? () => { } : confirmWalletPayment}
-                                                            data={data}
-                                                            dataHandler={dataHandler}
-                                                            isLoading={loading}
-                                                            isOpen={data.showOtpModal}
-                                                            toggle={() => {
-                                                                dataHandler("showOtpModal", false)
-                                                            }}
-                                                            resendHandler={sendOtp}
-                                                            error={data.otpError}
-                                                        />
-                                                    }
-                                                </div>
-                                            )
-                                        }
-
-                                        <div className={styles.bottom}>
-                                            <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
-                                                <HelpCircle size={16} />
-                                                {t("Trouble Sending Money")}
-                                            </Link>
-                                            <div className={styles?.buttons}>
-                                                {
-                                                    data.step > 1
-                                                    &&
-                                                    <button className={styles.transparent} disabled={data.loading} onClick={handleBack}>{t("Back")}</button>
-                                                }
-                                                <button disabled={disableNext || data.loading} onClick={handleClick}>
-                                                    {
-
-                                                        data.step === 5
-                                                            ?
-                                                            t("Confirm")
-                                                            :
-                                                            t("Next")
-                                                    }
-                                                    <ChevronRight size={18} />
-                                                </button>
-                                            </div>
-                                        </div>
+                                        {renderBottomButtons(false)}
                                     </div>
 
                                     {
@@ -666,8 +769,43 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                     }
                 </div>
                 :
-                <div>
+                <div className={styles.mobile}>
+                    <div className={styles.m_top}>
+                        <h1>{t("SEND MONEY")}</h1>
+                        <h2>{data.step === 5 && data.showCard ? t("Select Or Add Payment Card") : t(leftSideContent?.[data.step - 1])}</h2>
+                    </div>
 
+                    <div className={styles.flow}>
+                        {
+                            data?.transaction_details
+                                ?
+                                data.loading
+                                    ?
+                                    <div style={{ height: "300px", width: "300px", margin: "1rem auto" }}>
+                                        <InstaPayLoader />
+                                    </div>
+                                    :
+                                    <Receipt
+                                        data={data}
+                                    />
+                                :
+                                <>
+                                    <div className={styles.flow_com} style={{ minHeight: "50vh" }}>
+                                        {
+                                            data.step === 4 && !data.show_payment_type && data.payment_type?.value === "wallet"
+                                                ?
+                                                <WalletsComponent
+                                                    data={data}
+                                                    dataHandler={dataHandler}
+                                                />
+                                                :
+                                                renderStepContent(true)
+                                        }
+                                    </div>
+                                    {renderBottomButtons(true)}
+                                </>
+                        }
+                    </div>
                 </div>
             }
         </>
