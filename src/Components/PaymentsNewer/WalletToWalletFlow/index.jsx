@@ -165,6 +165,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
     const amount = queryParams.get("amount")
     const invoiceId = queryParams.get("invoiceId")
     const isShipping = queryParams.get("isShipping")
+    const phone = queryParams.get("phone")
 
     useEffect(() => {
         if (userDetails?._id) {
@@ -1506,6 +1507,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                     <StepOne
                                                                         data={data}
                                                                         dataHandler={dataHandler}
+                                                                        initialPhone={phone}
                                                                     />
                                                                 }
                                                                 {

@@ -81,6 +81,7 @@ const initialState = {
     show_payment_type: false,
     otp_token: "",
     showCard: false,
+    showAccountExistsModal: false,
 }
 
 function reducer(state, action) {
@@ -121,7 +122,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
         mutationFn: ({ receiverCountryCode, sendingWalletId, amount, type }) => apiWrapper({
             endpoint: "/api/pre-wallet/get-fee-details",
             method: "POST",
-            isEncrypted: true,
+            isEncrypted: false,
             payload: {
                 receiverCountryCode,
                 sendingWalletId,
@@ -284,8 +285,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
             if (decrypted.message === "Account not found!") {
                 return true
             } else {
-                dataHandler("error", "This phone number is already registered with InstaPay. Please use the Wallet-to-Wallet transfer option instead.")
-                // Example: setSendPaymentType("wallet-to-wallet")
+                dataHandler("showAccountExistsModal", true)
                 return false
             }
         } catch (error) {
@@ -294,7 +294,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
             if (dec?.message === "Account not found!") {
                 return true
             } else {
-                dataHandler("error", dec?.message ?? "Unable to verify account status.")
+                dataHandler("showAccountExistsModal", true)
                 return false
             }
         } finally {
@@ -476,6 +476,22 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                     ]}
                     title="QR Payment Failed"
                     reEnter={() => dataHandler("showCard", true)}
+                />
+            }
+            {
+                data.showAccountExistsModal
+                &&
+                <GeneralNoticeModal
+                    isOpen={data.showAccountExistsModal}
+                    toggle={() => {
+                        dataHandler("showAccountExistsModal", false)
+                    }}
+                    message="This phone number is already registered with InstaPay. Would you like to continue with Wallet-to-Wallet transfer instead?"
+                    buttonText="Continue with Wallet-to-Wallet"
+                    onConfirm={() => {
+                        dataHandler("showAccountExistsModal", false)
+                        navigate(`/payments?payment_action=send_money&send_type=wallet&phone=${data.identifier}`)
+                    }}
                 />
             }
             {

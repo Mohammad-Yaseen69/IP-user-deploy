@@ -74,14 +74,16 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
     const wallet_id = queryParams.get("wallet_id")
     const invoiceId = queryParams.get("invoiceId")
     const payment_type = queryParams.get("payment_type")
+    const phone = queryParams.get("phone")
 
     useEffect(() => {
         let timeout;
-        if (wallet_id) {
-            if (search !== wallet_id) {
-                setSearch(wallet_id)
+        if (wallet_id || phone) {
+            const searchValue = wallet_id || phone
+            if (search !== searchValue) {
+                setSearch(searchValue)
             }
-            performSearch(wallet_id)
+            performSearch(searchValue)
                 .then(() => {
                     if (!error && data.first_time) {
                         dataHandler("first_time", false)
@@ -101,7 +103,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
         return () => {
             clearTimeout(timeout)
         }
-    }, [wallet_id, search, data.first_time, invoiceId, payment_type])
+    }, [wallet_id, search, data.first_time, invoiceId, payment_type, phone])
 
 
     if ((invoiceId || payment_type === "payment_address") && !error) {
@@ -193,7 +195,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
 
 export default StepOne
 
-export const BeneficiaryCard = ({ data, dataHandler, item, type, setBenWalletsFound, benWalletsFound }) => {
+export const BeneficiaryCard = ({ data, dataHandler, item, type, setBenWalletsFound }) => {
     const { t } = useTranslation()
     const [showMore, setShowMore] = useState(false)
     const { authHeader, userWallets } = useContext(UserContext)
