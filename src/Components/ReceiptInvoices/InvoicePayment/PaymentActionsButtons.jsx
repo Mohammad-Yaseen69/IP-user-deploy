@@ -17,8 +17,8 @@ const PaymentActionsButtons = ({ actionButtons, inPlans, isRow, selectedAction, 
                             opacity: btn.disabled ? 0.5 : (inPlans && selectedAction?.label === btn.label) ? 1 : 1,
                             cursor: btn.disabled ? "not-allowed" : "pointer",
                             pointerEvents: btn.disabled ? "none" : "all",
-                            width: window.innerWidth < 1000 && "100%",
-                            justifyContent: window.innerWidth < 1000 && "center"
+                            width: "100%",
+                            justifyContent: "center"
                         }}
                         disabled={btn.disabled}
                     >
