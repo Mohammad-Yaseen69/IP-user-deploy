@@ -55,7 +55,7 @@ const CreatePin = () => {
     };
 
     const [isPinMatch, setIsPinMatch] = useState(false);
-    const { userDetails, authHeader } = useContext(UserContext)
+    const { userDetails, authHeader, setUserDetails } = useContext(UserContext)
 
     const handleInputChange = (index, value, setter, data, refs) => {
         const numericValue = value.replace(/[^0-9]/g, '');
@@ -129,6 +129,11 @@ const CreatePin = () => {
 
             const dec = decryptData(response.data.data)
 
+            setUserDetails(prev => ({
+                ...prev,
+                pin_status: true,
+                pin: "temp_pin"
+            }))
             if (dec.status) {
                 setShowSuccess(true)
             }
