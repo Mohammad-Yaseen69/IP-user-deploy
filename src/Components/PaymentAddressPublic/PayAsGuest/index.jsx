@@ -548,6 +548,7 @@ const PayAsGuest = ({
   const getFeesMobileWallet = async () => {
 
     dataHandler("loading", true);
+    dataHandler("exchange_rate_error", "")
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/mobile-wallet-fee/${wallet?.wallet_id}/${amount}/${data.country?.alpha3}?payment_type=${type === "subscription" ? "plan" : type}`
@@ -753,7 +754,7 @@ const PayAsGuest = ({
               {data.step === 1 && (
                 <Country username={username} data={data} dataHandler={dataHandler} />
               )}
-              
+
               {data.step === 2 && (
                 <StepOne
                   data={data}

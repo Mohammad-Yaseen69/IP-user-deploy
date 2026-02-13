@@ -10,6 +10,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
     const exchangeRateValue = _exObj && typeof _exObj === "object" ? _exObj.exchange_rate : _exObj ?? data?.exchange_rate
     const exchangeRateSendingCurrency = data?.exchange_rate?.exchange_rate?.exchange_rate_sending_currency || data?.exchange_rate?.sending?.currency
     const exchangeRateCurrency = data?.exchange_rate?.exchange_rate?.exchange_rate_currency || data?.exchange_rate?.receiver?.currency
+    const externalData = data?.exchange_rate?.external_transaction_data || data?.exchange_rate?.external_amount
 
     return (
         error
@@ -168,7 +169,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                 }
 
                 {
-                    data.payment_type?.value === "mobile_wallet" && data?.exchange_rate?.external_transaction_data
+                    data.payment_type?.value === "mobile_wallet" && externalData
                         ?
                         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                             <div
@@ -223,7 +224,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                                         fontWeight: 600,
                                         lineHeight: 1.5,
                                         letterSpacing: '-0.14px'
-                                    }}>{t(`Amount in ${data?.exchange_rate?.external_transaction_data?.total?.currency}`)}</span>
+                                    }}>{t(`Amount in ${externalData?.total?.currency || externalData?.currency}`)}</span>
                                     <strong style={{
                                         color: '#000',
                                         fontFamily: 'Manrope',
@@ -232,7 +233,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                                         fontWeight: 700,
                                         lineHeight: 1.7,
                                         letterSpacing: '-0.8px'
-                                    }}>{Number(data?.exchange_rate?.external_transaction_data?.total?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data?.exchange_rate?.external_transaction_data?.total?.currency}</strong>
+                                    }}>{Number(externalData?.total?.value || externalData?.value)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {externalData?.total?.currency || externalData?.currency}</strong>
                                 </div>
                             </div>
                         </div>
