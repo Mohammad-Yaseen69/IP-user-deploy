@@ -56,6 +56,7 @@ const initialState = {
     zipCode: "",
   },
   bankStep: 1,
+  mobileWalletSuccess: false,
 };
 
 function reducer(state, action) {
@@ -247,6 +248,81 @@ const PayAsGuest = ({
     }
   };
 
+  const initiateMobileWalletPayment = async () => {
+    dataHandler("loading", true);
+    let formattedDob = data.dob;
+    if (formattedDob && formattedDob.includes("-")) {
+      const [yyyy, mm, dd] = formattedDob.split("-");
+      formattedDob = `${dd}-${mm}-${yyyy}`;
+    }
+
+    try {
+      const payload = {
+        token: data.exchange_rate?.token,
+        name: data.fullName,
+        email: data.email,
+        phone: data.phone,
+        iso_code: data.country?.alpha3,
+        dob: formattedDob,
+        client_reference: data.paymentRef,
+        payment_type: type
+      };
+
+      if (planId) {
+        payload.plan_id = planId
+      }
+
+      if (invoiceId) {
+        payload.invoice_id = invoiceId;
+
+        if (isShipping) {
+          payload.shipping_details = {
+            ...data.shippingDetails,
+            country: data.shippingDetails?.country?.name,
+          };
+        }
+      }
+
+      if (type === "subscription") {
+        payload.subscription_id = subscriptionId;
+      }
+
+      const enc = encryptData(payload);
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_IP_DEV_API
+        }/api/guest-pay${type === "subscription" ? "/subscription/initiate-wallet-payment" : "/initiate-wallet-payment"}`,
+        {
+          data: enc,
+        }
+      );
+
+      const dec = decryptData(res.data.data);
+      console.log(dec);
+      dataHandler("mobileWalletSuccess", true);
+      dataHandler("loading", false);
+    } catch (error) {
+      const dec = decryptData(error?.response?.data?.data);
+      const err1 = LimitsErrorMessage(dec.code);
+      const err2 = apiErrorMessage(dec.message);
+
+      if (dec?.message === "invalid_card_details") {
+        setShowCardModal(true);
+      } else if (err1) {
+        dataHandler("error", err1);
+      } else if (err2) {
+        dataHandler("error", err2);
+      } else {
+        dataHandler(
+          "error",
+          dec?.message ??
+          "We cannot process your request at the moment, please try again later."
+        );
+      }
+      dataHandler("loading", false);
+    }
+  };
+
   const checkIfPhoneIsValid = async (callback) => {
     dataHandler("loading", true);
     dataHandler("phone_error", "");
@@ -306,6 +382,8 @@ const PayAsGuest = ({
       case 4:
         if (data.payment_type?.value === "paypal") {
           initiatePaypalPayment();
+        } else if (data.payment_type?.value === "mobile_wallet") {
+          initiateMobileWalletPayment()
         } else {
           checkIfPhoneIsValid(() => dataHandler("step", 5));
         }
@@ -467,6 +545,40 @@ const PayAsGuest = ({
     }
   };
 
+  const getFeesMobileWallet = async () => {
+
+    dataHandler("loading", true);
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/mobile-wallet-fee/${wallet?.wallet_id}/${amount}/${data.country?.alpha3}?payment_type=${type === "subscription" ? "plan" : type}`
+      );
+      const dec = decryptData(res.data.data);
+      console.log(dec);
+      dataHandler("exchange_rate", {
+        fee: {
+          amount: dec?.feeDetails,
+          paymentAddressFee: dec?.paymentAddressFee,
+        },
+        sending: { currency: wallet?.currency?.code, amount: amount },
+        receiver: {
+          currency: wallet?.currency?.code,
+          amount: dec?.recipient_amount,
+        },
+        total: dec?.total,
+        token: dec?.token,
+      });
+    } catch (error) {
+      const dec = decryptData(error?.response?.data?.data);
+      dataHandler(
+        "exchange_rate_error",
+        dec?.message ??
+        "We cannot process your request at the moment, please try again later."
+      );
+      console.log(dec);
+    } finally {
+      dataHandler("loading", false);
+    }
+  };
   const getFeesCard = async () => {
 
     dataHandler("loading", true);
@@ -508,6 +620,9 @@ const PayAsGuest = ({
     }
     if (data.payment_type?.value === "card" || data.payment_type?.value === "bank") {
       getFeesCard();
+    }
+    if (data.payment_type?.value === "mobile_wallet") {
+      getFeesMobileWallet()
     }
   }, [data.payment_type]);
 
@@ -638,6 +753,7 @@ const PayAsGuest = ({
               {data.step === 1 && (
                 <Country username={username} data={data} dataHandler={dataHandler} />
               )}
+              
               {data.step === 2 && (
                 <StepOne
                   data={data}
@@ -679,7 +795,7 @@ const PayAsGuest = ({
               }
               {data.step === 4 &&
                 (
-                  data.payment_type?.value === "paypal" ?
+                  data.payment_type?.value === "paypal" || data.payment_type?.value === "mobile_wallet" ?
                     <PaymentDetails
                       dataHandler={dataHandler}
                       data={data}
@@ -720,7 +836,14 @@ const PayAsGuest = ({
                 ) : (
                   ""
                 ))}
-              {(data.payment_type?.value !== "bank" || data.step < 4) &&
+              {data.mobileWalletSuccess && (
+                <div style={{ textAlign: 'center', padding: '20px' }}>
+                  <h2>Payment Initiated Successfully</h2>
+                  <p>The recipient will receive the funds once the mobile money transfer is completed. You can close this modal if you want.</p>
+                  <button onClick={toggle} style={{ marginTop: '10px', padding: '10px 20px', background: '#5926F0', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Close</button>
+                </div>
+              )}
+              {(data.payment_type?.value !== "bank" || data.step < 4) && !data.mobileWalletSuccess &&
                 <div className={styles.bottom} style={{ marginTop: "auto" }}>
                   <Link
                     to={"https://insta-pay.ch/faqs"}
@@ -866,7 +989,7 @@ const PayAsGuest = ({
                 }
 
                 {data.step === 4 &&
-                  (data.payment_type?.value === "paypal" ?
+                  (data.payment_type?.value === "paypal" || data?.payment_type?.value === "mobile_wallet" ?
                     (
                       <>
                         <PaymentDetails
@@ -917,9 +1040,16 @@ const PayAsGuest = ({
                   ) : (
                     ""
                   ))}
+                {data.mobileWalletSuccess && (
+                  <div style={{ textAlign: 'center', padding: '20px' }}>
+                    <h2>Payment Initiated Successfully</h2>
+                    <p>The recipient will receive the funds once the mobile money transfer is completed. You can close this modal if you want.</p>
+                    <button onClick={toggle} style={{ marginTop: '10px', padding: '10px 20px', background: '#5926F0', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Close</button>
+                  </div>
+                )}
               </div>
 
-              {(data.payment_type?.value !== "bank" || data.step < 4) &&
+              {(data.payment_type?.value !== "bank" || data.step < 4) && !data.mobileWalletSuccess &&
                 <div
                   className={paym_styles.bottom}
                   style={{

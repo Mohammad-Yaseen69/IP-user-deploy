@@ -37,11 +37,10 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
         },
         {
             name: "Mobile Wallet",
-            value: "mobile",
+            value: "mobile_wallet",
             id: 1,
-            coming_soon: true,
             icon: pagSvgs.wallet,
-            active_icon: pagSvgs.wallet_a,  
+            active_icon: pagSvgs.wallet_a,
             api_val: "mobile_money"
         },
 
