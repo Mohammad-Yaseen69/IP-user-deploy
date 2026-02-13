@@ -565,6 +565,7 @@ const PayAsGuest = ({
           currency: wallet?.currency?.code,
           amount: dec?.recipient_amount,
         },
+        external_amount: dec?.external_amount,
         total: dec?.total,
         token: dec?.token,
       });
