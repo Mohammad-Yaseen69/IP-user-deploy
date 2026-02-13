@@ -68,13 +68,13 @@ const SendPaymentType = ({ sendPaymentType, setStep, setSendPaymentType }) => {
                     : ""
             }
 
-            {/* {
+            {
                 <NonInstapayPayment
                     sendPaymentType={sendPaymentType}
                     setStep={setStep}
                     setSendPaymentType={setSendPaymentType}
                 />
-            } */}
+            }
         </div>
     )
 }

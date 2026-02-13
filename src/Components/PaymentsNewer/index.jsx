@@ -21,6 +21,7 @@ const CryptoFiatMobile = lazy(() => import("./Mobile/CryptoFiatMobile"));
 const Airtime = lazy(() => import("./AirtimeFlow"));
 const AirtimeMobile = lazy(() => import("./Mobile/Airtime"));
 const QRPayment = lazy(() => import("./Mobile/QRPayment"));
+const NonInstapayPayment = lazy(() => import("./NonInstapay"));
 
 // Static assets (normal imports)
 import rq from "./files/mobile/rq.png";
@@ -35,12 +36,14 @@ import quote_m from "./Mobile/files/quote.png";
 import airtime_m from "./Mobile/files/airtime.png";
 import internation_m from "./Mobile/files/international.png";
 import wallet_m from "./Mobile/files/wallet.png";
+import noninstapay_m from "./Mobile/files/wallet.png";
 
 import sm_m_i from "./files/sm.svg";
 import rm_m_i from "./files/rm.svg";
 import q_m_i from "./files/q.svg";
 import a_m_i from "./files/airtime.svg";
 import int_m_i from "./files/int.svg";
+import ni_m_i from "./files/non_ip.svg";
 
 
 const PaymentsNewer = () => {
@@ -422,6 +425,24 @@ const PaymentsNewer = () => {
                                                         <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", maxWidth: "8ch" }}>{t("QR Code Payment")}</span>
                                                     </button>
                                                 }
+                                                {
+                                                    (
+                                                        userDetails?.account_type === "individual"
+                                                            ?
+                                                            userDetails?.level?.wallet_to_wallet?.send
+                                                            :
+                                                            userDetails?.level?.wallet_to_wallet?.send
+                                                    )
+                                                    &&
+                                                    <button onClick={() => {
+                                                        setCurrentFlow("non-instapay")
+                                                        setSendPaymentType("non-instapay")
+                                                        setStep(3)
+                                                    }} style={{ background: `url(${noninstapay_m})` }}>
+                                                        <img src={ni_m_i} alt="" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
+                                                        <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", maxWidth: "15ch" }}>{t("Non-Instapay Transfer")}</span>
+                                                    </button>
+                                                }
                                             </>
                                             :
                                             ""
@@ -442,6 +463,10 @@ const PaymentsNewer = () => {
                             {
                                 sendPaymentType === "qr_pay"
                                 && <QRPayment setStep={setStep} step={step} setCurrentFlow={setCurrentFlow} setSendPaymentType={setSendPaymentType} sendPaymentType={sendPaymentType} setAction={setAction} />
+                            }
+                            {
+                                sendPaymentType === "non-instapay"
+                                && <NonInstapayPayment setStep={setStep} step={step} setCurrentFlow={setCurrentFlow} setSendPaymentType={setSendPaymentType} sendPaymentType={sendPaymentType} setAction={setAction} />
                             }
                             {
                                 action === "req_money"
