@@ -9,7 +9,7 @@ import LanguagePicker from '../../LanguagePicker'
 import addFunds from "../../HomeNewUpdated/files/AddFunds.png"
 import CryptoPay from "../../HomeNewUpdated/files/CryptoPay.svg"
 import logo from "../../../assets/images/logo/logo.png"
-import { isInIframe, openInNewTab } from '../../../utils/Functions'
+import { isInIframe, openInNewTab, paymentAddressFlagCheck } from '../../../utils/Functions'
 import { useNavigate } from 'react-router'
 import AnimatedHeader from '../../PaymentAddressPublic/AnimatedHeader'
 import useWindowWidth from '../../../utils/useWindowWidth'
@@ -23,6 +23,7 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal
     const navigate = useNavigate()
     const width = useWindowWidth()
     const [verificationBadge, setShowVerificationBadge] = useState(false)
+    const userDetails = data?.account
 
     const actionButtons = [
         {
@@ -39,19 +40,25 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal
                     navigate(path)
                 }
             },
-            width: "15px"
+            width: "15px",
+            disabled: !paymentAddressFlagCheck("payments.allowInstapay", userDetails),
+            disabledMessage: t("This method is disabled for this payment address by admin.")
         },
         {
             label: "Pay with Crypto",
             logo: CryptoPay,
             onClick: () => {
                 dataHandler("showCryptoModal", true)
-            }
+            },
+            disabled: !paymentAddressFlagCheck("payments.allowCrypto", userDetails),
+            disabledMessage: t("This method is disabled for this payment address by admin.")
         },
         {
             label: "Pay As Guest",
             logo: addFunds,
-            onClick: toggleCreditModal
+            onClick: toggleCreditModal,
+            disabled: !paymentAddressFlagCheck("payments.allowGuestPay", userDetails),
+            disabledMessage: t("This method is disabled for this payment address by admin.")
         }
     ]
     return (
@@ -127,7 +134,7 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal
                 </div>
 
                 {!data.paid ?
-                    <PaymentActionsButtons actionButtons={actionButtons} />
+                    <PaymentActionsButtons actionButtons={actionButtons} userDetails={userDetails} />
                     :
                     <div className={styles.paidInvoice}>
                         <p>
