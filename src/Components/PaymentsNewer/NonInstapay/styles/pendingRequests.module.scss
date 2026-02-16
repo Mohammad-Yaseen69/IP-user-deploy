@@ -155,3 +155,94 @@
         }
     }
 }
+
+
+.modalHeader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 1rem;
+
+    h5 {
+        margin: 0;
+        font-weight: 600;
+        color: #333;
+    }
+}
+
+.modalContent {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+
+    .detailRow {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #f8f9fa;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        span:first-child {
+            color: #6c757d;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        span:last-child {
+            color: #212529;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-align: right;
+        }
+    }
+}
+
+.modalActions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 1rem;
+
+    button {
+        width: 100%;
+        padding: 10px;
+        border-radius: 6px;
+        font-weight: 600;
+        transition: all 0.2s;
+        border: none;
+        outline: none;
+    }
+
+    .cancelPaymentBtn {
+        background-color: #fff0f0;
+        color: #dc3545;
+        border: 1px solid #fadbd8;
+
+        &:hover:not(:disabled) {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
+
+    .closeBtn {
+        background-color: #f8f9fa;
+        color: #6c757d;
+
+        &:hover {
+            background-color: #e2e6ea;
+            color: #495057;
+        }
+    }
+}
