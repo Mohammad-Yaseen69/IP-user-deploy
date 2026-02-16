@@ -442,7 +442,7 @@ const PayAsGuest = ({
   const disabled = useMemo(() => {
     let disabled = false;
     if (data.step === 1) {
-      disabled = !data.country?.name;
+      disabled = !data.country?.name || data?.exchange_rate_error;
     }
     if (data.step === 2) {
       disabled = !data.payment_type?.value;
@@ -634,8 +634,7 @@ const PayAsGuest = ({
       dataHandler("loading", true);
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/payment-methods/${user?.level?._id
-          }`
+          `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/payment-methods/${user?.level?._id}?country_iso_code=${data?.country?.alpha3}`
         );
         const dec = decryptData(res.data.data);
         setAllowed(dec?.data ?? []);
@@ -650,7 +649,7 @@ const PayAsGuest = ({
     if (user?.level?._id) {
       getPayouts();
     }
-  }, [user]);
+  }, [user, data?.country]);
 
 
   return (
