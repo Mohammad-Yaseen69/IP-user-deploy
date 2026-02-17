@@ -119,16 +119,17 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
     const loading = useMemo(() => { }, [])
 
     const { mutateAsync: getFeeDetails } = useMutation({
-        mutationFn: ({ receiverCountryCode, sendingWalletId, amount, type, paymentType }) => apiWrapper({
+        mutationFn: ({ receiverCountryCode, sendingWalletId, amount, type, paymentType, identifier }) => apiWrapper({
             endpoint: "/api/pre-wallet/get-fee-details",
             method: "POST",
-            isEncrypted: false,
+            // isEncrypted: false,
             payload: {
                 receiverCountryCode,
                 sendingWalletId,
                 amount,
                 type,
-                paymentType
+                paymentType,
+                identifier: +identifier
             }
         }).then(dec => dec?.response)
     })
@@ -222,7 +223,8 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                 sendingWalletId: data?.currency?._id,
                 amount: Number(amount),
                 type: type || "DETAILS",
-                paymentType: data?.payment_type?.value
+                paymentType: data?.payment_type?.value,
+                identifier: data?.identifier
             })
 
             if (!type) {

@@ -243,7 +243,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = 
                                 t("Invalid Amount")
                             }
                             {
-                                t(possibleErrors?.[Object.keys(possibleErrors).find(item => possibleErrors[item] === data?.exchange_rate_error)]) ?? ""
+                              !inNonInstapay && ( t(possibleErrors?.[Object.keys(possibleErrors).find(item => possibleErrors[item] === data?.exchange_rate_error)]) ?? "")
                             }
                             {(data?.exchange_rate_error && inNonInstapay) && data?.exchange_rate_error}
                         </div>
