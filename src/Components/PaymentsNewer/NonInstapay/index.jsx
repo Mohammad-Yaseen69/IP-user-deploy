@@ -119,7 +119,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
     const loading = useMemo(() => { }, [])
 
     const { mutateAsync: getFeeDetails } = useMutation({
-        mutationFn: ({ receiverCountryCode, sendingWalletId, amount, type }) => apiWrapper({
+        mutationFn: ({ receiverCountryCode, sendingWalletId, amount, type, paymentType }) => apiWrapper({
             endpoint: "/api/pre-wallet/get-fee-details",
             method: "POST",
             isEncrypted: false,
@@ -127,7 +127,8 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                 receiverCountryCode,
                 sendingWalletId,
                 amount,
-                type
+                type,
+                paymentType
             }
         }).then(dec => dec?.response)
     })
@@ -178,6 +179,37 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
             dataHandler("loading", false)
         }
     })
+    const { mutateAsync: initiatePaypalPayment } = useMutation({
+        mutationFn: (otp) => {
+            dataHandler("loading", true)
+            const payload = {
+                token: data.otp_token,
+                otp: otp,
+                type: data.codeType,
+            }
+
+            return apiWrapper({
+                endpoint: "/api/paypal/initiate-non-ip-payment",
+                method: "POST",
+                isFormData: true,
+                payload
+            })
+        },
+        onSuccess: (dec) => {
+            window.location.href = dec?.url
+        },
+        onError: (error) => {
+            handlePaymentApiError({
+                error,
+                navigate,
+                setError: (e) => dataHandler("otpError", e),
+                setProfileLockTime: setProfileLockTime
+            })
+        },
+        onSettled: () => {
+            dataHandler("loading", false)
+        }
+    })
 
 
     const getExchangeRate = async (amount, _, __, ___, setter, type) => {
@@ -189,7 +221,8 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                 receiverCountryCode: data?.country?.alpha3,
                 sendingWalletId: data?.currency?._id,
                 amount: Number(amount),
-                type: type || "DETAILS"
+                type: type || "DETAILS",
+                paymentType: data?.payment_type?.value
             })
 
             if (!type) {
@@ -216,6 +249,9 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                 token: res?.token || undefined
             }
 
+            if (res?.paypal) exchange_rate_details.paypal = res?.paypal;
+
+
             console.log(exchange_rate_details)
             dataHandler("exchange_rate", exchange_rate_details)
 
@@ -226,9 +262,13 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
             const dec = decryptData(res?.response?.data?.data)
 
             console.log(dec)
+            const error = LimitsErrorMessage(dec?.code)
             const error2 = apiErrorMessage(dec?.message)
 
-            if (error2) {
+            if (error) {
+                dataHandler("exchange_rate_error", error)
+            }
+            else if (error2) {
                 dataHandler("exchange_rate_error", error2)
             }
             else if (dec?.message?.toLowerCase()?.includes("insufficient")) {
@@ -306,7 +346,9 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
         const payload = {
             token: data?.exchange_rate?.token,
             identifier: Number(data?.identifier),
-            paymentType: data?.paymentType?.value
+            paymentType: data?.payment_type?.value,
+            description: data.comment,
+            purpose: data.reason,
         }
 
         await sendOtpFunction(payload, codeType || data?.codeType)
@@ -456,7 +498,6 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
         return () => clearTimeout(timeout)
     }, [data.payment_type?.value, data.wallet?._id, data.payment_type, data.currency?._id, userWallets])
 
-    // Helper function to render all modals
     const renderModals = () => (
         <>
             {
@@ -626,7 +667,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                                 data.showOtpModal
                                 &&
                                 <OtpConfirmation
-                                    callback={data.payment_type?.value === "card" ? () => { } : data.payment_type?.value === "paypal" ? () => { } : data?.payment_type?.value === "mobile_wallet" ? () => { } : confirmWalletPayment}
+                                    callback={data.payment_type?.value === "card" ? () => { } : data.payment_type?.value === "paypal" ? initiatePaypalPayment : data?.payment_type?.value === "mobile_wallet" ? () => { } : confirmWalletPayment}
                                     data={data}
                                     dataHandler={dataHandler}
                                     isLoading={loading}
