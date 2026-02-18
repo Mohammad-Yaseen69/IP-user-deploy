@@ -1,20 +1,42 @@
-import React, { useContext, useEffect } from 'react'
-import styles from "../ReceiptInvoices/styles/index.module.scss"
-import { useTranslation } from 'react-i18next'
-import bg from "../ReceiptInvoices/files/creation-bg.png"
-import useWindowWidth from '../../utils/useWindowWidth'
-import { openInNewTab } from '../../utils/Functions'
-import TopRight from '../topRight'
 import { useQuery } from "@tanstack/react-query"
-import { apiWrapper } from "../../utils/Functions/apiWrapper"
+import { useContext, useEffect } from 'react'
+import {
+    Search,
+    Shield,
+    ShoppingBag,
+    Zap
+} from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { UserContext } from "../../Context/UserContext"
+import { openInNewTab } from '../../utils/Functions'
+import { apiWrapper } from "../../utils/Functions/apiWrapper"
+import useWindowWidth from '../../utils/useWindowWidth'
 import InstaPayLoader from '../Loader'
-
+import bg from "../ReceiptInvoices/files/Footer Section.png"
+import styles from "../ReceiptInvoices/styles/index.module.scss"
+import TopRight from '../topRight'
 const StoreCreate = () => {
     const { t } = useTranslation()
     const width = useWindowWidth()
     const { userDetails } = useContext(UserContext)
-
+    const StepData = [
+        {
+            icon: <Zap />,
+            title: "Instant payments via InstaPay"
+        },
+        {
+            icon: <ShoppingBag />,
+            title: "Simple shop & order management"
+        },
+        {
+            icon: <Shield />,
+            title: "Secure and compliant transactions"
+        },
+        {
+            icon: <Search />,
+            title: "Transparent fees"
+        }
+    ]
     const { data, isError, isLoading } = useQuery({
         queryKey: ['UserStore'],
         enabled: !!userDetails?._id,
@@ -49,35 +71,40 @@ const StoreCreate = () => {
     return (
         <div className={styles.container}>
             <div className={styles.top}>
-                <h1>
-                    {t("My Store")}
-                </h1>
-
                 {width > 1000 && <TopRight />}
             </div>
 
-            <div style={{ gridTemplateColumns: width < 800 && "1fr" }} className={styles.noReceiptCont}>
+            <div className={styles.mainContent} style={{ gridTemplateColumns: width < 800 ? '1fr' : '1fr 1fr' }}>
                 <div className={styles.left}>
-                    <div>
-                        <h3>
-                            {t("You haven't created your store yet.")}
-                        </h3>
-                        <p>
-                            {t("Click on the button below to create your own eShop Store.")}
-                        </p>
+                    <h1>
+                        {t("Welcome to")} <br />
+                        <span className={styles.instaPay}>{t("InstaPay")}</span>
+                        {t("-eShop")}
+                    </h1>
+
+                    <p className={styles.message}>
+                        {t("Create and manage your online shop powered by InstaPay. Accept payments, manage orders, and grow your business — all from one place.")}
+                    </p>
+
+                    <div className={styles.features}>
+                        {StepData.map((item, index) => (
+                            <div key={index} className={styles.featureItem}>
+                                <span className={styles.icon}>{item.icon}</span>
+                                <span className={styles.title}>{item.title}</span>
+                            </div>
+                        ))}
                     </div>
-
-                    <button onClick={handleCreateStore}>
-                        {t("Create Your Store")}
-                    </button>
+                    <button onClick={handleCreateStore}>{t("Get Started / Create Shop")}</button>
+                    <p className={styles.links}>
+                        {t("eShop Guide")} · {t("FAQS")}
+                    </p>
                 </div>
-
                 <div className={styles.right}>
-                    <img src={bg} alt="" />
+                    <img src={bg} alt="Store Illustration" />
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default StoreCreate
