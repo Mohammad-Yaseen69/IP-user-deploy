@@ -16,7 +16,7 @@ import WalletsComponent from '../InternationalFlow/WalletsComponent'
 import FeesComponent from '../InternationalFlow/FeesComponent'
 import StepThree from '../InternationalFlow/StepThree'
 import OtpConfirmation from '../InternationalFlow/OtpConfirmation'
-import { ChevronLeft, ChevronRight, CreditCard, HelpCircle, Link } from 'react-feather'
+import { ChevronLeft, ChevronRight, HelpCircle, Link } from 'react-feather'
 import StepFive from '../InternationalFlow/StepFive'
 import StepFour from '../InternationalFlow/StepFour'
 import StepOne from './StepOne'
@@ -37,6 +37,8 @@ import { getExtractedPhone } from '../../../utils/Functions'
 import { verifyPhoneNumber } from '../../../utils/Functions/phoneVerification'
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import axios from 'axios'
+import { createShambeToken } from '../../../Helper/CreateToken'
+import CreditCard from '../InternationalFlow/CreditCard'
 
 
 const leftSideContent = [
@@ -211,6 +213,39 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
             dataHandler("loading", false)
         }
     })
+    const { mutateAsync: initiateCardPayment } = useMutation({
+        mutationFn: (otp) => {
+            dataHandler("loading", true)
+            const payload = {
+                token: data.otp_token,
+                otp: otp,
+                type: data.codeType,
+            }
+
+            return apiWrapper({
+                endpoint: "/api/trust-payment/initiat-non-ip-transaction",
+                method: "POST",
+                isEncrypted: true,
+                payload,
+                isDecrypted: true
+            })
+        },
+        onSuccess: (dec) => {
+            console.log(dec)
+            dataHandler("cardTransactionDetails", dec)
+        },
+        onError: (error) => {
+            handlePaymentApiError({
+                error,
+                navigate,
+                setError: (e) => dataHandler("otpError", e),
+                setProfileLockTime: setProfileLockTime
+            })
+        },
+        onSettled: () => {
+            dataHandler("loading", false)
+        }
+    })
 
 
     const getExchangeRate = async (amount, _, __, ___, setter, type) => {
@@ -351,6 +386,18 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
             paymentType: data?.payment_type?.value,
             description: data.comment,
             purpose: data.reason,
+            panData: {}
+        }
+
+        if (data?.payment_type?.value === "card") {
+            const mode = data?.selectedSavedCard?._id ? "saved" : "direct"
+            if (mode === "saved") {
+                payload.panData.pan = data?.selectedSavedCard?._id
+            } else {
+                payload.panData.se_shambey = createShambeToken(data)
+                payload.panData.is_card_save = data?.saveCard
+            }
+            payload.card_mode = mode
         }
 
         await sendOtpFunction(payload, codeType || data?.codeType)
@@ -459,12 +506,12 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
         }
     }, [data])
 
-    useEffect(() => {
-        if (country) {
-            const countryObj = countriesData.find(c => c.alpha3 === country)
-            dataHandler("country", countryObj)
-        }
-    }, [country])
+    // useEffect(() => {
+    //     if (country) {
+    //         const countryObj = countriesData.find(c => c.alpha3 === country)
+    //         dataHandler("country", countryObj)
+    //     }
+    // }, [country])
 
     useEffect(() => {
         if (userDetails?._id) {
@@ -552,15 +599,10 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                 data.cardTransactionDetails?.intlToken || data.cardTransactionDetails?.w2w_data
                     ?
                     <TrustpaymentPage
-                        amount={data.amount}
-                        card_cvc={data.cvc}
-                        card_expiry={data.expiry}
-                        card_number={data.cardNumber}
-                        currency={data.currency_wallet?.currency?.code}
                         transaction={data.cardTransactionDetails}
                         paymentWithSavedCard={data.selectedSavedCard?._id ? true : false}
-                        url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
-                        tokenUrl={() => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                        url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/non-ip-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                        tokenUrl={() => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/non-ip-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
                     />
                     :
                     <></>
@@ -640,6 +682,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                                         tokenUrl={() => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}`}
                                         data={data}
                                         dataHandler={dataHandler}
+                                        
                                     />
                             }
                         </>
@@ -669,7 +712,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                                 data.showOtpModal
                                 &&
                                 <OtpConfirmation
-                                    callback={data.payment_type?.value === "card" ? () => { } : data.payment_type?.value === "paypal" ? initiatePaypalPayment : data?.payment_type?.value === "mobile_wallet" ? () => { } : confirmWalletPayment}
+                                    callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : data?.payment_type?.value === "mobile_wallet" ? () => { } : confirmWalletPayment}
                                     data={data}
                                     dataHandler={dataHandler}
                                     isLoading={loading}

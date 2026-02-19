@@ -2,44 +2,44 @@ import { useEffect, useState } from 'react';
 import CryptoJS from 'crypto-js';
 
 
-const TrustpaymentPage = ({ amount, currency, card_number, card_expiry, card_cvc, transaction, type = "add_fund", url, paymentWithSavedCard = false, tokenUrl = undefined, isPartner }) => {
+const TrustpaymentPage = ({ transaction, type = "add_fund", url, paymentWithSavedCard = false, tokenUrl = undefined, isPartner }) => {
   const [token, setToken] = useState(null);
 
   const webhook_url = url ?? (paymentWithSavedCard ? `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-pan-transaction/${transaction?.transaction_id}` : `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/payment${type === "add_fund" ? "" : isPartner ? "-partner-kyc" : type === 'kyc_fee' ? "-kyc" : "-kyb"}-confirmation/${transaction?.transaction_id}`)
 
 
   useEffect(() => {
-    const createJWT = (header, payload, secret) => {
-      const headerString = JSON.stringify(header);
-      const payloadString = JSON.stringify(payload);
+    // const createJWT = (header, payload, secret) => {
+    //   const headerString = JSON.stringify(header);
+    //   const payloadString = JSON.stringify(payload);
 
-      const encodedHeader = CryptoJS.enc.Base64.stringify(
-        CryptoJS.enc.Utf8.parse(headerString)
-      )
-        .replace(/=/g, "")
-        .replace(/\+/g, "-")
-        .replace(/\//g, "_");
+    //   const encodedHeader = CryptoJS.enc.Base64.stringify(
+    //     CryptoJS.enc.Utf8.parse(headerString)
+    //   )
+    //     .replace(/=/g, "")
+    //     .replace(/\+/g, "-")
+    //     .replace(/\//g, "_");
 
-      const encodedPayload = CryptoJS.enc.Base64.stringify(
-        CryptoJS.enc.Utf8.parse(payloadString)
-      )
-        .replace(/=/g, "")
-        .replace(/\+/g, "-")
-        .replace(/\//g, "_");
+    //   const encodedPayload = CryptoJS.enc.Base64.stringify(
+    //     CryptoJS.enc.Utf8.parse(payloadString)
+    //   )
+    //     .replace(/=/g, "")
+    //     .replace(/\+/g, "-")
+    //     .replace(/\//g, "_");
 
-      const tokenData = `${encodedHeader}.${encodedPayload}`;
+    //   const tokenData = `${encodedHeader}.${encodedPayload}`;
 
-      const signature = CryptoJS.HmacSHA256(tokenData, secret);
+    //   const signature = CryptoJS.HmacSHA256(tokenData, secret);
 
-      const encodedSignature = CryptoJS.enc.Base64.stringify(signature)
-        .replace(/=/g, "")
-        .replace(/\+/g, "-")
-        .replace(/\//g, "_");
+    //   const encodedSignature = CryptoJS.enc.Base64.stringify(signature)
+    //     .replace(/=/g, "")
+    //     .replace(/\+/g, "-")
+    //     .replace(/\//g, "_");
 
-      const jwtToken = `${tokenData}.${encodedSignature}`;
-      setToken(jwtToken)
-      return jwtToken;
-    };
+    //   const jwtToken = `${tokenData}.${encodedSignature}`;
+    //   setToken(jwtToken)
+    //   return jwtToken;
+    // };
 
     setToken(transaction?.trustPaymentToken ?? transaction?.token)
   }, [])
@@ -81,6 +81,7 @@ const TrustpaymentPage = ({ amount, currency, card_number, card_expiry, card_cvc
   useEffect(() => {
     if (token && htmlString) {
       // const newTab = window.open()
+      console.log(htmlString)
       window.document.write(htmlString)
       // navigate("/")
     }
