@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import {
     Search,
     Shield,
@@ -15,10 +15,13 @@ import InstaPayLoader from '../Loader'
 import bg from "../ReceiptInvoices/files/Footer Section.png"
 import styles from "../ReceiptInvoices/styles/index.module.scss"
 import TopRight from '../topRight'
+import TermsModal from "./TermsModal"
 const StoreCreate = () => {
     const { t } = useTranslation()
     const width = useWindowWidth()
     const { userDetails } = useContext(UserContext)
+    const [showModal, setShowModal] = useState(false);
+
     const StepData = [
         {
             icon: <Zap />,
@@ -75,6 +78,9 @@ const StoreCreate = () => {
             </div>
 
             <div className={styles.mainContent} style={{ gridTemplateColumns: width < 800 ? '1fr' : '1fr 1fr' }}>
+                <span className={styles.MyeShop}>
+                    {t("My e-Shop")}
+                </span>
                 <div className={styles.left}>
                     <h1>
                         {t("Welcome to")} <br />
@@ -96,13 +102,22 @@ const StoreCreate = () => {
                     </div>
                     <button onClick={handleCreateStore}>{t("Get Started / Create Shop")}</button>
                     <p className={styles.links}>
-                        {t("eShop Guide")} · {t("FAQS")}
+                        <span className={styles.link}>
+                            {t("eShop Guide")}
+                        </span>
+
+                        <span className={styles.link}>
+                            · {t("FAQS")}
+                        </span>
+
                     </p>
                 </div>
                 <div className={styles.right}>
                     <img src={bg} alt="Store Illustration" />
                 </div>
             </div>
+            {showModal && <TermsModal onContinue={setShowModal}  setShowModal={setShowModal} />}
+
         </div>
     );
 }
