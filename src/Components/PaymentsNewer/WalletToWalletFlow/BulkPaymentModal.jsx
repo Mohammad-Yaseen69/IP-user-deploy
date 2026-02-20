@@ -32,14 +32,15 @@ const parseCsv = (text) => {
     });
 };
 
-const BulkPaymentModal = ({ isOpen, onClose, onNext }) => {
+const BulkPaymentModal = ({ isOpen, onClose, onNext, initialRecipients = [] }) => {
     const fileInputRef = useRef(null);
-    const [csvRows, setCsvRows] = useState([]);
+    const [csvRows, setCsvRows] = useState(initialRecipients);
     const [fileName, setFileName] = useState("");
     const [parseError, setParseError] = useState("");
 
     if (!isOpen) return null;
 
+ 
     const handleDownload = () => {
         const blob = new Blob([SAMPLE_CSV], { type: "text/csv;charset=utf-8;" });
         const url = URL.createObjectURL(blob);
@@ -86,7 +87,7 @@ const BulkPaymentModal = ({ isOpen, onClose, onNext }) => {
     return (
         <div className={styles.overlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
             <div className={styles.modal}>
-                    <div className={styles.header}>
+                <div className={styles.header}>
                     <h4>Bulk Payment Upload</h4>
                     <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
                         <X size={20} />

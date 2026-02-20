@@ -177,6 +177,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
                             <BulkPaymentModal
                                 isOpen={showBulkModal}
                                 onClose={() => setShowBulkModal(false)}
+                                initialRecipients={data.bulkPaymentRecipients || []}
                                 onNext={(recipients) => {
                                     dataHandler("bulkPaymentRecipients", recipients)
                                     dataHandler("isBulkPayment", true)
