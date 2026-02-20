@@ -126,8 +126,7 @@ const SignupForm = ({ silf }) => {
                 .then(res => {
                     const decrypted = decryptData(res.data.data)
                     // console.log(decrypted)
-
-                    if (decrypted.status) {
+               if (decrypted.status) {
                         const data = {
                             username: referralCode,
                             userId: decrypted?.accountData?._id ?? "",
