@@ -9,71 +9,32 @@ const TimelineBulkRequests = ({ mobileView, setStepNumber, beneficiaries, srr })
     const [data, setData] = useState(beneficiaries);
     const [editRowIndex, setEditRowIndex] = useState(-1);
     const [editedData, setEditedData] = useState([...data]);
-    const [showConfirm, setShowConfirm] = useState(false);
-    const [tempAmount, setTempAmount] = useState("");
-    const [tempCurrency, setTempCurrency] = useState("");
 
     const handleEdit = (index) => {
         setEditRowIndex(index);
         setEditedData([...data]);
     };
 
-    const handleSave = (moded) => {
-        if (data.length === 1) {
-            setData([...editedData]);
-            setEditRowIndex(-1);
-        } else {
-            if (moded === "Yes") {
-                setData([...editedData]);
-                setEditRowIndex(-1);
-            } else {
-                if (data.some((item) => item.Moded === "No")) {
-                    setShowConfirm(true);
-                } else {
-                    setData([...editedData]);
-                    setEditRowIndex(-1);
-                }
-            }
-        }
+    const handleSave = () => {
+        const updatedData = [...editedData];
+        updatedData[editRowIndex] = { ...updatedData[editRowIndex], Moded: "Yes" };
+        setData(updatedData);
+        setEditedData(updatedData);
+        if (srr) srr(updatedData);
+        setEditRowIndex(-1);
     };
 
     const handleDelete = (index) => {
-        if (editRowIndex === index) {
-            setEditRowIndex(-1)
-            const updatedData = data.filter((_, ind) => index !== ind)
-            setData(updatedData);
-        } else {
-            const updatedData = data.filter((_, ind) => index !== ind)
-            setData(updatedData);
-        }
+        setEditRowIndex(-1);
+        const updatedData = data.filter((_, ind) => index !== ind);
+        setData(updatedData);
+        if (srr) srr(updatedData);
     };
 
     const handleInputChange = (e, index, field) => {
         const updatedData = [...editedData];
-        updatedData[index][field] = e.target.value;
+        updatedData[index] = { ...updatedData[index], [field]: e.target.value };
         setEditedData(updatedData);
-    };
-
-    const handleConfirm = () => {
-        beneficiaries.forEach((item) => {
-            item.Amount = tempAmount;
-            item.Currency = tempCurrency;
-            item.Moded = "Yes";
-        });
-        srr(beneficiaries);
-        setData(beneficiaries);
-        setEditRowIndex(-1);
-        setShowConfirm(false);
-    };
-
-    const handleCancel = () => {
-        setData([...editedData]);
-        setEditRowIndex(-1);
-        beneficiaries.forEach((item) => {
-            item.Moded = "Yes";
-        });
-        srr(beneficiaries);
-        setShowConfirm(false);
     };
 
     return (
@@ -131,14 +92,15 @@ const TimelineBulkRequests = ({ mobileView, setStepNumber, beneficiaries, srr })
         //             <div>
         //                 <h3>Recipients</h3>
         <>
-            <div style={{ overflowX: "auto", marginTop: "1rem" }}>
+            <div style={{ overflowX: "auto" }}>
                 <Table responsive>
                     <thead>
                         <tr>
                             <th>Recipients</th>
                             <th>Amount</th>
                             <th>Currency</th>
-                            <th>Action</th> {/* Added Action column */}
+                            <th>Recipient Currency</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -146,17 +108,16 @@ const TimelineBulkRequests = ({ mobileView, setStepNumber, beneficiaries, srr })
                             <TBRItem
                                 item={item}
                                 index={index}
+                                key={index}
                                 editRowIndex={editRowIndex}
                                 editedData={editedData}
                                 handleInputChange={handleInputChange}
-                                setTempAmount={setTempAmount}
-                                setTempCurrency={setTempCurrency}
+                                setTempAmount={() => { }}
+                                setTempCurrency={() => { }}
                                 handleEdit={handleEdit}
                                 handleSave={handleSave}
-                                showConfirm={showConfirm}
-                                handleCancel={handleCancel}
-                                handleConfirm={handleConfirm}
                                 handleDelete={handleDelete}
+                                cancelEdit={() => setEditRowIndex(-1)}
                             />
                         ))}
                     </tbody>

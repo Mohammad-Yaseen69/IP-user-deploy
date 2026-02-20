@@ -3,16 +3,18 @@ import styles from "./styles/stepone.module.css"
 import { useContext, useEffect, useState } from "react"
 import InviteFriendModal from "../InviteFriendModal"
 import InstaPayLoader from "../../Loader"
-import { ChevronDown, ChevronRight } from "react-feather"
+import { ChevronDown, ChevronRight, Users, XCircle } from "react-feather"
 import { UserContext } from "../../../Context/UserContext"
 import axios from "axios"
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import { useLocation } from "react-router"
 import RecentBeneficiary from "./RecentBeneficiary"
+import BulkPaymentModal from "./BulkPaymentModal"
 const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
     const { t } = useTranslation()
     const [search, setSearch] = useState("")
     const [showInviteModal, setShowInviteModal] = useState(false)
+    const [showBulkModal, setShowBulkModal] = useState(false)
     const [searchedUsers, setSearchedUsers] = useState([])
     const { authHeader, userDetails, benLoading } = useContext(UserContext)
     const [error, setError] = useState("")
@@ -133,18 +135,54 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
                 <>
                     {!cardToWallet &&
                         <div className={styles.recipient_not}>
-                            <p>{t("Recipient Not on InstaPay?")}</p>
-                            <button onClick={() => setShowInviteModal(true)}>
-                                <span>{t("Invite Them")}</span>
-                            </button>
-                            {
-                                showInviteModal
-                                &&
-                                <InviteFriendModal
-                                    isOpen={showInviteModal}
-                                    toggle={() => setShowInviteModal(false)}
-                                />
+                            {!data.isBulkPayment && <>
+                                <p>{t("Recipient Not on InstaPay?")}</p>
+                                <button onClick={() => setShowInviteModal(true)}>
+                                    <span>{t("Invite Them")}</span>
+                                </button>
+                                {
+                                    showInviteModal
+                                    &&
+                                    <InviteFriendModal
+                                        isOpen={showInviteModal}
+                                        toggle={() => setShowInviteModal(false)}
+                                    />
+                                }
+                            </>
                             }
+                            <button
+                                className={styles.bulk_btn}
+                                onClick={() => setShowBulkModal(true)}
+                            >
+                                <div>
+                                    <Users size={12} />
+                                    {t("Bulk Recipients")}
+                                </div>
+                            </button>
+                            {data.isBulkPayment && (
+                                <button
+                                    className={styles.bulk_btn}
+                                    onClick={() => {
+                                        dataHandler("isBulkPayment", false)
+                                        dataHandler("bulkPaymentRecipients", [])
+                                    }}
+                                    style={{ background: "rgba(209, 36, 95, 0.08)", color: "#D1245F" }}
+                                >
+                                    <div style={{ background: "transparent" }}>
+                                        <XCircle size={12} />
+                                        {t("Cancel Bulk")}
+                                    </div>
+                                </button>
+                            )}
+                            <BulkPaymentModal
+                                isOpen={showBulkModal}
+                                onClose={() => setShowBulkModal(false)}
+                                onNext={(recipients) => {
+                                    dataHandler("bulkPaymentRecipients", recipients)
+                                    dataHandler("isBulkPayment", true)
+                                    dataHandler("step", 3)
+                                }}
+                            />
                         </div>
                     }
                     {

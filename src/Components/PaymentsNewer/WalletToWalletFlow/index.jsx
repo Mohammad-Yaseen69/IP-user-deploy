@@ -107,6 +107,8 @@ const initialState = {
         zipCode: "",
     },
     showRecentMobile: false,
+    isBulkPayment: false,
+    bulkPaymentRecipients: []
 }
 
 function reducer(state, action) {
@@ -208,6 +210,9 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
     const disabledButton = useMemo(() => {
         switch (data.step) {
             case 1:
+                if (data.isBulkPayment) {
+                    return !data.bulkPaymentRecipients?.length
+                }
                 return !data.beneficiary_wallet?._id
             case 2:
                 return !data?.amount || !data.currency?._id || !data.exchange_rate?.exchange_rate || data.exchange_rate_error
@@ -593,6 +598,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
         }
     }
 
+    console.log(data?.bulkPaymentRecipients, "recipients")
     const getExchangeRate = async (amount, setLimitType, payment_method = "instant", from, setLoading) => {
         setLoading(true)
         dataHandler("exchange_rate_error", "")
@@ -804,6 +810,17 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
 
     useEffect(() => {
         let timeout;
+        if (data?.isBulkPayment) {
+            const exchange_rate_details = {
+                fee: { amount: 100, currency: "PKR" },
+                sending: { amount: 1000, currency: "PKR" },
+                topup_fee: { amount: 0, currency: "PKR" },
+                service_fee: { amount: 100, currency: "PKR" },
+                receiver: { currency: 1000, amount: "PKR" },
+                total: 1100,
+            }
+            dataHandler("exchange_rate", exchange_rate_details)
+        }
         if (data.payment_type?.value && data.currency?._id && (data.recipient_amount || data.recipient_amount === null) && data.beneficiary_wallet?.wallet_id) {
             const getAmount = async () => {
                 let amount;
@@ -842,7 +859,11 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
     const handleClick = () => {
         switch (data.step) {
             case 1:
-                verifyWallet()
+                if (data.isBulkPayment) {
+                    dataHandler("step", 3)
+                } else {
+                    verifyWallet()
+                }
                 break;
             case 2:
                 dataHandler("step", 3)
@@ -992,6 +1013,9 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                 dataHandler("showShippingAddress", true)
             }
             dataHandler("step", data.step - 1)
+        }
+        else if (data.step === 3 && data.isBulkPayment) {
+            dataHandler("step", 1)
         }
         else if (data.step === 3 && payment_type === "payment_address") {
             navigate(`/pay/${userDetails.username}?amount=${amount}`)
