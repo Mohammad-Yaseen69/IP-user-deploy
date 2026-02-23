@@ -65,7 +65,7 @@ const InvoiceItemDetails = ({ inv }) => {
           }}
         >
           <span className={styles.label}> {t("Amount")}: </span>
-          <span className={styles.badge}>{t("Processing")}</span>
+          <span className={styles.badge}>{t(inv.status)}</span>
         </div>
         <h2>
           {inv.currency} {Number(inv.amount).toFixed(2)}
