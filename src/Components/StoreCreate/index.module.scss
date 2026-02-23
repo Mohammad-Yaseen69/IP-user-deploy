@@ -23,7 +23,7 @@
     align-items: center;
     padding: 0 35px;
 
-    @media (max-width: 800px) {
+    @media (max-width: 1000px) {
       grid-template-columns: 1fr !important;
       text-align: center;
     }
@@ -133,42 +133,13 @@
       img {
         width: 600px;
         height: 100%;
+        object-fit: contain;
       }
     }
   }
 }
 
-@media (max-width: 900px) {
 
-  .MyeShop {
-    display: block;
-    color: #4A32E3;
-
-    font-family: Manrope;
-    font-size: 30px;
-    font-style: normal;
-    font-weight: 800;
-    line-height: normal;
-    letter-spacing: -1.5px;
-  }
-
-  .mainContent {
-    grid-template-columns: 1fr;
-    text-align: center;
-
-    .featureItem {
-      justify-content: center;
-    }
-
-    .left {
-      align-items: center;
-    }
-
-    .right {
-      margin-top: 2rem;
-    }
-  }
-}
 
 .modalOverlay {
   position: fixed;
@@ -254,6 +225,55 @@
     &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+    }
+  }
+}
+
+@media (max-width: 1000px) {
+  .container {
+    padding: 1rem;
+
+    .MyeShop {
+      display: block;
+      color: #4A32E3;
+
+      font-family: Manrope;
+      font-size: 30px;
+      font-style: normal;
+      font-weight: 800;
+      line-height: normal;
+      letter-spacing: -1.5px;
+    }
+
+    .mainContent {
+      gap: 1rem;
+      grid-template-columns: 1fr !important;
+
+      .left {
+        gap: 1rem;
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        .features {
+          gap: 0.5rem;
+
+          .featureItem {
+            justify-content: center;
+            font-size: 0.8rem;
+
+          }
+        }
+
+        button {
+          width: 100%;
+        }
+      }
+
+      .right img {
+        max-width: 100%;
+      }
     }
   }
 }

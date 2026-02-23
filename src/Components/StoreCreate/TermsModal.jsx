@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import styles from "./index.module.scss";
 import { ChevronRight, X } from "react-feather";
 
-const TermsModal = ({ onContinue, setShowModal }) => {
+const TermsModal = ({ handleCreateStore, setShowModal }) => {
     const [agreed, setAgreed] = useState(false);
     const { t } = useTranslation()
     return (
@@ -30,8 +30,9 @@ const TermsModal = ({ onContinue, setShowModal }) => {
                     </button>
                     <button
                         className={styles.continue}
-                        onClick={onContinue}
-                        disabled={!agreed}
+                        onClick={
+                            handleCreateStore()
+                        } disabled={!agreed}
                     >
                         {t("Continue to eShop")} <ChevronRight />
                     </button>
