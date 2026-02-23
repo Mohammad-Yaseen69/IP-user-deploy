@@ -12,6 +12,7 @@ import { UserContext } from '../../Context/UserContext'
 import InstaPayLoader from '../Loader'
 import InvoiceTable from './InvoiceTable'
 import useWindowWidth from '../../utils/useWindowWidth'
+import { AiOutlineConsoleSql } from 'react-icons/ai'
 
 const ReceiptInvoice = () => {
     const { t } = useTranslation()
@@ -24,19 +25,11 @@ const ReceiptInvoice = () => {
     })
     const { userDetails } = useContext(UserContext)
 
-    const { isLoading, data } = useQuery({
-        queryKey: ["GetInvoicesList"],
-        queryFn: () => getInvoiceList(userDetails?._id, 1, 100),
+    const { isLoading, data = [], isRefetching } = useQuery({
+        queryKey: ["GetInvoicesList", search.trim().toLowerCase()],
+        queryFn: () => getInvoiceList(userDetails?._id, 1, 100, search.trim().toLowerCase()),
     })
-    const filteredInvoices = useMemo(() => {
-        const term = search.trim().toLowerCase()
-        if (!term) return data
-        return data.filter(inv =>
-            inv.title.toLowerCase().includes(term) ||
-            inv.invoiceId.toLowerCase().includes(term) ||
-            inv.status.toLowerCase().includes(term)
-        )
-    }, [data, search])
+
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -47,7 +40,7 @@ const ReceiptInvoice = () => {
                 {width > 1000 && <TopRight />}
             </div>
 
-            {isLoading ? <div style={{ width: "70%", margin: "auto" }}><InstaPayLoader /></div> : <>
+            {isLoading && !isRefetching ? <div style={{ width: "70%", margin: "auto" }}><InstaPayLoader /></div> : <>
                 {data?.length < 1 &&
                     <NoInvoiceScreen setShowModal={setShowModal} />
                 }
@@ -79,7 +72,7 @@ const ReceiptInvoice = () => {
                         </div>
                         <InvoiceTable
                             setEditModal={setEditModal}
-                            filteredInvoices={filteredInvoices}
+                            filteredInvoices={data || []}
                         />
                     </div>
                 }

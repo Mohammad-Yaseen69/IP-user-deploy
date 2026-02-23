@@ -28,8 +28,8 @@ const uploadQR = async (formData) => {
     return decryptData(response.data.data)?.data
 }
 
-const getInvoiceList = async (accountId, skip = 0, limit = 10) => {
-    const response = await axios.get(`${path}/get-invoices-list/${accountId}/${skip}/${limit}`, {
+const getInvoiceList = async (accountId, skip = 0, limit = 10, query) => {
+    const response = await axios.get(`${path}/get-invoices-list/${accountId}/${skip}/${limit}?search=${query}`, {
         headers: getAuthHeader()
     })
     return decryptData(response.data.data)?.data
