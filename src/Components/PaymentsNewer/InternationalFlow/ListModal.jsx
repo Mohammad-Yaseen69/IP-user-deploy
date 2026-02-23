@@ -45,10 +45,10 @@ const ListModal = ({ isOpen, toggle, content, onSelectHandler, searchable = fals
     }, [])
 
     useEffect(() => {
-        if(content.list?.length === 1){
+        if (content.list?.length === 1) {
             setCurrent(content?.list[0])
-        }   
-    },[content])
+        }
+    }, [content])
     return (
         <Modal isOpen={isOpen} style={{ width: "96vw", maxWidth: "850px" }} contentClassName={styles.content}>
             <ModalBody className={styles.body}>
@@ -87,7 +87,7 @@ const ListModal = ({ isOpen, toggle, content, onSelectHandler, searchable = fals
                                                         {
                                                             item?.file_url
                                                             &&
-                                                            <img src={item?.file_url} alt="" />
+                                                            <img style={{ boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px" }} src={item?.file_url} alt="" />
                                                         }
                                                         <div >
                                                             <span>{t(item?.name)}</span>
