@@ -150,7 +150,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
                                 }
                             </>
                             }
-                            <button
+                            {/* <button
                                 className={styles.bulk_btn}
                                 onClick={() => setShowBulkModal(true)}
                             >
@@ -158,7 +158,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
                                     <Users size={12} />
                                     {t("Bulk Recipients")}
                                 </div>
-                            </button>
+                            </button> */}
                             {data.isBulkPayment && (
                                 <button
                                     className={styles.bulk_btn}
