@@ -27,6 +27,14 @@ import { exportToExcel } from "../../utils/Functions/csvExport";
 
 
 
+const transactionFilter = (t) => {
+    if (t.transaction_type?.toLowerCase() === "credit" && t.status?.toLowerCase() === "failed" && t.payment_type?.toLowerCase() === "mobile_wallet") {
+        return false
+    } else {
+        return true
+    }
+}
+
 
 
 const TransactionsTable = () => {
@@ -103,8 +111,8 @@ const TransactionsTable = () => {
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
-                setTransactions(prev => [...prev, ...decrypted.transactionList])
-                setFiltered(prev => [...prev, ...decrypted.transactionList])
+                setTransactions(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
+                setFiltered(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
                 // console.log("all", decrypted)
                 setIsLoading(false)
             })
@@ -128,8 +136,8 @@ const TransactionsTable = () => {
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
-                setTransactions(prev => [...prev, ...decrypted.transactionList])
-                setFiltered(prev => [...prev, ...decrypted.transactionList])
+                setTransactions(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
+                setFiltered(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
 
                 // console.log("query", decrypted)
                 setIsLoading(false)
@@ -165,8 +173,8 @@ const TransactionsTable = () => {
         })
             .then(res => {
                 const decrypted = decryptData(res.data.data)
-                setTransactions(prev => [...prev, ...decrypted.transactionList])
-                setFiltered(prev => [...prev, ...decrypted.transactionList])
+                setTransactions(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
+                setFiltered(prev => [...prev, ...decrypted.transactionList.filter(transactionFilter)])
 
                 // console.log("date & query", decrypted)
                 setIsLoading(false)
