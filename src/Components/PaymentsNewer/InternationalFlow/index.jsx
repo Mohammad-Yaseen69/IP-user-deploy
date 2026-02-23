@@ -71,7 +71,7 @@ const apiErrors = {
 
 export const apiErrorMessage = (code) => {
     let error;
-    console.log(code, "lololo")
+    // console.log(code, "lololo")
     for (const key in apiErrors) {
         if (code?.includes(key)) {
             error = apiErrors[key]
@@ -663,10 +663,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         }
     }
 
-    const createTransaction = async (codeType = "") => {
+    const createTransaction = async (codeType = "", isResend = true) => {
         setLoading(true)
         try {
-            let payload;
+            let payload = {}            
             const transaction_data = {
                 additional_information: internationalData.comment,
                 purpose_of_remittance: internationalData.reason,
@@ -680,9 +680,18 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             }
 
             if (internationalData.payoutChannel?.vendor === "thunes") {
-                payload = {
-                    ...transaction_data,
-                    type: codeType || internationalData.codeType
+                if (isResend) {
+                    payload = {
+                        data: {
+                            token: internationalData.thunesCreateTransactionToken
+                        },
+                        type: codeType || internationalData.codeType
+                    }
+                } else {
+                    payload = {
+                        ...transaction_data,
+                        type: codeType || internationalData.codeType
+                    }
                 }
 
                 internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank") ? payload.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id : payload.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id
@@ -696,7 +705,8 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 internationalData.payoutChannel?.value?.toLowerCase()?.includes("bank") ? payload.data.bank_id = internationalData.beneficiary?.bank_details?.[0]?._id : payload.data.mobile_wallet_id = internationalData.beneficiary?.mobile_wallet?.[0]?._id
             }
             const enc = encryptData(payload)
-            const url = internationalData.payoutChannel?.vendor === "thunes" ? `${import.meta.env.VITE_THUNES_API}/createTransaction/${internationalData.created_quotation?.QuotationID}` : `${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`
+            const thunesUrl = isResend ? `${import.meta.env.VITE_IP_DEV_API}/api/wallet/otp-send` : `${import.meta.env.VITE_THUNES_API}/createTransaction/${internationalData.created_quotation?.QuotationID}`
+            const url = internationalData.payoutChannel?.vendor === "thunes" ? thunesUrl : `${import.meta.env.VITE_IP_DEV_API}/api/wallet/send-otp`
 
             const res = await axios.post(url, {
                 data: enc
@@ -706,6 +716,9 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
 
             const dec = decryptData(res.data.data)
             console.log(dec)
+            if (!isResend) {
+                updateInternationalData("thunesCreateTransactionToken", dec?.token)
+            }
             updateInternationalData("created_transaction", dec)
             updateInternationalData("showOtpModal", true)
         } catch (error) {
@@ -1029,7 +1042,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                     updateInternationalData("showCard", false)
                 }
                 else {
-                    createTransaction()
+                    createTransaction("", false)
                 }
                 break;
             default:
