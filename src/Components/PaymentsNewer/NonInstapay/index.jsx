@@ -16,7 +16,7 @@ import WalletsComponent from '../InternationalFlow/WalletsComponent'
 import FeesComponent from '../InternationalFlow/FeesComponent'
 import StepThree from '../InternationalFlow/StepThree'
 import OtpConfirmation from '../InternationalFlow/OtpConfirmation'
-import { ChevronLeft, ChevronRight, HelpCircle, Link } from 'react-feather'
+import { ChevronLeft, ChevronRight, HelpCircle } from 'react-feather'
 import StepFive from '../InternationalFlow/StepFive'
 import StepFour from '../InternationalFlow/StepFour'
 import StepOne from './StepOne'
@@ -39,6 +39,7 @@ import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import axios from 'axios'
 import { createShambeToken } from '../../../Helper/CreateToken'
 import CreditCard from '../InternationalFlow/CreditCard'
+import { Link } from 'react-router-dom'
 
 
 const leftSideContent = [
@@ -104,7 +105,6 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
     const [data, dispatch] = useReducer(reducer, initialState)
     const { userDetails, userWallets, setProfileLockTime } = useContext(UserContext)
     const { limitStatus, clearStatus } = useTopupLimitCheck(data?.currency?.currency?.code, +String(data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
-    const { country } = useCountryLocation()
     const [showCardModal, setShowCardModal] = useState(false)
     const { getExchangeRate: getPlainExchangeRate } = usePlainFx()
     const queryClient = useQueryClient()
@@ -122,7 +122,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
 
     const { mutateAsync: getFeeDetails } = useMutation({
         mutationFn: ({ receiverCountryCode, sendingWalletId, amount, type, paymentType, identifier }) => apiWrapper({
-            endpoint: "/api/pre-wallet/get-fee-details",
+            endpoint: `/api/pre-wallet/get-fee-details?${data?.exchange_rate?.receiver?.amount ? `preserved_amount=${data?.exchange_rate?.receiver?.amount}` : ""}`,
             method: "POST",
             // isEncrypted: false,
             payload: {
@@ -255,7 +255,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
             dataHandler("exchange_rate", {})
             const res = await getFeeDetails({
                 receiverCountryCode: data?.country?.alpha3,
-                sendingWalletId: data?.currency?._id,
+                sendingWalletId: data?.payment_type?.value === "wallet" ? data?.wallet?._id : data?.currency?._id,
                 amount: Number(amount),
                 type: type || "DETAILS",
                 paymentType: data?.payment_type?.value,
@@ -506,12 +506,12 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
         }
     }, [data])
 
-    // useEffect(() => {
-    //     if (country) {
-    //         const countryObj = countriesData.find(c => c.alpha3 === country)
-    //         dataHandler("country", countryObj)
-    //     }
-    // }, [country])
+    useEffect(() => {
+        if (userDetails?.country_iso_code) {
+            const countryObj = countriesData.find(c => c.alpha3 === userDetails?.country_iso_code)
+            dataHandler("country", countryObj)
+        }
+    }, [userDetails?.country_iso_code])
 
     useEffect(() => {
         if (userDetails?._id) {
@@ -682,7 +682,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                                         tokenUrl={() => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}`}
                                         data={data}
                                         dataHandler={dataHandler}
-                                        
+
                                     />
                             }
                         </>
@@ -781,7 +781,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                 }}>
                     <SendActionCard
                         bg={bg}
-                        title={t("Send to a Non-Instapay User")}
+                        title={t("Send to a Non-InstaPay User")}
                         icon={icon}
                         desc={t("Instantly transfer money to non- InstaPay users with our secure wallet-to-wallet service. Send and receive funds hassle-free within seconds.")}
                         setter={setSendPaymentType}
