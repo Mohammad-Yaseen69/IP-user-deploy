@@ -3,6 +3,7 @@ import styles from "./styles/index.module.scss";
 import { useTranslation } from "react-i18next";
 import InvoiceItem from "./InvoiceItem";
 import useWindowWidth from "../../utils/useWindowWidth";
+import { service_name_formatter } from "../TransactionsNewApi/TransactionItem";
 
 export const formatDateTime = (iso, dateOrTime = "both") => {
   try {
@@ -22,6 +23,7 @@ const InvoiceTable = ({ filteredInvoices, setEditModal }) => {
   const { t } = useTranslation();
   const width = useWindowWidth();
   const [menuOpenFor, setMenuOpenFor] = useState(null);
+
 
   return (
     <div className={styles.tableWrapper}>
@@ -52,13 +54,13 @@ const InvoiceTable = ({ filteredInvoices, setEditModal }) => {
               {t("Description")}
             </div>
           )}
-          
-            <div
-              style={{ flex: width <= 700 ? 0.20 : 0.12 }}
-              className={`${styles.th} ${styles.amount}`}
-            >
-              {t("Amount")}
-            </div>
+
+          <div
+            style={{ flex: width <= 700 ? 0.20 : 0.12 }}
+            className={`${styles.th} ${styles.amount}`}
+          >
+            {t("Amount")}
+          </div>
           {width > 700 && (
             <div style={{ flex: 0.17 }} className={styles.th}>
               {t("Receiving Wallet")}
@@ -79,8 +81,9 @@ const InvoiceTable = ({ filteredInvoices, setEditModal }) => {
 
         {filteredInvoices.map((inv, idx) => {
           const sn = idx + 1;
+          inv.status = inv.status === "accepted" ? "Completed" : service_name_formatter(inv.status)
           const badgeClass =
-            inv.status === "Accepted"
+            inv.status === "Completed"
               ? styles.badgeAccepted
               : inv.status === "Declined"
                 ? styles.badgeDeclined
