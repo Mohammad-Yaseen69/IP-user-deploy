@@ -440,7 +440,7 @@ const PaymentsNewer = () => {
                                                         setStep(3)
                                                     }} style={{ background: `url(${noninstapay_m})` }}>
                                                         <img src={ni_m_i} alt="" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
-                                                        <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", maxWidth: "15ch" }}>{t("Non-Instapay Transfer")}</span>
+                                                        <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", maxWidth: "15ch" }}>{t("To Non-InstaPay User")}</span>
                                                     </button>
                                                 }
                                             </>

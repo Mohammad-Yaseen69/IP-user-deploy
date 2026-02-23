@@ -41,7 +41,7 @@ const ReceiptInvoice = () => {
         <div className={styles.container}>
             <div className={styles.top}>
                 <h1>
-                    {t("My Receipts")}
+                    {t("My Invoices")}
                 </h1>
 
                 {width > 1000 && <TopRight />}
