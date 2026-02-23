@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import styles from "../ReceiptInvoices/styles/index.module.scss";
+import styles from "./index.module.scss";
 import { ChevronRight, X } from "react-feather";
 
 const TermsModal = ({ onContinue, setShowModal }) => {

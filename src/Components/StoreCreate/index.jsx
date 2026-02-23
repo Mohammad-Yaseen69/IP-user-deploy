@@ -13,7 +13,7 @@ import { apiWrapper } from "../../utils/Functions/apiWrapper"
 import useWindowWidth from '../../utils/useWindowWidth'
 import InstaPayLoader from '../Loader'
 import bg from "../ReceiptInvoices/files/Footer Section.png"
-import styles from "../ReceiptInvoices/styles/index.module.scss"
+import styles from "./index.module.scss"
 import TopRight from '../topRight'
 import TermsModal from "./TermsModal"
 const StoreCreate = () => {
