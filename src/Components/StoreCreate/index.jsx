@@ -59,6 +59,8 @@ const StoreCreate = () => {
     const handleCreateStore = () => {
         const eShopUrl = `${import.meta.env.VITE_IP_ECOM_URL}/dashboard/seller?fromMain=true`
         openInNewTab(eShopUrl)
+        setShowModal(false)
+
     }
 
     if (isLoading) {
@@ -100,7 +102,7 @@ const StoreCreate = () => {
                             </div>
                         ))}
                     </div>
-                    <button onClick={handleCreateStore}>{t("Get Started / Create Shop")}</button>
+                    <button onClick={() => setShowModal(true)}>{t("Get Started / Create Shop")}</button>
                     <p className={styles.links}>
                         <span className={styles.link}>
                             {t("eShop Guide")}
@@ -116,7 +118,7 @@ const StoreCreate = () => {
                     <img src={bg} alt="Store Illustration" />
                 </div>
             </div>
-            {showModal && <TermsModal onContinue={setShowModal}  setShowModal={setShowModal} />}
+            {showModal && <TermsModal setShowModal={setShowModal} handleCreateStore={handleCreateStore} />}
 
         </div>
     );
