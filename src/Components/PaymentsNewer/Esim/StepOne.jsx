@@ -55,7 +55,7 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                                 </div>
 
                                 <div className={styles.contentDiv} style={{ flexDirection: width < 600 && "column", alignItems: width < 600 && "flex-start" }}>
-                                    <h4>{t("Travel Distance")}</h4>
+                                    <h4>{t("Country")}</h4>
 
                                     <div style={{ flex: 0, width: width < 600 ? "100%" : "fit-content", minWidth: 'fit-content' }} className={`${country_styles.country} ${styles.country}`} onClick={() => setShowModal(true)}>
                                         <div className={country_styles.main}>

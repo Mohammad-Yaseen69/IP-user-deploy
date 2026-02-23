@@ -33,7 +33,7 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
         setLoadingCountries(true)
         const getCountries = async () => {
             try {
-                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/dt/countries`, { headers: authHeader })
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/dt/countries${data.flow === "e-sim" ? '?service=esim' : ''}`, { headers: authHeader })
                 const decrypted = decryptData(res.data.data)
                 const countriesArray = allCountries.filter((item) => {
                     return decrypted.some(apiCountry => apiCountry.iso_code === item?.alpha3)
