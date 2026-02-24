@@ -95,8 +95,8 @@ const InvoicePayment = () => {
 
   const toggleCreditModal = () => {
     if (data.amount < state.limits?.topup_min_amount) {
-      toast.error(t("Minimum amount for guest pay is") + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
-      dataHandler("guestPayError", t("Minimum amount for guest pay is") + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
+      toast.error(t("Minimum amount for guest pay is") + " " + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
+      dataHandler("guestPayError", t("Minimum amount for guest pay is") + " " + formatCurrency(state.limits?.topup_min_amount, true) + " " + data?.currency)
       setTimeout(() => {
         dataHandler("guestPayError", "")
       }, 3000)
