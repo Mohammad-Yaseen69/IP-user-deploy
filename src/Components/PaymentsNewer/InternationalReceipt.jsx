@@ -7,8 +7,9 @@ import { takeScreenshot } from "../../Helper/takeScreenshot";
 import download from "../Profile/files/download.svg"
 import { useState } from "react";
 import gif from "../Auth/files/success.gif"
+import { formatCurrency } from "../../Helper/AmountFormat";
 
-const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, paymentType, setShowStatus, isExternalWithdrawal, transactionDetails, type = "transferring" }) => {
+const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, isExternalWithdrawal, transactionDetails, type = "transferring" }) => {
     const { t } = useTranslation()
     const [downloading, setDownloading] = useState(false)
     return (
@@ -34,7 +35,7 @@ const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, paymen
                 <div style={{ display: "flex", flexDirection: "column", padding: "14px" }} className="conf_cont transaction-receipt">
                     <div style={{ textAlign: 'center' }}>
                         {isExternalWithdrawal ? <span style={{ color: "#8a8a8a", fontSize: "1.1rem" }}>{t(`Your external withdrawal request is successfull`)}</span> : <span style={{ color: "#8a8a8a", fontSize: "1.1rem" }}>{t(`You have ${type}`)}</span>}
-                        <h4 style={{ fontSize: "2rem" }}>{currency} {amount}</h4>
+                        <h4 style={{ fontSize: "2rem" }}>{currency} {formatCurrency(amount, true)}</h4>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
                         {
@@ -68,7 +69,7 @@ const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, paymen
                                 color: "#8a8a8a",
                                 fontSize: window.innerWidth > 1500 ? ".8rem" : ".6rem"
                             }}>
-                                {t("Receiver Gets")}: <span style={{ color: "black", fontWeight: 600 }}>{transactionDetails?.destination?.amount} {transactionDetails?.destination?.currency}</span>
+                                {t("Receiver Gets")}: <span style={{ color: "black", fontWeight: 600 }}>{formatCurrency(transactionDetails?.destination?.amount, true)} {transactionDetails?.destination?.currency}</span>
                             </div>
                         }
                     </div>
@@ -95,8 +96,8 @@ const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, paymen
                                 }}
                             >
                                 {
-                                    beneficiary.map(item => (
-                                        <SwiperSlide>
+                                    beneficiary.map((item, key) => (
+                                        <SwiperSlide key={key}>
                                             <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
                                                 <div style={{
                                                     width: "30px",
@@ -172,9 +173,9 @@ const Receipt = ({ beneficiary, amount, currency, country, payoutChannel, paymen
                     {
                         downloading
                             ?
-                            <div class="d-flex justify-content-center">
-                                <div class="spinner-border" color='primary' role="status">
-                                    <span class="sr-only">Loading...</span>
+                            <div className="d-flex justify-content-center">
+                                <div className="spinner-border" color='primary' role="status">
+                                    <span className="sr-only">Loading...</span>
                                 </div>
                             </div>
                             :
