@@ -25,6 +25,7 @@ import BankDeposit from "../../AddFunds/WalletFundsFlow/BankDeposit";
 import PaymentDetails from "./PaymentDetails";
 import RecipientDetails from "./RecipientDetails";
 import PaypalDetails from "./PaypalDetails";
+import successGif from "../../QuickQrPay/files/success.gif";
 
 const initialState = {
   loading: false,
@@ -720,165 +721,175 @@ const PayAsGuest = ({
             >
               <X color="black" />
             </button>
-            <div className={styles.left}>
-              <div className={styles.l_top}>
-                <h1>{t("PAY AS A GUEST")}</h1>
-                <h2>
-                  {data.step === 1 && t("Select Your Country")}
-                  {data.step === 2 && t("Select Payment Type")}
-                  {data.step === 3 &&
-                    (data.payment_type?.value === "card"
-                      ? t("Enter Card Details")
-                      : t("Enter Your Personal Details"))}
-                  {data.step === 4 &&
-                    (data.payment_type?.value === "card"
-                      ? t("Enter Your Personal Details")
-                      : t("Review Payment"))}
-                  {data.step === 5 &&
-                    (data.payment_type?.value === "card"
-                      ? t("Review Payment")
-                      : "")}
-                </h2>
+            {data.mobileWalletSuccess ? (
+              <div className={styles.success_container}>
+                <img src={successGif} alt="Success" className={styles.success_gif} />
+                <h2>{t("Payment Initiated")}</h2>
+                <p>
+                  {t(
+                    "Please open your mobile money app and approve the payment notification you have received to complete and validate this transaction."
+                  )}
+                </p>
+                <button className={styles.close_btn} onClick={toggle}>
+                  {t("Close")}
+                </button>
               </div>
-              {data.step > 1 && (
-                <div className={styles.l_bottom}>
-                  {data.loading ? (
-                    <div style={{ height: "200px", width: "200px" }}>
-                      <InstaPayLoader />
+            ) : (
+              <>
+                <div className={styles.left}>
+                  <div className={styles.l_top}>
+                    <h1>{t("PAY AS A GUEST")}</h1>
+                    <h2>
+                      {data.step === 1 && t("Select Your Country")}
+                      {data.step === 2 && t("Select Payment Type")}
+                      {data.step === 3 &&
+                        (data.payment_type?.value === "card"
+                          ? t("Enter Card Details")
+                          : t("Enter Your Personal Details"))}
+                      {data.step === 4 &&
+                        (data.payment_type?.value === "card"
+                          ? t("Enter Your Personal Details")
+                          : t("Review Payment"))}
+                      {data.step === 5 &&
+                        (data.payment_type?.value === "card"
+                          ? t("Review Payment")
+                          : "")}
+                    </h2>
+                  </div>
+                  {data.step > 1 && (
+                    <div className={styles.l_bottom}>
+                      {data.loading ? (
+                        <div style={{ height: "200px", width: "200px" }}>
+                          <InstaPayLoader />
+                        </div>
+                      ) : null}
                     </div>
-                  ) : null}
+                  )}
                 </div>
-              )}
-            </div>
-            <div className={styles.right}>
-              {data.step === 1 && (
-                <Country username={username} data={data} dataHandler={dataHandler} />
-              )}
+                <div className={styles.right}>
+                  {data.step === 1 && (
+                    <Country username={username} data={data} dataHandler={dataHandler} />
+                  )}
 
-              {data.step === 2 && (
-                <StepOne
-                  data={data}
-                  dataHandler={dataHandler}
-                  allowed={allowed}
-                  wallet={wallet}
-                />
-              )}
-              {data.step === 3 &&
-                (data.payment_type?.value === "card" ?
-                  (
-                    <div style={{ height: "100%" }}>
-                      <div className={styles.bot_top}>
-                        <h5>{t("Payment Details")}</h5>
-                        <span>
-                          {t(
-                            "Complete your payment by providing your payment details"
-                          )}
-                        </span>
-                      </div>
-                      <CreditCard
-                        showSave={false}
-                        data={data}
-                        dataHandler={dataHandler}
-                        tokenUrl={() => ""}
-                        url={""}
-                        inGuest={true}
-                        showCards={false}
-                      />
-                    </div>
-                  ) :
-                  <RecipientDetails
-                    data={data}
-                    dataHandler={dataHandler}
-                    isShipping={isShipping}
-                    isReferenceRequired={isReferenceRequired}
-                  />
-                )
-              }
-              {data.step === 4 &&
-                (
-                  data.payment_type?.value === "paypal" || data.payment_type?.value === "mobile_wallet" ?
-                    <PaymentDetails
-                      dataHandler={dataHandler}
+                  {data.step === 2 && (
+                    <StepOne
                       data={data}
-                      amount={amount}
+                      dataHandler={dataHandler}
+                      allowed={allowed}
+                      wallet={wallet}
                     />
-                    :
-                    data.payment_type?.value === "card" ?
+                  )}
+                  {data.step === 3 &&
+                    (data.payment_type?.value === "card" ?
+                      (
+                        <div style={{ height: "100%" }}>
+                          <div className={styles.bot_top}>
+                            <h5>{t("Payment Details")}</h5>
+                            <span>
+                              {t(
+                                "Complete your payment by providing your payment details"
+                              )}
+                            </span>
+                          </div>
+                          <CreditCard
+                            showSave={false}
+                            data={data}
+                            dataHandler={dataHandler}
+                            tokenUrl={() => ""}
+                            url={""}
+                            inGuest={true}
+                            showCards={false}
+                          />
+                        </div>
+                      ) :
                       <RecipientDetails
                         data={data}
                         dataHandler={dataHandler}
-                        isReferenceRequired={isReferenceRequired}
                         isShipping={isShipping}
+                        isReferenceRequired={isReferenceRequired}
                       />
-                      :
-                      <BankDeposit
-                        type={'payment_address'}
-                        data={{ ...data, wallet }}
+                    )
+                  }
+                  {data.step === 4 &&
+                    (
+                      data.payment_type?.value === "paypal" || data.payment_type?.value === "mobile_wallet" ?
+                        <PaymentDetails
+                          dataHandler={dataHandler}
+                          data={data}
+                          amount={amount}
+                        />
+                        :
+                        data.payment_type?.value === "card" ?
+                          <RecipientDetails
+                            data={data}
+                            dataHandler={dataHandler}
+                            isReferenceRequired={isReferenceRequired}
+                            isShipping={isShipping}
+                          />
+                          :
+                          <BankDeposit
+                            type={'payment_address'}
+                            data={{ ...data, wallet }}
+                            dataHandler={dataHandler}
+                            guestDetails={{
+                              name: data.fullName,
+                              phone: data.phone,
+                              email: data.email,
+                              iso_code: data.country?.alpha3
+                            }}
+                            client_reference={data.paymentRef}
+                            toggle={toggle}
+                          />
+                    )
+                  }
+                  {data.step === 5 &&
+                    (data.payment_type?.value === "card" ? (
+                      // <StepFive
+                      <PaymentDetails
                         dataHandler={dataHandler}
-                        guestDetails={{
-                          name: data.fullName,
-                          phone: data.phone,
-                          email: data.email,
-                          iso_code: data.country?.alpha3
-                        }}
-                        client_reference={data.paymentRef}
-                        toggle={toggle}
+                        data={data}
+                        amount={amount}
                       />
-                )
-              }
-              {data.step === 5 &&
-                (data.payment_type?.value === "card" ? (
-                  // <StepFive
-                  <PaymentDetails
-                    dataHandler={dataHandler}
-                    data={data}
-                    amount={amount}
-                  />
-                ) : (
-                  ""
-                ))}
-              {data.mobileWalletSuccess && (
-                <div style={{ textAlign: 'center', padding: '20px' }}>
-                  <h2>Payment Initiated Successfully</h2>
-                  <p>The recipient will receive the funds once the mobile money transfer is completed. You can close this modal if you want.</p>
-                  <button onClick={toggle} style={{ marginTop: '10px', padding: '10px 20px', background: '#5926F0', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Close</button>
-                </div>
-              )}
-              {(data.payment_type?.value !== "bank" || data.step < 4) && !data.mobileWalletSuccess &&
-                <div className={styles.bottom} style={{ marginTop: "auto" }}>
-                  <Link
-                    to={"https://insta-pay.ch/faqs"}
-                    target="_blank"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: ".7rem",
-                    }}
-                  >
-                    <HelpCircle size={16} />
-                    {t("Trouble Sending Money")}
-                  </Link>
-                  <div className={styles?.buttons}>
-                    <button
-                      className={styles.transparent}
-                      disabled={data.loading}
-                      onClick={onBackClickHandler}
-                    >
-                      {t("Back")}
-                    </button>
-                    {data.loading ? <div style={{ width: "100px" }}> <InstaPayLoader /> </div> :
-                      <button
-                        disabled={data.loading || disabled}
-                        onClick={onClickHandler}
+                    ) : (
+                      ""
+                    ))}
+                  {(data.payment_type?.value !== "bank" || data.step < 4) &&
+                    <div className={styles.bottom} style={{ marginTop: "auto" }}>
+                      <Link
+                        to={"https://insta-pay.ch/faqs"}
+                        target="_blank"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: ".7rem",
+                        }}
                       >
-                        {t("Next")}
-                        <ChevronRight size={18} />
-                      </button>
-                    }
-                  </div>
+                        <HelpCircle size={16} />
+                        {t("Trouble Sending Money")}
+                      </Link>
+                      <div className={styles?.buttons}>
+                        <button
+                          className={styles.transparent}
+                          disabled={data.loading}
+                          onClick={onBackClickHandler}
+                        >
+                          {t("Back")}
+                        </button>
+                        {data.loading ? <div style={{ width: "100px" }}> <InstaPayLoader /> </div> :
+                          <button
+                            disabled={data.loading || disabled}
+                            onClick={onClickHandler}
+                          >
+                            {t("Next")}
+                            <ChevronRight size={18} />
+                          </button>
+                        }
+                      </div>
+                    </div>
+                  }
                 </div>
-              }
-            </div>
+              </>
+            )}
           </ModalBody>
         </Modal>
       ) : (
@@ -901,204 +912,230 @@ const PayAsGuest = ({
               <X color="black" />
             </button>
 
-            <div className={paym_styles.mobile} style={{ marginTop: 0 }}>
-              <div className={paym_styles.m_top}>
-                <img
-                  src={logo}
-                  style={{ width: "130px", margin: "0px auto 20px auto" }}
-                  alt=""
-                />
-                <h1 style={{ color: "#906EF5", letterSpacing: "1.5px" }}>
-                  {t("PAY AS A GUEST")}
-                </h1>
-                <h2>
-                  {data.step === 1 && t("Select Your Country")}
-                  {data.step === 2 && t("Select Payment Type")}
-                  {data.step === 3 &&
-                    (data.payment_type?.value === "card"
-                      ? t("Enter Card Details")
-                      : t("Enter Your Personal Details"))}
-                  {data.step === 4 &&
-                    (data.payment_type?.value === "card"
-                      ? t("Enter Your Personal Details")
-                      : t("Review Payment"))}
-                  {data.step === 5 &&
-                    (data.payment_type?.value === "card"
-                      ? t("Review Payment")
-                      : "")}
-                </h2>
-              </div>
-            </div>
-            <div className={paym_styles.flow}>
-
+            {data.mobileWalletSuccess ? (
               <div
-                className={paym_styles.flow_com}
-                style={{ minHeight: "41vh" }}
+                className={styles.success_container}
+                style={{
+                  minHeight: "70vh",
+                  background: "white",
+                  padding: "2rem 1rem",
+                }}
               >
-                {data.step === 1 && (
-                  <Country username={username} data={data} dataHandler={dataHandler} />
-                )}
-                {data.step === 2 && (
-                  <StepOne
-                    data={data}
-                    dataHandler={dataHandler}
-                    allowed={allowed}
-                    wallet={wallet}
-                  />
-                )}
-                {data.step === 3 &&
-                  (data.payment_type?.value === "card" ?
-                    (
-                      <div
-                        style={{
-                          height: "100%",
-                          background:
-                            "linear-gradient(180deg, #FFF 0%, rgba(255, 255, 255, 0.00) 100%)",
-                          borderRadius: "8px",
-                          padding: "15px",
-                        }}
-                      >
-                        <div className={styles.bot_top}>
-                          <h5>{t("Payment Details")}</h5>
-                          <span>
-                            {t(
-                              "Complete your payment by providing your payment details"
-                            )}
-                          </span>
-                        </div>
-                        <CreditCard
-                          showSave={false}
-                          data={data}
-                          dataHandler={dataHandler}
-                          tokenUrl={() => ""}
-                          url={""}
-                          showCards={false}
-                          guest={true}
-                          inGuest={true}
-                        />
-                      </div>
-                    ) :
-                    (
-                      <RecipientDetails
+                <img
+                  src={successGif}
+                  alt="Success"
+                  className={styles.success_gif}
+                  style={{ width: "200px" }}
+                />
+                <h2 style={{ fontSize: "24px" }}>{t("Payment Initiated")}</h2>
+                <p style={{ fontSize: "14px" }}>
+                  {t(
+                    "Please open your mobile money app and approve the payment notification you have received to complete and validate this transaction."
+                  )}
+                </p>
+                <button
+                  className={styles.close_btn}
+                  onClick={toggle}
+                  style={{ width: "100%", marginTop: "auto" }}
+                >
+                  {t("Close")}
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className={paym_styles.mobile} style={{ marginTop: 0 }}>
+                  <div className={paym_styles.m_top}>
+                    <img
+                      src={logo}
+                      style={{ width: "130px", margin: "0px auto 20px auto" }}
+                      alt=""
+                    />
+                    <h1 style={{ color: "#906EF5", letterSpacing: "1.5px" }}>
+                      {t("PAY AS A GUEST")}
+                    </h1>
+                    <h2>
+                      {data.step === 1 && t("Select Your Country")}
+                      {data.step === 2 && t("Select Payment Type")}
+                      {data.step === 3 &&
+                        (data.payment_type?.value === "card"
+                          ? t("Enter Card Details")
+                          : t("Enter Your Personal Details"))}
+                      {data.step === 4 &&
+                        (data.payment_type?.value === "card"
+                          ? t("Enter Your Personal Details")
+                          : t("Review Payment"))}
+                      {data.step === 5 &&
+                        (data.payment_type?.value === "card"
+                          ? t("Review Payment")
+                          : "")}
+                    </h2>
+                  </div>
+                </div>
+                <div className={paym_styles.flow}>
+
+                  <div
+                    className={paym_styles.flow_com}
+                    style={{ minHeight: "41vh" }}
+                  >
+                    {data.step === 1 && (
+                      <Country username={username} data={data} dataHandler={dataHandler} />
+                    )}
+                    {data.step === 2 && (
+                      <StepOne
                         data={data}
                         dataHandler={dataHandler}
-                        isShipping={isShipping}
-                        isReferenceRequired={isReferenceRequired}
-
+                        allowed={allowed}
+                        wallet={wallet}
                       />
-                    ))
-                }
+                    )}
+                    {data.step === 3 &&
+                      (data.payment_type?.value === "card" ?
+                        (
+                          <div
+                            style={{
+                              height: "100%",
+                              background:
+                                "linear-gradient(180deg, #FFF 0%, rgba(255, 255, 255, 0.00) 100%)",
+                              borderRadius: "8px",
+                              padding: "15px",
+                            }}
+                          >
+                            <div className={styles.bot_top}>
+                              <h5>{t("Payment Details")}</h5>
+                              <span>
+                                {t(
+                                  "Complete your payment by providing your payment details"
+                                )}
+                              </span>
+                            </div>
+                            <CreditCard
+                              showSave={false}
+                              data={data}
+                              dataHandler={dataHandler}
+                              tokenUrl={() => ""}
+                              url={""}
+                              showCards={false}
+                              guest={true}
+                              inGuest={true}
+                            />
+                          </div>
+                        ) :
+                        (
+                          <RecipientDetails
+                            data={data}
+                            dataHandler={dataHandler}
+                            isShipping={isShipping}
+                            isReferenceRequired={isReferenceRequired}
 
-                {data.step === 4 &&
-                  (data.payment_type?.value === "paypal" || data?.payment_type?.value === "mobile_wallet" ?
-                    (
-                      <>
+                          />
+                        ))
+                    }
+
+                    {data.step === 4 &&
+                      (data.payment_type?.value === "paypal" || data?.payment_type?.value === "mobile_wallet" ?
+                        (
+                          <>
+                            <PaymentDetails
+                              dataHandler={dataHandler}
+                              data={data}
+                              amount={amount}
+                            />
+
+                            <PaypalDetails data={data} wallet={wallet} />
+                          </>
+                        ) :
+
+                        data.payment_type?.value === "card" ?
+                          <RecipientDetails
+                            data={data}
+                            dataHandler={dataHandler}
+                            isShipping={isShipping}
+                            isReferenceRequired={isReferenceRequired}
+                          />
+                          :
+
+                          <BankDeposit
+                            type={'payment_address'}
+                            data={{ ...data, wallet }}
+                            dataHandler={dataHandler}
+                            guestDetails={{
+                              name: data.fullName,
+                              phone: data.phone,
+                              email: data.email,
+                              iso_code: data.country?.alpha3
+                            }}
+                            client_reference={data.paymentRef}
+                            toggle={toggle}
+                          />
+                      )
+                    }
+
+
+
+                    {data.step === 5 &&
+                      (data.payment_type?.value === "card" ? (
+                        // <StepFive
                         <PaymentDetails
                           dataHandler={dataHandler}
                           data={data}
                           amount={amount}
                         />
-
-                        <PaypalDetails data={data} wallet={wallet} />
-                      </>
-                    ) :
-
-                    data.payment_type?.value === "card" ?
-                      <RecipientDetails
-                        data={data}
-                        dataHandler={dataHandler}
-                        isShipping={isShipping}
-                        isReferenceRequired={isReferenceRequired}
-                      />
-                      :
-
-                      <BankDeposit
-                        type={'payment_address'}
-                        data={{ ...data, wallet }}
-                        dataHandler={dataHandler}
-                        guestDetails={{
-                          name: data.fullName,
-                          phone: data.phone,
-                          email: data.email,
-                          iso_code: data.country?.alpha3
-                        }}
-                        client_reference={data.paymentRef}
-                        toggle={toggle}
-                      />
-                  )
-                }
-
-
-
-                {data.step === 5 &&
-                  (data.payment_type?.value === "card" ? (
-                    // <StepFive
-                    <PaymentDetails
-                      dataHandler={dataHandler}
-                      data={data}
-                      amount={amount}
-                    />
-                  ) : (
-                    ""
-                  ))}
-                {data.mobileWalletSuccess && (
-                  <div style={{ textAlign: 'center', padding: '20px' }}>
-                    <h2>Payment Initiated Successfully</h2>
-                    <p>The recipient will receive the funds once the mobile money transfer is completed. You can close this modal if you want.</p>
-                    <button onClick={toggle} style={{ marginTop: '10px', padding: '10px 20px', background: '#5926F0', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Close</button>
+                      ) : (
+                        ""
+                      ))}
                   </div>
-                )}
-              </div>
 
-              {(data.payment_type?.value !== "bank" || data.step < 4) && !data.mobileWalletSuccess &&
-                <div
-                  className={paym_styles.bottom}
-                  style={{
-                    flexDirection: "column",
-                    margin: "2rem 0",
-                    gap: "1.5rem",
-                  }}
-                >
-                  <Link
-                    to={"https://insta-pay.ch/faqs"}
-                    target="_blank"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: ".7rem",
-                    }}
-                  >
-                    <HelpCircle size={16} />
-                    {t("Trouble Sending Money")}
-                  </Link>
-                  <div
-                    className={paym_styles?.buttons}
-                    style={{ flexDirection: "column" }}
-                  >
-                    {data.loading ? <div style={{ width: "120px" }}><InstaPayLoader /> </div> : <button
-                      disabled={data.loading || disabled}
-                      onClick={onClickHandler}
-                      style={{ width: "100%", background: "#5926F0" }}
-                    >
-                      {t("Next")}
-                    </button>}
-                    <button
-                      className={styles.transparent}
-                      disabled={data.loading}
+                  {(data.payment_type?.value !== "bank" || data.step < 4) &&
+                    <div
+                      className={paym_styles.bottom}
                       style={{
-                        width: "100%",
-                        background: "#EEEEEE",
-                        boxShadow: "0px 3.643px 30.052px 0px rgba(0, 0, 0, 0.09)",
-                        color: "black",
+                        flexDirection: "column",
+                        margin: "2rem 0",
+                        gap: "1.5rem",
                       }}
-                      onClick={onBackClickHandler}
                     >
-                      {t("Go Back")}
-                    </button>
-                  </div>
+                      <Link
+                        to={"https://insta-pay.ch/faqs"}
+                        target="_blank"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: ".7rem",
+                        }}
+                      >
+                        <HelpCircle size={16} />
+                        {t("Trouble Sending Money")}
+                      </Link>
+                      <div
+                        className={paym_styles?.buttons}
+                        style={{ flexDirection: "column" }}
+                      >
+                        {data.loading ? <div style={{ width: "120px" }}><InstaPayLoader /> </div> : <button
+                          disabled={data.loading || disabled}
+                          onClick={onClickHandler}
+                          style={{ width: "100%", background: "#5926F0" }}
+                        >
+                          {t("Next")}
+                        </button>}
+                        <button
+                          className={styles.transparent}
+                          disabled={data.loading}
+                          style={{
+                            width: "100%",
+                            background: "#EEEEEE",
+                            boxShadow: "0px 3.643px 30.052px 0px rgba(0, 0, 0, 0.09)",
+                            color: "black",
+                          }}
+                          onClick={onBackClickHandler}
+                        >
+                          {t("Go Back")}
+                        </button>
+                      </div>
+                    </div>
+                  }
                 </div>
-              }
-            </div>
+              </>
+            )}
           </div>
         </div>
       )}
