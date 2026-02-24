@@ -710,7 +710,6 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                                 </div>
                                             </div>
 
-                                            {/* Back of card */}
                                             <div className={styles.back}>
                                                 <div>
                                                     <img src={IpLogo} alt="" />
@@ -725,7 +724,14 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
 
                                                 <div className={styles.cardDets}>
                                                     <div className={styles.num}>
-                                                        <h3 className={styles.vals}>
+                                                        <h3
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleCopy(currentCardDetails?.card_number);
+                                                            }}
+                                                            className={styles.vals}
+                                                            style={{ cursor: 'pointer' }}
+                                                        >
                                                             {formatCardNumber(currentCardDetails?.card_number)}
                                                         </h3>
                                                         <img
