@@ -71,7 +71,7 @@ Sentry.init({
 
 
 
-if (!import.meta.env.DEV) {
+if (import.meta.env.DEV) {
   window.console.log = () => { };
   window.console.warn = () => { };
   window.console.error = () => { };
