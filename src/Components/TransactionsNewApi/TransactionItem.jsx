@@ -291,6 +291,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                     note={note}
                     setNote={setNote}
                     cardNo={cardNo}
+                    vvc={vvc}
                 />
             }
         </div>

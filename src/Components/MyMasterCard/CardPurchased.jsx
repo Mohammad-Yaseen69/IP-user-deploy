@@ -379,7 +379,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
             textColor: [255, 255, 255],
         };
 
-        const doc = new jsPDF();
+        const doc = new jsPDF({ orientation: "landscape" });
 
         // Add logo
         doc.addImage(img, "png", 14, 10, 46.5, 13);
@@ -420,13 +420,16 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
             `•••• •••• •••• ${tx.cardNo?.slice(-4) || "N/A"}`,
             tx.type?.toUpperCase() || "N/A",
             tx.transaction_type?.replace(/_/g, ' ').toUpperCase() || "N/A",
-            tx.reason || tx.merchantName || "N/A",
+            tx.reason || "N/A",
+            tx.merchantName || "N/A",
+            tx.merchantCategory || "N/A",
+            CountriesData.find(item => item.alpha3 === tx.merchantCountry)?.name || tx?.merchantCountry || "N/A",
             `${tx.currency} ${tx.txAmount?.toFixed(2) || "0.00"}`,
             tx.status || "N/A"
         ]);
 
         const transactionTable = {
-            head: [['Date & Time', 'Transaction ID', 'Card No', 'Type', 'Transaction Type', 'Reason', 'Amount', 'Status']],
+            head: [['Date & Time', 'Transaction ID', 'Card No', 'Type', 'Transaction Type', 'Reason', 'Merchant Name', 'Merchant Category', 'Merchant Country', 'Amount', 'Status']],
             body: transactionBody,
             startY: 95,
             styles: tableStyles,
@@ -507,7 +510,16 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                 children: [new Paragraph(tx.transaction_type?.replace(/_/g, ' ').toUpperCase() || "N/A")],
                             }),
                             new TableCell({
-                                children: [new Paragraph(tx.reason || tx.merchantName || "N/A")],
+                                children: [new Paragraph(tx.reason || "N/A")],
+                            }),
+                            new TableCell({
+                                children: [new Paragraph(tx.merchantName || "N/A")],
+                            }),
+                            new TableCell({
+                                children: [new Paragraph(tx.merchantCategory || "N/A")],
+                            }),
+                            new TableCell({
+                                children: [new Paragraph(CountriesData.find(item => item.alpha3 === tx.merchantCountry)?.name || tx?.merchantCountry || "N/A")],
                             }),
                             new TableCell({
                                 children: [new Paragraph(`${tx.currency} ${tx.txAmount?.toFixed(2) || "0.00"}`)],
