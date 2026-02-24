@@ -23,6 +23,7 @@ import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import FinancialInfoModal from "../Components/FinancialInfoModal";
 import success from "../Components/Auth/files/success.gif"
 import SessionExpireModal from "../Components/SessionExpireModal";
+import SocketsService from "../Services/Socket";
 
 
 
@@ -128,7 +129,7 @@ const Layout = ({ children, classNames, ...rest }) => {
   }, [profileCompleted])
 
 
-  
+
 
 
   useEffect(() => {
@@ -171,21 +172,24 @@ const Layout = ({ children, classNames, ...rest }) => {
 
 
 
-  // const socketConfig = {
-  //   url: import.meta.env.VITE_IP_DEV_API,
-  //   transports: ["websocket", "polling", "flashsocket"],
-  // };
+  const socketConfig = useMemo(() => ({
+    url: import.meta.env.VITE_IP_DEV_API,
+    transports: ["websocket", "polling", "flashsocket"],
+  }), []);
 
-  // const socketsService = new SocketsService(socketConfig, checkAuth);
-  // useEffect(() => {
-  //   socketsService.connect();
-  //   const userId = userDetails?._id;
-  //   socketsService.connectToServer(userId);
+  const socketsService = useMemo(() => new SocketsService(socketConfig, () => { }), [socketConfig]);
 
-  //   return () => {
-  //     NS7R5M0zrsService.disconnect();
-  //   };
-  // }, [socketsService, userDetails]);
+  useEffect(() => {
+    if (userDetails?._id) {
+      socketsService.connect();
+      const userId = userDetails?._id;
+      socketsService.connectToServer(userId);
+
+      return () => {
+        socketsService.disconnect();
+      };
+    }
+  }, [socketsService, userDetails?._id]);
 
   useEffect(() => {
     if (location.pathname === "/" || location.pathname.toLowerCase() === "/dashboard/default") {

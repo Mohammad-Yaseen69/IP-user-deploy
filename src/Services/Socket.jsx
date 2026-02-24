@@ -4,7 +4,10 @@ import notification_sound from "./audio/notification.wav"
 
 class SocketsService {
     constructor(config, checkAuth) {
-        this.socket = io(config.url, config.options);
+        this.socket = io(config.url, {
+            transports: ["websocket"],
+            autoConnect: false,
+        });
         this.checkAuth = checkAuth.bind(this);
     }
 
@@ -16,6 +19,7 @@ class SocketsService {
         this.socket.on('connect', () => {
             console.log('Connected to the server');
             this.socket.emit('setUserId', userId);
+            this.socket.emit('messageFromFrontend', 'Hello from the client!');
         });
 
         this.socket.on('messageFromBackend', (data) => {
@@ -34,7 +38,6 @@ class SocketsService {
             }, 5000);
         });
 
-        this.socket.emit('messageFromFrontend', 'Hello from the client!');
     }
 
     disconnect() {
