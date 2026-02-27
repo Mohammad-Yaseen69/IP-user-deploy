@@ -1,4 +1,5 @@
 {
+  "plaid_currency_not_supported": "{{currency}} is not supported by Plaid. The amount will be converted to {{defaultCurrency}}.",
   "How Others Can Find You": "How Others Can Find You",
   "Schedules": "Scheduled",
   "Login": "Login",
