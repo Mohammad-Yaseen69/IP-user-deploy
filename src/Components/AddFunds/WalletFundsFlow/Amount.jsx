@@ -32,11 +32,10 @@ const Amount = ({ data, dataHandler }) => {
 
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
-    const wallet_address = queryParams.get("wallet_address")
+    const wallet_address = queryParams.get("wallet_address") || 'something'
     const [walletData, setWalletData] = useState({})
     const [loading, setLoading] = useState(false)
 
-    console.log(data)
     useEffect(() => {
         if (wallet_address && _wallet?._id) {
             setLoading(true)
@@ -59,6 +58,7 @@ const Amount = ({ data, dataHandler }) => {
 
     const limits = data?.limits || { min: 0, max: 0 };
 
+    console.log(data?.limits, _wallet)
     useEffect(() => {
         let errorMsg = '';
         if (!data.amount || +String(data.amount ?? "")?.replaceAll(",", "") < +formatCurrencyLocal(limits.min)) {
@@ -66,10 +66,13 @@ const Amount = ({ data, dataHandler }) => {
         } else if (+String(data.amount ?? "")?.replaceAll(",", "") > +formatCurrencyLocal(limits.max)) {
             errorMsg = `Maximum transactional amount is ${limits.max}`;
         } else if (userDetails?.user?.kyc_status !== "approved" && +String(data.amount ?? "").replaceAll(",", "") > +formatCurrencyLocal(limits.max)) {
+            console.log('SNAPSHOT FOR LIMIT ERROR', +String(data.amount ?? "").replaceAll(",", "") > +formatCurrencyLocal(limits.max), +String(data.amount ?? "").replaceAll(",", ""), +formatCurrencyLocal(limits.max), userDetails?.user?.kyc_status)
             errorMsg = "Invalid Amount: Your current identity verification level limits the maximum amount you can add. Please upgrade your identity verification to benefit from higher limits";
         }
         dataHandler && dataHandler('exchangeRateError', errorMsg);
     }, [data.amount, limits, userDetails?.user?.kyc_status]);
+
+                console.log('SNAPSHOT FOR LIMIT ERROR', +String(data.amount ?? "").replaceAll(",", "") > +formatCurrencyLocal(limits.max), +String(data.amount ?? "").replaceAll(",", ""), +formatCurrencyLocal(limits.max), userDetails?.user?.kyc_status)
 
     return (
         loading
