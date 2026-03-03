@@ -86,7 +86,7 @@ const PlaidBankTransfer = ({
           plaidCurrency:
             data.exchange_rate?.plaid_currency ?? data.wallet?.currency?.code,
         };
-        console.log("Initiating Plaid Payment with payload:", payload);
+        console.log("Initiating Plaid Payment with payload:", payload); 
         const response = await axios.post(
           `${import.meta.env.VITE_IP_DEV_API}/api/plaid/initiate-payment`,
           payload,
@@ -105,8 +105,7 @@ const PlaidBankTransfer = ({
       onError: (error) => {
         console.error("Failed to initiate Plaid payment:", error);
         toast.error(
-          error?.response?.data?.message ||
-            "Failed to initialize Plaid payment",
+         "We are unable to process your request at the moment, please try again later!"
         );
       },
     });
@@ -143,7 +142,7 @@ const PlaidBankTransfer = ({
       onError: (error) => {
         console.error("Failed to exchange Plaid token:", error);
         toast.error(
-          error?.response?.data?.message || "Failed to authorize payment",
+         "we are unable to process your request at the moment, please try again later!" | error?.response?.data?.message || error.message
         );
         setPlaidStep(1);
       },
@@ -182,8 +181,7 @@ const PlaidBankTransfer = ({
           );
           fetchSavedBanks();
         } else {
-          toast.error(
-            error?.response?.data?.message || "Failed to process payment",
+          toast.error("we are unable to process your request at the moment, please try again later!"
           );
         }
       },
