@@ -25,7 +25,7 @@ import BankDeposit from "../../AddFunds/WalletFundsFlow/BankDeposit";
 import PaymentDetails from "./PaymentDetails";
 import RecipientDetails from "./RecipientDetails";
 import PaypalDetails from "./PaypalDetails";
-import successGif from "../../QuickQrPay/files/success.gif";
+import MobileWalletStatus from "./MobileWalletStatus";
 
 const initialState = {
   loading: false,
@@ -58,6 +58,8 @@ const initialState = {
   },
   bankStep: 1,
   mobileWalletSuccess: false,
+  transactionId: "",
+  subscriptionToken: "",
 };
 
 function reducer(state, action) {
@@ -299,7 +301,14 @@ const PayAsGuest = ({
       );
 
       const dec = decryptData(res.data.data);
+
+      const subscriptionToken = dec?.data?.subscriptionToken
+      const transactionId = dec?.data?.transactionId
+      // use these 2 to connect to server
+
       console.log(dec);
+      dataHandler("transactionId", transactionId);
+      dataHandler("subscriptionToken", subscriptionToken);
       dataHandler("mobileWalletSuccess", true);
       dataHandler("loading", false);
     } catch (error) {
@@ -722,18 +731,11 @@ const PayAsGuest = ({
               <X color="black" />
             </button>
             {data.mobileWalletSuccess ? (
-              <div className={styles.success_container}>
-                <img src={successGif} alt="Success" className={styles.success_gif} />
-                <h2>{t("Payment Initiated")}</h2>
-                <p>
-                  {t(
-                    "Please open your mobile money app and approve the payment notification you have received to complete and validate this transaction."
-                  )}
-                </p>
-                <button className={styles.close_btn} onClick={toggle}>
-                  {t("Close")}
-                </button>
-              </div>
+              <MobileWalletStatus
+                transactionId={data.transactionId}
+                token={data.subscriptionToken}
+                toggle={toggle}
+              />
             ) : (
               <>
                 <div className={styles.left}>
@@ -913,34 +915,11 @@ const PayAsGuest = ({
             </button>
 
             {data.mobileWalletSuccess ? (
-              <div
-                className={styles.success_container}
-                style={{
-                  minHeight: "70vh",
-                  background: "white",
-                  padding: "2rem 1rem",
-                }}
-              >
-                <img
-                  src={successGif}
-                  alt="Success"
-                  className={styles.success_gif}
-                  style={{ width: "200px" }}
-                />
-                <h2 style={{ fontSize: "24px" }}>{t("Payment Initiated")}</h2>
-                <p style={{ fontSize: "14px" }}>
-                  {t(
-                    "Please open your mobile money app and approve the payment notification you have received to complete and validate this transaction."
-                  )}
-                </p>
-                <button
-                  className={styles.close_btn}
-                  onClick={toggle}
-                  style={{ width: "100%", marginTop: "auto" }}
-                >
-                  {t("Close")}
-                </button>
-              </div>
+              <MobileWalletStatus
+                transactionId={data.transactionId}
+                token={data.subscriptionToken}
+                toggle={toggle}
+              />
             ) : (
               <>
                 <div className={paym_styles.mobile} style={{ marginTop: 0 }}>

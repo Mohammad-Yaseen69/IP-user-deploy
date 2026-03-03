@@ -15,10 +15,14 @@ class SocketsService {
         this.socket.connect();
     }
 
-    connectToServer(userId) {
+    connectToServer(userId, transactionConnection = false, transactionId, token) {
         this.socket.on('connect', () => {
             console.log('Connected to the server');
-            this.socket.emit('setUserId', userId);
+            if (transactionConnection) {
+                this.socket.emit("subscribeTransaction", { transactionId, token })
+            } else {
+                this.socket.emit('setUserId', userId);
+            }
             this.socket.emit('messageFromFrontend', 'Hello from the client!');
         });
 
@@ -38,6 +42,19 @@ class SocketsService {
             }, 5000);
         });
 
+
+        this.socket.on("txn:update", (data) => {
+            const status = data.status // COMPLETED, PROCESSING, FAILED
+            console.log("txn:update", data);
+        })
+
+        this.socket.on("txn:subscribed", (data) => {
+            console.log("txn:subscribed", data)
+        })
+
+        this.socket.on("txn:subscribeError", (data) => {
+            console.log("txn:subscribeError", data)
+        })
     }
 
     disconnect() {
