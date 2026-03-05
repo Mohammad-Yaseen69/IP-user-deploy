@@ -196,7 +196,7 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
     // bank details
     const isAfricanBank = useMemo(() => {
         if (country) {
-            return citiesData.find(item => item.iso3 === bankCountryCode).region === "Africa"
+            return citiesData.find(item => item.iso3 === bankCountryCode)?.region === "Africa"
         }
     }, [bankCountryCode])
     useEffect(() => {
