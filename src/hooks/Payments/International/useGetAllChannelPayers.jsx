@@ -72,6 +72,14 @@ const useGetAllChannelPayers = ({ data, payoutChannelData, toggleModalHandler })
                             }));
                         }
 
+                        payers = payers.filter((payer) => {
+                            if (payer?.name?.toLowerCase() === "moncash") {
+                                return data?.country?.alpha3 === "CAN" || data?.country?.alpha3 === "CHE"
+                            } else {
+                                return true
+                            }
+                        })
+
                         console.log(payers, "this is payer")
 
                         return {
