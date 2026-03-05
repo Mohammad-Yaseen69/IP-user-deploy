@@ -55,7 +55,7 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = fal
                             data.payment_type?.value === "mobile_wallet" ?
                                 <MobileWalletStatus
                                     inGuestPay={false}
-                                    transactionId={data?.transaction_details?.transaction_id || data?.transaction_details?.transactionId}
+                                    transactionId={data?.transaction_details?.transaction_id || data?.transaction_details?.transactionId || data?.transaction_details?.data?.transaction_id || data?.transaction_details?.data?.transactionId}
                                 />
                                 :
                                 <div className={styles.confirmed}>
