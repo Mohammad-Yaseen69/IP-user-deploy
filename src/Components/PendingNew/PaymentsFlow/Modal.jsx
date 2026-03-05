@@ -268,6 +268,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
             })
 
             const dec = decryptData(res.data.data)
+            dataHandler("transaction_details", dec)
             dataHandler("verified", true)
         } catch (err) {
             console.log(err)

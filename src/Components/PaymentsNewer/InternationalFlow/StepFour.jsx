@@ -47,7 +47,7 @@ export const typesData = [
     name: "Bank Transfer",
     value: "bank",
     icon: bank,
-    status: "Active",
+    status: "Coming Soon",
     id: 2,
   },
   {

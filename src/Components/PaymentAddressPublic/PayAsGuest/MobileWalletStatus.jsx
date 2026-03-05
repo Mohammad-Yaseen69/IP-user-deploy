@@ -1,13 +1,21 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import SocketsService from '../../../Services/Socket';
-import styles from './styles/index.module.css';
 import failSvg from '../../QrQuickerPay/faile.svg';
 import clockSvg from '../PayWithCrypto/clock.svg';
 import successSvg from '../../QrQuickerPay/success.svg';
+import { UserContext } from '../../../Context/UserContext';
 
-const MobileWalletStatus = ({ token, transactionId, toggle }) => {
+const MobileWalletStatus = ({
+    token,
+    transactionId,
+    toggle = null,
+    buttonLabel = null,
+    inGuestPay = true,
+    containerStyle = {},
+}) => {
     const { t } = useTranslation();
+    const { userDetails } = useContext(UserContext)
     const [status, setStatus] = useState('PENDING'); // PENDING, PROCESSING, COMPLETED, FAILED
 
     const socketConfig = useMemo(() => ({
@@ -17,32 +25,56 @@ const MobileWalletStatus = ({ token, transactionId, toggle }) => {
 
     const socketsService = useMemo(() => new SocketsService(socketConfig, () => { }), [socketConfig]);
 
+    console.log(transactionId)
     useEffect(() => {
-        if (transactionId && token) {
-            socketsService.connect();
-            console.log(transactionId, token)
-            socketsService.connectToServer(null, true, transactionId, token);
+        if (transactionId) {
+            if (inGuestPay && token) {
+                socketsService.connect();
+                console.log('[MobileWalletStatus] subscribing:', transactionId, token);
+                socketsService.connectToServer(null, true, transactionId, token);
+            } else {
+                socketsService.connect();
+                socketsService.connectToServer(userDetails?._id);
+            }
 
-            socketsService.socket.on("txn:update", (data) => {
-                console.log("MobileWalletStatus: txn:update", data);
-                if (data.status) {
-                    setStatus(data.status);
-                }
+            const eventName = inGuestPay ? 'txn:update' : 'onafriq:transaction';
+
+            if (inGuestPay) {
+                socketsService.socket.on(eventName, (data) => {
+                    console.log(`[MobileWalletStatus] ${eventName}=`, data);
+                    if (data.status && transactionId === data?.transactionId) {
+                        setStatus(data.status);
+                    }
+                });
+            } else {
+                socketsService.socket.on("onafriq:transaction", (data) => {
+                    console.log("onafriq:transaction", data);
+
+                    if (data?.status && transactionId === data?.transactionId) {
+                        setStatus(data.status);
+                    }
+                });
+            }
+
+
+
+            socketsService.socket.on('txn:subscribed', (data) => {
+                console.log('[MobileWalletStatus] txn:subscribed', data);
             });
 
-            socketsService.socket.on("txn:subscribed", (data) => {
-                console.log("MobileWalletStatus: txn:subscribed", data);
-            });
-
-            socketsService.socket.on("txn:subscribeError", (data) => {
-                console.error("MobileWalletStatus: txn:subscribeError", data);
+            socketsService.socket.on('txn:subscribeError', (data) => {
+                console.error('[MobileWalletStatus] txn:subscribeError', data);
             });
 
             return () => {
-                socketsService.disconnect();
+                if (inGuestPay) {
+                    socketsService.disconnect();
+                } else {
+                    socketsService.socket.off(eventName);
+                }
             };
         }
-    }, [socketsService, transactionId, token]);
+    }, [socketsService, transactionId, token, inGuestPay]);
 
     const renderContent = () => {
         switch (status) {
@@ -76,15 +108,74 @@ const MobileWalletStatus = ({ token, transactionId, toggle }) => {
     };
 
     const content = renderContent();
+    const label = buttonLabel ?? t('Close');
 
     return (
-        <div className={styles.success_container}>
-            <img src={content.icon} alt={status} className={styles.success_gif} style={{ width: '100px', height: '100px' }} />
-            <h2>{content.title}</h2>
-            <p>{content.message}</p>
-            <button className={styles.close_btn} onClick={toggle}>
-                {t('Close')}
-            </button>
+        <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            width: '100%',
+            height: '100%',
+            padding: '2rem',
+            gap: '1.5rem',
+            background: 'white',
+            borderRadius: '16px',
+            minHeight: '400px',
+            ...containerStyle,
+        }}>
+            <img
+                src={content.icon}
+                alt={status}
+                style={{ width: '100px', height: '100px', objectFit: 'contain' }}
+            />
+            <h2 style={{
+                color: '#000',
+                fontFamily: 'Manrope, sans-serif',
+                fontSize: '1.8rem',
+                fontWeight: 800,
+                margin: 0,
+            }}>
+                {content.title}
+            </h2>
+            <p style={{
+                color: '#848484',
+                fontFamily: 'Manrope, sans-serif',
+                fontSize: '0.95rem',
+                fontWeight: 600,
+                lineHeight: '160%',
+                maxWidth: '400px',
+                margin: 0,
+            }}>
+                {content.message}
+            </p>
+            {toggle && (
+                <button
+                    onClick={toggle}
+                    style={{
+                        all: 'unset',
+                        cursor: 'pointer',
+                        borderRadius: '8px',
+                        background: status === 'FAILED'
+                            ? 'linear-gradient(0deg, rgba(0,0,0,0.4), rgba(0,0,0,0.4)), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%)'
+                            : '#5926F0',
+                        padding: '0.8rem 2.5rem',
+                        color: '#FFF',
+                        fontFamily: 'Manrope, sans-serif',
+                        fontSize: '1rem',
+                        fontWeight: 700,
+                        transition: 'all 0.2s ease',
+                        marginTop: '0.5rem',
+                        display: 'inline-block',
+                        minWidth: '160px',
+                        textAlign: 'center',
+                    }}
+                >
+                    {label}
+                </button>
+            )}
         </div>
     );
 };
