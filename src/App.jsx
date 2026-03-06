@@ -28,6 +28,7 @@ import { ToastContainer } from "react-toastify";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateMomentUtils from '@date-io/moment';
+import AdBlockCheck from './Components/AdBlockCheck/AdBlockCheck'
 
 
 
@@ -142,6 +143,7 @@ const App = () => {
 
   return (
     <div className='App' id='main_app'>
+      <AdBlockCheck/>
       {
         showOtherTabError
           ?
