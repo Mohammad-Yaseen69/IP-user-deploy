@@ -486,6 +486,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
             })
 
             const dec = decryptData(res.data.data)
+            dataHandler("transaction_details", dec)
             dataHandler("verified", true)
         } catch (err) {
             const decrypted = decryptData(err.response.data.data)

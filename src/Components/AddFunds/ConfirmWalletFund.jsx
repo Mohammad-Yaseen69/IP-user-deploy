@@ -20,6 +20,7 @@ import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
 
 import { WidgetSDK } from "@keabank/websdk";
 import { apiWrapper } from "../../utils/Functions/apiWrapper";
+import MobileWalletStatus from "../PaymentAddressPublic/PayAsGuest/MobileWalletStatus";
 
 
 const sdk = new WidgetSDK({
@@ -34,6 +35,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
     const { t } = useTranslation()
     const [complete, setComplete] = useState(false);
     const [mobileSuccess, setMobileSuccess] = useState(false)
+    const [mobileWalletTrxId, setMobileWalletTrxId] = useState("")
     const pRef = useRef(null)
     const divRef = useRef(null)
     const svgRef = useRef(null)
@@ -234,6 +236,9 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                         payload
                     })
 
+                    console.log(response, "response from api")
+
+                    setMobileWalletTrxId(response?.transaction_id)
                     setMobileSuccess(true)
 
                 } catch (error) {
@@ -345,64 +350,44 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                     </p>
                 </ModalBody>
             </Modal>
-            <Card style={{
-                height: "100%",
-                marginBottom: 0,
-                boxShadow: "none",
-                gap: "1.3rem",
-            }}>
-                <CardBody style={{
-                    paddingBottom: "0",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    borderRadius: "20px",
-                    padding: isBig ? (window.innerWidth < 1500 ? "20px" : "20px 40px") : "5px",
-                    paddingBottom: 0,
-                    boxShadow: "0px 2px 20px -5.704601287841797px rgba(89, 38, 240, 0.07)"
-                }} className="conf_cont">
-                    <div>
-                        <h4 style={{ fontSize: "1.25rem", fontWeight: 700, textAlign: "center" }}>{t("Your Details")}</h4>
-                        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                            {
-                                type === "add_fund" &&
-                                <SelectedWallet setSubStep={setSubStep} wallet={wallet} />
-                            }
-                            <SelectedAmountAndCurrency amount={payoutChannel?.value === "crypto" ? exchangeRate?.sending?.amount : amount} currency={kybFeeDets ? "USD" : payoutChannel?.value === "crypto" ? exchangeRate?.sending?.currency : wallet?.currency?.code} setSubStep={setSubStep} step={2} />
-                            {
-                                payoutChannel?.icon
-                                &&
-                                <SelectedPayoutChannel payoutChannel={payoutChannel} setSubStep={setSubStep} step={3} />
-                            }
+            {mobileSuccess ?
+                <MobileWalletStatus
+                    transactionId={mobileWalletTrxId}
+                    inGuestPay={false}
+                    toggle={() => navigate("/transactions")}
+                /> :
+                <Card style={{
+                    height: "100%",
+                    marginBottom: 0,
+                    boxShadow: "none",
+                    gap: "1.3rem",
+                }}>
+                    <CardBody style={{
+                        paddingBottom: "0",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
+                        borderRadius: "20px",
+                        padding: isBig ? (window.innerWidth < 1500 ? "20px" : "20px 40px") : "5px",
+                        paddingBottom: 0,
+                        boxShadow: "0px 2px 20px -5.704601287841797px rgba(89, 38, 240, 0.07)"
+                    }} className="conf_cont">
+                        <div>
+                            <h4 style={{ fontSize: "1.25rem", fontWeight: 700, textAlign: "center" }}>{t("Your Details")}</h4>
+                            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                                {
+                                    type === "add_fund" &&
+                                    <SelectedWallet setSubStep={setSubStep} wallet={wallet} />
+                                }
+                                <SelectedAmountAndCurrency amount={payoutChannel?.value === "crypto" ? exchangeRate?.sending?.amount : amount} currency={kybFeeDets ? "USD" : payoutChannel?.value === "crypto" ? exchangeRate?.sending?.currency : wallet?.currency?.code} setSubStep={setSubStep} step={2} />
+                                {
+                                    payoutChannel?.icon
+                                    &&
+                                    <SelectedPayoutChannel payoutChannel={payoutChannel} setSubStep={setSubStep} step={3} />
+                                }
+                            </div>
                         </div>
-                    </div>
 
-
-                    {mobileSuccess ?
-                        <div
-                            style={{
-                                textAlign: "center",
-                                position: "relative",
-                                background: "linear-gradient(0deg, rgba(11, 13, 65, 0.16), rgba(11, 13, 65, 0.16)), radial-gradient(182.3% 794.57% at 91.57% -107.9%, #E64067 0%, #5926F0 55.65%, #4828A0 100%)",
-                                backgroundBlendMode: "color-burn,normal",
-                                boxShadow: "0px 6px 13px -5.4094px rgba(89, 38, 240, 0.17)",
-                                borderRadius: "16px",
-                                padding: "1rem",
-                                overflow: "hidden",
-                                marginTop: "1rem",
-                                pointerEvents: loading ? "none" : "all",
-                                opacity: loading ? .9 : 1,
-                                display: "flex",
-                                alignItems: "center",
-                                flexDirection: "column"
-                            }}
-                        >
-                            <p style={{ margin: "0", fontWeight: "700", color: "white", fontSize: "16px" }}>{t("Transaction is in processing")}</p>
-                            <p style={{ margin: "0", fontWeight: "600", color: "white", fontSize: "12px" }}>
-                                {t("You will receive the funds in your wallet once the mobile money transfer is completed. You can close this page if you want.")}
-                            </p>
-                        </div>
-                        :
                         <div ref={divRef}
                             style={{
                                 textAlign: "center",
@@ -474,9 +459,9 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                                 </p>
                             }
                         </div>
-                    }
-                </CardBody>
-            </Card>
+                    </CardBody>
+                </Card>
+            }
             {
                 complete
                     && transDetails !== null

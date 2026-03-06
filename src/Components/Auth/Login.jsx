@@ -1134,7 +1134,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                             ?
                                                             t("Enter the code send on your Whatsapp")
                                                             :
-                                                            t(`Enter the SMS code sent to +41********4053`)
+                                                            t(`Enter the code sent to +41********4053`)
                                                                 .replace(
                                                                     "+41********4053",
                                                                     isEmail.test(email)
@@ -1188,7 +1188,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 )}
                                 <div style={{ paddingTop: "10px" }} className={styles.toggle_sms}>
                                     {
-                                        (consecutiveCount >= 3 && !isLoginError.includes('account is locked')) &&
+                                        (consecutiveCount >= 3 && !isLoginError.includes('account is locked') && methods?.length > 0) &&
                                         <div className={styles.input_error}>
                                             <span>{t("Having trouble receiving/verifying your code? Choose another method below or contact support.")}</span>
                                         </div>

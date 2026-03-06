@@ -66,7 +66,7 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
 
     return (
         // <ul className={`${className ? className : ""}`} onClick={verifyToken}>
-        <ul className={`${className ? className : ""}`}>
+        <ul style={{ width: togglSidebar ? "100%" : "auto" }} className={`${className ? className : ""}`}>
             {menu.map((item, i) => {
                 return (
                     <>
@@ -79,12 +79,13 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
                                     WebkitTextFillColor: /*togglSidebar ? "white" :*/ "transparent",
                                     WebkitBackgroundClip: "text",
                                     width: "100%",
-                                    padding: "1rem 1.5rem .5rem 1.5rem",
+                                    padding: !inheritSize && togglSidebar ? "0rem" : "1rem 1.5rem .5rem 1.5rem",
                                     fontWeight: 600,
                                     letterSpacing: "2px",
                                     fontSize: !inheritSize && togglSidebar ? ".5rem" : ".7rem",
                                     whiteSpace: !inheritSize && togglSidebar ? "normal" : "nowrap",
                                     marginBottom: inheritSize && togglSidebar ? ".1rem" : "0",
+                                    marginRight: !inheritSize && togglSidebar ? "13px" : "0",
                                     // opacity: togglSidebar ? 0 : 1
                                 }}>{t(item.title)}</li>
                                 :

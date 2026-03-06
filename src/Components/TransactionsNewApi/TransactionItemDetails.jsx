@@ -284,6 +284,37 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                             <span>{t("As")}: </span>
                             <p className={styles.p_type}>{asLabel}</p>
                         </div>
+
+                        {
+                            vvc && item?.merchantName && item?.transaction_type === "card_to_merchant" && (
+                                <div className={styles.er_item}>
+                                    <span>{t("Merchant Name")}</span>
+                                    <p>
+                                        {item?.merchantName}
+                                    </p>
+                                </div>
+                            )
+                        }
+                        {
+                            vvc && item?.merchantCategory && item?.transaction_type === "card_to_merchant" && (
+                                <div className={styles.er_item}>
+                                    <span>{t("Merchant Category")}</span>
+                                    <p>
+                                        {item?.merchantCategory}
+                                    </p>
+                                </div>
+                            )
+                        }
+                        {
+                            vvc && item?.merchantCountry && item?.transaction_type === "card_to_merchant" && (
+                                <div className={styles.er_item}>
+                                    <span>{t("Merchant Country")}</span>
+                                    <p>
+                                        {countries.find(item => item.alpha3 === item?.merchantCountry)?.name || item?.merchantCountry || "N/A"}
+                                    </p>
+                                </div>
+                            )
+                        }
                     </div>
                     {
                         item?.display_name && item?.lat && item?.long
@@ -410,7 +441,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                         </div>
                     </div>
                 }
-                        {!item.cardNo &&
+                {!item.cardNo &&
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         {
                             message

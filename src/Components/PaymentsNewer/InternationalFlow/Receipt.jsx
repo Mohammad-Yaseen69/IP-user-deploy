@@ -11,12 +11,14 @@ import { useLocation, useNavigate } from "react-router"
 import fail from "./files/fail.json"
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import success from "./files/success.gif"
+import MobileWalletStatus from "../../PaymentAddressPublic/PayAsGuest/MobileWalletStatus"
 
 const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = false }) => {
     const { t } = useTranslation()
     const [showShare, setShowShare] = useState(false)
     const navigate = useNavigate()
 
+    console.log(data?.transaction_details)
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const title = queryParams.get("title")
@@ -28,7 +30,8 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = fal
                     ?
                     ""
                     :
-                    <div style={{width: isFullWidth && "100%"}} className={styles.container}>
+                    <div style={{ width: isFullWidth && "100%" }} className={styles.container}>
+
                         {
                             showShare
                             &&
@@ -48,24 +51,32 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = fal
                                 </div>
                             } */}
                         </div>
-                        <div className={styles.confirmed}>
-                            <div className={styles.c_left}>
-                                <h3 style={{ maxWidth: "15ch" }}
-                                >{transactionStatus !== "error" ? t("Your payment is in process") : t("Your payment is Failed")}</h3>
-                                <p>{t("Thanks for Using InstaPay")}</p>
-                            </div>
-                            {/* <video src={confirm_vid} muted autoPlay loop controls={false} /> */}
-                            <img src={success} alt="" />
-                            <DotLottieReact
-                                src={transactionStatus !== "error" ? "https://lottie.host/dc9844a3-b41b-4ddc-97c8-0039376f3ac8/DGe7bLZyug.json" : fail}
-                                backgroundColor="transparent"
-                                speed="1"
-                                style={{ width: "225px", height: "225px" }}
-                                playMode="normal"
-                                loop={true}
-                                autoplay={true}
-                            />
-                        </div>
+                        {
+                            data.payment_type?.value === "mobile_wallet" ?
+                                <MobileWalletStatus
+                                    inGuestPay={false}
+                                    transactionId={data?.transaction_details?.transaction_id || data?.transaction_details?.transactionId || data?.transaction_details?.data?.transaction_id || data?.transaction_details?.data?.transactionId}
+                                />
+                                :
+                                <div className={styles.confirmed}>
+                                    <div className={styles.c_left}>
+                                        <h3 style={{ maxWidth: "15ch" }}
+                                        >{transactionStatus !== "error" ? t("Your payment is in process") : t("Your payment is Failed")}</h3>
+                                        <p>{t("Thanks for Using InstaPay")}</p>
+                                    </div>
+                                    {/* <video src={confirm_vid} muted autoPlay loop controls={false} /> */}
+                                    <img src={success} alt="" />
+                                    <DotLottieReact
+                                        src={transactionStatus !== "error" ? "https://lottie.host/dc9844a3-b41b-4ddc-97c8-0039376f3ac8/DGe7bLZyug.json" : fail}
+                                        backgroundColor="transparent"
+                                        speed="1"
+                                        style={{ width: "225px", height: "225px" }}
+                                        playMode="normal"
+                                        loop={true}
+                                        autoplay={true}
+                                    />
+                                </div>
+                        }
                         <div className={styles.trx_details}>
                             <div className={styles.td_top}>
                                 <h4>{t("Status")}</h4>

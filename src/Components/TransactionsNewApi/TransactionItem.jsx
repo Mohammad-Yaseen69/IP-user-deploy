@@ -11,6 +11,7 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import statuses from "./files/thunesTransactionStatus.json"
 import TransactionItemDetails from "./TransactionItemDetails.jsx"
 import CitiesData from "../CitiesDropDown/CitiesData.json"
+import { formatCurrency } from "../../Helper/AmountFormat.js"
 
 export const service_name_formatter = (itemName) => {
     if (itemName) {
@@ -240,7 +241,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
 
                 {vvc &&
                     <div style={{ color: item?.type === "credit" ? "green" : "red" }}>
-                        {symbol}{addDecimals(item?.billAmount)} {item?.type === "credit" ? "+" : "-"}
+                        {symbol}{formatCurrency(item?.billAmount)} {item?.type === "credit" ? "+" : "-"}
                     </div>
                 }
 
@@ -290,6 +291,7 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
                     note={note}
                     setNote={setNote}
                     cardNo={cardNo}
+                    vvc={vvc}
                 />
             }
         </div>

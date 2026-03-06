@@ -123,7 +123,7 @@ const SidebarNew = ({ setShowModal, showModal }) => {
                                             {
                                                 MENU.map((item, i) => (
                                                     <Fragment key={i}>
-                                                        <li className={item.className}>
+                                                        <li style={{ width: togglSidebar ? "100%" : "auto" }} className={item.className}>
                                                             <SidebarSubMenu menu={item.menu} isOpen={isOpen} setIsOpen={setIsOpen} level={0} setShowModal={setShowModal} profileCompletedPercentage={profileCompletedPercentage} showModal={showModal} inheritSize={inheritSize} />
                                                         </li>
                                                     </Fragment>

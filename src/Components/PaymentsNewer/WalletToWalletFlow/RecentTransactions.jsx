@@ -1,7 +1,7 @@
 import axios from "axios"
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import { useMutation, useQuery } from "@tanstack/react-query"
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { UserContext } from "../../../Context/UserContext"
 import styles from "./styles/recentTrans.module.scss"
 import { useTranslation } from "react-i18next"
@@ -11,6 +11,8 @@ import useWindowWidth from "../../../utils/useWindowWidth"
 import countriesData from "../CountriesData.json"
 import repeat from "./repeat.svg"
 import { capitalizeStatus } from "../../PendingNew/ItemMobile"
+import { BsPencil } from "react-icons/bs"
+import { Edit, Edit2, Edit3 } from "react-feather"
 
 
 const getRecentTransaction = async (authHeader, account, type) => {
@@ -46,6 +48,30 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
         }
     })
 
+    const [editingTxId, setEditingTxId] = useState(null)
+    const [tempAmount, setTempAmount] = useState("")
+    const [editedAmounts, setEditedAmounts] = useState({})
+
+    const handleEdit = (tx) => {
+        setEditingTxId(tx._id)
+        setTempAmount(editedAmounts[tx._id] || tx.amount?.toFixed(2) || "")
+    }
+
+    const handleSave = (txId) => {
+        const val = parseFloat(tempAmount)
+        if (isNaN(val) || val <= 0) {
+            toast.error("Please enter a valid amount")
+            return
+        }
+        setEditedAmounts(prev => ({ ...prev, [txId]: val }))
+        setEditingTxId(null)
+    }
+
+    const handleCancel = () => {
+        setEditingTxId(null)
+        setTempAmount("")
+    }
+
 
 
 
@@ -71,6 +97,8 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
         dataHandler("reason", t?.purpose)
         setShowRecent(false)
 
+        const finalAmount = editedAmounts[t?._id] || t?.amount
+
         if (type === "international") {
             const country = countriesData.find(item => item.name === t?.beneficiary?.country_name)
             const beneficiary = beneficiaries?.find(ben => ben?._id === t?.beneficiary?._id)
@@ -84,7 +112,7 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
             })()
             const channel = payoutChannelData.find(item => item?.value === channelValue)
 
-            dataHandler("amount", t?.amount?.toFixed(2))
+            dataHandler("amount", Number(finalAmount).toFixed(2))
             dataHandler("country", country)
             dataHandler("beneficiary", beneficiary)
             dataHandler("currency", currency?.currency?.code)
@@ -95,7 +123,7 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
 
         } else {
             const benWallet = await mutateAsync({ id: t?.receiver?._id, currency: t?.receiver?.currency })
-            dataHandler("amount", t?.amount)
+            dataHandler("amount", finalAmount)
             dataHandler("beneficiary_wallet", benWallet)
             dataHandler("currency", currency)
             dataHandler("currency_wallet", currency)
@@ -152,13 +180,29 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
                                     <h4>{truncate(receiverName, 16)}</h4>
                                     <span>{country}</span>
                                 </div>
-                                {width > 1300 &&
-                                    <span
-                                        onClick={() => setTransaction(tx)}
-                                        style={{ background: "#5926F0", height: "19px", width: "19px", display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "3px", cursor: "pointer" }}>
-                                        <img src={repeat} />
-                                    </span>
-                                }
+                                <div style={{ display: "flex", alignItems: "center", gap: "7px", flexDirection: "row" }} >
+                                    {width > 1300 &&
+                                        <span
+                                            onClick={() => editingTxId === tx._id ? handleSave(tx._id) : handleEdit(tx)}
+                                            style={{ background: "#5926F0", height: "19px", width: "19px", display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "3px", cursor: "pointer" }}>
+                                            {editingTxId === tx._id ? <span style={{ color: "white", fontSize: "10px", fontWeight: "bold" }}>OK</span> : <Edit color="white" size={13} />}
+                                        </span>
+                                    }
+                                    {width > 1300 && editingTxId === tx._id &&
+                                        <span
+                                            onClick={handleCancel}
+                                            style={{ background: "#f02626", height: "19px", width: "19px", display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "3px", cursor: "pointer" }}>
+                                            <span style={{ color: "white", fontSize: "10px", fontWeight: "bold" }}>X</span>
+                                        </span>
+                                    }
+                                    {width > 1300 && editingTxId !== tx._id &&
+                                        <span
+                                            onClick={() => setTransaction(tx)}
+                                            style={{ background: "#5926F0", height: "19px", width: "19px", display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "3px", cursor: "pointer" }}>
+                                            <img src={repeat} />
+                                        </span>
+                                    }
+                                </div>
                             </div>
 
                             {/* <div className={styles.paymentType}>
@@ -173,11 +217,61 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
                                     {t(capitalizeStatus(tx?.status))} <span>- {createdAt}</span>
                                 </h4>
                                 <h4>
-                                    {tx?.amount?.toFixed(2)} {tx?.currency?.code}
+                                    {editingTxId === tx?._id ? (
+                                        <input
+                                            type="number"
+                                            value={tempAmount}
+                                            onChange={(e) => setTempAmount(e.target.value)}
+                                            style={{
+                                                width: "80px",
+                                                border: "1px solid #5926F0",
+                                                borderRadius: "4px",
+                                                padding: "2px 4px",
+                                                fontSize: "14px",
+                                                outline: "none"
+                                            }}
+                                            autoFocus
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') handleSave(tx._id)
+                                                if (e.key === 'Escape') handleCancel()
+                                            }}
+                                        />
+                                    ) : (
+                                        `${(editedAmounts[tx?._id] || tx?.amount)?.toFixed(2)}`
+                                    )} {tx?.currency?.code}
                                 </h4>
                             </div>
 
-                            {width < 1300 && canRepeat(tx) && <button className={styles.send} onClick={() => setTransaction(tx)} type="button">{t("Send Again")}</button>}
+                            {width < 1300 && canRepeat(tx) && (
+                                <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
+                                    <button
+                                        className={styles.send}
+                                        onClick={() => setTransaction(tx)}
+                                        type="button"
+                                        style={{ flex: 1 }}
+                                    >
+                                        {t("Send Again")}
+                                    </button>
+                                    <button
+                                        style={{ background: editingTxId === tx?._id ? "#27ae60" : "gray", flex: 1 }}
+                                        className={styles.send}
+                                        type="button"
+                                        onClick={() => editingTxId === tx?._id ? handleSave(tx._id) : handleEdit(tx)}
+                                    >
+                                        {editingTxId === tx?._id ? t("Save") : t("Edit")}
+                                    </button>
+                                    {editingTxId === tx?._id && (
+                                        <button
+                                            style={{ background: "#e74c3c", flex: 0.5 }}
+                                            className={styles.send}
+                                            type="button"
+                                            onClick={handleCancel}
+                                        >
+                                            {t("Cancel")}
+                                        </button>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     ) : <></>
                 })}

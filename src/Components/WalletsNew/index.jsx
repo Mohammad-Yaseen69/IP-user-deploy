@@ -23,7 +23,7 @@ export const getLimits = async (currentWallet, setData, authHeader, setLoading, 
         const dec = decryptData(res?.data?.data)
         const { topup_values, limits, limits_used } = dec.data;
 
-        setData({
+        const data = {
             min_topup_amount: `${topup_values.topup_min_amount?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
             max_topup_amount: `${topup_values.topup_max_amount?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
             transaction_amount_limit: `${limits?.transaction_amount_limit?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currentWallet?.currency?.code} `,
@@ -100,7 +100,10 @@ export const getLimits = async (currentWallet, setData, authHeader, setLoading, 
                     }
                 },
             ]
-        })
+        }
+
+        console.log(data, "wallet data from account limit api")
+        setData(data)
     }
     catch (error) {
         if (error.response?.data?.data) {

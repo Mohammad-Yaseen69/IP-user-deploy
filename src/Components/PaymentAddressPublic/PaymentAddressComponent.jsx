@@ -337,14 +337,14 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
     if (state.amount < limits?.topup_min_amount) {
 
       toast.error(
-        t("Minimum amount for guest pay is") +
+        t("Minimum amount for guest pay is") + " " +
         formatCurrency(limits?.topup_min_amount, true) +
         " " +
         state.currentWallet?.currency?.code
       );
       dataHandler(
         "guestPayError",
-        t("Minimum amount for guest pay is") +
+        t("Minimum amount for guest pay is") + " " +
         formatCurrency(limits?.topup_min_amount, true) +
         " " +
         state.currentWallet?.currency?.code
