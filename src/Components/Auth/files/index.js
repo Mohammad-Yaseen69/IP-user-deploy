@@ -3,6 +3,7 @@ import whatsappIcon from "./whatsappIcon.svg"
 import biometricIcon from "./biometricIcon.jpg"
 import smsIcon from "./smsIcon.png"
 import authIcon from "./authIcon.svg"
+import email from "./email.svg"
 
 
 export {
@@ -10,5 +11,6 @@ export {
     whatsappIcon,
     biometricIcon,
     smsIcon,
-    authIcon
+    authIcon,
+    email
 }

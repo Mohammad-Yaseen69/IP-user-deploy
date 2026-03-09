@@ -5,7 +5,7 @@ import { UserContext } from "../../Context/UserContext";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import PhoneInput from "../PhoneInput";
-import { AlertTriangle, ChevronRight, Eye, EyeOff } from "react-feather";
+import { AlertTriangle, ChevronRight, Eye, EyeOff, Mail } from "react-feather";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import gs from "./files/gs.svg"
 import as from "./files/as.svg"
@@ -16,7 +16,7 @@ import FaceAnimation from "./FaceAnimation"
 import BiometricSvg from "../../assets/icons/fingerprint.png"
 import { startAuthentication } from "@simplewebauthn/browser"
 import * as rdd from "react-device-detect";
-import { authIcon, instaIcon, smsIcon, whatsappIcon } from "./files"
+import { authIcon, instaIcon, smsIcon, whatsappIcon, email as emailIcon } from "./files"
 import "./styles/index.module.css";
 import useWindowWidth from "../../utils/useWindowWidth";
 import i18next from "i18next";
@@ -55,6 +55,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [lastOtpSentTo, setLastOtpSentTo] = useState(null);
     const [consecutiveCount, setConsecutiveCount] = useState(0)
     const [firstTime, setFirstTime] = useState(true)
+    const [hasChangedMethodOnce, setHasChangedMethodOnce] = useState(false)
     const width = useWindowWidth()
     const [methodLoading, setMethodLoading] = useState(false)
     const [showNoticeModal, setShowNoticeModal] = useState(false);
@@ -97,7 +98,13 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             avail: true,
             icon: smsIcon,
             attr: "sms",
-            text: "SMS/Email"
+            text: "SMS"
+        },
+        {
+            avail: false,
+            icon: emailIcon,
+            attr: "email",
+            text: "Email"
         }
     ])
 
@@ -162,8 +169,9 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             setRestoreLoading(true)
         }
         const isAuth = method ? (method === "auth") : (currentOtpMethod === "auth");
-        const isInsta = method ? (method === "insta") : (currentOtpMethod === "insta" || currentOtpMethod !== "sms");
+        const isInsta = method ? (method === "insta") : (currentOtpMethod === "insta" || currentOtpMethod !== "sms" && currentOtpMethod !== "email" && currentOtpMethod !== "wp");
         const isWp = method ? (method === "wp") : (currentOtpMethod === "wp");
+        const isEmailOtp = method ? (method === "email") : (currentOtpMethod === "email");
 
 
         const credentials = isEmail.test(email)
@@ -171,7 +179,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 email,
                 password,
                 authenticator: isAuth,
-                platform: (isInsta && !isInstagramBrowser) ? "instagram" : isWp ? "whatsapp" : "",
+                platform: (isInsta && !isInstagramBrowser) ? "instagram" : isWp ? "whatsapp" : isEmailOtp ? "email" : "email",
                 first_time: firstTime,
                 ...(restoreAccount && { restoreAccount: true })
             }
@@ -179,7 +187,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 phone: email,
                 password,
                 authenticator: isAuth,
-                platform: (isInsta && !isInstagramBrowser) ? "instagram" : isWp ? "whatsapp" : "",
+                platform: (isInsta && !isInstagramBrowser) ? "instagram" : isWp ? "whatsapp" : isEmailOtp ? "email" : "",
                 first_time: firstTime,
                 ...(restoreAccount && { restoreAccount: true })
             };
@@ -210,13 +218,15 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         case 'auth':
                             return { ...method, avail: decrypted?.tfa || false };
                         case 'wp':
-                            return { ...method, avail: decrypted.whatsapp };
+                            return { ...method, avail: decrypted?.whatsapp };
                         case 'insta':
                             return { ...method, avail: !isInstagramBrowser && (decrypted?.instagram || false) };
                         case 'biometric':
                             return { ...method, avail: !isInstagramBrowser && (decrypted?.biometric || false) };
                         case 'sms':
-                            return { ...method, avail: true };
+                            return { ...method, avail: !!decrypted?.phone };
+                        case 'email':
+                            return { ...method, avail: !!decrypted?.email };
                         default:
                             return method;
                     }
@@ -229,7 +239,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     setLastOtpSentTo("wp")
                 }
                 else if (decrypted?.message === "otp") {
-                    setLastOtpSentTo("sms")
+                    if (decrypted?.otpMethod === "email") {
+                        setLastOtpSentTo("email")
+                    } else {
+                        setLastOtpSentTo("sms")
+                    }
                 }
 
                 const handleMethods = () => {
@@ -238,6 +252,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         if (decrypted?.tfa && decrypted?.message === "authenticator") return "auth";
                         if (decrypted?.message === "instagram" && !isInstagramBrowser) return "insta";
                         if (decrypted?.message === "whatsapp") return "wp";
+                        if (decrypted?.otpMethod === "email") return "email";
                         return "sms";
                     } else {
                         return method
@@ -246,7 +261,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
                 setCurrentOtpMethod(handleMethods())
 
-                if ((handleMethods() === "insta" || handleMethods() === "sms" || handleMethods() === "wp")) {
+                const currentSelection = handleMethods();
+                if ((currentSelection === "insta" || currentSelection === "sms" || currentSelection === "wp" || currentSelection === "email")) {
                     setResendTimer(120)
                 }
                 // console.log(decrypted)
@@ -592,12 +608,20 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         setOTPValues(Array(numberOfFields).fill(''))
         inputRefs?.current?.[0]?.focus()
 
-        if (resendTimer > 0 && lastOtpSentTo && (method === 'sms' || method === 'insta' || method === "wp")) {
-            setPendingOtpMethod(method);
-            return;
+        let shouldCallLoginHandler = false;
+
+        if (resendTimer > 0 && lastOtpSentTo && (method === 'sms' || method === 'insta' || method === "wp" || method === "email")) {
+            if (!hasChangedMethodOnce) {
+                setHasChangedMethodOnce(true);
+                shouldCallLoginHandler = true;
+            } else {
+                // Rate limited. Do not call loginHandler, but allow the UI to change method
+            }
+        } else if (method !== "biometric" && (method === "auth" || resendTimer === 0)) {
+            shouldCallLoginHandler = true;
         }
 
-        if ((method !== "biometric") && (method === "auth" || resendTimer === 0)) {
+        if (shouldCallLoginHandler) {
             loginHandler({ preventDefault: () => { } }, method);
         }
 
@@ -1073,7 +1097,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                             <h1>{currentOtpMethod === "biometric" ? t("Biometric Verification") :
                                 currentOtpMethod === "auth" ? t("Google Authenticator") :
                                     currentOtpMethod === "insta" ? t("Instagram") : currentOtpMethod === "wp" ? t("Whatsapp") :
-                                        t("SMS Verification").replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")}</h1>
+                                        currentOtpMethod === "email" ? t("Email OTP Verification") :
+                                            t("SMS Verification").replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")}</h1>
                             <p>{t("Start Your InstaPay Journey Today!")}</p>
                             {
                                 width < 1000
@@ -1118,7 +1143,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         )}
                                     </div>
                                 ) : (
-                                    // Existing OTP input fields
                                     <div className={styles.otp_inp}>
                                         <label>
                                             {
@@ -1134,15 +1158,19 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                             ?
                                                             t("Enter the code send on your Whatsapp")
                                                             :
-                                                            t(`Enter the code sent to +41********4053`)
-                                                                .replace(
-                                                                    "+41********4053",
-                                                                    isEmail.test(email)
-                                                                        ?
-                                                                        `${email.slice(0, 4).split("").map(_ => "*").join("")}${email.slice(4)}`
-                                                                        :
-                                                                        `${email.slice(0, email.length - 4).split("").map(_ => "*").join("")}${email.slice(email.length - 4)}`
-                                                                ).replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")
+                                                            currentOtpMethod === "email"
+                                                                ?
+                                                                t("Enter the code sent to your email")
+                                                                :
+                                                                t(`Enter the code sent to +41********4053`)
+                                                                    .replace(
+                                                                        "+41********4053",
+                                                                        isEmail.test(email)
+                                                                            ?
+                                                                            `${email.slice(0, 4).split("").map(_ => "*").join("")}${email.slice(4)}`
+                                                                            :
+                                                                            `${email.slice(0, email.length - 4).split("").map(_ => "*").join("")}${email.slice(email.length - 4)}`
+                                                                    ).replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")
                                             }
                                         </label>
                                         <FaceAnimation currentInput={currentActiveInput} verification={otpVerified} isCorrect={isOtpCorrect} startTyping />
@@ -1265,8 +1293,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         <span>
                                             {
                                                 resendTimer > 0
-                                                    ? ((lastOtpSentTo && ['sms', 'insta', 'wp'].includes(pendingOtpMethod || currentOtpMethod) && lastOtpSentTo !== (pendingOtpMethod || currentOtpMethod)) || (pendingOtpMethod && lastOtpSentTo !== currentOtpMethod))
-                                                        ? <span> {t(`You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : lastOtpSentTo === "wp" ? "Whatsapp" : 'Instagram'}, wait ${resendTimer} seconds to get code on ${(pendingOtpMethod || currentOtpMethod) === 'sms' ? 'SMS' : (pendingOtpMethod || currentOtpMethod) === "wp" ? "Whatsapp" : 'Instagram'}`)} </span>
+                                                    ? ((lastOtpSentTo && ['sms', 'insta', 'wp', 'email'].includes(pendingOtpMethod || currentOtpMethod) && lastOtpSentTo !== (pendingOtpMethod || currentOtpMethod)) || (pendingOtpMethod && lastOtpSentTo !== currentOtpMethod))
+                                                        ? <span> {t(`You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : lastOtpSentTo === "wp" ? "Whatsapp" : lastOtpSentTo === 'email' ? 'Email' : 'Instagram'}, wait ${resendTimer} seconds to get code on ${(pendingOtpMethod || currentOtpMethod) === 'sms' ? 'SMS' : (pendingOtpMethod || currentOtpMethod) === "wp" ? "Whatsapp" : (pendingOtpMethod || currentOtpMethod) === 'email' ? 'Email' : 'Instagram'}`)} </span>
                                                         :
                                                         currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" && <span>{t("Resend code in 30 seconds").replace("30", resendTimer)}</span>
                                                     :
@@ -1338,7 +1366,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </form >
             }
         </>
     )
