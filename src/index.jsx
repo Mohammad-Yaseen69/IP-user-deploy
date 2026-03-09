@@ -65,6 +65,7 @@ Sentry.init({
   profilesSampleRate: 1.0,
   defaultIntegrations: false,
   enableLogs: true,
+  tunnel: "/tunnel",  
 });
 
 
