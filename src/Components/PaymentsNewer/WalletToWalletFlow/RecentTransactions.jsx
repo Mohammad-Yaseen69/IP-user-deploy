@@ -2,6 +2,7 @@ import axios from "axios"
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useContext, useState } from "react"
+import { Modal, ModalBody, ModalFooter, Button, Input, ModalHeader } from 'reactstrap'
 import { UserContext } from "../../../Context/UserContext"
 import styles from "./styles/recentTrans.module.scss"
 import { useTranslation } from "react-i18next"
@@ -11,8 +12,7 @@ import useWindowWidth from "../../../utils/useWindowWidth"
 import countriesData from "../CountriesData.json"
 import repeat from "./repeat.svg"
 import { capitalizeStatus } from "../../PendingNew/ItemMobile"
-import { BsPencil } from "react-icons/bs"
-import { Edit, Edit2, Edit3 } from "react-feather"
+import { X } from "react-feather"
 
 
 const getRecentTransaction = async (authHeader, account, type) => {
@@ -48,28 +48,22 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
         }
     })
 
-    const [editingTxId, setEditingTxId] = useState(null)
-    const [tempAmount, setTempAmount] = useState("")
-    const [editedAmounts, setEditedAmounts] = useState({})
+    const [modalData, setModalData] = useState({
+        isOpen: false,
+        tx: null,
+        isEditing: false,
+        amount: ""
+    })
 
-    const handleEdit = (tx) => {
-        setEditingTxId(tx._id)
-        setTempAmount(editedAmounts[tx._id] || tx.amount?.toFixed(2) || "")
-    }
+    const closeExploreModal = () => setModalData({ isOpen: false, tx: null, isEditing: false, amount: "" })
 
-    const handleSave = (txId) => {
-        const val = parseFloat(tempAmount)
-        if (isNaN(val) || val <= 0) {
-            toast.error("Please enter a valid amount")
-            return
-        }
-        setEditedAmounts(prev => ({ ...prev, [txId]: val }))
-        setEditingTxId(null)
-    }
-
-    const handleCancel = () => {
-        setEditingTxId(null)
-        setTempAmount("")
+    const openRepeatModal = (tx) => {
+        setModalData({
+            isOpen: true,
+            tx: tx,
+            isEditing: false,
+            amount: tx.amount?.toFixed(2)
+        })
     }
 
 
@@ -91,13 +85,11 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
 
 
 
-    const setTransaction = async (t) => {
+    const proceedTransaction = async (t, finalAmount) => {
         const sendingWallet = userWallets?.find(w => w?.wallet_id === t?.wallet_id)
         const currency = { ...sendingWallet, ...currencies.find(item => item.currency_code === sendingWallet?.currency?.code) }
         dataHandler("reason", t?.purpose)
         setShowRecent(false)
-
-        const finalAmount = editedAmounts[t?._id] || t?.amount
 
         if (type === "international") {
             const country = countriesData.find(item => item.name === t?.beneficiary?.country_name)
@@ -132,6 +124,16 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
             dataHandler("recipient_amount", null)
 
         }
+        closeExploreModal()
+    }
+
+    const handleModalContinue = () => {
+        const val = parseFloat(modalData.amount)
+        if (isNaN(val) || val <= 0) {
+            toast.error("Please enter a valid amount")
+            return
+        }
+        proceedTransaction(modalData.tx, val)
     }
 
     const canRepeat = async (tx) => {
@@ -183,21 +185,7 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
                                 <div style={{ display: "flex", alignItems: "center", gap: "7px", flexDirection: "row" }} >
                                     {width > 1300 &&
                                         <span
-                                            onClick={() => editingTxId === tx._id ? handleSave(tx._id) : handleEdit(tx)}
-                                            style={{ background: "#5926F0", height: "19px", width: "19px", display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "3px", cursor: "pointer" }}>
-                                            {editingTxId === tx._id ? <span style={{ color: "white", fontSize: "10px", fontWeight: "bold" }}>OK</span> : <Edit color="white" size={13} />}
-                                        </span>
-                                    }
-                                    {width > 1300 && editingTxId === tx._id &&
-                                        <span
-                                            onClick={handleCancel}
-                                            style={{ background: "#f02626", height: "19px", width: "19px", display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "3px", cursor: "pointer" }}>
-                                            <span style={{ color: "white", fontSize: "10px", fontWeight: "bold" }}>X</span>
-                                        </span>
-                                    }
-                                    {width > 1300 && editingTxId !== tx._id &&
-                                        <span
-                                            onClick={() => setTransaction(tx)}
+                                            onClick={() => openRepeatModal(tx)}
                                             style={{ background: "#5926F0", height: "19px", width: "19px", display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "3px", cursor: "pointer" }}>
                                             <img src={repeat} />
                                         </span>
@@ -217,65 +205,86 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
                                     {t(capitalizeStatus(tx?.status))} <span>- {createdAt}</span>
                                 </h4>
                                 <h4>
-                                    {editingTxId === tx?._id ? (
-                                        <input
-                                            type="number"
-                                            value={tempAmount}
-                                            onChange={(e) => setTempAmount(e.target.value)}
-                                            style={{
-                                                width: "80px",
-                                                border: "1px solid #5926F0",
-                                                borderRadius: "4px",
-                                                padding: "2px 4px",
-                                                fontSize: "14px",
-                                                outline: "none"
-                                            }}
-                                            autoFocus
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter') handleSave(tx._id)
-                                                if (e.key === 'Escape') handleCancel()
-                                            }}
-                                        />
-                                    ) : (
-                                        `${(editedAmounts[tx?._id] || tx?.amount)?.toFixed(2)}`
-                                    )} {tx?.currency?.code}
+                                    {tx?.amount?.toFixed(2)} {tx?.currency?.code}
                                 </h4>
                             </div>
 
                             {width < 1300 && canRepeat(tx) && (
-                                <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
+                                <div style={{ display: "flex", gap: "8px", marginTop: "8px", width: "100%", flexDirection: "column" }}>
                                     <button
                                         className={styles.send}
-                                        onClick={() => setTransaction(tx)}
+                                        onClick={() => openRepeatModal(tx)}
                                         type="button"
                                         style={{ flex: 1 }}
                                     >
                                         {t("Send Again")}
                                     </button>
-                                    <button
-                                        style={{ background: editingTxId === tx?._id ? "#27ae60" : "gray", flex: 1 }}
-                                        className={styles.send}
-                                        type="button"
-                                        onClick={() => editingTxId === tx?._id ? handleSave(tx._id) : handleEdit(tx)}
-                                    >
-                                        {editingTxId === tx?._id ? t("Save") : t("Edit")}
-                                    </button>
-                                    {editingTxId === tx?._id && (
-                                        <button
-                                            style={{ background: "#e74c3c", flex: 0.5 }}
-                                            className={styles.send}
-                                            type="button"
-                                            onClick={handleCancel}
-                                        >
-                                            {t("Cancel")}
-                                        </button>
-                                    )}
                                 </div>
                             )}
                         </div>
                     ) : <></>
                 })}
             </div>
+
+            <Modal isOpen={modalData.isOpen} toggle={closeExploreModal} centered>
+                <ModalHeader toggle={closeExploreModal}>
+                    {t("Amount Confirmation")}
+                </ModalHeader>
+                <ModalBody style={{ padding: "1.5rem" }}>
+                    {modalData.isEditing ? (
+                        <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+                            <h4 style={{ fontSize: "18px", fontWeight: "700" }}>{t("Enter New Amount")}</h4>
+                            <Input
+                                type="number"
+                                value={modalData.amount}
+                                onChange={(e) => setModalData(prev => ({ ...prev, amount: e.target.value }))}
+                                placeholder={t("Amount")}
+                                style={{ borderRadius: "8px", padding: "12px" }}
+                                autoFocus
+                            />
+                            <Button
+                                onClick={handleModalContinue}
+                                style={{
+                                    background: "linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%)",
+                                    border: "none",
+                                    borderRadius: "8px",
+                                    padding: "12px",
+                                    fontWeight: "600"
+                                }}
+                            >
+                                {t("Continue")}
+                            </Button>
+                        </div>
+                    ) : (
+                        <div style={{ display: "flex", flexDirection: "column", gap: "20px", textAlign: "center" }}>
+                            <h4 style={{ fontSize: "16px", fontWeight: "600", color: "#333", lineHeight: "1.5", textAlign: "left" }}>
+                                {t("Do you want to repeat this transaction with the same amount or do you want to edit the amount before continuing the transaction?")}
+                            </h4>
+                            <div style={{ display: "flex", gap: "10px" }}>
+                                <button
+                                    onClick={() => setModalData(prev => ({ ...prev, isEditing: true }))}
+                                    style={{ flex: 1, borderRadius: "8px", padding: "10px", border: "1px solid #5926F0", color: "#5926F0", backgroundColor: "white",outline: "none" , fontWeight: 600}}
+                                >
+                                    {t("Edit Amount")}
+                                </button>
+                                <Button
+                                    onClick={handleModalContinue}
+                                    style={{
+                                        flex: 1,
+                                        background: "linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%)",
+                                        border: "none",
+                                        borderRadius: "8px",
+                                        padding: "10px",
+                                        fontWeight: "600"
+                                    }}
+                                >
+                                    {t("Continue")}
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+                </ModalBody>
+            </Modal>
         </div>
     )
 }
