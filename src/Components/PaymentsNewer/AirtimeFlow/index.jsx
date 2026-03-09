@@ -249,12 +249,15 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
 
     const createTransaction = async (codeType = "") => {
         try {
+            const isOpenRange = +String(data?.airtime_amount)?.replaceAll(",", "") > 0 && data.service_type?.name?.toLowerCase()?.includes("airtime");
+
             const payload = {
                 data: {
-                    wallet_id: data.wallet?._id,
+                    wallet_id: data?.payment_type?.value === "wallet" ? data.wallet?._id : data.localWallet?._id,
                     token: data.package_details?.data?.token,
                     number: data.recipient ? `+${data.recipient}` : data.eSimData.phone ? `+${data.eSimData.phone}` : `+${userDetails.phone}`,
-                    type: data.flow === "e-sim" && "esim"
+                    type: data.flow === "e-sim" && "esim",
+                    airtimeType: isOpenRange ? "ranged" : "fixed"
                 },
                 type: codeType || data.codeType
             }
@@ -304,6 +307,8 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
             if (data.flow === "airtime") {
                 if (data.payment_type.value === "paypal") {
                     url = `${import.meta.env.VITE_IP_DEV_API}${isOpenRange ? "/api/paypal/initiate-airtime-ranged-payment" : "/api/paypal/initiate-airtime-fixed-payment"}`
+                } else if (data?.payment_type?.value === "mobile_wallet") {
+                    url = `${import.meta.env.VITE_IP_DEV_API}/api/collection/airtime`
                 } else {
                     url = `${import.meta.env.VITE_IP_DEV_API}/api/dt/confirm${isOpenRange ? "-ranged" : ""}-airtime-transaction`
                 }
@@ -324,6 +329,7 @@ const Airtime = ({ setCurrentFlow, setAction, setStep }) => {
                 window.location.href = dec.url
             }
             updateDataHandler("verified", true)
+            updateDataHandler("transaction_details", dec)
             updateDataHandler("show_otp", false)
         } catch (err) {
             const decrypted = decryptData(err.response.data.data)
