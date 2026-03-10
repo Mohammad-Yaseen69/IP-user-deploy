@@ -67,7 +67,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             setIsValidIban(true)
             setError ? setError("") : setBankDetailsError("")
         }
-    }, [debouncedValue, accNumType, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey, bankAccountNumberKey, bankExtras, handleBankExtraChange, queryMetadata.isForEdit, setError])
+    }, [debouncedValue, accNumType, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey, queryMetadata.isForEdit, setError])
 
     useEffect(() => {
         setIbanSwift("")
@@ -153,7 +153,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             setBankCountryCode(decrypted?.bicDetails?.structured_address?.country_code || decrypted?.structured_address?.country_code || "")
             setIsValidIban(true)
         }
-    }, [rawData, accNumType, alpha3, countryName, setError, setFormData, queryMetadata, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey, bankAccountNumberKey, bankExtras, handleBankExtraChange])
+    }, [rawData, accNumType, alpha3, countryName, setError, setFormData, queryMetadata, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey])
 
     // Process query errors
     useEffect(() => {
@@ -189,7 +189,7 @@ const useBankDetails = ({ accNumType, setFormData, handleBankExtraChange, bankEx
             setBankCountryCode("")
             setIsValidIban(false)
         }
-    }, [queryError, setError, setFormData, queryMetadata, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey, bankAccountNumberKey, bankExtras, handleBankExtraChange])
+    }, [queryError, setError, setFormData, queryMetadata, bankNameKey, branchNameKey, bankBranchStreetKey, bankCityKey, bankProvinceKey, bankPostalCodeKey])
 
     const getBankDetails = useCallback((e, isForEdit = false, account_number = "") => {
         const value = e.target.value?.replace(/[^a-zA-Z0-9]/g, '')

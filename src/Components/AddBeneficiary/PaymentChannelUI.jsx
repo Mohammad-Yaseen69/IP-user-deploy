@@ -383,10 +383,19 @@ const PaymentChannelUI = ({
                                         } */}
                     <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                         <Label className="col-form-label" >{t("Account Number")}<span className="req_star">*</span></Label>
-                        <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" required /*readOnly={accNumType === "IBAN"}*/ value={formData.bank_account_number} name="bank_account_number" onChange={e => {
-                            const value = e.target.value.replace(/[^a-zA-Z0-9]/g, '')
-                            inputChangeHandler({ target: { name: e.target.name, value } })
-                        }} disabled={isEdit ? !isValidIban || !isEditMode : !isValidIban} />
+                        <Input className="form-control"
+                            style={{ flex: 1, minWidth: "250px" }}
+                            type="text"
+                            required /*readOnly={accNumType === "IBAN"}*/
+                            value={formData.bank_account_number}
+                            name="bank_account_number"
+                            onChange={e => {
+                                const value = e.target.value.replace(/[^a-zA-Z0-9]/g, '')
+                                console.log(value)
+                                inputChangeHandler({ target: { name: e.target.name, value } })
+                            }}
+                            disabled={isEdit ? !isValidIban || !isEditMode : !isValidIban}
+                        />
                     </FormGroup>
                     {
                         accNumType === "IBAN"
