@@ -25,10 +25,10 @@ import localforage from "localforage"
 import InstaPayLoader from "../Loader";
 import { logger } from "@sentry/react";
 import VpnModal from "./VpnModal";
+import LocationDeniedModal from "./LocationDeniedModal";
 const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
-    // capture redirect target from location state (if provided by router) or from query params (?redirect=...)
     const location = useLocation();
     const params = new URLSearchParams(location.search || "");
     const redirectQuery = params.get("redirect");
@@ -67,9 +67,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [showRestoreModal, setShowRestoreModal] = useState(false)
     const [accountRestoreDetails, setAccountRestoreDetails] = useState(null)
     const [restoreLoading, setRestoreLoading] = useState(false)
-
-    // convert this object into an array of object it should just have a type property which should tell like whatsapp insta biometric instead of a object property
-
+    const [pendingLoginData, setPendingLoginData] = useState(null)
+    const [capturedSecurityData, setCapturedSecurityData] = useState(null)
     const [methods, setMethods] = useState([
         {
             avail: false,
@@ -202,9 +201,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         })
             .then(async (res) => {
                 const decrypted = decryptData(res.data.data)
+                const isVpnAllowed = decrypted?.isVpnAllowed
                 setFirstTime(false)
-
-                // Check if account requires restoration (only if not already restoring)
                 if (!restoreAccount && decrypted?.status === false && decrypted?.accountDetails?.requiresConfirmation === true) {
                     setAccountRestoreDetails(decrypted)
                     setShowRestoreModal(true)
@@ -212,8 +210,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     setMethodLoading(false)
                     return
                 }
-
-                // console.log(decrypted)
                 setMethods(prevMethods => prevMethods.map(method => {
                     switch (method.attr) {
                         case 'auth':
@@ -266,23 +262,14 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 if ((currentSelection === "insta" || currentSelection === "sms" || currentSelection === "wp" || currentSelection === "email")) {
                     setResendTimer(120)
                 }
-                // console.log(decrypted)
-
-
-
-                // if (decrypted?.authenticator === true) {
-                //     setResendTimer(0)
-                // }
-
                 setLoginToken(decrypted?.token)
-                setStep(2)
-                setIsPressed(false)
-                setMethodLoading(false)
                 if (restoreAccount) {
                     setShowRestoreModal(false)
                     setAccountRestoreDetails(null)
                     setRestoreLoading(false)
                 }
+
+                performSecurityChecks(isVpnAllowed)
 
             })
             .catch(error => {
@@ -325,9 +312,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             setIsLoginError("")
         }
     }, [profileLockTIme, i18next.language])
-
-    // service error
-
     useLayoutEffect(() => {
         if (loginMethod === "email") return;
         const newEmail = email;
@@ -360,9 +344,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             logger.info(`IP Locate api called for user: ${username} `, {
                 data: location
             })
-
-
-
             if (location) {
                 return {
                     browser_name: rdd.browserName ?? "N/A",
@@ -405,65 +386,21 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
     }
 
-    const completeLoginProcess = async (userAccount, token, ipInfo) => {
-        const finalizeLogin = async (locationData = {}) => {
-            localStorage.setItem("login", true)
-            localStorage.setItem("token", token)
-            setUserDetails(userAccount)
-            setData({
-                pfp: userAccount?.profileImage?.url,
-                name: userAccount?.account_type === "individual" ? userAccount?.first_name + " " + userAccount?.last_name : userAccount?.company_name,
-                loginMethod: loginMethod,
-                credential: email,
-            })
-
-            const historyData = {
-                browser_name: rdd.browserName ?? "N/A",
-                browser_version: rdd.browserVersion ?? "N/A",
-                is_mobile_user: rdd.isMobile || rdd.isMobileSafari,
-                IPv4: ipInfo?.IPv4 || ipInfo?.ip || "",
-                city: locationData.city || ipInfo?.city || "",
-                country_code: locationData.country_code || ipInfo?.country_code || "",
-                country_name: locationData.country_name || ipInfo?.country_name || "",
-                latitude: locationData.latitude || ipInfo?.latitude || "",
-                longitude: locationData.longitude || ipInfo?.longitude || "",
-                postal: locationData.postal || ipInfo?.postal || "",
-                state: locationData.state || ipInfo?.state || "",
-                platform: rdd.osName || navigator.platform,
-                accountId: userAccount?._id,
-                language: navigator.language,
-                userAgent: navigator.userAgent,
-                screenResolution: `${window.screen.width}x${window.screen.height}`,
-                deviceType: rdd.deviceType ?? "desktop",
-            }
-
-            console.log("Final Login History Data:", historyData);
-
-            const encryptedWithLocation = encryptData(historyData);
-
-            try {
-                await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/login/create-login-history`, {
-                    data: encryptedWithLocation
-                });
-            } catch (err) {
-                console.error("Login history creation failed:", err);
-            } finally {
-                const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
-                if (path && path !== "undefined") {
-                    navigate(path)
-                } else {
-                    navigate("/")
-                }
-                sessionStorage.clear()
-                setIsPressed(false)
-                setBiometricLoading(false)
-            }
+    const performSecurityChecks = async (isVpnAllowed) => {
+        setIsPressed(true);
+        const ipInfo = await getUserInfo(email);
+        
+        const finishSecurityChecks = async (locationData = {}) => {
+            setCapturedSecurityData({ ipInfo, locationData });
+            setStep(2);
+            setIsPressed(false);
+            setMethodLoading(false);
         }
 
-        if ((ipInfo?.privacy?.is_proxy || ipInfo?.privacy?.is_tor || ipInfo?.privacy?.is_vpn) && !userAccount?.isVpnAllowed) {
+        if ((ipInfo?.privacy?.is_proxy || ipInfo?.privacy?.is_tor || ipInfo?.privacy?.is_vpn) && !isVpnAllowed) {
             setShowNoticeModal(true);
             setIsPressed(false);
-            setBiometricLoading(false);
+            setMethodLoading(false);
             return;
         }
 
@@ -483,24 +420,83 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                             state: data.principalSubdivision,
                             postal: data.postcode
                         };
-                        finalizeLogin(locationData);
+                        finishSecurityChecks(locationData);
                     } catch (error) {
                         console.error("Error fetching reverse geocode location data: ", error);
-                        finalizeLogin({ latitude, longitude });
+                        finishSecurityChecks({ latitude, longitude });
                     }
                 },
                 (error) => {
                     console.error("Geolocation permission error: ", error);
+                    setPendingLoginData({ isVpnAllowed });
                     setIsPressed(false);
-                    setBiometricLoading(false);
+                    setMethodLoading(false);
                     setShowLocationModal(true);
                 },
                 { timeout: 30000 }
             );
         } else {
+            setPendingLoginData({ isVpnAllowed });
             setIsPressed(false);
-            setBiometricLoading(false);
+            setMethodLoading(false);
             setShowLocationModal(true);
+        }
+    }
+
+    const completeLoginProcess = async (userAccount, token) => {
+        localStorage.setItem("login", true)
+        localStorage.setItem("token", token)
+        setUserDetails(userAccount)
+        setData({
+            pfp: userAccount?.profileImage?.url,
+            name: userAccount?.account_type === "individual" ? userAccount?.first_name + " " + userAccount?.last_name : userAccount?.company_name,
+            loginMethod: loginMethod,
+            credential: email,
+        })
+
+        const ipInfo = capturedSecurityData?.ipInfo;
+        const locationData = capturedSecurityData?.locationData || {};
+
+        const historyData = {
+            browser_name: rdd.browserName ?? "N/A",
+            browser_version: rdd.browserVersion ?? "N/A",
+            is_mobile_user: rdd.isMobile || rdd.isMobileSafari,
+            IPv4: ipInfo?.IPv4 || ipInfo?.ip || "",
+            city: locationData?.city || ipInfo?.city || "",
+            country_code: locationData?.country_code || ipInfo?.country_code || "",
+            country_name: locationData?.country_name || ipInfo?.country_name || "",
+            latitude: locationData?.latitude || ipInfo?.latitude || "",
+            longitude: locationData?.longitude || ipInfo?.longitude || "",
+            postal: locationData?.postal || ipInfo?.postal || "",
+            state: locationData?.state || ipInfo?.state || "",
+            platform: rdd.osName || navigator.platform,
+            accountId: userAccount?._id,
+            language: navigator.language,
+            userAgent: navigator.userAgent,
+            screenResolution: `${window.screen.width}x${window.screen.height}`,
+            deviceType: rdd.deviceType ?? "desktop",
+        }
+
+        console.log("Final Login History Data:", historyData);
+
+        const encryptedWithLocation = encryptData(historyData);
+
+        try {
+            await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/login/create-login-history`, {
+                data: encryptedWithLocation
+            });
+        } catch (err) {
+            console.error("Login history creation failed:", err);
+        } finally {
+            const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
+            if (path && path !== "undefined") {
+                navigate(path)
+            } else {
+                navigate("/")
+            }
+            sessionStorage.clear()
+            setIsPressed(false)
+            setBiometricLoading(false)
         }
     }
 
@@ -580,9 +576,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         const dec = decryptData(res.data.data)
                         setShowInactivityModal(false)
                         if (dec?.country?.status) {
-                            const data = await getUserInfo(dec?.username)
-                            console.log("data from ip", data)
-                            completeLoginProcess(dec, token, data)
+                            completeLoginProcess(dec, token)
                         }
                         else {
                             setUserDetails(dec)
@@ -590,7 +584,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         }
                     })
                     .catch(err => {
-                        // console.log(decryptData(err.response.data.data))
                         setIsPressed(false)
                         setIsLoginError("Something went wrong while getting account details")
                     })
@@ -739,8 +732,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     const dec = decryptData(res.data.data)
                     setShowInactivityModal(false)
                     if (dec?.country?.status) {
-                        const data = await getUserInfo(dec?.username)
-                        completeLoginProcess(dec, token, data)
+                        completeLoginProcess(dec, token)
                     } else {
                         sessionStorage.setItem("country_status_error", "Service not available in your country!")
                     }
@@ -794,19 +786,19 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             setLastOtpSentTo(null);
         }
     }, [resendTimer]);
-
     const resetOtpStates = () => {
-        setOTPValues(Array(numberOfFields).fill('')) // Reset OTP input values
-        setCurrentActiveInput(1) // Reset active input field
-        setIsAnyFieldEmpty(true) // Reset field empty check
-        setOtpVerified(false) // Reset OTP verification status
-        setIsOtpCorrect(false) // Reset OTP correctness check
-        setConsecutiveCount(0) // Reset consecutive attempts counter
-        setLastOtpSentTo(null) // Reset last OTP method
-        setIsLoginError('') // Reset login error message
-        setResendTimer(0) // Reset resend timer
-        setPendingOtpMethod(null) // Reset pending OTP method
-        setStep(1) // Reset step to 1
+        setOTPValues(Array(numberOfFields).fill(''))
+        setCurrentActiveInput(1)
+        setIsAnyFieldEmpty(true)
+        setOtpVerified(false)
+        setIsOtpCorrect(false)
+        setConsecutiveCount(0)
+        setLastOtpSentTo(null)
+        setIsLoginError('')
+        setResendTimer(0)
+        setPendingOtpMethod(null)
+        setCapturedSecurityData(null)
+        setStep(1)
     }
 
     const resetLoginStates = () => {
@@ -830,32 +822,17 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
             <VpnModal showNoticeModal={showNoticeModal} />
 
-            <Modal isOpen={showLocationModal} toggle={() => setShowLocationModal(false)} centered>
-                <ModalHeader toggle={() => setShowLocationModal(false)}>
-                    {t("Location Permission Required")}
-                </ModalHeader>
-                <ModalBody>
-                    <p style={{ marginBottom: "1.5rem", lineHeight: "1.6" }}>
-                        {t("We can't let you logged in without location permission. It's for security purposes. Please allow location access in your browser to continue.")}
-                    </p>
-                </ModalBody>
-                <ModalFooter style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
-                    <Button
-                        color="secondary"
-                        onClick={resetLoginStates}
-                        disabled={restoreLoading}
-                        style={{
-                            background: "#f5f5f5",
-                            border: "1px solid #e6e6e6",
-                            color: "black",
-                            borderRadius: "10px",
-                            padding: "10px 20px"
-                        }}
-                    >
-                        {t("Close")}
-                    </Button>
-                </ModalFooter>
-            </Modal>
+            <LocationDeniedModal
+                isOpen={showLocationModal}
+                toggle={() => setShowLocationModal(false)}
+                onRetry={() => {
+                    setShowLocationModal(false);
+                    if (pendingLoginData) {
+                        const { isVpnAllowed } = pendingLoginData;
+                        performSecurityChecks(isVpnAllowed);
+                    }
+                }}
+            />
 
             <Modal isOpen={showRestoreModal} toggle={() => setShowRestoreModal(false)} centered>
                 <ModalHeader toggle={() => setShowRestoreModal(false)}>
@@ -939,7 +916,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                     :
                                                     t("Login with email")
                                             }
-                                            {/* {t("Login with")} {loginMethod === "email" ? t("Phone Number") : t("Email")} */}
                                         </div>
                                     </div>
                                 </> :
@@ -1262,7 +1238,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                 })}
                                             </>
                                         ) : (
-                                            // Desktop flow
                                             <>
                                                 {methods.map((method, index) => {
                                                     if (method.avail && method.attr !== currentOtpMethod) {
