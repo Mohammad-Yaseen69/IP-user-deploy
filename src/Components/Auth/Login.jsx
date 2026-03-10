@@ -389,7 +389,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const performSecurityChecks = async (isVpnAllowed) => {
         setIsPressed(true);
         const ipInfo = await getUserInfo(email);
-        
+
         const finishSecurityChecks = async (locationData = {}) => {
             setCapturedSecurityData({ ipInfo, locationData });
             setStep(2);
@@ -404,43 +404,51 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             return;
         }
 
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                    const { latitude, longitude } = position.coords;
-                    try {
-                        const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
-                        const data = await res.json();
-                        const locationData = {
-                            latitude,
-                            longitude,
-                            country_name: data.countryName,
-                            country_code: data.countryCode,
-                            city: data.city,
-                            state: data.principalSubdivision,
-                            postal: data.postcode
-                        };
-                        finishSecurityChecks(locationData);
-                    } catch (error) {
-                        console.error("Error fetching reverse geocode location data: ", error);
-                        finishSecurityChecks({ latitude, longitude });
-                    }
-                },
-                (error) => {
-                    console.error("Geolocation permission error: ", error);
-                    setPendingLoginData({ isVpnAllowed });
-                    setIsPressed(false);
-                    setMethodLoading(false);
-                    setShowLocationModal(true);
-                },
-                { timeout: 30000 }
-            );
-        } else {
-            setPendingLoginData({ isVpnAllowed });
+
+        if ((rdd.isSafari || rdd.isMobileSafari)) {
+            setStep(2);
             setIsPressed(false);
             setMethodLoading(false);
-            setShowLocationModal(true);
+        } else {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        const { latitude, longitude } = position.coords;
+                        try {
+                            const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
+                            const data = await res.json();
+                            const locationData = {
+                                latitude,
+                                longitude,
+                                country_name: data.countryName,
+                                country_code: data.countryCode,
+                                city: data.city,
+                                state: data.principalSubdivision,
+                                postal: data.postcode
+                            };
+                            finishSecurityChecks(locationData);
+                        } catch (error) {
+                            console.error("Error fetching reverse geocode location data: ", error);
+                            finishSecurityChecks({ latitude, longitude });
+                        }
+                    },
+                    (error) => {
+                        console.error("Geolocation permission error: ", error);
+                        setPendingLoginData({ isVpnAllowed });
+                        setIsPressed(false);
+                        setMethodLoading(false);
+                        setShowLocationModal(true);
+                    },
+                    { timeout: 30000 }
+                );
+            } else {
+                setPendingLoginData({ isVpnAllowed });
+                setIsPressed(false);
+                setMethodLoading(false);
+                setShowLocationModal(true);
+            }
         }
+
     }
 
     const completeLoginProcess = async (userAccount, token) => {
