@@ -495,7 +495,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     setBiometricLoading(false);
                     setShowLocationModal(true);
                 },
-                { timeout: 10000 }
+                { timeout: 30000 }
             );
         } else {
             setIsPressed(false);
