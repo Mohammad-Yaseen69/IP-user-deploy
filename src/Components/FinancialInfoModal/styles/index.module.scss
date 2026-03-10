@@ -311,13 +311,15 @@
             justify-content: center;
 
             .btns {
+                margin-top: 16px;
                 padding: 0px;
                 justify-content: space-between;
                 width: 100%;
 
 
                 .next {
-                    width: 120px;
+                    width: 100%;
+
                 }
 
                 .back {

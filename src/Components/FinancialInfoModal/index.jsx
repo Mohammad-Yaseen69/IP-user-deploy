@@ -307,6 +307,7 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
     const width = useWindowWidth()
 
 
+
     const rightContent = (isMobile) => (
         <div className={styles.right}>
             <div className={styles.contentContainer}>
