@@ -160,6 +160,13 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const loginHandler = (e, method = undefined, restoreAccount = false) => {
         e.preventDefault()
         setIsPressed(true)
+
+        let locationPromise = null;
+        if (navigator.geolocation && step === 1) {
+            locationPromise = new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 30000 });
+            });
+        }
         setConsecutiveCount(1)
         setIsLoginError("")
         if (method) {
@@ -269,7 +276,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     setRestoreLoading(false)
                 }
 
-                performSecurityChecks(isVpnAllowed)
+                performSecurityChecks(isVpnAllowed, locationPromise)
 
             })
             .catch(error => {
@@ -386,7 +393,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
     }
 
-    const performSecurityChecks = async (isVpnAllowed) => {
+    const performSecurityChecks = async (isVpnAllowed, locationPromise = null) => {
         setIsPressed(true);
         const ipInfo = await getUserInfo(email);
 
@@ -404,51 +411,57 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             return;
         }
 
+        const handleLocation = async (position) => {
+            const { latitude, longitude } = position.coords;
+            try {
+                const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
+                const data = await res.json();
+                const locationData = {
+                    latitude,
+                    longitude,
+                    country_name: data.countryName,
+                    country_code: data.countryCode,
+                    city: data.city,
+                    state: data.principalSubdivision,
+                    postal: data.postcode
+                };
+                finishSecurityChecks(locationData);
+            } catch (error) {
+                console.error("Error fetching reverse geocode location data: ", error);
+                finishSecurityChecks({ latitude, longitude });
+            }
+        }
 
-        if ((rdd.isSafari || rdd.isMobileSafari)) {
-            setStep(2);
+        const handleLocationError = (error) => {
+            console.error("Geolocation permission error: ", error);
+            setPendingLoginData({ isVpnAllowed });
             setIsPressed(false);
             setMethodLoading(false);
+            setShowLocationModal(true);
+        }
+
+        if (locationPromise) {
+            try {
+                const position = await locationPromise;
+                await handleLocation(position);
+            } catch (error) {
+                handleLocationError(error);
+            }
         } else {
-            if (navigator.geolocation) {
+            if (navigator.geolocation && step === 1) {
                 navigator.geolocation.getCurrentPosition(
                     async (position) => {
-                        const { latitude, longitude } = position.coords;
-                        try {
-                            const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
-                            const data = await res.json();
-                            const locationData = {
-                                latitude,
-                                longitude,
-                                country_name: data.countryName,
-                                country_code: data.countryCode,
-                                city: data.city,
-                                state: data.principalSubdivision,
-                                postal: data.postcode
-                            };
-                            finishSecurityChecks(locationData);
-                        } catch (error) {
-                            console.error("Error fetching reverse geocode location data: ", error);
-                            finishSecurityChecks({ latitude, longitude });
-                        }
+                        await handleLocation(position);
                     },
                     (error) => {
-                        console.error("Geolocation permission error: ", error);
-                        setPendingLoginData({ isVpnAllowed });
-                        setIsPressed(false);
-                        setMethodLoading(false);
-                        setShowLocationModal(true);
+                        handleLocationError(error);
                     },
                     { timeout: 30000 }
                 );
             } else {
-                setPendingLoginData({ isVpnAllowed });
-                setIsPressed(false);
-                setMethodLoading(false);
-                setShowLocationModal(true);
+                finishSecurityChecks();
             }
         }
-
     }
 
     const completeLoginProcess = async (userAccount, token) => {
