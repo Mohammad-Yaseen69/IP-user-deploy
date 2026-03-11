@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import styles from "./BankDeposit.module.scss";
 import { useTranslation } from "react-i18next";
 import { useMutation } from "@tanstack/react-query";
@@ -33,10 +33,56 @@ const PlaidBankTransfer = ({
   });
   const [linkToken, setLinkToken] = useState(null);
   const [pendingTransactionId, setPendingTransactionId] = useState(null);
+  const pollingIntervalRef = useRef(null);
 
   useEffect(() => {
     fetchSavedBanks();
   }, [userDetails?._id]);
+
+  useEffect(() => {
+    if (!pendingTransactionId) return;
+
+    const checkTransactionStatus = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_IP_DEV_API}/api/plaid/transaction-status/${pendingTransactionId}`,
+          { headers: authHeader }
+        );
+
+        const { data } = response.data;
+        if (data?.redirect) {
+          clearInterval(pollingIntervalRef.current);
+          toast.info(data.redirect.message);
+          setTimeout(() => {
+            navigate("/wallets");
+          }, 1500);
+        }
+      } catch (error) {
+        console.warn("Transaction status check failed:", error?.message);
+      }
+    };
+
+    pollingIntervalRef.current = setInterval(checkTransactionStatus, 3000);
+
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+      }
+    };
+  }, [pendingTransactionId, authHeader, navigate]);
+
+  useEffect(() => {
+    if (plaidStep === 4) {
+      const redirectTimer = setTimeout(() => {
+        toast.success("Redirecting to wallets...");
+        setTimeout(() => {
+          navigate("/wallets");
+        }, 500);
+      }, 3000);
+
+      return () => clearTimeout(redirectTimer);
+    }
+  }, [plaidStep, navigate]);
 
   const fetchSavedBanks = async () => {
     try {
@@ -86,7 +132,7 @@ const PlaidBankTransfer = ({
           plaidCurrency:
             data.exchange_rate?.plaid_currency ?? data.wallet?.currency?.code,
         };
-        console.log("Initiating Plaid Payment with payload:", payload);
+        console.log("Initiating Plaid Payment with payload:", payload); 
         const response = await axios.post(
           `${import.meta.env.VITE_IP_DEV_API}/api/plaid/initiate-payment`,
           payload,
@@ -105,8 +151,7 @@ const PlaidBankTransfer = ({
       onError: (error) => {
         console.error("Failed to initiate Plaid payment:", error);
         toast.error(
-          error?.response?.data?.message ||
-            "Failed to initialize Plaid payment",
+         "We are unable to process your request at the moment, please try again later!"
         );
       },
     });
@@ -143,7 +188,7 @@ const PlaidBankTransfer = ({
       onError: (error) => {
         console.error("Failed to exchange Plaid token:", error);
         toast.error(
-          error?.response?.data?.message || "Failed to authorize payment",
+         "we are unable to process your request at the moment, please try again later!" | error?.response?.data?.message || error.message
         );
         setPlaidStep(1);
       },
@@ -224,6 +269,10 @@ const PlaidBankTransfer = ({
             err2?.message || err2,
           );
         }
+        
+        setTimeout(() => {
+          navigate("/wallets");
+        }, 1500);
       })();
       setPlaidStep(1);
     },
@@ -323,32 +372,6 @@ const PlaidBankTransfer = ({
     }
   };
 
-  const handleInitiatePayment = async () => {
-    if (!recipientData.iban.trim()) {
-      toast.error("Please enter IBAN");
-      return;
-    }
-
-    if (
-      !data.exchange_rate?.sending?.amount ||
-      data.exchange_rate?.sending?.amount <= 0
-    ) {
-      toast.error("Please enter a valid amount");
-      return;
-    }
-
-    if (!userDetails?._id) {
-      toast.error("User information not found. Please refresh and try again");
-      return;
-    }
-
-    if (!data.wallet?.wallet_id) {
-      toast.error("Wallet information not found. Please select a wallet");
-      return;
-    }
-
-    await initiatePlaidPayment();
-  };
 
   const handleConfirmPayment = () => {
     if (ready && linkToken) {
