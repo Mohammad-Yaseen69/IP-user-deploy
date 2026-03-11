@@ -102,6 +102,8 @@ const initialUserContext = {
     setBlocked: () => { },
     blocked: 0,
     processReceivingNonIpFunds: () => {},
+    showAnotherLoginModal: false,
+    setShowAnotherLoginModal: () => { },
 };
 
 const createImage = (url) =>

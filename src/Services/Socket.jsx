@@ -15,7 +15,7 @@ class SocketsService {
         this.socket.connect();
     }
 
-    connectToServer(userId, transactionConnection = false, transactionId, token) {
+    connectToServer(userId, transactionConnection = false, transactionId, token, onAnotherLogin) {
         this.socket.on('connect', () => {
             console.log('Connected to the server');
             if (transactionConnection) {
@@ -46,6 +46,21 @@ class SocketsService {
         this.socket.on("txn:update", (data) => {
             const status = data.status // COMPLETED, PROCESSING, FAILED
             console.log("txn:update", data);
+        })
+
+        this.socket.on('anotherLogin', (data) => {
+            const token = localStorage.getItem("token")
+
+            console.log('anotherLogin called', data, token)
+            if (onAnotherLogin) {
+                onAnotherLogin();
+            } else {
+                const coun = localStorage.getItem("ip_country")
+                localStorage.clear()
+                localStorage.setItem("ip_country", coun)
+                window.location.pathname = "/login";
+            }
+
         })
 
         this.socket.on("txn:subscribed", (data) => {

@@ -22,8 +22,8 @@ import AddBeneficiaryAddressModal from "../Components/AddBeneficiaryAddressModal
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import FinancialInfoModal from "../Components/FinancialInfoModal";
 import success from "../Components/Auth/files/success.gif"
-import SessionExpireModal from "../Components/SessionExpireModal";
 import SocketsService from "../Services/Socket";
+import AnotherLoginModal from "../Components/AnotherLoginModal";
 
 
 
@@ -106,6 +106,8 @@ const Layout = ({ children, classNames, ...rest }) => {
     verifyToken,
     beneficiaries,
     getUserBeneficiaries,
+    showAnotherLoginModal,
+    setShowAnotherLoginModal
   } = useContext(UserContext)
   const [showSuccessModal, setShowSuccessModal] = useState()
 
@@ -183,7 +185,7 @@ const Layout = ({ children, classNames, ...rest }) => {
     if (userDetails?._id) {
       socketsService.connect();
       const userId = userDetails?._id;
-      socketsService.connectToServer(userId);
+      socketsService.connectToServer(userId, false, null, null, () => setShowAnotherLoginModal(true));
 
       return () => {
         socketsService.disconnect();
@@ -358,6 +360,13 @@ const Layout = ({ children, classNames, ...rest }) => {
                 <BottomNav setShowModal={setShowModal} />
               </div>
             </>
+        }
+        {
+          showAnotherLoginModal && 
+          <AnotherLoginModal 
+            isOpen={showAnotherLoginModal} 
+            toggle={() => setShowAnotherLoginModal(false)} 
+          />
         }
       </MobileSbContextProvider>
     </Fragment>
