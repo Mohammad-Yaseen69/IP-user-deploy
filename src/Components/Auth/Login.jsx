@@ -59,6 +59,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const width = useWindowWidth()
     const [methodLoading, setMethodLoading] = useState(false)
     const [showNoticeModal, setShowNoticeModal] = useState(false);
+    const [showLocationModal, setShowLocationModal] = useState(false);
     const [loginData, setLoginData] = useState(null)
     const [showQuickLogin, setShowQuickLogin] = useState(false)
     const [biometricLoading, setBiometricLoading] = useState(false)
@@ -348,12 +349,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     }, [loginMethod, loginData])
 
 
-    // useEffect(() => {
-    //     if (step === 1) {
-    //         console.log("as")
-    //         setCurrentOtpMethod(userAuthSetup ? "auth" : isInstagram ? "insta" : "sms")
-    //     }
-    // }, [step])
+
 
 
     const getUserInfo = async (username) => {
@@ -408,6 +404,106 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             }
         }
     }
+
+    const completeLoginProcess = async (userAccount, token, ipInfo) => {
+        const finalizeLogin = async (locationData = {}) => {
+            localStorage.setItem("login", true)
+            localStorage.setItem("token", token)
+            setUserDetails(userAccount)
+            setData({
+                pfp: userAccount?.profileImage?.url,
+                name: userAccount?.account_type === "individual" ? userAccount?.first_name + " " + userAccount?.last_name : userAccount?.company_name,
+                loginMethod: loginMethod,
+                credential: email,
+            })
+
+            const historyData = {
+                browser_name: rdd.browserName ?? "N/A",
+                browser_version: rdd.browserVersion ?? "N/A",
+                is_mobile_user: rdd.isMobile || rdd.isMobileSafari,
+                IPv4: ipInfo?.IPv4 || ipInfo?.ip || "",
+                city: locationData.city || ipInfo?.city || "",
+                country_code: locationData.country_code || ipInfo?.country_code || "",
+                country_name: locationData.country_name || ipInfo?.country_name || "",
+                latitude: locationData.latitude || ipInfo?.latitude || "",
+                longitude: locationData.longitude || ipInfo?.longitude || "",
+                postal: locationData.postal || ipInfo?.postal || "",
+                state: locationData.state || ipInfo?.state || "",
+                platform: rdd.osName || navigator.platform,
+                accountId: userAccount?._id,
+                language: navigator.language,
+                userAgent: navigator.userAgent,
+                screenResolution: `${window.screen.width}x${window.screen.height}`,
+                deviceType: rdd.deviceType ?? "desktop",
+            }
+
+            console.log("Final Login History Data:", historyData);
+
+            const encryptedWithLocation = encryptData(historyData);
+
+            try {
+                await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/login/create-login-history`, {
+                    data: encryptedWithLocation
+                });
+            } catch (err) {
+                console.error("Login history creation failed:", err);
+            } finally {
+                const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
+                if (path && path !== "undefined") {
+                    navigate(path)
+                } else {
+                    navigate("/")
+                }
+                sessionStorage.clear()
+                setIsPressed(false)
+                setBiometricLoading(false)
+            }
+        }
+
+        if ((ipInfo?.privacy?.is_proxy || ipInfo?.privacy?.is_tor || ipInfo?.privacy?.is_vpn) && !userAccount?.isVpnAllowed) {
+            setShowNoticeModal(true);
+            setIsPressed(false);
+            setBiometricLoading(false);
+            return;
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const { latitude, longitude } = position.coords;
+                    try {
+                        const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
+                        const data = await res.json();
+                        const locationData = {
+                            latitude,
+                            longitude,
+                            country_name: data.countryName,
+                            country_code: data.countryCode,
+                            city: data.city,
+                            state: data.principalSubdivision,
+                            postal: data.postcode
+                        };
+                        finalizeLogin(locationData);
+                    } catch (error) {
+                        console.error("Error fetching reverse geocode location data: ", error);
+                        finalizeLogin({ latitude, longitude });
+                    }
+                },
+                (error) => {
+                    console.error("Geolocation permission error: ", error);
+                    setIsPressed(false);
+                    setBiometricLoading(false);
+                    setShowLocationModal(true);
+                },
+                { timeout: 30000 }
+            );
+        } else {
+            setIsPressed(false);
+            setBiometricLoading(false);
+            setShowLocationModal(true);
+        }
+    }
+
 
 
     const [resendTimer, setResendTimer] = useState(0)
@@ -481,72 +577,12 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 setIsOtpCorrect(true)
                 axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${decrypted?.token}`)
                     .then(async res => {
-                        const decrypted = decryptData(res.data.data)
                         const dec = decryptData(res.data.data)
                         setShowInactivityModal(false)
                         if (dec?.country?.status) {
                             const data = await getUserInfo(dec?.username)
-                                .catch(() => {
-                                    const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
-                                    localStorage.setItem("login", true)
-                                    localStorage.setItem("token", token)
-                                    setData({
-                                        pfp: dec?.profileImage?.url,
-                                        name: dec?.account_type === "individual" ? dec?.first_name + " " + dec?.last_name : dec?.company_name,
-                                        loginMethod: loginMethod,
-                                        credential: email,
-                                    })
-                                    setUserDetails(dec)
-                                    if (path && path !== "undefined") {
-                                        navigate(path)
-                                    } else {
-                                        navigate("/")
-                                    }
-                                    sessionStorage.clear()
-                                })
-                            const encrypted = encryptData(
-                                {
-                                    accountId: decrypted?._id,
-                                    ...data
-                                }
-                            )
-                            if ((data?.privacy?.is_proxy === true || data?.privacy?.is_tor === true || data?.privacy?.is_vpn === true) && !dec?.isVpnAllowed) {
-                                setShowNoticeModal(true);
-                            } else {
-                                localStorage.setItem("login", true)
-                                localStorage.setItem("token", token)
-                                setUserDetails(dec)
-                                setData({
-                                    pfp: dec?.profileImage?.url,
-                                    name: dec?.account_type === "individual" ? dec?.first_name + " " + dec?.last_name : dec?.company_name,
-                                    loginMethod: loginMethod,
-                                    credential: email,
-                                })
-                                axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/login/create-login-history`, {
-                                    data: encrypted
-                                })
-                                    .then(res => {
-                                        const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
-                                        if (path && path !== "undefined") {
-                                            navigate(path)
-                                        } else {
-                                            navigate("/")
-                                        }
-                                        sessionStorage.clear()
-                                        setIsPressed(false)
-                                    })
-                                    .catch(err => {
-                                        setIsPressed(false)
-                                        const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect ? redirect : ""
-                                        console.log(path)
-                                        if (path && path !== "undefined") {
-                                            navigate(path)
-                                        } else {
-                                            navigate("/")
-                                        }
-                                        sessionStorage.clear()
-                                    })
-                            }
+                            console.log("data from ip", data)
+                            completeLoginProcess(dec, token, data)
                         }
                         else {
                             setUserDetails(dec)
@@ -700,79 +736,16 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             const token = dec2?.token
             axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${token}`)
                 .then(async res => {
-                    const decrypted = decryptData(res.data.data)
                     const dec = decryptData(res.data.data)
                     setShowInactivityModal(false)
                     if (dec?.country?.status) {
                         const data = await getUserInfo(dec?.username)
-                            .catch(() => {
-                                const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
-                                localStorage.setItem("login", true)
-                                localStorage.setItem("token", token)
-                                setUserDetails(dec)
-                                setData({
-                                    pfp: dec?.profileImage?.url,
-                                    name: dec?.account_type === "individual" ? dec?.first_name + " " + dec?.last_name : dec?.company_name,
-                                    loginMethod: loginMethod,
-                                    credential: email,
-                                })
-                                if (path && path !== "undefined") {
-                                    navigate(path)
-                                } else {
-                                    navigate("/")
-                                }
-                                sessionStorage.clear()
-                            })
-                        const encrypted = encryptData(
-                            {
-                                accountId: decrypted?._id,
-                                ...data
-                            }
-                        )
-                        if ((data?.privacy?.is_proxy === true || data?.privacy?.is_tor === true || data?.privacy?.is_vpn === true) && !dec?.isVpnAllowed) {
-                            setShowNoticeModal(true);
-                        } else {
-                            localStorage.setItem("login", true)
-                            localStorage.setItem("token", token)
-                            setUserDetails(dec)
-                            setData({
-                                pfp: dec?.profileImage?.url,
-                                name: dec?.account_type === "individual" ? dec?.first_name + " " + dec?.last_name : dec?.company_name,
-                                loginMethod: loginMethod,
-                                credential: email,
-                            })
-                            axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/login/create-login-history`, {
-                                data: encrypted
-                            })
-                                .then(res => {
-                                    const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
-                                    if (path && path !== "undefined") {
-                                        navigate(path)
-                                    } else {
-                                        navigate("/")
-                                    }
-                                    sessionStorage.clear()
-                                    setIsPressed(false)
-                                })
-                                .catch(err => {
-                                    setIsPressed(false)
-                                    setBiometricLoading(false)
-                                    const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
-                                    console.log(path)
-                                    if (path && path !== "undefined") {
-                                        navigate(path)
-                                    } else {
-                                        navigate("/")
-                                    }
-                                    sessionStorage.clear()
-                                })
-                        }
+                        completeLoginProcess(dec, token, data)
                     } else {
                         sessionStorage.setItem("country_status_error", "Service not available in your country!")
                     }
                 })
                 .catch(err => {
-                    // console.log(decryptData(err.response.data.data))
                     setIsPressed(false)
                     setBiometricLoading(false)
                     setIsLoginError("Something went wrong while getting account details")
@@ -856,6 +829,33 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         <>
 
             <VpnModal showNoticeModal={showNoticeModal} />
+
+            <Modal isOpen={showLocationModal} toggle={() => setShowLocationModal(false)} centered>
+                <ModalHeader toggle={() => setShowLocationModal(false)}>
+                    {t("Location Permission Required")}
+                </ModalHeader>
+                <ModalBody>
+                    <p style={{ marginBottom: "1.5rem", lineHeight: "1.6" }}>
+                        {t("We can't let you logged in without location permission. It's for security purposes. Please allow location access in your browser to continue.")}
+                    </p>
+                </ModalBody>
+                <ModalFooter style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
+                    <Button
+                        color="secondary"
+                        onClick={resetLoginStates}
+                        disabled={restoreLoading}
+                        style={{
+                            background: "#f5f5f5",
+                            border: "1px solid #e6e6e6",
+                            color: "black",
+                            borderRadius: "10px",
+                            padding: "10px 20px"
+                        }}
+                    >
+                        {t("Close")}
+                    </Button>
+                </ModalFooter>
+            </Modal>
 
             <Modal isOpen={showRestoreModal} toggle={() => setShowRestoreModal(false)} centered>
                 <ModalHeader toggle={() => setShowRestoreModal(false)}>
