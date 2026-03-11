@@ -164,7 +164,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         let locationPromise = null;
         if (navigator.geolocation && step === 1) {
             locationPromise = new Promise((resolve, reject) => {
-                navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 30000 });
+                navigator.geolocation.getCurrentPosition(resolve, reject, { 
+                    timeout: 20000, 
+                    enableHighAccuracy: true,
+                    maximumAge: 0
+                });
             });
         }
         setConsecutiveCount(1)
@@ -433,11 +437,23 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
 
         const handleLocationError = (error) => {
-            console.error("Geolocation permission error: ", error);
-            setPendingLoginData({ isVpnAllowed });
-            setIsPressed(false);
-            setMethodLoading(false);
-            setShowLocationModal(true);
+            logger.error("Geolocation error details:", {
+                code: error.code,
+                message: error.message
+            });
+
+            // Code 1: PERMISSION_DENIED
+            // Code 2: POSITION_UNAVAILABLE
+            // Code 3: TIMEOUT
+            if (error.code === 1) {
+                setPendingLoginData({ isVpnAllowed });
+                setIsPressed(false);
+                setMethodLoading(false);
+                setShowLocationModal(true);
+            } else {
+                console.log("Non-permission geolocation error, falling back to IP info.");
+                finishSecurityChecks();
+            }
         }
 
         if (locationPromise) {
@@ -456,7 +472,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     (error) => {
                         handleLocationError(error);
                     },
-                    { timeout: 30000 }
+                    { timeout: 20000, enableHighAccuracy: true, maximumAge: 0 }
                 );
             } else {
                 finishSecurityChecks();
