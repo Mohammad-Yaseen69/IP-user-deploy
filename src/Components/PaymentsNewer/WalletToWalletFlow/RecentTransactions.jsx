@@ -13,6 +13,7 @@ import countriesData from "../CountriesData.json"
 import repeat from "./repeat.svg"
 import { capitalizeStatus } from "../../PendingNew/ItemMobile"
 import { X } from "react-feather"
+import { formatCurrency } from "../../../Helper/AmountFormat"
 
 
 const getRecentTransaction = async (authHeader, account, type) => {
@@ -162,6 +163,17 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
             return hasCountry && hasBeneficiary && hasChannel && tx?.payer?.id && tx?.payer?.id !== "N/A" && tx?.payer?.vendor
         }
     }
+    const setModalValue = (val) => {
+        setModalData(prev => ({ ...prev, amount: val }));
+    };
+
+    const handleModalKeyUp = (e) => {
+        formatCurrency(e.target.value, false, setModalValue);
+    };
+
+    const handleModalBlur = (e) => {
+        formatCurrency(e.target.value, true, setModalValue);
+    };
     return (
         <div style={{ minWidth: width < 1000 && "100%" }} className={styles.container}>
             <div style={{ justifyContent: width < 1000 && "center" }} className={styles.top}>
@@ -235,10 +247,12 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
                         <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
                             <h4 style={{ fontSize: "18px", fontWeight: "700" }}>{t("Enter New Amount")}</h4>
                             <Input
-                                type="number"
+                                type="text"
                                 value={modalData.amount}
                                 onChange={(e) => setModalData(prev => ({ ...prev, amount: e.target.value }))}
                                 placeholder={t("Amount")}
+                                onKeyUp={handleModalKeyUp}
+                                onBlur={handleModalBlur}
                                 style={{ borderRadius: "8px", padding: "12px" }}
                                 autoFocus
                             />
@@ -263,7 +277,7 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
                             <div style={{ display: "flex", gap: "10px" }}>
                                 <button
                                     onClick={() => setModalData(prev => ({ ...prev, isEditing: true }))}
-                                    style={{ flex: 1, borderRadius: "8px", padding: "10px", border: "1px solid #5926F0", color: "#5926F0", backgroundColor: "white",outline: "none" , fontWeight: 600}}
+                                    style={{ flex: 1, borderRadius: "8px", padding: "10px", border: "1px solid #5926F0", color: "#5926F0", backgroundColor: "white", outline: "none", fontWeight: 600 }}
                                 >
                                     {t("Edit Amount")}
                                 </button>
