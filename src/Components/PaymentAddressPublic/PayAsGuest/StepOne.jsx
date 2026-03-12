@@ -5,6 +5,7 @@ import { Info } from "react-feather"
 import PaypalCurrencies from "../../AddFunds/PaypalCurrencies.json"
 import FeesComponent from "../../PaymentsNewer/InternationalFlow/FeesComponent"
 import InstaPayLoader from "../../Loader"
+import { PlaidCurrencies } from "../../AddFunds/WalletFundsFlow"
 
 
 const StepOne = ({ data, dataHandler, allowed, wallet }) => {
@@ -34,6 +35,14 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
             icon: pagSvgs.wallet,
             active_icon: pagSvgs.wallet_a,
             api_val: "bank_deposit"
+        },
+        {
+            name: "EU Bank Transfer",
+            value: "bank_transfer",
+            id: 2,
+            icon: pagSvgs.wallet,
+            active_icon: pagSvgs.wallet_a,
+            api_val: "bank"
         },
         {
             name: "Mobile Wallet",
@@ -211,7 +220,95 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                                     </div>
                                 </>
                                 :
-                                ""
+                                data.payment_type?.value === "bank_transfer" && !PlaidCurrencies.includes(wallet?.currency?.code) ?
+                                    <>
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: ".7rem",
+                                                padding: ".5rem",
+                                                background: "#edecf1ff",
+                                                borderRadius: "6px",
+                                                color: "#5926F0",
+                                                fontSize: ".7rem",
+                                                fontStyle: "normal",
+                                                fontWeight: 700,
+                                                lineHeight: 1.3,
+                                                letterSpacing: "-0.28px",
+                                            }}
+                                        >
+                                            <Info size={16} />
+                                            <span>
+                                                {t("plaid_currency_not_supported", {
+                                                    currency: wallet?.currency?.code,
+                                                    defaultCurrency: "CHF",
+                                                })}
+                                            </span>
+                                        </div>
+                                        <div style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            gap: ".9rem",
+                                            padding: ".8rem",
+                                            background: "#fff",
+                                            borderRadius: "6px",
+                                            boxShadow: "0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11)"
+                                        }}>
+                                            <div style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: "1rem",
+                                                justifyContent: "space-between"
+                                            }}>
+                                                <span style={{
+                                                    color: '#8A8A8A',
+                                                    fontFamily: 'Manrope',
+                                                    fontSize: ".7rem",
+                                                    fontStyle: 'normal',
+                                                    fontWeight: 600,
+                                                    lineHeight: 1.5,
+                                                    letterSpacing: '-0.14px'
+                                                }}>{t("Exchange Rate")}</span>
+                                                <strong
+                                                    style={{
+                                                        color: '#000',
+                                                        fontFamily: 'Manrope',
+                                                        fontSize: ".7rem",
+                                                        fontStyle: 'normal',
+                                                        lineHeight: 1.5,
+                                                        letterSpacing: '-0.14px'
+                                                    }}>1.00 {wallet?.currency?.code}  = {Number(data.exchange_rate?.plaid_fx)} CHF</strong>
+                                            </div>
+                                            <div style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: "1rem",
+                                                justifyContent: "space-between"
+                                            }}>
+                                                <span style={{
+                                                    color: '#8A8A8A',
+                                                    fontFamily: 'Manrope',
+                                                    fontSize: ".7rem",
+                                                    fontStyle: 'normal',
+                                                    fontWeight: 600,
+                                                    lineHeight: 1.5,
+                                                    letterSpacing: '-0.14px'
+                                                }}>{t("Amount in CHF")}</span>
+                                                <strong style={{
+                                                    color: '#000',
+                                                    fontFamily: 'Manrope',
+                                                    fontSize: "1.2rem",
+                                                    fontStyle: 'normal',
+                                                    fontWeight: 700,
+                                                    lineHeight: 1.7,
+                                                    letterSpacing: '-0.8px'
+                                                }}>{Number(data.exchange_rate?.plaid_amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} CHF</strong>
+                                            </div>
+                                        </div>
+                                    </>
+                                    :
+                                    ""
                         }
                     </>
                 :

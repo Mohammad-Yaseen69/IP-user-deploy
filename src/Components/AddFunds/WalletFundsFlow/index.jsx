@@ -26,7 +26,7 @@ import BankDeposit from "./BankDeposit";
 import PlaidBankTransfer from "./PlaidBankTransfer";
 import TopIcon from "../../PaymentsNewer/Mobile/files/Top";
 
-const PlaidCurrencies = ["EUR", "GBP", "SEK", "DKK", "NOK", "CHF"];
+export const PlaidCurrencies = ["EUR", "GBP", "SEK", "DKK", "NOK", "CHF"];
 const initialState = {
   step: 1,
   bankStep: 1,
