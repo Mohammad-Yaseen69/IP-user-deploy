@@ -709,7 +709,7 @@ const PlaidBankTransfer = ({
             style={{ color: "black", textAlign: "center", marginBottom: "0px" }}
           >
             {t(
-              "Payment authorized successfully! Your wallet will be credited once the transfer is complete.",
+             type === "payment_address" ? "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this modal" :  "Payment authorized successfully! Your wallet will be credited once the transfer is complete.",
             )}
           </h4>
         </div>
