@@ -37,12 +37,12 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
             api_val: "bank_deposit"
         },
         {
-            name: "EU Bank Transfer",
+            name: "Bank Transfer (Europe Only)",
             value: "bank_transfer",
             id: 2,
             icon: pagSvgs.wallet,
             active_icon: pagSvgs.wallet_a,
-            api_val: "bank"
+            api_val: "bank_transfer"
         },
         {
             name: "Mobile Wallet",
