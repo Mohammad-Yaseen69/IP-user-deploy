@@ -722,22 +722,25 @@ const PayAsGuest = ({
                 <div className={styles.left}>
                   <div className={styles.l_top}>
                     <h1>{t("PAY AS A GUEST")}</h1>
-                    <h2>
-                      {data.step === 1 && t("Select Your Country")}
-                      {data.step === 2 && t("Select Payment Type")}
-                      {data.step === 3 &&
-                        (data.payment_type?.value === "card"
-                          ? t("Enter Card Details")
-                          : t("Enter Your Personal Details"))}
-                      {data.step === 4 &&
-                        (data.payment_type?.value === "card"
-                          ? t("Enter Your Personal Details")
-                          : t("Review Payment"))}
-                      {data.step === 5 &&
-                        (data.payment_type?.value === "card"
-                          ? t("Review Payment")
-                          : "")}
-                    </h2>
+                    {data.payment_type?.value !== "bank_transfer" || data.step < 4 ?
+                      <h2>
+                        {data.step === 1 && t("Select Your Country")}
+                        {data.step === 2 && t("Select Payment Type")}
+                        {data.step === 3 &&
+                          (data.payment_type?.value === "card"
+                            ? t("Enter Card Details")
+                            : t("Enter Your Personal Details"))}
+                        {data.step === 4 &&
+                          (data.payment_type?.value === "card"
+                            ? t("Enter Your Personal Details")
+                            : t("Review Payment"))}
+                        {data.step === 5 &&
+                          (data.payment_type?.value === "card"
+                            ? t("Review Payment")
+                            : "")}
+                      </h2> :
+                      <h2>{t("Bank Transfer")}</h2>
+                    }
                   </div>
                   {data.step > 1 && (
                     <div className={styles.l_bottom}>
@@ -925,22 +928,25 @@ const PayAsGuest = ({
                     <h1 style={{ color: "#906EF5", letterSpacing: "1.5px" }}>
                       {t("PAY AS A GUEST")}
                     </h1>
-                    <h2>
-                      {data.step === 1 && t("Select Your Country")}
-                      {data.step === 2 && t("Select Payment Type")}
-                      {data.step === 3 &&
-                        (data.payment_type?.value === "card"
-                          ? t("Enter Card Details")
-                          : t("Enter Your Personal Details"))}
-                      {data.step === 4 &&
-                        (data.payment_type?.value === "card"
-                          ? t("Enter Your Personal Details")
-                          : t("Review Payment"))}
-                      {data.step === 5 &&
-                        (data.payment_type?.value === "card"
-                          ? t("Review Payment")
-                          : "")}
-                    </h2>
+                    {data.payment_type?.value !== "bank_transfer" || data.step < 4 ?
+                      <h2>
+                        {data.step === 1 && t("Select Your Country")}
+                        {data.step === 2 && t("Select Payment Type")}
+                        {data.step === 3 &&
+                          (data.payment_type?.value === "card"
+                            ? t("Enter Card Details")
+                            : t("Enter Your Personal Details"))}
+                        {data.step === 4 &&
+                          (data.payment_type?.value === "card"
+                            ? t("Enter Your Personal Details")
+                            : t("Review Payment"))}
+                        {data.step === 5 &&
+                          (data.payment_type?.value === "card"
+                            ? t("Review Payment")
+                            : "")}
+                      </h2> :
+                      <h2>{t("Bank Transfer")}</h2>
+                    }
                   </div>
                 </div>
                 <div className={paym_styles.flow}>

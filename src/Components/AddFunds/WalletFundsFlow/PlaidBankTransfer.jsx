@@ -3,7 +3,7 @@ import styles from "./BankDeposit.module.scss";
 import { useTranslation } from "react-i18next";
 import { useMutation } from "@tanstack/react-query";
 import { UserContext } from "../../../Context/UserContext";
-import { ChevronRight, Check } from "react-feather";
+import { ChevronRight, Check, Info } from "react-feather";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { formatCurrency } from "../../../Helper/AmountFormat";
@@ -454,7 +454,7 @@ const PlaidBankTransfer = ({
               {/* SHOW ADD NEW BANK FORM */}
               <h4>
                 {showAddNewBank
-                  ? t("Add New Bank")
+                  ? t('')
                   : t("Enter recipient IBAN for Plaid Bank Transfer")}
               </h4>
 
@@ -471,10 +471,11 @@ const PlaidBankTransfer = ({
                     style={{
                       display: "block",
                       marginBottom: "0.5rem",
-                      fontWeight: "600",
+                      fontWeight: 700,
+                      fontSize: "16px"
                     }}
                   >
-                    {t("Recipient IBAN")}
+                    {t("Type in the IBAN of the bank account you'll be transferring from:")}
                   </label>
                   <input
                     type="text"
@@ -482,7 +483,7 @@ const PlaidBankTransfer = ({
                     onChange={(e) =>
                       handleRecipientChange("iban", e.target.value)
                     }
-                    placeholder="GB33BUKB20201555555555"
+                    placeholder="Example: GB33BUKB20201555555555"
                     style={{
                       width: "100%",
                       padding: "10px",
@@ -628,7 +629,7 @@ const PlaidBankTransfer = ({
                 <span>{recipientData.saveForFutureUse ? " Yes" : " No"}</span>
               </div>}
               <div className={styles.data}>
-                <p>{t("Amount")}</p>
+                <p>{type === "payment_address" ? t("You are Sending") : t("Amount")}</p>
                 <span>
                   {formatCurrency(
                     data.amount || data.exchange_rate?.sending?.amount,
@@ -642,14 +643,14 @@ const PlaidBankTransfer = ({
                   <div className={styles.data}>
                     <p>{t("Amount to Pay")}</p>
                     <span style={{ color: "#303c82", fontWeight: "600" }}>
-                      {formatCurrency(data.exchange_rate?.sending?.amount)}{" "}
+                      {formatCurrency(data?.exchange_rate?.total)}{" "}
                       {data.exchange_rate?.sending?.currency}
                     </span>
                   </div>
                 )}
               {data.exchange_rate?.fee?.amount > 0 && (
                 <div className={styles.data}>
-                  <p>{t("Fee")}</p>
+                  <p>{type === "payment_address" ? t("Sending Fees") : t("Fee")}</p>
                   <span>
                     {formatCurrency(data.exchange_rate?.fee?.amount)}{" "}
                     {data.exchange_rate?.fee?.currency ||
@@ -657,8 +658,17 @@ const PlaidBankTransfer = ({
                   </span>
                 </div>
               )}
+              {type === "payment_address" && data.exchange_rate?.fee?.paymentAddressFee > 0 && (
+                <div className={styles.data}>
+                  <p>{t("Payment Address Fee")}</p>
+                  <span>
+                    {formatCurrency(data.exchange_rate?.fee?.paymentAddressFee)}{" "}
+                    {data.exchange_rate?.sending?.currency}
+                  </span>
+                </div>
+              )}
               <div className={styles.data}>
-                <p>{t("Will Receive in Wallet")}</p>
+                <p>{type === "payment_address" ? t("They will receive") : t("Will Receive in Wallet")}</p>
                 <strong>
                   {formatCurrency(data.exchange_rate?.receiver?.amount)}{" "}
                   {data.exchange_rate?.receiver?.currency ||
@@ -666,6 +676,95 @@ const PlaidBankTransfer = ({
                 </strong>
               </div>
             </div>
+            {type === "payment_address" && data.exchange_rate?.plaid_fx && (
+              <div style={{ marginTop: "1rem" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: ".7rem",
+                    padding: ".5rem",
+                    background: "#edecf1ff",
+                    borderRadius: "6px",
+                    color: "#5926F0",
+                    fontSize: ".7rem",
+                    fontStyle: "normal",
+                    fontWeight: 700,
+                    lineHeight: 1.3,
+                    letterSpacing: "-0.28px",
+                    marginBottom: "0.5rem"
+                  }}
+                >
+                  <Info size={16} />
+                  <span>
+                    {t("plaid_currency_not_supported", {
+                      currency: data.wallet?.currency?.code,
+                      defaultCurrency: "CHF",
+                    })}
+                  </span>
+                </div>
+                <div style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: ".9rem",
+                  padding: ".8rem",
+                  background: "#fff",
+                  borderRadius: "6px",
+                  boxShadow: "0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11)"
+                }}>
+                  <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
+                    justifyContent: "space-between"
+                  }}>
+                    <span style={{
+                      color: '#8A8A8A',
+                      fontFamily: 'Manrope',
+                      fontSize: ".7rem",
+                      fontStyle: 'normal',
+                      fontWeight: 600,
+                      lineHeight: 1.5,
+                      letterSpacing: '-0.14px'
+                    }}>{t("Exchange Rate")}</span>
+                    <strong
+                      style={{
+                        color: '#000',
+                        fontFamily: 'Manrope',
+                        fontSize: ".7rem",
+                        fontStyle: 'normal',
+                        lineHeight: 1.5,
+                        letterSpacing: '-0.14px'
+                      }}>1.00 {data.wallet?.currency?.code} = {Number(data.exchange_rate?.plaid_fx)} CHF</strong>
+                  </div>
+                  <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
+                    justifyContent: "space-between"
+                  }}>
+                    <span style={{
+                      color: '#8A8A8A',
+                      fontFamily: 'Manrope',
+                      fontSize: ".7rem",
+                      fontStyle: 'normal',
+                      fontWeight: 600,
+                      lineHeight: 1.5,
+                      letterSpacing: '-0.14px'
+                    }}>{t("Amount in CHF")}</span>
+                    <strong style={{
+                      color: '#000',
+                      fontFamily: 'Manrope',
+                      fontSize: "1.2rem",
+                      fontStyle: 'normal',
+                      fontWeight: 700,
+                      lineHeight: 1.7,
+                      letterSpacing: '-0.8px'
+                    }}>{Number(data.exchange_rate?.plaid_amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} CHF</strong>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -709,7 +808,7 @@ const PlaidBankTransfer = ({
             style={{ color: "black", textAlign: "center", marginBottom: "0px" }}
           >
             {t(
-             type === "payment_address" ? "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this modal" :  "Payment authorized successfully! Your wallet will be credited once the transfer is complete.",
+              type === "payment_address" ? "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this modal" : "Payment authorized successfully! Your wallet will be credited once the transfer is complete.",
             )}
           </h4>
         </div>
