@@ -2,8 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption';
 import { apiWrapper } from '../../../utils/Functions/apiWrapper';
+import { useContext } from 'react';
+import { UserContext } from '../../../Context/UserContext';
 
 const useGetAllChannelPayers = ({ data, payoutChannelData, toggleModalHandler }) => {
+    const {userDetails} = useContext(UserContext)
 
     const { data: services = [], isLoading, isFetching } = useQuery({
         queryKey: ['ServicesWithPayers', data?.country?.alpha3, data?.flow],
@@ -74,7 +77,7 @@ const useGetAllChannelPayers = ({ data, payoutChannelData, toggleModalHandler })
 
                         payers = payers.filter((payer) => {
                             if (payer?.name?.toLowerCase() === "moncash") {
-                                return data?.country?.alpha3 === "CAN" || data?.country?.alpha3 === "CHE"
+                                return userDetails?.country_iso_code === "CAN" || userDetails?.country_iso_code === "CHE" || userDetails?.country_iso_code === "PAK"
                             } else {
                                 return true
                             }
