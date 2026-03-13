@@ -112,7 +112,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
                                 <input
                                     type="text"
                                     value={data.customerTown}
-                                    onChange={(e) => dataHandler("customerTown", e.target.value.trim())}
+                                    onChange={(e) => dataHandler("customerTown", e.target.value)}
                                     required={data.payment_type?.value === "card"}
                                 />
                             </div>
@@ -123,7 +123,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
                                 <input
                                     type="text"
                                     value={data.customerStreet}
-                                    onChange={(e) => dataHandler("customerStreet", e.target.value.trim())}
+                                    onChange={(e) => dataHandler("customerStreet", e.target.value)}
                                     required={data.payment_type?.value === "card"}
                                 />
                             </div>
