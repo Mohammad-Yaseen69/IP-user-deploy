@@ -699,7 +699,7 @@ const PlaidBankTransfer = ({
                   <span>
                     {t("plaid_currency_not_supported", {
                       currency: data.wallet?.currency?.code,
-                      defaultCurrency: "CHF",
+                      defaultCurrency: data?.exchange_rate?.plaid_currency,
                     })}
                   </span>
                 </div>
@@ -735,7 +735,7 @@ const PlaidBankTransfer = ({
                         fontStyle: 'normal',
                         lineHeight: 1.5,
                         letterSpacing: '-0.14px'
-                      }}>1.00 {data.wallet?.currency?.code} = {Number(data.exchange_rate?.plaid_fx)} CHF</strong>
+                      }}>1.00 {data.wallet?.currency?.code} = {Number(data.exchange_rate?.plaid_fx)} {data?.exchange_rate?.plaid_currency}</strong>
                   </div>
                   <div style={{
                     display: "flex",
@@ -751,7 +751,7 @@ const PlaidBankTransfer = ({
                       fontWeight: 600,
                       lineHeight: 1.5,
                       letterSpacing: '-0.14px'
-                    }}>{t("Amount in CHF")}</span>
+                    }}>{t("Amount in CHF").replace("CHF", data?.exchange_rate?.plaid_currency)}</span>
                     <strong style={{
                       color: '#000',
                       fontFamily: 'Manrope',
@@ -760,7 +760,7 @@ const PlaidBankTransfer = ({
                       fontWeight: 700,
                       lineHeight: 1.7,
                       letterSpacing: '-0.8px'
-                    }}>{Number(data.exchange_rate?.plaid_amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} CHF</strong>
+                    }}>{Number(data.exchange_rate?.plaid_amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} { data?.exchange_rate?.plaid_currency}</strong>
                   </div>
                 </div>
               </div>

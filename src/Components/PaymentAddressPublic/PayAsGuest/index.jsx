@@ -538,7 +538,7 @@ const PayAsGuest = ({
     dataHandler("loading", true);
     dataHandler("exchange_rate_error", "")
     try {
-      const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/${data.payment_type?.value === "bank_transfer" ? "bank" : "mobile-wallet"}-fee/${wallet?.wallet_id}/${amount}${data.payment_type?.value === "bank_transfer" ? "" : `/${data.country?.alpha3}`}?payment_type=${type === "subscription" ? "plan" : type}?iso_code=${data.country?.alpha3}`);
+      const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/${data.payment_type?.value === "bank_transfer" ? "bank" : "mobile-wallet"}-fee/${wallet?.wallet_id}/${amount}${data.payment_type?.value === "bank_transfer" ? "" : `/${data.country?.alpha3}`}?payment_type=${type === "subscription" ? "plan" : type}&iso_code=${data.country?.alpha3}`);
       const dec = decryptData(res.data.data);
 
       const apiData = data.payment_type?.value === "bank_transfer" ? dec?.data : dec
