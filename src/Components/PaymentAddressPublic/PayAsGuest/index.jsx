@@ -4,7 +4,7 @@ import styles from "./styles/index.module.css";
 import { useEffect, useMemo, useReducer, useState } from "react";
 import StepOne from "./StepOne";
 import { Link } from "react-router-dom";
-import { ChevronRight, HelpCircle, Info, X } from "react-feather";
+import { ChevronRight, HelpCircle, X } from "react-feather";
 import Country from "./Country";
 import CreditCard from "../../PaymentsNewer/InternationalFlow/CreditCard";
 import axios from "axios";
@@ -27,6 +27,7 @@ import RecipientDetails from "./RecipientDetails";
 import PaypalDetails from "./PaypalDetails";
 import MobileWalletStatus from "./MobileWalletStatus";
 import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
+import { isCardValid, isPersonalInfoValid, isShippingValid } from "../../../utils/Functions/validations";
 
 const initialState = {
   loading: false,
@@ -239,7 +240,9 @@ const PayAsGuest = ({
         iso_code: data.country?.alpha3,
         dob: formattedDob,
         client_reference: data.paymentRef,
-        payment_type: type
+        payment_type: type,
+        customer_town: data.customerTown,
+        customer_street: data.customerStreet,
       };
 
       if (planId) {
@@ -463,68 +466,31 @@ const PayAsGuest = ({
   }, [data]);
   const disabled = useMemo(() => {
     let disabled = false;
+
     if (data.step === 1) {
       disabled = !data.country?.name || data?.exchange_rate_error;
     }
+
     if (data.step === 2) {
       disabled = !data.payment_type?.value;
     }
-    if (data.step === 3) {
-      if (data.payment_type?.value === "paypal") {
-        disabled =
-          data.fullName.length < 3 ||
-          data.phone.length < 9 ||
-          !data.dob ||
-          (isReferenceRequired ? !data.paymentRef : false) ||
-          (data.email?.length > 0
-            ? !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
-              data.email
-            )
-            : false) ||
-          (isShipping
-            ? !data.shippingDetails.country ||
-            !data.shippingDetails.city ||
-            !data.shippingDetails.houseNo ||
-            !data.shippingDetails.state ||
-            !data.shippingDetails.street ||
-            !data.shippingDetails.zipCode
-            : false);
-      }
-      if (data.payment_type?.value === "card") {
-        const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
-        const currentDate = new Date();
-        const currentMonth = currentDate.getMonth() + 1;
-        const currentYear = currentDate.getFullYear() % 100;
 
-        const isValidExpiry =
-          contentYear > currentYear ||
-          (contentYear === currentYear && contentMonth > currentMonth);
-        return (
-          !data.selectedSavedCard?._id &&
-          (!data.cardNumber ||
-            !data.expiry ||
-            !isValidExpiry ||
-            !data.cvc ||
-            data.cvc?.length < 3 ||
-            !data.cardHolderName)
-        );
+    if (data.step === 3) {
+      if (data.payment_type?.value !== "card") {
+        disabled = !isPersonalInfoValid(data, isReferenceRequired) || (isShipping ? !isShippingValid(data.shippingDetails) : false);
+      } else {
+        return !isCardValid(data);
       }
     }
+
     if (data.step === 4) {
       if (data.payment_type?.value === "card") {
-        disabled =
-          data.fullName.length < 3 ||
-          !data.dob ||
-          data.phone.length < 9 ||
-          (data.email?.length > 0
-            ? !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
-              data.email
-            )
-            : false);
+        disabled = !isPersonalInfoValid(data, false) || !data.customerTown || !data.customerStreet || (isShipping ? !isShippingValid(data.shippingDetails) : false);
       }
     }
+
     return disabled;
-  }, [data, isShipping]);
+  }, [data, isShipping, isReferenceRequired]);
 
   const getFeesPaypal = async () => {
     dataHandler("loading", true);
