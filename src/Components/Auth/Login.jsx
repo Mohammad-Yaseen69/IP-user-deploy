@@ -164,8 +164,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         let locationPromise = null;
         if (navigator.geolocation && step === 1) {
             locationPromise = new Promise((resolve, reject) => {
-                navigator.geolocation.getCurrentPosition(resolve, reject, { 
-                    timeout: 20000, 
+                navigator.geolocation.getCurrentPosition(resolve, reject, {
+                    timeout: 20000,
                     enableHighAccuracy: true,
                     maximumAge: 0
                 });
@@ -446,10 +446,15 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             // Code 2: POSITION_UNAVAILABLE
             // Code 3: TIMEOUT
             if (error.code === 1) {
-                setPendingLoginData({ isVpnAllowed });
-                setIsPressed(false);
-                setMethodLoading(false);
-                setShowLocationModal(true);
+                if (rdd.isSafari && rdd.isMobileSafari) {
+                    console.log("Non-permission geolocation error, falling back to IP info.");
+                    finishSecurityChecks();
+                } else {
+                    setPendingLoginData({ isVpnAllowed });
+                    setIsPressed(false);
+                    setMethodLoading(false);
+                    setShowLocationModal(true);
+                }
             } else {
                 console.log("Non-permission geolocation error, falling back to IP info.");
                 finishSecurityChecks();
