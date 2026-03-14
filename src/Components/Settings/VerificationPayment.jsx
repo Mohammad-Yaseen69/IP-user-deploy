@@ -47,7 +47,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
         CardCVC: ""
     })
     const [isValid, setIsValid] = useState(false)
-    const { userDetails, userWallets, authHeader, setProfileLockTime, verifyToken } = useContext(UserContext)
+    const { userDetails, userWallets, authHeader, setProfileLockTime, verifyToken, checkAuth } = useContext(UserContext)
     const [saving, setSaving] = useState(false)
     const [showOtp, setShowOtp] = useState(false)
     const [token, setToken] = useState("")
@@ -528,11 +528,11 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                 </ModalBody>
             </Modal>
             <Modal isOpen={showSuccess} toggle={() => {
-                verifyToken()
+                checkAuth()
                 setShowSuccess(false)
             }}>
                 <ModalHeader toggle={() => {
-                    verifyToken()
+                    checkAuth()
                     setShowSuccess(false)
                 }}
                 >
@@ -561,10 +561,10 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                 borderRadius: "6px",
                                 marginTop: "1.5rem"
                             }}
-                            onClick={isKYB ? verify : toggle}
+                            onClick={!isKYB ? verify : toggle}
                             disabled={loading}
                         >
-                            {isKYB ? t("Close") : t("Proceed")}
+                            {!isKYB ? t("Close") : t("Proceed")}
                         </Button>
                     </div>
                 </ModalBody>
