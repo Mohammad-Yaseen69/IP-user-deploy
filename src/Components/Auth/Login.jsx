@@ -157,22 +157,71 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
 
 
-    const loginHandler = (e, method = undefined, restoreAccount = false) => {
+    const loginHandler = async (e, method = undefined, restoreAccount = false) => {
         e.preventDefault()
         setIsPressed(true)
+        setIsLoginError("")
 
-        let locationPromise = null;
-        if (navigator.geolocation && step === 1) {
-            locationPromise = new Promise((resolve, reject) => {
+        const getLocation = () => {
+            return new Promise((resolve, reject) => {
+                if (!navigator.geolocation) {
+                    resolve(null);
+                    return;
+                }
                 navigator.geolocation.getCurrentPosition(resolve, reject, {
                     timeout: 20000,
                     enableHighAccuracy: true,
                     maximumAge: 0
                 });
             });
+        };
+
+        let locationInput = null;
+        if (capturedSecurityData?.locationData) {
+            locationInput = capturedSecurityData.locationData;
+        } else if (step === 1) {
+            try {
+                locationInput = await getLocation();
+            } catch (error) {
+                logger.error("Location error occured", {
+                    error: error
+                })
+                if (error.code === 1) {
+                    if (rdd.isSafari || rdd.isMobileSafari) {
+                        try {
+                            locationInput = await new Promise((resolve, reject) => {
+                                navigator.geolocation.getCurrentPosition(resolve, reject, {
+                                    timeout: 10000,
+                                    enableHighAccuracy: true,
+                                    maximumAge: 0
+                                });
+                            });
+                        } catch (error2) {
+                            logger.error("Location error occured in safari", {
+                                error: error2
+                            })
+                            setPendingLoginData({ method, restoreAccount, isPendingRetry: true });
+                            setShowLocationModal(true);
+                            setIsPressed(false);
+                            setMethodLoading(false);
+                            setRestoreLoading(false);
+                            return;
+                        }
+                    } else {
+                        setPendingLoginData({ method, restoreAccount, isPendingRetry: true });
+                        setShowLocationModal(true);
+                        setIsPressed(false);
+                        setMethodLoading(false);
+                        setRestoreLoading(false);
+                        return;
+                    }
+                }
+
+                console.warn("Geolocation warning:", error);
+            }
         }
+
         setConsecutiveCount(1)
-        setIsLoginError("")
         if (method) {
             setMethodLoading(true)
         }
@@ -280,7 +329,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     setRestoreLoading(false)
                 }
 
-                performSecurityChecks(isVpnAllowed, locationPromise)
+                performSecurityChecks(isVpnAllowed, locationInput)
 
             })
             .catch(error => {
@@ -397,7 +446,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
     }
 
-    const performSecurityChecks = async (isVpnAllowed, locationPromise = null) => {
+    const performSecurityChecks = async (isVpnAllowed, input = null) => {
         setIsPressed(true);
         const ipInfo = await getUserInfo(email);
 
@@ -415,8 +464,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             return;
         }
 
-        const handleLocation = async (position) => {
-            const { latitude, longitude } = position.coords;
+        const handleLocation = async (pos) => {
+            const { latitude, longitude } = pos.coords;
             try {
                 const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
                 const data = await res.json();
@@ -436,68 +485,12 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             }
         }
 
-        const handleLocationError = async (error) => {
-            logger.error("Geolocation error details:", {
-                code: error.code,
-                message: error.message
-            });
-
-
-            if (error.code === 1) {
-                if (rdd.isSafari || rdd.isMobileSafari) {
-                    try {
-                        const position = await new Promise((resolve, reject) => {
-                            navigator.geolocation.getCurrentPosition(resolve, reject, {
-                                timeout: 10000,
-                                enableHighAccuracy: true,
-                                maximumAge: 0
-                            });
-                        });
-                        await handleLocation(position);
-                        return;
-                    } catch (error2) {
-                        logger.error("Geolocation error details on safari on retry:", {
-                            code: error2.code,
-                            message: error2.message
-                        });
-                        setPendingLoginData({ isVpnAllowed });
-                        setIsPressed(false);
-                        setMethodLoading(false);
-                        setShowLocationModal(true);
-                    }
-                } else {
-                    setPendingLoginData({ isVpnAllowed });
-                    setIsPressed(false);
-                    setMethodLoading(false);
-                    setShowLocationModal(true);
-                }
-            } else {
-                console.log("Non-permission geolocation error, falling back to IP info.");
-                finishSecurityChecks();
-            }
-        }
-
-        if (locationPromise) {
-            try {
-                const position = await locationPromise;
-                await handleLocation(position);
-            } catch (error) {
-                handleLocationError(error);
-            }
+        if (input && input.latitude) {
+            finishSecurityChecks(input);
+        } else if (input && input.coords) {
+            await handleLocation(input);
         } else {
-            if (navigator.geolocation && step === 1) {
-                navigator.geolocation.getCurrentPosition(
-                    async (position) => {
-                        await handleLocation(position);
-                    },
-                    (error) => {
-                        handleLocationError(error);
-                    },
-                    { timeout: 20000, enableHighAccuracy: true, maximumAge: 0 }
-                );
-            } else {
-                finishSecurityChecks();
-            }
+            finishSecurityChecks();
         }
     }
 
@@ -885,9 +878,9 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 toggle={() => setShowLocationModal(false)}
                 onRetry={() => {
                     setShowLocationModal(false);
-                    if (pendingLoginData) {
-                        const { isVpnAllowed } = pendingLoginData;
-                        performSecurityChecks(isVpnAllowed);
+                    if (pendingLoginData?.isPendingRetry) {
+                        const { method, restoreAccount } = pendingLoginData;
+                        loginHandler({ preventDefault: () => { } }, method, restoreAccount);
                     }
                 }}
             />
