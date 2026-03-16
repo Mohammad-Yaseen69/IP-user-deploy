@@ -82,7 +82,10 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
         {
             label: "Pay As Guest",
             logo: addFunds,
-            action: () => setShowGuestModal(true)
+            action: () => {
+                setShowGuestModal(true)
+                toggle()
+            }
         }
     ]
 
@@ -93,6 +96,7 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
     }
 
 
+    console.log(showGuestModal, "guest modal")
     return (
         <>
             <Modal isOpen={isOpen} style={{ minWidth: width > 1000 && "900px" }} toggle={toggle} >
@@ -234,16 +238,18 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
             </Modal>
 
 
-            <PayAsGuest
-                isOpen={showGuestModal}
-                amount={selectedPlan?.price}
-                wallet={selectedPlan?.receivingWallet}
-                toggle={() => setShowGuestModal(false)}
-                username={user_name}
-                user={user}
-                planId={selectedPlan?.planId}
-                type='plan'
-            />
+            {showGuestModal &&
+                <PayAsGuest
+                    isOpen={showGuestModal}
+                    amount={selectedPlan?.price}
+                    wallet={selectedPlan?.receivingWallet}
+                    toggle={() => setShowGuestModal(false)}
+                    username={user_name}
+                    user={user}
+                    planId={selectedPlan?.planId}
+                    type='plan' 
+                />
+            }
 
 
             <PayWithCrypto
