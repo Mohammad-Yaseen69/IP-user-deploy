@@ -3,10 +3,12 @@ import styles from "./styles/stepthree.module.css";
 import thunesReasons from "./thunesReasons.json";
 import file from "../files/file.svg";
 import { useEffect, useMemo, useState } from "react";
+import useWindowWidth from "../../../utils/useWindowWidth";
 
 const StepThree = ({ data, dataHandler }) => {
     const { t } = useTranslation();
     const [error, setError] = useState("");
+    const width = useWindowWidth()
 
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
@@ -41,7 +43,14 @@ const StepThree = ({ data, dataHandler }) => {
     return (
         <>
             <div></div>
-            <div className={styles.container}>
+            <div
+                style={width < 1000 ? {
+                    height: "55vh",
+                    display: "flex",
+                    justifyContent:"center"
+                } : {}}
+                className={styles.container}
+            >
                 <select value={data.reason} onChange={e => dataHandler("reason", e.target.value)}>
                     <option value="" disabled>{t("Select Purpose of Payment")}</option>
                     {
