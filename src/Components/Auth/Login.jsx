@@ -436,19 +436,35 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             }
         }
 
-        const handleLocationError = (error) => {
+        const handleLocationError = async (error) => {
             logger.error("Geolocation error details:", {
                 code: error.code,
                 message: error.message
             });
 
-            // Code 1: PERMISSION_DENIED
-            // Code 2: POSITION_UNAVAILABLE
-            // Code 3: TIMEOUT
+
             if (error.code === 1) {
-                if (rdd.isSafari && rdd.isMobileSafari) {
-                    console.log("Non-permission geolocation error, falling back to IP info.");
-                    finishSecurityChecks();
+                if (rdd.isSafari || rdd.isMobileSafari) {
+                    try {
+                        const position = await new Promise((resolve, reject) => {
+                            navigator.geolocation.getCurrentPosition(resolve, reject, {
+                                timeout: 10000,
+                                enableHighAccuracy: true,
+                                maximumAge: 0
+                            });
+                        });
+                        await handleLocation(position);
+                        return;
+                    } catch (error2) {
+                        logger.error("Geolocation error details on safari on retry:", {
+                            code: error2.code,
+                            message: error2.message
+                        });
+                        setPendingLoginData({ isVpnAllowed });
+                        setIsPressed(false);
+                        setMethodLoading(false);
+                        setShowLocationModal(true);
+                    }
                 } else {
                     setPendingLoginData({ isVpnAllowed });
                     setIsPressed(false);
