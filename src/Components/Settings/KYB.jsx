@@ -17,6 +17,7 @@ import VerificationPayment from './VerificationPayment'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { format } from 'date-fns'
+import { isEmailValid } from '../../utils/Functions/validations'
 
 
 function getFirstLargeFileName(files) {
@@ -125,6 +126,21 @@ const KYB = () => {
     const [showAdditionalModal, setShowAdditionalModal] = useState(false)
 
     const addPartnerHandler = async () => {
+        if (userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved") {
+            toast.error("All actions are blocked as the business is verified.");
+            return;
+        }
+
+        if (!isEmailValid(partnerEmail)) {
+            toast.error("Please enter a valid email address.");
+            return;
+        }
+
+        if (partners.find(p => p.email.toLowerCase() === partnerEmail.toLowerCase())) {
+            toast.error("A director with this email already exists.");
+            return;
+        }
+
         setAdding(true)
         try {
             if (userDetails?.company?.kyb_files && userDetails?.company?.kyb_files?.length === 0) {
@@ -407,7 +423,9 @@ const KYB = () => {
                                 background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                                 border: "none",
                                 outline: "none"
-                            }} onClick={() => setShowAddModal(!showAddModal)}>Add New Director</Button>
+                            }} 
+                            disabled={userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved"}
+                            onClick={() => setShowAddModal(!showAddModal)}>Add New Director</Button>
                             <Modal isOpen={showAddModal} toggle={() => setShowAddModal(!showAddModal)}>
                                 <ModalHeader toggle={() => setShowAddModal(!showAddModal)}>
                                     Add New Director
@@ -419,7 +437,7 @@ const KYB = () => {
                                     </FormGroup>
                                     <FormGroup>
                                         <Label>Director Email</Label>
-                                        <Input placeholder="Director Email" value={partnerEmail} onChange={e => setPartnerEmail(e.target.value)} />
+                                        <Input type='email' placeholder="Director Email" value={partnerEmail} onChange={e => setPartnerEmail(e.target.value)} />
                                     </FormGroup>
                                     <FormGroup>
                                         <Label>Director Designation</Label>
