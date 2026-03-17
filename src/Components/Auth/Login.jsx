@@ -95,7 +95,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             text: "Whatsapp"
         },
         {
-            avail: true,
+            avail: false,
             icon: smsIcon,
             attr: "sms",
             text: "SMS"
@@ -309,7 +309,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         if (decrypted?.tfa && decrypted?.message === "authenticator") return "auth";
                         if (decrypted?.message === "instagram" && !isInstagramBrowser) return "insta";
                         if (decrypted?.message === "whatsapp") return "wp";
-                        if (decrypted?.otpMethod === "email") return "email";
+                        if (decrypted?.otpMethod === "email" || (decrypted?.email && !decrypted?.phone)) return "email";
                         return "sms";
                     } else {
                         return method
@@ -359,6 +359,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             })
     }
 
+    console.log(methods)
     useEffect(() => {
         if (profileLockTIme > 0) {
             let minutes = Math.floor(profileLockTIme / 60);
@@ -1255,71 +1256,73 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         <span>{t("Problem with the token?")}</span>
                                     }
 
-                                    {methods.filter(m => m.attr !== "sms").some(m => m.avail === true)
+                                    {methods.filter(m => m.avail).length > 1
                                         &&
                                         <p style={{ alignSelf: "baseline" }}>
                                             {t("Choose your preferred method to verify your identity:")}
                                         </p>
                                     }
-                                    <div className={styles.otp_methods}>
-                                        {isMobile ? (
-                                            <>
-                                                {methods.map((method, index) => {
-                                                    if (method.avail && method.attr !== currentOtpMethod) {
-                                                        return (
-                                                            <button
-                                                                key={index}
-                                                                className={styles.otpMethodButton}
-                                                                type="button"
-                                                                disabled={isPressed || methodLoading || biometricLoading}
-                                                                onClick={() => handleOtpMethod(method.attr)}
-                                                            >
-                                                                <img
-                                                                    src={method.icon}
-                                                                    alt=""
-                                                                />
-                                                                <span style={{ marginBottom: "0", textDecoration: "underline", textDecorationColor: "white", color: 'black', whiteSpace: 'nowrap' }}
+                                    {methods.filter(m => m.avail).length > 1 &&
+                                        <div className={styles.otp_methods}>
+                                            {isMobile ? (
+                                                <>
+                                                    {methods.map((method, index) => {
+                                                        if (method.avail && method.attr !== currentOtpMethod) {
+                                                            return (
+                                                                <button
+                                                                    key={index}
+                                                                    className={styles.otpMethodButton}
+                                                                    type="button"
+                                                                    disabled={isPressed || methodLoading || biometricLoading}
+                                                                    onClick={() => handleOtpMethod(method.attr)}
                                                                 >
-                                                                    {t(method.text)}
-                                                                </span>
-                                                            </button>
-                                                        )
-                                                    }
-                                                    return null;
-                                                })}
-                                            </>
-                                        ) : (
-                                            <>
-                                                {methods.map((method, index) => {
-                                                    if (method.avail && method.attr !== currentOtpMethod) {
-                                                        return (
-                                                            <button
-                                                                key={index}
-                                                                className={styles.otpMethodButton}
-                                                                type="button"
-                                                                disabled={isPressed || methodLoading || biometricLoading}
-                                                                onClick={() => handleOtpMethod(method.attr)}
-                                                            >
-                                                                <img
-                                                                    src={method.icon}
-                                                                    alt=""
-                                                                />
-                                                                <span style={{ marginBottom: "0" }}>
-                                                                    {t(method.text)}
-                                                                </span>
-                                                            </button>
-                                                        )
-                                                    }
-                                                    return null;
-                                                })}
-                                            </>
-                                        )}
-                                    </div>
+                                                                    <img
+                                                                        src={method.icon}
+                                                                        alt=""
+                                                                    />
+                                                                    <span style={{ marginBottom: "0", textDecoration: "underline", textDecorationColor: "white", color: 'black', whiteSpace: 'nowrap' }}
+                                                                    >
+                                                                        {t(method.text)}
+                                                                    </span>
+                                                                </button>
+                                                            )
+                                                        }
+                                                        return null;
+                                                    })}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    {methods.map((method, index) => {
+                                                        if (method.avail && method.attr !== currentOtpMethod) {
+                                                            return (
+                                                                <button
+                                                                    key={index}
+                                                                    className={styles.otpMethodButton}
+                                                                    type="button"
+                                                                    disabled={isPressed || methodLoading || biometricLoading}
+                                                                    onClick={() => handleOtpMethod(method.attr)}
+                                                                >
+                                                                    <img
+                                                                        src={method.icon}
+                                                                        alt=""
+                                                                    />
+                                                                    <span style={{ marginBottom: "0" }}>
+                                                                        {t(method.text)}
+                                                                    </span>
+                                                                </button>
+                                                            )
+                                                        }
+                                                        return null;
+                                                    })}
+                                                </>
+                                            )}
+                                        </div>
+                                    }
                                     {
                                         <span>
                                             {
                                                 resendTimer > 0
-                                                    ? ((lastOtpSentTo && ['sms', 'insta', 'wp', 'email'].includes(pendingOtpMethod || currentOtpMethod) && lastOtpSentTo !== (pendingOtpMethod || currentOtpMethod)) || (pendingOtpMethod && lastOtpSentTo !== currentOtpMethod))
+                                                    ? (methods.filter(m => m.avail).length > 1 && (lastOtpSentTo && ['sms', 'insta', 'wp', 'email'].includes(pendingOtpMethod || currentOtpMethod) && lastOtpSentTo !== (pendingOtpMethod || currentOtpMethod)) || (pendingOtpMethod && lastOtpSentTo !== currentOtpMethod))
                                                         ? <span> {t(`You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : lastOtpSentTo === "wp" ? "Whatsapp" : lastOtpSentTo === 'email' ? 'Email' : 'Instagram'}, wait ${resendTimer} seconds to get code on ${(pendingOtpMethod || currentOtpMethod) === 'sms' ? 'SMS' : (pendingOtpMethod || currentOtpMethod) === "wp" ? "Whatsapp" : (pendingOtpMethod || currentOtpMethod) === 'email' ? 'Email' : 'Instagram'}`)} </span>
                                                         :
                                                         currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" && <span>{t("Resend code in 30 seconds").replace("30", resendTimer)}</span>
