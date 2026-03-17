@@ -107,7 +107,7 @@ const TwoFactorAuth = () => {
                     tfa: false
                 }
                 const encrypted = encryptData(data)
-                const res = await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-individual/${userDetails?._id}`, {
+                const res = await axios.put(`${import.meta.env.VITE_IP_DEV_API}/api/account/update-${userDetails?.account_type === "individual" ? "individual" : "business"}/${userDetails?._id}`, {
                     data: encrypted
                 }, {
                     headers: authHeader
