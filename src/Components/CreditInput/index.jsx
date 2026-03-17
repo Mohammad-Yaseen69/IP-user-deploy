@@ -66,7 +66,7 @@ const CreditCardInput = ({
                 <CardCVC
                     content={cardCvc}
                     setContent={setCardCvc}
-                    maxLength={cardType?.cvcLength}
+                    maxLength={4}
                     guest={guest}
                 />
                 <CardExpiry

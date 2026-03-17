@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import styles from "./styles/card_cvc.module.css"
 
-const CardCVC = ({ content, setContent, maxLength = 3, isinVVC = false, guest }) => {
+const CardCVC = ({ content, setContent, maxLength = 5, isinVVC = false, guest }) => {
     const divRef = useRef(null);
     const caretPositionRef = useRef(0);
 
@@ -87,7 +87,7 @@ const CardCVC = ({ content, setContent, maxLength = 3, isinVVC = false, guest })
                 div.removeEventListener('input', handleInput);
             };
         }
-    }, []);
+    }, [maxLength]);
 
     return (
         <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
