@@ -41,6 +41,7 @@ import { SwipeableDrawer } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
 import useTopupLimitCheck from "../../../hooks/Payments/useTopupLimitCheck";
 import GeneralNoticeModal from "../GeneralNoticeModal";
+import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
 
 
 
@@ -280,81 +281,86 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
         }
     }, [data.payment_type])
 
+    const generatePayload = (codeType) => {
+        let payload = {};
+        if (data.payment_duration?.value === "instant") {
+            payload = {
+                data: {
+                    "receiver_wallet_id": data.beneficiary_wallet?.wallet_id,
+                    "sender_wallet_id": data.payment_type?.value !== "wallet" ? data.currency?._id : data?.wallet?._id,
+                    "purpose": data.reason,
+                    "amount": data.payment_type?.value !== "wallet" ? +String(data.amount)?.replaceAll(",", "") : +data?.new_amoount > 0 ? +data?.new_amoount : +String(data.amount)?.replaceAll(",", ""),
+                    "type": data.payment_duration?.value,
+                    "payment_type": payment_type ?? "wallet_to_wallet",
+                    'description': data.comment,
+                    "token": data.exchange_rate?.token || "",
+                    // preserved_amount=${Number(String(data.recipient_amount)?.replace(",",""))}
+                    "preserved_amount": Number(String(data.recipient_amount)?.replace(",", "")),
+                },
+                type: codeType || data.codeType
+            }
+        }
+        if (data.payment_duration?.value === "subscription") {
+            const date = new Date(data.payment_duration?.recStartDate).toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            }).replaceAll("/", "-")
+            payload = {
+                data: {
+                    "receiver_wallet_id": data.beneficiary_wallet?.wallet_id,
+                    "sender_wallet_id": data.payment_type?.value !== "wallet" ? data.currency?._id : data?.wallet?._id,
+                    "purpose": data.reason,
+                    "amount": data.payment_type?.value !== "wallet" ? +String(data.amount)?.replaceAll(",", "") : +data?.new_amoount > 0 ? +data?.new_amoount : +String(data.amount)?.replaceAll(",", ""),
+                    'description': data.comment,
+                    "cycles": data.payment_duration?.unlimited ? "unlimited" : data.payment_duration?.cycles,
+                    "date": date,
+                    "timezone": data?.timezone,
+                    "token": data.exchange_rate?.token || "",
+                    "preserved_amount": Number(String(data.recipient_amount)?.replace(",", ""))
+                },
+                type: codeType || data.codeType
+            }
+        }
+        if (data.payment_duration?.value === "schedule") {
+            const date = new Date(data.payment_duration?.scheduleDate).toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            }).replaceAll("/", "-")
+            payload = {
+                data: {
+                    "receiver_wallet_id": data.beneficiary_wallet?.wallet_id,
+                    "sender_wallet_id": data.payment_type?.value !== "wallet" ? data.currency?._id : data?.wallet?._id,
+                    "purpose": data.reason,
+                    "amount": data.payment_type?.value !== "wallet" ? +String(data.amount)?.replaceAll(",", "") : +data?.new_amoount > 0 ? +data?.new_amoount : +String(data.amount)?.replaceAll(",", ""),
+                    'description': data.comment,
+                    "time": data.payment_duration?.scheduleTime,
+                    "date": date,
+                    "timezone": data?.timezone,
+                    "token": data.exchange_rate?.token || "",
+                    "preserved_amount": Number(String(data.recipient_amount)?.replace(",", ""))
+                },
+                type: codeType || data.codeType
+            }
+        }
+
+
+        if (invoiceId) {
+            payload.data.invoice_id = invoiceId
+            payload.data.shippingDetails = {
+                ...data.shippingDetails,
+                country: data.shippingDetails.country.name
+            }
+            payload.data.purpose = "OTHERS"
+        }
+        return payload
+    }
+
     const sendOtp = async (codeType = "") => {
         dataHandler("loading", true)
         try {
-            let payload = {};
-            if (data.payment_duration?.value === "instant") {
-                payload = {
-                    data: {
-                        "receiver_wallet_id": data.beneficiary_wallet?.wallet_id,
-                        "sender_wallet_id": data.payment_type?.value !== "wallet" ? data.currency?._id : data?.wallet?._id,
-                        "purpose": data.reason,
-                        "amount": data.payment_type?.value !== "wallet" ? +String(data.amount)?.replaceAll(",", "") : +data?.new_amoount > 0 ? +data?.new_amoount : +String(data.amount)?.replaceAll(",", ""),
-                        "type": data.payment_duration?.value,
-                        "payment_type": payment_type ?? "wallet_to_wallet",
-                        'description': data.comment,
-                        "token": data.exchange_rate?.token || "",
-                        // preserved_amount=${Number(String(data.recipient_amount)?.replace(",",""))}
-                        "preserved_amount": Number(String(data.recipient_amount)?.replace(",", "")),
-                    },
-                    type: codeType || data.codeType
-                }
-            }
-            if (data.payment_duration?.value === "subscription") {
-                const date = new Date(data.payment_duration?.recStartDate).toLocaleDateString('en-GB', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric'
-                }).replaceAll("/", "-")
-                payload = {
-                    data: {
-                        "receiver_wallet_id": data.beneficiary_wallet?.wallet_id,
-                        "sender_wallet_id": data.payment_type?.value !== "wallet" ? data.currency?._id : data?.wallet?._id,
-                        "purpose": data.reason,
-                        "amount": data.payment_type?.value !== "wallet" ? +String(data.amount)?.replaceAll(",", "") : +data?.new_amoount > 0 ? +data?.new_amoount : +String(data.amount)?.replaceAll(",", ""),
-                        'description': data.comment,
-                        "cycles": data.payment_duration?.unlimited ? "unlimited" : data.payment_duration?.cycles,
-                        "date": date,
-                        "timezone": data?.timezone,
-                        "token": data.exchange_rate?.token || "",
-                        "preserved_amount": Number(String(data.recipient_amount)?.replace(",", ""))
-                    },
-                    type: codeType || data.codeType
-                }
-            }
-            if (data.payment_duration?.value === "schedule") {
-                const date = new Date(data.payment_duration?.scheduleDate).toLocaleDateString('en-GB', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric'
-                }).replaceAll("/", "-")
-                payload = {
-                    data: {
-                        "receiver_wallet_id": data.beneficiary_wallet?.wallet_id,
-                        "sender_wallet_id": data.payment_type?.value !== "wallet" ? data.currency?._id : data?.wallet?._id,
-                        "purpose": data.reason,
-                        "amount": data.payment_type?.value !== "wallet" ? +String(data.amount)?.replaceAll(",", "") : +data?.new_amoount > 0 ? +data?.new_amoount : +String(data.amount)?.replaceAll(",", ""),
-                        'description': data.comment,
-                        "time": data.payment_duration?.scheduleTime,
-                        "date": date,
-                        "timezone": data?.timezone,
-                        "token": data.exchange_rate?.token || "",
-                        "preserved_amount": Number(String(data.recipient_amount)?.replace(",", ""))
-                    },
-                    type: codeType || data.codeType
-                }
-            }
-
-
-            if (invoiceId) {
-                payload.data.invoice_id = invoiceId
-                payload.data.shippingDetails = {
-                    ...data.shippingDetails,
-                    country: data.shippingDetails.country.name
-                }
-                payload.data.purpose = "OTHERS"
-            }
+            const payload = generatePayload(codeType)
 
             console.log("SendOTP Debug:", {
                 payload,
@@ -644,9 +650,15 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
             }
 
 
+
             console.log(exchange_rate_details, decrypted, "exchange_rate_dets")
 
             if (decrypted?.data?.paypal) exchange_rate_details.paypal = decrypted?.data?.paypal;
+            if (data.payment_type?.value === "bank_transfer") {
+                exchange_rate_details.plaid_currency = decrypted?.data?.converted_currency
+                exchange_rate_details.plaid_amount = decrypted?.data?.converted_amount
+                exchange_rate_details.plaid_fx = decrypted?.data?.converted_rate
+            }
 
             dataHandler("exchange_rate", exchange_rate_details)
             if (+amount > exchange_rate_details?.limits_used?.daily_sending_limit_used) {
@@ -1161,6 +1173,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                             ?
                                                             <>
                                                                 <FeesComponent
+                                                                    plaidValues
                                                                     data={data}
                                                                     isInvoice={invoiceId ? true : false}
                                                                     receiverFee={invoiceId & data.exchange_rate?.service_fee?.amount ? true : false}
@@ -1358,23 +1371,34 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                 data.step === 5
                                                 &&
                                                 (
-                                                    <>
-                                                        {
-                                                            !data.showCard
-                                                                ?
-                                                                <StepFive
-                                                                    data={data}
-                                                                />
-                                                                :
-                                                                <CreditCard
-                                                                    url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
-                                                                    tokenUrl={(t) => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
-                                                                    data={data}
-                                                                    dataHandler={dataHandler}
-                                                                />
-                                                        }
+                                                    data?.payment_type?.value === "bank_transfer" ?
+                                                        <PlaidBankTransfer
+                                                            data={data}
+                                                            dataHandler={dataHandler}
+                                                            endpoint="/api/plaid/initiate-w2w-payment"
+                                                            type="wallet_to_wallet"
+                                                            initiatePayload={() => {
+                                                                const payload = generatePayload()
+                                                                return payload.data
+                                                            }}
+                                                        /> :
+                                                        <>
+                                                            {
+                                                                !data.showCard
+                                                                    ?
+                                                                    <StepFive
+                                                                        data={data}
+                                                                    />
+                                                                    :
+                                                                    <CreditCard
+                                                                        url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                                                                        tokenUrl={(t) => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                                                                        data={data}
+                                                                        dataHandler={dataHandler}
+                                                                    />
+                                                            }
 
-                                                    </>
+                                                        </>
                                                 )
                                             }
                                             {data.step === 6
@@ -1416,34 +1440,36 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                     </div>
                                                 )
                                             }
-                                            <div className={styles.bottom}>
-                                                <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
-                                                    <HelpCircle size={16} />
-                                                    {t("Trouble Sending Money")}
-                                                </Link>
-                                                <div style={{ gap: data.step === 5 && "0.5rem" }} className={styles?.buttons}>
-                                                    {
-                                                        (data.step > 1)
-                                                        &&
-                                                        <button className={styles.transparent} disabled={data.loading} onClick={handleBack}>{t("Back")}</button>
-                                                    }
-                                                    <button disabled={disabledButton || data.loading} onClick={handleClick}>
+                                            {((data.payment_type?.value !== "bank" && data?.payment_type?.value !== "bank_transfer") || data.step < 5) &&
+                                                <div className={styles.bottom}>
+                                                    <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
+                                                        <HelpCircle size={16} />
+                                                        {t("Trouble Sending Money")}
+                                                    </Link>
+                                                    <div style={{ gap: data.step === 5 && "0.5rem" }} className={styles?.buttons}>
                                                         {
-
-                                                            data.step === 5
-                                                                ?
-                                                                t("Confirm")
-                                                                :
-                                                                data.step === 6
-                                                                    ?
-                                                                    t("Confirm and Proceed")
-                                                                    :
-                                                                    t("Next")
+                                                            (data.step > 1)
+                                                            &&
+                                                            <button className={styles.transparent} disabled={data.loading} onClick={handleBack}>{t("Back")}</button>
                                                         }
-                                                        <ChevronRight size={18} />
-                                                    </button>
+                                                        <button disabled={disabledButton || data.loading} onClick={handleClick}>
+                                                            {
+
+                                                                data.step === 5
+                                                                    ?
+                                                                    t("Confirm")
+                                                                    :
+                                                                    data.step === 6
+                                                                        ?
+                                                                        t("Confirm and Proceed")
+                                                                        :
+                                                                        t("Next")
+                                                            }
+                                                            <ChevronRight size={18} />
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            }
                                         </div>
                                         {
                                             data.step === 4 && data.payment_type?.value === "wallet" && !data.show_payment_type && !data.showShippingAddress
@@ -1602,22 +1628,34 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                     data.step === 5
                                                                     &&
                                                                     (
-                                                                        <>
-                                                                            {
-                                                                                !data.showCard
-                                                                                    ?
-                                                                                    <StepFive
-                                                                                        data={data}
-                                                                                    />
-                                                                                    :
-                                                                                    <CreditCard
-                                                                                        url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
-                                                                                        tokenUrl={(t) => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
-                                                                                        data={data}
-                                                                                        dataHandler={dataHandler}
-                                                                                    />
-                                                                            }
-                                                                        </>
+                                                                        data?.payment_type?.value === "bank_transfer" ?
+                                                                            <PlaidBankTransfer
+                                                                                data={data}
+                                                                                dataHandler={dataHandler}
+                                                                                endpoint="/api/plaid/initiate-w2w-payment"
+                                                                                type="wallet_to_wallet"
+                                                                                initiatePayload={() => {
+                                                                                    const payload = generatePayload()
+                                                                                    return payload.data
+                                                                                }}
+                                                                            />
+                                                                            :
+                                                                            <>
+                                                                                {
+                                                                                    !data.showCard
+                                                                                        ?
+                                                                                        <StepFive
+                                                                                            data={data}
+                                                                                        />
+                                                                                        :
+                                                                                        <CreditCard
+                                                                                            url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                                                                                            tokenUrl={(t) => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                                                                                            data={data}
+                                                                                            dataHandler={dataHandler}
+                                                                                        />
+                                                                                }
+                                                                            </>
                                                                     )
                                                                 }
 
@@ -1663,44 +1701,44 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                             </>
                                                     }
                                                 </div>
-                                                <div className={styles.bottom}>
-                                                    <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
-                                                        <HelpCircle size={16} />
-                                                        {t("Trouble Sending Money")}
-                                                    </Link>
-                                                    <div className={styles.buttons}>
-                                                        {
-                                                            data.step > 1
-                                                            &&
-                                                            <button
-                                                                disabled={data.loading}
-                                                                onClick={handleBack}
-                                                            >
-                                                                <ChevronLeft />
-                                                            </button>
-                                                        }
-                                                        <button className={styles.full} disabled={disabledButton || data.loading} onClick={handleClick}>
+                                                {((data.payment_type?.value !== "bank" && data?.payment_type?.value !== "bank_transfer") || data.step < 5) &&
+                                                    <div className={styles.bottom}>
+                                                        <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
+                                                            <HelpCircle size={16} />
+                                                            {t("Trouble Sending Money")}
+                                                        </Link>
+                                                        <div className={styles.buttons}>
                                                             {
-                                                                data.step === 5
-                                                                    ?
-                                                                    t("Confirm")
-                                                                    :
-                                                                    data.step === 6
-                                                                        ?
-                                                                        t("Confirm and Proceed")
-                                                                        :
-                                                                        t("Next")
+                                                                data.step > 1
+                                                                &&
+                                                                <button
+                                                                    disabled={data.loading}
+                                                                    onClick={handleBack}
+                                                                >
+                                                                    <ChevronLeft />
+                                                                </button>
                                                             }
-                                                        </button>
+                                                            <button className={styles.full} disabled={disabledButton || data.loading} onClick={handleClick}>
+                                                                {
+                                                                    data.step === 5
+                                                                        ?
+                                                                        t("Confirm")
+                                                                        :
+                                                                        data.step === 6
+                                                                            ?
+                                                                            t("Confirm and Proceed")
+                                                                            :
+                                                                            t("Next")
+                                                                }
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                }
                                             </>
                                     }
                                 </div>
                             </>
                         }
-
-
                     </div>
             }
         </>

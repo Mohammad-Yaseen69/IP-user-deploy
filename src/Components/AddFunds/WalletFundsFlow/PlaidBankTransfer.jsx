@@ -14,15 +14,18 @@ import cardStyles from "../../PaymentsNewer/InternationalFlow/styles/creditcard.
 import logo_w from "../../../assets/images/logo/logo_white.png";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import { PLAID_EXIT_MAP } from "./PlaidExistMap";
+import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError";
+import { PlaidCurrencies } from ".";
 
 const PlaidBankTransfer = ({
   data,
   dataHandler,
   type = "add_funds",
   toggle,
-  initiatePayload
+  initiatePayload,
+  endpoint = ""
 }) => {
-  const { userDetails, authHeader } = useContext(UserContext);
+  const { userDetails, authHeader, setProfileLockTime } = useContext(UserContext);
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [plaidStep, setPlaidStep] = useState(1);
@@ -85,57 +88,53 @@ const PlaidBankTransfer = ({
 
   calculateFee();
 
-  const amount = data.exchange_rate?.sending?.amount || 0;
-  const fee = data.exchange_rate?.fee?.amount || 0;
-  const totalAmount = amount - fee;
+  const { mutateAsync: initiatePlaidPayment, isPending: isInitiatingPlaid } = useMutation({
+    mutationFn: async () => {
+      const initiatePayloadResponse = {
+        ...initiatePayload(true),
+        recipient_iban: recipientData.iban,
+        saveForFutureUse: recipientData.saveForFutureUse,
+      }
 
-  const { mutateAsync: initiatePlaidPayment, isPending: isInitiatingPlaid } =
-    useMutation({
-      mutationFn: async () => {
-        const payload = {
-          userId: userDetails?._id,
-          amount: data.exchange_rate?.sending?.amount,
-          walletId: data.wallet?._id,
-          walletCurrency: data.wallet?.currency?.code,
-          recipientIban: recipientData.iban,
-          saveForFutureUse: recipientData.saveForFutureUse,
-          fee: data.exchange_rate?.fee?.amount ?? 0,
-          plaidAmount:
-            data.exchange_rate?.plaid_amount ??
-            data.exchange_rate?.sending?.amount,
-          plaidCurrency:
-            data.exchange_rate?.plaid_currency ?? data.wallet?.currency?.code,
-        };
-        console.log("Initiating Plaid Payment with payload:", payload);
+      if (type === "add_funds") {
+        initiatePayloadResponse.recipientIban = recipientData.iban
+      }
 
-        const initiatePayloadResponse = {
-          ...initiatePayload(true),
-          recipient_iban: recipientData.iban
-        }
-        // 
-        const response = await apiWrapper({
-          endpoint: type === "payment_address" ? "/api/guest-pay/initiate-bank-payment" : "/api/plaid/initiate-payment",
-          method: "POST",
-          payload: type === "payment_address" ? initiatePayloadResponse : payload,
-          isEncrypted: type === "payment_address" ? true : false,
-          isDecrypted: type === "payment_address" ? true : false,
-        })
-        console.log("Plaid initiation response:", response);
-        return response;
-      },
-      onSuccess: (res) => {
-        console.log(res)
-        setLinkToken(res?.linkToken);
-        setPendingTransactionId(res?.transaction_id || res?.data?.transactionId || res?.data?.data?.transactionId || null);
-        setPlaidStep(2);
-      },
-      onError: (error) => {
-        console.error("Failed to initiate Plaid payment:", error);
+      console.log("Initiating Plaid Payment with payload:", initiatePayloadResponse);
+
+      const response = await apiWrapper({
+        endpoint: type === "payment_address" ? "/api/guest-pay/initiate-bank-payment" : endpoint || "/api/plaid/initiate-payment",
+        method: "POST",
+        payload: initiatePayloadResponse,
+        isEncrypted: type === "add_funds" || type === "wallet_to_wallet" ? false : true,
+        isDecrypted: type === "add_funds" ? false : true,
+      })
+      console.log("Plaid initiation response:", response);
+      return response;
+    },
+    onSuccess: (res) => {
+      console.log(res)
+      setLinkToken(res?.linkToken || res?.data?.linkToken);
+      setPendingTransactionId(res?.transaction_id || res?.data?.transactionId || res?.data?.data?.transactionId || null);
+      setPlaidStep(2);
+    },
+    onError: (error) => {
+      console.error("Failed to initiate Plaid payment:", error);
+      if (type !== "payment_address") {
+        handlePaymentApiError({
+          error,
+          setError: (m) => dataHandler("error", m),
+          setProfileLockTime,
+          navigate,
+          fallback: "We are unable to process your request at the moment, please try again later.",
+        });
+      } else {
         toast.error(
           "We are unable to process your request at the moment, please try again later!"
         );
-      },
-    });
+      }
+    },
+  });
 
   const { mutateAsync: exchangePlaidToken, isPending: isExchangingToken } =
     useMutation({
@@ -146,7 +145,7 @@ const PlaidBankTransfer = ({
           userId: userDetails?._id,
           amount: data.exchange_rate?.sending?.amount,
           walletId: data.wallet?._id,
-          walletCurrency: data.wallet?.currency?.code,
+          walletCurrency: data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code,
           recipientIban: recipientData.iban,
           saveForFutureUse: recipientData.saveForFutureUse,
           transactionId: pendingTransactionId || null,
@@ -178,27 +177,37 @@ const PlaidBankTransfer = ({
         setPlaidStep(1);
       },
     });
-  // saved bank
+
   const { mutateAsync: performSavedBankPayment, isPending: isUsingSavedBank } =
     useMutation({
       mutationFn: async () => {
         if (!selectedBankId) {
           throw new Error("No bank selected");
         }
-        const payload = {
+        const topupPayload = {
           userId: userDetails?._id,
           amount: data.exchange_rate?.sending?.amount,
           walletId: data.wallet?._id,
           savedBankId: selectedBankId,
         };
+
+        const payload = {
+          ...initiatePayload(true),
+          recipient_iban: recipientData.iban,
+          saveForFutureUse: recipientData.saveForFutureUse,
+        }
+
         console.log("Using saved bank with payload:", payload);
-        const response = await axios.post(
-          `${import.meta.env.VITE_IP_DEV_API}/api/plaid/use-saved-bank`,
-          payload,
-          { headers: authHeader },
-        );
-        console.log("Saved bank payment response:", response.data);
-        return response.data;
+
+        const response = await apiWrapper({
+          endpoint: endpoint || "/api/plaid/use-saved-bank",
+          payload: type === "add_funds" ? topupPayload : payload,
+          isEncrypted: type === "add_funds" || type === "wallet_to_wallet" ? false : true,
+          isDecrypted: type === "add_funds" ? false : true,
+        })
+
+        console.log("Saved bank payment response:", response);
+        return response;
       },
       onSuccess: () => {
         setPlaidStep(4);
@@ -300,8 +309,12 @@ const PlaidBankTransfer = ({
 
   const onBackClickHandler = () => {
     if (plaidStep === 1) {
-      dataHandler("step", 3);
-      dataHandler("exchange_rate", data.exchange_rate_backup);
+      if (type === "wallet_to_wallet") {
+        dataHandler("step", 4);
+      } else {
+        dataHandler("step", 3);
+        dataHandler("exchange_rate", data.exchange_rate_backup);
+      }
     } else if (plaidStep === 2 || plaidStep === 3) {
       setPlaidStep(1);
       setLinkToken(null);
@@ -392,7 +405,7 @@ const PlaidBankTransfer = ({
                   <span>{t("Total")}</span>
                   <strong>
                     {formatCurrency(data.exchange_rate?.sending?.amount)}{" "}
-                    {data.wallet?.currency?.code}
+                    {data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code}
                   </strong>
                 </div>
                 {data.exchange_rate?.fee?.amount > 0 && (
@@ -408,7 +421,7 @@ const PlaidBankTransfer = ({
                     <span>{t("Fee")}</span>
                     <strong>
                       {formatCurrency(data.exchange_rate?.fee?.amount)}{" "}
-                      {data.wallet?.currency?.code}
+                      {data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code}
                     </strong>
                   </div>
                 )}
@@ -423,7 +436,7 @@ const PlaidBankTransfer = ({
                 >
                   <span>{t("Amount")}</span>
                   <strong>
-                    {formatCurrency(totalAmount)} {data.wallet?.currency?.code}
+                    {formatCurrency(totalAmount)} {data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code}
                   </strong>
                 </div>
               </div> */}
@@ -549,7 +562,7 @@ const PlaidBankTransfer = ({
                     <span>{t("Amount")}</span>
                     <strong>
                       {formatCurrency(data.exchange_rate?.sending?.amount)}{" "}
-                      {data.wallet?.currency?.code}
+                      {data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code}
                     </strong>
                   </div>
                   {data.exchange_rate?.fee?.amount > 0 && (
@@ -565,7 +578,7 @@ const PlaidBankTransfer = ({
                       <span>{t("Fee")}</span>
                       <strong>
                         {formatCurrency(data.exchange_rate?.fee?.amount)}{" "}
-                        {data.wallet?.currency?.code}
+                        {data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code}
                       </strong>
                     </div>
                   )}
@@ -581,7 +594,7 @@ const PlaidBankTransfer = ({
                     <span>{t("Total")}</span>
                     <strong>
                       {formatCurrency(totalAmount)}{" "}
-                      {data.wallet?.currency?.code}
+                      {data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code}
                     </strong>
                   </div>
                 </div> */}
@@ -634,12 +647,12 @@ const PlaidBankTransfer = ({
                   {formatCurrency(
                     data.amount || data.exchange_rate?.sending?.amount,
                   )}{" "}
-                  {data.wallet?.currency?.code}
+                  {data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code}
                 </span>
               </div>
               {data.exchange_rate?.sending?.currency &&
                 data.exchange_rate?.sending?.currency !==
-                data.wallet?.currency?.code && (
+                data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code && (
                   <div className={styles.data}>
                     <p>{t("Amount to Pay")}</p>
                     <span style={{ color: "#303c82", fontWeight: "600" }}>
@@ -676,7 +689,7 @@ const PlaidBankTransfer = ({
                 </strong>
               </div>
             </div>
-            {type === "payment_address" && data.exchange_rate?.plaid_fx && (
+            {type !== "add_funds" && data.exchange_rate?.plaid_fx && !PlaidCurrencies.includes(data.exchange_rate?.sending?.currency) && (
               <div style={{ marginTop: "1rem" }}>
                 <div
                   style={{
@@ -698,7 +711,7 @@ const PlaidBankTransfer = ({
                   <Info size={16} />
                   <span>
                     {t("plaid_currency_not_supported", {
-                      currency: data.wallet?.currency?.code,
+                      currency: data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code,
                       defaultCurrency: data?.exchange_rate?.plaid_currency,
                     })}
                   </span>
@@ -735,7 +748,7 @@ const PlaidBankTransfer = ({
                         fontStyle: 'normal',
                         lineHeight: 1.5,
                         letterSpacing: '-0.14px'
-                      }}>1.00 {data.wallet?.currency?.code} = {Number(data.exchange_rate?.plaid_fx)} {data?.exchange_rate?.plaid_currency}</strong>
+                      }}>1.00 {data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code} = {Number(data.exchange_rate?.plaid_fx)} {data?.exchange_rate?.plaid_currency}</strong>
                   </div>
                   <div style={{
                     display: "flex",
@@ -760,7 +773,7 @@ const PlaidBankTransfer = ({
                       fontWeight: 700,
                       lineHeight: 1.7,
                       letterSpacing: '-0.8px'
-                    }}>{Number(data.exchange_rate?.plaid_amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} { data?.exchange_rate?.plaid_currency}</strong>
+                    }}>{Number(data.exchange_rate?.plaid_amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data?.exchange_rate?.plaid_currency}</strong>
                   </div>
                 </div>
               </div>
