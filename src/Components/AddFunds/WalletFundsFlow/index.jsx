@@ -1063,14 +1063,29 @@ const WalletFundsFlow = ({ setAction }) => {
                         url={""}
                         showCards={true}
                       />
-                    ) : data.channel.value === "bank" ? (
-                      <BankDeposit data={data} dataHandler={dataHandler} />
-                    ) : data.channel.value === "bank_transfer" ? (
-                      <PlaidBankTransfer
-                        data={data}
-                        dataHandler={dataHandler}
-                      />
-                    ) : null
+                    ) :
+                      data.channel.value === "bank" ?
+                        <BankDeposit data={data} dataHandler={dataHandler} />
+                        :
+                        data.channel.value === "bank_transfer" ?
+                          <PlaidBankTransfer
+                            data={data}
+                            dataHandler={dataHandler}
+                            initiatePayload={() => ({
+                              userId: userDetails?._id,
+                              amount: data.exchange_rate?.sending?.amount,
+                              walletId: data.wallet?._id,
+                              walletCurrency: data.wallet?.currency?.code,
+                              fee: data.exchange_rate?.fee?.amount ?? 0,
+                              plaidAmount:
+                                data.exchange_rate?.plaid_amount ??
+                                data.exchange_rate?.sending?.amount,
+                              plaidCurrency:
+                                data.exchange_rate?.plaid_currency ?? data.wallet?.currency?.code
+                            })}
+                          />
+                          :
+                          null
                   ) : (
                     ""
                   )}

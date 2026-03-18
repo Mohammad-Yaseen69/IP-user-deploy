@@ -111,6 +111,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                             totalLabel="Amount To Pay"
                             bright={true}
                             guest={true}
+                            plaidValues={true}
                             extraContent={
                                 data.payment_type?.value === "card" && data.step > 3
                                     ?
@@ -220,95 +221,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                                     </div>
                                 </>
                                 :
-                                data.payment_type?.value === "bank_transfer" && !PlaidCurrencies.includes(wallet?.currency?.code) ?
-                                    <>
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                gap: ".7rem",
-                                                padding: ".5rem",
-                                                background: "#edecf1ff",
-                                                borderRadius: "6px",
-                                                color: "#5926F0",
-                                                fontSize: ".7rem",
-                                                fontStyle: "normal",
-                                                fontWeight: 700,
-                                                lineHeight: 1.3,
-                                                letterSpacing: "-0.28px",
-                                            }}
-                                        >
-                                            <Info size={16} />
-                                            <span>
-                                                {t("plaid_currency_not_supported", {
-                                                    currency: wallet?.currency?.code,
-                                                    defaultCurrency: data?.exchange_rate?.plaid_currency,
-                                                })}
-                                            </span>
-                                        </div>
-                                        <div style={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            gap: ".9rem",
-                                            padding: ".8rem",
-                                            background: "#fff",
-                                            borderRadius: "6px",
-                                            boxShadow: "0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11)"
-                                        }}>
-                                            <div style={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                gap: "1rem",
-                                                justifyContent: "space-between"
-                                            }}>
-                                                <span style={{
-                                                    color: '#8A8A8A',
-                                                    fontFamily: 'Manrope',
-                                                    fontSize: ".7rem",
-                                                    fontStyle: 'normal',
-                                                    fontWeight: 600,
-                                                    lineHeight: 1.5,
-                                                    letterSpacing: '-0.14px'
-                                                }}>{t("Exchange Rate")}</span>
-                                                <strong
-                                                    style={{
-                                                        color: '#000',
-                                                        fontFamily: 'Manrope',
-                                                        fontSize: ".7rem",
-                                                        fontStyle: 'normal',
-                                                        lineHeight: 1.5,
-                                                        letterSpacing: '-0.14px'
-                                                    }}>1.00 {wallet?.currency?.code}  = {Number(data.exchange_rate?.plaid_fx)} {data?.exchange_rate?.plaid_currency}</strong>
-                                            </div>
-                                            <div style={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                gap: "1rem",
-                                                justifyContent: "space-between"
-                                            }}>
-                                                <span style={{
-                                                    color: '#8A8A8A',
-                                                    fontFamily: 'Manrope',
-                                                    fontSize: ".7rem",
-                                                    fontStyle: 'normal',
-                                                    fontWeight: 600,
-                                                    lineHeight: 1.5,
-                                                    letterSpacing: '-0.14px'
-                                                }}>{t("Amount in CHF").replace("CHF", data?.exchange_rate?.plaid_currency)}</span>
-                                                <strong style={{
-                                                    color: '#000',
-                                                    fontFamily: 'Manrope',
-                                                    fontSize: "1.2rem",
-                                                    fontStyle: 'normal',
-                                                    fontWeight: 700,
-                                                    lineHeight: 1.7,
-                                                    letterSpacing: '-0.8px'
-                                                }}>{Number(data.exchange_rate?.plaid_amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data?.exchange_rate?.plaid_currency}</strong>
-                                            </div>
-                                        </div>
-                                    </>
-                                    :
-                                    ""
+                                ""
                         }
                     </>
                 :
