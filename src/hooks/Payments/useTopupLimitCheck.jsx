@@ -6,7 +6,7 @@ import { service_name_formatter } from '../../Components/TransactionsNewApi/Tran
 
 const useTopupLimitCheck = (sendingCurrency, amount, paymentMethod) => {
     const { userDetails } = useContext(UserContext)
-    const topupMethods = ["card", "paypal", "mobile_wallet"]
+    const topupMethods = ["card", "paypal", "mobile_wallet", "bank_transfer"]
     const { getExchangeRate } = usePlainFx()
     const [limitStatus, setLimitStatus] = useState({ status: true, thresholdLimit: null, message: "" })
 
