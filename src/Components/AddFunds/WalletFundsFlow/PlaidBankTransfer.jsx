@@ -204,6 +204,7 @@ const PlaidBankTransfer = ({
           payload: type === "add_funds" ? topupPayload : payload,
           isEncrypted: type === "add_funds" || type === "wallet_to_wallet" ? false : true,
           isDecrypted: type === "add_funds" ? false : true,
+          method: "POST",
         })
 
         console.log("Saved bank payment response:", response);
@@ -216,17 +217,19 @@ const PlaidBankTransfer = ({
       onError: (error) => {
         console.error("Failed to use saved bank:", error);
         if (error.response?.data?.action === "RECONNECT_REQUIRED") {
-          toast.error(
-            "This bank needs to be reconnected. Please add it again.",
-          );
+          dataHandler("error ", "This bank needs to be reconnected. Please add it again.",);
           if (userDetails?._id) {
             fetchSavedBanks();
           }
         } else {
-          toast.error(
-            error?.response?.data?.message || "Failed to process payment",
-          );
-        }
+          handlePaymentApiError({
+            error,
+            setError: (m) => dataHandler("error", m),
+            setProfileLockTime,
+            navigate,
+            fallback: "We are unable to process your request at the moment, please try again later.",
+          });
+        } 
       },
     });
 
