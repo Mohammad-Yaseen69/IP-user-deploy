@@ -59,12 +59,13 @@ const Channels = ({
           userDetails?.level?.topup_channel?.bank_deposit === "coming_soon",
       }
       : {},
-    userDetails?.level?.topup_channel?.card_payment
+    userDetails?.level?.topup_channel?.bank
       ? {
         name: "Bank Transfer (Europe)",
         id: 6,
         icon: bd,
         value: "bank_transfer",
+        api_val: "bank",
         coming_soon: false,
       }
       : {},
@@ -101,7 +102,7 @@ const Channels = ({
     if (!methods || isLoading) return allChannels;
 
     return allChannels.filter(
-      (item) => methods?.includes(item.value),
+      (item) => methods?.includes(item.value) || methods?.includes(item.api_val),
     );
   }, [payoutChannelData, thunesAllowed, methods, isLoading]);
   return (
