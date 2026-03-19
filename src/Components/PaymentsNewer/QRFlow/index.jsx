@@ -42,6 +42,7 @@ import { currencies } from "../InternationalFlow/StepOne";
 import { apiErrorMessage } from "../InternationalFlow";
 import useTopupLimitCheck from "../../../hooks/Payments/useTopupLimitCheck";
 import GeneralNoticeModal from "../GeneralNoticeModal";
+import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
 
 const leftSideContent = [
     "Choose the beneficiary!",
@@ -542,6 +543,11 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
 
             console.log(decrypted)
             if (decrypted?.data?.paypal) exchange_rate_details.paypal = decrypted?.data?.paypal;
+            if (data.payment_type?.value === "bank_transfer") {
+                exchange_rate_details.plaid_currency = decrypted?.data?.converted_currency
+                exchange_rate_details.plaid_amount = decrypted?.data?.converted_amount
+                exchange_rate_details.plaid_fx = decrypted?.data?.converted_rate
+            }
 
             dataHandler("exchange_rate", exchange_rate_details)
             if (+amount > exchange_rate_details?.limits_used?.daily_sending_limit_used) {
@@ -825,6 +831,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                             <>
                                                                 <FeesComponent
                                                                     data={data}
+                                                                    plaidValues
                                                                 />
                                                                 {
                                                                     data.payment_type?.value === "paypal" && !data?.exchange_rate?.paypal?.paypal_currency_supported
@@ -1011,41 +1018,60 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                 data.step === 5
                                                 &&
                                                 (
-                                                    <>
-                                                        {
-                                                            !data.showCard
-                                                                ?
-                                                                <StepFive
-                                                                    data={data}
-                                                                />
-                                                                :
-                                                                <CreditCard
-                                                                    url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
-                                                                    tokenUrl={(t) => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                                                    data?.payment_type?.value === "bank_transfer" ?
+                                                        <PlaidBankTransfer
+                                                            data={data}
+                                                            dataHandler={dataHandler}
+                                                            endpoint="/api/plaid/initiate-w2w-payment"
+                                                            type="wallet_to_wallet"
+                                                            initiatePayload={() => {
+                                                                return {
+                                                                    "receiver_wallet_id": data.beneficiary_wallet?.wallet_id,
+                                                                    "sender_wallet_id": data.payment_type?.value !== "wallet" ? data.currency?._id : data?.wallet?._id,
+                                                                    "purpose": data.reason,
+                                                                    "amount": Number(String(data.recipient_amount)?.replace(/,/g, "")),
+                                                                    "type": "instant",
+                                                                    "payment_type": "qr_pay",
+                                                                    'description': data.comment,
+                                                                    "token": data.exchange_rate?.token || ""
+                                                                }
+                                                            }}
+                                                        />
+                                                        :
+                                                        <>
+                                                            {
+                                                                !data.showCard
+                                                                    ?
+                                                                    <StepFive
+                                                                        data={data}
+                                                                    />
+                                                                    :
+                                                                    <CreditCard
+                                                                        url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                                                                        tokenUrl={(t) => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                                                                        data={data}
+                                                                        dataHandler={dataHandler}
+                                                                    />
+                                                            }
+                                                            {
+                                                                data.showOtpModal
+                                                                &&
+                                                                <OtpConfirmation
+                                                                    callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : verifyOtp}
                                                                     data={data}
                                                                     dataHandler={dataHandler}
+                                                                    isLoading={data.loading}
+                                                                    isOpen={data.showOtpModal}
+                                                                    toggle={() => {
+                                                                        dataHandler("showOtpModal", false)
+                                                                    }}
+                                                                    resendHandler={sendOtp}
                                                                 />
-                                                        }
-                                                        {
-                                                            data.showOtpModal
-                                                            &&
-                                                            <OtpConfirmation
-                                                                callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : verifyOtp}
-                                                                data={data}
-                                                                dataHandler={dataHandler}
-                                                                isLoading={data.loading}
-                                                                isOpen={data.showOtpModal}
-                                                                toggle={() => {
-                                                                    dataHandler("showOtpModal", false)
-                                                                }}
-                                                                resendHandler={sendOtp}
-                                                                error={data.otpError}
-                                                            />
-                                                        }
-                                                    </>
+                                                            }
+                                                        </>
                                                 )
                                             }
-                                            <div className={styles.bottom}>
+                                            {((data.payment_type?.value !== "bank" && data?.payment_type?.value !== "bank_transfer") || data.step < 5) && <div className={styles.bottom}>
                                                 <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
                                                     <HelpCircle size={16} />
                                                     {t("Trouble Sending Money")}
@@ -1088,7 +1114,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                     <button disabled={disabledButton || data.loading} onClick={handleClick}>
                                                         {
 
-                                                            data.step === 5
+                                                            data.step === 5 && data.payment_type?.value !== "bank_transfer"
                                                                 ?
                                                                 t("Confirm")
                                                                 :
@@ -1098,6 +1124,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                     </button>
                                                 </div>
                                             </div>
+                                            }
                                         </div>
                                         {
                                             data.step === 4 && data.payment_type?.value === "wallet" && !data.show_payment_type
@@ -1250,44 +1277,64 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                             data.step === 5
                                                             &&
                                                             (
-                                                                <>
-                                                                    {
-                                                                        !data.showCard
-                                                                            ?
-                                                                            <StepFive
-                                                                                data={data}
-                                                                            />
-                                                                            :
-                                                                            <CreditCard
-                                                                                url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
-                                                                                tokenUrl={(t) => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                                                                data?.payment_type?.value === "bank_transfer" ?
+                                                                    <PlaidBankTransfer
+                                                                        data={data}
+                                                                        dataHandler={dataHandler}
+                                                                        endpoint="/api/plaid/initiate-w2w-payment"
+                                                                        type="wallet_to_wallet"
+                                                                        initiatePayload={() => {
+                                                                            return {
+                                                                                "receiver_wallet_id": data.beneficiary_wallet?.wallet_id,
+                                                                                "sender_wallet_id": data.payment_type?.value !== "wallet" ? data.currency?._id : data?.wallet?._id,
+                                                                                "purpose": data.reason,
+                                                                                "amount": Number(String(data.recipient_amount)?.replace(/,/g, "")),
+                                                                                "type": "instant",
+                                                                                "payment_type": "qr_pay",
+                                                                                'description': data.comment,
+                                                                                "token": data.exchange_rate?.token || ""
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                    :
+                                                                    <>
+                                                                        {
+                                                                            !data.showCard
+                                                                                ?
+                                                                                <StepFive
+                                                                                    data={data}
+                                                                                />
+                                                                                :
+                                                                                <CreditCard
+                                                                                    url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                                                                                    tokenUrl={(t) => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/w2w${data.selectedSavedCard?._id ? "-pan" : ""}-payment-confirmation/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken ?? data.cardTransactionDetails?.w2w_data}`}
+                                                                                    data={data}
+                                                                                    dataHandler={dataHandler}
+                                                                                />
+                                                                        }
+                                                                        {
+                                                                            data.showOtpModal
+                                                                            &&
+                                                                            <OtpConfirmation
+                                                                                callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : verifyOtp}
                                                                                 data={data}
                                                                                 dataHandler={dataHandler}
+                                                                                isLoading={data.loading}
+                                                                                isOpen={data.showOtpModal}
+                                                                                toggle={() => {
+                                                                                    dataHandler("showOtpModal", false)
+                                                                                }}
+                                                                                resendHandler={sendOtp}
+                                                                                error={data.otpError}
                                                                             />
-                                                                    }
-                                                                    {
-                                                                        data.showOtpModal
-                                                                        &&
-                                                                        <OtpConfirmation
-                                                                            callback={data.payment_type?.value === "card" ? initiateCardPayment : data.payment_type?.value === "paypal" ? initiatePaypalPayment : verifyOtp}
-                                                                            data={data}
-                                                                            dataHandler={dataHandler}
-                                                                            isLoading={data.loading}
-                                                                            isOpen={data.showOtpModal}
-                                                                            toggle={() => {
-                                                                                dataHandler("showOtpModal", false)
-                                                                            }}
-                                                                            resendHandler={sendOtp}
-                                                                            error={data.otpError}
-                                                                        />
-                                                                    }
-                                                                </>
+                                                                        }
+                                                                    </>
                                                             )
                                                         }
                                                     </>
                                             }
                                         </div>
-                                        <div className={styles.bottom}>
+                                        {((data.payment_type?.value !== "bank" && data?.payment_type?.value !== "bank_transfer") || data.step < 5) && <div className={styles.bottom}>
                                             <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
                                                 <HelpCircle size={16} />
                                                 {t("Trouble Sending Money")}
@@ -1331,7 +1378,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                 }
                                                 <button className={styles.full} disabled={disabledButton || data.loading} onClick={handleClick}>
                                                     {
-                                                        data.step === 5
+                                                        data.step === 5 && data.payment_type?.value !== "bank_transfer"
                                                             ?
                                                             t("Confirm")
                                                             :
@@ -1339,7 +1386,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                                     }
                                                 </button>
                                             </div>
-                                        </div>
+                                        </div>}
                                     </>
                             }
                         </div>
