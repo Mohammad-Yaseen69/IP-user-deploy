@@ -92,10 +92,8 @@ const PaymentChannelUI = ({
         setInstapayWallets(newOTPValues);
     };
 
-    // For wallet ID handling in edit mode
     const walletIdLengthCheck = (item) => {
         if (isEdit) {
-            // In edit mode, wallet item may be object with wallet_id
             return typeof item === "object" ? (item.wallet_id && item.wallet_id.length === 8) : item.length === 8;
         }
         return item.length === 8;
@@ -122,7 +120,7 @@ const PaymentChannelUI = ({
                         selectedCountryDetails?.individual_receiving_channels?.bank_account
                     )
                     &&
-                    <button style={{
+                    <button type="button" style={{
                         border: "none",
                         outline: "none",
                         padding: "1rem",
@@ -130,7 +128,6 @@ const PaymentChannelUI = ({
                         flex: 1,
                         textAlign: "center",
                         cursor: "pointer",
-                        type: "button",
                         borderRadius: "10px",
                         background: active === 1 ? "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)" : "transparent",
                         color: active === 1 ? "white" : "inherit",
@@ -164,7 +161,7 @@ const PaymentChannelUI = ({
                         selectedCountryDetails?.individual_receiving_channels?.mobile_money
                     )
                     &&
-                    <button style={{
+                    <button type="button" style={{
                         border: "none",
                         outline: "none",
                         padding: "1rem",
@@ -172,7 +169,6 @@ const PaymentChannelUI = ({
                         flex: 1,
                         textAlign: "center",
                         cursor: "pointer",
-                        type: "button",
                         borderRadius: "10px",
                         background: active === 2 ? "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)" : "transparent",
                         color: active === 2 ? "white" : "inherit",
@@ -206,7 +202,7 @@ const PaymentChannelUI = ({
                         selectedCountryDetails?.individual_receiving_channels?.card_payment
                     )
                     &&
-                    <button style={{
+                    <button type="button" style={{
                         border: "none",
                         outline: "none",
                         padding: "1rem",
@@ -214,7 +210,6 @@ const PaymentChannelUI = ({
                         flex: 1,
                         textAlign: "center",
                         cursor: "pointer",
-                        type: "button",
                         borderRadius: "10px",
                         background: active === 3 ? "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)" : "transparent",
                         color: active === 3 ? "white" : "inherit",
@@ -239,14 +234,13 @@ const PaymentChannelUI = ({
                         }
                     </button>
                 }
-                <button style={{
+                <button type="button" style={{
                     all: "unset",
                     padding: mobileView ? ".25rem" : "1rem",
                     boxShadow: "0 0 3px rgba(128,128,128,0.4)",
                     flex: 1,
                     textAlign: "center",
                     cursor: "pointer",
-                    type: "button",
                     borderRadius: "10px",
                     background: active === 4 ? "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)" : "transparent",
                     color: active === 4 ? "white" : "inherit",
@@ -272,14 +266,13 @@ const PaymentChannelUI = ({
                 {
                     userDetails?.level?.wallet_to_wallet?.send
                     &&
-                    <button style={{
+                    <button type="button" style={{
                         all: "unset",
                         padding: mobileView ? ".25rem" : "1rem",
                         boxShadow: "0 0 3px rgba(128,128,128,0.4)",
                         flex: 1,
                         textAlign: "center",
                         cursor: "pointer",
-                        type: "button",
                         borderRadius: "10px",
                         background: active === 5 ? "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)" : "transparent",
                         color: active === 5 ? "white" : "inherit",
@@ -314,7 +307,7 @@ const PaymentChannelUI = ({
                         selectedCountryDetails?.individual_receiving_channels?.cash_pickup
                     )
                     &&
-                    <button style={{
+                    <button type="button" style={{
                         border: "none",
                         outline: "none",
                         padding: "1rem",
@@ -322,7 +315,6 @@ const PaymentChannelUI = ({
                         flex: 1,
                         textAlign: "center",
                         cursor: "pointer",
-                        type: "button",
                         borderRadius: "10px",
                         background: active === 6 ? "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)" : "transparent",
                         color: active === 6 ? "white" : "inherit",
