@@ -16,6 +16,7 @@ const detectSentryBlocked = async () => {
   try {
     const res = await fetch("https://o4509485673349120.ingest.us.sentry.io/api/4509485675118592/envelope/?sentry_version=7&sentry_key=448eafaae4776c67a2f5831cf64a23e5&sentry_client=sentry.javascript.react%2F9.41.0", {
       method: "POST",
+      mode: "no-cors",
       body: JSON.stringify({
         event_id: "123",
         message: "test",
@@ -42,16 +43,19 @@ const AdBlockCheck = () => {
 
   useEffect(() => {
     const runChecks = async () => {
-      if (adBlockDetected) {
+      const isBrave = await detectBrave();
+
+      if (adBlockDetected && isBrave) {
         setShow(true);
         return;
       }
 
-      const isBrave = await detectBrave();
-      const isSentryBlocked = await detectSentryBlocked();
-      if (isBrave && isSentryBlocked) {
-        setShow(true);
-        return;
+      if (isBrave) {
+        const isSentryBlocked = await detectSentryBlocked();
+        if (isSentryBlocked) {
+          setShow(true);
+          return;
+        }
       }
     };
 
