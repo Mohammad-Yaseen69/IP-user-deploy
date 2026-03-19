@@ -77,7 +77,7 @@ const useGetAllChannelPayers = ({ data, payoutChannelData, toggleModalHandler })
 
                         payers = payers.filter((payer) => {
                             if (payer?.name?.toLowerCase() === "moncash") {
-                                return userDetails?.country_iso_code === "CAN" || userDetails?.country_iso_code === "CHE" || userDetails?.country_iso_code === "PAK"
+                                return userDetails?.country_iso_code === "CAN" || userDetails?.country_iso_code === "CHE"
                             } else {
                                 return true
                             }
