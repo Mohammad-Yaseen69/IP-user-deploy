@@ -23,7 +23,8 @@ const PlaidBankTransfer = ({
   type = "add_funds",
   toggle,
   initiatePayload,
-  endpoint = ""
+  endpoint = "",
+  handleBackClick,
 }) => {
   const { userDetails, authHeader, setProfileLockTime } = useContext(UserContext);
   const { t } = useTranslation();
@@ -229,7 +230,7 @@ const PlaidBankTransfer = ({
             navigate,
             fallback: "We are unable to process your request at the moment, please try again later.",
           });
-        } 
+        }
       },
     });
 
@@ -313,7 +314,11 @@ const PlaidBankTransfer = ({
   const onBackClickHandler = () => {
     if (plaidStep === 1) {
       if (type === "wallet_to_wallet") {
-        dataHandler("step", 4);
+        if (handleBackClick) {
+          handleBackClick()
+        } else {
+          dataHandler("step", 4);
+        }
       } else {
         dataHandler("step", 3);
         dataHandler("exchange_rate", data.exchange_rate_backup);

@@ -317,6 +317,10 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                     dataHandler("show_cards", true)
                     dataHandler("step", data.step + 1)
                 }
+                if (data?.payment_type?.value === "bank_transfer") {
+                    dataHandler("show_receipt", true)
+                    dataHandler("step", data.step + 1)
+                }
                 break;
             case 2:
                 if (data.show_cards) {
@@ -430,6 +434,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                         <>
                                                             <FeesComponent
                                                                 data={data}
+                                                                plaidValues
                                                             />
                                                             {
                                                                 data.payment_type?.value === "paypal" && !data?.exchange_rate?.paypal?.paypal_currency_supported
@@ -576,6 +581,10 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                                         "token": data.exchange_rate?.token || ""
                                                                     }
                                                                 }}
+                                                                handleBackClick={() => {
+                                                                    dataHandler("step", 1)
+                                                                    dataHandler("show_cards", false)
+                                                                }}
                                                             />
                                                             :
                                                             <StepFive
@@ -604,31 +613,33 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                     error={data.otp_error}
                                                 />
                                             }
-                                            <div className={styles.bottom}>
-                                                <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
-                                                    <HelpCircle size={16} />
-                                                    {t("Trouble Sending Money")}
-                                                </Link>
-                                                <div className={styles?.buttons}>
-                                                    <button className={styles.transparent} disabled={data.loading} onClick={handleBackClick}>{t("Back")}</button>
-                                                    <button disabled={disabledButton || data.loading || data.exchange_rate_error} onClick={handleClick}>
-                                                        {
-                                                            // userDetails?.user?.kyc_status === "approved"
-                                                            //     ?
-                                                            //     (
-                                                            data.step === 2 && data.show_receipt && data.payment_type?.value !== "bank_transfer"
-                                                                ?
-                                                                t("Confirm")
-                                                                :
-                                                                t("Next")
-                                                            // )
-                                                            // :
-                                                            // t("Identify verification required")
-                                                        }
-                                                        <ChevronRight size={18} />
-                                                    </button>
+                                            {((data.payment_type?.value !== "bank" && data?.payment_type?.value !== "bank_transfer") || data.step < 2) &&
+                                                <div className={styles.bottom}>
+                                                    <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
+                                                        <HelpCircle size={16} />
+                                                        {t("Trouble Sending Money")}
+                                                    </Link>
+                                                    <div className={styles?.buttons}>
+                                                        <button className={styles.transparent} disabled={data.loading} onClick={handleBackClick}>{t("Back")}</button>
+                                                        <button disabled={disabledButton || data.loading || data.exchange_rate_error} onClick={handleClick}>
+                                                            {
+                                                                // userDetails?.user?.kyc_status === "approved"
+                                                                //     ?
+                                                                //     (
+                                                                data.step === 2 && data.show_receipt && data.payment_type?.value !== "bank_transfer"
+                                                                    ?
+                                                                    t("Confirm")
+                                                                    :
+                                                                    t("Next")
+                                                                // )
+                                                                // :
+                                                                // t("Identify verification required")
+                                                            }
+                                                            <ChevronRight size={18} />
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            }
                                         </div>
                                     </>
                             }
@@ -780,32 +791,34 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                             </>
                                     }
                                 </div>
-                                <div className={paym_styles.bottom} style={{ flexDirection: "column-reverse", margin: "2rem 0", gap: "1.5rem" }}>
-                                    <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
-                                        <HelpCircle size={16} />
-                                        {t("Trouble Sending Money")}
-                                    </Link>
-                                    <div className={paym_styles?.buttons}>
-                                        <button disabled={data.loading} onClick={handleBackClick}>
-                                            <ChevronLeft />
-                                        </button>
-                                        <button disabled={disabledButton || data.loading || data.exchange_rate_error} className={paym_styles.full} onClick={handleClick}>
-                                            {
-                                                // userDetails?.user?.kyc_status === "approved"
-                                                //     ?
-                                                //     (
-                                                data.step === 2 && data.show_receipt && data.payment_type?.value !== "bank_transfer"
-                                                    ?
-                                                    t("Confirm")
-                                                    :
-                                                    t("Next")
-                                                // )
-                                                // :
-                                                // t("Identify verification required")
-                                            }
-                                        </button>
+                                {((data.payment_type?.value !== "bank" && data?.payment_type?.value !== "bank_transfer") || data.step < 2) &&
+                                    <div className={paym_styles.bottom} style={{ flexDirection: "column-reverse", margin: "2rem 0", gap: "1.5rem" }}>
+                                        <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
+                                            <HelpCircle size={16} />
+                                            {t("Trouble Sending Money")}
+                                        </Link>
+                                        <div className={paym_styles?.buttons}>
+                                            <button disabled={data.loading} onClick={handleBackClick}>
+                                                <ChevronLeft />
+                                            </button>
+                                            <button disabled={disabledButton || data.loading || data.exchange_rate_error} className={paym_styles.full} onClick={handleClick}>
+                                                {
+                                                    // userDetails?.user?.kyc_status === "approved"
+                                                    //     ?
+                                                    //     (
+                                                    data.step === 2 && data.show_receipt && data.payment_type?.value !== "bank_transfer"
+                                                        ?
+                                                        t("Confirm")
+                                                        :
+                                                        t("Next")
+                                                    // )
+                                                    // :
+                                                    // t("Identify verification required")
+                                                }
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
+                                }
                             </div>
                         </div>
                     </div>

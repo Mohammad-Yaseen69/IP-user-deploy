@@ -153,6 +153,12 @@ const PaymentsFlow = ({ item }) => {
 
             if (decrypted?.data?.paypal) exchange_rate_details.paypal = decrypted?.data?.paypal;
 
+            if (data.payment_type?.value === "bank_transfer") {
+                exchange_rate_details.plaid_currency = decrypted?.data?.converted_currency
+                exchange_rate_details.plaid_amount = decrypted?.data?.converted_amount
+                exchange_rate_details.plaid_fx = decrypted?.data?.converted_rate
+            }
+
             updateData("exchange_rate", exchange_rate_details)
             if (+item?.amount > exchange_rate_details?.limits_used?.daily_sending_limit_used) {
                 updateData("exchange_rate_error", "Daily sending limit exceed.")

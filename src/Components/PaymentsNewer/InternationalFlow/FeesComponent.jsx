@@ -243,7 +243,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                 }
 
                 {
-                    data.payment_type?.value === "bank_transfer" && !PlaidCurrencies.includes(data.exchange_rate?.sending?.currency) && plaidValues ?
+                    data.payment_type?.value === "bank_transfer" && !PlaidCurrencies.includes(data.exchange_rate?.sending?.currency) && plaidValues && data.exchange_rate?.plaid_amount ?
                         <>
                             <div
                                 style={{
