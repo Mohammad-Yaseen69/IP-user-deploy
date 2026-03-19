@@ -938,7 +938,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                             </div>
                         </div>
 
-                        <div className={styles.detailsContainer}>
+                        {/* <div className={styles.detailsContainer}>
                             <h4 className={styles.title}>{t('Card Settings')}</h4>
 
                             <div style={{ display: "grid", gridTemplateColumns: window.innerWidth > 1000 ? "1fr 1fr 1fr" : "1fr", gap: "10px", width: "100%" }}>
@@ -998,7 +998,7 @@ const CardPurchased = ({ cards, setCardPurchased, current, setCurrent, currentCa
                                     <Tooltip isOpen={tooltipOpen.reportLost}>{t('Coming Soon')}</Tooltip>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                         <div style={{ backgroundColor: "white" }} className={styles.detailsContainer}>
                             <div style={{ display: "flex", justifyContent: "space-between", width: '100%', alignItems: window.innerWidth > 1000 && 'center', flexDirection: window.innerWidth < 1000 && "column", }}>
                                 <h4 className={styles.title}>{t('Mobile Payments')}</h4>

@@ -29,6 +29,7 @@ import TrustpaymentPage from '../../AddFunds/WalletFund/CreditTransaction'
 import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow'
 import useTopupLimitCheck from '../../../hooks/Payments/useTopupLimitCheck'
 import GeneralNoticeModal from '../../PaymentsNewer/GeneralNoticeModal'
+import PlaidBankTransfer from '../../AddFunds/WalletFundsFlow/PlaidBankTransfer'
 
 const headings = ["Select Payment Type", "Review Payment"]
 
@@ -558,12 +559,32 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                             {
                                                 data.step === 2 && data.show_receipt
                                                     ?
-                                                    <StepFive
-                                                        showMid={false}
-                                                        sending_currency={item?.currency?.code}
-                                                        data={data}
-                                                        dataHandler={dataHandler}
-                                                    />
+                                                    (
+                                                        data?.payment_type?.value === "bank_transfer" ?
+                                                            <PlaidBankTransfer
+                                                                data={data}
+                                                                dataHandler={dataHandler}
+                                                                endpoint="/api/plaid/initiate-w2w-payment"
+                                                                type="wallet_to_wallet"
+                                                                initiatePayload={() => {
+                                                                    return {
+                                                                        request_id: item.reference_id,
+                                                                        account_id: userDetails._id,
+                                                                        sender_wallet_id: data.payment_type?.value !== "wallet" ? data.currency_wallet?._id : data.wallet?._id,
+                                                                        purpose: "xyz",
+                                                                        payment_type: "payment_request",
+                                                                        "token": data.exchange_rate?.token || ""
+                                                                    }
+                                                                }}
+                                                            />
+                                                            :
+                                                            <StepFive
+                                                                showMid={false}
+                                                                sending_currency={item?.currency?.code}
+                                                                data={data}
+                                                                dataHandler={dataHandler}
+                                                            />
+                                                    )
                                                     :
                                                     ""
                                             }
@@ -595,7 +616,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                             // userDetails?.user?.kyc_status === "approved"
                                                             //     ?
                                                             //     (
-                                                            data.step === 2 && data.show_receipt
+                                                            data.step === 2 && data.show_receipt && data.payment_type?.value !== "bank_transfer"
                                                                 ?
                                                                 t("Confirm")
                                                                 :
@@ -711,12 +732,32 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                 {
                                                     data.step === 2 && data.show_receipt
                                                         ?
-                                                        <StepFive
-                                                            showMid={false}
-                                                            sending_currency={item?.currency?.code}
-                                                            data={data}
-                                                            dataHandler={dataHandler}
-                                                        />
+                                                        (
+                                                            data?.payment_type?.value === "bank_transfer" ?
+                                                                <PlaidBankTransfer
+                                                                    data={data}
+                                                                    dataHandler={dataHandler}
+                                                                    endpoint="/api/plaid/initiate-w2w-payment"
+                                                                    type="wallet_to_wallet"
+                                                                    initiatePayload={() => {
+                                                                        return {
+                                                                            request_id: item.reference_id,
+                                                                            account_id: userDetails._id,
+                                                                            sender_wallet_id: data.payment_type?.value !== "wallet" ? data.currency_wallet?._id : data.wallet?._id,
+                                                                            purpose: "xyz",
+                                                                            payment_type: "payment_request",
+                                                                            "token": data.exchange_rate?.token || ""
+                                                                        }
+                                                                    }}
+                                                                />
+                                                                :
+                                                                <StepFive
+                                                                    showMid={false}
+                                                                    sending_currency={item?.currency?.code}
+                                                                    data={data}
+                                                                    dataHandler={dataHandler}
+                                                                />
+                                                        )
                                                         :
                                                         ""
                                                 }
@@ -753,7 +794,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                 // userDetails?.user?.kyc_status === "approved"
                                                 //     ?
                                                 //     (
-                                                data.step === 2 && data.show_receipt
+                                                data.step === 2 && data.show_receipt && data.payment_type?.value !== "bank_transfer"
                                                     ?
                                                     t("Confirm")
                                                     :

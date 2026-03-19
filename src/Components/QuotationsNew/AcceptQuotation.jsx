@@ -29,6 +29,7 @@ import TrustpaymentPage from "../AddFunds/WalletFund/CreditTransaction";
 import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow";
 import useTopupLimitCheck from "../../hooks/Payments/useTopupLimitCheck";
 import GeneralNoticeModal from "../PaymentsNewer/GeneralNoticeModal";
+import PlaidBankTransfer from "../AddFunds/WalletFundsFlow/PlaidBankTransfer";
 
 const initialState = {
     step: 1,
@@ -211,6 +212,11 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
             }
 
             if (decrypted?.data?.paypal) exchange_rate_details.paypal = decrypted?.data?.paypal;
+            if (data.payment_type?.value === "bank_transfer") {
+                exchange_rate_details.plaid_currency = decrypted?.data?.converted_currency
+                exchange_rate_details.plaid_amount = decrypted?.data?.converted_amount
+                exchange_rate_details.plaid_fx = decrypted?.data?.converted_rate
+            }
 
             dataHandler("exchange_rate", exchange_rate_details)
             if (+item?.amount > exchange_rate_details?.limits_used?.daily_sending_limit_used) {
@@ -799,12 +805,29 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                                             {
                                                 data.step === 2 && data.show_receipt
                                                     ?
-                                                    <StepFive
-                                                        showMid={false}
-                                                        sending_currency={item?.amount_reciever_currency?.currency?.code}
-                                                        data={data}
-                                                        dataHandler={dataHandler}
-                                                    />
+                                                    (
+                                                        data?.payment_type?.value === "bank_transfer" ?
+                                                            <PlaidBankTransfer
+                                                                data={data}
+                                                                dataHandler={dataHandler}
+                                                                endpoint="/api/plaid/initiate-w2w-payment"
+                                                                type="wallet_to_wallet"
+                                                                initiatePayload={() => {
+                                                                    return {
+                                                                        receiver_wallet_id: data.payment_type?.value !== "wallet" ? data.currency_wallet?._id : data.wallet?._id,
+                                                                        quotation_id: item?._id,
+                                                                        "token": data.exchange_rate?.token || ""
+                                                                    }
+                                                                }}
+                                                            />
+                                                            :
+                                                            <StepFive
+                                                                showMid={false}
+                                                                sending_currency={item?.amount_reciever_currency?.currency?.code}
+                                                                data={data}
+                                                                dataHandler={dataHandler}
+                                                            />
+                                                    )
                                                     :
                                                     ""
                                             }
@@ -836,7 +859,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                                                             // userDetails?.user?.kyc_status === "approved"
                                                             //     ?
                                                             //     (
-                                                            data.step === 2 && data.show_receipt
+                                                            data.step === 2 && data.show_receipt && data.payment_type?.value !== "bank_transfer"
                                                                 ?
                                                                 t("Confirm")
                                                                 :
@@ -983,12 +1006,29 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                                                     {
                                                         data.step === 2 && data.show_receipt
                                                             ?
-                                                            <StepFive
-                                                                showMid={false}
-                                                                sending_currency={item?.amount_reciever_currency?.currency?.code}
-                                                                data={data}
-                                                                dataHandler={dataHandler}
-                                                            />
+                                                            (
+                                                                data?.payment_type?.value === "bank_transfer" ?
+                                                                    <PlaidBankTransfer
+                                                                        data={data}
+                                                                        dataHandler={dataHandler}
+                                                                        endpoint="/api/plaid/initiate-w2w-payment"
+                                                                        type="wallet_to_wallet"
+                                                                        initiatePayload={() => {
+                                                                            return {
+                                                                                receiver_wallet_id: data.payment_type?.value !== "wallet" ? data.currency_wallet?._id : data.wallet?._id,
+                                                                                quotation_id: item?._id,
+                                                                                "token": data.exchange_rate?.token || ""
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                    :
+                                                                    <StepFive
+                                                                        showMid={false}
+                                                                        sending_currency={item?.amount_reciever_currency?.currency?.code}
+                                                                        data={data}
+                                                                        dataHandler={dataHandler}
+                                                                    />
+                                                            )
                                                             :
                                                             ""
                                                     }
@@ -1025,7 +1065,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
                                                 // userDetails?.user?.kyc_status === "approved"
                                                 //     ?
                                                 //     (
-                                                data.step === 2 && data.show_receipt
+                                                data.step === 2 && data.show_receipt && data.payment_type?.value !== "bank_transfer"
                                                     ?
                                                     t("Confirm")
                                                     :
