@@ -226,7 +226,7 @@ const HomeNewUpdated = () => {
                                         &&
                                         <OtherBalance />
                                     }
-                                    {/* {
+                                    {
                                         userWallets.some(item => item?.balance?.reserved)
                                             ?
                                             <div className={styles.scroll_view} style={{ maxWidth: "33vw" }}>
@@ -244,7 +244,7 @@ const HomeNewUpdated = () => {
                                                     ))
                                                 }
                                             </div>
-                                    } */}
+                                    }
                                 </div>
                             </div>
                             <div className={styles.ban_ben}>

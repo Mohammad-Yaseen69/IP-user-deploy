@@ -171,7 +171,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
             }
 
 
-            {!invoice && showPlansModal &&
+            {!invoice &&
                 <PlansModal
                     isOpen={showPlansModal}
                     toggle={() => setShowPlansModal(false)}

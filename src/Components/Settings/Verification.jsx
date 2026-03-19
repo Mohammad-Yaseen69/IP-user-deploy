@@ -15,6 +15,7 @@ import { toast } from 'react-toastify';
 import VerificationGuide from './VerificationGuide';
 import errors from "../AddFunds/TrustPaymentErrors.json"
 import { AiOutlineClockCircle } from 'react-icons/ai';
+import { logger } from '@sentry/react';
 
 const industries = [
     "Arts & Entertainment",
@@ -405,7 +406,14 @@ const Verification = () => {
                                 }} disabled={loading || !message || !(occupation === "Other" ? occupationOther : occupation) || !(
                                     userDetails?.user?.kyc_status !== "declined" ||
                                     userDetails?.user?.kyc_status !== "unverified"
-                                )} onClick={() => userDetails?.kyc_verification_paid ? handleVerify() : setShowVerificationModal(true)}>
+                                )} onClick={() => {
+                                    logger.info(`User ${userDetails?.first_name || userDetails?.company_name} ${userDetails?.last_name} clicked on start verification his status is ${userDetails?.user?.kyc_status} and paid status is ${userDetails?.kyc_verification_paid}`)
+                                    if (userDetails?.kyc_verification_paid) {
+                                        handleVerify()
+                                    } else {
+                                        setShowVerificationModal(true)
+                                    }
+                                }}>
                                     {t("Start Verification")}
                                 </Button>
                                 : ""

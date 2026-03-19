@@ -5,6 +5,7 @@ import { Info } from "react-feather"
 import PaypalCurrencies from "../../AddFunds/PaypalCurrencies.json"
 import FeesComponent from "../../PaymentsNewer/InternationalFlow/FeesComponent"
 import InstaPayLoader from "../../Loader"
+import { PlaidCurrencies } from "../../AddFunds/WalletFundsFlow"
 
 
 const StepOne = ({ data, dataHandler, allowed, wallet }) => {
@@ -34,6 +35,14 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
             icon: pagSvgs.wallet,
             active_icon: pagSvgs.wallet_a,
             api_val: "bank_deposit"
+        },
+        {
+            name: "Bank Transfer (Europe Only)",
+            value: "bank_transfer",
+            id: 2,
+            icon: pagSvgs.wallet,
+            active_icon: pagSvgs.wallet_a,
+            api_val: "bank"
         },
         {
             name: "Mobile Wallet",
@@ -102,6 +111,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                             totalLabel="Amount To Pay"
                             bright={true}
                             guest={true}
+                            plaidValues={true}
                             extraContent={
                                 data.payment_type?.value === "card" && data.step > 3
                                     ?

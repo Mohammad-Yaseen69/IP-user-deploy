@@ -31,65 +31,66 @@ const Channels = ({
   const payoutChannelData = [
     userDetails?.level?.topup_channel?.card_payment
       ? {
-          name: "Payment Card",
-          id: 5,
-          icon: pc,
-          value: "card",
-          coming_soon:
-            userDetails?.level?.topup_channel?.card_payment === "coming_soon",
-        }
+        name: "Payment Card",
+        id: 5,
+        icon: pc,
+        value: "card",
+        coming_soon:
+          userDetails?.level?.topup_channel?.card_payment === "coming_soon",
+      }
       : {},
     userDetails?.level?.topup_channel?.paypal
       ? {
-          name: "Paypal",
-          id: 5,
-          icon: pc,
-          value: "paypal",
-          coming_soon:
-            userDetails?.level?.topup_channel?.paypal === "coming_soon",
-        }
+        name: "Paypal",
+        id: 5,
+        icon: pc,
+        value: "paypal",
+        coming_soon:
+          userDetails?.level?.topup_channel?.paypal === "coming_soon",
+      }
       : {},
     userDetails?.level?.topup_channel?.bank_deposit
       ? {
-          name: "Bank Deposit",
-          id: 2,
-          icon: bd,
-          value: "bank",
-          coming_soon:
-            userDetails?.level?.topup_channel?.bank_deposit === "coming_soon",
-        }
+        name: "Bank Deposit",
+        id: 2,
+        icon: bd,
+        value: "bank",
+        coming_soon:
+          userDetails?.level?.topup_channel?.bank_deposit === "coming_soon",
+      }
       : {},
-    userDetails?.level?.topup_channel?.card_payment
+    userDetails?.level?.topup_channel?.bank
       ? {
-          name: "EU Bank Tranfer",
-          id: 6,
-          icon: bd,
-          value: "EU_bank_transfer",
-          coming_soon: false,
-        }
+        name: "Bank Transfer (Europe)",
+        id: 6,
+        icon: bd,
+        value: "bank_transfer",
+        api_val: "bank",
+        coming_soon: false,
+      }
       : {},
     userDetails?.level?.topup_channel?.crypto
       ? {
-          name: "Crypto Transfer",
-          id: 2,
-          icon: bd,
-          value: "crypto",
-          coming_soon:
-            userDetails?.level?.topup_channel?.crypto === "coming_soon",
-        }
+        name: "Crypto Transfer",
+        id: 2,
+        icon: bd,
+        value: "crypto",
+        coming_soon:
+          userDetails?.level?.topup_channel?.crypto === "coming_soon",
+      }
       : {},
   ];
 
   const thunesAllowed = [
     userDetails?.level?.topup_channel?.mobile_money
       ? {
-          name: "Mobile Wallet",
-          id: 1,
-          icon: mw,
-          value: "mobile_wallet",
-          // coming_soon: userDetails?.level?.topup_channel?.mobile_money === "coming_soon",
-          sub_name: "wallet",
-        }
+        name: "Mobile Wallet",
+        id: 1,
+        icon: mw,
+        value: "mobile_wallet",
+        // coming_soon: userDetails?.level?.topup_channel?.mobile_money === "coming_soon",
+        sub_name: "wallet",
+      }
       : {},
   ];
 
@@ -101,7 +102,7 @@ const Channels = ({
     if (!methods || isLoading) return allChannels;
 
     return allChannels.filter(
-      (item) => methods?.includes(item.value) || item.value === "EU_bank_transfer",
+      (item) => methods?.includes(item.value) || methods?.includes(item.api_val),
     );
   }, [payoutChannelData, thunesAllowed, methods, isLoading]);
   return (

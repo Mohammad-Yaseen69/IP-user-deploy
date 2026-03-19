@@ -102,6 +102,34 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
                             autoOk
                         />
                     </div>
+
+                    {data.payment_type?.value === "card" &&
+                        <>
+                            <div className={styles.inpt_co}>
+                                <label>
+                                    {t("Customer Town")}
+                                </label>
+                                <input
+                                    type="text"
+                                    value={data.customerTown}
+                                    onChange={(e) => dataHandler("customerTown", e.target.value)}
+                                    required={data.payment_type?.value === "card"}
+                                />
+                            </div>
+                            <div className={styles.inpt_co}>
+                                <label>
+                                    {t("Customer Street")}{" "}
+                                </label>
+                                <input
+                                    type="text"
+                                    value={data.customerStreet}
+                                    onChange={(e) => dataHandler("customerStreet", e.target.value)}
+                                    required={data.payment_type?.value === "card"}
+                                />
+                            </div>
+                        </>
+                    }
+
                     <div className={styles.inpt_co}>
                         <label>
                             {isReferenceRequired ? t("Ucard Number or Sharer ID") : t("Payment Reference")} {!isReferenceRequired && `(${t("Optional")})`}{" "}

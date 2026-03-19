@@ -1,9 +1,9 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import styles from "./BankDeposit.module.scss";
 import { useTranslation } from "react-i18next";
 import { useMutation } from "@tanstack/react-query";
 import { UserContext } from "../../../Context/UserContext";
-import { ChevronRight, Check } from "react-feather";
+import { ChevronRight, Check, Info } from "react-feather";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { formatCurrency } from "../../../Helper/AmountFormat";
@@ -12,18 +12,24 @@ import axios from "axios";
 import { usePlaidLink } from "react-plaid-link";
 import cardStyles from "../../PaymentsNewer/InternationalFlow/styles/creditcard.module.css";
 import logo_w from "../../../assets/images/logo/logo_white.png";
+import { apiWrapper } from "../../../utils/Functions/apiWrapper";
+import { PLAID_EXIT_MAP } from "./PlaidExistMap";
+import { handlePaymentApiError } from "../../../utils/Functions/handlePaymentApiError";
+import { PlaidCurrencies } from ".";
 
 const PlaidBankTransfer = ({
   data,
   dataHandler,
   type = "add_funds",
   toggle,
+  initiatePayload,
+  endpoint = ""
 }) => {
-  const { userDetails, authHeader } = useContext(UserContext);
+  const { userDetails, authHeader, setProfileLockTime } = useContext(UserContext);
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [plaidStep, setPlaidStep] = useState(1);
-  const [showAddNewBank, setShowAddNewBank] = useState(false);
+  const [showAddNewBank, setShowAddNewBank] = useState(true);
   const [savedBanks, setSavedBanks] = useState([]);
   const [loadingSavedBanks, setLoadingSavedBanks] = useState(true);
   const [selectedBankId, setSelectedBankId] = useState(null);
@@ -35,8 +41,23 @@ const PlaidBankTransfer = ({
   const [pendingTransactionId, setPendingTransactionId] = useState(null);
 
   useEffect(() => {
-    fetchSavedBanks();
+    if (userDetails?._id) {
+      fetchSavedBanks();
+    }
   }, [userDetails?._id]);
+
+  useEffect(() => {
+    if (plaidStep === 4 && type === "add_funds") {
+      const redirectTimer = setTimeout(() => {
+        toast.success("Redirecting to wallets...");
+        setTimeout(() => {
+          navigate("/wallets");
+        }, 500);
+      }, 3000);
+
+      return () => clearTimeout(redirectTimer);
+    }
+  }, [plaidStep, navigate]);
 
   const fetchSavedBanks = async () => {
     try {
@@ -66,50 +87,54 @@ const PlaidBankTransfer = ({
   };
 
   calculateFee();
-  const amount = data.exchange_rate?.sending?.amount || 0;
-  const fee = data.exchange_rate?.fee?.amount || 0;
-  const totalAmount = amount - fee;
-  const { mutateAsync: initiatePlaidPayment, isPending: isInitiatingPlaid } =
-    useMutation({
-      mutationFn: async () => {
-        const payload = {
-          userId: userDetails?._id,
-          amount: data.exchange_rate?.sending?.amount,
-          walletId: data.wallet?._id,
-          walletCurrency: data.wallet?.currency?.code,
-          recipientIban: recipientData.iban,
-          saveForFutureUse: recipientData.saveForFutureUse,
-          fee: data.exchange_rate?.fee?.amount ?? 0,
-          plaidAmount:
-            data.exchange_rate?.plaid_amount ??
-            data.exchange_rate?.sending?.amount,
-          plaidCurrency:
-            data.exchange_rate?.plaid_currency ?? data.wallet?.currency?.code,
-        };
-        console.log("Initiating Plaid Payment with payload:", payload);
-        const response = await axios.post(
-          `${import.meta.env.VITE_IP_DEV_API}/api/plaid/initiate-payment`,
-          payload,
-          { headers: authHeader },
-        );
-        console.log("Plaid initiation response:", response.data);
-        return response.data;
-      },
-      onSuccess: (res) => {
-        setLinkToken(res?.data?.linkToken);
-        setPendingTransactionId(
-          res?.data?.transactionId || res?.data?.data?.transactionId || null,
-        );
-        setPlaidStep(2);
-      },
-      onError: (error) => {
-        console.error("Failed to initiate Plaid payment:", error);
+
+  const { mutateAsync: initiatePlaidPayment, isPending: isInitiatingPlaid } = useMutation({
+    mutationFn: async () => {
+      const initiatePayloadResponse = {
+        ...initiatePayload(true),
+        recipient_iban: recipientData.iban,
+        saveForFutureUse: recipientData.saveForFutureUse,
+      }
+
+      if (type === "add_funds") {
+        initiatePayloadResponse.recipientIban = recipientData.iban
+      }
+
+      console.log("Initiating Plaid Payment with payload:", initiatePayloadResponse);
+
+      const response = await apiWrapper({
+        endpoint: type === "payment_address" ? "/api/guest-pay/initiate-bank-payment" : endpoint || "/api/plaid/initiate-payment",
+        method: "POST",
+        payload: initiatePayloadResponse,
+        isEncrypted: type === "add_funds" || type === "wallet_to_wallet" ? false : true,
+        isDecrypted: type === "add_funds" ? false : true,
+      })
+      console.log("Plaid initiation response:", response);
+      return response;
+    },
+    onSuccess: (res) => {
+      console.log(res)
+      setLinkToken(res?.linkToken || res?.data?.linkToken);
+      setPendingTransactionId(res?.transaction_id || res?.data?.transactionId || res?.data?.data?.transactionId || null);
+      setPlaidStep(2);
+    },
+    onError: (error) => {
+      console.error("Failed to initiate Plaid payment:", error);
+      if (type !== "payment_address") {
+        handlePaymentApiError({
+          error,
+          setError: (m) => dataHandler("error", m),
+          setProfileLockTime,
+          navigate,
+          fallback: "We are unable to process your request at the moment, please try again later.",
+        });
+      } else {
         toast.error(
-          error?.response?.data?.message ||
-            "Failed to initialize Plaid payment",
+          "We are unable to process your request at the moment, please try again later!"
         );
-      },
-    });
+      }
+    },
+  });
 
   const { mutateAsync: exchangePlaidToken, isPending: isExchangingToken } =
     useMutation({
@@ -120,19 +145,23 @@ const PlaidBankTransfer = ({
           userId: userDetails?._id,
           amount: data.exchange_rate?.sending?.amount,
           walletId: data.wallet?._id,
-          walletCurrency: data.wallet?.currency?.code,
+          walletCurrency: data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code,
           recipientIban: recipientData.iban,
           saveForFutureUse: recipientData.saveForFutureUse,
           transactionId: pendingTransactionId || null,
           bankName,
           fee: data.exchange_rate?.fee?.amount ?? 0,
+          transaction_id: pendingTransactionId || null
         };
         console.log("Exchanging Plaid token with payload:", payload);
-        const response = await axios.post(
-          `${import.meta.env.VITE_IP_DEV_API}/api/plaid/exchange-token`,
-          payload,
-          { headers: authHeader },
-        );
+        // 
+        const response = await apiWrapper({
+          endpoint: type === "payment_address" ? "/api/guest-pay/exchange-bank-token" : "/api/plaid/exchange-token",
+          method: "POST",
+          payload: payload,
+          isEncrypted: type === "payment_address" ? true : false,
+          isDecrypted: type === "payment_address" ? true : false,
+        })
         console.log("Token exchange response:", response.data);
         return response.data;
       },
@@ -143,32 +172,43 @@ const PlaidBankTransfer = ({
       onError: (error) => {
         console.error("Failed to exchange Plaid token:", error);
         toast.error(
-          error?.response?.data?.message || "Failed to authorize payment",
+          "we are unable to process your request at the moment, please try again later!" | error?.response?.data?.message || error.message
         );
         setPlaidStep(1);
       },
     });
-  // saved bank
+
   const { mutateAsync: performSavedBankPayment, isPending: isUsingSavedBank } =
     useMutation({
       mutationFn: async () => {
         if (!selectedBankId) {
           throw new Error("No bank selected");
         }
-        const payload = {
+        const topupPayload = {
           userId: userDetails?._id,
           amount: data.exchange_rate?.sending?.amount,
           walletId: data.wallet?._id,
           savedBankId: selectedBankId,
         };
+
+        const payload = {
+          ...initiatePayload(true),
+          recipient_iban: recipientData.iban,
+          saveForFutureUse: recipientData.saveForFutureUse,
+        }
+
         console.log("Using saved bank with payload:", payload);
-        const response = await axios.post(
-          `${import.meta.env.VITE_IP_DEV_API}/api/plaid/use-saved-bank`,
-          payload,
-          { headers: authHeader },
-        );
-        console.log("Saved bank payment response:", response.data);
-        return response.data;
+
+        const response = await apiWrapper({
+          endpoint: endpoint || "/api/plaid/use-saved-bank",
+          payload: type === "add_funds" ? topupPayload : payload,
+          isEncrypted: type === "add_funds" || type === "wallet_to_wallet" ? false : true,
+          isDecrypted: type === "add_funds" ? false : true,
+          method: "POST",
+        })
+
+        console.log("Saved bank payment response:", response);
+        return response;
       },
       onSuccess: () => {
         setPlaidStep(4);
@@ -177,15 +217,19 @@ const PlaidBankTransfer = ({
       onError: (error) => {
         console.error("Failed to use saved bank:", error);
         if (error.response?.data?.action === "RECONNECT_REQUIRED") {
-          toast.error(
-            "This bank needs to be reconnected. Please add it again.",
-          );
-          fetchSavedBanks();
+          dataHandler("error ", "This bank needs to be reconnected. Please add it again.",);
+          if (userDetails?._id) {
+            fetchSavedBanks();
+          }
         } else {
-          toast.error(
-            error?.response?.data?.message || "Failed to process payment",
-          );
-        }
+          handlePaymentApiError({
+            error,
+            setError: (m) => dataHandler("error", m),
+            setProfileLockTime,
+            navigate,
+            fallback: "We are unable to process your request at the moment, please try again later.",
+          });
+        } 
       },
     });
 
@@ -224,6 +268,12 @@ const PlaidBankTransfer = ({
             err2?.message || err2,
           );
         }
+
+        if (type === "add_funds") {
+          setTimeout(() => {
+            navigate("/wallets");
+          }, 1500);
+        }
       })();
       setPlaidStep(1);
     },
@@ -232,66 +282,19 @@ const PlaidBankTransfer = ({
     },
   });
 
-  const PLAID_EXIT_MAP = {
-    PAYMENT_INSUFFICIENT_FUNDS: {
-      code: "PAYMENT_INSUFFICIENT_FUNDS",
-      message:
-        "There isn't enough money in this account to complete the payment. Try again, or select another account or bank.",
-    },
-    PAYMENT_ACCOUNT_INVALID: {
-      code: "PAYMENT_ACCOUNT_INVALID",
-      message:
-        "This account is no longer active. Please select another account or bank.",
-    },
-    PAYMENT_ACCOUNT_BLOCKED: {
-      code: "PAYMENT_ACCOUNT_BLOCKED",
-      message:
-        "This account cannot be used for payments. Contact your bank or select another account.",
-    },
-    PAYMENT_LIMIT_EXCEEDED: {
-      code: "PAYMENT_LIMIT_EXCEEDED",
-      message:
-        "This payment exceeds your bank's daily or per-transaction limit. Try a smaller amount or contact your bank.",
-    },
-    PAYMENT_INVALID_CURRENCY: {
-      code: "PAYMENT_INVALID_CURRENCY",
-      message:
-        "The selected currency is not supported. Please choose EUR, GBP, or USD.",
-    },
-    PAYMENT_EXPIRED: {
-      code: "PAYMENT_EXPIRED",
-      message: "This payment session has expired. Please start a new payment.",
-    },
-    PAYMENT_CANCELLED: {
-      code: "PAYMENT_CANCELLED",
-      message: "Payment cancelled.",
-    },
-    UNKNOWN: {
-      code: "UNKNOWN",
-      message: "Payment cancelled or failed. Please try again.",
-    },
-  };
 
   const getExitPayload = (err) => {
     if (err) {
-      const errCode = (
-        err?.error_code ||
-        err?.errorCode ||
-        err?.code ||
-        ""
-      ).toString();
+      const errCode = (err?.error_code || err?.errorCode || err?.code || "").toString();
+
       if (errCode && PLAID_EXIT_MAP[errCode]) return PLAID_EXIT_MAP[errCode];
-      const rawMsg = (
-        err?.display_message ||
-        err?.error_message ||
-        err?.message ||
-        ""
-      ).toLowerCase();
-      if (rawMsg.includes("insufficient"))
-        return PLAID_EXIT_MAP.PAYMENT_INSUFFICIENT_FUNDS;
+
+      const rawMsg = (err?.display_message || err?.error_message || err?.message || "").toLowerCase();
+
+      if (rawMsg.includes("insufficient")) return PLAID_EXIT_MAP.PAYMENT_INSUFFICIENT_FUNDS;
       if (rawMsg.includes("expired")) return PLAID_EXIT_MAP.PAYMENT_EXPIRED;
-      if (rawMsg.includes("limit"))
-        return PLAID_EXIT_MAP.PAYMENT_LIMIT_EXCEEDED;
+      if (rawMsg.includes("limit")) return PLAID_EXIT_MAP.PAYMENT_LIMIT_EXCEEDED;
+
       return {
         code: errCode || PLAID_EXIT_MAP.UNKNOWN.code,
         message: err?.display_message || PLAID_EXIT_MAP.UNKNOWN.message,
@@ -309,8 +312,12 @@ const PlaidBankTransfer = ({
 
   const onBackClickHandler = () => {
     if (plaidStep === 1) {
-      dataHandler("step", 3);
-      dataHandler("exchange_rate", data.exchange_rate_backup);
+      if (type === "wallet_to_wallet") {
+        dataHandler("step", 4);
+      } else {
+        dataHandler("step", 3);
+        dataHandler("exchange_rate", data.exchange_rate_backup);
+      }
     } else if (plaidStep === 2 || plaidStep === 3) {
       setPlaidStep(1);
       setLinkToken(null);
@@ -323,33 +330,6 @@ const PlaidBankTransfer = ({
     }
   };
 
-  const handleInitiatePayment = async () => {
-    if (!recipientData.iban.trim()) {
-      toast.error("Please enter IBAN");
-      return;
-    }
-
-    if (
-      !data.exchange_rate?.sending?.amount ||
-      data.exchange_rate?.sending?.amount <= 0
-    ) {
-      toast.error("Please enter a valid amount");
-      return;
-    }
-
-    if (!userDetails?._id) {
-      toast.error("User information not found. Please refresh and try again");
-      return;
-    }
-
-    if (!data.wallet?.wallet_id) {
-      toast.error("Wallet information not found. Please select a wallet");
-      return;
-    }
-
-    await initiatePlaidPayment();
-  };
-
   const handleConfirmPayment = () => {
     if (ready && linkToken) {
       open();
@@ -358,6 +338,7 @@ const PlaidBankTransfer = ({
     }
   };
 
+  console.log(ready)
   return (
     <div
       style={{
@@ -427,7 +408,7 @@ const PlaidBankTransfer = ({
                   <span>{t("Total")}</span>
                   <strong>
                     {formatCurrency(data.exchange_rate?.sending?.amount)}{" "}
-                    {data.wallet?.currency?.code}
+                    {data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code}
                   </strong>
                 </div>
                 {data.exchange_rate?.fee?.amount > 0 && (
@@ -443,7 +424,7 @@ const PlaidBankTransfer = ({
                     <span>{t("Fee")}</span>
                     <strong>
                       {formatCurrency(data.exchange_rate?.fee?.amount)}{" "}
-                      {data.wallet?.currency?.code}
+                      {data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code}
                     </strong>
                   </div>
                 )}
@@ -458,7 +439,7 @@ const PlaidBankTransfer = ({
                 >
                   <span>{t("Amount")}</span>
                   <strong>
-                    {formatCurrency(totalAmount)} {data.wallet?.currency?.code}
+                    {formatCurrency(totalAmount)} {data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code}
                   </strong>
                 </div>
               </div> */}
@@ -489,7 +470,7 @@ const PlaidBankTransfer = ({
               {/* SHOW ADD NEW BANK FORM */}
               <h4>
                 {showAddNewBank
-                  ? t("Add New Bank")
+                  ? t('')
                   : t("Enter recipient IBAN for Plaid Bank Transfer")}
               </h4>
 
@@ -506,10 +487,11 @@ const PlaidBankTransfer = ({
                     style={{
                       display: "block",
                       marginBottom: "0.5rem",
-                      fontWeight: "600",
+                      fontWeight: 700,
+                      fontSize: "16px"
                     }}
                   >
-                    {t("Recipient IBAN")}
+                    {t("Type in the IBAN of the bank account you'll be transferring from:")}
                   </label>
                   <input
                     type="text"
@@ -517,7 +499,7 @@ const PlaidBankTransfer = ({
                     onChange={(e) =>
                       handleRecipientChange("iban", e.target.value)
                     }
-                    placeholder="GB33BUKB20201555555555"
+                    placeholder="Example: GB33BUKB20201555555555"
                     style={{
                       width: "100%",
                       padding: "10px",
@@ -529,46 +511,43 @@ const PlaidBankTransfer = ({
                   />
                 </div>
 
-                {/*  Save for Future Use Checkbox */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10px",
-                    padding: "12px",
-                    background: "#f8f9fa",
-                    borderRadius: "6px",
-                    marginTop: "1rem",
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    id="saveForFuture"
-                    checked={recipientData.saveForFutureUse}
-                    onChange={(e) =>
-                      handleRecipientChange(
-                        "saveForFutureUse",
-                        e.target.checked,
-                      )
-                    }
-                    style={{ cursor: "pointer", width: "18px", height: "18px" }}
-                  />
-                  <label
-                    htmlFor="saveForFuture"
-                    style={{ cursor: "pointer", marginBottom: 0, flex: 1 }}
+                {type !== "payment_address" &&
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      padding: "12px",
+                      background: "#f8f9fa",
+                      borderRadius: "6px",
+                      marginTop: "1rem",
+                    }}
                   >
-                    <strong>{t("Save this bank for future use")}</strong>
-                    <small
-                      style={{
-                        display: "block",
-                        color: "#666",
-                        marginTop: "0.25rem",
-                      }}
-                    ></small>
-                  </label>
-                </div>
+                    <input
+                      type="checkbox"
+                      id="saveForFuture"
+                      checked={recipientData.saveForFutureUse}
+                      onChange={(e) => handleRecipientChange("saveForFutureUse", e.target.checked)
+                      }
+                      style={{ cursor: "pointer", width: "18px", height: "18px" }}
+                    />
+                    <label
+                      htmlFor="saveForFuture"
+                      style={{ cursor: "pointer", marginBottom: 0, flex: 1 }}
+                    >
+                      <strong>{t("Save this bank for future use")}</strong>
+                      <small
+                        style={{
+                          display: "block",
+                          color: "#666",
+                          marginTop: "0.25rem",
+                        }}
+                      ></small>
+                    </label>
 
-                <div
+                  </div>
+                }
+                {/* <div
                   style={{
                     background: "#f8f9fa",
                     padding: "1rem",
@@ -586,7 +565,7 @@ const PlaidBankTransfer = ({
                     <span>{t("Amount")}</span>
                     <strong>
                       {formatCurrency(data.exchange_rate?.sending?.amount)}{" "}
-                      {data.wallet?.currency?.code}
+                      {data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code}
                     </strong>
                   </div>
                   {data.exchange_rate?.fee?.amount > 0 && (
@@ -602,7 +581,7 @@ const PlaidBankTransfer = ({
                       <span>{t("Fee")}</span>
                       <strong>
                         {formatCurrency(data.exchange_rate?.fee?.amount)}{" "}
-                        {data.wallet?.currency?.code}
+                        {data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code}
                       </strong>
                     </div>
                   )}
@@ -618,10 +597,10 @@ const PlaidBankTransfer = ({
                     <span>{t("Total")}</span>
                     <strong>
                       {formatCurrency(totalAmount)}{" "}
-                      {data.wallet?.currency?.code}
+                      {data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code}
                     </strong>
                   </div>
-                </div>
+                </div> */}
 
                 {showAddNewBank && savedBanks.length > 0 && (
                   <button
@@ -661,33 +640,33 @@ const PlaidBankTransfer = ({
                 <span>{recipientData.iban}</span>
               </div>
               <div className={styles.data}></div>
-              <div className={styles.data}>
+              {type !== "payment_address" && <div className={styles.data}>
                 <p>{t("Save for future use")}</p>
                 <span>{recipientData.saveForFutureUse ? " Yes" : " No"}</span>
-              </div>
+              </div>}
               <div className={styles.data}>
-                <p>{t("Amount")}</p>
+                <p>{type === "payment_address" ? t("You are Sending") : t("Amount")}</p>
                 <span>
                   {formatCurrency(
                     data.amount || data.exchange_rate?.sending?.amount,
                   )}{" "}
-                  {data.wallet?.currency?.code}
+                  {data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code}
                 </span>
               </div>
               {data.exchange_rate?.sending?.currency &&
                 data.exchange_rate?.sending?.currency !==
-                  data.wallet?.currency?.code && (
+                data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code && (
                   <div className={styles.data}>
                     <p>{t("Amount to Pay")}</p>
                     <span style={{ color: "#303c82", fontWeight: "600" }}>
-                      {formatCurrency(data.exchange_rate?.sending?.amount)}{" "}
+                      {formatCurrency(data?.exchange_rate?.total)}{" "}
                       {data.exchange_rate?.sending?.currency}
                     </span>
                   </div>
                 )}
               {data.exchange_rate?.fee?.amount > 0 && (
                 <div className={styles.data}>
-                  <p>{t("Fee")}</p>
+                  <p>{type === "payment_address" ? t("Sending Fees") : t("Fee")}</p>
                   <span>
                     {formatCurrency(data.exchange_rate?.fee?.amount)}{" "}
                     {data.exchange_rate?.fee?.currency ||
@@ -695,8 +674,17 @@ const PlaidBankTransfer = ({
                   </span>
                 </div>
               )}
+              {type === "payment_address" && data.exchange_rate?.fee?.paymentAddressFee > 0 && (
+                <div className={styles.data}>
+                  <p>{t("Payment Address Fee")}</p>
+                  <span>
+                    {formatCurrency(data.exchange_rate?.fee?.paymentAddressFee)}{" "}
+                    {data.exchange_rate?.sending?.currency}
+                  </span>
+                </div>
+              )}
               <div className={styles.data}>
-                <p>{t("Will Receive in Wallet")}</p>
+                <p>{type === "payment_address" ? t("They will receive") : t("Will Receive in Wallet")}</p>
                 <strong>
                   {formatCurrency(data.exchange_rate?.receiver?.amount)}{" "}
                   {data.exchange_rate?.receiver?.currency ||
@@ -704,6 +692,95 @@ const PlaidBankTransfer = ({
                 </strong>
               </div>
             </div>
+            {type !== "add_funds" && data.exchange_rate?.plaid_fx && !PlaidCurrencies.includes(data.exchange_rate?.sending?.currency) && (
+              <div style={{ marginTop: "1rem" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: ".7rem",
+                    padding: ".5rem",
+                    background: "#edecf1ff",
+                    borderRadius: "6px",
+                    color: "#5926F0",
+                    fontSize: ".7rem",
+                    fontStyle: "normal",
+                    fontWeight: 700,
+                    lineHeight: 1.3,
+                    letterSpacing: "-0.28px",
+                    marginBottom: "0.5rem"
+                  }}
+                >
+                  <Info size={16} />
+                  <span>
+                    {t("plaid_currency_not_supported", {
+                      currency: data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code,
+                      defaultCurrency: data?.exchange_rate?.plaid_currency,
+                    })}
+                  </span>
+                </div>
+                <div style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: ".9rem",
+                  padding: ".8rem",
+                  background: "#fff",
+                  borderRadius: "6px",
+                  boxShadow: "0px 1.5px 10.8px 0px rgba(0, 0, 0, 0.11)"
+                }}>
+                  <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
+                    justifyContent: "space-between"
+                  }}>
+                    <span style={{
+                      color: '#8A8A8A',
+                      fontFamily: 'Manrope',
+                      fontSize: ".7rem",
+                      fontStyle: 'normal',
+                      fontWeight: 600,
+                      lineHeight: 1.5,
+                      letterSpacing: '-0.14px'
+                    }}>{t("Exchange Rate")}</span>
+                    <strong
+                      style={{
+                        color: '#000',
+                        fontFamily: 'Manrope',
+                        fontSize: ".7rem",
+                        fontStyle: 'normal',
+                        lineHeight: 1.5,
+                        letterSpacing: '-0.14px'
+                      }}>1.00 {data?.exchange_rate?.sending?.currency || data.wallet?.currency?.code} = {Number(data.exchange_rate?.plaid_fx)} {data?.exchange_rate?.plaid_currency}</strong>
+                  </div>
+                  <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
+                    justifyContent: "space-between"
+                  }}>
+                    <span style={{
+                      color: '#8A8A8A',
+                      fontFamily: 'Manrope',
+                      fontSize: ".7rem",
+                      fontStyle: 'normal',
+                      fontWeight: 600,
+                      lineHeight: 1.5,
+                      letterSpacing: '-0.14px'
+                    }}>{t("Amount in CHF").replace("CHF", data?.exchange_rate?.plaid_currency)}</span>
+                    <strong style={{
+                      color: '#000',
+                      fontFamily: 'Manrope',
+                      fontSize: "1.2rem",
+                      fontStyle: 'normal',
+                      fontWeight: 700,
+                      lineHeight: 1.7,
+                      letterSpacing: '-0.8px'
+                    }}>{Number(data.exchange_rate?.plaid_amount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {data?.exchange_rate?.plaid_currency}</strong>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -747,7 +824,7 @@ const PlaidBankTransfer = ({
             style={{ color: "black", textAlign: "center", marginBottom: "0px" }}
           >
             {t(
-              "Payment authorized successfully! Your wallet will be credited once the transfer is complete.",
+              type === "payment_address" ? "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this modal" : "Payment authorized successfully! Your wallet will be credited once the transfer is complete.",
             )}
           </h4>
         </div>
@@ -776,7 +853,9 @@ const PlaidBankTransfer = ({
                 (!showAddNewBank && savedBanks.length > 0 && !selectedBankId)
               }
               onClick={async () => {
+                console.log("clicked")
                 try {
+                  console.log(showAddNewBank, recipientData)
                   if (!showAddNewBank && selectedBankId) {
                     console.log("Using saved bank:", selectedBankId);
                     const result = await performSavedBankPayment();

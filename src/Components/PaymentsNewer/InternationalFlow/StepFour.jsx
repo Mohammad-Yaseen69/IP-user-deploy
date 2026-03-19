@@ -45,9 +45,10 @@ export const typesData = [
   },
   {
     name: "Bank Transfer",
-    value: "bank",
+    value: "bank_transfer",
     icon: bank,
-    status: "Coming Soon",
+    api_val: "bank",
+    status: "Active",
     id: 2,
   },
   {
@@ -61,7 +62,7 @@ export const typesData = [
 const StepFour = ({
   data,
   dataHandler,
-  callback = () => {},
+  callback = () => { },
   loading = false,
   error = "",
   filteringValue = "dummy",
@@ -79,6 +80,7 @@ const StepFour = ({
     retry: 3,
   });
 
+  console.log(data?.mobile_wallet_services)
   const types = useMemo(() => {
     if (data?.mobile_wallet_services?.length > 0) {
       console.log(typesData, data.mobile_wallet_services);
@@ -130,7 +132,7 @@ const StepFour = ({
           <>
             <FeesComponent error={error} data={data} />
             {data.payment_type?.value === "paypal" &&
-            !data?.exchange_rate?.paypal?.paypal_currency_supported ? (
+              !data?.exchange_rate?.paypal?.paypal_currency_supported ? (
               <>
                 <div
                   style={{
@@ -285,9 +287,7 @@ const StepFour = ({
             .filter(
               (i) =>
                 i.value !== filteringValue &&
-                (methods?.includes(i.value) ||
-                  i.value === "wallet" ||
-                  i.value === "bank"),
+                (methods?.includes(i.value) || methods?.includes(i?.api_val) || i.value === "wallet"),
             )
             .map((item) => (
               <div
@@ -305,7 +305,7 @@ const StepFour = ({
                 <span>
                   {t(item.name)}
                   {item.value === "mobile" &&
-                  data?.mobile_wallet_services?.length > 0 ? (
+                    data?.mobile_wallet_services?.length > 0 ? (
                     <>
                       <br />
                       (

@@ -3,24 +3,13 @@ import { Svg } from "../files"
 import er_icon from "../../PaymentsNewer/InternationalFlow/files/exchange_rate.svg"
 import { useTranslation } from 'react-i18next';
 
-function getCurrencySymbol(currencyCode) {
-    if (!currencyCode) return currencyCode
-    const formatted = new Intl.NumberFormat('en', {
-        style: 'currency',
-        currency: currencyCode,
-        currencyDisplay: 'symbol',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0
-    }).format(1);
 
-    return formatted.replace(/[0-9.,\s]/g, '');
-}
 
 export const paymentInfoJSX = (feeDetails, addFunds, title, t) => (
     <div className={styles.paymentInfo}>
         <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
             <p>{title || t("You Have to Pay")}</p>
-            <h1>{!addFunds ? feeDetails.currency : getCurrencySymbol(feeDetails?.feeDetails?.currency)}{!addFunds ? feeDetails?.fee : feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}</h1>
+            <h1>{!addFunds ? feeDetails?.fee : feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}{!addFunds ? feeDetails.currency : feeDetails?.feeDetails?.currency}</h1>
         </div>
         <img src={Svg} style={{ position: "absolute", right: "10px", top: "0px" }} alt="" />
     </div>
@@ -52,14 +41,14 @@ const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds,
                             <div style={{ justifyContent: "center" }}>
                                 <div style={{ flexDirection: "row" }} className={styles.er_details}>
                                     <img src={er_icon} alt="" />
-                                    <span>1.00 {cardDets?.currency}  = {getCurrencySymbol(feeDetails?.feeDetails?.currency)} {Number(feeDetails?.feeDetails?.exchangeRate?.replace(/[,]/g, ""))?.toFixed(2)} </span>
+                                    <span>1.00 {cardDets?.currency}  =  {Number(feeDetails?.feeDetails?.exchangeRate?.replace(/[,]/g, ""))?.toFixed(2)} {feeDetails?.feeDetails?.currency} </span>
                                 </div>
                             </div>
                         }
                         {addFunds &&
                             <div>
-                                <h3 style={{ marginBottom: "0", fontSize: "18px" }}>{getCurrencySymbol(cardDets?.currency)}{feeDetails?.feeDetails?.amount}</h3>
-                                <h3 style={{ marginBottom: "0", fontSize: "18px" }}>{getCurrencySymbol(feeDetails?.feeDetails?.currency)} {feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}</h3>
+                                <h3 style={{ marginBottom: "0", fontSize: "18px" }}>{feeDetails?.feeDetails?.amount}{cardDets?.currency}</h3>
+                                <h3 style={{ marginBottom: "0", fontSize: "18px" }}>{feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}{feeDetails?.feeDetails?.currency} </h3>
                             </div>
                         }
                     </div>
@@ -67,22 +56,22 @@ const ConfirmationStep = ({ feeDetails, walletState, setStep, sendOtp, addFunds,
                     {!addFunds &&
                         <div className={styles.feeInfo}>
                             <h3>{t("Card activation fee")}</h3>
-                            <h3>{feeDetails.currency}{feeDetails.fee}</h3>
+                            <h3>{feeDetails.fee}{feeDetails.currency}</h3>
                         </div>}
 
                     {addFunds && (
                         <>
                             <div className={styles.feeInfo}>
                                 <h3>{t("Fee")}:</h3>
-                                <h3>{getCurrencySymbol(cardDets?.currency)}{feeDetails?.feeDetails?.fee}</h3>
+                                <h3>{feeDetails?.feeDetails?.fee}{cardDets?.currency}</h3>
                             </div>
                             <div className={styles.feeInfo}>
                                 <h3>{t("Total Funds to be Added:")}</h3>
-                                <h3>{getCurrencySymbol(cardDets?.currency)}{feeDetails?.feeDetails?.amountToTopup}</h3>
+                                <h3>{feeDetails?.feeDetails?.amountToTopup}{cardDets?.currency}</h3>
                             </div>
                             <div className={styles.feeInfo}>
                                 <h3>{t("Total Amount:")}</h3>
-                                <h3>{getCurrencySymbol(feeDetails?.feeDetails?.currency)} {feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}</h3>
+                                <h3> {feeDetails?.feeDetails?.totalAmount ?? feeDetails?.feeDetails?.amount}{feeDetails?.feeDetails?.currency}</h3>
                             </div>
                         </>
                     )}

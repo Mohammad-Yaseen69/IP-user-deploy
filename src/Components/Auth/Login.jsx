@@ -25,10 +25,10 @@ import localforage from "localforage"
 import InstaPayLoader from "../Loader";
 import { logger } from "@sentry/react";
 import VpnModal from "./VpnModal";
+import LocationDeniedModal from "./LocationDeniedModal";
 const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
-    // capture redirect target from location state (if provided by router) or from query params (?redirect=...)
     const location = useLocation();
     const params = new URLSearchParams(location.search || "");
     const redirectQuery = params.get("redirect");
@@ -67,9 +67,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [showRestoreModal, setShowRestoreModal] = useState(false)
     const [accountRestoreDetails, setAccountRestoreDetails] = useState(null)
     const [restoreLoading, setRestoreLoading] = useState(false)
-
-    // convert this object into an array of object it should just have a type property which should tell like whatsapp insta biometric instead of a object property
-
+    const [pendingLoginData, setPendingLoginData] = useState(null)
+    const [capturedSecurityData, setCapturedSecurityData] = useState(null)
     const [methods, setMethods] = useState([
         {
             avail: false,
@@ -96,7 +95,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             text: "Whatsapp"
         },
         {
-            avail: true,
+            avail: false,
             icon: smsIcon,
             attr: "sms",
             text: "SMS"
@@ -158,11 +157,71 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
 
 
-    const loginHandler = (e, method = undefined, restoreAccount = false) => {
+    const loginHandler = async (e, method = undefined, restoreAccount = false) => {
         e.preventDefault()
         setIsPressed(true)
-        setConsecutiveCount(1)
         setIsLoginError("")
+
+        const getLocation = () => {
+            return new Promise((resolve, reject) => {
+                if (!navigator.geolocation) {
+                    resolve(null);
+                    return;
+                }
+                navigator.geolocation.getCurrentPosition(resolve, reject, {
+                    timeout: 20000,
+                    enableHighAccuracy: true,
+                    maximumAge: 0
+                });
+            });
+        };
+
+        let locationInput = null;
+        if (capturedSecurityData?.locationData) {
+            locationInput = capturedSecurityData.locationData;
+        } else if (step === 1) {
+            try {
+                locationInput = await getLocation();
+            } catch (error) {
+                logger.error("Location error occured", {
+                    error: error
+                })
+                if (error.code === 1) {
+                    if (rdd.isSafari || rdd.isMobileSafari) {
+                        try {
+                            locationInput = await new Promise((resolve, reject) => {
+                                navigator.geolocation.getCurrentPosition(resolve, reject, {
+                                    timeout: 10000,
+                                    enableHighAccuracy: true,
+                                    maximumAge: 0
+                                });
+                            });
+                        } catch (error2) {
+                            logger.error("Location error occured in safari", {
+                                error: error2
+                            })
+                            setPendingLoginData({ method, restoreAccount, isPendingRetry: true });
+                            setShowLocationModal(true);
+                            setIsPressed(false);
+                            setMethodLoading(false);
+                            setRestoreLoading(false);
+                            return;
+                        }
+                    } else {
+                        setPendingLoginData({ method, restoreAccount, isPendingRetry: true });
+                        setShowLocationModal(true);
+                        setIsPressed(false);
+                        setMethodLoading(false);
+                        setRestoreLoading(false);
+                        return;
+                    }
+                }
+
+                console.warn("Geolocation warning:", error);
+            }
+        }
+
+        setConsecutiveCount(1)
         if (method) {
             setMethodLoading(true)
         }
@@ -202,9 +261,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         })
             .then(async (res) => {
                 const decrypted = decryptData(res.data.data)
+                const isVpnAllowed = decrypted?.isVpnAllowed
                 setFirstTime(false)
-
-                // Check if account requires restoration (only if not already restoring)
                 if (!restoreAccount && decrypted?.status === false && decrypted?.accountDetails?.requiresConfirmation === true) {
                     setAccountRestoreDetails(decrypted)
                     setShowRestoreModal(true)
@@ -212,8 +270,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     setMethodLoading(false)
                     return
                 }
-
-                // console.log(decrypted)
                 setMethods(prevMethods => prevMethods.map(method => {
                     switch (method.attr) {
                         case 'auth':
@@ -253,7 +309,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         if (decrypted?.tfa && decrypted?.message === "authenticator") return "auth";
                         if (decrypted?.message === "instagram" && !isInstagramBrowser) return "insta";
                         if (decrypted?.message === "whatsapp") return "wp";
-                        if (decrypted?.otpMethod === "email") return "email";
+                        if (decrypted?.otpMethod === "email" || (decrypted?.email && !decrypted?.phone)) return "email";
                         return "sms";
                     } else {
                         return method
@@ -266,23 +322,14 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 if ((currentSelection === "insta" || currentSelection === "sms" || currentSelection === "wp" || currentSelection === "email")) {
                     setResendTimer(120)
                 }
-                // console.log(decrypted)
-
-
-
-                // if (decrypted?.authenticator === true) {
-                //     setResendTimer(0)
-                // }
-
                 setLoginToken(decrypted?.token)
-                setStep(2)
-                setIsPressed(false)
-                setMethodLoading(false)
                 if (restoreAccount) {
                     setShowRestoreModal(false)
                     setAccountRestoreDetails(null)
                     setRestoreLoading(false)
                 }
+
+                performSecurityChecks(isVpnAllowed, locationInput)
 
             })
             .catch(error => {
@@ -312,6 +359,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             })
     }
 
+    console.log(methods)
     useEffect(() => {
         if (profileLockTIme > 0) {
             let minutes = Math.floor(profileLockTIme / 60);
@@ -325,9 +373,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             setIsLoginError("")
         }
     }, [profileLockTIme, i18next.language])
-
-    // service error
-
     useLayoutEffect(() => {
         if (loginMethod === "email") return;
         const newEmail = email;
@@ -360,9 +405,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             logger.info(`IP Locate api called for user: ${username} `, {
                 data: location
             })
-
-
-
             if (location) {
                 return {
                     browser_name: rdd.browserName ?? "N/A",
@@ -405,102 +447,108 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
     }
 
-    const completeLoginProcess = async (userAccount, token, ipInfo) => {
-        const finalizeLogin = async (locationData = {}) => {
-            localStorage.setItem("login", true)
-            localStorage.setItem("token", token)
-            setUserDetails(userAccount)
-            setData({
-                pfp: userAccount?.profileImage?.url,
-                name: userAccount?.account_type === "individual" ? userAccount?.first_name + " " + userAccount?.last_name : userAccount?.company_name,
-                loginMethod: loginMethod,
-                credential: email,
-            })
+    const performSecurityChecks = async (isVpnAllowed, input = null) => {
+        setIsPressed(true);
+        const ipInfo = await getUserInfo(email);
 
-            const historyData = {
-                browser_name: rdd.browserName ?? "N/A",
-                browser_version: rdd.browserVersion ?? "N/A",
-                is_mobile_user: rdd.isMobile || rdd.isMobileSafari,
-                IPv4: ipInfo?.IPv4 || ipInfo?.ip || "",
-                city: locationData.city || ipInfo?.city || "",
-                country_code: locationData.country_code || ipInfo?.country_code || "",
-                country_name: locationData.country_name || ipInfo?.country_name || "",
-                latitude: locationData.latitude || ipInfo?.latitude || "",
-                longitude: locationData.longitude || ipInfo?.longitude || "",
-                postal: locationData.postal || ipInfo?.postal || "",
-                state: locationData.state || ipInfo?.state || "",
-                platform: rdd.osName || navigator.platform,
-                accountId: userAccount?._id,
-                language: navigator.language,
-                userAgent: navigator.userAgent,
-                screenResolution: `${window.screen.width}x${window.screen.height}`,
-                deviceType: rdd.deviceType ?? "desktop",
-            }
-
-            console.log("Final Login History Data:", historyData);
-
-            const encryptedWithLocation = encryptData(historyData);
-
-            try {
-                await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/login/create-login-history`, {
-                    data: encryptedWithLocation
-                });
-            } catch (err) {
-                console.error("Login history creation failed:", err);
-            } finally {
-                const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
-                if (path && path !== "undefined") {
-                    navigate(path)
-                } else {
-                    navigate("/")
-                }
-                sessionStorage.clear()
-                setIsPressed(false)
-                setBiometricLoading(false)
-            }
+        const finishSecurityChecks = async (locationData = {}) => {
+            setCapturedSecurityData({ ipInfo, locationData });
+            setStep(2);
+            setIsPressed(false);
+            setMethodLoading(false);
         }
 
-        if ((ipInfo?.privacy?.is_proxy || ipInfo?.privacy?.is_tor || ipInfo?.privacy?.is_vpn) && !userAccount?.isVpnAllowed) {
+        if ((ipInfo?.privacy?.is_proxy || ipInfo?.privacy?.is_tor || ipInfo?.privacy?.is_vpn) && !isVpnAllowed) {
             setShowNoticeModal(true);
             setIsPressed(false);
-            setBiometricLoading(false);
+            setMethodLoading(false);
             return;
         }
 
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                    const { latitude, longitude } = position.coords;
-                    try {
-                        const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
-                        const data = await res.json();
-                        const locationData = {
-                            latitude,
-                            longitude,
-                            country_name: data.countryName,
-                            country_code: data.countryCode,
-                            city: data.city,
-                            state: data.principalSubdivision,
-                            postal: data.postcode
-                        };
-                        finalizeLogin(locationData);
-                    } catch (error) {
-                        console.error("Error fetching reverse geocode location data: ", error);
-                        finalizeLogin({ latitude, longitude });
-                    }
-                },
-                (error) => {
-                    console.error("Geolocation permission error: ", error);
-                    setIsPressed(false);
-                    setBiometricLoading(false);
-                    setShowLocationModal(true);
-                },
-                { timeout: 30000 }
-            );
+        const handleLocation = async (pos) => {
+            const { latitude, longitude } = pos.coords;
+            try {
+                const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
+                const data = await res.json();
+                const locationData = {
+                    latitude,
+                    longitude,
+                    country_name: data.countryName,
+                    country_code: data.countryCode,
+                    city: data.city,
+                    state: data.principalSubdivision,
+                    postal: data.postcode
+                };
+                finishSecurityChecks(locationData);
+            } catch (error) {
+                console.error("Error fetching reverse geocode location data: ", error);
+                finishSecurityChecks({ latitude, longitude });
+            }
+        }
+
+        if (input && input.latitude) {
+            finishSecurityChecks(input);
+        } else if (input && input.coords) {
+            await handleLocation(input);
         } else {
-            setIsPressed(false);
-            setBiometricLoading(false);
-            setShowLocationModal(true);
+            finishSecurityChecks();
+        }
+    }
+
+    const completeLoginProcess = async (userAccount, token) => {
+        localStorage.setItem("login", true)
+        localStorage.setItem("token", token)
+        setUserDetails(userAccount)
+        setData({
+            pfp: userAccount?.profileImage?.url,
+            name: userAccount?.account_type === "individual" ? userAccount?.first_name + " " + userAccount?.last_name : userAccount?.company_name,
+            loginMethod: loginMethod,
+            credential: email,
+        })
+
+        const ipInfo = capturedSecurityData?.ipInfo;
+        const locationData = capturedSecurityData?.locationData || {};
+
+        const historyData = {
+            browser_name: rdd.browserName ?? "N/A",
+            browser_version: rdd.browserVersion ?? "N/A",
+            is_mobile_user: rdd.isMobile || rdd.isMobileSafari,
+            IPv4: ipInfo?.IPv4 || ipInfo?.ip || "",
+            city: locationData?.city || ipInfo?.city || "",
+            country_code: locationData?.country_code || ipInfo?.country_code || "",
+            country_name: locationData?.country_name || ipInfo?.country_name || "",
+            latitude: locationData?.latitude || ipInfo?.latitude || "",
+            longitude: locationData?.longitude || ipInfo?.longitude || "",
+            postal: locationData?.postal || ipInfo?.postal || "",
+            state: locationData?.state || ipInfo?.state || "",
+            platform: rdd.osName || navigator.platform,
+            accountId: userAccount?._id,
+            language: navigator.language,
+            userAgent: navigator.userAgent,
+            screenResolution: `${window.screen.width}x${window.screen.height}`,
+            deviceType: rdd.deviceType ?? "desktop",
+        }
+
+        console.log("Final Login History Data:", historyData);
+
+        const encryptedWithLocation = encryptData(historyData);
+
+        try {
+            await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/login/create-login-history`, {
+                data: encryptedWithLocation
+            });
+        } catch (err) {
+            console.error("Login history creation failed:", err);
+        } finally {
+            const path = sessionStorage.getItem("path") && sessionStorage.getItem("path") !== "undefined" ? sessionStorage.getItem("path") : redirect || ""
+            if (path && path !== "undefined") {
+                navigate(path)
+            } else {
+                navigate("/")
+            }
+            sessionStorage.clear()
+            setIsPressed(false)
+            setBiometricLoading(false)
         }
     }
 
@@ -580,9 +628,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         const dec = decryptData(res.data.data)
                         setShowInactivityModal(false)
                         if (dec?.country?.status) {
-                            const data = await getUserInfo(dec?.username)
-                            console.log("data from ip", data)
-                            completeLoginProcess(dec, token, data)
+                            completeLoginProcess(dec, token)
                         }
                         else {
                             setUserDetails(dec)
@@ -590,7 +636,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         }
                     })
                     .catch(err => {
-                        // console.log(decryptData(err.response.data.data))
                         setIsPressed(false)
                         setIsLoginError("Something went wrong while getting account details")
                     })
@@ -739,8 +784,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     const dec = decryptData(res.data.data)
                     setShowInactivityModal(false)
                     if (dec?.country?.status) {
-                        const data = await getUserInfo(dec?.username)
-                        completeLoginProcess(dec, token, data)
+                        completeLoginProcess(dec, token)
                     } else {
                         sessionStorage.setItem("country_status_error", "Service not available in your country!")
                     }
@@ -794,19 +838,19 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             setLastOtpSentTo(null);
         }
     }, [resendTimer]);
-
     const resetOtpStates = () => {
-        setOTPValues(Array(numberOfFields).fill('')) // Reset OTP input values
-        setCurrentActiveInput(1) // Reset active input field
-        setIsAnyFieldEmpty(true) // Reset field empty check
-        setOtpVerified(false) // Reset OTP verification status
-        setIsOtpCorrect(false) // Reset OTP correctness check
-        setConsecutiveCount(0) // Reset consecutive attempts counter
-        setLastOtpSentTo(null) // Reset last OTP method
-        setIsLoginError('') // Reset login error message
-        setResendTimer(0) // Reset resend timer
-        setPendingOtpMethod(null) // Reset pending OTP method
-        setStep(1) // Reset step to 1
+        setOTPValues(Array(numberOfFields).fill(''))
+        setCurrentActiveInput(1)
+        setIsAnyFieldEmpty(true)
+        setOtpVerified(false)
+        setIsOtpCorrect(false)
+        setConsecutiveCount(0)
+        setLastOtpSentTo(null)
+        setIsLoginError('')
+        setResendTimer(0)
+        setPendingOtpMethod(null)
+        setCapturedSecurityData(null)
+        setStep(1)
     }
 
     const resetLoginStates = () => {
@@ -830,32 +874,17 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
             <VpnModal showNoticeModal={showNoticeModal} />
 
-            <Modal isOpen={showLocationModal} toggle={() => setShowLocationModal(false)} centered>
-                <ModalHeader toggle={() => setShowLocationModal(false)}>
-                    {t("Location Permission Required")}
-                </ModalHeader>
-                <ModalBody>
-                    <p style={{ marginBottom: "1.5rem", lineHeight: "1.6" }}>
-                        {t("We can't let you logged in without location permission. It's for security purposes. Please allow location access in your browser to continue.")}
-                    </p>
-                </ModalBody>
-                <ModalFooter style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
-                    <Button
-                        color="secondary"
-                        onClick={resetLoginStates}
-                        disabled={restoreLoading}
-                        style={{
-                            background: "#f5f5f5",
-                            border: "1px solid #e6e6e6",
-                            color: "black",
-                            borderRadius: "10px",
-                            padding: "10px 20px"
-                        }}
-                    >
-                        {t("Close")}
-                    </Button>
-                </ModalFooter>
-            </Modal>
+            <LocationDeniedModal
+                isOpen={showLocationModal}
+                toggle={() => setShowLocationModal(false)}
+                onRetry={() => {
+                    setShowLocationModal(false);
+                    if (pendingLoginData?.isPendingRetry) {
+                        const { method, restoreAccount } = pendingLoginData;
+                        loginHandler({ preventDefault: () => { } }, method, restoreAccount);
+                    }
+                }}
+            />
 
             <Modal isOpen={showRestoreModal} toggle={() => setShowRestoreModal(false)} centered>
                 <ModalHeader toggle={() => setShowRestoreModal(false)}>
@@ -939,7 +968,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                     :
                                                     t("Login with email")
                                             }
-                                            {/* {t("Login with")} {loginMethod === "email" ? t("Phone Number") : t("Email")} */}
                                         </div>
                                     </div>
                                 </> :
@@ -1228,72 +1256,73 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         <span>{t("Problem with the token?")}</span>
                                     }
 
-                                    {methods.filter(m => m.attr !== "sms").some(m => m.avail === true)
+                                    {methods.filter(m => m.avail).length > 1
                                         &&
                                         <p style={{ alignSelf: "baseline" }}>
                                             {t("Choose your preferred method to verify your identity:")}
                                         </p>
                                     }
-                                    <div className={styles.otp_methods}>
-                                        {isMobile ? (
-                                            <>
-                                                {methods.map((method, index) => {
-                                                    if (method.avail && method.attr !== currentOtpMethod) {
-                                                        return (
-                                                            <button
-                                                                key={index}
-                                                                className={styles.otpMethodButton}
-                                                                type="button"
-                                                                disabled={isPressed || methodLoading || biometricLoading}
-                                                                onClick={() => handleOtpMethod(method.attr)}
-                                                            >
-                                                                <img
-                                                                    src={method.icon}
-                                                                    alt=""
-                                                                />
-                                                                <span style={{ marginBottom: "0", textDecoration: "underline", textDecorationColor: "white", color: 'black', whiteSpace: 'nowrap' }}
+                                    {methods.filter(m => m.avail).length > 1 &&
+                                        <div className={styles.otp_methods}>
+                                            {isMobile ? (
+                                                <>
+                                                    {methods.map((method, index) => {
+                                                        if (method.avail && method.attr !== currentOtpMethod) {
+                                                            return (
+                                                                <button
+                                                                    key={index}
+                                                                    className={styles.otpMethodButton}
+                                                                    type="button"
+                                                                    disabled={isPressed || methodLoading || biometricLoading}
+                                                                    onClick={() => handleOtpMethod(method.attr)}
                                                                 >
-                                                                    {t(method.text)}
-                                                                </span>
-                                                            </button>
-                                                        )
-                                                    }
-                                                    return null;
-                                                })}
-                                            </>
-                                        ) : (
-                                            // Desktop flow
-                                            <>
-                                                {methods.map((method, index) => {
-                                                    if (method.avail && method.attr !== currentOtpMethod) {
-                                                        return (
-                                                            <button
-                                                                key={index}
-                                                                className={styles.otpMethodButton}
-                                                                type="button"
-                                                                disabled={isPressed || methodLoading || biometricLoading}
-                                                                onClick={() => handleOtpMethod(method.attr)}
-                                                            >
-                                                                <img
-                                                                    src={method.icon}
-                                                                    alt=""
-                                                                />
-                                                                <span style={{ marginBottom: "0" }}>
-                                                                    {t(method.text)}
-                                                                </span>
-                                                            </button>
-                                                        )
-                                                    }
-                                                    return null;
-                                                })}
-                                            </>
-                                        )}
-                                    </div>
+                                                                    <img
+                                                                        src={method.icon}
+                                                                        alt=""
+                                                                    />
+                                                                    <span style={{ marginBottom: "0", textDecoration: "underline", textDecorationColor: "white", color: 'black', whiteSpace: 'nowrap' }}
+                                                                    >
+                                                                        {t(method.text)}
+                                                                    </span>
+                                                                </button>
+                                                            )
+                                                        }
+                                                        return null;
+                                                    })}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    {methods.map((method, index) => {
+                                                        if (method.avail && method.attr !== currentOtpMethod) {
+                                                            return (
+                                                                <button
+                                                                    key={index}
+                                                                    className={styles.otpMethodButton}
+                                                                    type="button"
+                                                                    disabled={isPressed || methodLoading || biometricLoading}
+                                                                    onClick={() => handleOtpMethod(method.attr)}
+                                                                >
+                                                                    <img
+                                                                        src={method.icon}
+                                                                        alt=""
+                                                                    />
+                                                                    <span style={{ marginBottom: "0" }}>
+                                                                        {t(method.text)}
+                                                                    </span>
+                                                                </button>
+                                                            )
+                                                        }
+                                                        return null;
+                                                    })}
+                                                </>
+                                            )}
+                                        </div>
+                                    }
                                     {
                                         <span>
                                             {
                                                 resendTimer > 0
-                                                    ? ((lastOtpSentTo && ['sms', 'insta', 'wp', 'email'].includes(pendingOtpMethod || currentOtpMethod) && lastOtpSentTo !== (pendingOtpMethod || currentOtpMethod)) || (pendingOtpMethod && lastOtpSentTo !== currentOtpMethod))
+                                                    ? (methods.filter(m => m.avail).length > 1 && (lastOtpSentTo && ['sms', 'insta', 'wp', 'email'].includes(pendingOtpMethod || currentOtpMethod) && lastOtpSentTo !== (pendingOtpMethod || currentOtpMethod)) || (pendingOtpMethod && lastOtpSentTo !== currentOtpMethod))
                                                         ? <span> {t(`You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : lastOtpSentTo === "wp" ? "Whatsapp" : lastOtpSentTo === 'email' ? 'Email' : 'Instagram'}, wait ${resendTimer} seconds to get code on ${(pendingOtpMethod || currentOtpMethod) === 'sms' ? 'SMS' : (pendingOtpMethod || currentOtpMethod) === "wp" ? "Whatsapp" : (pendingOtpMethod || currentOtpMethod) === 'email' ? 'Email' : 'Instagram'}`)} </span>
                                                         :
                                                         currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" && <span>{t("Resend code in 30 seconds").replace("30", resendTimer)}</span>

@@ -363,7 +363,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
                                     <path d="M3.75 6L7.5 9.75M3 10.5L7.5 6L9 3.75M1.5 3.75H10.5M5.25 1.5H6M9.68478 12.75H15.0652M9.68478 12.75L8.25 15.75M9.68478 12.75L11.8337 8.25677C12.0069 7.8947 12.0935 7.71367 12.2119 7.65646C12.315 7.60671 12.435 7.60671 12.5381 7.65646C12.6565 7.71367 12.7431 7.8947 12.9163 8.25677L15.0652 12.75M15.0652 12.75L16.5 15.75" stroke="#5926F0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                                 <span style={{ fontWeight: 600, fontSize: "14px" }}>
-                                    {languageCountries.find(i => i.lang === currentLang).label}
+                                    {languageCountries.find(i => i.lang === currentLang)?.label}
                                 </span>
 
                                 {window.innerWidth < 1000 && <img src={drag} style={{ cursor: 'grab' }} alt="drag" />}

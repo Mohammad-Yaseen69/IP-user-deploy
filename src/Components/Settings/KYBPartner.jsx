@@ -9,6 +9,8 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import UploadAdditionalKYB from "./UploadAdditionalKYB"
 import { useTranslation } from "react-i18next"
 import { capitalizeStatus } from "../PendingNew/ItemMobile"
+import { isEmailValid } from "../../utils/Functions/validations"
+import { toast } from "react-toastify"
 
 const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPartnerVerification }) => {
 
@@ -24,6 +26,21 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
     const { t } = useTranslation()
 
     const updatePartnerHandler = async () => {
+        if (userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved") {
+            toast.error("All actions are blocked as the business is verified.");
+            return;
+        }
+
+        if (!isEmailValid(partnerEmail)) {
+            toast.error("Please enter a valid email address.");
+            return;
+        }
+
+        if (partners.find((p, i) => p.email.toLowerCase() === partnerEmail.toLowerCase() && i !== index)) {
+            toast.error("A director with this email already exists.");
+            return;
+        }
+
         setUpdating(true)
         try {
             const payload = {
@@ -81,6 +98,10 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
     }
 
     const sendEmailVerification = async () => {
+        if (userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved") {
+            toast.error("All actions are blocked as the business is verified.");
+            return;
+        }
         setUpdating(true)
         try {
 
@@ -122,7 +143,7 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
             <td>{partner?.email}</td>
             <td>{partner?.designation}</td>
             <td style={{ display: "flex", gap: ".75rem" }}>
-                {!userDetails?.kyb_verification_paid && <>
+                {!userDetails?.kyb_verification_paid && (userDetails?.company?.kyb_status !== "verified" && userDetails?.company?.kyb_status !== "approved") && <>
                     <Button color="primary" style={{
                         background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                         border: "none",
@@ -151,7 +172,7 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
                     </Button>
                 </>}
                 {
-                    (userDetails?.kyb_verification_paid && (!partner?.kyc_status || partner?.kyc_status === "initiated")) &&
+                    (userDetails?.kyb_verification_paid && (userDetails?.company?.kyb_status !== "verified" && userDetails?.company?.kyb_status !== "approved") && (!partner?.kyc_status || partner?.kyc_status === "initiated")) &&
                     <>
                         {
                             emailSent
@@ -197,10 +218,10 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
                     </Button>
                 }
                 {
-                    (userDetails?.kyb_verification_paid && (partner?.kyc_status && partner?.kyc_status !== "initiated" && partner?.kyc_status !== "declined")) && <span style={{ fontWeight: 600, color: "darkgray" }}>{t("No Action Allowed")} </span>
+                    ((userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved") || (userDetails?.kyb_verification_paid && (partner?.kyc_status && partner?.kyc_status !== "initiated" && partner?.kyc_status !== "declined"))) && <span style={{ fontWeight: 600, color: "darkgray" }}>{t("No Action Allowed")} </span>
                 }
                 {
-                    partnerFiles?.length > 0 && partnerFiles?.some(item => item?.status === "requested")
+                    (userDetails?.company?.kyb_status !== "verified" && userDetails?.company?.kyb_status !== "approved") && partnerFiles?.length > 0 && partnerFiles?.some(item => item?.status === "requested")
                     &&
                     <Button color="primary" style={{
                         background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",

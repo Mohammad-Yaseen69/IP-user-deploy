@@ -79,6 +79,7 @@ const UserState = ({ children }) => {
     const [missingTabsData, setMissingTabsData] = useState([])
     const [available, setAvailable] = useState(0)
     const [blocked, setBlocked] = useState(0)
+    const [showAnotherLoginModal, setShowAnotherLoginModal] = useState(false)
 
 
 
@@ -219,7 +220,7 @@ const UserState = ({ children }) => {
                         localStorage.clear()
                         localStorage.setItem("ip_country", coun)
                         clearData()
-                        navigate("/login")
+                        navigate("/login", { replace: true })
                     }
                     if (decrypted?.status !== "active") {
                         toast.error("Account Suspended!")
@@ -227,7 +228,7 @@ const UserState = ({ children }) => {
                         localStorage.clear()
                         localStorage.setItem("ip_country", coun)
                         clearData()
-                        navigate("/login")
+                        navigate("/login", { replace: true })
                     }
                     if (decrypted.profileImage?.coordinates) {
                         getImage(decrypted.profileImage?.url, decrypted.profileImage?.coordinates, "profile", "dp")
@@ -257,7 +258,7 @@ const UserState = ({ children }) => {
                         clearData()
                         if (!publicRoutes.some(item => window.location.pathname.toLowerCase().includes(item.path.toLowerCase().split(":")[0])) && !window.location.pathname.toLowerCase().includes("profile/")) {
                             sessionStorage.setItem("path", window.location.href?.split("pay.ch")?.[1])
-                            navigate("/login")
+                            navigate("/login", { replace: true })
                         }
                     }
                 })
@@ -276,7 +277,7 @@ const UserState = ({ children }) => {
                     localStorage.clear()
                     localStorage.setItem("ip_country", coun)
                     clearData()
-                    navigate("/login")
+                    navigate("/login", { replace: true })
                 }
                 if (decrypted?.status !== "active") {
                     toast.error("Account Suspended!")
@@ -284,7 +285,7 @@ const UserState = ({ children }) => {
                     localStorage.clear()
                     localStorage.setItem("ip_country", coun)
                     clearData()
-                    navigate("/login")
+                    navigate("/login", { replace: true })
                 }
             })
             .catch((err) => {
@@ -294,11 +295,11 @@ const UserState = ({ children }) => {
                 localStorage.setItem("ip_country", coun)
                 clearData()
                 if (dec?.message?.toLowerCase()?.includes("account not found")) {
-                    navigate("/login")
+                    navigate("/login", { replace: true })
                 }
                 if (!publicRoutes.some(item => window.location.pathname.toLowerCase().includes(item.path.toLowerCase().split(":")[0])) && !window.location.pathname.toLowerCase().includes("profile/")) {
                     sessionStorage.setItem("path", window.location.href?.split("pay.ch")?.[1])
-                    navigate("/login")
+                    navigate("/login", { replace: true })
                 }
             })
     }
@@ -630,8 +631,8 @@ const UserState = ({ children }) => {
 
 
     return (
-        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, showModalState, setShowModalState, processReceivingNonIpFunds: processReceivingNonIpFunds.mutateAsync }}>
-            {(showModalState || Boolean(isSessionExpired)) &&
+        <UserContext.Provider value={{ userDetails, setUserDetails, userWallets, setUserWallets, token, authHeader, beneficiaries, setBeneficiaries, userTransactions, setUserTransactions, searchQuery, setSearchQuery, apiDates, setApiDates, userSecurityQues, referralLink, userSessions, allowedFeatures, verifyToken, userWithdrawals, setUserWithdrawals, allowedWithdrawals, registeredBeneficiaries, profileCompleted, allowedCountries, userPortfolio, profileIncompleteReason, setUserPortfolio, setUserVideos, getUserVideos, userVideos, checkRegisteredBenficiaries, getAllActiveCountries, getUserWallets, getUserBeneficiaries, getUserDocuments, checkAuth, getSecurityQuestions, getInvitationLink, getSessions, profileCompletedPercentage, getWithdrawals, getReferralCommission, totalReferralAmount, validateSendingLimits, validateReceivingLimits, validateTransactionsCount, profileLockTIme, setProfileLockTime, showInactivityModal, setShowInactivityModal, is30Days, setIs30Days, threeDaysReminder, set3DaysReminder, is30DaysInfo, setIs30DaysInfo, threeDaysReminderInfo, set3DaysReminderInfo, clearData, croppedImages, updateCoordinates, setCroppedImages, missingTabsData, setMissingTabsData, setAvailable, available, setBlocked, blocked, benLoading, balanceLoading, showModalState, setShowModalState, processReceivingNonIpFunds: processReceivingNonIpFunds.mutateAsync, showAnotherLoginModal, setShowAnotherLoginModal }}>
+            {((showModalState || Boolean(isSessionExpired)) && !location.pathname.startsWith("/pay/")) &&
                 <SessionExpireModal
                     isOpen={(showModalState || Boolean(isSessionExpired))}
                     toggle={() => {

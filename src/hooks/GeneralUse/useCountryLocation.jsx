@@ -21,9 +21,6 @@ const useCountryLocation = () => {
                         throw new Error("ip locate failed")
                     }
 
-                    Sentry.logger.info(`IP Locate api called`, {
-                        data: location
-                    })
                     if (location) {
                         if ((location?.privacy?.is_proxy === true || location?.privacy?.is_tor === true || location?.privacy?.is_vpn === true)) {
                             setShowNoticeModal(true);
