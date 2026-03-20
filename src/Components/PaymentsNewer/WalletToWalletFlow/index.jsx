@@ -1158,7 +1158,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                 <h1>{t("Send Money")}</h1>
                                                 <h2>{data.step === 5 && data.showCard ? t("Select Or Add Payment Card") : t(leftSideContent?.[data.step - 1])}</h2>
                                             </div>
-                                            {data.step === 1 && !payment_type && <RecentTransactions dataHandler={dataHandler} type={"wallet_to_wallet"} />}
+                                            {data.step === 1 && !payment_type && data.currency?._id  && <RecentTransactions dataHandler={dataHandler} type={"wallet_to_wallet"} dataCurrency={data} />}
                                             {
                                                 (data.step === 4 && !data.limitReached)
                                                 &&

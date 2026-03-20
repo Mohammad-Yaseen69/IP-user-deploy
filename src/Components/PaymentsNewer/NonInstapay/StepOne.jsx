@@ -38,7 +38,8 @@ const StepOne = ({ data, dataHandler }) => {
                 style={{
                     display: "flex",
                     gap: "7px",
-                    alignItems: "start"
+                    alignItems: "center"
+                    
                 }}
             >
                 <Info size={25} color="#6D6C79" />
