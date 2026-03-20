@@ -127,6 +127,7 @@
     display: flex;
     gap: 1rem;
     align-items: center;
+    width: 100%;
 }
 
 .bd_top h5 {
@@ -140,7 +141,7 @@
     font-weight: 700;
     line-height: normal;
     letter-spacing: -0.42px;
-    max-width: 70%;
+    max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

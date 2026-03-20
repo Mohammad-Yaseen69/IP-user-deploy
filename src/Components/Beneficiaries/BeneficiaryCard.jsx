@@ -64,7 +64,7 @@ const BeneficiaryCard = ({ user }) => {
                                 &&
                                 <h5 style={{
                                     whiteSpace: "nowrap",
-                                    maxWidth: "40ch",
+                                    maxWidth: "100%",
                                     overflow: "hidden",
                                     textOverflow: "ellipsis"
                                 }}>{user?.first_name} {user?.last_name}</h5>
