@@ -85,55 +85,27 @@ const HomeNewUpdated = () => {
     useEffect(() => {
         const getCryptoRates = async () => {
             try {
-                const res = await axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether&vs_currencies=usd`)
-                const data = res?.data ?? {}
+                const symbols = encodeURIComponent(JSON.stringify(["BTCUSDT", "ETHUSDT"]))
+                const res = await fetch(`https://api.binance.com/api/v3/ticker/price?symbols=${symbols}`)
+                const data = await res.json()
 
-                setCurrenciesData([
-                    {
-                        name: "Bitcoin",
-                        img: btc,
-                        value: "btc",
-                        color: "#f39900",
-                        graph_values: [13, 15, 25, 20, 30, 26, 24, 15, 16, 20],
-                        item_bg: "#FFE1B4",
-                        price: data?.bitcoin?.usd,
-                        text_color: "#ff9921",
-                        text_bg: "rgba(255, 153, 33, 0.20)",
-                        increment: "2.05%",
-                        inc_bg: "#91BE65",
-                        inc_color: "white"
-                    },
-                    {
-                        name: "Tether",
-                        img: usdt,
-                        value: "usdt",
-                        color: "#009393",
-                        graph_values: [15, 12, 13, 10, 12, 14, 16, 16, 8],
-                        item_bg: "#01E2E2",
-                        price: data?.tether?.usd,
-                        text_color: "#009393",
-                        text_bg: "rgba(0, 147, 147, 0.22)",
-                        increment: "2.05%",
-                        inc_bg: "#fff",
-                        inc_color: "black"
-                    },
-                    {
-                        name: "Ethereum",
-                        img: eth,
-                        value: "eth",
-                        color: "#101010",
-                        graph_values: [8, 9, 16, 7, 20, 8, 12, 14],
-                        item_bg: "#ececec",
-                        price: data?.ethereum?.usd,
-                        text_color: "#000",
-                        text_bg: "rgba(0,0,0,.2)",
-                        increment: "2.05%",
-                        inc_bg: "#FD0D1b",
-                        inc_color: "white"
-                    },
-                ])
+                const btcPrice = data.find(i => i.symbol === "BTCUSDT")?.price || 0
+                const ethPrice = data.find(i => i.symbol === "ETHUSDT")?.price || 0
+
+                setCurrenciesData(prev => prev.map(currency => {
+                    let price = currency.price;
+                    if (currency.value === "btc") price = Number(btcPrice);
+                    else if (currency.value === "eth") price = Number(ethPrice);
+                    else if (currency.value === "usdt") price = 1.00;
+
+                    return {
+                        ...currency,
+                        price: price,
+                        increment: "0.00%", // Binance ticker/price doesn't provide 24h change
+                    };
+                }));
             } catch (error) {
-                return error
+                console.error("Error fetching crypto rates:", error);
             }
         }
 
