@@ -162,7 +162,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             case 3:
                 return !data.reason
             case 4:
-                return !data.payment_type?.name || data.payment_type?.value === "wallet" ? !data.wallet?._id : false || data?.payment_duration?.value == "subscription" ? !data.payment_duration?.recStartDate || (!data.payment_duration?.cycles && !data.payment_duration?.unlimited) : data?.payment_duration?.value == "schedule" ? !data.payment_duration?.scheduleDate || !data.payment_duration?.scheduleTime : false
+                return !data.payment_type?.name || data.payment_type?.value === "wallet" ? !data.wallet?._id : data?.payment_duration?.value == "subscription" ? !data.payment_duration?.recStartDate || (!data.payment_duration?.cycles && !data.payment_duration?.unlimited) : data?.payment_duration?.value == "schedule" ? !data.payment_duration?.scheduleDate || !data.payment_duration?.scheduleTime : false
             case 5:
                 if (data.payment_type?.value === "card") {
                     const [contentMonth, contentYear] = data.expiry.split("/").map(Number);
@@ -206,6 +206,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
             const dec = decryptData(res.data.data)
             dataHandler("mobile_wallet_services", dec?.data?.payers ?? [])
         } catch {
+            // 
         }
         finally {
             dataHandler("loading", false)
@@ -1155,7 +1156,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                     <div className={styles.mobile}>
                         <div className={styles.m_top}>
                             <h1>{t("SEND MONEY")}</h1>
-                            <h2>{data.payment_type?.value === "card"t("Select Or Add Payment Card") : data.payment_type?.value === "bank_transfer" ? t("Europe Bank Transfer") : t(leftSideContent?.[data.step - 1])}</h2>
+                            <h2>{data.payment_type?.value === "card" ? t("Select Or Add Payment Card") : data.payment_type?.value === "bank_transfer" ? t("Europe Bank Transfer") : t(leftSideContent?.[data.step - 1])}</h2>
                         </div>
                         <div className={styles.flow}>
                             {
