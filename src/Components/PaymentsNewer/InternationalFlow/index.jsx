@@ -345,7 +345,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 updateInternationalData("exchange_rate", exchange_rate_details)
                 updateInternationalData("quotation_details", decrypted?.data)
                 // console.log(decrypted)
-                if (fromOrTo === "from") {
+                if (fromOrTo === "to") {
                     updateInternationalData("receiving_amount", exchange_rate_details?.receiver?.amount)
                     updateInternationalData("conversion_in", destinationCurrency)
                 } else {
@@ -375,11 +375,11 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
             }
             catch (err) {
                 const dec = decryptData(err?.response.data.data)
-                if (fromOrTo === "from") {
-                    updateInternationalData("receiving_amount", 0)
+                if (fromOrTo === "to") {
+                    updateInternationalData("amount", 0)
                     updateInternationalData("conversion_in", destinationCurrency)
                 } else {
-                    updateInternationalData("amount", 0)
+                    updateInternationalData("receiving_amount", 0)
                     updateInternationalData("conversion_in", internationalData.currency_wallet?.currency?.code)
                 }
 
