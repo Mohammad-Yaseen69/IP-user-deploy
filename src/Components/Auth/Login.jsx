@@ -692,21 +692,25 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         let shouldCallLoginHandler = false;
 
         if (resendTimer > 0 && lastOtpSentTo && (method === 'sms' || method === 'insta' || method === "wp" || method === "email")) {
-            if (!hasChangedMethodOnce) {
+            if (!hasChangedMethodOnce || lastOtpSentTo === method) {
                 setHasChangedMethodOnce(true);
-                shouldCallLoginHandler = true;
+                setCurrentOtpMethod(method);
+                if (resendTimer === 0) {
+                    shouldCallLoginHandler = true;
+                }
             } else {
-                // Rate limited. Do not call loginHandler, but allow the UI to change method
+                setPendingOtpMethod(method);
+                return;
             }
         } else if (method !== "biometric" && (method === "auth" || resendTimer === 0)) {
             shouldCallLoginHandler = true;
+            setCurrentOtpMethod(method);
         }
 
         if (shouldCallLoginHandler) {
             loginHandler({ preventDefault: () => { } }, method);
         }
 
-        setCurrentOtpMethod(method);
         setPendingOtpMethod(null);
     }
 
@@ -836,6 +840,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     useEffect(() => {
         if (resendTimer === 0) {
             setLastOtpSentTo(null);
+            setPendingOtpMethod(null);
         }
     }, [resendTimer]);
     const resetOtpStates = () => {
