@@ -815,7 +815,7 @@ const QRFlow = ({ sendPaymentType, setStep, setSendPaymentType, setIsWallet }) =
                                         <div className={styles.left}>
                                             <div className={styles.l_top}>
                                                 <h1>{t("Send Money")}</h1>
-                                                <h2>{data.step === 5 && data.showCard ? t("Select Or Add Payment Card") : data.payment_type?.value === "bank_transfer" ? t("Europe Bank Transfer") : t(leftSideContent?.[data.step - 1])}</h2>
+                                                <h2>{data.step === 5 && data.showCard && data.payment_type?.value === "card" ? t("Select Or Add Payment Card") : data.payment_type?.value === "bank_transfer" ? t("Europe Bank Transfer") : t(leftSideContent?.[data.step - 1])}</h2>
                                             </div>
                                             {
                                                 data.step === 4

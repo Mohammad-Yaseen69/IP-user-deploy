@@ -1156,7 +1156,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                         <div className={styles.left}>
                                             <div className={styles.l_top}>
                                                 <h1>{t("Send Money")}</h1>
-                                                <h2>{data.step === 5 && data.showCard ? t("Select Or Add Payment Card") : data.payment_type?.value === "bank_transfer" ? t("Europe Bank Transfer") : t(leftSideContent?.[data.step - 1])}</h2>
+                                                <h2>{data.step === 5 && data.showCard && data.payment_type?.value === "card"  ? t("Select Or Add Payment Card") : data.payment_type?.value === "bank_transfer" ? t("Europe Bank Transfer") : t(leftSideContent?.[data.step - 1])}</h2>
                                             </div>
                                             {data.step === 1 && !payment_type && <RecentTransactions dataHandler={dataHandler} type={"wallet_to_wallet"} />}
                                             {
