@@ -31,7 +31,8 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
     useEffect(() => {
         if (!userCurrency || !exchangedCurrency) {
             const cur = userWallets?.filter(item => item?.status === "active" && !item?.blocked && !item?.admin_blocked)?.filter(item => item?.currency?.code?.toLowerCase() !== "btc" && item?.currency?.code?.toLowerCase() !== "eth")
-            setUserCurrency(extCurrency || cur?.[0]?.currency?.code)
+            const filteredForFrom = cur?.filter(item => item?.currency?.code !== "USDT")
+            setUserCurrency(extCurrency && extCurrency !== "USDT" ? extCurrency : filteredForFrom?.[0]?.currency?.code)
             setExchangedCurrency(extCurrency ? cur?.filter(item => item?.currency?.code !== extCurrency)?.[0]?.currency?.code : cur?.[1]?.currency?.code)
             if (cur.wallet_type !== "crypto") {
                 setExchangedCurrency("USD")
@@ -194,7 +195,7 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
                         <div className={styles.input_con}>
                             <select value={userCurrency} onChange={e => setUserCurrency(e.target.value)}>
                                 {
-                                    filteredWallets?.filter(item => item?.status && !item?.blocked && !item?.admin_blocked && !item?.blocked && !item?.admin_blocked && item?.currency?.code !== exchangedCurrency)?.map(item => (
+                                    filteredWallets?.filter(item => item?.status && !item?.blocked && !item?.admin_blocked && item?.currency?.code !== exchangedCurrency && item?.currency?.code !== "USDT")?.map(item => (
                                         <option key={item?._id} value={item?.currency?.code} style={{ display: userCurrency === item?.currency?.code ? "none" : "inherit" }}>
                                             {item?.currency?.code}
                                         </option>
@@ -227,6 +228,7 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
                                 }
                             </select>
                             <div style={{ cursor: "pointer" }} onClick={() => {
+                                if (exchangedCurrency === "USDT") return;
                                 const oldUserCur = userCurrency;
                                 const oldExcCur = exchangedCurrency;
                                 setUserCurrency(oldExcCur)
