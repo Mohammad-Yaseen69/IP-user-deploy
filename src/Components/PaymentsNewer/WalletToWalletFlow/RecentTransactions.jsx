@@ -32,7 +32,7 @@ const getWallet = async (authHeader, id, currency,) => {
     return decrypted?.walletList?.find(item => item?.currency?.code === currency)
 }
 
-const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setSubStep, }) => {
+const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setSubStep, dataCurrency }) => {
     const { userDetails, authHeader, userWallets, beneficiaries } = useContext(UserContext)
     const { t } = useTranslation()
     const { data, isError } = useQuery({
@@ -48,7 +48,7 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
             toast.error("We can't let your proceed with transaction please select another one or enter all details manually.")
         }
     })
-
+    console.log(dataCurrency)
     const [modalData, setModalData] = useState({
         isOpen: false,
         tx: null,
@@ -246,16 +246,41 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
                     {modalData.isEditing ? (
                         <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
                             <h4 style={{ fontSize: "18px", fontWeight: "700" }}>{t("Enter New Amount")}</h4>
-                            <Input
-                                type="text"
-                                value={modalData.amount}
-                                onChange={(e) => setModalData(prev => ({ ...prev, amount: e.target.value }))}
-                                placeholder={t("Amount")}
-                                onKeyUp={handleModalKeyUp}
-                                onBlur={handleModalBlur}
-                                style={{ borderRadius: "8px", padding: "12px" }}
-                                autoFocus
-                            />
+                            <div style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "10px",
+                                border: "1px solid black",
+                                padding: "12px",
+                                borderRadius: "8px"
+                            }}>
+                                <span style={{
+                                    color: "#666",
+                                    fontWeight: "700",
+                                    fontSize: "18px"
+                                }}>
+                                    {dataCurrency?.beneficiary_wallet?.currency?.code ||
+                                        dataCurrency?.currency?.currency?.code ||
+                                        "USD"}                                </span>
+                                <input
+
+                                    type="text"
+                                    value={modalData.amount}
+                                    onChange={(e) => setModalData(prev => ({ ...prev, amount: e.target.value }))}
+                                    placeholder={t("Amount")}
+                                    onKeyUp={handleModalKeyUp}
+                                    onBlur={handleModalBlur}
+                                    data-type="currency"
+                                    className={styles.CurrencyInput}
+                                    style={{
+                                        flex: 1,
+                                        outline: "none",
+                                        border: "none",
+                                        fontSize: "16px",
+                                    }}
+                                    autoFocus
+                                />
+                            </div>
                             <Button
                                 onClick={handleModalContinue}
                                 style={{
