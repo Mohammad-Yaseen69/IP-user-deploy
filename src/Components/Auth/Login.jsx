@@ -707,6 +707,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             setCurrentOtpMethod(method);
         }
 
+        if (method === "biometric") {
+            setCurrentOtpMethod(method);
+            return
+        }
+
         if (shouldCallLoginHandler) {
             loginHandler({ preventDefault: () => { } }, method);
         }
