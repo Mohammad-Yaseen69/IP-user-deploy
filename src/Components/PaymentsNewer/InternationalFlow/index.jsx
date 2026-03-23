@@ -347,10 +347,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 // console.log(decrypted)
                 if (fromOrTo === "from") {
                     updateInternationalData("receiving_amount", exchange_rate_details?.receiver?.amount)
-                    updateInternationalData("conversion_in", destinationCurrency)
+                    updateInternationalData("conversion_in", internationalData.currency_wallet?.currency?.code)
                 } else {
                     updateInternationalData("amount", exchange_rate_details?.receiver?.amount)
-                    updateInternationalData("conversion_in", internationalData.currency_wallet?.currency?.code)
+                    updateInternationalData("conversion_in", destinationCurrency)
                 }
 
                 // if (+amount > exchange_rate_details?.limits_used?.daily_sending_limit_used) {
@@ -377,10 +377,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                 const dec = decryptData(err?.response.data.data)
                 if (fromOrTo === "from") {
                     updateInternationalData("receiving_amount", 0)
-                    updateInternationalData("conversion_in", destinationCurrency)
-                } else {
-                    updateInternationalData("amount", 0)
                     updateInternationalData("conversion_in", internationalData.currency_wallet?.currency?.code)
+                } else {
+                    updateInternationalData("conversion_in", destinationCurrency)
+                    updateInternationalData("amount", 0)
                 }
 
                 if (typeof dec?.message == "object") {
