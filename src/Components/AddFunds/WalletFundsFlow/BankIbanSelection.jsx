@@ -99,7 +99,7 @@ const BankIbanSelection = ({
             />
           </div>
 
-          {type !== "payment_address" && (
+          {(type !== "payment_address" && type !== "verification_payment") && (
             <div
               style={{
                 display: "flex",
