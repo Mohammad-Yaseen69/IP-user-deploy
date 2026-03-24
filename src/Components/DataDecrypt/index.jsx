@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
+import { toast } from 'react-toastify'
+import { Copy } from 'react-feather'
 
 const TEXT_EMPTY = '(empty)'
 
@@ -78,7 +80,9 @@ const JsonViewer = ({ data }) => {
 
 const DataDecrypt = () => {
     const TEXT_DECRYPT = 'Decrypt'
+    const TEXT_COPY = 'Copy JSON'
     const TEXT_HINT = 'Decrypted JSON will appear here'
+    const TEXT_SUCCESS = 'JSON copied to clipboard!'
     
     const [str, setStr] = useState("")
     const [data, setData] = useState(null)
@@ -97,6 +101,13 @@ const DataDecrypt = () => {
         }
     }
 
+    const handleCopy = () => {
+        if (data) {
+            navigator.clipboard.writeText(JSON.stringify(data, null, 2))
+            toast.success(TEXT_SUCCESS)
+        }
+    }
+
     return (
         <>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
@@ -110,6 +121,24 @@ const DataDecrypt = () => {
                 <button onClick={handleDecrypt} style={{ padding: '8px 12px', border: '1px solid #111827', background: '#111827', color: '#fff', borderRadius: 6 }}>
                     {TEXT_DECRYPT}
                 </button>
+                {data && (
+                    <button 
+                        onClick={handleCopy} 
+                        style={{ 
+                            padding: '8px 12px', 
+                            border: '1px solid #059669', 
+                            background: '#059669', 
+                            color: '#fff', 
+                            borderRadius: 6,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 6
+                        }}
+                    >
+                        <Copy size={16} />
+                        {TEXT_COPY}
+                    </button>
+                )}
             </div>
             {error ? (
                 <div style={{ color: '#ef4444', marginBottom: 12 }}>{error}</div>
