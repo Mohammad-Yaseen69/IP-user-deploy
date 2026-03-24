@@ -935,7 +935,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 </ModalFooter>
             </Modal>
 
-            <form onSubmit={emailVerified ? loginHandler : checkEmailHandler} className={styles.form_details} style={width > 1000 ? { opacity: step === 1 ? 1 : 0, pointerEvents: step === 1 ? "all" : "none" } : { display: step === 1 ? "inherit" : "none" }}>
+            <form autoComplete="off" onSubmit={emailVerified ? loginHandler : checkEmailHandler} className={styles.form_details} style={width > 1000 ? { opacity: step === 1 ? 1 : 0, pointerEvents: step === 1 ? "all" : "none" } : { display: step === 1 ? "inherit" : "none" }}>
                 <div className={styles.left}>
                     <h1>{t("Login")}</h1>
                     <p>{t("Start Your InstaPay Journey Today!")}</p>
@@ -961,7 +961,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                     country={country}
                                                 />
                                                 :
-                                                <input type="email" placeholder={t("eg: john@doe.org")} value={email} onChange={e => setEmail(e.target.value?.toLowerCase())} autoComplete="on" name="email" />
+                                                <input type="email" placeholder={t("eg: john@doe.org")} value={email} onChange={e => setEmail(e.target.value?.toLowerCase())} autoComplete="off" name="email" />
                                         }
                                         <div
                                             className={styles.loginWith}
@@ -1033,7 +1033,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     display: "flex",
                                     alignItems: "center"
                                 }}>
-                                    <input type={showPassword ? "text" : "password"} placeholder={t("Enter your password")} value={password} onChange={e => setPassword(e.target.value)} />
+                                    <input type={showPassword ? "text" : "password"} placeholder={t("Enter your password")} value={password} onChange={e => setPassword(e.target.value)} autoComplete="off" />
                                     <div style={{
                                         position: "absolute",
                                         top: "55%",
