@@ -1549,7 +1549,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                     <ShippingDetails
                                                                         data={data}
                                                                         dataHandler={dataHandler}
-                                                                    />
+                                                                    /> 
                                                                 }
                                                                 {
                                                                     data.step === 1

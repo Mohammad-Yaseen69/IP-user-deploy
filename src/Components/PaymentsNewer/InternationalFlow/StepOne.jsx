@@ -266,8 +266,14 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
     }
 
     const handleKeyUp = (e) => {
+        const cursor = e.target.selectionStart;
+        const prevLen = e.target.value.length;
         formatCurrency(e.target.value, false, setValue);
-
+        requestAnimationFrame(() => {
+            const newLen = e.target.value.length;
+            const pos = cursor + (newLen - prevLen);
+            e.target.setSelectionRange(pos, pos);
+        });
         if (data?.currency && data?.payer && data.country && data?.payoutChannel) {
             dataHandler("exchange_rate", {})
             dataHandler("exchange_rate_error", "")
@@ -333,11 +339,11 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                                     :
                                     <input
                                         type="text"
-                                        onKeyDown={(e) => {
-                                            if (!/^\d*\.?\d*$/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== "Tab" && e.key !== "Enter") {
-                                                e.preventDefault();
-                                            }
-                                        }}
+                                        // onKeyDown={(e) => {
+                                        //     if (!/^\d*\.?\d*$/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== "Tab" && e.key !== "Enter") {
+                                        //         e.preventDefault();
+                                        //     }
+                                        // }}
                                         value={data.amount}
                                         onChange={(e) => dataHandler("amount", e.target.value)}
                                         onKeyUp={handleKeyUp}
