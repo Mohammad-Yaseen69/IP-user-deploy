@@ -40,6 +40,7 @@ import axios from 'axios'
 import { createShambeToken } from '../../../Helper/CreateToken'
 import CreditCard from '../InternationalFlow/CreditCard'
 import { Link } from 'react-router-dom'
+import PlaidBankTransfer from '../../AddFunds/WalletFundsFlow/PlaidBankTransfer'
 
 
 const leftSideContent = [
@@ -287,6 +288,11 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
             }
 
             if (res?.paypal) exchange_rate_details.paypal = res?.paypal;
+            if (data.payment_type?.value === "bank_transfer") {
+                exchange_rate_details.plaid_currency = res?.converted_currency
+                exchange_rate_details.plaid_amount = res?.converted_amount
+                exchange_rate_details.plaid_fx = res?.converted_rate
+            }
 
 
             console.log(exchange_rate_details)
@@ -336,11 +342,11 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                 return true
             } else {
                 dataHandler("phone_error", "Incorrect phone number, please enter a valid number.")
-                return false
+                return true
             }
         } catch {
             dataHandler("phone_error", "Incorrect phone number, please enter a valid number.")
-            return false
+            return true
         } finally {
             dataHandler("loading", false)
         }
@@ -378,6 +384,15 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
             dataHandler("loading", false)
         }
     }
+
+    const initiatePayload = () => ({
+        token: data?.exchange_rate?.token,
+        identifier: Number(data?.identifier),
+        paymentType: data?.payment_type?.value,
+        description: data.comment,
+        purpose: data.reason,
+        sender_wallet_id: data?.currency?._id
+    })
 
     const sendOtp = async (codeType = "") => {
         const payload = {
@@ -670,20 +685,30 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                     (
                         <>
                             {
-                                !data.showCard
+                                data.payment_type?.value === "bank_transfer"
                                     ?
-                                    <StepFive
+                                    <PlaidBankTransfer
                                         data={data}
                                         dataHandler={dataHandler}
+                                        endpoint="/api/plaid/initiate-w2w-payment"
+                                        type="wallet_to_wallet"
+                                        initiatePayload={initiatePayload}
+                                        handleBackClick={() => dataHandler("step", 4)}
                                     />
                                     :
-                                    <CreditCard
-                                        url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}`}
-                                        tokenUrl={() => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}`}
-                                        data={data}
-                                        dataHandler={dataHandler}
-
-                                    />
+                                    !data.showCard
+                                        ?
+                                        <StepFive
+                                            data={data}
+                                            dataHandler={dataHandler}
+                                        />
+                                        :
+                                        <CreditCard
+                                            url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}`}
+                                            tokenUrl={() => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm-international${data.selectedSavedCard?._id ? "-pan" : ""}-transaction/${data.cardTransactionDetails?.transaction_id}/${data.cardTransactionDetails?.intlToken}`}
+                                            data={data}
+                                            dataHandler={dataHandler}
+                                        />
                             }
                         </>
                     )
@@ -731,41 +756,44 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
         )
     }
 
-    const renderBottomButtons = (isMobile = false) => (
-        <div className={styles.bottom}>
-            <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
-                <HelpCircle size={16} />
-                {t("Trouble Sending Money")}
-            </Link>
-            <div className={styles?.buttons}>
-                {
-                    data.step > 1
-                    &&
-                    <button
-                        className={isMobile ? "" : styles.transparent}
-                        disabled={data.loading}
-                        onClick={handleBack}
-                    >
-                        {isMobile ? <ChevronLeft /> : t("Back")}
-                    </button>
-                }
-                <button
-                    className={isMobile ? styles.full : ""}
-                    disabled={disableNext || data.loading}
-                    onClick={handleClick}
-                >
+    const renderBottomButtons = (isMobile = false) => {
+        if (data.step === 5 && data.payment_type?.value === "bank_transfer") return null
+        return (
+            <div className={styles.bottom}>
+                <Link to={"https://insta-pay.ch/faqs"} target="_blank" style={{ display: "flex", alignItems: "center", gap: ".7rem" }}>
+                    <HelpCircle size={16} />
+                    {t("Trouble Sending Money")}
+                </Link>
+                <div className={styles?.buttons}>
                     {
-                        data.step === 5
-                            ?
-                            t("Confirm")
-                            :
-                            t("Next")
+                        data.step > 1
+                        &&
+                        <button
+                            className={isMobile ? "" : styles.transparent}
+                            disabled={data.loading}
+                            onClick={handleBack}
+                        >
+                            {isMobile ? <ChevronLeft /> : t("Back")}
+                        </button>
                     }
-                    {!isMobile && <ChevronRight size={18} />}
-                </button>
+                    <button
+                        className={isMobile ? styles.full : ""}
+                        disabled={disableNext || data.loading}
+                        onClick={handleClick}
+                    >
+                        {
+                            data.step === 5
+                                ?
+                                t("Confirm")
+                                :
+                                t("Next")
+                        }
+                        {!isMobile && <ChevronRight size={18} />}
+                    </button>
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
 
     return (
         <>
@@ -837,6 +865,7 @@ const NonInstapayPayment = ({ sendPaymentType, setSendPaymentType, setStep }) =>
                                                             <FeesComponent
                                                                 data={data}
                                                                 paypalValues
+                                                                plaidValues
                                                             />
                                                         </>
                                                         :
