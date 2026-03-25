@@ -167,7 +167,14 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
 
     const [formattedAmount, setFormattedAmount] = useState("1.00")
     const handleKeyUp = (e) => {
+        const cursor = e.target.selectionStart;
+        const prevLen = e.target.value.length;
         formatCurrency(e.target.value, false, setFormattedAmount);
+        requestAnimationFrame(() => {
+            const newLen = e.target.value.length;
+            const pos = cursor + (newLen - prevLen);
+            e.target.setSelectionRange(pos, pos);
+        });
     };
 
     const handleBlur = (e) => {

@@ -168,7 +168,14 @@ const RecentTransactions = ({ dataHandler, type, setShowRecent = () => { }, setS
     };
 
     const handleModalKeyUp = (e) => {
+        const cursor = e.target.selectionStart;
+        const prevLen = e.target.value.length;
         formatCurrency(e.target.value, false, setModalValue);
+        requestAnimationFrame(() => {
+            const newLen = e.target.value.length;
+            const pos = cursor + (newLen - prevLen);
+            e.target.setSelectionRange(pos, pos);
+        });
     };
 
     const handleModalBlur = (e) => {

@@ -82,8 +82,14 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = 
     }
 
     const handleKeyUp = (e) => {
+        const cursor = e.target.selectionStart;
+        const prevLen = e.target.value.length;
         formatCurrency(e.target.value, false, setValue);
-
+        requestAnimationFrame(() => {
+            const newLen = e.target.value.length;
+            const pos = cursor + (newLen - prevLen);
+            e.target.setSelectionRange(pos, pos);
+        });
         if (api_timeout) {
             clearTimeout(api_timeout);
         }
@@ -94,8 +100,14 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = 
         }, 1000)
     };
     const handleKeyUpR = (e) => {
+        const cursor = e.target.selectionStart;
+        const prevLen = e.target.value.length;
         formatCurrency(e.target.value, false, setValueR);
-
+        requestAnimationFrame(() => {
+            const newLen = e.target.value.length;
+            const pos = cursor + (newLen - prevLen);
+            e.target.setSelectionRange(pos, pos);
+        });
         if (api_timeout) {
             clearTimeout(api_timeout);
         }
@@ -137,11 +149,11 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = 
                                     dataHandler("reCallApi", e.target.value)
                                     dataHandler("amount", e.target.value)
                                 }}
-                                onKeyDown={(e) => {
-                                    if (!/^\d*\.?\d*$/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== "Tab" && e.key !== "Enter") {
-                                        e.preventDefault();
-                                    }
-                                }}
+                                // onKeyDown={(e) => {
+                                //     if (!/^\d*\.?\d*$/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== "Tab" && e.key !== "Enter") {
+                                //         e.preventDefault();
+                                //     }
+                                // }}
                                 onKeyUp={handleKeyUp}
                                 onBlur={handleBlur}
                                 maxLength={14}
@@ -243,7 +255,7 @@ const StepTwo = ({ data, dataHandler, getExchangeRate, showFee, inNonInstapay = 
                                 t("Invalid Amount")
                             }
                             {
-                              !inNonInstapay && ( t(possibleErrors?.[Object.keys(possibleErrors).find(item => possibleErrors[item] === data?.exchange_rate_error)]) ?? "")
+                                !inNonInstapay && (t(possibleErrors?.[Object.keys(possibleErrors).find(item => possibleErrors[item] === data?.exchange_rate_error)]) ?? "")
                             }
                             {(data?.exchange_rate_error && inNonInstapay) && data?.exchange_rate_error}
                         </div>

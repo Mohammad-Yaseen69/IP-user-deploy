@@ -19,7 +19,14 @@ const Amount = ({ data, dataHandler }) => {
     const _wallet = (data && typeof data.wallet === "object" && data.wallet !== null) ? data.wallet : {};
     const [formattedAmount, setFormattedAmount] = useState(data?.amount)
     const handleKeyUp = (e) => {
+        const cursor = e.target.selectionStart;
+        const prevLen = e.target.value.length;
         formatCurrency(e.target.value, false, setFormattedAmount);
+        requestAnimationFrame(() => {
+            const newLen = e.target.value.length;
+            const pos = cursor + (newLen - prevLen);
+            e.target.setSelectionRange(pos, pos);
+        });
     };
 
     const handleBlur = (e) => {
@@ -72,7 +79,7 @@ const Amount = ({ data, dataHandler }) => {
         dataHandler && dataHandler('exchangeRateError', errorMsg);
     }, [data.amount, limits, userDetails?.user?.kyc_status]);
 
-                console.log('SNAPSHOT FOR LIMIT ERROR', +String(data.amount ?? "").replaceAll(",", "") > +formatCurrencyLocal(limits.max), +String(data.amount ?? "").replaceAll(",", ""), +formatCurrencyLocal(limits.max), userDetails?.user?.kyc_status)
+    console.log('SNAPSHOT FOR LIMIT ERROR', +String(data.amount ?? "").replaceAll(",", "") > +formatCurrencyLocal(limits.max), +String(data.amount ?? "").replaceAll(",", ""), +formatCurrencyLocal(limits.max), userDetails?.user?.kyc_status)
 
     return (
         loading

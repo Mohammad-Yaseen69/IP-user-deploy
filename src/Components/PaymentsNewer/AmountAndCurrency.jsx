@@ -415,7 +415,14 @@ const AmountAndCurrency = ({ setSubStep, amount, setAmount, currency, setCurrenc
     }, [amount, balance, currency, walletDetails, sendType])
     const [formattedAmount, setFormattedAmount] = useState("1.00")
     const handleKeyUp = (e) => {
+        const cursor = e.target.selectionStart;
+        const prevLen = e.target.value.length;
         formatCurrency(e.target.value, false, setFormattedAmount);
+        requestAnimationFrame(() => {
+            const newLen = e.target.value.length;
+            const pos = cursor + (newLen - prevLen);
+            e.target.setSelectionRange(pos, pos);
+        });
     };
 
     const handleBlur = (e) => {
@@ -486,11 +493,11 @@ const AmountAndCurrency = ({ setSubStep, amount, setAmount, currency, setCurrenc
                         onKeyUp={handleKeyUp}
                         onBlur={handleBlur}
                         placeholder="10.00"
-                        onKeyDown={(e) => {
-                            if (!/^\d*\.?\d*$/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== "Tab" && e.key !== "Enter") {
-                                e.preventDefault();
-                            }
-                        }}
+                        // onKeyDown={(e) => {
+                        //     if (!/^\d*\.?\d*$/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete" && e.key !== "Tab" && e.key !== "Enter") {
+                        //         e.preventDefault();
+                        //     }
+                        // }}
                         data-type="currency"
                         style={{
                             width: "100%",

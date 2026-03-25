@@ -57,7 +57,15 @@ const QuotationDetails = ({ amount, currency, setAmount, setCurrency, title, set
 
     const [formattedAmount, setFormattedAmount] = useState("1.00")
     const handleKeyUp = (e) => {
+
+        const cursor = e.target.selectionStart;
+        const prevLen = e.target.value.length;
         formatCurrency(e.target.value, false, setFormattedAmount);
+        requestAnimationFrame(() => {
+            const newLen = e.target.value.length;
+            const pos = cursor + (newLen - prevLen);
+            e.target.setSelectionRange(pos, pos);
+        });
     };
 
     const handleBlur = (e) => {
@@ -105,7 +113,7 @@ const QuotationDetails = ({ amount, currency, setAmount, setCurrency, title, set
                         maxLength={12}
                         onChange={(e) => setFormattedAmount(e.target.value)}
                         onKeyUp={handleKeyUp}
-                        onBlur={handleBlur} 
+                        onBlur={handleBlur}
                         placeholder="10.00"
                         data-type="currency"
                         style={{
