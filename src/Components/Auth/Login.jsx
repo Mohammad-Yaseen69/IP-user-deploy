@@ -176,50 +176,50 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             });
         };
 
-        let locationInput = null;
-        if (capturedSecurityData?.locationData) {
-            locationInput = capturedSecurityData.locationData;
-        } else if (step === 1) {
-            try {
-                locationInput = await getLocation();
-            } catch (error) {
-                logger.error("Location error occured", {
-                    error: error
-                })
-                if (error.code === 1) {
-                    if (rdd.isSafari || rdd.isMobileSafari) {
-                        try {
-                            locationInput = await new Promise((resolve, reject) => {
-                                navigator.geolocation.getCurrentPosition(resolve, reject, {
-                                    timeout: 10000,
-                                    enableHighAccuracy: true,
-                                    maximumAge: 0
-                                });
-                            });
-                        } catch (error2) {
-                            logger.error("Location error occured in safari", {
-                                error: error2
-                            })
-                            setPendingLoginData({ method, restoreAccount, isPendingRetry: true });
-                            setShowLocationModal(true);
-                            setIsPressed(false);
-                            setMethodLoading(false);
-                            setRestoreLoading(false);
-                            return;
-                        }
-                    } else {
-                        setPendingLoginData({ method, restoreAccount, isPendingRetry: true });
-                        setShowLocationModal(true);
-                        setIsPressed(false);
-                        setMethodLoading(false);
-                        setRestoreLoading(false);
-                        return;
-                    }
-                }
+        let locationInput = {};
+        // if (capturedSecurityData?.locationData) {
+        //     locationInput = capturedSecurityData.locationData;
+        // } else if (step === 1) {
+        //     try {
+        //         locationInput = await getLocation();
+        //     } catch (error) {
+        //         logger.error("Location error occured", {
+        //             error: error
+        //         })
+        //         if (error.code === 1) {
+        //             if (rdd.isSafari || rdd.isMobileSafari) {
+        //                 try {
+        //                     locationInput = await new Promise((resolve, reject) => {
+        //                         navigator.geolocation.getCurrentPosition(resolve, reject, {
+        //                             timeout: 10000,
+        //                             enableHighAccuracy: true,
+        //                             maximumAge: 0
+        //                         });
+        //                     });
+        //                 } catch (error2) {
+        //                     logger.error("Location error occured in safari", {
+        //                         error: error2
+        //                     })
+        //                     setPendingLoginData({ method, restoreAccount, isPendingRetry: true });
+        //                     setShowLocationModal(true);
+        //                     setIsPressed(false);
+        //                     setMethodLoading(false);
+        //                     setRestoreLoading(false);
+        //                     return;
+        //                 }
+        //             } else {
+        //                 setPendingLoginData({ method, restoreAccount, isPendingRetry: true });
+        //                 setShowLocationModal(true);
+        //                 setIsPressed(false);
+        //                 setMethodLoading(false);
+        //                 setRestoreLoading(false);
+        //                 return;
+        //             }
+        //         }
 
-                console.warn("Geolocation warning:", error);
-            }
-        }
+        //         console.warn("Geolocation warning:", error);
+        //     }
+        // }
 
         setConsecutiveCount(1)
         if (method) {
