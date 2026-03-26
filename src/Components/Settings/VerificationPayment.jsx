@@ -202,7 +202,11 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
         } catch (err) {
             // console.log(decryptData(error?.response?.data?.data))
             const decrypted = decryptData(err.response.data.data);
-            setOtpError(decrypted?.message ?? "Something went wrong while verifying the code.")
+            if(decrypted?.message?.toLowerCase()?.includes("kyc already paid")){
+                setOtpError('You have already paid for the KYC please refresh the page to continue the verification process.')
+            }else{
+                setOtpError(decrypted?.message ?? "Something went wrong while verifying the code.")
+            }
             if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                 const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                 const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
@@ -495,8 +499,9 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                 }}
                                 data={{}}
                                 handleBackClick={() => {
-                                    setShowSuccess(false)
+                                    setStep(1)
                                 }}
+                                successMessage={'Payment authorized successfully, you will be able to continue your KYC Verification once the transaction is completed, you can now close this window now.'}
                             />
                         }
                         {

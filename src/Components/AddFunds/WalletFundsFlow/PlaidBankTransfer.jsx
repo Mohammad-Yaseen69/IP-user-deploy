@@ -29,6 +29,7 @@ const PlaidBankTransfer = ({
   initiatePayload,
   endpoint = "",
   handleBackClick,
+  successMessage
 }) => {
   const { userDetails, authHeader, setProfileLockTime } = useContext(UserContext);
   const { t } = useTranslation();
@@ -150,34 +151,28 @@ const PlaidBankTransfer = ({
     },
     onError: (error) => {
       console.error("Failed to initiate Plaid payment:", error);
-      if (type !== "payment_address") {
-        handlePaymentApiError({
-          error,
-          setError: (m) => dataHandler("error", m),
-          setProfileLockTime,
-          navigate,
-          fallback: "We are unable to process your request at the moment, please try again later.",
-        });
-      } else {
-        toast.error(
-          "We are unable to process your request at the moment, please try again later!"
-        );
-      }
+      handlePaymentApiError({
+        error,
+        setError: (m) => dataHandler("error", m),
+        setProfileLockTime,
+        navigate,
+        fallback: "We are unable to process your request at the moment, please try again later.",
+      });
     },
   });
 
-  const sendOtpHandler = async (type) => {
+  const sendOtpHandler = async (otpCodeType) => {
     const initiatePayloadResponse = {
       ...initiatePayload(true),
       recipient_iban: recipientData.iban,
       saveForFutureUse: recipientData.saveForFutureUse,
     }
 
-    if (type === "add_funds") {
+    if (otpCodeType === "add_funds") {
       initiatePayloadResponse.recipientIban = recipientData.iban
     }
 
-    await sendOtp(initiatePayloadResponse, type || codeType)
+    await sendOtp(initiatePayloadResponse, otpCodeType || codeType)
   }
 
   const initiateCallback = (setter, _, otp) => {
@@ -285,9 +280,12 @@ const PlaidBankTransfer = ({
     token: linkToken,
     onSuccess: async (publicToken, metadata) => {
       console.log("Plaid success:", { publicToken, metadata });
-      setPlaidStep(3);
+
       if (type !== "verification_payment") {
+        setPlaidStep(3);
         await exchangePlaidToken({ publicToken, metadata });
+      } else {
+        setPlaidStep(4);
       }
     },
     onExit: (err, metadata) => {
@@ -376,8 +374,12 @@ const PlaidBankTransfer = ({
           dataHandler("step", 4);
         }
       } else {
-        dataHandler("step", 3);
-        dataHandler("exchange_rate", data.exchange_rate_backup);
+        if (handleBackClick) {
+          handleBackClick()
+        } else {
+          dataHandler("step", 3);
+          dataHandler("exchange_rate", data.exchange_rate_backup);
+        }
       }
     } else if (plaidStep === 2 || plaidStep === 3) {
       setPlaidStep(1);
@@ -471,7 +473,7 @@ const PlaidBankTransfer = ({
             style={{ color: "black", textAlign: "center", marginBottom: "0px" }}
           >
             {t(
-              type !== "add_funds" ? "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window" : "Payment authorized successfully! Your wallet will be credited once the transfer is complete.",
+              successMessage || type !== "add_funds" ? "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window" : "Payment authorized successfully! Your wallet will be credited once the transfer is complete.",
             )}
           </h4>
         </div>
@@ -527,7 +529,7 @@ const PlaidBankTransfer = ({
                   } else {
                     console.log("Adding new bank");
                     if (type === "verification_payment") {
-                      await sendOtpHandler(type)
+                      await sendOtpHandler()
                     } else {
                       await initiatePlaidPayment({});
                     }
