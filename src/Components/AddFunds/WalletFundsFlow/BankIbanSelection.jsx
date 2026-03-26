@@ -60,7 +60,7 @@ const BankIbanSelection = ({
       )}
 
       <div style={{ padding: "0", border: "none" }}>
-        <h5 style={{ fontWeight: 700 }}>{savedBanks.length > 0 ? t("Add bank details") : t("Enter recipient IBAN for Plaid Bank Transfer")}</h5>
+        <h5 style={{ fontWeight: 700 }}>{savedBanks.length > 0 ? t("Add bank details") : t("Enter your bank IBAN")}</h5>
         <div
           style={{
             display: "flex",
