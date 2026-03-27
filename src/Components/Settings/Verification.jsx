@@ -394,9 +394,7 @@ const Verification = () => {
                     }
                     <Col className='mb-4' style={{ display: "flex", justifyContent: "flex-end" }}>
                         {
-                            userDetails?.user?.kyc_status !== "approved"
-                                &&
-                                userDetails?.user?.kyc_status !== "needs-review"
+                            userDetails?.user?.kyc_status !== "approved" && userDetails?.user?.kyc_status !== "needs-review"
                                 ?
                                 <Button style={{
                                     background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
