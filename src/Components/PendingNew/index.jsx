@@ -260,7 +260,7 @@ const PendingNew = () => {
                                         color: active === item.name ? "white" : "#848484",
                                         minWidth: "200px"
                                     }} className={styles.menu_item} onClick={() => setActive(item.name)}>
-                                        <img src={active === item.name ? item.icon_white : item.icon_grey} style={{ width: "18px" }} />
+                                        <img src={active === item.name ? item.icon_white : item.icon_grey} loading="lazy" style={{ width: "18px" }} />
                                         <span>{t(item.name)}</span>
                                         {
                                             active === item.name
@@ -276,7 +276,7 @@ const PendingNew = () => {
                                 <Search size={16} color="#848484" />
                                 <Input placeholder={t("Search Request")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
                             </div>
-                            <img src={calendar} alt="c" onClick={handleDatePickerClick} />
+                            <img src={calendar} alt="c" loading="lazy" onClick={handleDatePickerClick} />
                             {showDatePicker && (
                                 <div ref={datePickerRef} style={{ position: "absolute", top: "100%", right: 0, boxShadow: "0px 0px 3px rgba(0,0,0,0.1)", borderRadius: "10xp", overflow: "hidden", zIndex: 10000000 }}>
                                     <DateRangePicker maxDate={new Date()}
@@ -380,7 +380,7 @@ const PendingNew = () => {
                                 <Search size={16} color="#848484" />
                                 <Input placeholder={t("Search Request")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
                             </div>
-                            <img src={calendar} alt="c" onClick={handleDatePickerClick} />
+                            <img src={calendar} alt="c" loading="lazy" onClick={handleDatePickerClick} />
                             {showDatePicker && (
                                 <div ref={datePickerRef} style={{ position: "absolute", top: "100%", right: 0, boxShadow: "0px 0px 3px rgba(0,0,0,0.1)", borderRadius: "10xp", overflow: "hidden", zIndex: 10000000 }}>
                                     <DateRangePicker maxDate={new Date()}

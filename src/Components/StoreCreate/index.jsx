@@ -98,7 +98,7 @@ const StoreCreate = () => {
                         {StepData.map((item, index) => (
                             <div key={index} className={styles.featureItem}>
                                 <span className={styles.icon}>{item.icon}</span>
-                                <span className={styles.title}>{item.title}</span>
+                                <span className={styles.title}>{t(item.title)}</span>
                             </div>
                         ))}
                     </div>
@@ -115,7 +115,7 @@ const StoreCreate = () => {
                     </p>
                 </div>
                 <div className={styles.right}>
-                    <img src={bg} alt="Store Illustration" />
+                    <img src={bg} alt="Store Illustration" loading="lazy" />
                 </div>
             </div>
             {showModal && <TermsModal setShowModal={setShowModal} handleCreateStore={handleCreateStore} />}

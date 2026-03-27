@@ -101,12 +101,18 @@ const AuthNew = () => {
                             <LanguagePicker />
                         </div>
                         {/* } */}
-                        <img src={overlay} alt="overlay" className={styles.overlay} />
+                        <img src={overlay} alt="overlay"
+                            loading="lazy"
+                            className={styles.overlay} />
                         {
                             step < 2 ?
-                                <img src={man} alt="man" className={styles.man} />
+                                <img src={man} alt="man"
+                                    loading="lazy"
+                                    className={styles.man} />
                                 :
-                                <img src={woman} alt="woman" className={styles.man} />
+                                <img src={woman} alt="woman"
+                                    loading="lazy"
+                                    className={styles.man} />
                         }
                         {
                             isForgot
