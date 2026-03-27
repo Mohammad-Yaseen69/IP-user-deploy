@@ -66,11 +66,11 @@ export const openInNewTab = (url) => {
     }
 };
 
-
-export const paymentAddressFlagCheck = (destination = "", details = {}) => {
+export const flagCheck = (destination = "", details = {}, type) => {
     console.log(details, "flags ")
     const parts = destination.split(".");
-    let cursor = details?.paymentAddressFlags;
+
+    let cursor = type === "invoice" ? details?.invoiceFlags : details?.paymentAddressFlags;
 
     for (let i = 0; i < parts.length - 1; i++) {
         cursor = cursor?.[parts[i]];

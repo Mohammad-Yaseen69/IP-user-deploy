@@ -19,7 +19,7 @@ import useWindowWidth from "../../utils/useWindowWidth";
 import ip from "./instapay_black.svg";
 import PayWithCrypto from "./PayWithCrypto"
 import UserDets from "./UserDets"
-import { paymentAddressFlagCheck } from "../../utils/Functions";
+import { flagCheck } from "../../utils/Functions";
 import useCountryLocation from "../../hooks/GeneralUse/useCountryLocation";
 import VpnModal from "../Auth/VpnModal";
 
@@ -119,7 +119,7 @@ export const LeftJsx = ({
     >
       {width > 1000 &&
         <div style={{ position: "absolute", bottom: "10px", right: "10px" }}>
-          {paymentAddressFlagCheck("allowMultiLanguage", userDetails) && <LanguagePicker defaultLanguage={userDetails.langauge} newUI={true} />}
+          {flagCheck("allowMultiLanguage", userDetails, "paymentAddress") && <LanguagePicker defaultLanguage={userDetails.langauge} newUI={true} />}
         </div>
       }
       {width > 1000 && (
@@ -130,15 +130,17 @@ export const LeftJsx = ({
       )}
       <div className={styles.left_bottom}>
         <div>
-          {(title || description) && (
+          {(flagCheck("allowTitle", userDetails, "paymentAddress") ? title : "") || (flagCheck("allowDescription", userDetails, "paymentAddress") ? description : "") ? (
             <div className={styles.about}>
-              <h4 style={{ marginBottom: "0px" }}>{title}</h4>
-              <p style={{ fontSize: "14px", fontWeight: 600, color: "#7E7E7E" }}>
-                {description}
-              </p>
+              {flagCheck("allowTitle", userDetails, "paymentAddress") && <h4 style={{ marginBottom: "0px" }}>{title}</h4>}
+              {flagCheck("allowDescription", userDetails, "paymentAddress") && (
+                <p style={{ fontSize: "14px", fontWeight: 600, color: "#7E7E7E" }}>
+                  {description}
+                </p>
+              )}
             </div>
-          )}
-          {userVideos && userVideos.length > 0 && (
+          ) : null}
+          {userVideos && userVideos.length > 0 && flagCheck("allowVideos", userDetails, "paymentAddress") && (
             <div className="p-swiper-videos-123">
               <Swiper
                 modules={[FreeMode, Mousewheel, Pagination]}

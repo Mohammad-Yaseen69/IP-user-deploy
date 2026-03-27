@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next"
 import borderline from "./files/borderline.png"
 import styles from './styles/index.module.scss'
 import ip from "../../PaymentAddressPublic/instapay_black.svg";
+import { flagCheck } from "../../../utils/Functions"
 
 const InvoiceDetails = ({ data, isSubscription = false }) => {
     const { t } = useTranslation()
@@ -17,14 +18,16 @@ const InvoiceDetails = ({ data, isSubscription = false }) => {
             </div>
 
             <div className={styles.details}>
-                <div>
-                    <span>
-                        {isSubscription ? t("Plan Title") : t("Invoice Title")}
-                    </span>
-                    <h2>
-                        {data?.plan?.title || data.title}
-                    </h2>
-                </div>
+                {flagCheck("allowTitle", data.account, "invoice") &&
+                    <div>
+                        <span>
+                            {isSubscription ? t("Plan Title") : t("Invoice Title")}
+                        </span>
+                        <h2>
+                            {data?.plan?.title || data.title}
+                        </h2>
+                    </div>
+                }
                 <div>
                     <span>
                         {isSubscription ? t("Plan ID") : t("Invoice ID")}
@@ -33,14 +36,16 @@ const InvoiceDetails = ({ data, isSubscription = false }) => {
                         {data?.plan?.planId || data.invoiceId}
                     </h4>
                 </div>
-                <div>
-                    <span>
-                        {isSubscription ? t("Plan Description") : t("Invoice Description")}
-                    </span>
-                    <h2>
-                        {data?.plan?.description || data.description}
-                    </h2>
-                </div>
+                {flagCheck("allowDescription", data.account, "invoice") &&
+                    <div>
+                        <span>
+                            {isSubscription ? t("Plan Description") : t("Invoice Description")}
+                        </span>
+                        <h2>
+                            {data?.plan?.description || data.description}
+                        </h2>
+                    </div>
+                }
                 {isSubscription && (
                     <div>
                         <span>
