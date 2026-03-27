@@ -54,6 +54,9 @@ export default defineConfig({
       usePolling: true,
       interval: 100
     }
+  //    allowedHosts: [
+  //   'procontinuation-harmonious-hayes.ngrok-free.dev'
+  // ]
   },
   build: {
     rollupOptions: {
