@@ -61,7 +61,7 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal
             disabledMessage: t("This method is disabled for this payment address by admin.")
         }
     ]
-    return (    
+    return (
         <>
             {
                 state.showCreditModal
@@ -112,12 +112,16 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal
 
                 <div className={styles.buttons}>
                     <div>
-                        <button onClick={() => navigate(`/profile/${user_name}`)} style={{ color: "white", background: "#5926F0" }}>
-                            {t("View Profile")}
-                        </button>
-                        <button>
-                            {t("Explore eShop")}
-                        </button>
+                        {flagCheck("allowViewProfile", userDetails, "invoice") &&
+                            <button onClick={() => navigate(`/profile/${user_name}`)} style={{ color: "white", background: "#5926F0" }}>
+                                {t("View Profile")}
+                            </button>
+                        }
+                        {flagCheck("allowEcommerce", userDetails, "invoice") &&
+                            <button>
+                                {t("Explore eShop")}
+                            </button>
+                        }
                     </div>
 
                     <LanguagePicker newUI={true} />
