@@ -10,7 +10,7 @@ import SendActionCard from "../../PaymentsNewer/Common/SendActionCard";
 import InstaPayLoader from "../../Loader";
 import FeesComponent from "../../PaymentsNewer/InternationalFlow/FeesComponent";
 import styles from "../../PaymentsNewer/InternationalFlow/styles/index.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, HelpCircle, Info } from "react-feather";
 import { useTranslation } from "react-i18next";
 import Wallets from "./Wallets";
@@ -189,6 +189,7 @@ const WalletFundsFlow = ({ setAction }) => {
   const { t } = useTranslation();
   const [data, dispatch] = useReducer(reducer, initialState);
   const { userDetails, authHeader, userWallets } = useContext(UserContext);
+  const navigate = useNavigate()
 
   const dataHandler = (field, value) => {
     dispatch({ type: "UPDATE_FIELD", field, value });
@@ -1136,7 +1137,10 @@ const WalletFundsFlow = ({ setAction }) => {
       ) : (
         <div className={styles.mobile}>
           <div className={styles.top}>
-            <button className={styles.back_btn}>
+            <button onClick={() => {
+              navigate("/add-funds")
+              setAction("")
+            }} className={styles.back_btn}>
               <ChevronLeft />
             </button>
             <h5>{t("Add Funds")}</h5>

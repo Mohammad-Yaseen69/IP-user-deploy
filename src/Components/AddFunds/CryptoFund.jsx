@@ -1,13 +1,15 @@
 import { useContext, useEffect, useState } from "react"
 import crypto_selected from "./files/crypto_selected.png"
-import { Button, Card, CardBody } from "reactstrap";
+import { Card, CardBody } from "reactstrap";
 import c_vid from "../PaymentsNewer/files/confirm.mp4"
 import CryptoCurrencyNew from "../PaymentsNewer/CryptoCurrencyNew";
 import CryptoFundReceipt from "./CryptoFundReceipt";
 import SelectedCryptoCurrency from "../PaymentsNewer/SelectedCryptoCurrency";
 import styles from "../PaymentsNewer/Mobile/styles/International.module.css"
+import flowStyles from "../PaymentsNewer/InternationalFlow/styles/index.module.css"
 import { useTranslation } from "react-i18next";
-import { ChevronLeft, ChevronRight } from "react-feather";
+import { ChevronLeft, ChevronRight, HelpCircle } from "react-feather";
+import { Link } from "react-router-dom";
 import TopIcon from "../PaymentsNewer/Mobile/files/Top";
 import Amount from "./WalletFundsFlow/Amount";
 import { useNavigate } from "react-router";
@@ -22,8 +24,6 @@ import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow";
 import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation";
 import { WidgetSDK } from "@keabank/websdk";
 import ErrorModal from "../PaymentsNewer/InternationalFlow/ErrorModal";
-
-const isBig = window.innerWidth > 1000
 
 
 const sdk = new WidgetSDK({
@@ -78,6 +78,7 @@ const CryptoFund = ({ setAction }) => {
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data);
             setExchangeRateError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
+            setError(dec?.message ?? "We cannot process your request at the moment, please try again later.")
             console.log(dec)
         } finally {
             setLoading(false)
@@ -164,7 +165,7 @@ const CryptoFund = ({ setAction }) => {
 
     return (
         <>
-            <ErrorModal isOpen={error} toggle={() => setError(null)} heading="Crypto Topup Failed" />
+            <ErrorModal isOpen={error} message={error} toggle={() => setError(null)} heading="Crypto Topup Failed" />
             {
                 window.innerWidth > 1000
                     ?
@@ -268,59 +269,53 @@ const CryptoFund = ({ setAction }) => {
                                         />
                                     }
 
-                                    <div style={{
-                                        display: "flex",
-                                        justifyContent: "flex-end",
-                                        alignItems: "center",
-                                        gap: ".5rem",
-                                        flexWrap: "wrap",
-                                        paddingLeft: isBig ? "1rem" : "0",
-                                        marginTop: "1rem",
-                                    }}>
-                                        {
-                                            !transactionComplete &&
-                                            <span onClick={handleBack} style={{ fontWeight: 600, marginRight: "20px", cursor: "pointer" }}>
-                                                {t("Back")}
-                                            </span>
-                                        }
-                                        <Button size="sm" style={{
-                                            border: "none",
-                                            outline: "none",
-                                            background: " linear-gradient(to right, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0",
-                                            backgroundBlendMode: "overlay, normal",
-                                            boxShadow: "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
-                                            display: "flex",
-                                            justifyContent: "space-between",
-                                            alignItems: "center",
-                                            width: isBig ? "60%" : "100%",
-                                            minWidth: "fit-content",
-                                            padding: ".75rem 2rem",
-                                            borderRadius: "12px"
-                                        }}
-                                            className="i_t_button"
-                                            onClick={() => {
-                                                if (transactionComplete) {
-                                                    navigate("/wallets")
-                                                } else {
-                                                    if (subStep === 1) {
-                                                        navigate("/add-funds?wallet_address=" + cryptoCurrency._id)
-                                                        setSubStep(prev => prev + 1)
-                                                    } else {
-                                                        handleConfirm()
-                                                    }
-                                                }
+                                    <div className={flowStyles.bottom} style={{ marginTop: "1rem" }}>
+                                        <Link
+                                            to={"https://insta-pay.ch/faqs"}
+                                            target="_blank"
+                                            style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: ".7rem",
                                             }}
-                                            disabled={subStep === 1 ? !cryptoCurrency?._id : !amount || exchangeRateError || loading || transactionLoading}
                                         >
-                                            {transactionComplete ? t("Go to wallets.") : t("Next")} <ChevronRight size={20} />
-                                        </Button>
+                                            <HelpCircle size={16} />
+                                            {t("Trouble Sending Money")}
+                                        </Link>
+                                        <div className={flowStyles?.buttons}>
+                                            <button
+                                                className={flowStyles.transparent}
+                                                onClick={handleBack}
+                                                disabled={loading || transactionLoading}
+                                            >
+                                                {t("Back")}
+                                            </button>
+                                            <button
+                                                disabled={subStep === 1 ? !cryptoCurrency?._id : !amount || exchangeRateError || loading || transactionLoading}
+                                                onClick={() => {
+                                                    if (transactionComplete) {
+                                                        navigate("/wallets")
+                                                    } else {
+                                                        if (subStep === 1) {
+                                                            navigate("/add-funds?wallet_address=" + cryptoCurrency._id)
+                                                            setSubStep(prev => prev + 1)
+                                                        } else {
+                                                            handleConfirm()
+                                                        }
+                                                    }
+                                                }}
+                                            >
+                                                {transactionComplete ? t("Go to wallets.") : t("Next")}
+                                                {!transactionComplete && <ChevronRight size={18} />}
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </CardBody>
                         </Card>
                     </div>
                     :
-                    <div className={styles.container}>
+                    <div className={`${styles.container} ${flowStyles.mobile}`}>
                         <div className={styles.top}>
                             <button className={styles.back_btn} onClick={() => {
                                 if (subStep === 1) {
@@ -337,7 +332,15 @@ const CryptoFund = ({ setAction }) => {
                             </div>
                         </div>
 
-                        <div className={styles.bottom}>
+                        <div
+                            className={styles.bottom}
+                            style={{
+                                minHeight: "80vh",
+                                display: "flex",
+                                justifyContent:"space-between",
+                                flexDirection: "column"
+                            }}
+                        >
                             {
                                 subStep === 1
                                 &&
@@ -385,52 +388,47 @@ const CryptoFund = ({ setAction }) => {
                             }
 
 
-                            <div style={{
-                                display: "flex",
-                                justifyContent: "flex-end",
-                                alignItems: "center",
-                                gap: ".5rem",
-                                flexWrap: "wrap",
-                                paddingLeft: isBig ? "1rem" : "0",
-                                marginTop: "1rem",
-                            }}>
-                                {
-                                    !transactionComplete &&
-                                    <span onClick={handleBack} style={{ fontWeight: 600, marginRight: "20px", cursor: "pointer" }}>
-                                        {t("Back")}
-                                    </span>
-                                }
-                                <Button size="sm" style={{
-                                    border: "none",
-                                    outline: "none",
-                                    background: " linear-gradient(to right, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0",
-                                    backgroundBlendMode: "overlay, normal",
-                                    boxShadow: "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                    width: isBig ? "60%" : "100%",
-                                    minWidth: "fit-content",
-                                    padding: ".75rem 2rem",
-                                    borderRadius: "12px"
-                                }}
-                                    className="i_t_button"
-                                    onClick={() => {
-                                        if (transactionComplete) {
-                                            navigate("/wallets")
-                                        } else {
-                                            if (subStep === 1) {
-                                                navigate("/add-funds?wallet_address=" + cryptoCurrency._id)
-                                                setSubStep(prev => prev + 1)
-                                            } else {
-                                                handleConfirm()
-                                            }
-                                        }
+                            <div className={flowStyles.bottom}>
+                                <Link
+                                    to={"https://insta-pay.ch/faqs"}
+                                    target="_blank"
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: ".7rem",
                                     }}
-                                    disabled={subStep === 1 ? !cryptoCurrency?._id : !amount || exchangeRateError || loading || transactionLoading}
                                 >
-                                    {transactionComplete ? t("Go to wallets.") : t("Next")} <ChevronRight size={20} />
-                                </Button>
+                                    <HelpCircle size={16} />
+                                    {t("Trouble Sending Money")}
+                                </Link>
+                                <div className={flowStyles.buttons}>
+                                    {subStep > 1 && (
+                                        <button
+                                            disabled={loading || transactionLoading}
+                                            onClick={handleBack}
+                                        >
+                                            <ChevronLeft />
+                                        </button>
+                                    )}
+                                    <button
+                                        className={flowStyles.full}
+                                        disabled={subStep === 1 ? !cryptoCurrency?._id : !amount || exchangeRateError || loading || transactionLoading}
+                                        onClick={() => {
+                                            if (transactionComplete) {
+                                                navigate("/wallets")
+                                            } else {
+                                                if (subStep === 1) {
+                                                    navigate("/add-funds?wallet_address=" + cryptoCurrency._id)
+                                                    setSubStep(prev => prev + 1)
+                                                } else {
+                                                    handleConfirm()
+                                                }
+                                            }
+                                        }}
+                                    >
+                                        {transactionComplete ? t("Go to wallets.") : t("Next")}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div >
