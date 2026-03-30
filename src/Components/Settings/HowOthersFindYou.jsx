@@ -10,6 +10,7 @@ import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import styles from "./styles/NotifTable.module.css"
 import { toast } from 'react-toastify';
 import Switch from './Switch';
+import { Toggle } from '../MyMasterCard/CardPurchased';
 
 const HowOthersFindYou = () => {
     const { t } = useTranslation()
@@ -59,7 +60,7 @@ const HowOthersFindYou = () => {
 
     // will be used later to get info
     useEffect(() => {
-        if (userDetails) {
+        if (userDetails && !editMode) {
             setPhoneActive(userDetails?.isPhoneSearch ?? false)
             setEmailActive(userDetails?.isEmailSearch ?? false)
             setNameActive(userDetails?.isNameSearch ?? true)
@@ -105,6 +106,7 @@ const HowOthersFindYou = () => {
         }
     }
 
+    console.log(phoneActive)
     return (
         <Card id='two_factor'>
             <CardHeader className={`pb-0`}>
@@ -122,25 +124,25 @@ const HowOthersFindYou = () => {
                         <tr>
                             <td style={{ width: "100%" }} data-label="Email Address">{t("Email Address")}</td>
                             <td data-label={t("Email Address")}>
-                                <Switch checked={emailActive} callback={() => setEmailActive(!emailActive)} disabled={!editMode || isSaving} />
+                                <Toggle checked={emailActive} onChange={(e) => setEmailActive(!emailActive)} disabled={!editMode || isSaving} />
                             </td>
                         </tr>
                         <tr>
                             <td style={{ width: "100%" }} data-label="Phone Number">{t("Phone Number")}</td>
                             <td data-label={t("Phone Number")}>
-                                <Switch checked={phoneActive} callback={() => setPhoneActive(!phoneActive)} disabled={!editMode || isSaving} />
+                                <Toggle checked={phoneActive} onChange={(e) => setPhoneActive(!phoneActive)} disabled={!editMode || isSaving} />
                             </td>
                         </tr>
                         <tr>
                             <td style={{ width: "100%" }} data-label="Name">{t("Name")}</td>
                             <td data-label={t("Name")}>
-                                <Switch checked={nameActive} />
+                                <Toggle checked={nameActive} />
                             </td>
                         </tr>
                         <tr>
                             <td style={{ width: "100%" }} data-label="Username">{t("Username")}</td>
                             <td data-label={t("Username")}>
-                                <Switch checked={usernameActive} />
+                                <Toggle checked={usernameActive} />
                             </td>
                         </tr>
                     </tbody>
