@@ -286,7 +286,7 @@ const GeoFencing = () => {
         <div className={styles.container}>
             <div className={styles.top}>
                 <div style={{ width: "70%" }}>
-                    <h4>{t("Manage Payment & Quotation Access")}</h4>
+                    <h2>{t("Manage Payment & Quotation Access")}</h2>
                     <p>{t("Control countries from where you can receive Payment Requests and Quotations. Toggle on/off access for specific countries.")}</p>
                 </div>
                 <div>
