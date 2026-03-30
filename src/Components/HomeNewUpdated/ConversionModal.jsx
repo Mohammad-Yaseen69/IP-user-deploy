@@ -59,8 +59,6 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
     useEffect(() => {
         if (!isOpen) {
             setStep(1)
-            setEnteredCurrency("")
-            setResultCurrency("")
         }
     }, [isOpen])
 
