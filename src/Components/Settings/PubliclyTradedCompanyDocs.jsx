@@ -3,6 +3,7 @@ import { FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstr
 import styles from "./styles/doctype.module.css"
 import { CheckCircle, Info } from 'react-feather'
 import { UserContext } from '../../Context/UserContext'
+import { useTranslation } from 'react-i18next'
 
 const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, userDetails, checkFileStatus }) => {
     const existingFile = userDetails?.company?.kyb_files?.find(f => f.document_name === docName)
@@ -57,6 +58,8 @@ const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, 
 }
 
 const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => {
+    const { t } = useTranslation();
+
     const [modalOne, setModalOne] = useState(false)
     const [modalTwo, setModalTwo] = useState(false)
     const [modalThree, setModalThree] = useState(false)
@@ -65,10 +68,10 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
     const { userDetails } = useContext(UserContext)
     return (
         <div className={styles.container}>
-            <h5>Documents Required: </h5>
+            <h5>{t("Documents Required:")} </h5>
             <div>
                 <FormGroup>
-                    <Label>Official Company Registry Extract (Entity's Registration/Incorporation Document) <Info className={styles.info_icon} size={16} onClick={() => setModalOne(!modalOne)} /></Label>
+                    <Label>{t("Official Company Registry Extract (Entity's Registration/Incorporation Document)")} <Info className={styles.info_icon} size={16} onClick={() => setModalOne(!modalOne)} /></Label>
                     <FileUploadWithPreview
                         docName={`Official Company Registry Extract (Entity's Registration/Incorporation Document)`}
                         setCompanyFiles={setCompanyFiles}
@@ -78,37 +81,35 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                     />
                 </FormGroup>
                 <Modal isOpen={modalOne} toggle={() => setModalOne(!modalOne)} style={{ minWidth: '60vw' }}>
-                    <ModalHeader toggle={() => setModalOne(!modalOne)}>Details</ModalHeader>
+                    <ModalHeader toggle={() => setModalOne(!modalOne)}>{t("Details")}</ModalHeader>
                     <ModalBody>
                         <div className={styles.content}>
                             <p>
-                                This document serves as the company's official "identity card," and it should be
-                                obtained from the local business registry. It reflects the current status of the business
-                                (active or closed).
+                                {t("This document serves as the company's official \"identity card,\" and it should be obtained from the local business registry. It reflects the current status of the business (active or closed).")}
                             </p>
                             <br />
                             <p>
-                                The document should be current, with an issuance date not exceeding 3 months.
+                                {t("The document should be current, with an issuance date not exceeding 3 months.")}
                             </p>
                             <br />
-                            <p>The document must include the following details:</p>
+                            <p>{t("The document must include the following details:")}</p>
                             <br />
                             <ul>
-                                <li>Legal name of the company</li>
-                                <li>Full registered address</li>
-                                <li>Company registration number</li>
-                                <li>Date of incorporation</li>
-                                <li>Description of the company's activities/purpose</li>
-                                <li>Legal representative's information: full name, date and place of birth, residential address (minimum requirement: country of residence), and nationality</li>
+                                <li>{t("Legal name of the company")}</li>
+                                <li>{t("Full registered address")}</li>
+                                <li>{t("Company registration number")}</li>
+                                <li>{t("Date of incorporation")}</li>
+                                <li>{t("Description of the company's activities/purpose")}</li>
+                                <li>{t("Legal representative's information: full name, date and place of birth, residential address (minimum requirement: country of residence), and nationality")}</li>
                             </ul>
                             <br />
-                            <p>If applicable, the document should also include:</p>
+                            <p>{t("If applicable, the document should also include:")}</p>
                             <br />
                             <ul>
-                                <li>Brand or trading names</li>
-                                <li>Value Added Tax (VAT) number</li>
-                                <li>List of Ultimate Beneficial Owners (UBOs) - this is mandatory in some countries,
-                                    otherwise, it may be provided as a separate document.</li>
+                                <li>{t("Brand or trading names")}</li>
+                                <li>{t("Value Added Tax (VAT) number")}</li>
+                                <li>{t("List of Ultimate Beneficial Owners (UBOs) - this is mandatory in some countries,")} 
+                                    {t("otherwise, it may be provided as a separate document.")}</li>
                             </ul>
                         </div>
                     </ModalBody>
@@ -116,7 +117,7 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
             </div>
             <div>
                 <FormGroup>
-                    <Label>Proof of Legal Representative's Authority <Info className={styles.info_icon} size={16} onClick={() => setModalTwo(!modalTwo)} /></Label>
+                    <Label>{t("Proof of Legal Representative's Authority")} <Info className={styles.info_icon} size={16} onClick={() => setModalTwo(!modalTwo)} /></Label>
                     <FileUploadWithPreview
                         docName={`Proof of Legal Representative's Authority`}
                         setCompanyFiles={setCompanyFiles}
@@ -126,7 +127,7 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                     />
                 </FormGroup>
                 <Modal isOpen={modalTwo} toggle={() => setModalTwo(!modalTwo)} style={{ minWidth: '60vw' }}>
-                    <ModalHeader toggle={() => setModalTwo(!modalTwo)}>Details</ModalHeader>
+                    <ModalHeader toggle={() => setModalTwo(!modalTwo)}>{t("Details")}</ModalHeader>
                     <ModalBody>
                         <div className={styles.content}>
                             <p>This document validates an individual's authority to represent the company</p>
@@ -148,7 +149,7 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
             </div>
             <div>
                 <FormGroup>
-                    <Label>Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation <Info className={styles.info_icon} size={16} onClick={() => setModalThree(!modalThree)} /></Label>
+                    <Label>{t("Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation")} <Info className={styles.info_icon} size={16} onClick={() => setModalThree(!modalThree)} /></Label>
                     <FileUploadWithPreview
                         docName={`Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation`}
                         setCompanyFiles={setCompanyFiles}
@@ -159,7 +160,7 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
 
                 </FormGroup>
                 <Modal isOpen={modalThree} toggle={() => setModalThree(!modalThree)} style={{ minWidth: '60vw' }}>
-                    <ModalHeader toggle={() => setModalThree(!modalThree)}>Details</ModalHeader>
+                    <ModalHeader toggle={() => setModalThree(!modalThree)}>{t("Details")}</ModalHeader>
                     <ModalBody>
                         <div className={styles.content}>
                             <p>Evidence of the company's listing on the relevant stock exchange should be provided.
@@ -175,7 +176,7 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
             </div>
             <div>
                 <FormGroup>
-                    <Label>Collection of Identification Documents <Info className={styles.info_icon} size={16} onClick={() => setModalFour(!modalFour)} /></Label>
+                    <Label>{t("Collection of Identification Documents")} <Info className={styles.info_icon} size={16} onClick={() => setModalFour(!modalFour)} /></Label>
                     <FileUploadWithPreview
                         docName={`Collection of Identification Documents`}
                         setCompanyFiles={setCompanyFiles}
@@ -185,7 +186,7 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                     />
                 </FormGroup>
                 <Modal isOpen={modalFour} toggle={() => setModalFour(!modalFour)} style={{ minWidth: '60vw' }}>
-                    <ModalHeader toggle={() => setModalFour(!modalFour)}>Details</ModalHeader>
+                    <ModalHeader toggle={() => setModalFour(!modalFour)}>{t("Details")}</ModalHeader>
                     <ModalBody>
                         <div className={styles.content}>
                             <p>The identification document must be government-issued, bearing a photograph of the
@@ -212,7 +213,7 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
             </div>
             <div>
                 <FormGroup>
-                    <Label>Proof of Address <Info className={styles.info_icon} size={16} onClick={() => setModalFive(!modalFive)} /></Label>
+                    <Label>{t("Proof of Address")} <Info className={styles.info_icon} size={16} onClick={() => setModalFive(!modalFive)} /></Label>
                     <FileUploadWithPreview
                         docName={`Proof of Address`}
                         setCompanyFiles={setCompanyFiles}
@@ -222,7 +223,7 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                     />
                 </FormGroup>
                 <Modal isOpen={modalFive} toggle={() => setModalFive(!modalFive)} style={{ minWidth: '60vw' }}>
-                    <ModalHeader toggle={() => setModalFive(!modalFive)}>Details</ModalHeader>
+                    <ModalHeader toggle={() => setModalFive(!modalFive)}>{t("Details")}</ModalHeader>
                     <ModalBody>
                         <div className={styles.content}>
                             <ul>

@@ -175,10 +175,10 @@ const ApiKey = () => {
                         &&
                         <>
                             <Col md="12" className={styles.sectionRow}>
-                                <h5 className={styles.sectionTitle}>API Key</h5>
+                                <h5 className={styles.sectionTitle}>{t("API Key")}</h5>
                                 <div className={styles.columnFlex}>
                                     <div className={styles.inlineControls}>
-                                        <Input style={{ background: "#F9F9F9", border: "none", boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.13)" }} type={showKey ? 'text' : 'password'} placeholder={isBusy ? "Loading..." : 'API key will be rendered'} readOnly disabled value={apiKey || ''} />
+                                        <Input style={{ background: "#F9F9F9", border: "none", boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.13)" }} type={showKey ? 'text' : 'password'} placeholder={isBusy ? "Loading..." : t('API key will be rendered')} readOnly disabled value={apiKey || ''} />
                                         <div style={{ display: "grid", gap: "10px", width: "100%", gridTemplateColumns: "1fr 1fr" }}>
                                             <button className={styles.btn} onClick={() => setShowKey(prev => !prev)} disabled={!apiKey || featureStatus !== "enabled"}>
                                                 {showKey ? t("Hide") : t("Reveal")}
@@ -192,7 +192,7 @@ const ApiKey = () => {
                             </Col>
 
                             <Col md="12" className={styles.sectionRow}>
-                                <h5 className={styles.sectionTitle}>Webhook URL</h5>
+                                <h5 className={styles.sectionTitle}>{t("Webhook URL")}</h5>
                                 <div className={styles.columnFlex}>
                                     <div className={styles.inlineControls}>
                                         <input style={{ background: "#F9F9F9", border: "none", boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.13)" }} className="form-control" value={webhookUrl} onChange={e => setWebHookUrl(e.target.value)} type="text" placeholder="https://example.com/webhook" />
@@ -239,7 +239,7 @@ const ApiKey = () => {
                                             <div key={feature.id} className={styles.featureRow}>
                                                 <div className={styles.featureContent}>
                                                     <span className={styles.featureLabel}>
-                                                        {feature.label}
+                                                        {t(feature.label)}
                                                         {!isAdminEnabled && <span className={styles.adminBadge}>{t("Admin Disabled")}</span>}
                                                     </span>
                                                 </div>
@@ -266,7 +266,7 @@ const ApiKey = () => {
                                     {updateFeatures.isPending ? t("Saving...") : t("Save")}
                                 </button>
                                 <button className={`${styles.btn} ${styles.btnPrimary}`} style={{ padding: "13px 26px" }} onClick={handleRegenerate} disabled={isBusy || featureStatus !== "enabled"}>
-                                    {regenerateMutation.isPending ? "Regenerating..." : (apiKey ? "Regenerate API Key" : "Generate API Key")}
+                                    {regenerateMutation.isPending ? t("Regenerating...") : (apiKey ? (t("Regenerate API Key")) : t("Generate API Key"))}
                                 </button>
                             </div>
                         </>

@@ -300,7 +300,7 @@ const GeoFencing = () => {
                         <Search width={18} height={18} />
                     </span>
                     <input
-                        placeholder="Search Countries"
+                        placeholder={t("Search Countries")}
                         type="text"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}

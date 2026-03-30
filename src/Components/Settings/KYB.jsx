@@ -323,7 +323,7 @@ const KYB = () => {
                     userDetails?.company?.kyb_status !== "verified"
                     &&
                     <>
-                        <h4 className='text-center'>{companyType?.name}</h4>
+                        <h4 className='text-center'>{t(companyType?.name)}</h4>
                         {
                             companyType?.name?.toLowerCase()?.includes("private")
                             &&
@@ -418,7 +418,7 @@ const KYB = () => {
                 {
                     <Card style={{ marginTop: "1.5rem" }}>
                         <CardHeader style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <h4>Directors</h4>
+                            <h4>{t("Directors")}</h4>
                             <Button style={{
                                 background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                                 border: "none",
@@ -428,20 +428,20 @@ const KYB = () => {
                             onClick={() => setShowAddModal(!showAddModal)}>Add New Director</Button>
                             <Modal isOpen={showAddModal} toggle={() => setShowAddModal(!showAddModal)}>
                                 <ModalHeader toggle={() => setShowAddModal(!showAddModal)}>
-                                    Add New Director
+                                    {t("Add New Director")}
                                 </ModalHeader>
                                 <ModalBody>
                                     <FormGroup>
-                                        <Label>Director Name</Label>
-                                        <Input placeholder="Director Name" value={partnerName} onChange={e => setPartnerName(e.target.value)} />
+                                        <Label>{t("Director Name")}</Label>
+                                        <Input placeholder={t("Director Name")} value={partnerName} onChange={e => setPartnerName(e.target.value)} />
                                     </FormGroup>
                                     <FormGroup>
-                                        <Label>Director Email</Label>
+                                        <Label>{t("Director Email")}</Label>
                                         <Input type='email' placeholder="Director Email" value={partnerEmail} onChange={e => setPartnerEmail(e.target.value)} />
                                     </FormGroup>
                                     <FormGroup>
-                                        <Label>Director Designation</Label>
-                                        <Input placeholder="Director Designation" value={partnerDesignation} onChange={e => setPartnerDesignation(e.target.value)} />
+                                        <Label>{t("Director Designation")}</Label>
+                                        <Input placeholder={t("Director Designation")} value={partnerDesignation} onChange={e => setPartnerDesignation(e.target.value)} />
                                     </FormGroup>
                                 </ModalBody>
                                 <ModalFooter>
@@ -453,7 +453,7 @@ const KYB = () => {
                                         disabled={adding || !partnerName || !partnerEmail || !partnerDesignation}
                                         onClick={addPartnerHandler}
                                     >
-                                        {adding ? "Adding" : "Add Now"}
+                                        {adding ? t("Adding") : t("Add Now")}
                                     </Button>
                                 </ModalFooter>
                             </Modal>
@@ -469,11 +469,11 @@ const KYB = () => {
                                     <Table responsive>
                                         <thead>
                                             <tr>
-                                                <td>Name</td>
-                                                <td>Email</td>
-                                                <td>Designation</td>
-                                                <td>Actions</td>
-                                                <td>Status</td>
+                                                <td>{t("Name")}</td>
+                                                <td>{t("Email")}</td>
+                                                <td>{t("Designation")}</td>
+                                                <td>{t("Actions")}</td>
+                                                <td>{t("Status")}</td>
                                             </tr>
                                         </thead>
                                         <tbody>

@@ -109,7 +109,7 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
     // company typs
     const company_types = [
         'Private Limited Companies or equivalent',
-        'Publicly Listed Companies',
+        "Publicly Listed Companies",
         'Association / NGOs / Charities',
         'Sole Proprietorships',
     ];
@@ -150,7 +150,7 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
                         <option value={""} disabled>--Select-Your-Company-Type--</option>
                         {
                             company_types.map(item => (
-                                <option value={item} key={item}>{item}</option>
+                                <option value={item} key={item}>{t(item)}</option>
                             ))
                         }
                     </Input>

@@ -185,7 +185,7 @@ const ApiKey = () => {
                             <Col md="12">
                                 <FormGroup className="mb-3">
                                     <Label className="form-label">{t("Webhook URL")}</Label>
-                                    <input className="form-control" type="text" placeholder="Webhook URL" />
+                                    <input className="form-control" type="text" placeholder={t("Webhook URL")} />
                                 </FormGroup>
                             </Col>
                         </>

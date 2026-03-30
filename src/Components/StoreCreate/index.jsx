@@ -98,7 +98,7 @@ const StoreCreate = () => {
                         {StepData.map((item, index) => (
                             <div key={index} className={styles.featureItem}>
                                 <span className={styles.icon}>{item.icon}</span>
-                                <span className={styles.title}>{item.title}</span>
+                                <span className={styles.title}>{t(item.title)}</span>
                             </div>
                         ))}
                     </div>

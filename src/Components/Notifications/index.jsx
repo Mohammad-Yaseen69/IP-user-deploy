@@ -6,10 +6,11 @@ import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { FaBell } from "react-icons/fa6";
 import axios from "axios";
 import Notification from "./Notification";
+import { useTranslation } from "react-i18next";
 
 const Notifications = () => {
     const [showDropDown, setShowDropDown] = useState(false)
-
+    const { t } = useTranslation()
     const dropdownRef = useRef(null);
 
     useEffect(() => {
@@ -69,7 +70,7 @@ const Notifications = () => {
                 cursor: "pointer",
                 position: "relative"
             }} onClick={() => setShowDropDown(!showDropDown)}>
-                <FaBell size={23}/>
+                <FaBell size={23} />
                 {
                     notifications.some(item => item?.status === "unread")
                     &&
@@ -122,7 +123,7 @@ const Notifications = () => {
                                         />
                                     ))
                                 :
-                                <div style={{ margin: "1rem auto" }}>No notification</div>
+                                <div style={{ margin: "1rem auto" }}>{t("No notification")}</div>
                         }
                     </div>
                 }

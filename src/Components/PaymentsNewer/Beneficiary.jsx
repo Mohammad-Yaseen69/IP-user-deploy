@@ -299,17 +299,17 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                     }
                 </form>
                 {
-                    isBulk && <p style={{ fontSize: ".7rem", padding: 0, margin: 0 }}>Click on the beneficiaries to select multiple</p>
+                    isBulk && <p style={{ fontSize: ".7rem", padding: 0, margin: 0 }}>{t("Click on the beneficiaries to select multiple")}</p>
                 }
                 {
                     (type === "Requesting" || type === "Quoting") && searched.length == 0 && searchQuery.length > 0
                         ?
                         <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
-                            <p style={{ marginBottom: 0, fontWeight: 600 }}>Please follow these examples: </p>
-                            <div>Full Name: <strong>Muhammad Imtiaz</strong></div>
-                            <div>InstaPay/Intagram Username: <strong>instauser</strong></div>
-                            <div>Email: <strong>user@email.com</strong></div>
-                            <div>Phone Number: <strong>44795396600</strong> (With Country Code)</div>
+                            <p style={{ marginBottom: 0, fontWeight: 600 }}>{t("Please follow these examples:")} </p>
+                            <div>{t("Full Name")}: <strong>Muhammad Imtiaz</strong></div>
+                            <div>{t("InstaPay/Instagram Username")}: <strong>instauser</strong></div>
+                            <div>{t("Email")}: <strong>user@email.com</strong></div>
+                            <div>{t("Phone Number")}: <strong>44795396600</strong> ({t("With Country Code")})</div>
                         </div>
                         : ""
                 }
