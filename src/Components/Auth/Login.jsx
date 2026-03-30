@@ -1035,7 +1035,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     display: "flex",
                                     alignItems: "center"
                                 }}>
-                                    <input type={showPassword ? "text" : "password"} placeholder={t("Enter your password")} value={password} onChange={e => setPassword(e.target.value)} autoComplete="off" />
+                                    <input className={styles.inp_con} type={showPassword ? "text" : "password"} placeholder={t("Enter your password")} value={password} onChange={e => setPassword(e.target.value)} autoComplete="off" />
                                     <div style={{
                                         position: "absolute",
                                         top: "55%",
@@ -1220,6 +1220,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         >
                                             {otpValues.map((value, index) => (
                                                 <input
+                                                    type="tel"      
                                                     key={`otp-input-${index}`}
                                                     maxLength={1}
                                                     disabled={isOtpCorrect}
