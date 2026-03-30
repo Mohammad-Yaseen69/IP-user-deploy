@@ -13,7 +13,7 @@ import jsPDF from 'jspdf'
 import calendar from "./files/calendar.svg"
 import { DateRangePicker } from 'react-date-range'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
-import img from "../../assets/images/logo/logo2.png"
+import img from "../../assets/images/logo/logo2.webp"
 import { UserContext } from '../../Context/UserContext'
 import { Link, useLocation } from 'react-router-dom'
 import cardsStyle from "../HomeNewUpdated/styles/CardsContainer.module.css"

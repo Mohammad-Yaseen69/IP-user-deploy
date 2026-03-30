@@ -127,7 +127,7 @@ const Settings = () => {
                             />
                         </div>
                         :
-                        <img src={coverPhoto} alt="cover" className={styles.cover} />
+                        <img src={coverPhoto} alt="cover" loading="lazy" className={styles.cover} />
                 }
                 {
                     isEditing

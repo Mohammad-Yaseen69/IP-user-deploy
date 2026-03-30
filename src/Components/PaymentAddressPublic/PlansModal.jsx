@@ -8,7 +8,7 @@ import { isInIframe, openInNewTab } from '../../utils/Functions'
 import { useNavigate } from 'react-router'
 import addFunds from "../HomeNewUpdated/files/AddFunds.png"
 import CryptoPay from "../HomeNewUpdated/files/CryptoPay.svg"
-import logo from "../../assets/images/logo/logo.png"
+import logo from "../../assets/images/logo/logo.webp"
 import PaymentActionsButtons from '../ReceiptInvoices/InvoicePayment/PaymentActionsButtons'
 import PayAsGuest from './PayAsGuest'
 import PayWithCrypto from './PayWithCrypto'
@@ -247,7 +247,7 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
                     username={user_name}
                     user={user}
                     planId={selectedPlan?.planId}
-                    type='plan' 
+                    type='plan'
                 />
             }
 

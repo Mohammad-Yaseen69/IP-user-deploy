@@ -10,7 +10,9 @@ const NotFound = ({ type = "User" }) => {
     return (
         <div className={styles.container}>
             <div className={styles.content}>
-                <img src={type === "User" ? user : page} alt="Not Found Image" />
+                <img
+                    loading="lazy"
+                    src={type === "User" ? user : page} alt="Not Found Image" />
                 <h5>{t("User not found").replace("User", type)}</h5>
                 <span>{t("The user you're searching for isn't available.").replace("user", type.toLowerCase())}</span>
                 <button onClick={() => navigate("/")}>{t("Go back to dashboard")}</button>

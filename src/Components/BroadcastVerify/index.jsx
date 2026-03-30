@@ -3,7 +3,7 @@ import styles from "../AuthNew/styles/index.module.css"
 import { useTranslation } from "react-i18next";
 import FormLogo from "../AuthNew/FormLogo";
 import overlay from "../AuthNew/files/overlay.svg"
-import man from "../AuthNew/files/man.png"
+import man from "../AuthNew/files/man.webp"
 import { useContext, useEffect, useState } from "react";
 import { ChevronRight, Eye, EyeOff } from "react-feather";
 import axios from "axios";
@@ -52,8 +52,11 @@ const BroadcastVerify = () => {
 
     return (
         <section className={styles.container}>
-            <img src={overlay} alt="overlay" className={styles.overlay} />
-            <img src={man} alt="man" className={styles.man} />
+            <img src={overlay} alt="overlay"
+                loading="lazy" className={styles.overlay} />
+            <img src={man}
+                loading="lazy"
+                alt="man" className={styles.man} />
             <form className={styles.form}>
                 <div className={styles.top}>
                     <FormLogo />
