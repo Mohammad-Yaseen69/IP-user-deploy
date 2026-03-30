@@ -3,9 +3,23 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  padding: 32px;
   box-sizing: border-box;
-  background: #fff;
+  background: transparent;
+
+  .top {
+    position: relative;
+    margin-bottom: 2.5rem;
+    display: flex !important;
+    justify-content: space-between !important;
+
+    h1 {
+      color: #5626e6;
+      font-size: 40px;
+      font-style: normal;
+      font-weight: 700;
+    }
+  }
 
   .MyeShop {
     display: none;
@@ -21,7 +35,7 @@
     display: grid;
     gap: 2rem;
     align-items: center;
-    padding: 0 35px;
+    padding: 0;
 
     @media (max-width: 1000px) {
       grid-template-columns: 1fr !important;

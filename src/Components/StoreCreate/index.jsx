@@ -76,6 +76,10 @@ const StoreCreate = () => {
     return (
         <div className={styles.container}>
             <div className={styles.top}>
+                <h1>
+                    {t("My e-Shop")}
+                </h1>
+
                 {width > 1000 && <TopRight />}
             </div>
 
