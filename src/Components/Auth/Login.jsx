@@ -1196,7 +1196,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                         :
                                                         currentOtpMethod === "wp"
                                                             ?
-                                                            t("Enter the code send on your Whatsapp")
+                                                            t(`Enter the code sent to your Whatsapp on +41********4053`)
+                                                                .replace(
+                                                                    "+41********4053",
+                                                                    `${email.slice(0, email.length - 4).split("").map(() => "*").join("")}${email.slice(email.length - 4)}`
+                                                                )
                                                             :
                                                             currentOtpMethod === "email"
                                                                 ?
@@ -1209,7 +1213,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                                             ?
                                                                             `${email.slice(0, 4).split("").map(_ => "*").join("")}${email.slice(4)}`
                                                                             :
-                                                                            `${email.slice(0, email.length - 4).split("").map(_ => "*").join("")}${email.slice(email.length - 4)}`
+                                                                            `${email.slice(0, email.length - 4).split("").map(() => "*").join("")}${email.slice(email.length - 4)}`
                                                                     ).replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")
                                             }
                                         </label>
@@ -1266,7 +1270,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     {
                                         currentOtpMethod === "auth"
                                         &&
-                                        <span>{t("Problem with the token?")}</span>
+                                        <span>{t("Problem with the OTP?")}</span>
                                     }
 
                                     {methods.filter(m => m.avail).length > 1

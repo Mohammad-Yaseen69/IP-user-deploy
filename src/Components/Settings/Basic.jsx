@@ -67,8 +67,9 @@ const Basic = ({ setCurrentTab }) => {
             const nestedUserFields = ["first_name", "last_name", "dob"];
 
             if (nestedUserFields.includes(field)) {
-                next.first_name = value
-                next.last_name = value
+                if (field === "first_name") next.first_name = value
+                if (field === "last_name") next.last_name = value
+                if (field === "dob") next.dob = value
                 next.user = { ...(next.user || {}), [field]: value };
             } else if (field === "company_name") {
                 next.company_name = value
