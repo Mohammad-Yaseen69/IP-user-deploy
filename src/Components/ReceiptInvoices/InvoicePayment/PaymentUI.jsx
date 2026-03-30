@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import LanguagePicker from '../../LanguagePicker'
 import addFunds from "../../HomeNewUpdated/files/AddFunds.png"
 import CryptoPay from "../../HomeNewUpdated/files/CryptoPay.svg"
-import logo from "../../../assets/images/logo/logo.png"
+import logo from "../../../assets/images/logo/logo.webp"
 import { isInIframe, openInNewTab, paymentAddressFlagCheck } from '../../../utils/Functions'
 import { useNavigate } from 'react-router'
 import AnimatedHeader from '../../PaymentAddressPublic/AnimatedHeader'

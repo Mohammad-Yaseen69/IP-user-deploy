@@ -29,8 +29,8 @@ const OtherBalance = lazy(() => import("./OtherBalance"));
 
 //  Static assets (normal imports)
 import btc from "../PaymentsNewer/files/btc.png";
-import eth from "../PaymentsNewer/files/eth.png";
-import usdt from "../PaymentsNewer/files/usdt.png";
+import eth from "../PaymentsNewer/files/eth.webp";
+import usdt from "../PaymentsNewer/files/usdt.webp";
 import crown from "./files/crown.svg";
 import chat from "./files/chat.svg";
 

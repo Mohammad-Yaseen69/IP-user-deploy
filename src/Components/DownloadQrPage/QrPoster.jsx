@@ -2,7 +2,7 @@ import styles from "./QrPoster.module.css"
 import logo from "../../assets/images/logo/logo.svg"
 import { useTranslation } from "react-i18next"
 import QRCodeStyling from "qr-code-styling";
-import logo2 from "../../assets/images/logo/logo.png"
+import logo2 from "../../assets/images/logo/logo.webp"
 import { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
 
@@ -71,7 +71,7 @@ const QrPoster = ({ wallet }) => {
 
                 <div className={styles.qr_con}>
                     <div className={styles.qr_container}>
-                        <div style={{position: "relative"}}>
+                        <div style={{ position: "relative" }}>
                             {qrLink && <img src={qrLink} alt="" />}
                             <img src={logo2} style={{ position: "absolute", left: "50%", top: "40%", translate: "-50% -50%", width: window.innerWidth > 1000 ? "3rem" : "3.5rem", padding: ".6rem", background: "white", borderRadius: "10px" }} />
                         </div>

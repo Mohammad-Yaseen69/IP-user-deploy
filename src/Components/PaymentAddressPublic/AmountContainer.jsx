@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import vpa_styles from "./styles/VPA.module.css"
 import addFunds from "../HomeNewUpdated/files/AddFunds.png"
 import CryptoPay from "../HomeNewUpdated/files/CryptoPay.svg"
-import logo from "../../assets/images/logo/logo.png"
+import logo from "../../assets/images/logo/logo.webp"
 import { formatCurrency } from '../../Helper/AmountFormat'
 import { isInIframe, paymentAddressFlagCheck } from '../../utils/Functions'
 
