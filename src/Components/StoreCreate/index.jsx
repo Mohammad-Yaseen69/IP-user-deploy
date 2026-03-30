@@ -119,7 +119,7 @@ const StoreCreate = () => {
                     </p>
                 </div>
                 <div className={styles.right}>
-                    <img src={bg} alt="Store Illustration" />
+                    <img src={bg} alt="Store Illustration" loading="lazy" />
                 </div>
             </div>
             {showModal && <TermsModal setShowModal={setShowModal} handleCreateStore={handleCreateStore} />}

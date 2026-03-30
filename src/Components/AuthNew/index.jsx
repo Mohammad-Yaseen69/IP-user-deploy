@@ -1,5 +1,5 @@
 import styles from "./styles/index.module.css"
-import man from "./files/man.png"
+import man from "./files/man.webp"
 import woman from "./files/woman.png"
 import overlay from "./files/overlay.svg"
 import LoginForm from "./LoginForm"
@@ -101,12 +101,18 @@ const AuthNew = () => {
                             <LanguagePicker />
                         </div>
                         {/* } */}
-                        <img src={overlay} alt="overlay" className={styles.overlay} />
+                        <img src={overlay} alt="overlay"
+                            loading="lazy"
+                            className={styles.overlay} />
                         {
                             step < 2 ?
-                                <img src={man} alt="man" className={styles.man} />
+                                <img src={man} alt="man"
+                                    loading="lazy"
+                                    className={styles.man} />
                                 :
-                                <img src={woman} alt="woman" className={styles.man} />
+                                <img src={woman} alt="woman"
+                                    loading="lazy"
+                                    className={styles.man} />
                         }
                         {
                             isForgot

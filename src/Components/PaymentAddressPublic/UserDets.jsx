@@ -64,7 +64,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
             {flagCheck("allowCoverImage", userDetails, invoice ? "invoice" : "paymentAddress") &&
                 <div className={styles.cover_container} style={{ position: "relative", marginBottom: invoice && "-90px" }}>
                     <div style={{ backgroundColor: "#1200BA" }}>
-                        <img src={(croppedCover || cover) || coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: invoice ? "150px" : "135px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important", objectPosition: (!croppedCover || !cover) && "right" }} />
+                        <img loading="lazy" src={(croppedCover || cover) || coverPlaceHolder} alt="cover" className={styles.cover} style={{ height: invoice ? "150px" : "135px", width: "100%", objectFit: "cover", borderRadius: window.innerWidth > 1000 ? "30px 30px 0 0 !important" : "0 0 30px 30px !important", objectPosition: (!croppedCover || !cover) && "right" }} />
                     </div>
                 </div>
             }

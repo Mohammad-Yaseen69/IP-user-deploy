@@ -39,19 +39,20 @@ import {
     WidthType,
 } from "docx";
 import * as FileSaver from "file-saver";
-import img from "../../assets/images/logo/logo2.png"
+import img from "../../assets/images/logo/logo2.webp"
 import { useQuery } from '@tanstack/react-query';
 import { apiWrapper } from '../../utils/Functions/apiWrapper';
 import { localCurrency } from '../../utils/Functions';
 import { formatCurrency } from '../../Helper/AmountFormat';
 
-export const Toggle = ({ checked, onChange, isCheckbox = false }) => (
-    <label className={isCheckbox ? styles.checkbox : styles.toggle}>
+export const Toggle = ({ checked, onChange, isCheckbox = false, disabled = false }) => (
+    <label disabled={disabled} className={isCheckbox ? styles.checkbox : styles.toggle}>
 
         <input
             type={isCheckbox ? "checkbox" : "checkbox"}
             checked={checked}
             onChange={onChange}
+            disabled={disabled}
         />
 
         <span className={isCheckbox ? styles.checkmark : styles.slider}>

@@ -8,8 +8,8 @@ import { useTranslation } from 'react-i18next'
 import LanguagePicker from '../../LanguagePicker'
 import addFunds from "../../HomeNewUpdated/files/AddFunds.png"
 import CryptoPay from "../../HomeNewUpdated/files/CryptoPay.svg"
-import logo from "../../../assets/images/logo/logo.png"
 import { isInIframe, openInNewTab, flagCheck } from '../../../utils/Functions'
+import logo from "../../../assets/images/logo/logo.webp"
 import { useNavigate } from 'react-router'
 import AnimatedHeader from '../../PaymentAddressPublic/AnimatedHeader'
 import useWindowWidth from '../../../utils/useWindowWidth'

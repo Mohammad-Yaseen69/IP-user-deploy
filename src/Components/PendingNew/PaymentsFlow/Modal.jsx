@@ -35,7 +35,7 @@ const headings = ["Select Payment Type", "Review Payment"]
 
 const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
     const { t } = useTranslation()
-    const { limitStatus, clearStatus } = useTopupLimitCheck(data?.currency?.currency?.code, +String(data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
+    const { limitStatus, clearStatus } = useTopupLimitCheck(item?.currency?.code, +String(data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
     const { userDetails, authHeader, setProfileLockTime, verifyToken } = useContext(UserContext)
     const navigate = useNavigate()
 

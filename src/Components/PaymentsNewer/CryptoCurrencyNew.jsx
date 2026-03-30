@@ -2,8 +2,8 @@ import { Card, CardBody } from "reactstrap";
 import 'swiper/css';
 import { useContext, useMemo } from "react";
 import btc from "./files/btc.png"
-import eth from "./files/eth.png"
-import usdt from "./files/usdt.png"
+import eth from "./files/eth.webp"
+import usdt from "./files/usdt.webp"
 import { UserContext } from "../../Context/UserContext";
 
 const isBig = window.innerWidth > 1000

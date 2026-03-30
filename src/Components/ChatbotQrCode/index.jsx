@@ -61,7 +61,10 @@ const ChatbotQrCode = () => {
                         ?
                         <video style={{ width: "300px", height: "300px", objectFit: "cover" }} autoPlay={true} muted={true} loop={true} controls={false} src={success}></video>
                         :
-                        <img style={{ width: "300px", height: "300px", objectFit: "cover" }} src={pending} alt="" />
+                        <img
+                            loading="lazy"
+                            width="300px" height="300px"
+                            style={{ objectFit: "cover" }} src={pending} alt="" />
             }
             <h3>{message}</h3>
             {/* {
