@@ -209,7 +209,7 @@ const InvoiceItem = ({ sn, inv, badgeClass, setEditModal, setMenuOpenFor, menuOp
           >
             <div
               style={{
-                width: width < 750 ? "100%" : "550px",
+                width: width < 750 ? "100%" : "",
                 height: width < 750 && "80vh",
               }}
             >
