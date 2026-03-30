@@ -230,4 +230,124 @@ const CustomDatePicker = ({ setRecStartDate, setShowPicker }) => {
     );
 };
 
+
+const FutureDatePicker = ({ setRecStartDate, setShowPicker }) => {
+  const today = new Date();
+
+  const [selectedDate, setSelectedDate] = useState(today);
+  const [selectedMonth, setSelectedMonth] = useState(today.getMonth());
+  const [selectedYear, setSelectedYear] = useState(today.getFullYear());
+
+  const handleYearChange = (e) => {
+    setSelectedYear(parseInt(e.target.value));
+  };
+
+  const handleMonthChange = (e) => {
+    setSelectedMonth(parseInt(e.target.value));
+  };
+
+  const getMonthName = (monthIndex) => {
+    return new Date(0, monthIndex).toLocaleString("en-US", { month: "long" });
+  };
+
+  const renderMonthDropdown = () => (
+    <select value={selectedMonth} onChange={handleMonthChange}>
+      {Array.from({ length: 12 }, (_, i) => (
+        <option key={i} value={i}>
+          {getMonthName(i)}
+        </option>
+      ))}
+    </select>
+  );
+
+  const renderYearDropdown = () => {
+    const currentYear = today.getFullYear();
+    return (
+      <select value={selectedYear} onChange={handleYearChange}>
+        {Array.from({ length: 10 }, (_, i) => currentYear + i).map((year) => (
+          <option key={year} value={year}>
+            {year}
+          </option>
+        ))}
+      </select>
+    );
+  };
+
+  const renderDays = () => {
+    const firstDay = new Date(selectedYear, selectedMonth, 1).getDay();
+    const totalDays = new Date(selectedYear, selectedMonth + 1, 0).getDate();
+
+    const emptyDays = Array(firstDay).fill(null);
+    const days = Array.from({ length: totalDays }, (_, i) => i + 1);
+
+    return (
+      <div className="days">
+        {[...emptyDays, ...days].map((day, index) => {
+          if (!day) {
+            return <div key={index} className="day empty"></div>;
+          }
+
+          const currentDate = new Date(selectedYear, selectedMonth, day);
+
+          const isPast =
+            currentDate < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+          const isSelected =
+            selectedDate.toDateString() === currentDate.toDateString();
+
+          return (
+            <div
+              key={index}
+              className={`day ${isPast ? "disabled" : ""} ${
+                isSelected ? "active" : ""
+              }`}
+              onClick={() => {
+                if (isPast) return;
+
+                setSelectedDate(currentDate);
+
+                // ✅ format YYYY-MM-DD
+                const formatted = currentDate.toISOString().split("T")[0];
+                setRecStartDate(formatted);
+
+                setShowPicker(false);
+              }}
+            >
+              <span>{day}</span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  // Close on outside click
+  const pickerRef = useRef(null);
+
+  const handleClickOutside = useCallback((e) => {
+    if (pickerRef.current && !pickerRef.current.contains(e.target)) {
+      setShowPicker(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div className="custom-datepicker" ref={pickerRef}>
+      <div className="calendar-top">
+        <div className="calendar-nav">
+          {renderMonthDropdown()}
+          {renderYearDropdown()}
+        </div>
+      </div>
+
+      {renderDays()}
+    </div>
+  );
+};
+
 export default CustomDatePicker;
+export { FutureDatePicker };

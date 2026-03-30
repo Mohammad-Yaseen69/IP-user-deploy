@@ -11,6 +11,7 @@ import { useLocation } from "react-router"
 
 
 const FailedTransaction = ({ showBack, backHandler }) => {
+    const BASE_URL = window.location.origin || "https://my.insta-pay.ch";
     const { t } = useTranslation()
     const [showShare, setShowShare] = useState(false)
     const location = useLocation()
@@ -28,7 +29,7 @@ const FailedTransaction = ({ showBack, backHandler }) => {
                 <SocialModal
                     isOpen={showShare}
                     toggle={() => setShowShare(!showShare)}
-                    link={"https://my.insta-pay.ch"}
+                    link={`${BASE_URL}`}
                 />
             }
             <div className={styles.top} style={{

@@ -26,6 +26,7 @@ import QrGenerate from '../Settings/QrGenerate'
 import PricingsAndPlan from './PricingsAndPlan'
 
 const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
+    const BASE_URL = window.location.origin || "https://my.insta-pay.ch";
     const { t } = useTranslation()
     const [userCountry, setUserCountry] = useState({})
     const { authHeader, userWallets, getUserVideos, verifyToken, userVideos, setUserVideos } = useContext(UserContext)
@@ -171,7 +172,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     }
 
     // pa link
-    const pa_link = `https://my.insta-pay.ch/pay/${userDetails?.username}`;
+    const pa_link = `${BASE_URL}/pay/${userDetails?.username}`;
     const [urlCopied, setUrlCopied] = useState(false)
     const copyHandler = () => {
         navigator?.clipboard?.writeText(pa_link)
@@ -256,7 +257,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                     isAllowed === true
                         ?
                         <>
-                            <QrGenerate downloadFileSetter={setQrFile} qrUrl={`https://my.insta-pay.ch/pay/${userDetails?.username}`} />
+                            <QrGenerate downloadFileSetter={setQrFile} qrUrl={`${BASE_URL}/pay/${userDetails?.username}`} />
                             <InstructionsModal isOpen={isOpen} toggle={() => setIsOpen(!isOpen)} />
                             <Cover dets={paymentAddressDetails} cover={cover} setCover={setCover} />
                             <Card style={{ marginBottom: "0", borderRadius: '0px' }} className={styles.sub_container}>
@@ -356,7 +357,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
 
                                             <div className={styles.copyDiv}>
                                                 <p>
-                                                    my.insta-pay.ch/pay/
+                                                    {BASE_URL}/pay/
                                                 </p>
                                                 <span>
                                                     {userDetails?.username}

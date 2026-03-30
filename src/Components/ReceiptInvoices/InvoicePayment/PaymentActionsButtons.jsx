@@ -8,8 +8,10 @@ const PaymentActionsButtons = ({ actionButtons, inPlans, isRow, selectedAction, 
         <div className={`${styles.actions} ${isRow && styles.plans}`}>
             {actionButtons.map((btn, idx) => (
                 <div key={idx} title={btn.disabled ? btn.disabledMessage : ""} style={{ position: "relative", width: "100%" }}>
+
                     <button
-                        className={styles.button}
+                        className={`${styles.button} ${styles.buttonResponsive}`}
+
                         onClick={() => inPlans ? setSelectedAction(btn) : btn.onClick()}
                         style={{
                             background: (inPlans && selectedAction?.label === btn.label) ? "#5926F0" : !btn.purple && "white",
@@ -17,8 +19,8 @@ const PaymentActionsButtons = ({ actionButtons, inPlans, isRow, selectedAction, 
                             opacity: btn.disabled ? 0.5 : (inPlans && selectedAction?.label === btn.label) ? 1 : 1,
                             cursor: btn.disabled ? "not-allowed" : "pointer",
                             pointerEvents: btn.disabled ? "none" : "all",
-                            width: "100%",
-                            justifyContent: "center"
+                            width: "100% !important",
+
                         }}
                         disabled={btn.disabled}
                     >
