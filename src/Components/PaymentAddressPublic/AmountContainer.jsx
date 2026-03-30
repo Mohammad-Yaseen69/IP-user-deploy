@@ -6,7 +6,7 @@ import addFunds from "../HomeNewUpdated/files/AddFunds.png"
 import CryptoPay from "../HomeNewUpdated/files/CryptoPay.svg"
 import logo from "../../assets/images/logo/logo.png"
 import { formatCurrency } from '../../Helper/AmountFormat'
-import { isInIframe, paymentAddressFlagCheck } from '../../utils/Functions'
+import { isInIframe, flagCheck } from '../../utils/Functions'
 
 
 
@@ -74,13 +74,13 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                 }}
                                 className={vpa_styles.buttons}
                             >
-                                <div title={!paymentAddressFlagCheck("payments.allowGuestPay", userDetails) ? t("This method is disabled for this payment address by admin.") : ""} style={{ position: "relative" }}>
-                                    <Link onClick={paymentAddressFlagCheck("payments.allowGuestPay", userDetails) ? toggleCreditModal : (e) => e.preventDefault()} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
+                                <div title={!flagCheck("payments.allowGuestPay", userDetails, "paymentAddress") ? t("This method is disabled for this payment address by admin.") : ""} style={{ position: "relative" }}>
+                                    <Link onClick={flagCheck("payments.allowGuestPay", userDetails, "paymentAddress") ? toggleCreditModal : (e) => e.preventDefault()} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
                                         style={{
-                                            opacity: !paymentAddressFlagCheck("payments.allowGuestPay", userDetails) ? 0.5 : (state.amount <= 0 ? 0.7 : 1),
-                                            pointerEvents: !paymentAddressFlagCheck("payments.allowGuestPay", userDetails) ? "none" : (state.amount <= 0 ? "none" : "all"),
+                                            opacity: !flagCheck("payments.allowGuestPay", userDetails, "paymentAddress") ? 0.5 : (state.amount <= 0 ? 0.7 : 1),
+                                            pointerEvents: !flagCheck("payments.allowGuestPay", userDetails, "paymentAddress") ? "none" : (state.amount <= 0 ? "none" : "all"),
                                             position: "relative",
-                                            cursor: !paymentAddressFlagCheck("payments.allowGuestPay", userDetails) ? "not-allowed" : (state.amount <= 0 ? "not-allowed" : "pointer")
+                                            cursor: !flagCheck("payments.allowGuestPay", userDetails, "paymentAddress") ? "not-allowed" : (state.amount <= 0 ? "not-allowed" : "pointer")
                                         }}
                                     >
                                         <div>
@@ -110,13 +110,13 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                     </Link>
                                 </div>
 
-                                <div title={!paymentAddressFlagCheck("payments.allowCrypto", userDetails) ? t("This method is disabled for this payment address by admin.") : ""} style={{ position: "relative" }}>
-                                    <Link to={paymentAddressFlagCheck("payments.allowCrypto", userDetails) ? "#" : ""} onClick={paymentAddressFlagCheck("payments.allowCrypto", userDetails) ? toggleCryptoModal : (e) => e.preventDefault()} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
+                                <div title={!flagCheck("payments.allowCrypto", userDetails, "paymentAddress") ? t("This method is disabled for this payment address by admin.") : ""} style={{ position: "relative" }}>
+                                    <Link to={flagCheck("payments.allowCrypto", userDetails, "paymentAddress") ? "#" : ""} onClick={flagCheck("payments.allowCrypto", userDetails, "paymentAddress") ? toggleCryptoModal : (e) => e.preventDefault()} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
                                         style={{
-                                            opacity: !paymentAddressFlagCheck("payments.allowCrypto", userDetails) ? 0.5 : (state.amount <= 0 ? 0.7 : 1),
-                                            pointerEvents: !paymentAddressFlagCheck("payments.allowCrypto", userDetails) ? "none" : (state.amount <= 0 ? "none" : "all"),
+                                            opacity: !flagCheck("payments.allowCrypto", userDetails, "paymentAddress") ? 0.5 : (state.amount <= 0 ? 0.7 : 1),
+                                            pointerEvents: !flagCheck("payments.allowCrypto", userDetails, "paymentAddress") ? "none" : (state.amount <= 0 ? "none" : "all"),
                                             position: "relative",
-                                            cursor: !paymentAddressFlagCheck("payments.allowCrypto", userDetails) ? "not-allowed" : (state.amount <= 0 ? "not-allowed" : "pointer")
+                                            cursor: !flagCheck("payments.allowCrypto", userDetails, "paymentAddress") ? "not-allowed" : (state.amount <= 0 ? "not-allowed" : "pointer")
                                         }}
                                     >
                                         <div>
@@ -127,9 +127,9 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                 </div>
 
 
-                                <div title={!paymentAddressFlagCheck("payments.allowInstapay", userDetails) ? t("This method is disabled for this payment address by admin.") : ""} style={{ position: "relative" }}>
+                                <div title={!flagCheck("payments.allowInstapay", userDetails, "paymentAddress") ? t("This method is disabled for this payment address by admin.") : ""} style={{ position: "relative" }}>
                                     <Link onClick={(e) => {
-                                        if (!paymentAddressFlagCheck("payments.allowInstapay", userDetails)) {
+                                        if (!flagCheck("payments.allowInstapay", userDetails, "paymentAddress")) {
                                             e.preventDefault();
                                             return;
                                         }
@@ -144,11 +144,11 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                         } else {
                                             e.preventDefault();
                                         }
-                                    }} to={(paymentAddressFlagCheck("payments.allowInstapay", userDetails) && state.amount > 0 && !isInIframe()) ? url : ""} className={`${vpa_styles.button} ${vpa_styles.ipBtn}`}
+                                    }} to={(flagCheck("payments.allowInstapay", userDetails, "paymentAddress") && state.amount > 0 && !isInIframe()) ? url : ""} className={`${vpa_styles.button} ${vpa_styles.ipBtn}`}
                                         style={{
-                                            opacity: !paymentAddressFlagCheck("payments.allowInstapay", userDetails) ? 0.5 : (state.amount <= 0 ? 0.7 : 1),
-                                            pointerEvents: !paymentAddressFlagCheck("payments.allowInstapay", userDetails) ? "none" : (state.amount <= 0 ? "none" : "all"),
-                                            cursor: !paymentAddressFlagCheck("payments.allowInstapay", userDetails) ? "not-allowed" : (state.amount <= 0 ? "not-allowed" : "pointer")
+                                            opacity: !flagCheck("payments.allowInstapay", userDetails, "paymentAddress") ? 0.5 : (state.amount <= 0 ? 0.7 : 1),
+                                            pointerEvents: !flagCheck("payments.allowInstapay", userDetails, "paymentAddress") ? "none" : (state.amount <= 0 ? "none" : "all"),
+                                            cursor: !flagCheck("payments.allowInstapay", userDetails, "paymentAddress") ? "not-allowed" : (state.amount <= 0 ? "not-allowed" : "pointer")
                                         }}
                                     >
                                         <div>

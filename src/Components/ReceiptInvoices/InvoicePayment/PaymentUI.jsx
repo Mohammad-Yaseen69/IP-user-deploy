@@ -9,7 +9,7 @@ import LanguagePicker from '../../LanguagePicker'
 import addFunds from "../../HomeNewUpdated/files/AddFunds.png"
 import CryptoPay from "../../HomeNewUpdated/files/CryptoPay.svg"
 import logo from "../../../assets/images/logo/logo.png"
-import { isInIframe, openInNewTab, paymentAddressFlagCheck } from '../../../utils/Functions'
+import { isInIframe, openInNewTab, flagCheck } from '../../../utils/Functions'
 import { useNavigate } from 'react-router'
 import AnimatedHeader from '../../PaymentAddressPublic/AnimatedHeader'
 import useWindowWidth from '../../../utils/useWindowWidth'
@@ -41,7 +41,7 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal
                 }
             },
             width: "15px",
-            disabled: !paymentAddressFlagCheck("payments.allowInstapay", userDetails),
+            disabled: !flagCheck("payments.allowInstapay", userDetails, "invoice"),
             disabledMessage: t("This method is disabled for this payment address by admin.")
         },
         {
@@ -50,14 +50,14 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal
             onClick: () => {
                 dataHandler("showCryptoModal", true)
             },
-            disabled: !paymentAddressFlagCheck("payments.allowCrypto", userDetails),
+            disabled: !flagCheck("payments.allowCrypto", userDetails, "invoice"),
             disabledMessage: t("This method is disabled for this payment address by admin.")
         },
         {
             label: "Pay As Guest",
             logo: addFunds,
             onClick: toggleCreditModal,
-            disabled: !paymentAddressFlagCheck("payments.allowGuestPay", userDetails),
+            disabled: !flagCheck("payments.allowGuestPay", userDetails, "invoice"),
             disabledMessage: t("This method is disabled for this payment address by admin.")
         }
     ]
@@ -112,12 +112,16 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal
 
                 <div className={styles.buttons}>
                     <div>
-                        <button onClick={() => navigate(`/profile/${user_name}`)} style={{ color: "white", background: "#5926F0" }}>
-                            {t("View Profile")}
-                        </button>
-                        <button>
-                            {t("Explore eShop")}
-                        </button>
+                        {flagCheck("allowViewProfile", userDetails, "invoice") &&
+                            <button onClick={() => navigate(`/profile/${user_name}`)} style={{ color: "white", background: "#5926F0" }}>
+                                {t("View Profile")}
+                            </button>
+                        }
+                        {flagCheck("allowEcommerce", userDetails, "invoice") &&
+                            <button>
+                                {t("Explore eShop")}
+                            </button>
+                        }
                     </div>
 
                     <LanguagePicker newUI={true} />

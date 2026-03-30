@@ -15,6 +15,11 @@ import { toast } from 'react-toastify'
 import CardDetails from '../AddFunds/WalletFund/CardDetails'
 import ConfirmWalletFund from '../AddFunds/ConfirmWalletFund'
 import { useNavigate } from 'react-router'
+import useAvailableMethods from '../../hooks/Payments/useAvailableMethods'
+import { apiWrapper } from '../../utils/Functions/apiWrapper'
+import MobileWalletStatus from '../PaymentAddressPublic/PayAsGuest/MobileWalletStatus'
+import PlaidBankTransfer from '../AddFunds/WalletFundsFlow/PlaidBankTransfer'
+import ErrorModal from '../PaymentsNewer/InternationalFlow/ErrorModal'
 
 const paymentChannels = [
     {
@@ -31,6 +36,16 @@ const paymentChannels = [
         name: "PayPal",
         icon: pc,
         value: "paypal"
+    },
+    {
+        name: "Mobile Wallet",
+        icon: pc,
+        value: "mobile_wallet"
+    },
+    {
+        name: "Bank Transfer",
+        icon: pc,
+        value: "bank"
     }
 ]
 
@@ -61,6 +76,9 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
     const [cardError, setCardError] = useState('');
     const [codeType, setCodeType] = useState("sms")
     const [feeDetails, setFeeDetails] = useState({})
+    const { isLoading, methods } = useAvailableMethods()
+    const [createdTransactionId, setCreatedTransactionId] = useState(null)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         setCodeType(userDetails?.tfa ? "authenticator" : "sms")
@@ -167,19 +185,28 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                 otp,
                 type: codeType
             }
-            // console.log(data)
-            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/${partnerId ? "partner" : isKYB ? "company" : "user"}/charge-${partnerId ? "kyc" : isKYB ? "kyb" : "kyc"}`, {
-                data: encryptData(data)
-            }, {
-                headers: authHeader
+
+            const endpoint = `/api/${payoutChannel?.value === "mobile_wallet" ? "collection" : partnerId ? "partner" : isKYB ? "company" : "user"}/${payoutChannel?.value === "mobile_wallet" ? "" : 'charge-'}${partnerId ? "kyc" : isKYB ? "kyb" : "kyc"}`
+
+            console.log(endpoint)
+
+            const res = await apiWrapper({
+                method: "POST",
+                payload: data,
+                isEncrypted: true,
+                endpoint
             })
-            const dec = decryptData(res.data.data)
-            // console.log(dec)
+            console.log(res)
+            setCreatedTransactionId(res?.data?.transactionId || res?.data?.transaction_id)
             setter(true)
         } catch (err) {
             // console.log(decryptData(error?.response?.data?.data))
             const decrypted = decryptData(err.response.data.data);
-            setOtpError(decrypted?.message ?? "Something went wrong while verifying the code.")
+            if(decrypted?.message?.toLowerCase()?.includes("kyc already paid")){
+                setOtpError('You have already paid for the KYC please refresh the page to continue the verification process.')
+            }else{
+                setOtpError(decrypted?.message ?? "Something went wrong while verifying the code.")
+            }
             if (decrypted.message?.toLowerCase()?.includes("account is locked")) {
                 const time = decrypted?.message?.split(" in ")?.[1]?.split(" ")?.[0] ?? "0:00"
                 const timeInSec = (+time?.split(":")?.[0] * 60) + (+time?.split(":")?.[1])
@@ -210,8 +237,14 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
 
     const handleClick = async () => {
         if (step === 1) {
-            if (payoutChannel?.value === "paypal") {
-                initiatePaypal()
+            const skipStepMethods = ["paypal", "mobile_wallet"]
+            if (skipStepMethods?.includes(payoutChannel?.value)) {
+                if (payoutChannel?.value === "paypal") {
+                    initiatePaypal()
+                }
+                else if (payoutChannel?.value === "mobile_wallet") {
+                    sendOtp()
+                }
             } else {
                 setStep(2)
             }
@@ -244,6 +277,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
         }
     }
 
+
     return (
         <>
             {
@@ -262,7 +296,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                 <div style={{ margin: "1rem 0", display: "flex", flexDirection: "column", gap: "1rem" }}>
                                     {
                                         paymentChannels
-                                            .filter(item => wallets.length > 0 ? item : item?.value !== "wallet")
+                                            .filter(item => item?.value === "wallet" ? wallets.length > 0 : methods?.includes(item?.value))
                                             .map(item => {
                                                 const isPaypalDisabled = isKYB && item?.value === "paypal";
                                                 return (
@@ -453,14 +487,38 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                             // wallet={userWallets?.find(item => item?.currency?.code === "USD")}
                             />
                         }
+                        {(step === 2 && payoutChannel?.value === "bank") &&
+                            <PlaidBankTransfer
+                                type='verification_payment'
+                                initiatePayload={() => ({})}
+                                endpoint='/api/plaid/kyc'
+                                dataHandler={(type, data) => {
+                                    if (type === "error") {
+                                        setError(data)
+                                    }
+                                }}
+                                data={{}}
+                                handleBackClick={() => {
+                                    setStep(1)
+                                }}
+                                successMessage={'Payment authorized successfully, you will be able to continue your KYC Verification once the transaction is completed, you can now close this window now.'}
+                            />
+                        }
                         {
-                            step < 3 && !isKYB
+                            (payoutChannel?.value === "bank" ? step === 1 : step < 3 && !isKYB)
                             &&
                             <h5 style={{ marginTop: "1rem" }}>{t("A fee of {{amount}} will be charged for the verification process.", { amount: `$${userDetails?.country?.kyc_fee}` })}</h5>
                         }
+
+                        <ErrorModal
+                            isOpen={error}
+                            toggle={() => setError(null)}
+                            message={error}
+                            heading='Transaction Error'
+                        />
                     </ModalBody>
                     {
-                        step < 3
+                        (payoutChannel?.value === "bank" ? step === 1 : step < 3)
                         &&
                         <ModalFooter style={{ justifyContent: step > 1 ? "space-between" : "flex-end", transition: "250ms" }}>
                             {
@@ -539,34 +597,52 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                     {t("{{type}} Fee Payment", { type: isKYB ? "KYB" : "KYC" })}
                 </ModalHeader>
                 <ModalBody>
-                    <h5 className='modal-title' style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <CheckCircle size={64} className="text-success" style={{ marginBottom: "1rem" }} />
-                        {t("Payment Successful!")}
-                    </h5>
-                    <div className="text-center">
-                        <p className="mb-0">
-                            {isKYB ?
-                                t(`Thank you for submitting the required documents for business verification. An email has been sent to the business directors to complete their KYC verification.
-                                    Once the business documents and directors’ KYC are successfully validated, your business account will be verified.`) :
-                                t("The KYC fee payment is successful. Please proceed to verify your account.")
-                            }
-                        </p>
-                        <Button
-                            style={{
-                                border: "none",
-                                outline: "none",
-                                background: " linear-gradient(to right, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0",
-                                backgroundBlendMode: "overlay, normal",
-                                boxShadow: "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
-                                borderRadius: "6px",
-                                marginTop: "1.5rem"
+
+
+                    {payoutChannel?.value === "mobile_wallet" ?
+                        <MobileWalletStatus
+                            inGuestPay={false}
+                            transactionId={createdTransactionId}
+                            containerStyle={{
+                                padding: "0",
+                                minHeight: "auto"
                             }}
-                            onClick={!isKYB ? verify : toggle}
-                            disabled={loading}
-                        >
-                            {!isKYB ? t("Close") : t("Proceed")}
-                        </Button>
-                    </div>
+                        />
+                        :
+                        <>
+                            <h5 className='modal-title' style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                <CheckCircle size={64} className="text-success" style={{ marginBottom: "1rem" }} />
+                                {t("Payment Successful!")}
+                            </h5>
+
+                            <div className="text-center">
+
+                                <p className="mb-0">
+                                    {isKYB ?
+                                        t(`Thank you for submitting the required documents for business verification. An email has been sent to the business directors to complete their KYC verification.
+                                    Once the business documents and directors’ KYC are successfully validated, your business account will be verified.`) :
+                                        t("The KYC fee payment is successful. Please proceed to verify your account.")
+                                    }
+                                </p>
+                                <Button
+                                    style={{
+                                        border: "none",
+                                        outline: "none",
+                                        background: " linear-gradient(to right, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0",
+                                        backgroundBlendMode: "overlay, normal",
+                                        boxShadow: "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
+                                        borderRadius: "6px",
+                                        marginTop: "1.5rem"
+                                    }}
+                                    onClick={!isKYB ? verify : toggle}
+                                    disabled={loading}
+                                >
+                                    {!isKYB ? t("Close") : t("Proceed")}
+                                </Button>
+                            </div>
+                        </>
+                    }
+
                 </ModalBody>
             </Modal>
         </>

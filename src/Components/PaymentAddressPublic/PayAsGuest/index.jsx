@@ -625,7 +625,7 @@ const PayAsGuest = ({
       dataHandler("loading", true);
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/payment-methods/${user?.level?._id}?country_iso_code=${data?.country?.alpha3}`
+          `${import.meta.env.VITE_IP_DEV_API}/api/guest-pay/payment-methods/${user?.level?._id}?accountId=${user?._id}&country_iso_code=${data?.country?.alpha3}${type === "invoice" ? "&isInvoice=true" : ""}`
         );
         const dec = decryptData(res.data.data);
         setAllowed(dec?.data ?? []);

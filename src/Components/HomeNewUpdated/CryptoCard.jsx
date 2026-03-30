@@ -16,12 +16,14 @@ const CryptoCard = ({ item }) => {
     }, [])
 
     const { userWallets } = useContext(UserContext)
+    const isPositive = !item.increment.startsWith("-");
+    const isStable = item.name === "Tether";
+
     return (
         <div className={window.innerWidth < 1000 ? styles.res_card : styles.card} style={{
             background: item.item_bg,
         }}>
             {
-                // !userWallets.some(item => item?.balance?.reserved)
                 window.innerWidth > 1000
                     ?
                     <div className={styles.wrapper_pc}>
@@ -31,7 +33,14 @@ const CryptoCard = ({ item }) => {
                                 color: item.inc_color,
                                 background: item.inc_bg,
                             }} className={styles.card_title}>
-                                <img src={item.name === "Tether" ? chev_right : chev_up} alt="c" />
+                                <img
+                                    src={isStable ? chev_right : chev_up}
+                                    alt="c"
+                                    style={{
+                                        transform: (!isPositive && !isStable) ? "rotate(180deg)" : "none",
+                                        transition: "transform 0.3s ease"
+                                    }}
+                                />
                                 {item.increment}
                             </span>
                         </div>
@@ -67,7 +76,14 @@ const CryptoCard = ({ item }) => {
                                 padding: ".2rem",
                                 borderRadius: ".2rem"
                             }} className={styles.card_title}>
-                                <img src={item.name === "Tether" ? chev_right : chev_up} alt="c" />
+                                <img
+                                    src={isStable ? chev_right : chev_up}
+                                    alt="c"
+                                    style={{
+                                        transform: (!isPositive && !isStable) ? "rotate(180deg)" : "none",
+                                        transition: "transform 0.3s ease"
+                                    }}
+                                />
                                 {item.increment}
                             </span>
                         </div>

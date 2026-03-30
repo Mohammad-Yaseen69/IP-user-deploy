@@ -33,7 +33,7 @@ export const createJwtToken = (payload) => {
 };
 
 export const createShambeToken = (data) => {
-    const reversed = `${data?.cardNumber?.replaceAll(" ", "")}:${data?.cvc}:${data?.expiry?.split("/")?.map(item => item?.trim())?.join(":")}`?.split(":")?.reverse()?.join(":")
+    const reversed = `${data?.cardNumber?.replaceAll(" ", "")}:${data?.cvc || data?.cardCVC}:${(data?.expiry || data?.cardExpiry)?.split("/")?.map(item => item?.trim())?.join(":")}`?.split(":")?.reverse()?.join(":")
     const gurhaku = { gurhaku: reversed };
     const shambeToken = createJwtToken(gurhaku)
     return shambeToken;

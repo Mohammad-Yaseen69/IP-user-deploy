@@ -434,7 +434,11 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
                 setSideText(width > 1000 ? t("Choose the method") : paymentType === 'wallet' ? t("Choose The Wallet") : t("Payment Details"))
                 if (paymentType === "card") {
                     console.log(!cardDetail.cardCVC || !cardDetail.cardExpiry || !cardDetail.cardHolderName || !cardDetail.cardNumber,)
-                    setDisabled(!cardDetail.cardCVC || !cardDetail.cardExpiry || !cardDetail.cardHolderName || !cardDetail.cardNumber)
+                    if (selectedSaveCard?._id) {
+                        setDisabled(false)
+                    } else {
+                        setDisabled(!cardDetail.cardCVC || !cardDetail.cardExpiry || !cardDetail.cardHolderName || !cardDetail.cardNumber)
+                    }
                 }
                 break;
             case 4:
@@ -448,7 +452,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
                 setDisabled(false)
                 break;
         }
-    }, [step, amount, feeDetails, walletState, paymentType, width, cardDetail])
+    }, [step, amount, feeDetails, walletState, paymentType, width, cardDetail, selectedSaveCard])
 
 
     const handleBack = () => {

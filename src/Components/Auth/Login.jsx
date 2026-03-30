@@ -176,55 +176,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             });
         };
 
-        let locationInput = null;
-        if (capturedSecurityData?.locationData) {
-            locationInput = capturedSecurityData.locationData;
-        } else if (step === 1) {
-            try {
-                locationInput = await getLocation();
-            } catch (error) {
-                logger.error("Location error occured", {
-                    error: error
-                })
-                if (error.code === 1) {
-                    if (rdd.isSafari || rdd.isMobileSafari) {
-                        try {
-                            locationInput = await new Promise((resolve, reject) => {
-                                navigator.geolocation.getCurrentPosition(resolve, reject, {
-                                    timeout: 10000,
-                                    enableHighAccuracy: true,
-                                    maximumAge: 0
-                                });
-                            });
-                        } catch (error2) {
-                            logger.error("Location error occured in safari", {
-                                error: error2
-                            })
-                            setPendingLoginData({ method, restoreAccount, isPendingRetry: true });
-                            setShowLocationModal(true);
-                            setIsPressed(false);
-                            setMethodLoading(false);
-                            setRestoreLoading(false);
-                            return;
-                        }
-                    } else {
-                        setPendingLoginData({ method, restoreAccount, isPendingRetry: true });
-                        setShowLocationModal(true);
-                        setIsPressed(false);
-                        setMethodLoading(false);
-                        setRestoreLoading(false);
-                        return;
-                    }
-                }
-
-                console.warn("Geolocation warning:", error);
-            }
-        }
-
         setConsecutiveCount(1)
         if (method) {
             setMethodLoading(true)
         }
+
         if (restoreAccount) {
             setRestoreLoading(true)
         }
@@ -262,6 +218,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             .then(async (res) => {
                 const decrypted = decryptData(res.data.data)
                 const isVpnAllowed = decrypted?.isVpnAllowed
+                const isLocationRequired = decrypted?.isLocationRequired
                 setFirstTime(false)
                 if (!restoreAccount && decrypted?.status === false && decrypted?.accountDetails?.requiresConfirmation === true) {
                     setAccountRestoreDetails(decrypted)
@@ -328,6 +285,50 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     setAccountRestoreDetails(null)
                     setRestoreLoading(false)
                 }
+
+                let locationInput = capturedSecurityData?.locationData || {};
+                if (!locationInput.latitude && isLocationRequired && step === 1) {
+                    try {
+                        locationInput = await getLocation();
+                    } catch (error) {
+                        logger.error("Location error occured", {
+                            error: error
+                        })
+                        if (error.code === 1) {
+                            if (rdd.isSafari || rdd.isMobileSafari) {
+                                try {
+                                    locationInput = await new Promise((resolve, reject) => {
+                                        navigator.geolocation.getCurrentPosition(resolve, reject, {
+                                            timeout: 10000,
+                                            enableHighAccuracy: true,
+                                            maximumAge: 0
+                                        });
+                                    });
+                                } catch (error2) {
+                                    logger.error("Location error occured in safari", {
+                                        error: error2
+                                    })
+                                    setPendingLoginData({ method, restoreAccount, isPendingRetry: true });
+                                    setShowLocationModal(true);
+                                    setIsPressed(false);
+                                    setMethodLoading(false);
+                                    setRestoreLoading(false);
+                                    return;
+                                }
+                            } else {
+                                setPendingLoginData({ method, restoreAccount, isPendingRetry: true });
+                                setShowLocationModal(true);
+                                setIsPressed(false);
+                                setMethodLoading(false);
+                                setRestoreLoading(false);
+                                return;
+                            }
+                        }
+
+                        console.warn("Geolocation warning:", error);
+                    }
+                }
+
 
                 performSecurityChecks(isVpnAllowed, locationInput)
 
@@ -692,21 +693,31 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         let shouldCallLoginHandler = false;
 
         if (resendTimer > 0 && lastOtpSentTo && (method === 'sms' || method === 'insta' || method === "wp" || method === "email")) {
-            if (!hasChangedMethodOnce) {
+            if (!hasChangedMethodOnce || lastOtpSentTo === method) {
                 setHasChangedMethodOnce(true);
-                shouldCallLoginHandler = true;
+                if (resendTimer === 0 || !hasChangedMethodOnce) {
+                    shouldCallLoginHandler = true;
+                } else {
+                    setCurrentOtpMethod(method);
+                }
             } else {
-                // Rate limited. Do not call loginHandler, but allow the UI to change method
+                setPendingOtpMethod(method);
+                return;
             }
         } else if (method !== "biometric" && (method === "auth" || resendTimer === 0)) {
             shouldCallLoginHandler = true;
+            setCurrentOtpMethod(method);
+        }
+
+        if (method === "biometric") {
+            setCurrentOtpMethod(method);
+            return
         }
 
         if (shouldCallLoginHandler) {
             loginHandler({ preventDefault: () => { } }, method);
         }
 
-        setCurrentOtpMethod(method);
         setPendingOtpMethod(null);
     }
 
@@ -836,6 +847,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     useEffect(() => {
         if (resendTimer === 0) {
             setLastOtpSentTo(null);
+            setPendingOtpMethod(null);
         }
     }, [resendTimer]);
     const resetOtpStates = () => {
@@ -925,7 +937,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 </ModalFooter>
             </Modal>
 
-            <form onSubmit={emailVerified ? loginHandler : checkEmailHandler} className={styles.form_details} style={width > 1000 ? { opacity: step === 1 ? 1 : 0, pointerEvents: step === 1 ? "all" : "none" } : { display: step === 1 ? "inherit" : "none" }}>
+            <form autoComplete="off" onSubmit={emailVerified ? loginHandler : checkEmailHandler} className={styles.form_details} style={width > 1000 ? { opacity: step === 1 ? 1 : 0, pointerEvents: step === 1 ? "all" : "none" } : { display: step === 1 ? "inherit" : "none" }}>
                 <div className={styles.left}>
                     <h1>{t("Login")}</h1>
                     <p>{t("Start Your InstaPay Journey Today!")}</p>
@@ -951,7 +963,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                     country={country}
                                                 />
                                                 :
-                                                <input type="email" placeholder={t("eg: john@doe.org")} value={email} onChange={e => setEmail(e.target.value?.toLowerCase())} autoComplete="on" name="email" />
+                                                <input type="email" placeholder={t("eg: john@doe.org")} value={email} onChange={e => setEmail(e.target.value?.toLowerCase())} autoComplete="off" name="email" />
                                         }
                                         <div
                                             className={styles.loginWith}
@@ -1023,7 +1035,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     display: "flex",
                                     alignItems: "center"
                                 }}>
-                                    <input type={showPassword ? "text" : "password"} placeholder={t("Enter your password")} value={password} onChange={e => setPassword(e.target.value)} />
+                                    <input type={showPassword ? "text" : "password"} placeholder={t("Enter your password")} value={password} onChange={e => setPassword(e.target.value)} autoComplete="off" />
                                     <div style={{
                                         position: "absolute",
                                         top: "55%",

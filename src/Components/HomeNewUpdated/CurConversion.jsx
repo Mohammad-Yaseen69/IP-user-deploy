@@ -226,7 +226,7 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
                         <div className={styles.input_con}>
                             <select value={exchangedCurrency} onChange={e => setExchangedCurrency(e.target.value)}>
                                 {
-                                    filteredWallets?.map(item => (
+                                    filteredWallets?.filter(item => item?.currency?.code !== "USDT")?.map(item => (
                                         <option key={item._id} value={item?.currency?.code} style={{ fontSize: "1rem", fontWeight: 900, display: exchangedCurrency === item?.currency?.code ? "none" : "inherit" }}>
                                             {item?.currency?.code}
                                         </option>

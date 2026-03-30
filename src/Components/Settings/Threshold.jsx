@@ -24,6 +24,7 @@ const Threshold = ({ userDetails, authHeader }) => {
     const [editMode, setEditMode] = useState(false)
     const [showTooltip, setShowTooltip] = useState(false)
     const [toggle, setToggle] = useState(false)
+    const [loading, setLoading] = useState(false)
     const width = useWindowWidth()
     const { t } = useTranslation()
 
@@ -61,6 +62,7 @@ const Threshold = ({ userDetails, authHeader }) => {
 
     const updateThreshold = async (toggle, defaultA) => {
         console.log(userDetails)
+        setLoading(true)
         try {
             const data = {
                 accountId: userDetails?._id,
@@ -97,6 +99,9 @@ const Threshold = ({ userDetails, authHeader }) => {
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
             console.log(dec)
+        }
+        finally {
+            setLoading(false)
         }
     }
 
@@ -158,8 +163,8 @@ const Threshold = ({ userDetails, authHeader }) => {
                             <p>{t("You can set different payment thresholds for features like QR payments, invoices, and more.")}</p>
                         </div>
                     </div>
-                    <button onClick={() => updateThreshold(true, cAmount || defaultAmount)}>
-                        {t("Activate")}
+                    <button disabled={loading} onClick={() => updateThreshold(true, cAmount || defaultAmount)}>
+                        {loading ? t("Activating...") : t("Activate")}
                     </button>
                 </div> :
                 <div className={styles.thresholdSetBox}>
@@ -219,7 +224,7 @@ const Threshold = ({ userDetails, authHeader }) => {
 
                             {!editMode &&
                                 <div className={styles.btns}>
-                                    <button className={styles.deactivate} onClick={() => updateThreshold(false)}>{t("Deactivate")}</button>
+                                    <button disabled={loading} className={styles.deactivate} onClick={() => updateThreshold(false)}>{loading ? t("Deactivating...") : t("Deactivate")}</button>
                                     <button className={styles.edit} onClick={() => setEditMode(true)}>{t("Edit the amount")}</button>
                                 </div>}
                         </div>
@@ -249,19 +254,18 @@ const Threshold = ({ userDetails, authHeader }) => {
                                         onChange={(e) => {
                                             let val = e.target.value;
                                             if (/^\d*\.?\d*$/.test(val)) {
-                                                if (val === "") {
-                                                    setAmount("1.00");
-                                                    return;
-                                                }
-                                                let num = parseFloat(val);
-                                                if (isNaN(num) || num < 1) {
-                                                    setAmount("1.00");
-                                                } else if (maxAmount && num > parseFloat(maxAmount)) {
-                                                    toast.error(`Amount must be less than or equal to ${localcur} ${maxAmount}`);
-                                                    setAmount(parseFloat(maxAmount).toFixed(2));
-                                                } else {
-                                                    setAmount(num.toFixed(2))
-                                                }
+                                                setAmount(val);
+                                            }
+                                        }}
+                                        onBlur={(e) => {
+                                            let num = parseFloat(e.target.value);
+                                            if (isNaN(num) || num < 1) {
+                                                setAmount("1.00");
+                                            } else if (maxAmount && num > parseFloat(maxAmount)) {
+                                                toast.error(`Amount must be less than or equal to ${localcur} ${maxAmount}`);
+                                                setAmount(parseFloat(maxAmount).toFixed(2));
+                                            } else {
+                                                setAmount(num.toFixed(2));
                                             }
                                         }}
                                     />
