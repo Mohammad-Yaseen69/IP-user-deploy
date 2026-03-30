@@ -11,7 +11,9 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+     "optimize": "node scripts/optimizeImages.js"
+
   },
   "dependencies": {
     "@asseinfo/react-kanban": "^2.2.0",
@@ -147,6 +149,7 @@
     "globals": "^16.0.0",
     "jsdom": "^26.1.0",
     "rollup-plugin-visualizer": "^6.0.3",
+    "sharp": "^0.34.5",
     "vite": "^6.3.5",
     "vitest": "^3.2.4"
   },
