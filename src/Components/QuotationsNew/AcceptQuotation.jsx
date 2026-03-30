@@ -91,7 +91,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
     const { t } = useTranslation()
     const [data, dispatch] = useReducer(reducer, initialState);
     const { userWallets, userDetails, authHeader, setProfileLockTime, verifyToken } = useContext(UserContext)
-    const { limitStatus, clearStatus } = useTopupLimitCheck(data?.currency?.currency?.code, +String(data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
+    const { limitStatus, clearStatus } = useTopupLimitCheck(item?.amount_reciever_currency?.currency?.code, +String(data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
 
     const navigate = useNavigate()
     const dataHandler = (field, value) => {
@@ -299,6 +299,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
             const dec = decryptData(res.data.data)
             dataHandler("mobile_wallet_services", dec?.data?.payers ?? [])
         } catch {
+            // 
         }
         finally {
             dataHandler("loading", false)
