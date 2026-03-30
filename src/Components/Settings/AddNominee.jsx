@@ -92,7 +92,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
     useEffect(() => {
         const getAddresses = async () => {
             try {
-                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/get-autocomplete-address?lat=${position.lat}&long=${position.lng}&countryIso=${countryIsoCode}&query=${debouncedAddress}&countryName=${coordApiCountry}`, { headers: authHeader });
+                const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/beneficiary/get-autocomplete-address?lat=${position?.lat}&long=${position?.lng}&countryIso=${countryIsoCode}&query=${debouncedAddress}&countryName=${coordApiCountry}`, { headers: authHeader });
                 const dec = decryptData(res.data.data);
                 console.log(dec);
                 setAddresses(dec?.addresses ?? []);
@@ -103,7 +103,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
             }
         };
 
-        if (debouncedAddress.length >= 5 && position.lat && position.lng && addressInFocus) {
+        if (debouncedAddress.length >= 5 && position?.lat && position?.lng && addressInFocus) {
             getAddresses();
         }
 
