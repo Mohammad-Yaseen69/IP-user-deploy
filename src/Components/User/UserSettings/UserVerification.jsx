@@ -5,29 +5,32 @@ import StepOne from './UserVerificationStepOne';
 import StepThree from './UserVerificationStepThree';
 import { Button, Form, FormGroup, Input, Label, Row } from 'reactstrap';
 import AccordianComponent from './AccordionComponent';
+import { useTranslation } from 'react-i18next';
 
 const InitialStep = () => {
     const [businessType, setBusinessType] = useState("")
+    const { t } = useTranslation()
     const createMarkup = () => {
         return { __html: markups[businessType] }
     }
+    console.log(t("Publicly Listed Companies"))
     return (
         <>
             <FormGroup style={{ marginTop: "3rem" }}>
-                <Label>Account Type</Label>
+                <Label>{t("Account Type")}</Label>
                 <select required className="form-control" value={businessType} onChange={(e) => setBusinessType(e.target.value)}>
                     <option value="">--Select-Business-Type--</option>
-                    <option value="private_comp">Private Limited Companies or equivalent</option>
-                    <option value="public_comp">Publicly Listed Companies</option>
-                    <option value="ngos">Associations, Non-Governmental Organizations (NGOs), and Charitable Entities</option>
-                    <option value="sole_prop">Sole Proprietorships</option>
+                    <option value="private_comp">{t("Private Limited Companies or equivalent")}</option>
+                    <option value="public_comp">{t("Publicly Listed Companies")}</option>
+                    <option value="ngos">{t("Associations, Non-Governmental Organizations (NGOs), and Charitable Entities")}</option>
+                    <option value="sole_prop">{t("Sole Proprietorships")}</option>
                 </select>
             </FormGroup>
             {
                 businessType
                 &&
                 <div className='card' style={{ padding: "1.5rem" }}>
-                    <h4 className='text-center mb-4'>Document Submission Guideline</h4>
+                    <h4 className='text-center mb-4'>{t("Document Submission Guideline")}</h4>
                     <div dangerouslySetInnerHTML={createMarkup()}></div>
                 </div>
             }
@@ -36,6 +39,8 @@ const InitialStep = () => {
 }
 
 const KYC = () => {
+    const { t } = useTranslation()
+
     const [isOpen, setIsOpen] = useState(1)
     const toggle = (id) => (isOpen === id ? setIsOpen(null) : setIsOpen(id));
     const items = [
@@ -82,8 +87,8 @@ const KYC = () => {
     ]
     return (
         <div>
-            <h3 className="text-center mt-4">Upload The Proof of Your Identity</h3>
-            <p className="text-center mb-4">Instapay requires a valid government issued documents.</p>
+            <h3 className="text-center mt-4">{t("Upload The Proof of Your Identity")}</h3>
+            <p className="text-center mb-4">{t("Instapay requires a valid government issued documents.")}</p>
             <Form className='mt-4'>
                 <Row>
                     {
@@ -93,7 +98,7 @@ const KYC = () => {
                 <FormGroup check style={{ marginBottom: "2rem" }}>
                     <Label check>
                         <Input type="checkbox" />
-                        <Label>I confirm, that I uploaded valid government-issued documents.</Label>
+                        <Label>{t("I confirm, that I uploaded valid government-issued documents.")}</Label>
                     </Label>
                 </FormGroup>
             </Form>

@@ -11,7 +11,7 @@ const GeneralNoticeModal = ({ isOpen, toggle, message, buttonText, onConfirm }) 
             </ModalHeader>
             <ModalBody>
                 <div style={{ fontSize: "16px", fontWeight: 500 }}>
-                    {message}
+                    {t(message)}
                 </div>
             </ModalBody>
             {
@@ -19,10 +19,10 @@ const GeneralNoticeModal = ({ isOpen, toggle, message, buttonText, onConfirm }) 
                 &&
                 <ModalFooter>
                     <Button color="secondary" onClick={toggle}>
-                        {("Cancel")}
+                        {t("Cancel")}
                     </Button>
                     <Button color="primary" onClick={onConfirm}>
-                        {buttonText}
+                        {t(buttonText)}
                     </Button>
                 </ModalFooter>
             }
