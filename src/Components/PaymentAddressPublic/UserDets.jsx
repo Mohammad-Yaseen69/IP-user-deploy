@@ -86,7 +86,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                         </div>
                         <div style={{ display: "flex", justifyContent: invoice ? "center" : "space-between", alignItems: "center", width: "100%", flexDirection: width < 1000 && "column", position: "relative" }}>
                             <div style={{ alignItems: invoice ? "center" : 'flex-start', }} className={styles.basic_dets}>
-                                <div className={styles.badge}>{userDetails?.account_type === "individual" ? t("Personal") : t("Business")} {t("Account")}</div>
+                                {flagCheck("allowAccountType", userDetails, invoice ? "invoice" : "paymentAddress") && <div className={styles.badge}>{userDetails?.account_type === "individual" ? t("Personal") : t("Business")} {t("Account")}</div>}
                                 <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: ".3rem" }}>
                                     {flagCheck("allowProfileName", userDetails, invoice ? "invoice" : "paymentAddress") &&
                                         <h4

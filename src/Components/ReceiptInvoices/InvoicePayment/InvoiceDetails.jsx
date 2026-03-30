@@ -3,14 +3,16 @@ import borderline from "./files/borderline.png"
 import styles from './styles/index.module.scss'
 import ip from "../../PaymentAddressPublic/instapay_black.svg";
 import { flagCheck } from "../../../utils/Functions"
+import { useNavigate } from "react-router";
 
 const InvoiceDetails = ({ data, isSubscription = false }) => {
     const { t } = useTranslation()
+    const navigate  = useNavigate()
     return (
         <>
             <div className={styles.top}>
                 <div className={styles.top_content}>
-                    <img src={ip} style={{ width: "150px" }} alt="" />
+                    <img onClick={() => navigate("/")} src={ip} style={{ width: "150px" }} alt="" />
                     <h1>{isSubscription ? t("Subscription")?.toUpperCase() : t("Invoice")?.toUpperCase()} </h1>
                 </div>
 
