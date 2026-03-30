@@ -695,9 +695,10 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         if (resendTimer > 0 && lastOtpSentTo && (method === 'sms' || method === 'insta' || method === "wp" || method === "email")) {
             if (!hasChangedMethodOnce || lastOtpSentTo === method) {
                 setHasChangedMethodOnce(true);
-                setCurrentOtpMethod(method);
-                if (resendTimer === 0) {
+                if (resendTimer === 0 || !hasChangedMethodOnce) {
                     shouldCallLoginHandler = true;
+                } else {
+                    setCurrentOtpMethod(method);
                 }
             } else {
                 setPendingOtpMethod(method);
