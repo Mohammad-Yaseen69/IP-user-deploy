@@ -1070,7 +1070,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         {
                             (emailVerified && width < 1000)
                             &&
-                            <button type="button" className={styles.go_back_btn}
+                            <button type="button"  className={styles.go_back_btn}
                                 onClick={() => {
                                     setPassword("")
                                     setEmailVerified(false)
@@ -1086,10 +1086,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                             {
                                 (emailVerified && width > 1000)
                                 &&
-                                <button type="button" className={styles.go_back_btn}
+                                <button type="button" disabled={isPressed} className={styles.go_back_btn}
                                     onClick={() => {
                                         setPassword("")
                                         setEmailVerified(false)
+
                                     }}
                                 >
                                     {t("Back")}
@@ -1384,7 +1385,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     {
                                         width > 1000
                                         &&
-                                        <button type="button" className={styles.go_back_btn} onClick={resetOtpStates}>
+                                        <button type="button" disabled={isPressed} className={styles.go_back_btn} onClick={resetOtpStates}>
                                             {t("Back")}
                                         </button>
                                     }
