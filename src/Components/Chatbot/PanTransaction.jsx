@@ -31,9 +31,7 @@ const PanTransaction = () => {
                 width: "90%",
                 maxWidth: "450px"
             }}>
-                        <img src={${pending}} 
-                        loading="lazy"
-                        alt="" style={{ width: "100%", objectFit: "cover", aspectRatio: "1" }} />
+                        <img src={${pending}} alt="" style={{ width: "100%", objectFit: "cover", aspectRatio: "1" }} />
             </div>
             <h5>Loading...</h5>
         </div>
@@ -80,9 +78,7 @@ const PanTransaction = () => {
         {
           isLoading
             ?
-            <img src={pending}
-            loading='lazy'
-            alt="" style={{ width: "100%", objectFit: "cover", aspectRatio: "1" }} />
+            <img src={pending} alt="" style={{ width: "100%", objectFit: "cover", aspectRatio: "1" }} />
             :
             <></>
         }

@@ -11,7 +11,7 @@ import { UserContext } from "../../../Context/UserContext";
 // import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 // import DownloadModal from "./DownloadModal";
 // import * as XLSX from "xlsx"
-import img from "../../../assets/images/logo/logo2.webp"
+import img from "../../../assets/images/logo/logo2.png"
 import {
     Packer,
     Document,

@@ -191,7 +191,7 @@ const LoginForm = ({ setIsLoginForm, setIsForgot, country }) => {
                                     :
                                     <div className={styles.email_verified}>
                                         <div>
-                                            <img src={ev_left} loading="lazy" alt="img" />
+                                            <img src={ev_left} alt="img" />
                                         </div>
                                         <p>{email}</p>
                                         <button type="button" onClick={() => {

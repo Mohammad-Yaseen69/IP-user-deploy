@@ -10,7 +10,7 @@ const PaymentActionsButtons = ({ actionButtons, inPlans, isRow, selectedAction, 
                 <div key={idx} title={btn.disabled ? btn.disabledMessage : ""} style={{ position: "relative", width: "100%" }}>
 
                     <button
-                        className={`${styles.button} ${styles.buttonResponsive}`}
+                        className={`${styles.button}`}
 
                         onClick={() => inPlans ? setSelectedAction(btn) : btn.onClick()}
                         style={{

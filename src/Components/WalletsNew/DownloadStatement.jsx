@@ -8,7 +8,7 @@ import { UserContext } from '../../Context/UserContext'
 import axios from 'axios'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import jsPDF from 'jspdf'
-import img from "../../assets/images/logo/logo2.webp"
+import img from "../../assets/images/logo/logo2.png"
 import { toast } from 'react-toastify'
 import "jspdf-autotable";
 import { service_name_formatter } from '../TransactionsNewApi/TransactionItem'
@@ -262,72 +262,72 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
     };
 
     return (
-        <Modal className='removeAllOverflowHidden' style={{ overflow: "visible", margin: "0 auto" }} isOpen={showModal}>
-            <ModalHeader toggle={() => setShowModal(!showModal)}>
-                {t("Download Statement")}
-            </ModalHeader>
-            <ModalBody style={{ overflow: "visible" }}>
-                <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "1rem",
-                    position: "relative",
-                    marginBottom: ".5rem"
-                }}>
-                    <div style={{ display: "flex", alignItems: "center", width: "90%", overflowX: "auto", padding: "1rem", background: "rgb(240,240,240)", borderRadius: "7px", whiteSpace: "nowrap" }}>{dateString}</div>
-                    <img src={calendar} alt="i" onClick={handleDatePickerClick} />
-                    {showDatePicker && (
-                        <div
-                            ref={datePickerRef}
-                            style={{
-                                position: "absolute",
-                                top: "50px",
-                                right: "0px",
-                                zIndex: 9999999,
-                            }}
-                        >
-                            <DateRangePicker
-                                maxDate={new Date()}
-                                ranges={[dateRange]}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    )}
-                </div>
-                {
-                    downloadError
-                    &&
-                    <div style={{ color: "red", fontSize: ".65rem", fontWeight: 500, margin: ".5rem 0" }}>{downloadError}</div>
-                }
-                <Input type='select' value={fileType} onChange={e => setFileType(e.target.value)}>
-                    <option value="">{t("-Select-File-Type-")}</option>
-                    <option value="PDF">PDF</option>
-                    <option value="CSV">CSV</option>
-                </Input>
-            </ModalBody>
-            <ModalFooter>
-                <Button
-                    disabled={!fileType || !apiDates || downlaoding}
-                    onClick={() => {
-                        if (fileType === "PDF") {
-                            generatePDF();
-                        } else if (fileType === "CSV") {
-                            getTransactions(exportToExcel);
-                        }
-                    }}
-                    style={{
-                        border: "none",
-                        outline: "none",
-                        background: " linear-gradient(to right, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0",
-                        backgroundBlendMode: "overlay, normal",
-                        boxShadow: "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
-                        borderRadius: "6px",
+            <Modal className='removeAllOverflowHidden' style={{ overflow: "visible", margin: "0 auto" }} isOpen={showModal}>
+                <ModalHeader toggle={() => setShowModal(!showModal)}>
+                    {t("Download Statement")}
+                </ModalHeader>
+                <ModalBody style={{ overflow: "visible" }}>
+                    <div style={{
                         display: "flex",
                         alignItems: "center",
-                    }}
-                >{downlaoding ? t("Downloading") + "..." : t("Download Now")}</Button>
-            </ModalFooter>
-        </Modal>
+                        gap: "1rem",
+                        position: "relative",
+                        marginBottom: ".5rem"
+                    }}>
+                        <div style={{ display: "flex", alignItems: "center", width: "90%", overflowX: "auto", padding: "1rem", background: "rgb(240,240,240)", borderRadius: "7px", whiteSpace: "nowrap" }}>{dateString}</div>
+                        <img src={calendar} alt="i" onClick={handleDatePickerClick} />
+                        {showDatePicker && (
+                            <div
+                                ref={datePickerRef}
+                                style={{
+                                    position: "absolute",
+                                    top: "50px",
+                                    right: "0px",
+                                    zIndex: 9999999,
+                                }}
+                            >
+                                <DateRangePicker
+                                    maxDate={new Date()}
+                                    ranges={[dateRange]}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        )}
+                    </div>
+                    {
+                        downloadError
+                        &&
+                        <div style={{ color: "red", fontSize: ".65rem", fontWeight: 500, margin: ".5rem 0" }}>{downloadError}</div>
+                    }
+                    <Input type='select' value={fileType} onChange={e => setFileType(e.target.value)}>
+                        <option value="">{t("-Select-File-Type-")}</option>
+                        <option value="PDF">PDF</option>
+                        <option value="CSV">CSV</option>
+                    </Input>
+                </ModalBody>
+                <ModalFooter>
+                    <Button
+                        disabled={!fileType || !apiDates || downlaoding}
+                        onClick={() => {
+                            if (fileType === "PDF") {
+                                generatePDF();
+                            } else if (fileType === "CSV") {
+                                getTransactions(exportToExcel);
+                            }
+                        }}
+                        style={{
+                            border: "none",
+                            outline: "none",
+                            background: " linear-gradient(to right, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0",
+                            backgroundBlendMode: "overlay, normal",
+                            boxShadow: "0px 11.90068244934082px 8.655041694641113px -5.409400939941406px rgba(89, 38, 240, 0.17)",
+                            borderRadius: "6px",
+                            display: "flex",
+                            alignItems: "center",
+                        }}
+                    >{downlaoding ? t("Downloading") + "..." : t("Download Now")}</Button>
+                </ModalFooter>
+            </Modal>
     )
 }
 

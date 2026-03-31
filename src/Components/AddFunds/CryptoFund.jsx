@@ -170,10 +170,7 @@ const CryptoFund = ({ setAction }) => {
                 window.innerWidth > 1000
                     ?
                     <div style={{ display: "flex" }} className="i_t_con" >
-                        <img src={crypto_selected}
-                            // width="130px"
-                            loading="lazy"
-                            alt="cs" style={{ maxHeight: window.innerWidth > 1500 ? "700px" : "530px", borderRadius: "10px" }} draggable="false" />
+                        <img src={crypto_selected} alt="cs" style={{ maxHeight: window.innerWidth > 1500 ? "700px" : "530px", borderRadius: "10px" }} draggable="false" />
                         <Card style={{ width: "100%", marginBottom: 0, paddingBottom: "1rem", height: "fit-content", minHeight: "80vh" }}>
                             <CardBody style={{ display: "flex", gap: subStep === 5 ? "0" : "1rem", flexWrap: "wrap", padding: "24px" }}>
                                 <div style={{

@@ -5,8 +5,8 @@ const BroadcastPage = () => {
     return (
         <div className="broadcast-container">
             <div className="broadcast-div">
-
-                <img src={png} alt="" loading="lazy" />
+                <img src={png} alt="" loading="lazy"    
+w                />
                 <div className="text-cont">
                     <div>
                         <h1>

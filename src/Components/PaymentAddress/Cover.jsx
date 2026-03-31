@@ -100,7 +100,7 @@ const Cover = ({ cover, setCover, dets }) => {
 
     return (
         <div className={styles.cover_container} ref={mainContainerRef}>
-            <img src={(croppedImages.paBanner || cover) || coverPlaceHolder} alt="cover" loading="lazy" className={styles.cover} />
+            <img src={(croppedImages.paBanner || cover) || coverPlaceHolder} alt="cover" className={styles.cover} />
             {
                 (isEditing || deleting)
                     ?

@@ -42,10 +42,10 @@ const InstructionsModal = ({ isOpen, toggle }) => {
                         disableOnInteraction: false,
                     }} modules={[Autoplay]} style={{ width: "40%", minWidth: "400px", objectFit: "contain", height: "100%", overflow: "hidden", aspectRatio: "870/1140", borderRadius: "20px" }}>
                         <SwiperSlide>
-                            <img src={img} alt="." loading="lazy" style={{ width: "100%", objectFit: "contain" }} />
+                            <img src={img} alt="." style={{ width: "100%", objectFit: "contain" }} />
                         </SwiperSlide>
                         <SwiperSlide>
-                            <img src={img_2} alt="." loading="lazy" style={{ width: "100%", objectFit: "contain" }} />
+                            <img src={img_2} alt="." style={{ width: "100%", objectFit: "contain" }} />
                         </SwiperSlide>
                     </Swiper>
                 }

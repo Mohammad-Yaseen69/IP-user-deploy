@@ -69,12 +69,7 @@ const ConfirmCryptoFund = ({ setSubStep, cryptoCurrency, amount }) => {
                             alignItems: "center",
                             gap: ".5rem"
                         }}>
-                            <img src={cryptoCurrency.img}
-                                alt={cryptoCurrency.value}
-                                width="30"
-                                loading="lazy"
-
-                                style={{ borderRadius: "10px" }} />
+                            <img src={cryptoCurrency.img} alt={cryptoCurrency.value} style={{ width: "30px", borderRadius: "10px" }} />
                             <h5 style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 600 }}>{cryptoCurrency.name}</h5>
                         </div>
                         <h4 style={{ marginBottom: "0", fontSize: window.innerWidth < 1500 ? "1.4rem" : "2rem", fontWeight: 600 }}>{(+amount.split(",").join("") / +cryptoCurrency.price.split("$")[1].split(",").join("")).toFixed(5)}</h4>
@@ -138,12 +133,7 @@ const ConfirmCryptoFund = ({ setSubStep, cryptoCurrency, amount }) => {
                         marginTop: ".75rem"
                     }}
                 >
-                    <img src={faded_lines}
-                        alt="faded"
-                        width="130px"
-                        loading="lazy"
-                        style={{ position: "absolute", left: "-130px", display: complete ? "none" : "inherit",  }}
-                        ref={svgRef} />
+                    <img src={faded_lines} alt="faded" style={{ position: "absolute", left: "-130px", display: complete ? "none" : "inherit", width: "130px" }} ref={svgRef} />
                     <Draggable axis="x" bounds="parent" onDrag={handleDrag}>
                         <div
                             style={{

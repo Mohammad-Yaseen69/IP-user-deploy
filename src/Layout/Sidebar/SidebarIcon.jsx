@@ -1,5 +1,5 @@
 import { useState } from "react";
-import cubaimg from "../../assets/images/logo/logo.webp";
+import cubaimg from "../../assets/images/logo/logo.png";
 import { Link } from 'react-router-dom';
 import SidebarLogo from "./SidebarLogo";
 

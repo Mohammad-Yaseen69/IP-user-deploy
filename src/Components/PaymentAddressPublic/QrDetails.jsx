@@ -5,7 +5,7 @@ import wa from "./wa.svg";
 import tl from "./tl.svg";
 import { useEffect, useRef, useState } from "react";
 import QRCodeStyling from "qr-code-styling";
-import logo from "../../assets/images/logo/logo.webp";
+import logo from "../../assets/images/logo/logo.png";
 
 
 const QrDetails = ({

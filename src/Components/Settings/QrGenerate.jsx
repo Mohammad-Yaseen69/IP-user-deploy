@@ -1,7 +1,7 @@
 import QRCodeStyling from 'qr-code-styling';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import axios from 'axios';
-import logo from "../../assets/images/logo/logo.webp"
+import logo from "../../assets/images/logo/logo.png"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 
 
