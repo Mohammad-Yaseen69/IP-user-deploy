@@ -1,5 +1,5 @@
 import styles from "./styles/LoginNew.module.css"
-import logo from "../../assets/images/logo/logo2.webp"
+import logo from "../../assets/images/logo/logo2.png"
 import LanguagePicker from "../LanguagePicker"
 import { useTranslation } from "react-i18next"
 import { useContext, useEffect, useLayoutEffect, useState } from "react"
@@ -13,7 +13,7 @@ import PhoneInput from "../PhoneInput"
 import { Link } from "react-router-dom"
 import gs from "./files/gs.svg"
 import as from "./files/as.svg"
-import authenticator from "./files/"
+import authenticator from "./files/authenticator.png"
 import OtpConfimation from "./OtpConfimation"
 
 const LoginNew = ({ country, setIsLoginForm, setIsForgot }) => {

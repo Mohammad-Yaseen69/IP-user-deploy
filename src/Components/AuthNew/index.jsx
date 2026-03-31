@@ -1,5 +1,5 @@
 import styles from "./styles/index.module.css"
-import man from "./files/man.webp"
+import man from "./files/man.png"
 import woman from "./files/woman.png"
 import overlay from "./files/overlay.svg"
 import LoginForm from "./LoginForm"

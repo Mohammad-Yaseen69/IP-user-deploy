@@ -9,7 +9,7 @@ import { useLocation, useParams } from "react-router"
 import { useTranslation } from "react-i18next"
 import Cross from "./Cross.svg"
 import { toast } from "react-toastify"
-import Logo from "../../assets/images/logo/logo2.webp"
+import Logo from "../../assets/images/logo/logo2.png"
 import Gif from "../../assets/gif.gif"
 import i18next from "i18next"
 
