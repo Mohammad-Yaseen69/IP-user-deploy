@@ -233,7 +233,6 @@ const CustomDatePicker = ({ setRecStartDate, setShowPicker }) => {
 
 const FutureDatePicker = ({ setRecStartDate, setShowPicker }) => {
   const today = new Date();
-
   const [selectedDate, setSelectedDate] = useState(today);
   const [selectedMonth, setSelectedMonth] = useState(today.getMonth());
   const [selectedYear, setSelectedYear] = useState(today.getFullYear());
@@ -280,6 +279,9 @@ const FutureDatePicker = ({ setRecStartDate, setShowPicker }) => {
     const emptyDays = Array(firstDay).fill(null);
     const days = Array.from({ length: totalDays }, (_, i) => i + 1);
 
+    // Today at midnight (for accurate date-only comparison)
+    const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
     return (
       <div className="days">
         {[...emptyDays, ...days].map((day, index) => {
@@ -288,9 +290,7 @@ const FutureDatePicker = ({ setRecStartDate, setShowPicker }) => {
           }
 
           const currentDate = new Date(selectedYear, selectedMonth, day);
-
-          const isPast =
-            currentDate < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+          const isPast = currentDate < todayMidnight;
 
           const isSelected =
             selectedDate.toDateString() === currentDate.toDateString();
@@ -302,14 +302,11 @@ const FutureDatePicker = ({ setRecStartDate, setShowPicker }) => {
                 isSelected ? "active" : ""
               }`}
               onClick={() => {
-                if (isPast) return;
+                if (isPast) return; // 🔴 past date select nahi hogi
 
                 setSelectedDate(currentDate);
-
-                // ✅ format YYYY-MM-DD
                 const formatted = currentDate.toISOString().split("T")[0];
                 setRecStartDate(formatted);
-
                 setShowPicker(false);
               }}
             >
@@ -321,19 +318,17 @@ const FutureDatePicker = ({ setRecStartDate, setShowPicker }) => {
     );
   };
 
-  // Close on outside click
   const pickerRef = useRef(null);
-
   const handleClickOutside = useCallback((e) => {
     if (pickerRef.current && !pickerRef.current.contains(e.target)) {
       setShowPicker(false);
     }
-  }, []);
+  }, [setShowPicker]);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [handleClickOutside]);
 
   return (
     <div className="custom-datepicker" ref={pickerRef}>
@@ -343,7 +338,6 @@ const FutureDatePicker = ({ setRecStartDate, setShowPicker }) => {
           {renderYearDropdown()}
         </div>
       </div>
-
       {renderDays()}
     </div>
   );
