@@ -100,7 +100,7 @@ const CreatePassword = () => {
     return (
         <div className={styles.container}>
             <div style={{ display: !success ? "flex" : "none", justifyContent: "center" }}>
-                <img src={Logo} loading="lazy" style={{ margin: "40px auto", width: "150px" }} alt="" />
+                <img src={Logo} style={{ margin: "40px auto", width: "150px" }} alt="" />
             </div>
             {!success ?
                 (<div className={styles.wrapper}>
@@ -236,8 +236,8 @@ const CreatePassword = () => {
                 </div>) :
                 (
                     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", flexDirection: "column", gap: "18px", textAlign: "center" }}>
-                        <img src={Logo} loading="lazy" style={{ margin: "20px auto", width: "150px" }} alt="" />
-                        <img src={Gif} loading="lazy" style={{ width: '220px', height: "220px", borderRadius: "8px" }} alt="" />
+                        <img src={Logo} style={{ margin: "20px auto", width: "150px" }} alt="" />
+                        <img src={Gif} style={{ width: '220px', height: "220px", borderRadius: "8px" }} alt="" />
                         <div style={{ position: "relative" }}>
                             <h3 style={{ fontSize: "18px", fontWeight: 700 }}>{t("Your password has been set!")}</h3>
                             <p style={{ color: "#575757", fontSize: "14px", fontWeight: 600, width: "300px", marginTop: "8px" }}>{t("You may close this window and proceed further on {{platform}}", { platform: data.platform === "telegram" ? "Telegram" : "Instagram" })}</p>

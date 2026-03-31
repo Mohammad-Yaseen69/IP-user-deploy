@@ -60,7 +60,7 @@ const QuickLinksNew = () => {
                         alignItems: "center",
                         background: "radial-gradient(124.63% 259.09% at 48.48% 152.15%, rgba(230, 64, 103, 0.10) 0%, rgba(89, 38, 240, 0.10) 55.65%, rgba(72, 40, 160, 0.10) 100%), #FFF"
                     }}>
-                        <img src={item.icon} loading="lazy" style={{ objectFit: "contain", width: item.width }} />
+                        <img src={item.icon} style={{ objectFit: "contain", width: item.width }} />
                     </div>
                     <p style={{ color: "black", padding: "0", margin: "0", fontSize: ".85rem", whiteSpace: "nowrap", fontWeight: 700 }}>{item.text}</p>
                 </Link>

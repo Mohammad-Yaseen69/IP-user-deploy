@@ -106,7 +106,7 @@ const Cover = () => {
     return (
         <div className={styles.container}>
             <div className={styles.cover_container} ref={mainContainerRef}>
-                <img src={croppedImages?.profileBanner || coverPhoto} alt="cover" loading="lazy" className={styles.cover} />
+                <img src={croppedImages?.profileBanner || coverPhoto} alt="cover" className={styles.cover} />
                 {
                     isEditing
                         ?

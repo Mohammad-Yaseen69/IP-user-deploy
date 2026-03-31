@@ -136,7 +136,7 @@ const LoginNew = ({ country, setIsLoginForm, setIsForgot }) => {
                     ?
                     <>
                         <div className={styles.top}>
-                            <img src={logo} alt="Instapay" loading="lazy" />
+                            <img src={logo} alt="Instapay" />
                             <LanguagePicker />
                         </div>
                         <div className={styles.center} style={{
@@ -185,7 +185,7 @@ const LoginNew = ({ country, setIsLoginForm, setIsForgot }) => {
                                             :
                                             <div className={styles.email_verified}>
                                                 <div>
-                                                    <img src={ev_left} alt="img" loading="lazy" />
+                                                    <img src={ev_left} alt="img" />
                                                 </div>
                                                 <p>{email}</p>
                                                 <button type="button" onClick={() => {
@@ -289,12 +289,12 @@ const LoginNew = ({ country, setIsLoginForm, setIsForgot }) => {
                                 <h5>{t("Two-factor authentication (2FA) is the best way to protect yourself online.")}</h5>
                                 <p>{t("We recommend you download and install the Google Authenticator app to ensure you receive your verification codes instantly, avoiding any SMS delays or issues.")}</p>
                                 <div className={styles.download_info}>
-                                    <img src={gs} alt="" loading="lazy" />
-                                    <img src={as} alt="" loading="lazy" />
+                                    <img src={gs} alt="" />
+                                    <img src={as} alt="" />
                                 </div>
                             </div>
                             <div className={styles.right}>
-                                <img src={authenticator} alt="" loading="lazy" />
+                                <img src={authenticator} alt="" />
                                 <h4>{("Stronger security with Google Authenticator")}</h4>
                             </div>
                         </div>

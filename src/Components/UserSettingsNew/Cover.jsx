@@ -96,7 +96,7 @@ const Cover = () => {
     }, []);
     return (
         <div className={styles.container}>
-            <div className={styles.cover_container}  ref={mainContainerRef}>
+            <div className={styles.cover_container} ref={mainContainerRef}>
                 {
                     isEditing
                         ?
@@ -112,7 +112,7 @@ const Cover = () => {
                             />
                         </div>
                         :
-                        <img src={coverPhoto} alt="cover" loading="lazy" className={styles.cover} />
+                        <img src={coverPhoto} alt="cover" className={styles.cover} />
                 }
                 {
                     isEditing

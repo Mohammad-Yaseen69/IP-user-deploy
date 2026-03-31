@@ -40,11 +40,7 @@ const CryptoFundReceipt = ({ cryptoCurrency, amount }) => {
                         alignItems: "center",
                         gap: ".5rem"
                     }}>
-                        <img src={cryptoCurrency.img}
-                            alt={cryptoCurrency.value}
-                            width="30px"
-                            loading="lazy"
-                            style={{  borderRadius: "10px" }} />
+                        <img src={cryptoCurrency.img} alt={cryptoCurrency.value} style={{ width: "30px", borderRadius: "10px" }} />
                         <h5 style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 600 }}>{cryptoCurrency.name}</h5>
                     </div>
                 </div>

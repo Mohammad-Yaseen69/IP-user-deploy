@@ -142,18 +142,14 @@ const HomeNewUpdated = () => {
                                                 {
                                                     userDetails?.profileImage?.url
                                                         ?
-                                                        <img
-
-                                                            src={croppedImages.profileDP || userDetails?.profileImage?.url} alt={userDetails?.user?.first_name} style={{
-                                                                minWidth: window.innerWidth > 1650 ? "50px" : "40px",
-                                                                minHeight: window.innerWidth > 1650 ? "50px" : "40px",
-                                                                width: window.innerWidth > 1650 ? "50px" : "40px",
-                                                                height: window.innerWidth > 1650 ? "50px" : "40px",
-                                                                borderRadius: "25px",
-                                                                objectFit: "cover"
-                                                            }}
-                                                            loading="lazy"
-                                                        />
+                                                        <img src={croppedImages.profileDP || userDetails?.profileImage?.url} alt={userDetails?.user?.first_name} style={{
+                                                            minWidth: window.innerWidth > 1650 ? "50px" : "40px",
+                                                            minHeight: window.innerWidth > 1650 ? "50px" : "40px",
+                                                            width: window.innerWidth > 1650 ? "50px" : "40px",
+                                                            height: window.innerWidth > 1650 ? "50px" : "40px",
+                                                            borderRadius: "25px",
+                                                            objectFit: "cover"
+                                                        }} />
                                                         :
                                                         <div style={{
                                                             minWidth: window.innerWidth > 1650 ? "50px" : "40px",
@@ -261,15 +257,12 @@ const HomeNewUpdated = () => {
                                 height: "100%"
                             }}>
                                 <div style={{ display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "7px", background: "#5926f02e", height: "36px", width: "36px" }}>
-                                    <img src={chat} alt=""
-                                        loading="lazy"
-                                        style={{
-                                            width: "70%",
-                                            height: "70%",
-                                            objectFit: "contain",
-                                            flexShrink: "0"
-                                        }}
-                                    />
+                                    <img src={chat} alt="" style={{
+                                        width: "70%",
+                                        height: "70%",
+                                        objectFit: "contain",
+                                        flexShrink: "0"
+                                    }} />
                                 </div>
                                 <span style={{
                                     color: "#000",
@@ -328,9 +321,7 @@ const HomeNewUpdated = () => {
                                 borderRadius: "7px",
                                 padding: "1rem"
                             }}>
-                                <img src={crown} alt="c"
-                                    loading="lazy"
-                                    style={{ width: "20px" }} />
+                                <img src={crown} alt="c" style={{ width: "20px" }} />
                                 <span style={{ color: "white", WebkitTextFillColor: "white", fontSize: ".9rem" }}>{t("Upgrade to Business Account")}</span>
                                 <BsFillPlayFill size={25} style={{ marginLeft: "auto" }} />
                             </button>
