@@ -10,6 +10,7 @@ import PlansModal from "./PlansModal"
 import { useQuery } from "@tanstack/react-query"
 import { getUserPlans } from "../PaymentAddress/queries/pricings"
 import { flagCheck } from "../../utils/Functions"
+import { apiWrapper } from "../../utils/Functions/apiWrapper"
 
 
 const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, userCountry, setShowVerTT, showVerTT, invoicePaid, AmountComponent, paymentAddress, invoice, user, data, dataHandler }) => {
@@ -17,29 +18,71 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [showPlansModal, setShowPlansModal] = useState(false)
+    const [actionButtons, setActionsButtons] = useState([]);
     const { data: plansData, isLoading } = useQuery({
         queryKey: ['PublicUserPlans', user_name],
         queryFn: () => getUserPlans(user_name),
         enabled: !!user_name
     })
+    const { data: storeData, } = useQuery({
+        queryKey: ['UserStore'],
+        enabled: !!userDetails?._id,
+        queryFn: () => apiWrapper({
+            server: "ecommerce",
+            endpoint: `/api/store/get-account-store/${userDetails?._id}`
+        }),
+        retry: 1
+    })
+    console.log("user Data", userDetails)
+    // const [actionButtons, setActionsButtons] = useState([
+    //     flagCheck("allowViewProfile", userDetails, invoice ? "invoice" : "paymentAddress") ? {
+    //         label: "View Profile",
+    //         onClick: () => navigate(`/profile/${user_name}`),
+    //         disable: false,
+    //         purple: true,
+    //     } : null,
 
-    const [actionButtons, setActionsButtons] = useState([
-        flagCheck("allowViewProfile", userDetails, invoice ? "invoice" : "paymentAddress") ? {
-            label: "View Profile",
-            onClick: () => navigate(`/profile/${user_name}`),
-            disable: false,
-            purple: true,
-        } : null,
 
-        flagCheck("allowEcommerce", userDetails, invoice ? "invoice" : "paymentAddress") ? {
-            label: "Explore eShop",
-            onClick: () => { },
-            disable: true,
-            purple: false,
-        } : null,
-    ].filter(btn => btn !== null))
+    //     (flagCheck("allowEcommerce", userDetails, invoice ? "invoice" : "paymentAddress")
+    //         && storeData?.data?._id) ? {
+    //             label: "Explore eShop",
+    //         onClick: () => { window.open(`https://eshopinsta-pay.vercel.app/store/${storeData?.data?.storeId}`) },
+    //         disable: false,
+    //         purple: false,
+    //     } : null,
+    // ].filter(btn => btn !== null))
 
+    useEffect(() => {
+        if (!userDetails) return;
 
+        const buttons = [];
+
+        if (flagCheck("allowViewProfile", userDetails, invoice ? "invoice" : "paymentAddress")) {
+            buttons.push({
+                label: "View Profile",
+                onClick: () => navigate(`/profile/${user_name}`),
+                disable: false,
+                purple: true,
+            });
+        }
+
+        if (
+            flagCheck("allowEcommerce", userDetails, invoice ? "invoice" : "paymentAddress") &&
+            storeData?.data?._id
+        ) {
+            buttons.push({
+                label: "Explore eShop",
+                onClick: () => {
+                    window.open(`https://eshopinsta-pay.vercel.app/store/${storeData?.data?.storeId}`);
+                },
+                disable: false,
+                purple: false,
+            });
+        }
+
+        setActionsButtons(buttons);
+
+    }, [storeData, userDetails, invoice]);
 
     useEffect(() => {
         if (plansData && plansData.length > 0) {
