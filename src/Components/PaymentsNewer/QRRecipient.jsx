@@ -8,6 +8,7 @@ import InviteFriendModal from './InviteFriendModal'
 
 
 const QRRecipient = ({ wallet, dataHandler }) => {
+        const BASE_URL = window.location.origin || "https://my.insta-pay.ch";
     const { t } = useTranslation()
     const country = countries.find(item => item.name === wallet?.country_name || item?.name?.toLowerCase()?.includes(wallet?.country_name?.toLowerCase()))
     const navigate = useNavigate()
@@ -147,7 +148,7 @@ const QRRecipient = ({ wallet, dataHandler }) => {
                                             padding: "5px 1.25rem",
                                             cursor: "pointer"
                                         }} onClick={() => {
-                                            // window.open(`https://my.insta-pay.ch/profile/${wallet?.username}`, "_blank")
+                                            // window.open(`${BASE_URL}/profile/${wallet?.username}`, "_blank")
                                             navigate(`/profile/${wallet?.username}`)
                                         }}>{t("Visit Profile")}</div>
                                     </div>

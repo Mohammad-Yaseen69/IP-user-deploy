@@ -3,7 +3,7 @@ import { ChevronRight, HelpCircle } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import subscription from "./files/subscription.png"
-import CustomDatePicker from "./DatePicker";
+import {FutureDatePicker} from "./DatePicker";
 import calendar from "./files/calendar.png"
 import { NumberInputValidator } from "../../Helper/NumberInput";
 import { useTimezones } from "../../Context/TimezoneContext";
@@ -180,7 +180,7 @@ const Recursive = ({
                             {
                                 showPicker
                                 &&
-                                <CustomDatePicker
+                                <FutureDatePicker
                                     setRecStartDate={setRecStartDate}
                                     setShowPicker={setShowPicker}
                                 />

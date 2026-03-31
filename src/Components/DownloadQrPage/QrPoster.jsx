@@ -36,6 +36,7 @@ const qrCode = new QRCodeStyling({
 });
 
 const QrPoster = ({ wallet }) => {
+    const BASE_URL = window.location.origin || "https://my.insta-pay.ch";
     const { t } = useTranslation()
     const [qrLink, setQrLink] = useState("")
     const ref = useRef(null)
@@ -45,9 +46,11 @@ const QrPoster = ({ wallet }) => {
         qrCode.append(ref.current);
     }, []);
 
+    
+
     useEffect(() => {
         if (qrCode && wallet) {
-            const url = `https://my.insta-pay.ch/q/${wallet?.wallet_id}`
+            const url = `${BASE_URL}/q/${wallet?.wallet_id}`
             qrCode.update({ data: url });
 
             qrCode.getRawData("png").then((dataUrl) => {

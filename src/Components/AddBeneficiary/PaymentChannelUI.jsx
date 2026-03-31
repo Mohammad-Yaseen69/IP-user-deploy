@@ -8,6 +8,7 @@ import { AccountTypeData } from '../../utils/Data'
 import { UserContext } from '../../Context/UserContext'
 import { useTranslation } from 'react-i18next'
 import PhoneInput from '../PhoneInput'
+import { X } from 'react-feather';
 
 const PaymentChannelUI = ({
     // Translation function
@@ -97,6 +98,12 @@ const PaymentChannelUI = ({
             return typeof item === "object" ? (item.wallet_id && item.wallet_id.length === 8) : item.length === 8;
         }
         return item.length === 8;
+    };
+
+    const handleRemoveWallet = (index) => {
+        const updated = [...instapayWallets];
+        updated.splice(index, 1);
+        setInstapayWallets(updated);
     };
 
 
@@ -684,9 +691,12 @@ const PaymentChannelUI = ({
                     {
                         instapayWallets.map((value, index) => {
                             return (
-                                <div key={index} style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+                                <div key={index} style={{ display: "flex", flexWrap: "wrap", gap: "1rem", alignItems: "center" }}>
+
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
-                                        <Label className="col-form-label" htmlFor="card-holder-name">{t("Wallet ID")} <span className="req_star">*</span></Label>
+                                        <Label className="col-form-label" htmlFor="card-holder-name">
+                                            {t("Wallet ID")} <span className="req_star">*</span>
+                                        </Label>
                                         <Input
                                             className="form-control"
                                             style={{ flex: 1, minWidth: "250px" }}
@@ -697,6 +707,7 @@ const PaymentChannelUI = ({
                                             disabled={isEdit ? !isEdit : false}
                                         />
                                     </FormGroup>
+
                                     <WalletDetails
                                         setFirstName={setFirstName}
                                         firstName={firstName}
@@ -709,6 +720,14 @@ const PaymentChannelUI = ({
                                         walletIds={walletIds}
                                         setDuplicateWallet={setDuplicateWallet}
                                     />
+
+                                    {index !== 0 && (
+                                        <X
+                                            size={18}
+                                            style={{ cursor: "pointer", color: "red", marginTop: "20px" }}
+                                            onClick={() => handleRemoveWallet(index)}
+                                        />
+                                    )}
                                 </div>
                             )
                         })

@@ -4,6 +4,7 @@ import axios from 'axios';
 import logo from "../../assets/images/logo/logo.webp"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 
+const BASE_URL = window.location.origin || "https://my.insta-pay.ch";
 const qrCode = new QRCodeStyling({
     width: 300,
     height: 300,
@@ -47,7 +48,7 @@ const QrCode = () => {
 
     const uploadQR = async (item) => {
         // const url = `https://my.instapay.ch/payments?payment_action=send_money&send_type=qr_pay&wallet_id=${item?.wallet_id}`
-        const url = `https://my.insta-pay.ch/q/${item?.wallet_id}`
+        const url = `${BASE_URL}/q/${item?.wallet_id}`
         qrCode.update({ data: url });
         const fileName = `qrcode.${fileExt}`;
         const mimeType = `image/${fileExt === "jpg" ? "jpeg" : fileExt}`;

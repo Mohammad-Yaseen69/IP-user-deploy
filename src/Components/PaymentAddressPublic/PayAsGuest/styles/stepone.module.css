@@ -43,6 +43,11 @@
     border: 1px solid #1D62EC;
 
 }
+@media (max-width: 420px) {
+  .item span {
+    font-size: 16px;
+  }
+}
 
 
 .badge {

@@ -12,6 +12,7 @@ import { CheckCircle } from 'react-feather';
 import { service_name_formatter } from '../TransactionsNewApi/TransactionItem';
 
 const InviteFriendModal = ({ isOpen, toggle }) => {
+    const BASE_URL = window.location.origin || "https://my.insta-pay.ch";
     const { t } = useTranslation()
     const { userDetails, authHeader } = useContext(UserContext)
     const [email, setEmail] = useState('');
@@ -149,7 +150,7 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
                                     </div>
                                     <div style={{ display: "flex", flexDirection: "column", gap: ".3rem" }}>
                                         <strong>{t("Message")}: </strong>
-                                        <span>{t(message)} <br /> {`https://my.insta-pay.ch/auth/signup/${userDetails?.username}`}</span>
+                                        <span>{t(message)} <br /> {`${BASE_URL}/auth/signup/${userDetails?.username}`}</span>
                                     </div>
                                 </div>
                             }
