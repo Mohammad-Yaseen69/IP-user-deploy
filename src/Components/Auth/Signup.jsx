@@ -90,8 +90,8 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
     }, [data.country])
 
     useEffect(() => {
-        if (code) {
-            dataHandler("referral_code", code)
+        if (code?.trim()) {
+            dataHandler("referral_code", code?.trim())
         }
     }, [code])
 
@@ -178,8 +178,8 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                 payload.email = data.email
             }
 
-            if (data.referral_code.length > 0) {
-                payload.ref_code = data.referral_code
+            if (data.referral_code?.trim()?.length > 0) {
+                payload.ref_code = data.referral_code?.trim()
             }
 
             if (data.account_type === "business") {
