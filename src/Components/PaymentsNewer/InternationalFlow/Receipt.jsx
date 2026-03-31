@@ -14,7 +14,6 @@ import success from "./files/success.gif"
 import MobileWalletStatus from "../../PaymentAddressPublic/PayAsGuest/MobileWalletStatus"
 
 const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = false }) => {
-    const BASE_URL = window.location.origin || "https://my.insta-pay.ch";
     const { t } = useTranslation()
     const [showShare, setShowShare] = useState(false)
     const navigate = useNavigate()
@@ -39,7 +38,7 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = fal
                             <SocialModal
                                 isOpen={showShare}
                                 toggle={() => setShowShare(!showShare)}
-                                link={`${BASE_URL}`}
+                                link={"https://my.insta-pay.ch"}
                             />
                         }
                         <div className={styles.top}>

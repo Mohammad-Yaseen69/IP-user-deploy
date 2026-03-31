@@ -19,7 +19,6 @@ const QrDetails = ({
   inInvoice,
   invoiceId = undefined,
 }) => {
-  const BASE_URL = window.location.origin || "https://my.insta-pay.ch";
   const { t } = useTranslation();
   const ref = useRef(null);
   const [qrLink, setQrLink] = useState("");
@@ -74,7 +73,7 @@ const QrDetails = ({
     }
     // Always update data
     try {
-      qrCode.update({ data: `${BASE_URL}${url}` });
+      qrCode.update({ data: `https://my.insta-pay.ch${url}` });
     } catch (_) { }
 
     // If logo is ready, set it now

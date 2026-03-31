@@ -13,7 +13,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { toast } from "react-toastify";
-import { service_name_formatter } from "../../TransactionsNewApi/TransactionItem";
 
 const InvoiceItemDetails = ({ inv }) => {
   const { t } = useTranslation();
@@ -261,8 +260,8 @@ const InvoiceItemDetails = ({ inv }) => {
                       {t("Phone")} : {r?.userInfo?.phone}
                     </span>
                     <span className={styles.label}>
-  {t("Payment Method")} : {service_name_formatter(r.paymentInfo?.paymentMethod || "")}
-</span>
+                      {t("Payment Method")} : {r.paymentInfo?.paymentMethod}
+                    </span>
                   </div>
                 </div>
 

@@ -104,7 +104,6 @@ const EditMyProfile = ({ isCollapsed, setIsCollapsed }) => {
     setPostalCode(userDetails?.postal_code)
     setCountry(userDetails?.country)
     setAboutMe(userDetails?.about_me)
-    setDateOfBirth(userDetails?.date_of_birth) 
   }, [userDetails, isEditMode])
 
 
@@ -144,8 +143,7 @@ const EditMyProfile = ({ isCollapsed, setIsCollapsed }) => {
         city,
         country: country,
         postal_code: postalCode,
-        about_me: aboutMe,
-        date_of_birth: dateOfBirth,
+        about_me: aboutMe
       }
       const encrypted = encryptData(data)
 

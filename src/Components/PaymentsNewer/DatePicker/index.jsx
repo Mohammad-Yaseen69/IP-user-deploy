@@ -343,5 +343,5 @@ const FutureDatePicker = ({ setRecStartDate, setShowPicker }) => {
   );
 };
 
-export default CustomDatePicker;
 export { FutureDatePicker };
+export default CustomDatePicker;

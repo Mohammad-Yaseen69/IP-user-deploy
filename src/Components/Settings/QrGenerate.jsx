@@ -11,8 +11,6 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
     const [isReady, setIsReady] = useState(false);
     const [generated, setGenerated] = useState(0)
 
-        const BASE_URL = window.location.origin || "https://my.insta-pay.ch";
-
     useEffect(() => {
         qrRef.current = new QRCodeStyling({
             width: 300,
@@ -110,7 +108,7 @@ const QrGenerate = ({ wallets = [], setMessage = () => { }, chatbot = false, pla
     const uploadQR = async (item) => {
         setMessage("Generating Qr Code sticker.")
 
-        const url = `${BASE_URL}/q/${item?.wallet_id}`
+        const url = `https://my.insta-pay.ch/q/${item?.wallet_id}`
 
         const formData = await preparingFormData(url)
 
