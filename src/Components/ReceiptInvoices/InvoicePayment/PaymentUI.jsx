@@ -54,13 +54,16 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal
             disabledMessage: t("This method is disabled for this payment address by admin.")
         },
         {
-            label: "Pay As Guest",
+            label: user_name === "novamind" ? "Pay" : "Pay As Guest",
             logo: addFunds,
             onClick: toggleCreditModal,
             disabled: !flagCheck("payments.allowGuestPay", userDetails, "invoice"),
             disabledMessage: t("This method is disabled for this payment address by admin.")
         }
     ]
+
+    const visibleButtons = actionButtons.filter(btn => !btn.disabled)
+
     return (
         <>
             {
@@ -138,7 +141,14 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal
                 </div>
 
                 {!data.paid ?
-                    <PaymentActionsButtons actionButtons={actionButtons} userDetails={userDetails} />
+                    visibleButtons.length > 0 ?
+                        <PaymentActionsButtons actionButtons={visibleButtons} userDetails={userDetails} />
+                        :
+                        <div className={styles.paidInvoice} style={{ border: "none", background: "none" }}>
+                            <p style={{ color: 'red' }}>
+                                {t("No Payment Method Available")}
+                            </p>
+                        </div>
                     :
                     <div className={styles.paidInvoice}>
                         <p>

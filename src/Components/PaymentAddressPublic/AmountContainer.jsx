@@ -74,89 +74,101 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                 }}
                                 className={vpa_styles.buttons}
                             >
-                                <div title={!flagCheck("payments.allowGuestPay", userDetails, "paymentAddress") ? t("This method is disabled for this payment address by admin.") : ""} style={{ position: "relative" }}>
-                                    <Link onClick={flagCheck("payments.allowGuestPay", userDetails, "paymentAddress") ? toggleCreditModal : (e) => e.preventDefault()} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
-                                        style={{
-                                            opacity: !flagCheck("payments.allowGuestPay", userDetails, "paymentAddress") ? 0.5 : (state.amount <= 0 ? 0.7 : 1),
-                                            pointerEvents: !flagCheck("payments.allowGuestPay", userDetails, "paymentAddress") ? "none" : (state.amount <= 0 ? "none" : "all"),
-                                            position: "relative",
-                                            cursor: !flagCheck("payments.allowGuestPay", userDetails, "paymentAddress") ? "not-allowed" : (state.amount <= 0 ? "not-allowed" : "pointer")
-                                        }}
-                                    >
-                                        <div>
-                                            <img src={addFunds} alt="A" />
-                                        </div>
-                                        <span>{t("Pay As Guest")}</span>
-                                        {
-                                            state.guestPayError
-                                            &&
-                                            <div
-                                                style={{
-                                                    position: "absolute",
-                                                    top: "100%",
-                                                    left: 0,
-                                                    background: "white",
-                                                    color: "red",
-                                                    maxHeight: "unset",
-                                                    height: "fit-content",
-                                                    padding: "1rem",
-                                                    whiteSpace: "nowrap"
-                                                }}
-                                                className={vpa_styles.gperror}
-                                            >
-                                                {state.guestPayError}
-                                            </div>
-                                        }
-                                    </Link>
-                                </div>
-
-                                <div title={!flagCheck("payments.allowCrypto", userDetails, "paymentAddress") ? t("This method is disabled for this payment address by admin.") : ""} style={{ position: "relative" }}>
-                                    <Link to={flagCheck("payments.allowCrypto", userDetails, "paymentAddress") ? "#" : ""} onClick={flagCheck("payments.allowCrypto", userDetails, "paymentAddress") ? toggleCryptoModal : (e) => e.preventDefault()} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
-                                        style={{
-                                            opacity: !flagCheck("payments.allowCrypto", userDetails, "paymentAddress") ? 0.5 : (state.amount <= 0 ? 0.7 : 1),
-                                            pointerEvents: !flagCheck("payments.allowCrypto", userDetails, "paymentAddress") ? "none" : (state.amount <= 0 ? "none" : "all"),
-                                            position: "relative",
-                                            cursor: !flagCheck("payments.allowCrypto", userDetails, "paymentAddress") ? "not-allowed" : (state.amount <= 0 ? "not-allowed" : "pointer")
-                                        }}
-                                    >
-                                        <div>
-                                            <img src={CryptoPay} alt="A" />
-                                        </div>
-                                        <span>{t("Pay with Crypto")}</span>
-                                    </Link>
-                                </div>
-
-
-                                <div title={!flagCheck("payments.allowInstapay", userDetails, "paymentAddress") ? t("This method is disabled for this payment address by admin.") : ""} style={{ position: "relative" }}>
-                                    <Link onClick={(e) => {
-                                        if (!flagCheck("payments.allowInstapay", userDetails, "paymentAddress")) {
-                                            e.preventDefault();
-                                            return;
-                                        }
-                                        if (state.amount > 0) {
-                                            if (isInIframe()) {
-                                                const toNavigate = `${import.meta.env.VITE_PUBLIC_URL}/login?redirect=${encodeURIComponent(url)}`
-                                                openInNewTab(toNavigate)
-                                            } else {
-                                                const path = url;
-                                                sessionStorage.setItem("path", path);
+                                {
+                                    (flagCheck("payments.allowGuestPay", userDetails, "paymentAddress") || flagCheck("payments.allowCrypto", userDetails, "paymentAddress") || flagCheck("payments.allowInstapay", userDetails, "paymentAddress"))
+                                        ?
+                                        <>
+                                            {flagCheck("payments.allowGuestPay", userDetails, "paymentAddress") &&
+                                                <div title={!flagCheck("payments.allowGuestPay", userDetails, "paymentAddress") ? t("This method is disabled for this payment address by admin.") : ""} style={{ position: "relative" }}>
+                                                    <Link onClick={toggleCreditModal} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
+                                                        style={{
+                                                            opacity: state.amount <= 0 ? 0.7 : 1,
+                                                            pointerEvents: state.amount <= 0 ? "none" : "all",
+                                                            position: "relative",
+                                                            cursor: state.amount <= 0 ? "not-allowed" : "pointer"
+                                                        }}
+                                                    >
+                                                        <div>
+                                                            <img src={addFunds} alt="A" />
+                                                        </div>
+                                                        <span>{userDetails?.username === "novamind" ? t("Pay") : t("Pay As Guest")}</span>
+                                                        {
+                                                            state.guestPayError
+                                                            &&
+                                                            <div
+                                                                style={{
+                                                                    position: "absolute",
+                                                                    top: "100%",
+                                                                    left: 0,
+                                                                    background: "white",
+                                                                    color: "red",
+                                                                    maxHeight: "unset",
+                                                                    height: "fit-content",
+                                                                    padding: "1rem",
+                                                                    whiteSpace: "nowrap"
+                                                                }}
+                                                                className={vpa_styles.gperror}
+                                                            >
+                                                                {state.guestPayError}
+                                                            </div>
+                                                        }
+                                                    </Link>
+                                                </div>
                                             }
-                                        } else {
-                                            e.preventDefault();
-                                        }
-                                    }} to={(flagCheck("payments.allowInstapay", userDetails, "paymentAddress") && state.amount > 0 && !isInIframe()) ? url : ""} className={`${vpa_styles.button} ${vpa_styles.ipBtn}`}
-                                        style={{
-                                            opacity: !flagCheck("payments.allowInstapay", userDetails, "paymentAddress") ? 0.5 : (state.amount <= 0 ? 0.7 : 1),
-                                            pointerEvents: !flagCheck("payments.allowInstapay", userDetails, "paymentAddress") ? "none" : (state.amount <= 0 ? "none" : "all"),
-                                            cursor: !flagCheck("payments.allowInstapay", userDetails, "paymentAddress") ? "not-allowed" : (state.amount <= 0 ? "not-allowed" : "pointer")
-                                        }}
-                                    >
-                                        <div>
-                                            <img src={logo} alt="A" />
+
+                                            {flagCheck("payments.allowCrypto", userDetails, "paymentAddress") &&
+                                                <div title={!flagCheck("payments.allowCrypto", userDetails, "paymentAddress") ? t("This method is disabled for this payment address by admin.") : ""} style={{ position: "relative" }}>
+                                                    <Link to={"#"} onClick={toggleCryptoModal} className={`${vpa_styles.button} ${vpa_styles.guestBtn}`}
+                                                        style={{
+                                                            opacity: state.amount <= 0 ? 0.7 : 1,
+                                                            pointerEvents: state.amount <= 0 ? "none" : "all",
+                                                            position: "relative",
+                                                            cursor: state.amount <= 0 ? "not-allowed" : "pointer"
+                                                        }}
+                                                    >
+                                                        <div>
+                                                            <img src={CryptoPay} alt="A" />
+                                                        </div>
+                                                        <span>{t("Pay with Crypto")}</span>
+                                                    </Link>
+                                                </div>
+                                            }
+
+
+                                            {flagCheck("payments.allowInstapay", userDetails, "paymentAddress") &&
+                                                <div title={!flagCheck("payments.allowInstapay", userDetails, "paymentAddress") ? t("This method is disabled for this payment address by admin.") : ""} style={{ position: "relative" }}>
+                                                    <Link onClick={(e) => {
+                                                        if (state.amount > 0) {
+                                                            if (isInIframe()) {
+                                                                const toNavigate = `${import.meta.env.VITE_PUBLIC_URL}/login?redirect=${encodeURIComponent(url)}`
+                                                                openInNewTab(toNavigate)
+                                                            } else {
+                                                                const path = url;
+                                                                sessionStorage.setItem("path", path);
+                                                            }
+                                                        } else {
+                                                            e.preventDefault();
+                                                        }
+                                                    }} to={(state.amount > 0 && !isInIframe()) ? url : ""} className={`${vpa_styles.button} ${vpa_styles.ipBtn}`}
+                                                        style={{
+                                                            opacity: state.amount <= 0 ? 0.7 : 1,
+                                                            pointerEvents: state.amount <= 0 ? "none" : "all",
+                                                            cursor: state.amount <= 0 ? "not-allowed" : "pointer"
+                                                        }}
+                                                    >
+                                                        <div>
+                                                            <img src={logo} alt="A" />
+                                                        </div>
+                                                        <span style={{ color: "white" }}>{t("Pay With InstaPay")}</span>
+                                                    </Link>
+                                                </div>
+                                            }
+                                        </>
+                                        :
+                                        <div style={{ textAlign: "center", color: 'red', fontWeight: 600, width: "100%", marginTop: "1rem" }}>
+                                            {t("No Payment Method Available")}
                                         </div>
-                                        <span style={{ color: "white" }}>{t("Pay With InstaPay")}</span>
-                                    </Link>
-                                </div>
+                                }
                             </div>
                         </>}
                 </div>
