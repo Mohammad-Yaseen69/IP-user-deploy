@@ -91,7 +91,7 @@ const AmountContainer = ({ state, url, toggleCreditModal, dataHandler, handleBlu
                                                         <div>
                                                             <img src={addFunds} alt="A" />
                                                         </div>
-                                                        <span>{userDetails?.username === "novamind" ? t("Pay") : t("Pay As Guest")}</span>
+                                                        <span>{userDetails?.username === "novamind" ? t("PAY") : t("Pay As Guest")}</span>
                                                         {
                                                             state.guestPayError
                                                             &&
