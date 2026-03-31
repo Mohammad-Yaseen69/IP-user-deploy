@@ -50,7 +50,7 @@ const paymentChannels = [
 ]
 
 
-const VerificationPayment = ({ isOpen, toggle, verify, loading, isKYB, amount, getFeeDetails, partnerId }) => {
+const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading, source_of_funds, isKYB, amount, getFeeDetails, partnerId }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [step, setStep] = useState(1)
@@ -139,6 +139,9 @@ const VerificationPayment = ({ isOpen, toggle, verify, loading, isKYB, amount, g
             const data = {
                 data: {
                     wallet_id: wallet?._id,
+                    desc,
+                    occupation,
+                    source_of_funds
                 },
                 type: codeType
             }
