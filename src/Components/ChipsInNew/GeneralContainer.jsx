@@ -20,7 +20,8 @@ import { captureScreenShot, takeScreenshot } from "../../Helper/takeScreenshot";
 import DownloadQR from "./DownloadQR";
 
 const GeneralContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh, authHeader, defaultWal, showTooltip, setShowTooltip }) => {
-    const LINK = `https://my.insta-pay.ch/requests/general/${currency}`;
+    const BASE_URL = window.location.origin || "https://my.insta-pay.ch";
+    const LINK = `${BASE_URL}/requests/general/${currency}`;
     const [generalQRactive, setGeneralQRactive] = useState(false);
     const [currentDefault, setCurrentDefault] = useState(false);
     const [showConfirmationModal, setShowConfirmationModal] = useState(false)

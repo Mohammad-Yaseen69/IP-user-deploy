@@ -57,9 +57,21 @@
 }
 
 .day.empty {
-    visibility: hidden;
+    color: gray;
+    cursor: not-allowed;
 }
 
 .day span {
     font-size: 14px;
+}
+.day.disabled {
+  color: #acc;
+  background-color: #f5f5f5;
+  pointer-events: auto; /* click to allow, but onClick will block */
+}
+
+/* Agar bilkul click hi disable karna ho to (optional) */
+.day.disabled {
+  pointer-events: none;
+  opacity: 0.5;
 }

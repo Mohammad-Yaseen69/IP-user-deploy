@@ -83,6 +83,7 @@ const BankIbanSelection = ({
             <input
               type="text"
               value={recipientData.iban}
+              maxLength={34}
               onChange={(e) => {
                 handleRecipientChange("iban", e.target.value);
                 setSelectedBankId(null); // Clear selected bank if user starts typing a new IBAN

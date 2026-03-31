@@ -24,6 +24,7 @@ import "./styles/player.reset.css"
 import useWindowWidth from "../../utils/useWindowWidth"
 
 const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress, publicP, setPlayingMediaId, playingMediaId, playerRefs }) => {
+    const BASE_URL = window.location.origin || "https://my.insta-pay.ch";
     const { t } = useTranslation()
     const [showMenu, setShowMenu] = useState(false)
     const menuRef = useRef(null)
@@ -414,7 +415,7 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
             <SocialModal
                 isOpen={showShareModal}
                 toggle={() => setShowShareModal(!showShareModal)}
-                link={"https://my.insta-pay.ch/profile/" + userDetails?.username}
+                link={`${BASE_URL}/profile/${userDetails?.username}`}
             />
             {
                 showEdit
