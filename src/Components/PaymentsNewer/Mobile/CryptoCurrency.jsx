@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { Button } from 'reactstrap'
 import Chart from "react-apexcharts"
 import btc from "../files/btc.png"
-import eth from "../files/eth.png"
-import usdt from "../files/usdt.png"
+import eth from "../files/eth.webp"
+import usdt from "../files/usdt.webp"
 import chevup from "../files/chevup.png"
 
 

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import logo from "../../assets/images/logo/logo.png"
+import logo from "../../assets/images/logo/logo.webp"
 import OtpForm from './OtpForm'
 import PhoneNumberForm from './PhoneNumberForm'
 

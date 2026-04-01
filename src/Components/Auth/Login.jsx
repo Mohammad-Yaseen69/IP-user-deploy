@@ -9,7 +9,7 @@ import { AlertTriangle, ChevronRight, Eye, EyeOff, Mail } from "react-feather";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import gs from "./files/gs.svg"
 import as from "./files/as.svg"
-import authenticator from "./files/authenticator.png"
+import authenticator from "./files/authenticator.webp"
 import axios from "axios";
 import LanguagePicker from "../LanguagePicker";
 import FaceAnimation from "./FaceAnimation"

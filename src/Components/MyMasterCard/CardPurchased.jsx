@@ -39,7 +39,7 @@ import {
     WidthType,
 } from "docx";
 import * as FileSaver from "file-saver";
-import img from "../../assets/images/logo/logo2.png"
+import img from "../../assets/images/logo/logo2.webp"
 import { useQuery } from '@tanstack/react-query';
 import { apiWrapper } from '../../utils/Functions/apiWrapper';
 import { localCurrency } from '../../utils/Functions';
