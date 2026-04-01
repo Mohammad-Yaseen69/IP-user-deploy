@@ -101,7 +101,9 @@ const Beneficiaries = () => {
                             <Input type='search' placeholder={t('Search for Beneficiaries')} style={{ padding: ".5rem 1rem" }} onChange={filterBenef} />
                         </div>
                         <Link to={"/beneficiaries/add"}>
-                            <img src={add_ben} />
+                            <img src={add_ben}
+                                loading="lazy"
+                            />
                         </Link>
                     </div>
                     <div className={styles.table_body}>

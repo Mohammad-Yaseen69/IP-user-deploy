@@ -49,7 +49,7 @@ const QuickLinksMobile = () => {
         </div>
         <div className={styles.right}>
           <Link to={selected.link}>
-            <img src={selected.icon} alt="" />
+            <img src={selected.icon} alt="" loading="lazy" />
             <h5>{selected.text}</h5>
           </Link>
         </div>

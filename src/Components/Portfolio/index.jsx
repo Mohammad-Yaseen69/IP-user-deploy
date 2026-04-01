@@ -81,7 +81,7 @@ const Portfolio = () => {
                                 minWidth: "112px",
                                 maxHeight: "40px"
                             }}>
-                                <img src={plus} alt="add" />
+                                <img src={plus} alt="add" loading="lazy" />
                                 <span>{t("Add New")}</span>
                             </button>
                         </div>
@@ -136,7 +136,7 @@ const Portfolio = () => {
                         minWidth: "112px",
                         maxHeight: "40px"
                     }}>
-                        <img src={plus} alt="add" />
+                        <img src={plus} alt="add" loading="lazy" />
                         <span>{t("Add New")}</span>
                     </button>
                 </div>

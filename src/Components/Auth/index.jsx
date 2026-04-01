@@ -69,16 +69,27 @@ const Auth = () => {
                     />
                     :
                     <section className={styles.container}>
-                        <img src={overlay} alt="overlay" className={styles.overlay} />
+                        <img src={overlay} alt="overlay"
+                            loading="lazy"
+
+                            className={styles.overlay} />
                         {
                             step < 2 ?
-                                <img src={man} alt="man" className={styles.man} />
+                                <img src={man} alt="man"
+                                    loading="lazy"
+
+                                    className={styles.man} />
                                 :
-                                <img src={woman} alt="woman" className={styles.man} />
+                                <img src={woman} alt="woman"
+                                    loading="lazy"
+                                    className={styles.man} />
                         }
                         <div className={styles.form}>
                             <div style={{ visibility: hideLogo && "hidden" }} className={styles.f_top}>
-                                <img src={logo} alt="Instapay" />
+                                <img src={logo} alt="Instapay"
+                                    loading="lazy"
+
+                                />
                                 {
                                     window.innerWidth > 1000
                                     &&
@@ -103,7 +114,9 @@ const Auth = () => {
                                 {/* <span>{t("© 2024 InstaPay | Kemit KIngdom SA • All rights reserved")}</span> */}
                                 <span>{t("Powered By")} {t("Kemit Kingdom SA")}</span>
                                 <span style={{ display: "flex", gap: ".4rem", alignItems: "center" }}>
-                                    <img src={swissFlag} alt="" style={{ height: "13px", width: "18px", objectFit: "cover", borderRadius: "2px" }} />
+                                    <img src={swissFlag} alt=""
+                                        loading="lazy"
+                                        style={{ height: "13px", width: "18px", objectFit: "cover", borderRadius: "2px" }} />
                                     {t("A Swiss Company")}
                                 </span>
                             </div>

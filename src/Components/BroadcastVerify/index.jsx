@@ -52,8 +52,11 @@ const BroadcastVerify = () => {
 
     return (
         <section className={styles.container}>
-            <img src={overlay} alt="overlay" className={styles.overlay} />
-            <img src={man} alt="man" className={styles.man} />
+            <img src={overlay} alt="overlay"
+                loading="lazy" className={styles.overlay} />
+            <img src={man}
+                loading="lazy"
+                alt="man" className={styles.man} />
             <form className={styles.form}>
                 <div className={styles.top}>
                     <FormLogo />

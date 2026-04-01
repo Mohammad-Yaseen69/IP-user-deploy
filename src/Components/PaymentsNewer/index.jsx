@@ -290,7 +290,7 @@ const PaymentsNewer = () => {
                                                 )
                                                     ?
                                                     <button data-action="send_money" style={{ background: `url(${sendmoney_m})` }} onClick={() => setActionType("send_money")}>
-                                                        <img src={sm_m_i} alt="" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
+                                                        <img src={sm_m_i} alt="" loading="lazy" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
                                                         <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left" }}>{t("Send Money")}</span>
                                                     </button>
                                                     : ""
@@ -308,7 +308,7 @@ const PaymentsNewer = () => {
                                                     setActionType("req_money")
                                                     setCurrentFlow("req_money")
                                                 }}>
-                                                    <img src={rm_m_i} alt="" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
+                                                    <img src={rm_m_i} alt="" loading="lazy" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
                                                     <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", }}>{t("Request Money")}</span>
                                                 </button>
                                             }
@@ -325,7 +325,7 @@ const PaymentsNewer = () => {
                                                     setActionType("send_quote")
                                                     setCurrentFlow("send_quote")
                                                 }}>
-                                                    <img src={q_m_i} alt="" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
+                                                    <img src={q_m_i} alt="" loading="lazy" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
                                                     <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left" }}>{t("Send A Quote")}</span>
                                                 </button>
                                             }
@@ -333,7 +333,7 @@ const PaymentsNewer = () => {
                                                 setActionType("airtime")
                                                 setCurrentFlow("airtime")
                                             }}>
-                                                <img src={a_m_i} alt="" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
+                                                <img src={a_m_i} alt="" loading="lazy" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
                                                 <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", maxWidth: "8ch" }}>{t("Mobile Airtime")}</span>
                                             </button>
                                             {
@@ -353,7 +353,7 @@ const PaymentsNewer = () => {
                                                 </button>
                                             }
                                             <button className={styles.disabled} style={{padding: "0px"}} disabled data-action="placeholder">
-                                                <img src={rq} alt="payment types" />
+                                                <img src={rq} alt="payment types" loading="lazy" />
                                             </button>
                                         </>
                                     }
@@ -383,7 +383,7 @@ const PaymentsNewer = () => {
                                                             setSendPaymentType("international")
                                                             setStep(3)
                                                         }} style={{ background: `url(${internation_m})` }}>
-                                                            <img src={int_m_i} alt="" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
+                                                            <img src={int_m_i} alt="" loading="lazy" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
                                                             <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", maxWidth: "12ch" }}>{t("International Transfer")}</span>
                                                         </button>
                                                         :
@@ -403,7 +403,7 @@ const PaymentsNewer = () => {
                                                         setSendPaymentType("wallet_to_wallet")
                                                         setStep(3)
                                                     }} style={{ background: `url(${wallet_m})` }}>
-                                                        <img src={w2_ic} alt="" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
+                                                        <img src={w2_ic} alt="" loading="lazy" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
                                                         <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", maxWidth: "15ch" }}>{t("Wallet To Wallet Transfer")}</span>
                                                     </button>
                                                 }
@@ -421,7 +421,7 @@ const PaymentsNewer = () => {
                                                         setSendPaymentType("qr_pay")
                                                         setStep(3)
                                                     }} style={{ background: `url(${qr})` }}>
-                                                        <img src={qr_ic} alt="" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
+                                                        <img src={qr_ic} alt="" loading="lazy" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
                                                         <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", maxWidth: "8ch" }}>{t("QR Code Payment")}</span>
                                                     </button>
                                                 }
@@ -439,7 +439,7 @@ const PaymentsNewer = () => {
                                                         setSendPaymentType("non-instapay")
                                                         setStep(3)
                                                     }} style={{ background: `url(${noninstapay_m})` }}>
-                                                        <img src={ni_m_i} alt="" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
+                                                        <img src={ni_m_i} alt="" loading="lazy" style={{ width: "30px", objectFit: "contain", height: "30px" }} />
                                                         <span style={{ fontSize: "1rem", color: "white", fontWeight: "600", textAlign: "left", maxWidth: "15ch" }}>{t("To Non-InstaPay User")}</span>
                                                     </button>
                                                 }

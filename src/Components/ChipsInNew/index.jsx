@@ -135,7 +135,7 @@ const ChipsInNew = () => {
                                     }
                                 </div>
                                 <Link to={"/wallets"}>
-                                    <img src={vt} alt="icon" />
+                                    <img src={vt} alt="icon" loading="lazy" />
                                     <span>{t("View Transactions")}</span>
                                 </Link>
                             </div>
