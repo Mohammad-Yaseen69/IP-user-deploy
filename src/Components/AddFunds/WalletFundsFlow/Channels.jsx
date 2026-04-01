@@ -144,8 +144,8 @@ const Channels = ({
             >
               <div
                 style={{
-                  height: "35px !important",
-                  width: "35px !important",
+                  height: "35px",
+                  width: "35px",
                   background:
                     "linear-gradient(-24deg, rgb(210, 60, 122) 0%, rgb(164, 52, 167) 43.66%, rgb(88, 38, 239) 100%)",
                   display: "flex",
@@ -160,14 +160,13 @@ const Channels = ({
                   draggable="false"
                   alt={item?.name?.[0]}
                   style={{
-                    width: "19px !important",
-                    height: "19px !important",
-                    objectFit: "cover",
+                    width: "19px",
+                    objectFit: "contain",
                     aspectRatio: 1,
                   }}
                 />
               </div>
-              <h5 style={{ marginBottom: 0, fontSize: "1.2rem",  }}>
+              <h5 style={{ marginBottom: 0, fontSize: "1.2rem", }}>
                 {t(item?.name) + " "}
                 {window.innerWidth < 1000 && <br />}
                 {thunesProviders?.length > 0 && item?.sub_name === "wallet" ? (
