@@ -61,19 +61,15 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
     const [translateY, setTranslateY] = useState(0);
 
     useEffect(() => {
-        // Function to handle clicks outside the dropdown
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                // Click was outside the dropdown, hide it
                 setShowDropDown(false);
             }
         };
 
-        // Add a click event listener to the document
         document.addEventListener("click", handleClickOutside);
 
         return () => {
-            // Remove the event listener when the component unmounts
             document.removeEventListener("click", handleClickOutside);
         };
     }, []);
@@ -87,7 +83,6 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
             if (showDropDown) return;
             draggingRef.current = true;
             startYRef.current = e.clientY ?? (e.touches && e.touches[0] && e.touches[0].clientY) ?? 0;
-            // prevent page scrolling while dragging
             document.body.style.touchAction = 'none';
             img.style.cursor = 'grabbing';
         };
@@ -126,7 +121,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
         };
     }, [showDropDown, translateY]);
 
-    const { authHeader, userDetails } = useContext(UserContext)
+    const { authHeader, userDetails, setUserDetails } = useContext(UserContext)
 
 
     // useEffect(() => {
@@ -170,38 +165,54 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
                 headers: authHeader
             })
 
-        } catch {
-            // console.log(error)
+            setUserDetails(prev => ({
+                ...prev,
+                language: lang
+            }))
+
+        } catch (error) {
+            console.error("Error setting language:", error)
             // toast.error("Something went wrong while setting the language")
-            // console.log(decryptData(error?.response?.data?.data))
         }
     }
 
 
     useEffect(() => {
         const localStorageLang = localStorage.getItem("i18nextLng")
+        
         if (userDetails?.language) {
-            const lng = languageCountries.find(item => item.lang.toLowerCase() === userDetails.language)
-            i18n.changeLanguage(lng.lang)
-            setCurrentLang(lng.lang)
-            localStorage.setItem("i18nextLng", lng.lang)
+            const targetLang = userDetails.language.toLowerCase()
+            const lng = languageCountries.find(item => 
+                item.lang.toLowerCase() === targetLang || 
+                item.label.toLowerCase() === targetLang
+            )
+            
+            if (lng && i18n.language !== lng.lang) {
+                i18n.changeLanguage(lng.lang)
+                setCurrentLang(lng.lang)
+                localStorage.setItem("i18nextLng", lng.lang)
+            }
         }
         else if (defaultLanguage) {
-            const lng = languageCountries.find(item => item.lang.toLowerCase() === defaultLanguage)
-            i18n.changeLanguage(lng.lang)
-            setCurrentLang(lng.lang)
-            localStorage.setItem("i18nextLng", lng.lang)
+            const lng = languageCountries.find(item => item.lang.toLowerCase() === defaultLanguage.toLowerCase())
+            if (lng && i18n.language !== lng.lang) {
+                i18n.changeLanguage(lng.lang)
+                setCurrentLang(lng.lang)
+                localStorage.setItem("i18nextLng", lng.lang)
+            }
         }
         else if (localStorageLang) {
-            i18n.changeLanguage(localStorageLang)
-            setCurrentLang(localStorageLang)
+            if (i18n.language !== localStorageLang) {
+                i18n.changeLanguage(localStorageLang)
+                setCurrentLang(localStorageLang)
+            }
         }
         else {
             i18n.changeLanguage(eng.lang)
             setCurrentLang(eng.lang)
             localStorage.setItem("i18nextLng", eng.lang)
         }
-    }, [userDetails])
+    }, [userDetails?.language, defaultLanguage])
 
     useEffect(() => {
         const handlePosition = () => {
@@ -293,6 +304,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
                             }} onClick={() => {
                                 i18n.changeLanguage(eng.lang)
                                 setCurrentLang(eng.lang)
+                                localStorage.setItem("i18nextLng", eng.lang)
                                 setLanguage(eng.lang)
                             }}>
                                 <img src={eng.file_url} alt={eng.alpha3} style={{
@@ -319,6 +331,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
                                         }} onClick={() => {
                                             i18n.changeLanguage(item.lang)
                                             setCurrentLang(item.lang)
+                                            localStorage.setItem("i18nextLng", item.lang)
                                             setLanguage(item.lang)
                                         }}>
                                             <img src={item.file_url} alt={item.alpha3} style={{
@@ -407,6 +420,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
                             }} onClick={() => {
                                 i18n.changeLanguage(item.lang)
                                 setCurrentLang(item.lang)
+                                localStorage.setItem("i18nextLng", item.lang)
                                 toggleModal()
                                 setLanguage(item.lang)
                             }}>
