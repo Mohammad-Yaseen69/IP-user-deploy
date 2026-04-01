@@ -375,7 +375,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         if (!isDataLoaded) return;
         if (loginMethod === "email") return;
         if (!email) {
-            console.warn("Invalid email/phone blocked:", email);
+            console.warn("Invalid email/phone blocked: empty input");
             return;
         }
         if (email.startsWith("92")) return;
@@ -389,7 +389,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 setEmail(formatted)
             }
         }
-    }, [loginMethod, isDataLoaded])
+    }, [loginMethod, isDataLoaded, email, country])
     useEffect(() => {
         if (loginMethod === "email" && !loginData) {
             setEmail("")
