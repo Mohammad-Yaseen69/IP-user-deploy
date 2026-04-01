@@ -1,5 +1,5 @@
 import { Button, Card, CardBody, } from "reactstrap";
-import { ChevronRight, HelpCircle } from "react-feather";
+import { ChevronRight, HelpCircle, X } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import subscription from "./files/subscription.png"
@@ -96,6 +96,7 @@ const Recursive = ({
                                 }} />
                             </div>
                             <h5>{t("Subscription Payment")}</h5>
+                            
                         </div>
                     </CardBody>
                 </Card>
