@@ -14,7 +14,7 @@ import "jspdf-autotable";
 import { service_name_formatter } from '../TransactionsNewApi/TransactionItem'
 import { exportToExcel } from '../../utils/Functions/csvExport'
 
-const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
+const DownloadStatement = ({ showModal, setShowModal, wallet, isTransection }) => {
     const { userDetails, authHeader, beneficiaries } = useContext(UserContext)
     const { t } = useTranslation()
     const [dateString, setDateString] = useState("")
@@ -72,29 +72,39 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
         }
         const encrypted = encryptData(data)
 
-        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-wallet-by-date/${wallet?.wallet_id}/0/0?isSenderExtraInfoRequired=${userDetails?.username === "usharellc" || userDetails?.username === "spmfrance" || userDetails?.username === "yaseen123" ? true : ""}`,
-            {
-                data: encrypted
-            }, {
-            headers: authHeader,
-        })
+        let request;
+
+        if (!isTransection) {
+            request = axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-wallet-by-date/${wallet?.wallet_id}/0/0?isSenderExtraInfoRequired=${["usharellc", "spmfrance", "yaseen123"].includes(userDetails?.username) ? true : ""}`,
+                { data: encrypted },
+                { headers: authHeader }
+            );
+        } else {
+            request =
+                axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/transaction/search-account-transactions-by-date/${wallet?._id}/1/99999999999`,
+                    { data: encrypted },
+                    { headers: authHeader }
+                );
+        }
+
+        request
             .then(res => {
-                const decrypted = decryptData(res.data.data)
-                callback(decrypted.transactionList, userDetails, () => { }, false)
-                setShowModal(false)
-                setApiDates(null)
-                setFileType("")
-                setDateString("")
+                const decrypted = decryptData(res.data.data);
+                callback(decrypted.transactionList, userDetails, () => { }, false);
+                setShowModal(false);
+                setApiDates(null);
+                setFileType("");
+                setDateString("");
             })
             .catch(err => {
-                const decrypted = decryptData(err.response.data.data)
-                console.log(decrypted)
-                setDownloadError("No transactions found within the date range!")
-                toast.error(decrypted?.message)
+                const decrypted = decryptData(err.response.data.data);
+                console.log(decrypted);
+                setDownloadError("No transactions found within the date range!");
+                toast.error(decrypted?.message);
             })
             .finally(() => {
-                setDownloading(false)
-            })
+                setDownloading(false);
+            });
     }
 
 
@@ -178,38 +188,35 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
 
         doc.setFont("montserrat", "normal");
         doc.setFontSize(8);
-        doc.text(`Wallet ID: INSTA-${wallet?.wallet_id}`, 14, 32);
-        doc.text(`Name: ${userDetails?.user?.first_name ?? userDetails?.company_name} ${userDetails?.user?.last_name ?? ""}`, 14, 38);
-        doc.text(`Address: ${userDetails?.address ?? "N/A"}`, 14, 44);
-        doc.text(`Statement Duration: ${apiDates?.from} to ${apiDates?.to}`, 14, 50);
+        !isTransection ? doc.text(`Wallet ID: INSTA - ${wallet?.wallet_id}`, 14, 32) : null;
 
-        const transactionsTable = {
-            head: [
-                [
+        doc.text(`Name: ${userDetails?.user?.first_name ?? userDetails?.company_name} ${userDetails?.user?.last_name ?? ""} `, 14, 38);
+        doc.text(`Address: ${userDetails?.address ?? "N/A"} `, 14, 44);
+        doc.text(`Statement Duration: ${apiDates?.from} to ${apiDates?.to} `, 14, 50);
+
+        if (!isTransection && doc.autoTable) {
+            doc.autoTable({
+                head: [[
                     "Wallet ID",
                     "Wallet Currency",
                     "Current Balance",
                     "Wallet Status",
-                ],
-            ],
-            body: [[
-                `INSTA-${wallet?.wallet_id}`,
-                wallet?.currency?.code,
-                `${Number(wallet?.balance?.available)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${wallet?.currency?.code} `,
-                wallet?.status?.toUpperCase()
-            ]],
-            startY: 60,
-            styles: tableStyles,
-            headStyles: tableHeaderStyles,
-        };
-
-        if (doc.autoTable) {
-            doc?.autoTable(transactionsTable);
+                ]],
+                body: [[
+                    `INSTA - ${wallet?.wallet_id}`,
+                    wallet?.currency?.code,
+                    `${Number(wallet?.balance?.available)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${wallet?.currency?.code}`,
+                    wallet?.status?.toUpperCase()
+                ]],
+                startY: 60,
+                styles: tableStyles,
+                headStyles: tableHeaderStyles,
+            });
         }
 
         // Current Time and Date
         const currentDate = new Date();
-        const formattedDate = `As of ${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
+        const formattedDate = `As of ${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()} `;
         doc.setFont("montserrat", "normal", "bold");
         doc.setFontSize(8);
         doc.text(formattedDate, 160, 17.5);
@@ -247,7 +254,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
                         item?.status,
                     ]
                 }),
-                startY: 80,
+                startY: isTransection ? 60 : doc.lastAutoTable.finalY + 5,
                 styles: tableStyles,
                 headStyles: tableHeaderStyles,
             };
@@ -256,7 +263,7 @@ const DownloadStatement = ({ showModal, setShowModal, wallet }) => {
                 doc?.autoTable(transactionsTable);
             }
 
-            doc.save(`${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name}_${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`}${new Date().toLocaleString()}_transactions.pdf`);
+            doc.save(`${userDetails?.account_type === "individual" ? `${userDetails?.user?.first_name}_${userDetails?.user?.last_name}` : `${userDetails?.company?.company_name}`}${new Date().toLocaleString()} _transactions.pdf`);
         };
         getTransactions(callback);
     };
