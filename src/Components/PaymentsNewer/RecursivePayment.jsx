@@ -22,7 +22,7 @@ const Recursive = ({
     decrementHandler,
     timezone = "",
     setTimezone = () => { },
-    onClose=() => { }
+    onClose
 }) => {
 
     const { t } = useTranslation()
@@ -98,21 +98,27 @@ const Recursive = ({
                             </div>
                             <h5 style={{ marginBottom: 0 }}>{t("Subscription Payment")}</h5>
                         </div>
-                        <span
-                            style={{
-                                cursor: "pointer",
-                                fontSize: "24px",
-                                fontWeight: "500",
-                                color: "#888",
-                                lineHeight: 1,
-                                transition: "color 0.2s",
-                            }}
-                            onClick={onClose}
-                            onMouseEnter={(e) => (e.target.style.color = "#ff0000")}
-                            onMouseLeave={(e) => (e.target.style.color = "#888")}
-                        >
-                            <X size={20} />
-                        </span>
+                        {typeof onClose === "function" && (
+                            <button
+                                type="button"
+                                aria-label={t("Close subscription payment")}
+                                onClick={onClose}
+                                style={{
+                                    cursor: "pointer",
+                                    border: "none",
+                                    background: "transparent",
+                                    padding: 0,
+                                   display: "flex",
+                                    alignItems: "center",
+                                    color: "#888",
+                                    transition: "color 0.2s",
+                                }}
+                                onMouseEnter={(e) => (e.currentTarget.style.color = "#ff0000")}
+                                onMouseLeave={(e) => (e.currentTarget.style.color = "#888")}
+                            >
+                                <X size={20} />
+                            </button>
+                        )}
                     </CardBody>
                 </Card>
 
