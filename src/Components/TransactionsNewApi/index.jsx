@@ -8,6 +8,7 @@ import { UserContext } from "../../Context/UserContext";
 const TransactionsNewApi = () => {
     const { t } = useTranslation()
     const { userDetails } = useContext(UserContext);
+    
     return (
         <>
             {

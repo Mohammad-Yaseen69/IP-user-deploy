@@ -1,29 +1,29 @@
-import { useTranslation } from "react-i18next";
-import styles from "./styles/index.module.scss"
-import calendar from "./files/calendar.png"
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { Search } from "react-feather";
-import { Input } from "reactstrap";
-import TransactionItem from "./TransactionItem";
-import all_white from "./files/all_white.png"
-import all_grey from "./files/all_grey.png"
-import sent_white from "./files/sent_white.png"
-import sent_grey from "./files/sent_grey.png"
-import received_white from "./files/received_white.png"
-import received_grey from "./files/received_grey.png"
-import requested_white from "./files/requested_white.png"
-import requested_grey from "./files/requested_grey.png"
-import quoted_white from "./files/quoted_white.png"
-import quoted_grey from "./files/quoted_grey.png"
-import { DateRangePicker } from "react-date-range";
-import { UserContext } from "../../Context/UserContext";
 import axios from "axios";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { DateRangePicker } from "react-date-range";
+import { Search } from "react-feather";
+import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router";
+import { Input } from "reactstrap";
+import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
 import InstaPayLoader from "../Loader";
+import DownloadStatement from "../WalletsNew/DownloadStatement";
 import TransactionItemMobile from "./Mobile/TransactionItemMobile";
-import { useLocation } from "react-router";
-import { exportToExcel } from "../../utils/Functions/csvExport";
+import TransactionItem from "./TransactionItem";
+import all_grey from "./files/all_grey.png";
+import all_white from "./files/all_white.png";
+import calendar from "./files/calendar.png";
+import quoted_grey from "./files/quoted_grey.png";
+import quoted_white from "./files/quoted_white.png";
+import received_grey from "./files/received_grey.png";
+import received_white from "./files/received_white.png";
+import requested_grey from "./files/requested_grey.png";
+import requested_white from "./files/requested_white.png";
+import sent_grey from "./files/sent_grey.png";
+import sent_white from "./files/sent_white.png";
+import styles from "./styles/index.module.scss";
 
 
 
@@ -81,6 +81,7 @@ const TransactionsTable = () => {
     const mobileLoaderRef = useRef()
     const [stopLoader, setStopLoader] = useState(false)
     const [exportLoading, setExportLoading] = useState(false)
+    const [showStatementModal, setShowStatementModal] = useState(false)
 
     useEffect(() => {
         getUserBeneficiaries()
@@ -370,7 +371,11 @@ const TransactionsTable = () => {
                         <Input placeholder={t("Search Transactions")} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
                     </div>
                     <img src={calendar} alt="c" onClick={handleDatePickerClick} />
-                    <span onClick={() => exportToExcel(transactions, userDetails, setExportLoading)} style={{ background: "linear-gradient(346deg, rgb(230, 64, 103) 0%, rgb(89, 38, 240) 55.65%, rgb(72, 40, 160) 100%), rgb(217, 217, 217)", borderRadius: "8px", padding: "4px", marginBottom: "3px", pointerEvents: exportLoading && "none", opacity: exportLoading && .6, display: "flex" }}>
+                    <span
+                        onClick={() => setShowStatementModal(!showStatementModal)}
+
+                        // onClick={() => exportToExcel(transactions, userDetails, setExportLoading)}
+                        style={{ background: "linear-gradient(346deg, rgb(230, 64, 103) 0%, rgb(89, 38, 240) 55.65%, rgb(72, 40, 160) 100%), rgb(217, 217, 217)", borderRadius: "8px", padding: "4px", marginBottom: "3px", pointerEvents: exportLoading && "none", opacity: exportLoading && .6, display: "flex" }}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
                             <path d="M21 6H17.8C16.1198 6 15.2798 6 14.638 6.32698C14.0735 6.6146 13.6146 7.07354 13.327 7.63803C13 8.27976 13 9.11984 13 10.8V12M21 6L18 3M21 6L18 9M10 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V16.2C3 17.8802 3 18.7202 3.32698 19.362C3.6146 19.9265 4.07354 20.3854 4.63803 20.673C5.27976 21 6.11984 21 7.8 21H16.2C17.8802 21 18.7202 21 19.362 20.673C19.9265 20.3854 20.3854 19.9265 20.673 19.362C21 18.7202 21 17.8802 21 16.2V14" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
@@ -468,7 +473,14 @@ const TransactionsTable = () => {
                         </div>}
                 </div>
             </div>
-
+            {
+                showStatementModal && <DownloadStatement
+                    showModal={showStatementModal}
+                    setShowModal={setShowStatementModal}
+                    wallet={userDetails}
+                    isTransection={true}
+                />
+            }
         </div>
     )
 }
