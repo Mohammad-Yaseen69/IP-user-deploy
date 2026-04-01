@@ -955,6 +955,13 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
         }
     }
 
+    const handleCloseSubscription = () =>
+        dataHandler("payment_duration", {
+            ...data.payment_duration,
+            name: "Instant Payment",
+            value: "instant",
+        });
+
 
 
     useEffect(() => {
@@ -1340,6 +1347,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                 incrementHandler={() => dataHandler("payment_duration", { ...data.payment_duration, cycles: (data.payment_duration?.cycles ?? 1) + 1 })}
                                                                 timezone={data.timezone}
                                                                 setTimezone={e => dataHandler("timezone", e)}
+                                                                onClose={handleCloseSubscription}
                                                             />
                                                             :
                                                             data.payment_duration?.value === "schedule"
@@ -1353,6 +1361,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                     setSubStep={() => { }}
                                                                     timezone={data.timezone}
                                                                     setTimezone={e => dataHandler("timezone", e)}
+                                                                    onClose={handleCloseSubscription}
                                                                 />
                                                                 :
                                                                 <PaymentType

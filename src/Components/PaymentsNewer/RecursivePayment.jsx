@@ -21,7 +21,8 @@ const Recursive = ({
     incrementHandler,
     decrementHandler,
     timezone = "",
-    setTimezone = () => { }
+    setTimezone = () => { },
+    onClose
 }) => {
 
     const { t } = useTranslation()
@@ -63,41 +64,61 @@ const Recursive = ({
                 boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)"
             }}>
                 <Card style={{ marginBottom: 0 }}>
-                    <CardBody style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: ".5rem",
-                        padding: "15px",
-                        justifyContent: "space-between",
-                        cursor: "pointer",
-                        borderRadius: "12px",
-                        boxShadow: "0px 16.675323486328125px 18.0649356842041px 0px rgba(109, 41, 220, 0.04), 0px 4px 157px 0px rgba(0, 0, 0, 0.09)",
-                        zIndex: 1
-                    }}>
-                        <div style={{
+                    <CardBody
+                        style={{
                             display: "flex",
                             alignItems: "center",
-                            gap: ".5rem"
-                        }}>
-                            <div style={{
-                                minHeight: "35px",
-                                minWidth: "35px",
-                                background: "linear-gradient(to top left, #e64067,#5926f0,#4828a0)",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                borderRadius: "12px",
-                                boxShadow: "0px 4px 7px rgba(172, 53, 159, 0.31)"
-                            }}>
-                                <img src={subscription} draggable="false" alt={"sub"} style={{
-                                    height: "22px",
-                                    width: "22px",
-                                    objectFit: "contain"
-                                }} />
+                            justifyContent: "space-between",
+                            gap: "10px",
+                            padding: "16px",
+                        }}
+                    >
+                        {/* Left side: gradient icon + title */}
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                            <div
+                                style={{
+                                    minHeight: "35px",
+                                    minWidth: "35px",
+                                    background: "linear-gradient(to top left, #e64067,#5926f0,#4828a0)",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    borderRadius: "12px",
+                                    boxShadow: "0px 4px 7px rgba(172, 53, 159, 0.31)",
+                                }}>
+                                <img
+                                    src={subscription}
+                                    draggable="false"
+                                    alt={"sub"}
+                                    style={{
+                                        height: "22px",
+                                        width: "22px",
+                                        objectFit: "contain",
+                                    }}/>
                             </div>
-                            <h5>{t("Subscription Payment")}</h5>
-                            
+                            <h5 style={{ marginBottom: 0 }}>{t("Subscription Payment")}</h5>
                         </div>
+                        {typeof onClose === "function" && (
+                            <button
+                                type="button"
+                                aria-label={t("Close subscription payment")}
+                                onClick={onClose}
+                                style={{
+                                    cursor: "pointer",
+                                    border: "none",
+                                    background: "transparent",
+                                    padding: 0,
+                                   display: "flex",
+                                    alignItems: "center",
+                                    color: "#888",
+                                    transition: "color 0.2s",
+                                }}
+                                onMouseEnter={(e) => (e.currentTarget.style.color = "#ff0000")}
+                                onMouseLeave={(e) => (e.currentTarget.style.color = "#888")}
+                            >
+                                <X size={20} />
+                            </button>
+                        )}
                     </CardBody>
                 </Card>
 
