@@ -1340,6 +1340,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                 incrementHandler={() => dataHandler("payment_duration", { ...data.payment_duration, cycles: (data.payment_duration?.cycles ?? 1) + 1 })}
                                                                 timezone={data.timezone}
                                                                 setTimezone={e => dataHandler("timezone", e)}
+                                                                onClose={() => dataHandler("payment_duration", { ...data.payment_duration, value: "instant" })}
                                                             />
                                                             :
                                                             data.payment_duration?.value === "schedule"
