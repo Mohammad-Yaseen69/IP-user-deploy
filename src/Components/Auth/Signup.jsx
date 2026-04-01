@@ -7,7 +7,7 @@ import { ChevronRight } from "react-feather";
 import Stepone from "./Signup/Stepone";
 import gs from "./files/gs.svg"
 import as from "./files/as.svg"
-import authenticator from "./files/authenticator.webp"
+import authenticator from "./files/authenticator.png"
 import Stepfour, { passwordRegex } from "./Signup/Stepfour";
 import Steptwo from "./Signup/Steptwo";
 import Stepthree from "./Signup/Stepthree";

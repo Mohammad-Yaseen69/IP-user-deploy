@@ -200,11 +200,7 @@ const AddFunds = () => {
                             position: "relative"
                         }}>
                             <div style={{ cursor: "pointer" }} onClick={() => setAction("money")}>
-                                <img src={money} alt="money"
-                                    // width="130px"
-                                    loading="lazy"
-                                    style={{ maxHeight: is_big ? "541px" : "430px" }}
-                                    draggable="false" />
+                                <img src={money} alt="money" style={{ maxHeight: is_big ? "541px" : "430px" }} draggable="false" />
                             </div>
                             {/* <div style={{ cursor: "pointer", position: "relative" }} onClick={() => setAction("crypto")}> */}
                             <div
@@ -224,13 +220,7 @@ const AddFunds = () => {
                                         {t("This feature is not allowed in your account.")}
                                     </div>
                                 }
-                                <img src={crypto}
-                                    alt="crypto"
-                                    // width="130px"
-                                    loading="lazy"
-                                    style={{ maxHeight: is_big ? "541px" : "430px" }}
-
-                                    draggable="false" />
+                                <img src={crypto} alt="crypto" style={{ maxHeight: is_big ? "541px" : "430px" }} draggable="false" />
                             </div>
                             {/* </div> */}
                             {/* <Button style={{
@@ -306,10 +296,7 @@ const AddFunds = () => {
                             gap: "2rem"
                         }}>
                             <div style={{ cursor: "pointer", borderRadius: "16px", width: "100%", overflow: "hidden" }} onClick={() => setAction("money")}>
-                                <img src={money} alt="money"
-                                    loading="lazy"
-                                    style={{ height: "100%", width: "100%", objectFit: "cover" }}
-                                    draggable="false" />
+                                <img src={money} alt="money" style={{ height: "100%", width: "100%", objectFit: "cover" }} draggable="false" />
                             </div>
                             <div
                                 style={{
@@ -324,9 +311,7 @@ const AddFunds = () => {
                                 title={!isCryptoAllowed ? t("This feature is not allowed for your account.") : undefined}
                                 aria-disabled={!isCryptoAllowed}
                             >
-                                <img src={crypto} alt="crypto"
-                                loading="lazy"
-                                style={{ height: "100%", width: "100%", objectFit: "cover" }} draggable="false" />
+                                <img src={crypto} alt="crypto" style={{ height: "100%", width: "100%", objectFit: "cover" }} draggable="false" />
                             </div>
                         </div>
                     }

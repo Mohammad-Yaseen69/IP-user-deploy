@@ -75,7 +75,6 @@ function reducer(state, action) {
       return state;
   }
 }
-
 const PayAsGuest = ({
   amount,
   isOpen,

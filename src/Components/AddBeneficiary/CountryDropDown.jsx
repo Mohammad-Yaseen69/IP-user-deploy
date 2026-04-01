@@ -100,7 +100,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
     }, [isOpen])
     return (
         <Dropdown isOpen={isOpen} toggle={toggleDropdown}>
-            <DropdownToggle color='white' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", border: "1px solid rgba(0,0,0,.05)", borderRadius: "5px", padding: padding, background: disabled ? disabledColor : background, boxShadow: shadow ? "0px -0.5px 7.2px 0px rgba(0, 0, 0, 0.20), 0px 0px 4px 6px #FDFDFD inset" : "" }} disabled={disabled}>
+            <DropdownToggle color='white' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", border: "1px solid rgba(0,0,0,.05)", borderRadius: "5px", padding: padding, background: disabled ? disabledColor : background , boxShadow: shadow ? "0px -0.5px 7.2px 0px rgba(0, 0, 0, 0.20), 0px 0px 4px 6px #FDFDFD inset" : ""}} disabled={disabled}>
                 {
                     isOpen
                         ?
@@ -109,15 +109,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
                         <>
                             {selectedCountry ? (
                                 <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-                                    <img src={selectedCountry.file_url}
-                                        alt={selectedCountry.code}
-                                        width="41"
-                                        height="27"
-                                        loading="lazy"
-                                        style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", }}
-                                        className="i_t_flag"
-                                        draggable="false"
-                                    />
+                                    <img src={selectedCountry.file_url} alt={selectedCountry.code} style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", width: "41px", height: "27px" }} className="i_t_flag" draggable="false" />
                                     <span style={{ fontWeight: 700, ...countryNameSize }}>{t(selectedCountry.name)}</span>
                                 </div>
                             ) : <span style={{ color: "#a8a8a8" }}>{t("Select Country")}</span>}
@@ -136,15 +128,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
                                 cursor: "pointer",
                                 borderRadius: "10px"
                             }}>
-                                <img src={country.file_url}
-                                    alt={country.code}
-                                    width="41"
-                                    height="27"
-                                    loading="lazy"
-                                    style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", width: "41px", height: "27px" }}
-                                    className="i_t_flag"
-                                    draggable="false"
-                                />
+                                <img src={country.file_url} alt={country.code} style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", width: "41px", height: "27px" }} className="i_t_flag" draggable="false" />
                                 <span style={{ fontWeight: 700 }}>{t(country.name)}</span>
                             </div>
                         </DropdownItem>

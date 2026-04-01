@@ -266,7 +266,7 @@ const QuickQrPay = () => {
                                     </label>
                                     <input type="file" name="input_qr" id="input_qr" hidden onChange={setFileHandler} accept="image/*" />
 
-                                    {isLoading && <img style={{ position: 'absolute', top: '0px', left: '0px', width: "100%", height: "100%", objectFit: 'cover' }} src={cameraGif} alt="adfa" loading="lazy" />}
+                                    {isLoading && <img style={{ position: 'absolute', top: '0px', left: '0px', width: "100%", height: "100%", objectFit: 'cover' }} src={cameraGif} alt="adfa" />}
                                 </div>
                                 {(error && step === 1) && <p className={styles.error} style={{ fontWeight: 600, color: "red", marginTop: ".5rem" }}>{t(error)}</p>}
                             </>
@@ -291,7 +291,7 @@ const QuickQrPay = () => {
 
                                 <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
                                     <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-                                        <img src={addU} alt="" loading="lazy" />
+                                        <img src={addU} alt="" />
                                         <span>
                                             {t("Recipient Not on InstaPay?")}
                                         </span>
@@ -315,13 +315,13 @@ const QuickQrPay = () => {
                         <div className={styles.info}>
                             {walletDetails?.coverPicture &&
                                 <div className={styles.banner}>
-                                    <img src={walletDetails?.coverPicture} alt="" loading="lazy" />
+                                    <img src={walletDetails?.coverPicture} alt="" />
                                 </div>
                             }
 
                             <div className={styles.dets}>
                                 <div className={styles.u_info}>
-                                    {walletDetails?.profilePicture ? <img src={walletDetails?.profilePicture} loading="lazy" className={styles.pfp} alt="" /> : <div className={styles.pfp_placeHolder}>{walletDetails?.name?.split(' ')[0][0]?.toUpperCase()}{walletDetails?.name?.split(' ')[1][0]?.toUpperCase()}</div>}
+                                    {walletDetails?.profilePicture ? <img src={walletDetails?.profilePicture} className={styles.pfp} alt="" /> : <div className={styles.pfp_placeHolder}>{walletDetails?.name?.split(' ')[0][0]?.toUpperCase()}{walletDetails?.name?.split(' ')[1][0]?.toUpperCase()}</div>}
                                     <h2>{walletDetails?.name}</h2>
                                     <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                                         <p>@{walletDetails?.username}</p>
@@ -329,7 +329,7 @@ const QuickQrPay = () => {
                                     </div>
 
                                     <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                                        <img style={{ width: "20px" }} src={getFileUrl(walletDetails.country)} loading="lazy" alt="" />
+                                        <img style={{ width: "20px" }} src={getFileUrl(walletDetails.country)} alt="" />
                                         <h6 style={{ fontSize: "10px", color: "#6C6C6C", fontWeight: 600 }}>{walletDetails?.country}</h6>
                                     </div>
                                 </div>
@@ -381,7 +381,6 @@ const QuickQrPay = () => {
                                     style={{ width: "180px" }}
                                     src={gif}
                                     alt=""
-                                    loading="lazy"
                                 />
                                 <p style={{
                                     width: "100%",

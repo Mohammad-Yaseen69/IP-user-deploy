@@ -5,7 +5,7 @@ import { Button, Card, CardBody, CardHeader, Input, Label } from "reactstrap";
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { UserContext } from "../../Context/UserContext";
-import img from "../../assets/images/logo/logo2.webp"
+import img from "../../assets/images/logo/logo2.png"
 import {
     Packer,
     Document,

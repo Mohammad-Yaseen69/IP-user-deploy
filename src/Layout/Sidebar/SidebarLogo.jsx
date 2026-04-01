@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Grid } from "react-feather";
 import { Link } from "react-router-dom";
 import CustomizerContext from "../../Helper/Customizer";
-import cubaimg from "../../assets/images/logo/logo.webp";
+import cubaimg from "../../assets/images/logo/logo.png";
 import { Image } from "../../AbstractElements";
 const SidebarLogo = () => {
   const { togglSidebar, setTogglSidebar } = useContext(CustomizerContext)

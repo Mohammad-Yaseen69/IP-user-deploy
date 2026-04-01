@@ -323,10 +323,10 @@ const ReferralsNew = () => {
                                                 ?
                                                 <Check />
                                                 :
-                                                <img src={copy_ic} alt="c" loading="lazy" style={{ cursor: "pointer" }} onClick={handleCopy} />
+                                                <img src={copy_ic} alt="c" style={{ cursor: "pointer" }} onClick={handleCopy} />
                                         }
                                     </div>
-                                    <img src={ref_share} alt="r" loading="lazy" style={{ cursor: "pointer" }} onClick={() => setShowShareModal(!showShareModal)} />
+                                    <img src={ref_share} alt="r" style={{ cursor: "pointer" }} onClick={() => setShowShareModal(!showShareModal)} />
                                 </div>
                                 <SocialModal isOpen={showShareModal} toggle={() => setShowShareModal(!showShareModal)} link={referralLink} />
                             </div>

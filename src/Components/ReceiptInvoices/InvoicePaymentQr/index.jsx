@@ -306,7 +306,7 @@ const InvoicePaymentQr = () => {
                                     </div>
                                 }
                                 <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                                    <img src={ip} alt="" loading="lazy" />
+                                    <img src={ip} alt="" />
                                     <h1>{t("Pay Invoice")}</h1>
                                     {data.step === 1 && !data.showShippingAddress &&
                                         <div className={styles.detsText}>
@@ -373,7 +373,7 @@ const InvoicePaymentQr = () => {
                                         <div className={styles.options}>
                                             {paymentConfirmOptions.map(option => (
                                                 <div onClick={() => !option.link && navigate(option.navigate)} key={option.text}>
-                                                    <img src={option.icon} alt="" loading="lazy" />
+                                                    <img src={option.icon} alt="" />
                                                     <span>
                                                         {option.link ? <a style={{ color: "black" }} href={option.navigate}>{option.text}</a> : option.text}
                                                     </span>

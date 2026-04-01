@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from 'reactstrap';
 import styles from "./styles/EMB.module.css"
-import emb from "./files/ref_banner.webp"
+import emb from "./files/ref_banner.png"
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
