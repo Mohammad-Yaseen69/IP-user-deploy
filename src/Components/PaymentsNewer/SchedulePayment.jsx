@@ -1,5 +1,5 @@
 import { Button, Card, CardBody } from "reactstrap";
-import { ChevronRight, HelpCircle } from "react-feather";
+import { ChevronRight, HelpCircle, X } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import schedule from "./files/schedule.png";
@@ -7,7 +7,7 @@ import calendar from "./files/calendar.png";
 import CustomDatePicker from "./DatePicker";
 import { useTimezones } from "../../Context/TimezoneContext";
 
-const SchedulePayment = ({ setSubStep, scheduleDate, setScheduleDate, scheduleTime, setScheduleTime, showBottom = true, timezone = "", setTimezone = () => { } }) => {
+const SchedulePayment = ({ setSubStep, scheduleDate, setScheduleDate, scheduleTime, setScheduleTime, showBottom = true, timezone = "", setTimezone = () => { }, onClose } ) => {
     const { t } = useTranslation();
     const [showDateError, setShowDateError] = useState(false);
     const [showPicker, setShowPicker] = useState(false);
@@ -63,38 +63,76 @@ const SchedulePayment = ({ setSubStep, scheduleDate, setScheduleDate, scheduleTi
                 boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)"
             }}>
                 <Card style={{ marginBottom: 0 }}>
-                    <CardBody style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: ".5rem",
-                        padding: "15px",
-                        justifyContent: "space-between",
-                        cursor: "pointer",
-                        borderRadius: "12px",
-                        boxShadow: "0px 16.675323486328125px 18.0649356842041px 0px rgba(109, 41, 220, 0.04), 0px 4px 157px 0px rgba(0, 0, 0, 0.09)",
-                        zIndex: 1
-                    }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
-                            <div style={{
-                                minHeight: "35px",
-                                minWidth: "35px",
-                                background: "linear-gradient(to top left, #e64067,#5926f0,#4828a0)",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                borderRadius: "12px",
-                                boxShadow: "0px 4px 7px rgba(172, 53, 159, 0.31)"
-                            }}>
-                                <img src={schedule} draggable="false" alt={"sch"} style={{
-                                    height: "22px",
-                                    width: "22px",
-                                    objectFit: "contain"
-                                }} />
-                            </div>
-                            <h5>{t("schedule payment")}</h5>
-                        </div>
-                    </CardBody>
-                </Card>
+  <CardBody
+    style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between", // 👈 important
+      gap: ".5rem",
+      padding: "15px",
+      cursor: "pointer",
+      borderRadius: "12px",
+      boxShadow:
+        "0px 16.675323486328125px 18.0649356842041px 0px rgba(109, 41, 220, 0.04), 0px 4px 157px 0px rgba(0, 0, 0, 0.09)",
+      zIndex: 1,
+    }}
+  >
+    {/* LEFT SIDE */}
+    <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
+      <div
+        style={{
+          minHeight: "35px",
+          minWidth: "35px",
+          background:
+            "linear-gradient(to top left, #e64067,#5926f0,#4828a0)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          borderRadius: "12px",
+          boxShadow: "0px 4px 7px rgba(172, 53, 159, 0.31)",
+        }}
+      >
+        <img
+          src={schedule}
+          draggable="false"
+          alt={"sch"}
+          style={{
+            height: "22px",
+            width: "22px",
+            objectFit: "contain",
+          }}
+        />
+      </div>
+
+      <h5 style={{ marginBottom: 0 }}>
+        {t("schedule payment")}
+      </h5>
+    </div>
+
+    {/* RIGHT SIDE CLOSE BUTTON */}
+    {typeof onClose === "function" && (
+      <button
+        type="button"
+        aria-label={t("Close schedule payment")}
+        onClick={onClose}
+        style={{
+          cursor: "pointer",
+          border: "none",
+          background: "transparent",
+          padding: 0,
+          display: "flex",
+          alignItems: "center",
+          color: "#888",
+          transition: "color 0.2s",
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.color = "#ff0000")}
+        onMouseLeave={(e) => (e.currentTarget.style.color = "#888")}
+      >
+        <X size={20} />
+      </button>
+    )}
+  </CardBody>
+</Card>
 
                 <Card style={{ marginBottom: 0, height: "100%" }}>
                     <CardBody style={{

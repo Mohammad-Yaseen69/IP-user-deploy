@@ -1361,6 +1361,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                     setSubStep={() => { }}
                                                                     timezone={data.timezone}
                                                                     setTimezone={e => dataHandler("timezone", e)}
+                                                                    onClose={handleCloseSubscription}
                                                                 />
                                                                 :
                                                                 <PaymentType
