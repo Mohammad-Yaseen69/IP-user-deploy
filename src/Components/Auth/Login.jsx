@@ -69,6 +69,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [restoreLoading, setRestoreLoading] = useState(false)
     const [pendingLoginData, setPendingLoginData] = useState(null)
     const [capturedSecurityData, setCapturedSecurityData] = useState(null)
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [methods, setMethods] = useState([
         {
             avail: false,
@@ -143,19 +144,15 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             } else {
                 setShowQuickLogin(false)
             }
+            setIsDataLoaded(true);
         }
 
         getData()
     }, [])
 
-
-
     const setData = async (data) => {
         await localforage.setItem("loginData", data)
     }
-
-
-
 
     const loginHandler = async (e, method = undefined, restoreAccount = false) => {
         e.preventDefault()
@@ -375,28 +372,29 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
     }, [profileLockTIme, i18next.language])
     useLayoutEffect(() => {
+        if (!isDataLoaded) return;
         if (loginMethod === "email") return;
+        if (!email) {
+            console.warn("Invalid email/phone blocked:", email);
+            return;
+        }
+        if (email.startsWith("92")) return;
         const newEmail = email;
         if (/^\d+$/.test(newEmail.slice(0, 6)) && newEmail.startsWith(0) && newEmail.length >= 6) {
             if (country) {
-                const formatted = `${country?.country_code?.split("+")[1] ?? "41"}${newEmail.slice(1)} `
+                const formatted = `${country?.country_code?.split("+")[1] ?? "41"}${newEmail.slice(1)}`
                 setEmail(formatted)
             } else {
-                const formatted = `41${newEmail.slice(1)} `
+                const formatted = `41${newEmail.slice(1)}`
                 setEmail(formatted)
             }
         }
-    }, [email, loginMethod])
-
+    }, [loginMethod, isDataLoaded])
     useEffect(() => {
         if (loginMethod === "email" && !loginData) {
             setEmail("")
         }
     }, [loginMethod, loginData])
-
-
-
-
 
     const getUserInfo = async (username) => {
         try {
@@ -552,9 +550,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             setBiometricLoading(false)
         }
     }
-
-
-
     const [resendTimer, setResendTimer] = useState(0)
     const numberOfFields = 6;
     const [otpValues, setOTPValues] = useState(Array(numberOfFields).fill(''));
@@ -1071,7 +1066,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         {
                             (emailVerified && width < 1000)
                             &&
-                            <button type="button"  className={styles.go_back_btn}
+                            <button type="button" className={styles.go_back_btn}
                                 onClick={() => {
                                     setPassword("")
                                     setEmailVerified(false)
@@ -1225,7 +1220,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                         >
                                             {otpValues.map((value, index) => (
                                                 <input
-                                                    type="tel"      
+                                                    type="tel"
                                                     key={`otp-input-${index}`}
                                                     maxLength={1}
                                                     disabled={isOtpCorrect}
