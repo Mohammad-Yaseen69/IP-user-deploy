@@ -80,12 +80,15 @@ const BankIbanSelection = ({
             >
               {t("Type in the IBAN of the bank account you'll be transferring from:")}
             </label>
+
             <input
               type="text"
               value={recipientData.iban}
+              maxLength={34}
               onChange={(e) => {
-                handleRecipientChange("iban", e.target.value);
-                setSelectedBankId(null); // Clear selected bank if user starts typing a new IBAN
+                const value = e.target.value.replace(/\s/g, "")
+                handleRecipientChange("iban", value);
+                setSelectedBankId(null);
               }}
               placeholder="Example: GB33BUKB20201555555555"
               style={{
@@ -97,39 +100,19 @@ const BankIbanSelection = ({
                 fontSize: "0.9rem",
               }}
             />
+
+            <div
+              style={{
+                textAlign: "right",
+                fontSize: "12px",
+                marginTop: "4px",
+                color: recipientData.iban.length === 34 ? "red" : "#8A8A8A"
+              }}
+            >
+              {recipientData.iban.length} / 34 {t("characters")}
+            </div>
           </div>
 
-          <input
-            type="text"
-            value={recipientData.iban}
-            maxLength={34}
-            onChange={(e) => {
-              const value = e.target.value.replace(/\s/g, ""); // optional: remove spaces
-              handleRecipientChange("iban", value);
-              setSelectedBankId(null);
-            }}
-            placeholder="Example: GB33BUKB20201555555555"
-            style={{
-              width: "100%",
-              padding: "12px",
-              border: "1px solid #ddd",
-              borderRadius: "6px",
-              fontFamily: "Manrope",
-              fontSize: "0.9rem",
-            }}
-          />
-
-          {/* ✅ Character Counter */}
-          <div
-            style={{
-              textAlign: "right",
-              fontSize: "12px",
-              marginTop: "4px",
-              color: recipientData.iban.length === 34 ? "red" : "#8A8A8A"
-            }}
-          >
-            {recipientData.iban.length} / 34 {t("characters")}
-          </div>
         </div>
       </div>
     </div>
