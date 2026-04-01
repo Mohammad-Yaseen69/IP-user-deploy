@@ -45,7 +45,7 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal
             disabledMessage: t("This method is disabled for this payment address by admin.")
         },
         {
-            label: "Pay with Crypto",
+            label: "Pay with Cryptoㅤ",
             logo: CryptoPay,
             onClick: () => {
                 dataHandler("showCryptoModal", true)
@@ -54,7 +54,7 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal
             disabledMessage: t("This method is disabled for this payment address by admin.")
         },
         {
-            label: user_name === "novamind" ? "PAY" : "Pay As Guest",
+            label: user_name === "novamind" ? "PAY" : "Pay As Guestㅤㅤ",
             logo: addFunds,
             onClick: toggleCreditModal,
             disabled: !flagCheck("payments.allowGuestPay", userDetails, "invoice"),
