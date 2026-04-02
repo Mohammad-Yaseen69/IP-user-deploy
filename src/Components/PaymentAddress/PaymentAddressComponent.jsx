@@ -46,6 +46,8 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const width = useWindowWidth()
     const [loading, setLoading] = useState(false)
 
+    const base_url = window.location.origin || 'my.insta-pay.ch'
+
     const getPaymentAddress = () => {
         axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/get-payment-address/${userDetails?.username}`, {
             headers: authHeader
@@ -171,7 +173,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     }
 
     // pa link
-    const pa_link = `https://my.insta-pay.ch/pay/${userDetails?.username}`;
+    const pa_link = `${base_url}/pay/${userDetails?.username}`;
     const [urlCopied, setUrlCopied] = useState(false)
     const copyHandler = () => {
         navigator?.clipboard?.writeText(pa_link)
@@ -256,7 +258,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                     isAllowed === true
                         ?
                         <>
-                            <QrGenerate downloadFileSetter={setQrFile} qrUrl={`https://my.insta-pay.ch/pay/${userDetails?.username}`} />
+                            <QrGenerate downloadFileSetter={setQrFile} qrUrl={`${base_url}/pay/${userDetails?.username}`} />
                             <InstructionsModal isOpen={isOpen} toggle={() => setIsOpen(!isOpen)} />
                             <Cover dets={paymentAddressDetails} cover={cover} setCover={setCover} />
                             <Card style={{ marginBottom: "0", borderRadius: '0px' }} className={styles.sub_container}>
@@ -356,7 +358,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
 
                                             <div className={styles.copyDiv}>
                                                 <p>
-                                                    my.insta-pay.ch/pay/
+                                                    {`${base_url}/pay`}
                                                 </p>
                                                 <span>
                                                     {userDetails?.username}
