@@ -157,6 +157,4 @@ export const exportToExcel = async (transactions, userDetails, setExportLoading,
         toast.error("Something went wrong while exporting Please Try again!")
     }
     setExportLoading(false)
-
-
 };

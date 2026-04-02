@@ -1,0 +1,79 @@
+reviews:
+  auto_review:
+    enabled: true
+    drafts: false
+  request_changes_workflow: true
+  collapse_walkthrough: false
+  poem: true
+  path_filters:
+    - "!node_modules/**"
+    - "!dist/**"
+    - "!build/**"
+    - "!**/*.min.js"
+    - "!**/*.lock"
+    - "!coverage/**"
+    - "!.env*"
+  path_instructions:
+    - path: "**/*.jsx"
+      instructions: |
+        You are reviewing a MERN stack / React frontend codebase for a fintech application (InstaPay).
+        Apply strict, production-grade review standards. Focus on the following:
+
+        ## 🔴 Critical — Always Flag
+        - Undefined or null access without optional chaining (e.g., wallet.wallet_id instead of wallet?.wallet_id)
+        - API calls inside useEffect without proper dependency arrays — flag infinite loop risks
+        - Missing error handling in axios calls (no .catch or try/catch)
+        - Sensitive data (API keys, tokens, secrets) hardcoded or logged to console
+        - console.log or console.error left in production code
+        - Encrypted/decrypted data logged to console
+        - GET requests used where POST is required (e.g., sending body data via GET)
+        - Missing loading/error state resets before new API calls
+        - Any critical business logic that has obvious bugs
+
+        ## 🟠 High Priority — Flag and Suggest Fix
+        - useEffect with missing or incorrect dependency arrays
+        - useState updates inside loops or conditions that may cause extra renders
+        - Duplicate API calls triggered by multiple useEffect hooks watching overlapping state
+        - Race conditions: multiple async calls without cancellation (missing AbortController or cleanup)
+        - API pagination parameters hardcoded as 99999999999 — suggest proper pagination or dedicated export endpoint
+        - Date range filters not being passed correctly to API (e.g., dates in body of GET request)
+        - Ternary operators used for statements instead of expressions (const inside ternary)
+        - Missing null checks before .map(), .filter(), .find() on API response arrays
+        - Unhandled Promise rejections
+
+        ## 🟡 Medium Priority — Suggest Improvement
+        - Magic numbers or hardcoded values (IDs, usernames like "usharellc", limits) — suggest constants or env vars
+        - Repeated inline styles — suggest moving to CSS modules or shared style objects
+        - Debounce timers stored in useState instead of useRef — causes unnecessary re-renders
+        - Missing cleanup in useEffect (event listeners, timers, observers not disconnected)
+        - IntersectionObserver not disconnected on component unmount
+        - PDF/Excel generation logic inside component — suggest extracting to utility functions
+        - Prop drilling more than 2 levels deep — suggest Context or lifting state
+        - Large components doing too many things — suggest splitting into smaller components
+
+        ## ✅ Security Checks
+        - User input used directly in API URLs without sanitization
+        - Auth tokens exposed in error logs
+        - Decrypted sensitive response data logged to console
+        - Hardcoded usernames used for feature flags (suggest proper role/permission system)
+
+        ## ⚛️ React Specific Rules
+        - useEffect dependencies must include all variables used inside
+        - Avoid setting state unconditionally inside useEffect (infinite loop risk)
+        - Refs (useRef) should be used for values that don't need to trigger re-renders (timers, observers)
+        - Avoid stale closures — verify latest state is used inside async callbacks
+        - Keys in .map() must be unique and stable (not array index)
+
+        ## 🗂️ Response Format
+        For every issue found, respond with:
+        - 📍 File & line number
+        - 🔴/🟠/🟡/🔵 Severity level
+        - ❌ What the problem is
+        - ✅ Suggested fix with code example
+    - path: "**/*.js"
+      instructions: |
+        Review this JavaScript file for the same standards as JSX files above.
+        Extra focus on: axios error handling, encryption/decryption safety, and API URL correctness.
+
+chat:
+  auto_reply: true

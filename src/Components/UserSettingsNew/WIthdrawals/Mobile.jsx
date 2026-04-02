@@ -21,7 +21,7 @@ const Mobile = ({ values, changeHandler, isEditMode }) => {
                 <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" placeholder='Wallet Name' required id="account_holder_name" name="mobile_wallet_name" value={values.mobile_wallet_name} onChange={changeHandler} />
             </FormGroup>
             <FormGroup style={{ flex: 1, margin: 0 }}>
-                <Label className="col-form-label" htmlFor="mobile_wallet_account_number">Wallet Number <span className="req_star">*</span></Label>
+                <Label className="col-form-label" htmlFor="mobile_wallet_account_number"> Number <span className="req_star">*</span></Label>
                 <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} placeholder='Account Number' required name="mobile_wallet_account_number" value={values.mobile_wallet_account_number} onChange={changeHandler} />
             </FormGroup>
         </div>
