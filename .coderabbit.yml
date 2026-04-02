@@ -1,8 +1,11 @@
 reviews:
-  auto_review: true
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - main
+      - develop
   request_changes_workflow: true
-  auto_review_on_push: true
-  auto_review_on_draft: false
   collapse_walkthrough: false
   poem: true
 
@@ -31,7 +34,7 @@ instructions: |
   - Encrypted/decrypted data logged to console
   - GET requests used where POST is required (e.g., sending body data via GET)
   - Missing loading/error state resets before new API calls
-  - any critial business logic that has obvious bugs
+  - Any critical business logic that has obvious bugs
 
   ## 🟠 High Priority — Flag and Suggest Fix
   - useEffect with missing or incorrect dependency arrays
@@ -54,13 +57,13 @@ instructions: |
   - Prop drilling more than 2 levels deep — suggest Context or lifting state
   - Large components doing too many things — suggest splitting into smaller components
 
-  ## ⚛️ Re
   ## ✅ Security Checks
   - User input used directly in API URLs without sanitization
   - Auth tokens exposed in error logs
   - Decrypted sensitive response data logged to console
   - Hardcoded usernames used for feature flags (suggest proper role/permission system)
-  act Specific Rules
+
+  ## ⚛️ React Specific Rules
   - useEffect dependencies must include all variables used inside
   - Avoid setting state unconditionally inside useEffect (infinite loop risk)
   - Refs (useRef) should be used for values that don't need to trigger re-renders (timers, observers)
