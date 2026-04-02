@@ -660,7 +660,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             })
 
             const dec = decryptData(res.data.data)
-            updateWithdrawalFunc()
+            userWithdrawals?._id ? updateWithdrawalFunc() : addWithDrawal()
             console.log(dec)
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
@@ -674,6 +674,14 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
         }
     }
 
+    const handleAdd = () => {
+        const mobile = current?.value === "mobile"
+        if (mobile) {
+            verifyNumber()
+        } else {
+            addWithDrawal()
+        }
+    }
     const updateWithDrawal = () => {
         const mobile = current?.value === "mobile"
 
@@ -1058,7 +1066,7 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
                                                             border: "none",
                                                             outline: "none",
                                                             borderRadius: "5px"
-                                                        }} onClick={addWithDrawal}>{t("Save")}</Button>
+                                                        }} onClick={handleAdd}>{t("Save")}</Button>
                                                 }
                                             </div>
                                         }
