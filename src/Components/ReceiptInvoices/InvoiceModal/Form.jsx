@@ -30,9 +30,23 @@ const Form = ({ data, inputFieldChange, dataHandler }) => {
             </Field>
             <Field label={t('Description')} required>
                 <div style={{ width: '100%' }}>
-                    <TextArea value={data.description} onChange={inputFieldChange('description')} placeholder={t('Enter description')} rows={5} maxLength={500} />
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 4 }}>
-                        <span style={{ fontSize: 12, color: '#6b7280' }}>{(data?.description?.length ?? 0)}/500</span>
+                    <TextArea
+                        value={data.description}
+                        onChange={inputFieldChange('description')}
+                        placeholder={t('Enter description')}
+                        rows={5}
+                        maxLength={250}
+                    />
+
+                    {/* Character Info */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
+                        <span style={{ fontSize: 12, color: '#6b7280' }}>
+                            {t('You can type up to 250 characters')}
+                        </span>
+
+                        <span style={{ fontSize: 12, color: data?.description?.length === 250 ? 'red' : '#6b7280' }}>
+                            {(data?.description?.length ?? 0)} / 250
+                        </span>
                     </div>
                 </div>
             </Field>
