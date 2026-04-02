@@ -2990,5 +2990,9 @@
   "Director Name": "Nama Direktur",
   "Director Email": "Email Direktur",
   "Director Designation": "Penunjukan Direktur",
-  "Submit": "Kirim"
+  "Submit": "Kirim",
+  "Crypto Transfer": "Transfer Kripto",
+  "Transaction Failed!": "Transaksi Gagal!",
+  "PAY": "MEMBAYAR",
+  "No Payment Method Available": "Tidak Tersedia Metode Pembayaran"
 }

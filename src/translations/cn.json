@@ -2991,5 +2991,9 @@
   "Director Name": "导演姓名",
   "Director Email": "主管邮件",
   "Director Designation": "董事任命",
-  "Submit": "提交"
+  "Submit": "提交",
+  "Crypto Transfer": "加密货币转账",
+  "Transaction Failed!": "交易失败！",
+  "PAY": "支付",
+  "No Payment Method Available": "暂无可用付款方式"
 }

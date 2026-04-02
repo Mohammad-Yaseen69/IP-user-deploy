@@ -3004,5 +3004,9 @@
   "Director Name": "Director Name",
   "Director Email": "Director Email",
   "Director Designation": "Director Designation",
-  "Submit": "Submit"
+  "Submit": "Submit",
+  "Crypto Transfer": "Crypto Transfer",
+  "Transaction Failed!": "Transaction Failed!",
+  "PAY": "PAY",
+  "No Payment Method Available": "No Payment Method Available"
 }

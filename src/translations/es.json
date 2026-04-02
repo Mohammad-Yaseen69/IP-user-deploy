@@ -2998,5 +2998,9 @@
   "Director Name": "Nombre del director",
   "Director Email": "Correo electrónico del director",
   "Director Designation": "Designación de Director",
-  "Submit": "Entregar"
+  "Submit": "Entregar",
+  "Crypto Transfer": "Transferencia de criptomonedas",
+  "Transaction Failed!": "¡Transacción fallida!",
+  "PAY": "PAGAR",
+  "No Payment Method Available": "No hay método de pago disponible"
 }

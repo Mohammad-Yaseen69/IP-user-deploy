@@ -2992,5 +2992,9 @@
   "Director Name": "निर्देशक का नाम",
   "Director Email": "निदेशक का ईमेल",
   "Director Designation": "निदेशक पदनाम",
-  "Submit": "जमा करना"
+  "Submit": "जमा करना",
+  "Crypto Transfer": "क्रिप्टो ट्रांसफर",
+  "Transaction Failed!": "लेन - देन विफल!",
+  "PAY": "वेतन",
+  "No Payment Method Available": "कोई भुगतान विधि उपलब्ध नहीं है"
 }

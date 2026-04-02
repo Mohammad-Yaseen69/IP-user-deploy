@@ -2911,5 +2911,9 @@
   "Director Designation": "Назначение директора",
   "Adding": "Добавление",
   "Designation": "Обозначение",
-  "Submit": "Представлять на рассмотрение"
+  "Submit": "Представлять на рассмотрение",
+  "Crypto Transfer": "Криптовалютный перевод",
+  "Transaction Failed!": "Транзакция не удалась!",
+  "PAY": "ПЛАТИТЬ",
+  "No Payment Method Available": "Способ оплаты недоступен"
 }

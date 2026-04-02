@@ -2997,5 +2997,9 @@
   "Director Name": "Nom du réalisateur",
   "Director Email": "Courriel du directeur",
   "Director Designation": "Désignation de directeur",
-  "Submit": "Soumettre"
+  "Submit": "Soumettre",
+  "Crypto Transfer": "Transfert de cryptomonnaie",
+  "Transaction Failed!": "Transaction échouée !",
+  "PAY": "PAYER",
+  "No Payment Method Available": "Aucun mode de paiement disponible"
 }
