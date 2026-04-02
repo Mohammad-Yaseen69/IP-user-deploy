@@ -46,8 +46,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
     const width = useWindowWidth()
     const [loading, setLoading] = useState(false)
 
-    const base_url = window.location.origin || 'my.insta-pay.ch'
-
+    const base_url = window.location.origin || 'my.insta-pay.ch';
     const getPaymentAddress = () => {
         axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment-address/get-payment-address/${userDetails?.username}`, {
             headers: authHeader
