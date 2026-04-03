@@ -21,34 +21,25 @@ const Header = () => {
         <div className={styles.top}>
             <div className={styles.left}>
                 {
-                    userDetails?.profileImage?.url
-                        ?
-                        <div className={styles.dp} style={{ overflow: "hidden" }}>
-                            {
-                                userDetails?.profileImage?.url
-                                    ? (
-                                        <img
-                                            alt="profile"
-                                            src={croppedImages.profileDP || userDetails?.profileImage?.url}
-                                            className={styles.dp}
-                                            style={{ background: "transparent" }}
-                                        />
-                                    )
-                                    : (
-                                        <div className={styles.dp} style={{ overflow: "hidden" }}>
-                                            {
-                                                (
-                                                    userDetails?.user?.first_name?.charAt(0) ||
-                                                    userDetails?.company_name?.charAt(0) ||
-                                                    "U"
-                                                ).toUpperCase()
-                                            }
-                                        </div>
-                                    )
-                            }
-                        </div>
-                        :
-                        <div className={styles.dp} style={{ overflow: "hidden" }}>{userDetails?.user?.first_name?.[0]}</div>
+                    (croppedImages.profileDP || userDetails?.profileImage?.url)?.trim()
+                        ? (
+                            <img
+                                src={croppedImages.profileDP || userDetails?.profileImage?.url}
+                                alt="profile"
+                                className={styles.dp}
+                            />
+                        )
+                        : (
+                            <span className={styles.dp}>
+                                {
+                                    (
+                                        userDetails?.user?.first_name?.charAt(0) ||
+                                        userDetails?.company_name?.charAt(0) ||
+                                        "U"
+                                    ).toUpperCase()
+                                }
+                            </span>
+                        )
                 }
                 <div className={styles.basic_dets}>
                     <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
