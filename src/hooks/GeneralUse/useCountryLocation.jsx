@@ -6,7 +6,7 @@ const useCountryLocation = () => {
     const { allowedCountries } = useContext(UserContext)
     const [country, setCountry] = useState()
     const [showNoticeModal, setShowNoticeModal] = useState(false)
-
+    const [loading, setLoading] = useState(true)
     useEffect(() => {
         const getCountryDetails = async () => {
             const ipBasedStoredCountry = localStorage.getItem("ip_country")
@@ -14,6 +14,7 @@ const useCountryLocation = () => {
                 setCountry(ipBasedStoredCountry)
             } else {
                 try {
+                    setLoading(true)
                     const res = await fetch(`https://iplocate.io/api/lookup?apikey=${import.meta.env.VITE_IP_LOCATE_API_KEY}`)
                     const location = await res.json();
 
@@ -31,6 +32,7 @@ const useCountryLocation = () => {
                         }
                         setCountry(foundCount?.country_iso_code ?? localStorage.getItem("ip_country") ?? "USA")
                     }
+                    setLoading(false)
                 } catch (error) {
                     Sentry.logger.error(`IP Locate api failed.`, {
                         error: error
@@ -42,6 +44,8 @@ const useCountryLocation = () => {
                     if (filteredCountry) {
                         localStorage.setItem("ip_country", filteredCountry)
                     }
+                    setLoading(false)
+
                     setCountry(filteredCountry ?? localStorage.getItem("ip_country"))
                 }
             }
