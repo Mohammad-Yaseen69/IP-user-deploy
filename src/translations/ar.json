@@ -2990,5 +2990,9 @@
   "Director Name": "اسم المدير",
   "Director Email": "البريد الإلكتروني للمدير",
   "Director Designation": "تعيين مدير",
-  "Submit": "يُقدِّم"
+  "Submit": "يُقدِّم",
+  "Crypto Transfer": "تحويل العملات المشفرة",
+  "Transaction Failed!": "فشلت العملية!",
+  "PAY": "يدفع",
+  "No Payment Method Available": "لا توجد طريقة دفع متاحة"
 }

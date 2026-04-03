@@ -2992,5 +2992,9 @@
   "Director Name": "Imię i nazwisko dyrektora",
   "Director Email": "E-mail dyrektora",
   "Director Designation": "Stanowisko dyrektora",
-  "Submit": "Składać"
+  "Submit": "Składać",
+  "Crypto Transfer": "Transfer kryptowalut",
+  "Transaction Failed!": "Transakcja nieudana!",
+  "PAY": "PŁACIĆ",
+  "No Payment Method Available": "Brak dostępnej metody płatności"
 }
