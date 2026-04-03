@@ -23,7 +23,13 @@ const Header = () => {
                 {
                     userDetails?.profileImage?.url
                         ?
-                        <img alt="asdfasf" src={croppedImages.profileDP || userDetails?.profileImage?.url} className={styles.dp} alt="profile picture" style={{ background: "transparent" }} />
+                        <div className={styles.dp} style={{ overflow: "hidden" }}>
+  {
+    userDetails?.user?.first_name?.[0] ||
+    userDetails?.company_name?.[0] ||
+    "U"
+  }
+</div>
                         :
                         <div className={styles.dp} style={{ overflow: "hidden" }}>{userDetails?.user?.first_name?.[0]}</div>
                 }
