@@ -67,7 +67,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
             map[item.alpha3] = item.lang
         })
         return map
-    }, [languageCountries])
+    }, [])
     console.log("maplang", countryLangMap)
     const isExtendedPage = pathname.includes("/payment-address") || pathname.includes("/invoices")
     const newLangs = ["ro", "bg", "lt", "cs", "hr", "et", "lv", "hu", "el", "sv", "no", "da", "fi", "az", "uz", "ka", "hy"]
