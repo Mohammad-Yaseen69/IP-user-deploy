@@ -24,12 +24,29 @@ const Header = () => {
                     userDetails?.profileImage?.url
                         ?
                         <div className={styles.dp} style={{ overflow: "hidden" }}>
-  {
-    userDetails?.user?.first_name?.[0] ||
-    userDetails?.company_name?.[0] ||
-    "U"
-  }
-</div>
+                            {
+                                userDetails?.profileImage?.url
+                                    ? (
+                                        <img
+                                            alt="profile"
+                                            src={croppedImages.profileDP || userDetails?.profileImage?.url}
+                                            className={styles.dp}
+                                            style={{ background: "transparent" }}
+                                        />
+                                    )
+                                    : (
+                                        <div className={styles.dp} style={{ overflow: "hidden" }}>
+                                            {
+                                                (
+                                                    userDetails?.user?.first_name?.charAt(0) ||
+                                                    userDetails?.company_name?.charAt(0) ||
+                                                    "U"
+                                                ).toUpperCase()
+                                            }
+                                        </div>
+                                    )
+                            }
+                        </div>
                         :
                         <div className={styles.dp} style={{ overflow: "hidden" }}>{userDetails?.user?.first_name?.[0]}</div>
                 }
