@@ -169,7 +169,12 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal
                     }}
                 >
                     <AnimatedHeader mobileUI />
-                    <img src={ip} alt="" style={{ margin: "20px auto", width: "200px" }} />
+                    <img
+                        src={ip}
+                        alt=""
+                        style={{ margin: "20px auto", width: "200px", cursor: "pointer" }}
+                        onClick={() => navigate("/")}
+                    />
                 </div>
             }
         </>
