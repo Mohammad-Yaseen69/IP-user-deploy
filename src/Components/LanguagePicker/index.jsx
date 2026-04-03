@@ -68,7 +68,6 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
         })
         return map
     }, [])
-    console.log("maplang", countryLangMap)
     const isExtendedPage = pathname.includes("/payment-address") || pathname.includes("/invoices")
     const newLangs = ["ro", "bg", "lt", "cs", "hr", "et", "lv", "hu", "el", "sv", "no", "da", "fi", "az", "uz", "ka", "hy"]
     // const filtered = countries.filter(it => languageCountries.some(item => item.name === "India" ? it.name === item.name : it.name.includes(item.name))).map(coun => {
