@@ -90,7 +90,7 @@ function reducer(state, action) {
 `}
 </style>;
 
-
+const base_URL = window.location.origin || "https://insta-pay.ch/";
 
 export const LeftJsx = ({
   width,
@@ -125,7 +125,9 @@ export const LeftJsx = ({
       {width > 1000 && (
         <div className={styles.left_top}>
           <AnimatedHeader />
-          <img src={ip} alt="" />
+          <Link to={base_URL}>
+            <img src={ip} alt="" />
+          </Link>
         </div>
       )}
       <div className={styles.left_bottom}>
