@@ -12,6 +12,7 @@ const useCountryLocation = () => {
             const ipBasedStoredCountry = localStorage.getItem("ip_country")
             if (ipBasedStoredCountry?.length === 3) {
                 setCountry(ipBasedStoredCountry)
+                setLoading(false)
             } else {
                 try {
                     setLoading(true)
@@ -57,7 +58,8 @@ const useCountryLocation = () => {
 
     return {
         country,
-        showNoticeModal
+        showNoticeModal,
+        loading 
     }
 }
 
