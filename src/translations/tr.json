@@ -2992,5 +2992,9 @@
   "Director Name": "Yönetmen Adı",
   "Director Email": "Yönetici E-postası",
   "Director Designation": "Yönetici Ataması",
-  "Submit": "Göndermek"
+  "Submit": "Göndermek",
+  "Crypto Transfer": "Kripto Para Transferi",
+  "Transaction Failed!": "İşlem başarısız oldu!",
+  "PAY": "ÖDEMEK",
+  "No Payment Method Available": "Mevcut Ödeme Yöntemi Yok"
 }

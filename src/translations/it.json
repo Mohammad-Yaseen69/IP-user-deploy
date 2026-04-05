@@ -2998,5 +2998,9 @@
   "Director Name": "Nome del regista",
   "Director Email": "Indirizzo email del direttore",
   "Director Designation": "Nomina del direttore",
-  "Submit": "Invia"
+  "Submit": "Invia",
+  "Crypto Transfer": "Trasferimento di criptovalute",
+  "Transaction Failed!": "Transazione non riuscita!",
+  "PAY": "PAGA",
+  "No Payment Method Available": "Nessun metodo di pagamento disponibile"
 }

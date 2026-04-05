@@ -2998,5 +2998,9 @@
   "Director Name": "Ім'я директора",
   "Director Email": "Електронна пошта директора",
   "Director Designation": "Призначення директора",
-  "Submit": "Надіслати"
+  "Submit": "Надіслати",
+  "Crypto Transfer": "Криптопереказ",
+  "Transaction Failed!": "Транзакцію не вдалося!",
+  "PAY": "СПЛАТИТИ",
+  "No Payment Method Available": "Немає доступних способів оплати"
 }

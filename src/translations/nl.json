@@ -2979,5 +2979,9 @@
   "Director Name": "Naam van de regisseur",
   "Director Email": "E-mailadres van de directeur",
   "Director Designation": "Directeursbenoeming",
-  "Submit": "Indienen"
+  "Submit": "Indienen",
+  "Crypto Transfer": "Crypto-overdracht",
+  "Transaction Failed!": "Transactie mislukt!",
+  "PAY": "BETALEN",
+  "No Payment Method Available": "Geen betaalmethode beschikbaar"
 }

@@ -287,6 +287,22 @@ const UserState = ({ children }) => {
                     clearData()
                     navigate("/login", { replace: true })
                 }
+                if (decrypted.profileImage?.coordinates) {
+                    getImage(decrypted.profileImage?.url, decrypted.profileImage?.coordinates, "profile", "dp")
+                }
+                if (decrypted.coverImage?.coordinates) {
+                    getImage(decrypted.coverImage?.url, decrypted.coverImage?.coordinates, "profile", "cover")
+                }
+
+                if (!decrypted?.tfa) {
+                    setMissingTabsData(prev => prev.includes("tfa") ? prev : [...prev, "tfa"]);
+                }
+                if ((decrypted?.user?.kyc_status === "declined" || !decrypted.user?.kyc_status)) {
+                    setMissingTabsData(prev => prev.includes("kyc") ? prev : [...prev, "kyc"]);
+                }
+                if (!decrypted?.insta_username && !decrypted?.telegram_bot) {
+                    setMissingTabsData(prev => prev.includes("social") ? prev : [...prev, "social"]);
+                }
             })
             .catch((err) => {
                 const dec = decryptData(err?.response?.data?.data)
