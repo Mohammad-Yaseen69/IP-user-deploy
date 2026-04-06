@@ -25,7 +25,16 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
     const { allowedCountries, authHeader, userDetails } = useContext(UserContext)
     const [loadingCountries, setLoadingCountries] = useState(false)
     const [lookedup, setLookedUp] = useState(false)
+    const [imagesLoaded, setImagesLoaded] = useState({
+        left: false,
+        right: false,
+    });
 
+    useEffect(() => {
+        setImagesLoaded({ left: false, right: false });
+    }, [data.flow]);
+
+    const isBannerLoaded = imagesLoaded.left && imagesLoaded.right;
     // country
     const [countries, setCountries] = useState([])
     useEffect(() => {
@@ -90,17 +99,53 @@ const StepTwo = ({ data, dataHandler, eSimDataHandler }) => {
 
     return (
         <div className={styles.container}>
-            {data.flow === "airtime" &&
-                <div className={styles.banner}>
-                    <div className={styles.b_left}>
-                        <span>{t("Send Top-up").toUpperCase()}</span>
-                        <div>
-                            <img src={data.flow === "airtime" ? airtime : esim} alt="" />
-                            <span>{t(`${data.flow === "airtime" ? "Mobile Airtime" : "eSim"}`)}</span>
+            {data.flow === "airtime" && (
+                <>
+                    {!isBannerLoaded && (
+                        <div className={styles.banner}>
+                            <div className={styles.b_left}>
+                                <div className={styles.skeletonText} />
+                                <div className={styles.skeletonRow}>
+                                    <div className={styles.skeletonIcon} />
+                                    <div className={styles.skeletonTextSmall} />
+                                </div>
+                            </div>
+                            <div className={styles.skeletonImage} />
                         </div>
+                    )}
+
+                    <div
+                        className={styles.banner}
+                        style={{ display: isBannerLoaded ? "flex" : "none" }}
+                    >
+                        <div className={styles.b_left}>
+                            <span>{t("Send Top-up").toUpperCase()}</span>
+                            <div>
+                                <img
+                                    src={data.flow === "airtime" ? airtime : esim}
+                                    alt=""
+                                    onLoad={() =>
+                                        setImagesLoaded((prev) => ({ ...prev, left: true }))
+                                    }
+                                />
+                                <span>
+                                    {t(
+                                        `${data.flow === "airtime" ? "Mobile Airtime" : "eSim"}`
+                                    )}
+                                </span>
+                            </div>
+                        </div>
+
+                        <img
+                            src={data.flow === "airtime" ? air_dude : e_dude}
+                            alt=""
+                            onLoad={() =>
+                                setImagesLoaded((prev) => ({ ...prev, right: true }))
+                            }
+                        />
                     </div>
-                    <img src={data.flow === "airtime" ? air_dude : e_dude} alt="" />
-                </div>}
+                </>
+            )}
             {data.flow === "airtime" ?
                 loadingCountries
                     ?
