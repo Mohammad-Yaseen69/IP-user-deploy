@@ -183,7 +183,7 @@ const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor =
                                     <p>{error}</p>
                                     <div className={styles.btns}>
                                         <button disabled={saving} onClick={toggle} className={styles.trs}>{t("Cancel")}</button>
-                                        <button disabled={saving || !counterAmount || counterAmount < 1} onClick={counterOffer} className={styles.cou}>
+                                        <button disabled={saving || !counterAmount} onClick={counterOffer} className={styles.cou}>
                                             {t("Send the offer")}
                                             <ChevronRight
                                                 color="white"
@@ -353,7 +353,7 @@ const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor =
                                     <button disabled={saving} onClick={toggle}>
                                         <ChevronLeft />
                                     </button>
-                                    <button disabled={saving || !counterAmount || counterAmount < 1} onClick={counterOffer} className={paym_styles.full}>
+                                    <button disabled={saving || !counterAmount} onClick={counterOffer} className={paym_styles.full}>
                                         {t("Send the offer")}
                                     </button>
                                 </div>
