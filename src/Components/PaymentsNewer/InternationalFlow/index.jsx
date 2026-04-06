@@ -250,12 +250,12 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const disabledButton = useMemo(() => {
         switch (subStep) {
             case 1:
-                if (userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status !== "approved" : userDetails?.company?.kyb_status !== "approved") {
-                    return false
-                }
-
                 if (!internationalData.transactionTypeSelected) {
                     return !internationalData.transactionType
+                }
+
+                if (userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status !== "approved" : userDetails?.company?.kyb_status !== "approved") {
+                    return false
                 }
 
                 return !internationalData.amount || Number(String(internationalData.amount)?.replaceAll(",", "")) < 1 || !internationalData.currency || !internationalData.currency_wallet?.currency?.code || !internationalData.country?.name || !internationalData?.payoutChannel?.name || !internationalData?.payer?.name || internationalData.error || internationalData.exchange_rate_error || !internationalData.exchange_rate?.receiver?.amount > 0 || vendorBalanceLoading
@@ -666,7 +666,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
     const createTransaction = async (codeType = "", isResend = true) => {
         setLoading(true)
         try {
-            let payload = {}            
+            let payload = {}
             const transaction_data = {
                 additional_information: internationalData.comment,
                 purpose_of_remittance: internationalData.reason,
@@ -905,17 +905,18 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
         switch (subStep) {
             case 1:
                 {
-                    if (userDetails?.account_type === "individual" ? userDetails.user?.kyc_status !== "approved" : userDetails.company?.kyb_status !== "approved") {
-                        navigate("/settings?tab=verification")
-                        return
-                    }
-
                     if (vendorBalanceLoading) {
                         return
                     }
 
                     if (!internationalData.transactionTypeSelected) {
                         updateInternationalData("transactionTypeSelected", true)
+                        return
+                    }
+
+
+                    if (userDetails?.account_type === "individual" ? userDetails.user?.kyc_status !== "approved" : userDetails.company?.kyb_status !== "approved") {
+                        navigate("/settings?tab=verification")
                         return
                     }
 
@@ -1572,7 +1573,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                     }
                                                     <button disabled={disabledButton || loading} onClick={handleClick}>
                                                         {
-                                                            (userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status === "approved" : userDetails?.company?.kyb_status === "approved")
+                                                            (!internationalData.transactionTypeSelected || (userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status === "approved" : userDetails?.company?.kyb_status === "approved"))
                                                                 ?
                                                                 (
                                                                     subStep === 5
@@ -1790,7 +1791,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                     </Link>
                                                     <div className={styles?.buttons}>
                                                         {
-                                                            subStep > 1
+                                                            (subStep > 1 || internationalData.transactionTypeSelected)
                                                             &&
                                                             <button disabled={loading} onClick={() => {
                                                                 if (subStep === 4 && internationalData.payment_type?.value) {
@@ -1804,6 +1805,10 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                 else if (subStep === 5 && internationalData.payment_type?.value === "card" && !internationalData.showCard) {
                                                                     updateInternationalData("showCard", true)
                                                                 }
+                                                                else if (internationalData.transactionTypeSelected && subStep === 1) {
+                                                                    dispatch({ type: "RESET_FIRST_STEP_DATA" })
+                                                                    updateInternationalData("transactionTypeSelected", false)
+                                                                }
                                                                 else {
                                                                     setSubStep(prev => prev - 1)
                                                                 }
@@ -1813,7 +1818,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                         }
                                                         <button disabled={disabledButton || loading} className={styles.full} onClick={handleClick}>
                                                             {
-                                                                userDetails?.user?.kyc_status === "approved"
+                                                                (!internationalData.transactionTypeSelected || (userDetails?.account_type === "individual" ? userDetails?.user?.kyc_status === "approved" : userDetails?.company?.kyb_status === "approved"))
                                                                     ?
                                                                     (
                                                                         subStep === 5
@@ -1826,7 +1831,7 @@ const InternationFlow = ({ sendPaymentType, setStep, setSendPaymentType, showRec
                                                                                 t("Continue")
                                                                     )
                                                                     :
-                                                                    t("Identify verification required")
+                                                                    t(`${userDetails?.account_type === "individual" ? "Identity" : "Business"} verification required`)
                                                             }
                                                         </button>
                                                     </div>
