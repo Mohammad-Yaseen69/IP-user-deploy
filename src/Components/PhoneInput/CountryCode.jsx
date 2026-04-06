@@ -15,7 +15,7 @@ const CountryCode = ({ country, selectedCountry, setSelectedCountry, setCountry,
 
     const countriesData = useMemo(() => {
         return countriesInDiffLangs[i18n.language]
-            .map(item => {
+            ?.map(item => {
                 const phoneDetails = CountryBasedPhone?.[item?.alpha3]
                 return {
                     ...item,
@@ -35,7 +35,7 @@ const CountryCode = ({ country, selectedCountry, setSelectedCountry, setCountry,
     const searchedCountries = useMemo(() => {
         if (!searchTerm) return countriesData;
 
-        const fuseResults = fuse.search(searchTerm).map(result => result.item);
+        const fuseResults = fuse.search(searchTerm)?.map(result => result.item);
         if (fuseResults.length > 0) {
             return fuseResults
         } else {
@@ -49,8 +49,8 @@ const CountryCode = ({ country, selectedCountry, setSelectedCountry, setCountry,
     const [firstTime, setFirstTime] = useState(true)
     // selected
     useEffect(() => {
-        if (country && countriesData.length > 0) {
-            const filtered = countriesData.filter(item => item.alpha3 === country)?.[0]
+        if (country && countriesData?.length > 0) {
+            const filtered = countriesData?.filter(item => item.alpha3 === country)?.[0]
             console.log(filtered)
             setSelectedCountry(filtered)
             if (firstTime && !number) {
@@ -106,7 +106,7 @@ const CountryCode = ({ country, selectedCountry, setSelectedCountry, setCountry,
                 <div className={styles.dropdown} ref={dropdownRef} style={{ zIndex: 99999999999 }}>
                     <input type="search" placeholder='Search Country' ref={inputRef} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
                     {
-                        searchedCountries.map(item => (
+                        searchedCountries?.map(item => (
                             <div className={styles.dropdown_item} key={item?.name} onClick={() => {
                                 setNumber("")
                                 setCountry(item)
