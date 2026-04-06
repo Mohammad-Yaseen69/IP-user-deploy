@@ -125,7 +125,7 @@ export const LeftJsx = ({
       {width > 1000 && (
         <div className={styles.left_top}>
           <AnimatedHeader />
-          <img src={ip} alt="" />
+          <img src={ip} alt=""  onClick={() => window.location.href = "https://insta-pay.ch"} />
         </div>
       )}
       <div className={styles.left_bottom}>
@@ -498,7 +498,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                         }}
                       >
                         <AnimatedHeader mobileUI />
-                        <img src={ip} alt="" style={{ margin: "20px auto", width: "200px" }} />
+                        <img src={ip} alt="" style={{ margin: "20px auto", width: "200px" }}  onClick={() => window.location.href = "https://insta-pay.ch"}/>
                       </div>
                     }
                   </div>

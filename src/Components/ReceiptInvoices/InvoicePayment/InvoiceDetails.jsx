@@ -7,12 +7,16 @@ import { useNavigate } from "react-router";
 
 const InvoiceDetails = ({ data, isSubscription = false }) => {
     const { t } = useTranslation()
-    const navigate  = useNavigate()
     return (
         <>
             <div className={styles.top}>
                 <div className={styles.top_content}>
-                    <img onClick={() => navigate("/")} src={ip} style={{ width: "150px" }} alt="" />
+                    <img
+                        onClick={() => window.location.href = "https://insta-pay.ch"}
+                        src={ip}
+                        style={{ width: "150px", cursor: "pointer" }}
+                        alt=""
+                    />
                     <h1>{isSubscription ? t("Subscription")?.toUpperCase() : t("Invoice")?.toUpperCase()} </h1>
                 </div>
 
