@@ -514,3 +514,47 @@
         opacity: .7;
     }
 }
+.skeletonText {
+  width: 120px;
+  height: 16px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite;
+}
+
+.skeletonTextSmall {
+  width: 100px;
+  height: 14px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite;
+}
+
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.skeletonIcon {
+  width: 30px;
+  height: 30px;
+  background: #e5e7eb;
+  border-radius: 6px;
+  animation: pulse 1.5s infinite;
+}
+
+.skeletonImage {
+  width: 150px;
+  height: 150px;
+  background: #e5e7eb;
+  border-radius: 10px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
