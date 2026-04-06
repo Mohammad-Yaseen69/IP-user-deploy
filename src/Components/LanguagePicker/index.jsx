@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef, useContext, useMemo } from "react"
 import countries from "../PaymentsNewer/CountriesData.json"
 import { Col, Modal, ModalBody, ModalHeader } from "reactstrap"
@@ -7,14 +8,19 @@ import drag from "./drag.png"
 import axios from "axios"
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import { UserContext } from "../../Context/UserContext"
+import { useLocation } from "react-router"
+import useCountryLocation from "../../hooks/GeneralUse/useCountryLocation"
 
 const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }) => {
     const { i18n, t } = useTranslation()
     const [showDropDown, setShowDropDown] = useState()
     const [currentLang, setCurrentLang] = useState(localStorage.getItem("i18nextLng"))
     const [showModal, setShowModal] = useState(false)
+    const { country: userCountryLocation, loading: countryLoading } = useCountryLocation()
+
     const toggleModal = () => setShowModal(!showModal)
     const [openUp, setOpenUp] = useState(false)
+    const { pathname } = useLocation()
 
     const languageCountries = [
         { name: "United Kingdom", display: t("English (UK)"), label: "EN-GB", lang: "en", alpha3: "GBR" },
@@ -36,19 +42,53 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
         { name: "India", display: t("Hindi"), label: "HI-IN", lang: "hi", alpha3: "IND" },
         { name: "China", display: t("Chinese"), label: "ZH-CN", lang: "cn", alpha3: "CHN" },
         { name: "Pakistan", display: t("Urdu"), label: "UR-PK", lang: "ur", alpha3: "PAK" },
+        { name: "Romania", display: t("Romanian"), label: "RO-RO", lang: "ro", alpha3: "ROU" },
+        { name: "Bulgaria", display: t("Bulgarian"), label: "BG-BG", lang: "bg", alpha3: "BGR" },
+        { name: "Lithuania", display: t("Lithuanian"), label: "LT-LT", lang: "lt", alpha3: "LTU" },
+        { name: "Czech Republic", display: t("Czech"), label: "CS-CZ", lang: "cs", alpha3: "CZE" },
+        { name: "Croatia", display: t("Croatian"), label: "HR-HR", lang: "hr", alpha3: "HRV" },
+        { name: "Estonia", display: t("Estonian"), label: "ET-EE", lang: "et", alpha3: "EST" },
+        { name: "Latvia", display: t("Latvian"), label: "LV-LV", lang: "lv", alpha3: "LVA" },
+        { name: "Hungary", display: t("Hungarian"), label: "HU-HU", lang: "hu", alpha3: "HUN" },
+        { name: "Greece", display: t("Greek"), label: "EL-GR", lang: "el", alpha3: "GRC" },
+        { name: "Sweden", display: t("Swedish"), label: "SV-SE", lang: "sv", alpha3: "SWE" },
+        { name: "Norway", display: t("Norwegian"), label: "NO-NO", lang: "no", alpha3: "NOR" },
+        { name: "Denmark", display: t("Danish"), label: "DA-DK", lang: "da", alpha3: "DNK" },
+        { name: "Finland", display: t("Finnish"), label: "FI-FI", lang: "fi", alpha3: "FIN" },
+        { name: "Azerbaijan", display: t("Azerbaijani"), label: "AZ-AZ", lang: "az", alpha3: "AZE" },
+        { name: "Uzbekistan", display: t("Uzbek"), label: "UZ-UZ", lang: "uz", alpha3: "UZB" },
+        { name: "Georgia", display: t("Georgian"), label: "KA-GE", lang: "ka", alpha3: "GEO" },
+        { name: "Armenia", display: t("Armenian"), label: "HY-AM", lang: "hy", alpha3: "ARM" },
     ];
 
-
-
+    const countryLangMap = useMemo(() => {
+        const map = {}
+        languageCountries.forEach(item => {
+            map[item.alpha3] = item.lang
+        })
+        return map
+    }, [])
+    const isExtendedPage = pathname.includes("/payment-address") || pathname.includes("/invoices")
+    const newLangs = ["ro", "bg", "lt", "cs", "hr", "et", "lv", "hu", "el", "sv", "no", "da", "fi", "az", "uz", "ka", "hy"]
     // const filtered = countries.filter(it => languageCountries.some(item => item.name === "India" ? it.name === item.name : it.name.includes(item.name))).map(coun => {
-    const filtered = countries.filter(it => languageCountries.some(item => item.alpha3 === it.alpha3)).map(coun => {
-        const current = languageCountries.filter(it => coun.alpha3 === it.alpha3)[0]
-        return {
-            ...coun,
-            ...current
-        }
-    })
+    const filtered = countries
+        .filter(it => {
+            const langItem = languageCountries.find(item => item.alpha3 === it.alpha3)
 
+            if (!isExtendedPage && newLangs.includes(langItem?.lang)) {
+                return false
+            }
+
+            return !!langItem
+        })
+        .map(coun => {
+            const current = languageCountries.find(it => coun.alpha3 === it.alpha3)
+
+            return {
+                ...coun,
+                ...current
+            }
+        })
     const eng = useMemo(() => {
         return filtered.find(i => i.lang === "en")
     }, [filtered])
@@ -178,42 +218,47 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
 
 
     useEffect(() => {
-        const localStorageLang = localStorage.getItem("i18nextLng")
-        
+        const userManuallySelected = localStorage.getItem("userSelectedLang")
+
         if (userDetails?.language) {
             const targetLang = userDetails.language.toLowerCase()
-            const lng = languageCountries.find(item => 
-                item.lang.toLowerCase() === targetLang || 
+            const langItem = languageCountries.find(item =>
+                item.lang.toLowerCase() === targetLang ||
                 item.label.toLowerCase() === targetLang
             )
-            
-            if (lng && i18n.language !== lng.lang) {
-                i18n.changeLanguage(lng.lang)
-                setCurrentLang(lng.lang)
-                localStorage.setItem("i18nextLng", lng.lang)
+            if (langItem && i18n.language !== langItem.lang) {
+                i18n.changeLanguage(langItem.lang)
+                setCurrentLang(langItem.lang)
+                localStorage.setItem("i18nextLng", langItem.lang)
             }
+            return
         }
-        else if (defaultLanguage) {
-            const lng = languageCountries.find(item => item.lang.toLowerCase() === defaultLanguage.toLowerCase())
-            if (lng && i18n.language !== lng.lang) {
-                i18n.changeLanguage(lng.lang)
-                setCurrentLang(lng.lang)
-                localStorage.setItem("i18nextLng", lng.lang)
-            }
-        }
-        else if (localStorageLang) {
-            if (i18n.language !== localStorageLang) {
-                i18n.changeLanguage(localStorageLang)
-                setCurrentLang(localStorageLang)
-            }
-        }
-        else {
-            i18n.changeLanguage(eng.lang)
-            setCurrentLang(eng.lang)
-            localStorage.setItem("i18nextLng", eng.lang)
-        }
-    }, [userDetails?.language, defaultLanguage])
 
+        if (userManuallySelected) {
+            const saved = localStorage.getItem("i18nextLng")
+            if (saved && i18n.language !== saved) {
+                i18n.changeLanguage(saved)
+                setCurrentLang(saved)
+            }
+            return
+        }
+
+        if (countryLoading) return 
+
+        if (userCountryLocation) {
+            const detectedLang = countryLangMap[userCountryLocation] || 'en'
+            localStorage.removeItem("i18nextLng")
+            i18n.changeLanguage(detectedLang)
+            setCurrentLang(detectedLang)
+            localStorage.setItem("i18nextLng", detectedLang)
+            return
+        }
+
+        i18n.changeLanguage('en')
+        setCurrentLang('en')
+        localStorage.setItem("i18nextLng", 'en')
+
+    }, [userDetails?.language, userCountryLocation, countryLoading])  // ← countryLoading add karo
     useEffect(() => {
         const handlePosition = () => {
             const dropdown = dropdownRef.current
@@ -305,6 +350,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
                                 i18n.changeLanguage(eng.lang)
                                 setCurrentLang(eng.lang)
                                 localStorage.setItem("i18nextLng", eng.lang)
+                                localStorage.setItem("userSelectedLang", "true")
                                 setLanguage(eng.lang)
                             }}>
                                 <img src={eng.file_url} alt={eng.alpha3} style={{
@@ -332,6 +378,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
                                             i18n.changeLanguage(item.lang)
                                             setCurrentLang(item.lang)
                                             localStorage.setItem("i18nextLng", item.lang)
+                                            localStorage.setItem("userSelectedLang", "true")
                                             setLanguage(item.lang)
                                         }}>
                                             <img src={item.file_url} alt={item.alpha3} style={{
@@ -421,6 +468,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
                                 i18n.changeLanguage(item.lang)
                                 setCurrentLang(item.lang)
                                 localStorage.setItem("i18nextLng", item.lang)
+                                localStorage.setItem("userSelectedLang", "true")
                                 toggleModal()
                                 setLanguage(item.lang)
                             }}>

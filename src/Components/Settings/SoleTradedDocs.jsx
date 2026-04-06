@@ -5,7 +5,7 @@ import { CheckCircle, Info } from 'react-feather'
 import { UserContext } from '../../Context/UserContext'
 
 // Reusable file upload component (inline for this file)
-const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, userDetails, checkFileStatus }) => {
+const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, userDetails, checkFileStatus, isReadOnly }) => {
     const existingFile = userDetails?.company?.kyb_files?.find(f => f.document_name === docName);
     const [localFile, setLocalFile] = useState(null);
 
@@ -26,11 +26,11 @@ const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, 
         }
     };
 
-    if (userDetails?.kyb_verification_paid) {
+    if (userDetails?.kyb_verification_paid || isReadOnly) {
         return (
             <div style={{ display: "flex", alignItems: "center", gap: ".7rem", fontSize: "1rem", fontWeight: 500 }}>
                 <CheckCircle color='green' />
-                {checkFileStatus(docName)?.status?.toUpperCase()}
+                {checkFileStatus(docName)?.status?.toUpperCase() || "UPLOADED"}
             </div>
         );
     }
@@ -49,15 +49,15 @@ const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, 
                     Selected: {localFile.name}
                 </div>
             )}
-            <Input type='file' name={docName} onChange={handleFileChange} style={{ maxWidth: 300 }} />
-            {existingFile && !localFile && (
+            {!isReadOnly && <Input type='file' name={docName} onChange={handleFileChange} style={{ maxWidth: 300 }} />}
+            {existingFile && !localFile && !isReadOnly && (
                 <small style={{ color: '#888' }}>Choose a new file to replace the existing one.</small>
             )}
         </div>
     );
 };
 
-const SoleTradedDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => {
+const SoleTradedDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isReadOnly }) => {
     const [modalOne, setModalOne] = useState(false)
     const [modalTwo, setModalTwo] = useState(false)
     const [modalThree, setModalThree] = useState(false)
@@ -74,6 +74,7 @@ const SoleTradedDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus 
                         setCompanyFileNames={setCompanyFileNames}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
+                        isReadOnly={isReadOnly}
                     />
                 </FormGroup>
                 <Modal isOpen={modalOne} toggle={() => setModalOne(!modalOne)} style={{ minWidth: "60vw" }}>
@@ -119,6 +120,7 @@ const SoleTradedDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus 
                         setCompanyFileNames={setCompanyFileNames}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
+                        isReadOnly={isReadOnly}
                     />
                 </FormGroup>
                 <Modal isOpen={modalTwo} toggle={() => setModalTwo(!modalTwo)} style={{ minWidth: "60vw" }}>
@@ -151,6 +153,7 @@ const SoleTradedDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus 
                         setCompanyFileNames={setCompanyFileNames}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
+                        isReadOnly={isReadOnly}
                     />
                 </FormGroup>
                 <Modal isOpen={modalThree} toggle={() => setModalThree(!modalThree)} style={{ minWidth: "60vw" }}>
@@ -174,7 +177,7 @@ const SoleTradedDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus 
                     </ModalBody></Modal>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default SoleTradedDocs

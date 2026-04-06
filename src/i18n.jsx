@@ -105,7 +105,7 @@ i18n
       hu: { translations: hu },
       el: { translations: el },
       sv: { translations: sv },
-      no: { translations: no }, 
+      no: { translations: no },
       da: { translations: da },
       fi: { translations: fi },
       az: { translations: az },
@@ -114,14 +114,19 @@ i18n
       hy: { translations: hy },
 
     },
-    lng: "en",
+    // lng: "en",
     fallbackLng: "en",
     debug: false,
+    detection: {
+      order: ["localStorage", "navigator"], 
+      lookupLocalStorage: "i18nextLng",
+      cacheUserLanguage: false,
+    },
 
     ns: ["translations"],
     defaultNS: "translations",
 
-    keySeparator: false, 
+    keySeparator: false,
 
     interpolation: {
       escapeValue: false,

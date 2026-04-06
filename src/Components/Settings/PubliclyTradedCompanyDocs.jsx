@@ -5,7 +5,7 @@ import { CheckCircle, Info } from 'react-feather'
 import { UserContext } from '../../Context/UserContext'
 import { useTranslation } from 'react-i18next'
 
-const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, userDetails, checkFileStatus }) => {
+const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, userDetails, checkFileStatus, isReadOnly }) => {
     const existingFile = userDetails?.company?.kyb_files?.find(f => f.document_name === docName)
     const [localFile, setLocalFile] = useState(null)
 
@@ -26,11 +26,11 @@ const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, 
         }
     }
 
-    if (userDetails?.kyb_verification_paid) {
+    if (userDetails?.kyb_verification_paid || isReadOnly) {
         return (
             <div style={{ display: 'flex', alignItems: 'center', gap: '.7rem', fontSize: '1rem', fontWeight: 500 }}>
                 <CheckCircle color='green' />
-                {checkFileStatus(docName)?.status?.toUpperCase()}
+                {checkFileStatus(docName)?.status?.toUpperCase() || "UPLOADED"}
             </div>
         )
     }
@@ -49,7 +49,7 @@ const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, 
                     Selected: {localFile.name}
                 </div>
             )}
-            <Input type='file' name={docName} onChange={handleFileChange} style={{ maxWidth: 300 }} />
+            {!isReadOnly && <Input type='file' name={docName} onChange={handleFileChange} style={{ maxWidth: 300 }} />}
             {existingFile && !localFile && (
                 <small style={{ color: '#888' }}>Choose a new file to replace the existing one.</small>
             )}
@@ -57,7 +57,7 @@ const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, 
     )
 }
 
-const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => {
+const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isReadOnly }) => {
     const { t } = useTranslation();
 
     const [modalOne, setModalOne] = useState(false)
@@ -78,6 +78,7 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                         setCompanyFileNames={setCompanyFileNames}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
+                        isReadOnly={isReadOnly}
                     />
                 </FormGroup>
                 <Modal isOpen={modalOne} toggle={() => setModalOne(!modalOne)} style={{ minWidth: '60vw' }}>
@@ -108,7 +109,7 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                             <ul>
                                 <li>{t("Brand or trading names")}</li>
                                 <li>{t("Value Added Tax (VAT) number")}</li>
-                                <li>{t("List of Ultimate Beneficial Owners (UBOs) - this is mandatory in some countries,")} 
+                                <li>{t("List of Ultimate Beneficial Owners (UBOs) - this is mandatory in some countries,")}
                                     {t("otherwise, it may be provided as a separate document.")}</li>
                             </ul>
                         </div>
@@ -124,6 +125,7 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                         setCompanyFileNames={setCompanyFileNames}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
+                        isReadOnly={isReadOnly}
                     />
                 </FormGroup>
                 <Modal isOpen={modalTwo} toggle={() => setModalTwo(!modalTwo)} style={{ minWidth: '60vw' }}>
@@ -156,6 +158,7 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                         setCompanyFileNames={setCompanyFileNames}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
+                        isReadOnly={isReadOnly}
                     />
 
                 </FormGroup>
@@ -183,6 +186,7 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                         setCompanyFileNames={setCompanyFileNames}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
+                        isReadOnly={isReadOnly}
                     />
                 </FormGroup>
                 <Modal isOpen={modalFour} toggle={() => setModalFour(!modalFour)} style={{ minWidth: '60vw' }}>
@@ -220,6 +224,7 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                         setCompanyFileNames={setCompanyFileNames}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
+                        isReadOnly={isReadOnly}
                     />
                 </FormGroup>
                 <Modal isOpen={modalFive} toggle={() => setModalFive(!modalFive)} style={{ minWidth: '60vw' }}>

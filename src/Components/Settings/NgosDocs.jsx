@@ -4,7 +4,7 @@ import styles from "./styles/doctype.module.css"
 import { CheckCircle, Info } from 'react-feather'
 import { UserContext } from '../../Context/UserContext'
 
-const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, userDetails, checkFileStatus }) => {
+const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, userDetails, checkFileStatus, isReadOnly }) => {
     const existingFile = userDetails?.company?.kyb_files?.find(f => f.document_name === docName)
     const [localFile, setLocalFile] = useState(null)
 
@@ -25,11 +25,11 @@ const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, 
         }
     }
 
-    if (userDetails?.kyb_verification_paid) {
+    if (userDetails?.kyb_verification_paid || isReadOnly) {
         return (
             <div style={{ display: 'flex', alignItems: 'center', gap: '.7rem', fontSize: '1rem', fontWeight: 500 }}>
                 <CheckCircle color='green' />
-                {checkFileStatus(docName)?.status?.toUpperCase()}
+                {checkFileStatus(docName)?.status?.toUpperCase() || "UPLOADED"}
             </div>
         )
     }
@@ -48,7 +48,7 @@ const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, 
                     Selected: {localFile.name}
                 </div>
             )}
-            <Input type='file' name={docName} onChange={handleFileChange} style={{ maxWidth: 300 }} />
+            {!isReadOnly && <Input type='file' name={docName} onChange={handleFileChange} style={{ maxWidth: 300 }} />}
             {existingFile && !localFile && (
                 <small style={{ color: '#888' }}>Choose a new file to replace the existing one.</small>
             )}
@@ -56,7 +56,7 @@ const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, 
     )
 }
 
-const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => {
+const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isReadOnly }) => {
     const [modalOne, setModalOne] = useState(false)
     const [modalTwo, setModalTwo] = useState(false)
     const [modalThree, setModalThree] = useState(false)
@@ -76,6 +76,7 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => 
                         setCompanyFileNames={setCompanyFileNames}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
+                        isReadOnly={isReadOnly}
                     />
                 </FormGroup>
                 <Modal isOpen={modalOne} toggle={() => setModalOne(!modalOne)} style={{ minWidth: "60vw" }}>
@@ -127,6 +128,7 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => 
                         setCompanyFileNames={setCompanyFileNames}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
+                        isReadOnly={isReadOnly}
                     />
                 </FormGroup>
                 <Modal isOpen={modalTwo} toggle={() => setModalTwo(!modalTwo)} style={{ minWidth: "60vw" }}>
@@ -178,6 +180,7 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => 
                         setCompanyFileNames={setCompanyFileNames}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
+                        isReadOnly={isReadOnly}
                     />
                 </FormGroup>
                 <Modal isOpen={modalThree} toggle={() => setModalThree(!modalThree)} style={{ minWidth: "60vw" }}>
@@ -222,6 +225,7 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => 
                         setCompanyFileNames={setCompanyFileNames}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
+                        isReadOnly={isReadOnly}
                     />
                 </FormGroup>
                 <Modal isOpen={modalFour} toggle={() => setModalFour(!modalFour)} style={{ minWidth: "60vw" }}>
@@ -247,6 +251,7 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => 
                         setCompanyFileNames={setCompanyFileNames}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
+                        isReadOnly={isReadOnly}
                     />
                 </FormGroup>
                 <Modal isOpen={modalFive} toggle={() => setModalFive(!modalFive)} style={{ minWidth: "60vw" }}>
@@ -286,6 +291,7 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus }) => 
                         setCompanyFileNames={setCompanyFileNames}
                         userDetails={userDetails}
                         checkFileStatus={checkFileStatus}
+                        isReadOnly={isReadOnly}
                     />
                 </FormGroup>
                 <Modal isOpen={modalSix} toggle={() => setModalSix(!modalSix)} style={{ minWidth: "60vw" }}>
