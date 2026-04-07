@@ -289,6 +289,10 @@ const KYB = () => {
         return companyType?.name?.toLowerCase()?.includes("ngos") ? 6 : companyType?.name?.toLowerCase()?.includes("sole") ? 3 : 5
     }, [companyType])
 
+    const isReadOnly = useMemo(() => {
+        return userDetails?.company?.kyb_status === "approved"
+    }, [userDetails])
+
     console.log(partners)
     return (
         <Card>
@@ -306,10 +310,12 @@ const KYB = () => {
                             padding: "5px 10px",
                             fontSize: ".7rem",
                             borderRadius: "5px"
-                        }} onClick={(e) => {
-                            e.stopPropagation()
-                            setShowAdditionalModal(!showAdditionalModal)
-                        }}>Additional Files</Button>
+                        }}
+                            disabled={isReadOnly}
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                setShowAdditionalModal(!showAdditionalModal)
+                            }}>Additional Files</Button>
                     }
                 </div>
             </CardHeader>
@@ -320,29 +326,29 @@ const KYB = () => {
             }
             <CardBody style={{ display: "flex", flexDirection: "column" }}>
                 {
-                    userDetails?.company?.kyb_status !== "verified"
+                    (userDetails?.company?.kyb_status !== "verified")
                     &&
                     <>
                         <h4 className='text-center'>{t(companyType?.name)}</h4>
                         {
                             companyType?.name?.toLowerCase()?.includes("private")
                             &&
-                            <PrivateCompanyDocs setCompanyFiles={setCompanyFiles} setCompanyFileNames={setCompanyFileNames} checkFileStatus={checkFileStatus} />
+                            <PrivateCompanyDocs setCompanyFiles={setCompanyFiles} setCompanyFileNames={setCompanyFileNames} checkFileStatus={checkFileStatus} isReadOnly={isReadOnly} />
                         }
                         {
                             companyType?.name?.toLowerCase()?.includes("publicly")
                             &&
-                            <PubliclyTradedCompanyDocs setCompanyFiles={setCompanyFiles} setCompanyFileNames={setCompanyFileNames} checkFileStatus={checkFileStatus} />
+                            <PubliclyTradedCompanyDocs setCompanyFiles={setCompanyFiles} setCompanyFileNames={setCompanyFileNames} checkFileStatus={checkFileStatus} isReadOnly={isReadOnly} />
                         }
                         {
                             companyType?.name?.toLowerCase()?.includes("ngos")
                             &&
-                            <NgosDocs setCompanyFiles={setCompanyFiles} setCompanyFileNames={setCompanyFileNames} checkFileStatus={checkFileStatus} />
+                            <NgosDocs setCompanyFiles={setCompanyFiles} setCompanyFileNames={setCompanyFileNames} checkFileStatus={checkFileStatus} isReadOnly={isReadOnly} />
                         }
                         {
                             companyType?.name?.toLowerCase()?.includes("sole")
                             &&
-                            <SoleTradedDocs setCompanyFiles={setCompanyFiles} setCompanyFileNames={setCompanyFileNames} checkFileStatus={checkFileStatus} />
+                            <SoleTradedDocs setCompanyFiles={setCompanyFiles} setCompanyFileNames={setCompanyFileNames} checkFileStatus={checkFileStatus} isReadOnly={isReadOnly} />
                         }
 
 
@@ -356,6 +362,7 @@ const KYB = () => {
                                 name="Registration Number"
                                 value={registrationNum}
                                 onChange={e => setRegistrationNum(e.target.value)}
+                                disabled={isReadOnly}
                             />
                         </FormGroup>
                         <FormGroup>
@@ -367,6 +374,7 @@ const KYB = () => {
                                 name="Taxation Id"
                                 value={taxId}
                                 onChange={e => setTaxId(e.target.value)}
+                                disabled={isReadOnly}
                             />
                         </FormGroup>
                         <FormGroup>
@@ -380,6 +388,7 @@ const KYB = () => {
                                 className="form-control custom-datepicker"
                                 clearable
                                 autoOk
+                                disabled={isReadOnly}
                                 style={{
                                     background: "#fff",
                                     border: "1px solid #e9e9e9",
@@ -393,7 +402,7 @@ const KYB = () => {
                                 InputProps={{
                                     disableUnderline: true,
                                     style: {
-                                        background: userDetails?.company?.kyb_status === "verified" ? "#e9ecef" : '#fff',
+                                        background: isReadOnly ? "#e9ecef" : '#fff',
                                         border: 'none',
                                         boxShadow: 'none',
                                         padding: '0 10px',
@@ -403,7 +412,7 @@ const KYB = () => {
                                 }}
                                 inputProps={{
                                     style: {
-                                        background: userDetails?.company?.kyb_status === "verified" ? "#e9ecef" : '#fff',
+                                        background: isReadOnly ? "#e9ecef" : '#fff',
                                         border: 'none',
                                         boxShadow: 'none',
                                         padding: '2px 0px',
@@ -423,9 +432,9 @@ const KYB = () => {
                                 background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                                 border: "none",
                                 outline: "none"
-                            }} 
-                            disabled={userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved"}
-                            onClick={() => setShowAddModal(!showAddModal)}>Add New Director</Button>
+                            }}
+                                disabled={userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved"}
+                                onClick={() => setShowAddModal(!showAddModal)}>Add New Director</Button>
                             <Modal isOpen={showAddModal} toggle={() => setShowAddModal(!showAddModal)}>
                                 <ModalHeader toggle={() => setShowAddModal(!showAddModal)}>
                                     {t("Add New Director")}
@@ -497,7 +506,7 @@ const KYB = () => {
                             outline: "none",
                             alignSelf: "flex-end "
                         }}
-                        disabled={isUploading || compnanyFiles?.length === 0 || partners?.length === 0 || !taxId || !dateOfI || !registrationNum || compnanyFileNames.length < requiredFilesLength}
+                        disabled={isReadOnly || isUploading || compnanyFiles?.length === 0 || partners?.length === 0 || !taxId || !dateOfI || !registrationNum || compnanyFileNames.length < requiredFilesLength}
                         onClick={uploadKybFiles}
                     >{t("Submit")}</Button>
                 }

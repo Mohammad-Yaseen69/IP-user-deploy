@@ -15,6 +15,8 @@ import { useNavigate } from "react-router"
 import SocialModal from "../ShareBtn/SocialModal"
 import copy from "./copy.png"
 import InstructionsModal from "./InstructionModal"
+import { Toggle } from "../MyMasterCard/CardPurchased"
+import { ChevronDown } from "react-feather"
 
 const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh, authHeader, defaultWal, showTooltip, setShowTooltip, setCurrentWallet }) => {
     const { t } = useTranslation()
@@ -33,9 +35,9 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
         setDescription(currentWallet?.qrCode?.description ?? "")
     }, [currentWallet])
 
-    const updateQr = (setter, type) => {
+    const updateQr = (setter, type = () => { }) => {
         setSaving(true)
-    
+
         const data = {
             title,
             description,
@@ -53,11 +55,10 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
                 const decrypted = decryptData(res.data.data)
                 type(false)
                 setCurrentWallet(currentWallet)
-                setter(decrypted?.walletDetails?.qrCode?.status === "false" ? false : true)
-                console.log(generalQRactive)
+                setGeneralQRactive(!generalQRactive)
             })
             .catch(err => {
-                const decrypted = decryptData(err.response.data.data)
+                const decrypted = decryptData(err.response?.data?.data)
                 console.log(decrypted)
             })
             .finally(() => {
@@ -85,19 +86,24 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
             <div className={styles.top}>
                 <div className={styles.top_layer}>
                     <div className={styles.left}>
-                        <Input type="select" value={currency} onChange={e => {
-                            setCurrency(e.target.value)
-                            const wallet = userWallets?.find(item => item?.currency?.code === e.target.value)
-                            setCurrentWallet(wallet)
-                        }} className={styles.dropdown}>
-                            {
-                                userWallets?.filter(item => item?.wallet_type === "insta" && item?.status && !item?.blocked && !item?.admin_blocked && !item?.blocker)?.map(item => (
-                                    <option value={item?.currency?.code} style={{ fontSize: "1rem", fontWeight: 900, display: currency === item?.currency?.code ? "none" : "inherit" }}>
-                                        {item?.currency?.code}  ({item?.currency?.code} )
-                                    </option>
-                                ))
-                            }
-                        </Input>
+                        <div className={styles.dropdown}>
+                            <Input type="select" value={currency} onChange={e => {
+                                setCurrency(e.target.value)
+                                const wallet = userWallets?.find(item => item?.currency?.code === e.target.value)
+                                setCurrentWallet(wallet)
+                            }} >
+                                {
+                                    userWallets?.filter(item => item?.wallet_type === "insta" && item?.status && !item?.blocked && !item?.admin_blocked && !item?.blocker)?.map((item, idx) => (
+                                        <option key={idx} value={item?.currency?.code} style={{ fontSize: "1rem", fontWeight: 900, display: currency === item?.currency?.code ? "none" : "inherit" }}>
+                                            {item?.currency?.code}  ({item?.currency?.code} )
+                                        </option>
+                                    ))
+                                }
+                            </Input>
+
+                            <ChevronDown size={20} style={{marginLeft: "-10px"}} />
+
+                        </div>
                         <h5 style={{ marginBottom: 0 }}>{currency} {t("Wallet QR")}</h5>
                         <p style={{ marginTop: ".5rem", marginBottom: 0 }}>{currentWallet?.qrCode?.description ?? ""}</p>
                         <div className={styles.tl_bot}>
@@ -107,13 +113,7 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
                             </Button>
                             <div className={styles.qr_status}>
                                 <span>{t("QR Code Status")}</span>
-                                <div
-                                    className={`${styles.switch} ${generalQRactive ? styles.disabled : ""}`}
-                                    onClick={(e) => {
-                                        updateQr(setGeneralQRactive)
-                                    }}>
-                                    <div className={`${styles.thumb} ${generalQRactive ? styles.active : ""}`}></div>
-                                </div>
+                                <Toggle bottom={'0'} disabled={saving} checked={generalQRactive} onChange={() => updateQr(setGeneralQRactive)} />
                             </div>
                         </div>
                     </div>

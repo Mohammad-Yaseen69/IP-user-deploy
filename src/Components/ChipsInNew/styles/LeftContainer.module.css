@@ -26,9 +26,16 @@
     flex: 1;
 }
 
+.left .dropdown {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    width: fit-content;
+    border-radius: 13.413px;
+}
+
 .left select,
 .left select option {
-    border-radius: 13.413px;
     background: #FFF;
     color: #5926f0;
     leading-trim: both;
@@ -39,6 +46,7 @@
     font-weight: 800;
     line-height: normal;
     width: fit-content;
+    border: none;
 }
 
 .left h5 {

@@ -20,6 +20,20 @@ import ha from "./translations/ha.json"
 import hi from "./translations/hi.json"
 import cn from "./translations/cn.json"
 import ur from "./translations/ur.json"
+import ro from "./translations/ro.json"
+import cs from "./translations/cs.json"
+import bg from "./translations/bg.json"
+import lt from "./translations/lt.json"
+import hu from "./translations/hu.json"
+import el from "./translations/el.json"
+import sv from "./translations/sv.json"
+import no from "./translations/no.json"
+import da from "./translations/da.json"
+import fi from "./translations/fi.json"
+import az from "./translations/az.json"
+import uz from "./translations/uz.json"
+import ka from "./translations/ka.json"
+import hy from "./translations/hy.json"
 
 i18n
   .use(LanguageDetector)
@@ -83,17 +97,36 @@ i18n
       },
       ur: {
         translations: ur
-      }
+      },
+      ro: { translations: ro },
+      cs: { translations: cs },
+      bg: { translations: bg },
+      lt: { translations: lt },
+      hu: { translations: hu },
+      el: { translations: el },
+      sv: { translations: sv },
+      no: { translations: no },
+      da: { translations: da },
+      fi: { translations: fi },
+      az: { translations: az },
+      uz: { translations: uz },
+      ka: { translations: ka },
+      hy: { translations: hy },
+
     },
-    lng: "en",
+    // lng: "en",
     fallbackLng: "en",
     debug: false,
+    detection: {
+      order: ["localStorage", "navigator"], 
+      lookupLocalStorage: "i18nextLng",
+      cacheUserLanguage: false,
+    },
 
-    // have a common namespace used around the full app
     ns: ["translations"],
     defaultNS: "translations",
 
-    keySeparator: false, // we use content as keys
+    keySeparator: false,
 
     interpolation: {
       escapeValue: false,

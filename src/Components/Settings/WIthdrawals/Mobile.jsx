@@ -38,8 +38,7 @@ const Mobile = ({ values, changeHandler, isEditMode, payers, country, payerLoadi
 
         console.log(CountryBasedPhone[country.alpha3]?.maxLength)
         if (input.length > CountryBasedPhone[country.alpha3]?.maxLength) {
-            e.preventDefault()
-            return;
+            return null;
         }
         return input
     };
@@ -105,15 +104,21 @@ const Mobile = ({ values, changeHandler, isEditMode, payers, country, payerLoadi
                                             </div>
 
                                             <input
-                                                value={values.mobile_wallet_account_number}
-                                                type="tel"
+                                                value={values.mobile_wallet_account_number?.replace(
+                                                    CountryBasedPhone[country.alpha3]?.dial_code?.replace("+", ""), ""
+                                                ) || ""} type="tel"
                                                 disabled={!isEditMode}
                                                 placeholder="Wallet Number"
                                                 style={{ border: 'none', background: 'transparent', fontWeight: 600 }}
                                                 onChange={(e) => {
                                                     const inp = handleChange(e)
-                                                    changeHandler({ target: { value: inp, name: "mobile_wallet_account_number" } })
-                                                    if (userWithdrawals?.some((item, idx) => item?.mobile_wallet?.[0]?.wallet_account_number === inp && idx !== index) && userWithdrawals?.some((item, idx) => item?.mobile_wallet?.[0]?.money_provider === values.mobile_money_provider && idx !== index)) {
+                                                    if (inp === null || inp === undefined) return; 
+
+                                                    const dialCode = CountryBasedPhone[country.alpha3]?.dial_code?.replace("+", "")
+                                                    changeHandler({ target: { value: `${dialCode}${inp}`, name: "mobile_wallet_account_number" } })
+
+                                                    if (userWithdrawals?.some((item, idx) => item?.mobile_wallet?.[0]?.wallet_account_number === inp && idx !== index) &&
+                                                        userWithdrawals?.some((item, idx) => item?.mobile_wallet?.[0]?.money_provider === values.mobile_money_provider && idx !== index)) {
                                                         setBankError("You can't add same withdrawal twice.")
                                                     } else {
                                                         setBankError("")

@@ -61,7 +61,9 @@ const TransDetails = ({ selectedWallet }) => {
                 setData([
                     {
                         name: "Number of Transactions",
-                        value: Number(currentData?.totalTransactions)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? 0.00
+                        value: (() => {
+                            const transactions = Number(currentData?.totalTransactions);
+                            return !isNaN(transactions) ? transactions.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"; })()
                     },
                     {
                         name: "Total Transaction Amount",
