@@ -17,6 +17,12 @@ import ReceivedTransactionItem from "./ReceivedTransactionItem";
 import InstaPayLoader from "../Loader";
 import SentItem from "./Mobile/SentItem";
 import ReceivedItem from "./Mobile/ReceivedItem";
+import { useQuery } from "@tanstack/react-query";
+const fetchTransactions = async (url, authHeader) => {
+    const res = await axios.get(url, { headers: authHeader });
+    const decrypted = decryptData(res.data.data);
+    return decrypted.data;
+};
 
 const TransactionsTable = () => {
     const { t } = useTranslation()
@@ -49,12 +55,10 @@ const TransactionsTable = () => {
 
     const [searchQuery, setSearchQuery] = useState("")
     const [apiDates, setApiDates] = useState(null)
-    const [sentPayments, setSentPayments] = useState([])
-    const [receivedPayments, setReceivedPayments] = useState([])
+
     const { userDetails, authHeader } = useContext(UserContext);
     const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
     const [debounceTimer, setDebounceTimer] = useState(null);
-    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         if (searchQuery !== debouncedSearchQuery) {
@@ -107,74 +111,130 @@ const TransactionsTable = () => {
         },
     ]
 
-    useEffect(() => {
-        let isMounted = true;
+    // useEffect(() => {
+    //     let isMounted = true;
 
-        const fetchData = async () => {
+    //     const fetchData = async () => {
+    //         try {
+    //             if (userDetails) {
+    //                 const source = axios.CancelToken.source();
+
+    //                 const handleRequest = async (url, setDataCallback) => {
+    //                     try {
+    //                         const res = await axios.get(url, {
+    //                             headers: authHeader,
+    //                             cancelToken: source.token,
+    //                         });
+
+    //                         const decrypted = decryptData(res.data.data);
+    //                         if (isMounted) {
+    //                             setDataCallback((prev) => [...prev, ...decrypted.data]);
+    //                         }
+    //                         console.log(decrypted);
+    //                     } catch (err) {
+    //                         const decrypted = decryptData(err.response.data.data);
+    //                         // console.log(decrypted);
+    //                     }
+    //                 };
+
+    //                 await Promise.all([
+    //                     handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/subcribe-payment-request-w2w/${userDetails._id}`, setSentPayments),
+    //                     handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/schedule-payment-request-w2w/${userDetails._id}`, setSentPayments),
+    //                     handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/subcribe-payment-w2w/${userDetails._id}`, setReceivedPayments),
+    //                     handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/schedule-payment-w2w/${userDetails._id}`, setReceivedPayments),
+    //                 ]);
+    //             }
+    //         } catch (error) {
+    //             console.error('Error fetching data:', error);
+    //         }
+    //         finally {
+    //             setIsLoading(false)
+    //         }
+    //     };
+
+    //     fetchData();
+
+    //     return () => {
+    //         isMounted = false;
+    //     };
+    // }, [userDetails]);
+    const { data: sentPayments = [], isLoading: loadingSent } = useQuery({
+        queryKey: ["sentPayments", userDetails?._id],
+        queryFn: async () => {
+            if (!userDetails?._id) return [];
+            const results = [];
+
             try {
-                if (userDetails) {
-                    const source = axios.CancelToken.source();
-
-                    const handleRequest = async (url, setDataCallback) => {
-                        try {
-                            const res = await axios.get(url, {
-                                headers: authHeader,
-                                cancelToken: source.token,
-                            });
-
-                            const decrypted = decryptData(res.data.data);
-                            if (isMounted) {
-                                setDataCallback((prev) => [...prev, ...decrypted.data]);
-                            }
-                            console.log(decrypted);
-                        } catch (err) {
-                            const decrypted = decryptData(err.response.data.data);
-                            // console.log(decrypted);
-                        }
-                    };
-
-                    await Promise.all([
-                        handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/subcribe-payment-request-w2w/${userDetails._id}`, setSentPayments),
-                        handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/schedule-payment-request-w2w/${userDetails._id}`, setSentPayments),
-                        handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/subcribe-payment-w2w/${userDetails._id}`, setReceivedPayments),
-                        handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/schedule-payment-w2w/${userDetails._id}`, setReceivedPayments),
-                    ]);
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
+                const subReq = await fetchTransactions(
+                    `${import.meta.env.VITE_IP_DEV_API}/api/wallet/subcribe-payment-request-w2w/${userDetails._id}`,
+                    authHeader
+                );
+                results.push(...subReq);
+            } catch (err) {
+                console.log("subcribe-payment-request-w2w failed", err.response?.data || err);
             }
-            finally {
-                setIsLoading(false)
+
+            try {
+                const scheduleReq = await fetchTransactions(
+                    `${import.meta.env.VITE_IP_DEV_API}/api/wallet/schedule-payment-request-w2w/${userDetails._id}`,
+                    authHeader
+                );
+                results.push(...scheduleReq);
+            } catch (err) {
+                console.log("schedule-payment-request-w2w failed", err.response?.data || err);
             }
-        };
 
-        fetchData();
+            return results;
+        },
+        enabled: !!userDetails?._id,
+    });
+    const { data: receivedPayments = [], isLoading: loadingReceived } = useQuery({
+        queryKey: ["receivedPayments", userDetails?._id],
+        queryFn: async () => {
+            if (!userDetails?._id) return [];
+            const results = [];
 
-        return () => {
-            isMounted = false;
-        };
-    }, [userDetails]);
+            try {
+                const subPayment = await fetchTransactions(
+                    `${import.meta.env.VITE_IP_DEV_API}/api/wallet/subcribe-payment-w2w/${userDetails._id}`,
+                    authHeader
+                );
+                results.push(...subPayment);
+            } catch (err) {
+                console.log("subcribe-payment-w2w failed", err.response?.data || err);
+            }
 
+            try {
+                const schedulePayment = await fetchTransactions(
+                    `${import.meta.env.VITE_IP_DEV_API}/api/wallet/schedule-payment-w2w/${userDetails._id}`,
+                    authHeader
+                );
+                results.push(...schedulePayment);
+            } catch (err) {
+                console.log("schedule-payment-w2w failed", err.response?.data || err);
+            }
+
+            return results;
+        },
+        enabled: !!userDetails?._id,
+    });
+
+    const isLoading = loadingSent || loadingReceived;
     const transsactions = useMemo(() => {
+        const all = [...sentPayments, ...receivedPayments];
+
         if (active === "All") {
-            console.log([...sentPayments, ...receivedPayments] ?? [])
-            return [...sentPayments, ...receivedPayments] ?? []
+            return all ?? []
         }
-        else if (active === "Schedule Payments") {
-            console.log([...sentPayments, ...receivedPayments].filter(item => !item?.recursive) ?? [])
-            return [...sentPayments, ...receivedPayments].filter(item => !item?.recursive) ?? []
-        }
-        else {
-            console.log([...sentPayments, ...receivedPayments].filter(item => item?.recursive) ?? [])
-            return [...sentPayments, ...receivedPayments].filter(item => item?.recursive) ?? []
-        }
-    }, [sentPayments, receivedPayments, active])
+        if (active === "Schedule Payments") return all.filter(item => !item?.recursive);
+        return all.filter(item => item?.recursive);
+    }, [sentPayments, receivedPayments, active]);
 
     return (
         <div className={styles.table}>
             <div className={styles.menu}>
                 <div className={styles.right}>
-                    
+
                     {
                         menuData.map(item => (
                             <div key={item.id} style={{

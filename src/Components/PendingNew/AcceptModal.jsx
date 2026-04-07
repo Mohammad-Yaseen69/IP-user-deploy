@@ -13,6 +13,7 @@ import InstaPayLoader from '../Loader'
 import { Link } from 'react-router-dom'
 import { LimitsErrorMessage } from '../PaymentsNewer/OTPConfirmation'
 import ErrorModal from '../PaymentsNewer/InternationalFlow/ErrorModal'
+import { useQueryClient } from '@tanstack/react-query'
 
 const AcceptModal = ({ isOpen, toggle, item }) => {
     const { userWallets, authHeader, userDetails, verifyToken } = useContext(UserContext)
@@ -25,6 +26,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
     const [showOtp, setShowOtp] = useState(false)
     const [codeType, setCodeType] = useState("sms")
     const [error, setError] = useState("")
+    const queryClient = useQueryClient()
 
     useEffect(() => {
         setCodeType(userDetails?.tfa ? "authenticator" : "sms")
@@ -60,6 +62,8 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
             // console.log(dec)
             setShowOtp(true)
             setToken(dec?.token)
+            await queryClient.invalidateQueries({ queryKey: ['receivedPaymentRequests', userDetails?._id] })
+            await queryClient.invalidateQueries({ queryKey: ['sentPaymentRequests', userDetails?._id] })
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
             // console.log(dec)

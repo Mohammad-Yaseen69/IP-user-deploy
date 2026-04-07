@@ -25,6 +25,7 @@ import { toast } from "react-toastify";
 import { createShambeToken } from "../../../Helper/CreateToken";
 import NotFoundModal from "../../NotFound/NotFoundModal";
 import { apiErrorMessage } from "../../PaymentsNewer/InternationalFlow";
+import { useQueryClient } from "@tanstack/react-query";
 
 const initialState = {
     step: 1,
@@ -84,6 +85,8 @@ const headings = [
 
 const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
     const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
     const [data, dispatch] = useReducer(reducer, initialState);
     const { userWallets, userDetails, authHeader, setProfileLockTime, verifyToken } = useContext(UserContext)
     const navigate = useNavigate()
@@ -475,6 +478,8 @@ const SubscriptionPaymentFlow = ({ item, toggle, isOpen }) => {
 
             const dec = decryptData(res.data.data)
             dataHandler("verified", true)
+            queryClient.invalidateQueries(["sentPayments"]);
+            queryClient.invalidateQueries(["receivedPayments"]);
         } catch (err) {
             console.log(err)
             const decrypted = decryptData(err.response.data.data)

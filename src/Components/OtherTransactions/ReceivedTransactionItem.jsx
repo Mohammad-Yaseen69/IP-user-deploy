@@ -10,7 +10,7 @@ import SubscriptionDetails from "./SubscriptionDetails.jsx"
 import { useTranslation } from "react-i18next"
 
 
-export const cancelSubscriptionOrSchedulePayment = async (item, authHeader, refetchMethod) => {
+export const cancelSubscriptionOrSchedulePayment = async (item, authHeader, refetchMethod, queryClient) => {
     // if (item?.recursive) {
     //     toast.info("Still in development.")
     // } else {
@@ -22,6 +22,9 @@ export const cancelSubscriptionOrSchedulePayment = async (item, authHeader, refe
         // console.log(dec)
         toast.success(dec?.message)
         refetchMethod()
+        queryClient.invalidateQueries(["sentPayments"]);
+        queryClient.invalidateQueries(["receivedPayments"]);
+
     } catch (error) {
         const decrypted = decryptData(error?.response?.data?.data)
         // console.log(decrypted)

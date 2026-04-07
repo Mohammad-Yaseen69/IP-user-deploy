@@ -1,31 +1,28 @@
-import { useTranslation } from "react-i18next";
-import styles from "../TransactionsNewApi/styles/index.module.scss"
-import TopRight from "../topRight";
-import calendar from "../TransactionsNewApi/files/calendar.png"
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Search } from "react-feather";
+import { useTranslation } from "react-i18next";
 import { Input } from "reactstrap";
-import TransactionItem from "../TransactionsNewApi/TransactionItem";
-import all_white from "../TransactionsNewApi/files/all_white.png"
-import all_grey from "../TransactionsNewApi/files/all_grey.png"
-import sent_white from "../TransactionsNewApi/files/sent_white.png"
-import sent_grey from "../TransactionsNewApi/files/sent_grey.png"
-import received_white from "../TransactionsNewApi/files/received_white.png"
-import received_grey from "../TransactionsNewApi/files/received_grey.png"
+import calendar from "../TransactionsNewApi/files/calendar.png";
+import received_grey from "../TransactionsNewApi/files/received_grey.png";
+import received_white from "../TransactionsNewApi/files/received_white.png";
+import sent_grey from "../TransactionsNewApi/files/sent_grey.png";
+import sent_white from "../TransactionsNewApi/files/sent_white.png";
+import styles from "../TransactionsNewApi/styles/index.module.scss";
+import TopRight from "../topRight";
 // import requested_white from "./files/requested_white.png"
 // import requested_grey from "./files/requested_grey.png"
 // import quoted_white from "./files/quoted_white.png"
 // import quoted_grey from "./files/quoted_grey.png"
-import { DateRangePicker } from "react-date-range";
-import { UserContext } from "../../Context/UserContext";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { DateRangePicker } from "react-date-range";
+import { useLocation } from "react-router";
+import { UserContext } from "../../Context/UserContext";
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
-import PendingItem from "./PendingItem";
 import InstaPayLoader from "../Loader";
-import { useLocation } from "react-router";
 import ItemMobile from "./ItemMobile";
-
+import PendingItem from "./PendingItem";
 const PendingNew = () => {
     const { t } = useTranslation()
     const [active, setActive] = useState("Received Requests")
@@ -71,53 +68,58 @@ const PendingNew = () => {
         };
     }, [handleClickOutside]);
 
-    const [receivedRequests, setReceivedRequests] = useState([])
-    const [sentRequests, setSentRequests] = useState([])
+
     const [searchQuery, setSearchQuery] = useState("")
     const [apiDates, setApiDates] = useState(null)
     const [page, setPage] = useState(1);
     const { userDetails, authHeader } = useContext(UserContext);
     const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
     const [debounceTimer, setDebounceTimer] = useState(null);
-    const [isLoading, setIsLoading] = useState(true)
 
-    useEffect(() => {
-        setIsLoading(true)
-        if (userDetails) {
-            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/get-user-receive-payment-request/${userDetails._id}`, {
-                headers: authHeader
-            })
-                .then(res => {
-                    const decrypted = decryptData(res.data.data)
-                    setReceivedRequests(decrypted.paymentRequests)
-                    setIsLoading(false)
-                    // console.log(decrypted.paymentRequests)
-                })
-                .catch(err => {
-                    setIsLoading(false)
-                    // console.log(decryptData(err.response.data.data))
-                })
-        }
-    }, [userDetails])
-    useEffect(() => {
-        setIsLoading(true)
-        if (userDetails) {
-            axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/get-user-send-payment-request/${userDetails._id}`, {
-                headers: authHeader
-            })
-                .then(res => {
-                    const decrypted = decryptData(res.data.data)
-                    setSentRequests(decrypted.paymentRequests)
-                    setIsLoading(false)
-                })
-                .catch(err => {
-                    // console.log(decryptData(err.response.data.data))
-                    setIsLoading(false)
-                })
-        }
-    }, [userDetails])
+    const {
+        data: receivedRequests = [],
+        isLoading: isLoadingReceived,
+        isError: isErrorReceived,
+        error: receivedError
+    } = useQuery({
+        queryKey: ['receivedPaymentRequests', userDetails?._id],
+        queryFn: async () => {
+            try {
+                const res = await axios.get(
+                    `${import.meta.env.VITE_IP_DEV_API}/api/account/get-user-receive-payment-request/${userDetails?._id}`,
+                    { headers: authHeader }
+                )
+                const decrypted = await decryptData(res.data.data)
+                return decrypted?.paymentRequests ?? []
+            } catch (err) {
+                throw new Error(err.response?.data?.message || "Failed to fetch received requests")
+            }
+        },
+        enabled: !!userDetails?._id
 
+    })
 
+    const {
+        data: sentRequests = [],
+        isLoading: isLoadingSent,
+        isError: isErrorSent,
+        error: sentError
+    } = useQuery({
+        queryKey: ['sentPaymentRequests', userDetails?._id],
+        queryFn: async () => {
+            try {
+                const res = await axios.get(
+                    `${import.meta.env.VITE_IP_DEV_API}/api/account/get-user-send-payment-request/${userDetails?._id}`,
+                    { headers: authHeader }
+                )
+                const decrypted = await decryptData(res.data.data)
+                return decrypted?.paymentRequests ?? []
+            } catch (err) {
+                throw new Error(err.response?.data?.message || "Failed to fetch sent requests")
+            }
+        },
+        enabled: !!userDetails?._id
+    })
     useEffect(() => {
         if (searchQuery !== debouncedSearchQuery) {
             if (debounceTimer) {
@@ -193,7 +195,6 @@ const PendingNew = () => {
     }, []);
 
 
-    // updating states as per url
     useEffect(() => {
         if (tab === "sent" && sentRequests.length > 0) {
             if (currentIndex) {
@@ -242,6 +243,8 @@ const PendingNew = () => {
         lastShown()
 
     }, [filteredReceived, userDetails])
+
+    const isLoading = isLoadingReceived || isLoadingSent
     return (
         <>
             <div className={styles.container}>

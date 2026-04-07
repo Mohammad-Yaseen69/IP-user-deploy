@@ -23,9 +23,15 @@ reviews:
         - Undefined or null access without optional chaining (e.g., wallet.wallet_id instead of wallet?.wallet_id)
         - API calls inside useEffect without proper dependency arrays — flag infinite loop risks
         - Missing error handling in axios calls (no .catch or try/catch)
+<<<<<<< Updated upstream
         - Sensitive data (API keys, tokens, secrets) hardcoded or logged to console
         - console.log or console.error left in production code
         - Encrypted/decrypted data logged to console
+=======
+        # - Sensitive data (API keys, tokens, secrets) hardcoded or logged to console
+        # - console.log or console.error left in production code
+        # - Encrypted/decrypted data logged to console
+>>>>>>> Stashed changes
         - GET requests used where POST is required (e.g., sending body data via GET)
         - Missing loading/error state resets before new API calls
         - Any critical business logic that has obvious bugs
@@ -53,8 +59,13 @@ reviews:
 
         ## ✅ Security Checks
         - User input used directly in API URLs without sanitization
+<<<<<<< Updated upstream
         - Auth tokens exposed in error logs
         - Decrypted sensitive response data logged to console
+=======
+        # - Auth tokens exposed in error logs
+        # - Decrypted sensitive response data logged to console
+>>>>>>> Stashed changes
         - Hardcoded usernames used for feature flags (suggest proper role/permission system)
 
         ## ⚛️ React Specific Rules
