@@ -68,7 +68,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
         })
         return map
     }, [])
-    const isExtendedPage = pathname.includes("/payment-address") || pathname.includes("/invoices")
+    const isExtendedPage = /^\/pay\/[^/]+$/.test(pathname) || /^\/invoice\/[^/]+\/[^/]+$/.test(pathname);
     const newLangs = ["ro", "bg", "lt", "cs", "hr", "et", "lv", "hu", "el", "sv", "no", "da", "fi", "az", "uz", "ka", "hy"]
     // const filtered = countries.filter(it => languageCountries.some(item => item.name === "India" ? it.name === item.name : it.name.includes(item.name))).map(coun => {
     const filtered = countries
@@ -243,7 +243,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
             return
         }
 
-        if (countryLoading) return 
+        if (countryLoading) return
 
         if (userCountryLocation) {
             const detectedLang = countryLangMap[userCountryLocation] || 'en'
@@ -258,14 +258,14 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
         setCurrentLang('en')
         localStorage.setItem("i18nextLng", 'en')
 
-    }, [userDetails?.language, userCountryLocation, countryLoading])  // ← countryLoading add karo
+    }, [userDetails?.language, userCountryLocation, countryLoading])  
     useEffect(() => {
         const handlePosition = () => {
             const dropdown = dropdownRef.current
             if (!dropdown) return
             const rect = dropdown.getBoundingClientRect()
             const windowHeight = window.innerHeight
-            const dropdownHeight = 500 // or whatever your dropdown’s max height is
+            const dropdownHeight = 500 
             const shouldOpenUp = rect.bottom + dropdownHeight > windowHeight
             setOpenUp(shouldOpenUp)
         }
@@ -297,7 +297,6 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
                         flex: 1,
                         background: backgroundWhite && 'white',
                         zIndex: backgroundWhite && 999,
-                        // when on small screens and user has dragged the compact control, move the dropdown to match
                         transform: window.innerWidth < 1000 ? `translateY(${translateY}px)` : undefined,
                         transition: window.innerWidth < 1000 ? 'transform 120ms linear' : undefined,
                     }} className={styles.active}>
