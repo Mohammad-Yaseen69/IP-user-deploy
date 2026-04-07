@@ -90,7 +90,6 @@ const QuotationSentItem = ({ item, activeItem, setActiveItem, index }) => {
                 />
             }
 
-            {/* revise */}
             {
                 showReviseModal
                 &&
@@ -103,7 +102,6 @@ const QuotationSentItem = ({ item, activeItem, setActiveItem, index }) => {
                 />
             }
 
-            {/* cancel Modal */}
             {
                 showDeleteModal
                 &&

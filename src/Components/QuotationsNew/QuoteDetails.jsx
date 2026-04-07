@@ -138,7 +138,7 @@ const QuoteDetails = ({ item, type = "receive" }) => {
                     <span>{t("Attached Files")}</span>
                     <div className={styles.files_count}>
                         <img src={file} alt="" />
-                        <span>{item?.images?.length} File</span>
+                        <span>{item?.images?.length} {t("File")}</span>
                     </div>
                     {
                         item?.images && item?.images?.length > 0

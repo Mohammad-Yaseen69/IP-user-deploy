@@ -16,18 +16,20 @@ import paym_styles from "../PaymentsNewer/InternationalFlow/styles/index.module.
 import recent from "../PaymentsNewer/Mobile/files/recent.svg"
 import success from "../PaymentsNewer/InternationalFlow/files/success.gif"
 import { capitalizeStatus } from "../PendingNew/ItemMobile"
+import { useQueryClient } from "@tanstack/react-query"
 
 const counterTypes = ["10", "25", "50", "75", "Custom Amount"];
 let timeout;
 
 const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor = "" }) => {
     const { t } = useTranslation()
-    const { authHeader, verifyToken } = useContext(UserContext)
+    const { authHeader, verifyToken, userDetails } = useContext(UserContext)
     const [saving, setSaving] = useState(false)
     const [step, setStep] = useState(1)
     const [counterType, setCounterType] = useState("")
     const [counterAmount, setCounterAmount] = useState(item?.amount)
     const [error, setError] = useState("")
+    const queryClient = useQueryClient()
 
     useEffect(() => {
         setCounterAmount(item?.amount)
@@ -77,8 +79,9 @@ const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor =
             }, {
                 headers: authHeader
             })
-
             const decrypted = decryptData(response.data.data)
+            await queryClient.invalidateQueries({ queryKey: ['receivedQuotations', userDetails?._id] })
+            await queryClient.invalidateQueries({ queryKey: ['sentQuotations', userDetails?._id] })
             console.log(decrypted)
             setStep(2)
         } catch (error) {

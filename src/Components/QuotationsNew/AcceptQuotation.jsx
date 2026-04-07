@@ -30,6 +30,7 @@ import { apiErrorMessage } from "../PaymentsNewer/InternationalFlow";
 import useTopupLimitCheck from "../../hooks/Payments/useTopupLimitCheck";
 import GeneralNoticeModal from "../PaymentsNewer/GeneralNoticeModal";
 import PlaidBankTransfer from "../AddFunds/WalletFundsFlow/PlaidBankTransfer";
+import { useQueryClient } from "@tanstack/react-query";
 
 const initialState = {
     step: 1,
@@ -92,6 +93,7 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
     const [data, dispatch] = useReducer(reducer, initialState);
     const { userWallets, userDetails, authHeader, setProfileLockTime, verifyToken } = useContext(UserContext)
     const { limitStatus, clearStatus } = useTopupLimitCheck(item?.amount_reciever_currency?.currency?.code, +String(data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
+    const queryClient = useQueryClient()
 
     const navigate = useNavigate()
     const dataHandler = (field, value) => {
@@ -495,6 +497,8 @@ const AcceptQuotation = ({ isOpen, toggle, item, type = "receive" }) => {
             const dec = decryptData(res.data.data)
             dataHandler("transaction_details", dec)
             dataHandler("verified", true)
+            await queryClient.invalidateQueries({ queryKey: ['receivedQuotations', userDetails?._id] })
+            await queryClient.invalidateQueries({ queryKey: ['sentQuotations', userDetails?._id] })
         } catch (err) {
             const decrypted = decryptData(err.response.data.data)
             const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)

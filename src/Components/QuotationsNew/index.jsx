@@ -20,6 +20,7 @@ import ReceivedItemMobile from "./Mobile/ReceivedItem";
 import SentItemMobile from "./Mobile/SentItem";
 import calendar from "../TransactionsNewApi/files/calendar.png"
 import { DateRangePicker } from "react-date-range";
+import { useQuery } from '@tanstack/react-query'
 
 
 const Quotations = () => {
@@ -27,8 +28,8 @@ const Quotations = () => {
     const [active, setActive] = useState("Received Quotations")
     const [searchQuery, setSearchQuery] = useState("")
     const { userDetails, authHeader } = useContext(UserContext)
-    const [isLoading, setIsLoading] = useState(true)
     const [activeItem, setActiveItem] = useState(0)
+    // const [receivedQuotations, setReceivedQuotations] = useState([])
 
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
@@ -57,6 +58,37 @@ const Quotations = () => {
         }
     };
 
+    const {
+        data: receivedQuotations = [],
+        isLoading: isLoadingReceived,
+    } = useQuery({
+        queryKey: ['receivedQuotations', userDetails?._id],
+        queryFn: async () => {
+            const response = await axios.get(
+                `${import.meta.env.VITE_IP_DEV_API}/api/quotation/get-quotation-by-reciever/${userDetails._id}`,
+                { headers: authHeader }
+            )
+            const decrypted = await decryptData(response.data.data)
+            return decrypted?.quotation ?? []
+        },
+        enabled: !!userDetails,
+    })
+    const {
+        data: sentQuotations = [],
+        isLoading: isLoadingSent,
+    } = useQuery({
+        queryKey: ['sentQuotations', userDetails?._id],
+        queryFn: async () => {
+            const response = await axios.get(
+                `${import.meta.env.VITE_IP_DEV_API}/api/quotation/get-quotation-by-sender/${userDetails._id}`,
+                { headers: authHeader }
+            )
+            const decrypted = await decryptData(response.data.data)
+            return decrypted?.quotation ?? []
+        },
+        enabled: !!userDetails,
+    })
+    const isLoading = isLoadingReceived || isLoadingSent
     useEffect(() => {
         if (tab) {
             setActive(tab === "received" ? "Received Quotations" : "Sent Quotations")
@@ -66,72 +98,6 @@ const Quotations = () => {
     useEffect(() => {
         setActiveItem(0)
     }, [active])
-
-    const menuData = [
-        {
-            id: 3,
-            name: "Received Quotations",
-            icon_white: received_white,
-            icon_grey: received_grey
-        },
-        {
-            id: 2,
-            name: "Sent Quotations",
-            icon_white: sent_white,
-            icon_grey: sent_grey
-        },
-    ]
-
-
-    // const received quotations
-    const [receivedQuotations, setReceivedQuotations] = useState([])
-
-    useEffect(() => {
-        const getReceivedQuotations = async () => {
-            setIsLoading(true)
-            try {
-                const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/quotation/get-quotation-by-reciever/${userDetails?._id}`, {
-                    headers: authHeader
-                })
-                const decrypted = await decryptData(response.data.data)
-                setReceivedQuotations(decrypted?.quotation)
-                // console.log(decrypted?.quotation)
-                setIsLoading(false)
-            } catch (error) {
-                // console.log(decryptData(error?.response?.data?.data))
-                setIsLoading(false)
-            }
-        }
-        if (userDetails) {
-            getReceivedQuotations()
-        }
-    }, [])
-
-    // const received quotations
-    const [sentQuotations, setSentQuotations] = useState([])
-
-    useEffect(() => {
-        const getSentQuotations = async () => {
-            setIsLoading(true)
-            try {
-                const response = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/quotation/get-quotation-by-sender/${userDetails?._id}`, {
-                    headers: authHeader
-                })
-                const decrypted = await decryptData(response.data.data)
-                setSentQuotations(decrypted?.quotation)
-                // console.log(decrypted?.quotation)
-                setIsLoading(false)
-            } catch (error) {
-                // console.log(decryptData(error?.response?.data?.data))
-                setIsLoading(false)
-            }
-        }
-        if (userDetails) {
-            getSentQuotations()
-        }
-    }, [])
-
-    // updating states as per url
     useEffect(() => {
         if (tab === "sent" && sentQuotations.length > 0) {
             if (currentIndex) {
@@ -177,7 +143,20 @@ const Quotations = () => {
         }
         return sentQuotations
     }, [sentQuotations, searchQuery])
-
+    const menuData = [
+        {
+            id: 3,
+            name: "Received Quotations",
+            icon_white: received_white,
+            icon_grey: received_grey
+        },
+        {
+            id: 2,
+            name: "Sent Quotations",
+            icon_white: sent_white,
+            icon_grey: sent_grey
+        },
+    ]
     return (
         <>
             <div className={styles.container}>

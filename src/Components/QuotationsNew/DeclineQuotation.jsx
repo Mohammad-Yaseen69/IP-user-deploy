@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom'
 import int_styles from "../PaymentsNewer/Mobile/styles/International.module.css"
 import paym_styles from "../PaymentsNewer/InternationalFlow/styles/index.module.css"
 import recent from "../PaymentsNewer/Mobile/files/recent.svg"
+import { useQueryClient } from '@tanstack/react-query'
 
 const DeclineQuotation = ({ item, isOpen, toggle }) => {
     const { t } = useTranslation()
@@ -19,7 +20,9 @@ const DeclineQuotation = ({ item, isOpen, toggle }) => {
     const [step, setStep] = useState(1)
     const [error, setError] = useState("")
 
-    const { authHeader, verifyToken } = useContext(UserContext)
+    const queryClient = useQueryClient()
+
+    const { authHeader, verifyToken ,userDetails} = useContext(UserContext)
 
     const declineQuotation = async () => {
         setIsDeleting(true)
@@ -29,6 +32,9 @@ const DeclineQuotation = ({ item, isOpen, toggle }) => {
             })
 
             const decrypted = decryptData(response.data.data)
+             await queryClient.invalidateQueries({ queryKey: ['receivedQuotations', userDetails?._id] })
+            await queryClient.invalidateQueries({ queryKey: ['sentQuotations', userDetails?._id] })
+
             setStep(2)
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
@@ -50,7 +56,7 @@ const DeclineQuotation = ({ item, isOpen, toggle }) => {
                         <>
                             <img src={decline} style={{ height: "36px", width: "36px", objectFit: "contain" }} />
                             <h4>{t("Decline Offer")}</h4>
-                            <p>Are you sure that you want to decline the offer?</p>
+                            <p>{t("Are you sure that you want to decline the offer?")}</p>
                             <div className={styles.bottom}>
                                 <p>{error}</p>
                                 <div className={styles.btns}>
@@ -106,14 +112,14 @@ const DeclineQuotation = ({ item, isOpen, toggle }) => {
                             {
                                 step === 1
                                 &&
-                                <p className={styles.p}>Are you sure that you want to decline the offer?</p>
+                                <p className={styles.p}>{t("Are you sure that you want to decline the offer?")}</p>
                             }
                             {
                                 step === 2
                                 &&
                                 <div className={styles.m_s_2}>
-                                    <h2>Your quotation is declined</h2>
-                                    <span>Thanks for Using InstaPay</span>
+                                    <h2>{t("Your quotation is declined")}</h2>
+                                    <span>{t("Thanks for Using InstaPay")}</span>
                                 </div>
                             }
                         </div>

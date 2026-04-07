@@ -7,11 +7,11 @@ const ItemDetails = ({ item, type, isOpen, toggle, isSaving, setShowActionModal,
     const {t} = useTranslation()
     return (
         <Modal isOpen={isOpen} toggle={toggle} style={{ minWidth: "40vw" }}>
-            <ModalHeader toggle={toggle}>Details</ModalHeader>
+            <ModalHeader toggle={toggle}>{t("Details")}</ModalHeader>
             <ModalBody>
                 <div>
-                    <h5><strong>Title:</strong> {item?.title}</h5>
-                    <p><strong>Description:</strong> {item?.desc}</p>
+                    <h5><strong>{t("Title")}:</strong> {item?.title}</h5>
+                    <p><strong>{t("Description")}:</strong> {item?.desc}</p>
                 </div>
                 <div style={{ display: "flex", gap: "1rem" }}>
                     {
@@ -81,7 +81,7 @@ const ItemDetails = ({ item, type, isOpen, toggle, isSaving, setShowActionModal,
                                 background: "linear-gradient(341deg, #E64067 -4.84%, #5926F0 90.69%, #4828A0 166.81%), #D9D9D9",
                                 border: "none",
                                 outline: "none"
-                            }} disabled={isSaving} onClick={acceptQuotation}>Accept</Button>
+                            }} disabled={isSaving} onClick={acceptQuotation}>{t("Accept")}</Button>
                             : ""
                     }
                     {
@@ -92,7 +92,7 @@ const ItemDetails = ({ item, type, isOpen, toggle, isSaving, setShowActionModal,
                                 background: "linear-gradient(341deg, #E64067 -4.84%, #5926F0 90.69%, #4828A0 166.81%), #D9D9D9",
                                 border: "none",
                                 outline: "none"
-                            }} disabled={isSaving} onClick={acceptQuotation}>Accept</Button>
+                            }} disabled={isSaving} onClick={acceptQuotation}>{t("Accept")}</Button>
                             : ""
                     }
                 </ModalFooter>
