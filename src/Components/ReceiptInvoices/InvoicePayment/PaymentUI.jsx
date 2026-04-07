@@ -78,6 +78,7 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url, toggleCreditModal
                     username={user_name}
                     isShipping={data.shippingAddress}
                     invoiceId={data.invoiceId}
+                    countryIsoCode={data.countryIsoCode}
                     type='invoice'
                 />
             }

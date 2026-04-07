@@ -13,14 +13,17 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiWrapper } from "../../../utils/Functions/apiWrapper";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
 import { toast } from "react-toastify";
+import { countriesInDiffLangs } from "../../../Data/CountriesWithTranslations/countries";
 
 const InvoiceItemDetails = ({ inv }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { userDetails } = useContext(UserContext);
   const [openRecipientIds, setOpenRecipientIds] = useState(new Set());
   const queryClient = useQueryClient();
   const width = useWindowWidth();
   const [active, setActive] = useState(inv.active)
+
+  const country = inv?.countryIsoCode ? countriesInDiffLangs[i18n.language]?.find(c => c.alpha3 === inv.countryIsoCode) : null
   const { mutateAsync, isPending } = useMutation({
     mutationFn: () => apiWrapper({
       endpoint: `/api/invoice/toggle-active/${inv._id}`,
@@ -139,6 +142,32 @@ const InvoiceItemDetails = ({ inv }) => {
                 </span>
                 <Toggle checked={inv?.recurring} />
               </div>
+              {country && (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    justifyContent: "space-between",
+                    marginTop: "10px",
+                  }}
+                >
+                  <span style={{ fontSize: "14px" }} className={styles.label}>
+                    {" "}
+                    {t("Country")}:{" "}
+                  </span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                    <img
+                      src={country.file_url}
+                      alt={country.alpha3}
+                      width="20"
+                      height="14"
+                      style={{ borderRadius: "2px" }}
+                    />
+                    <h5 style={{ textAlign: "right" }}>{t(country.name)}</h5>
+                  </div>
+                </div>
+              )}
               <div
                 style={{
                   display: "flex",

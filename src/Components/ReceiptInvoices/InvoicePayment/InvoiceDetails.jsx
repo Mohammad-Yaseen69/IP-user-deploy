@@ -4,10 +4,14 @@ import styles from './styles/index.module.scss'
 import ip from "../../PaymentAddressPublic/instapay_black.svg";
 import { flagCheck } from "../../../utils/Functions"
 import { useNavigate } from "react-router";
+import { countriesInDiffLangs } from "../../../Data/CountriesWithTranslations/countries";
 
 const InvoiceDetails = ({ data, isSubscription = false }) => {
-    const { t } = useTranslation()
-    const navigate  = useNavigate()
+    const { t, i18n } = useTranslation()
+    const navigate = useNavigate()
+
+    const country = data?.countryIsoCode ? countriesInDiffLangs[i18n.language]?.find(c => c.alpha3 === data.countryIsoCode) : null
+
     return (
         <>
             <div className={styles.top}>
@@ -38,6 +42,23 @@ const InvoiceDetails = ({ data, isSubscription = false }) => {
                         {data?.plan?.planId || data.invoiceId}
                     </h4>
                 </div>
+
+                {country && (
+                    <div>
+                        <span>{t("Country")}</span>
+                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                            <img
+                                src={country.file_url}
+                                alt={country.alpha3}
+                                width="30"
+                                height="20"
+                                style={{ borderRadius: "2px", boxShadow: "0 0 4px rgba(0,0,0,.2)" }}
+                            />
+                            <h2>{t(country.name)}</h2>
+                        </div>
+                    </div>
+                )}
+
                 {flagCheck("allowDescription", data.account, "invoice") &&
                     <div>
                         <span>
