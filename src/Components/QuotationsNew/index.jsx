@@ -61,17 +61,18 @@ const Quotations = () => {
     const {
         data: receivedQuotations = [],
         isLoading: isLoadingReceived,
+        
     } = useQuery({
         queryKey: ['receivedQuotations', userDetails?._id],
         queryFn: async () => {
             const response = await axios.get(
-                `${import.meta.env.VITE_IP_DEV_API}/api/quotation/get-quotation-by-reciever/${userDetails._id}`,
+                `${import.meta.env.VITE_IP_DEV_API}/api/quotation/get-quotation-by-reciever/${userDetails?._id}`,
                 { headers: authHeader }
             )
-            const decrypted = await decryptData(response.data.data)
+            const decrypted = await decryptData(response?.data?.data)
             return decrypted?.quotation ?? []
         },
-        enabled: !!userDetails,
+        enabled: !!userDetails?._id
     })
     const {
         data: sentQuotations = [],
@@ -83,10 +84,10 @@ const Quotations = () => {
                 `${import.meta.env.VITE_IP_DEV_API}/api/quotation/get-quotation-by-sender/${userDetails._id}`,
                 { headers: authHeader }
             )
-            const decrypted = await decryptData(response.data.data)
+            const decrypted = await decryptData(response?.data?.data)
             return decrypted?.quotation ?? []
         },
-        enabled: !!userDetails,
+        enabled: !!userDetails?._id,
     })
     const isLoading = isLoadingReceived || isLoadingSent
     useEffect(() => {
@@ -157,6 +158,7 @@ const Quotations = () => {
             icon_grey: sent_grey
         },
     ]
+
     return (
         <>
             <div className={styles.container}>
@@ -218,9 +220,9 @@ const Quotations = () => {
                                             &&
                                             <>
                                                 {
-                                                    filteredReceived.length > 0
+                                                    filteredReceived?.length > 0
                                                         ?
-                                                        filteredReceived.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((item, index) => {
+                                                        filteredReceived?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((item, index) => {
                                                             let color;
                                                             if (item?.status?.toLowerCase() !== "accepted" && item?.status?.toLowerCase() !== "declined") { color = "primary" };
                                                             if (item?.status?.toLowerCase() === "accepted") { color = "success" };
