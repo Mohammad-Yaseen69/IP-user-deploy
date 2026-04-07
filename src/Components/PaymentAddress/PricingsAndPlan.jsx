@@ -2,12 +2,14 @@ import { useTranslation } from "react-i18next"
 import styles from "./styles/Pricings.module.css"
 import { useState, useRef, useEffect, useContext } from "react"
 import PricingsAddModal from "./PricingsAddModal"
+import SubscribersModal from "./SubscribersModal"
 import { formatCurrency } from "../../Helper/AmountFormat";
 import { UserContext } from "../../Context/UserContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { addPlan, deletePlan as deletePlanApi, getUserPlans, updatePlan } from "./queries/pricings"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import { toast } from "react-toastify"
+import { apiWrapper } from "../../utils/Functions/apiWrapper";
 
 
 
@@ -16,6 +18,8 @@ const PricingsAndPlan = () => {
     const [plans, setPlans] = useState([])
     const [showAddModal, setShowAddModal] = useState(false)
     const [showEditModal, setShowEditModal] = useState(false)
+    const [showSubscribersModal, setShowSubscribersModal] = useState(false)
+    const [subscribersData, setSubscribersData] = useState([])
     const [selectedPlan, setSelectedPlan] = useState(null)
     const [openMenuPlanId, setOpenMenuPlanId] = useState(null)
     const { userDetails } = useContext(UserContext)
@@ -84,7 +88,21 @@ const PricingsAndPlan = () => {
         }
     })
 
+    const { mutateAsync: getSubscribers, isPending: isGettingSubscribers } = useMutation({
+        mutationFn: (planId) => apiWrapper({
+            endpoint: `/api/plans/get-subscribers/${planId}`
+        }).then(dec => dec?.data || [])
+    })
+
+    const handleViewSubscription = async (planId) => {
+        setOpenMenuPlanId(null)
+        const res = await getSubscribers(planId)
+        setSubscribersData(res)
+        setShowSubscribersModal(true)
+    }
+
     const handleDelete = async (planId) => {
+        if (isGettingSubscribers) return
         await deleteMutate(planId)
         setOpenMenuPlanId(null)
     }
@@ -192,6 +210,7 @@ const PricingsAndPlan = () => {
                                         {openMenuPlanId === (plan.id || plan._id) && (
                                             <div ref={el => menuRefs.current[plan.id || plan._id] = el} style={{ position: 'absolute', top: 38, right: 16, background: '#fff', boxShadow: '0 4px 12px 0 rgba(0,0,0,0.13)', borderRadius: 10, zIndex: 10, minWidth: 110, padding: '3px 0', transition: 'opacity .2s' }}>
                                                 <div style={{ padding: '8px 18px', cursor: 'pointer', color: '#5926F0', fontWeight: 600, fontSize: 14 }} onClick={() => handleEdit(plan)}>{t('Edit')}</div>
+                                                <div style={{ padding: '8px 18px', cursor: 'pointer', color: '#5926F0', fontWeight: 600, fontSize: 14 }} onClick={() => handleViewSubscription(plan?._id)}>{isGettingSubscribers ? t('Loading...') : t('Subscribers')}</div>
                                                 <div style={{ padding: '8px 18px', cursor: 'pointer', color: '#e11d48', fontWeight: 600, fontSize: 14 }} onClick={() => handleDelete(plan._id)}>{isDeleting ? t('Deleting...') : t('Delete')}</div>
                                             </div>
                                         )}
@@ -234,6 +253,9 @@ const PricingsAndPlan = () => {
                                     <span style={{ fontWeight: 600, color: "#6039CD", fontSize: "11px", marginLeft: "5px", cursor: 'pointer' }} onClick={() => handleEdit(plan)}>
                                         {t("Edit")}
                                     </span>
+                                    <span style={{ fontWeight: 600, color: "#5926F0", fontSize: "11px", marginLeft: "5px", cursor: 'pointer' }} onClick={() => handleViewSubscription(plan.id || plan._id)}>
+                                        {t("Subscribers")}
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -252,6 +274,11 @@ const PricingsAndPlan = () => {
                     submitting={isEditing}
                 />
             )}
+            <SubscribersModal
+                isOpen={showSubscribersModal}
+                toggle={() => setShowSubscribersModal(false)}
+                subscribers={subscribersData}
+            />
         </div>
     )
 }
