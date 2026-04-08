@@ -17,6 +17,7 @@ import ReviewModal from "./ReviewModal"
 import ImagePreviewModal from "../ImagePreviewModal.jsx"
 import t_styles from "../TransactionsNewApi/Mobile/TransactionItemMobile.module.css"
 import PendingItemDetails from "./PendingItemDetails.jsx"
+import { useQueryClient } from "@tanstack/react-query"
 
 
 const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "received", authHeader }) => {
@@ -25,11 +26,12 @@ const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "re
     const [step, setStep] = useState(1)
     const [country, setCountry] = useState(null)
     const navigate = useNavigate("")
-    const { verifyToken, userWallets } = useContext(UserContext)
+    const { verifyToken, userWallets, userDetails } = useContext(UserContext)
     const [showReviewModal, setShowReviewModal] = useState(false)
     const [allRating, setAllRating] = useState(0)
     const [allReviews, setAllReviews] = useState([])
     const [currentImage, setCurrentImage] = useState("")
+    const queryClient = useQueryClient()
 
     console.log(item)
 
@@ -43,20 +45,22 @@ const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "re
     const currentWallet = userWallets.filter(it => it.wallet_id === item?.wallet_id)[0]
 
 
-    const rejectRequest = () => {
-        verifyToken()
-        axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/decline-payment-request/${item.reference_id}`, {
-            headers: authHeader
-        })
-            .then(res => {
-                const decrypted = decryptData(res.data.data)
-                // console.log(decrypted)
-                navigate("/payment-requests")
-                setStatus("cancelled")
+    const rejectRequest = async () => {
+        try {
+            verifyToken()
+            const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/decline-payment-request/${item.reference_id}`, {
+                headers: authHeader
             })
-            .catch(err => {
-                // console.log(decryptData(err.response.data.data))
-            })
+            const decrypted = decryptData(res.data.data)
+            // console.log(decrypted)
+            navigate("/payment-requests")
+            setStatus("cancelled")
+            await queryClient.invalidateQueries({ queryKey: ['receivedPaymentRequests', userDetails?._id] })
+            await queryClient.invalidateQueries({ queryKey: ['sentPaymentRequests', userDetails?._id] })
+
+        } catch (error) {
+            console.log(error)
+        }
     }
     const service_name_formatter = (itemName) => {
         if (itemName) {
@@ -90,7 +94,6 @@ const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "re
     }, [activeItem])
 
 
-    // notification item states and methods
 
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)

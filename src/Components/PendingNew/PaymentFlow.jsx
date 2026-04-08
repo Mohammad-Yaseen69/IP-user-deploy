@@ -13,6 +13,7 @@ import OTPConfirmation from "../UserSettingsNew/OTPConfirmation"
 import { useTranslation } from "react-i18next"
 import { LimitsErrorMessage } from "../PaymentsNewer/OTPConfirmation"
 import { Link, useNavigate } from "react-router-dom"
+import { useQueryClient } from "@tanstack/react-query"
 
 const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
     const navigate = useNavigate()
@@ -26,6 +27,8 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
     const [token, setToken] = useState("")
     const [codeType, setCodeType] = useState("sms")
     const [fx, setFx] = useState({})
+    const queryClient = useQueryClient()
+
     useEffect(() => {
         setCodeType(userDetails?.tfa ? "authenticator" : "sms")
     }, [userDetails])
@@ -118,42 +121,59 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
             setSending(false)
         }
     }
+    const acceptRequest = async (setter, type, otp, setError) => {
+        try {
+            setSending(true)
 
-    const acceptRequest = (setter, type, otp, setError) => {
-        setSending(true)
-        const data = new FormData()
-        data.append("token", token)
-        data.append("otp", otp)
-        data.append("type", codeType)
+            const data = new FormData()
+            data.append("token", token)
+            data.append("otp", otp)
+            data.append("type", codeType)
 
+            const res = await axios.post(
+                `${import.meta.env.VITE_IP_DEV_API}/api/wallet/accept-payment-request`,
+                data,
+                { headers: authHeader }
+            )
 
-        axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/accept-payment-request`, data, {
-            headers: authHeader
-        })
-            .then(res => {
-                const decrypted = decryptData(res.data.data)
-                // console.log(decrypted)
-                setStatus("completed")
-                setStep(3)
-                setter(true)
+            const decrypted = await decryptData(res.data.data)
+
+            setStatus("completed")
+            setStep(3)
+            setter(true)
+
+            await queryClient.invalidateQueries({
+                queryKey: ['receivedPaymentRequests', userDetails?._id]
             })
-            .catch(err => {
-                const dec = decryptData(err.response.data.data)
+            await queryClient.invalidateQueries({
+                queryKey: ['sentPaymentRequests', userDetails?._id]
+            })
+
+        } catch (err) {
+            try {
+                const dec = await decryptData(err?.response?.data?.data)
+
                 console.log(dec)
+
                 const error = LimitsErrorMessage(dec?.code ?? dec?.message)
+
                 if (error) {
                     setError(error)
-                }
-                else if (dec?.message?.toLowerCase()?.includes("otp")) {
+                } else if (dec?.message?.toLowerCase()?.includes("otp")) {
                     setError("Invalid Verification Code")
+                } else {
+                    setError("We cannot process your request at the moment, please try again later.")
                 }
-                else {
-                    setError("We cannot process your request at the moment, please try again later.")
-                }
-            })
-            .finally(() => setSending(false))
-    }
 
+            } catch (e) {
+                setError("Something went wrong. Please try again.")
+            }
+
+        } finally {
+            setSending(false)
+        }
+    }
+    
     const [showSuccess, setShowSuccess] = useState(false)
     const [showOtp, setShowOtp] = useState(false)
 
