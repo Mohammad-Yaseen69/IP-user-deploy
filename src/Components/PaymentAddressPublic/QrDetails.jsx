@@ -23,6 +23,7 @@ const QrDetails = ({
   const ref = useRef(null);
   const [qrLink, setQrLink] = useState("");
   const [logoReady, setLogoReady] = useState(false);
+  const base_url = window.location.origin || 'my.insta-pay.ch';
   const [qrCode] = useState(new QRCodeStyling({
     width: 300,
     height: 300,
@@ -69,12 +70,14 @@ const QrDetails = ({
     if (invoiceId) {
       url = `/invoice/qr/${username}/${invoiceId}`;
     } else {
-      url = `/payments?payment_action=send_money&payment_type=payment_address&send_type=wallet&wallet_id=${currentWallet?.wallet_id}&currency=${currency}&amount=${amount}`;
+      url = `/pay/${username}?amount=${amount}&fromQr=true`;
     }
     // Always update data
     try {
-      qrCode.update({ data: `https://my.insta-pay.ch${url}` });
-    } catch (_) { }
+      qrCode.update({ data: `${base_url}${url}` });
+    } catch (_) {
+      // 
+    }
 
     // If logo is ready, set it now
     if (logoReady) {
@@ -99,7 +102,9 @@ const QrDetails = ({
       })
       .catch(() => {
         // retry once without logo
-        try { qrCode.update({ image: undefined }); } catch (_) { }
+        try { qrCode.update({ image: undefined }); } catch (_) {
+          // 
+        }
         qrCode.getRawData("png").then((dataUrl) => {
           const file = new File([dataUrl], "qr.png", { type: "image/png" });
           const reader = new FileReader();

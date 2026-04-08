@@ -16,21 +16,32 @@ import paym_styles from "../PaymentsNewer/InternationalFlow/styles/index.module.
 import recent from "../PaymentsNewer/Mobile/files/recent.svg"
 import success from "../PaymentsNewer/InternationalFlow/files/success.gif"
 import { capitalizeStatus } from "../PendingNew/ItemMobile"
+import { useQueryClient } from "@tanstack/react-query"
 
 const counterTypes = ["10", "25", "50", "75", "Custom Amount"];
 let timeout;
 
 const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor = "" }) => {
     const { t } = useTranslation()
-    const { authHeader, verifyToken } = useContext(UserContext)
+    const { authHeader, verifyToken, userDetails } = useContext(UserContext)
     const [saving, setSaving] = useState(false)
     const [step, setStep] = useState(1)
     const [counterType, setCounterType] = useState("")
     const [counterAmount, setCounterAmount] = useState(item?.amount)
     const [error, setError] = useState("")
+    const queryClient = useQueryClient()
 
+    const parseAmount = (value) => {
+        if (typeof value === 'number') return value;
+        if (typeof value === 'string') {
+            const cleaned = value.replace(/,/g, '');
+            const parsed = parseFloat(cleaned);
+            return isNaN(parsed) ? 0 : parsed;
+        }
+        return 0;
+    };
     useEffect(() => {
-        setCounterAmount(item?.amount)
+        setCounterAmount(parseAmount(item?.amount))
     }, [item])
 
     useEffect(() => {
@@ -77,8 +88,9 @@ const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor =
             }, {
                 headers: authHeader
             })
-
             const decrypted = decryptData(response.data.data)
+            await queryClient.invalidateQueries({ queryKey: ['receivedQuotations', userDetails?._id] })
+            await queryClient.invalidateQueries({ queryKey: ['sentQuotations', userDetails?._id] })
             console.log(decrypted)
             setStep(2)
         } catch (error) {
@@ -143,8 +155,8 @@ const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor =
                                             value={counterAmount}
                                             onChange={(e) => {
                                                 if (e.target.value < 0) return;
-                                                setCounterType("Enter Custom")
-                                                setCounterAmount(e.target.value)
+                                                setCounterType("Enter Custom");
+                                                setCounterAmount(parseFloat(e.target.value));
                                             }}
                                             ref={inputRef}
                                         />
@@ -163,13 +175,12 @@ const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor =
                                                         setCounterAmount("")
                                                         return;
                                                     }
+                                                    const rawAmount = parseAmount(item?.amount);
                                                     const percentage = Number(it) / 100;
-                                                    console.log(percentage)
-                                                    const calculatedAmount = item?.amount * percentage;
-                                                    console.log(calculatedAmount)
-                                                    console.log(item?.amount)
-                                                    setCounterAmount(Number(item?.amount - calculatedAmount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
-                                                    setCounterType(it)
+                                                    const calculatedAmount = rawAmount * percentage;
+                                                    const newAmount = rawAmount - calculatedAmount;
+                                                    setCounterAmount(newAmount);
+                                                    setCounterType(it);
                                                 }}
                                             >
                                                 <span>{it?.includes("Custom") ? it : `-${it}%`}</span>

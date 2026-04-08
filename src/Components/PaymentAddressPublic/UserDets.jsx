@@ -19,6 +19,9 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
     const { t } = useTranslation()
     const [showPlansModal, setShowPlansModal] = useState(false)
     const [actionButtons, setActionsButtons] = useState([]);
+    const queryParams = new URLSearchParams(location.search)
+    const isFromQr = queryParams.get('fromQr')
+
     const { data: plansData, isLoading } = useQuery({
         queryKey: ['PublicUserPlans', user_name],
         queryFn: () => getUserPlans(user_name),
@@ -68,7 +71,8 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
 
         if (
             flagCheck("allowEcommerce", userDetails, invoice ? "invoice" : "paymentAddress") &&
-            storeData?.data?._id
+            storeData?.data?._id &&
+            !isFromQr
         ) {
             buttons.push({
                 label: "Explore eShop",
@@ -85,7 +89,7 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
     }, [storeData, userDetails, invoice]);
 
     useEffect(() => {
-        if (plansData && plansData.length > 0) {
+        if (plansData && plansData.length > 0 && !isFromQr ) {
             setActionsButtons(prev => [
                 ...prev,
                 {
@@ -143,6 +147,8 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                                             {userDetails?.first_name || userDetails?.company_name} {userDetails?.last_name}
                                         </h4>
                                     }
+
+
                                     {(userDetails?.kyc_status === "approved" || userDetails?.kyb_status === "approved") && flagCheck("allowVerificationBadge", userDetails, invoice ? "invoice" : "paymentAddress") && (
                                         <>
                                             <img
@@ -179,6 +185,20 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
                                     )}
 
                                 </div>
+
+                                {flagCheck("allowUserName", userDetails, invoice ? "invoice" : "paymentAddress") &&
+                                    <h6
+                                        style={{
+                                            margin: "0 6px 0 0",
+                                            fontWeight: 700,
+                                            whiteSpace: "wrap",
+                                            textAlign: width < 1000 && 'center',
+                                            color: "#777"
+                                        }}
+                                    >
+                                        @{user_name}
+                                    </h6>
+                                }
                                 {flagCheck("allowCountry", userDetails, invoice ? "invoice" : "paymentAddress") &&
                                     <div className={styles.country}>
                                         <img src={userCountry?.file_url} alt={userCountry?.alpha3} style={{ boxShadow: "0 0 5px #afafaf" }} />

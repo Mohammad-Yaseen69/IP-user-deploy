@@ -107,6 +107,8 @@ export const LeftJsx = ({
   user_name,
   invoiceId,
 }) => {
+  const queryParams = new URLSearchParams(location.search)
+  const isFromQr = queryParams.get('fromQr')
 
   return (
     <div
@@ -128,67 +130,69 @@ export const LeftJsx = ({
           <img src={ip} alt=""  onClick={() => window.location.href = "https://insta-pay.ch"} />
         </div>
       )}
-      <div className={styles.left_bottom}>
-        <div>
-          {(flagCheck("allowTitle", userDetails, "paymentAddress") ? title : "") || (flagCheck("allowDescription", userDetails, "paymentAddress") ? description : "") ? (
-            <div className={styles.about}>
-              {flagCheck("allowTitle", userDetails, "paymentAddress") && <h4 style={{ marginBottom: "0px" }}>{title}</h4>}
-              {flagCheck("allowDescription", userDetails, "paymentAddress") && (
-                <p style={{ fontSize: "14px", fontWeight: 600, color: "#7E7E7E" }}>
-                  {description}
-                </p>
-              )}
-            </div>
-          ) : null}
-          {userVideos && userVideos.length > 0 && flagCheck("allowVideos", userDetails, "paymentAddress") && (
-            <div className="p-swiper-videos-123">
-              <Swiper
-                modules={[FreeMode, Mousewheel, Pagination]}
-                spaceBetween={10}
-                pagination={{ clickable: true, el: '.portfolio-swiper-pagination' }}
-                slidesPerView={
-                  userVideos.length === 1 || window.innerWidth < 700
-                    ? 1
-                    : userVideos.length === 2
-                      ? 2
-                      : 2.3
-                }
-                grabCursor={true}
-                freeMode={true}
-                mousewheel={{ forceToAxis: true }}
-              >
-                {userVideos.map((video, index) => (
-                  <SwiperSlide key={video._id || index}>
-                    <PortfolioCard
-                      item={video}
-                      pAddress={true}
-                      publicP={true}
-                      playingMediaId={playingMediaId}
-                      setPlayingMediaId={setPlayingMediaId}
-                      playerRefs={playerRefs}
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+      {!isFromQr &&
+        <div className={styles.left_bottom}>
+          <div>
+            {(flagCheck("allowTitle", userDetails, "paymentAddress") ? title : "") || (flagCheck("allowDescription", userDetails, "paymentAddress") ? description : "") ? (
+              <div className={styles.about}>
+                {flagCheck("allowTitle", userDetails, "paymentAddress") && <h4 style={{ marginBottom: "0px" }}>{title}</h4>}
+                {flagCheck("allowDescription", userDetails, "paymentAddress") && (
+                  <p style={{ fontSize: "14px", fontWeight: 600, color: "#7E7E7E" }}>
+                    {description}
+                  </p>
+                )}
+              </div>
+            ) : null}
+            {userVideos && userVideos.length > 0 && flagCheck("allowVideos", userDetails, "paymentAddress") && (
+              <div className="p-swiper-videos-123">
+                <Swiper
+                  modules={[FreeMode, Mousewheel, Pagination]}
+                  spaceBetween={10}
+                  pagination={{ clickable: true, el: '.portfolio-swiper-pagination' }}
+                  slidesPerView={
+                    userVideos.length === 1 || window.innerWidth < 700
+                      ? 1
+                      : userVideos.length === 2
+                        ? 2
+                        : 2.3
+                  }
+                  grabCursor={true}
+                  freeMode={true}
+                  mousewheel={{ forceToAxis: true }}
+                >
+                  {userVideos.map((video, index) => (
+                    <SwiperSlide key={video._id || index}>
+                      <PortfolioCard
+                        item={video}
+                        pAddress={true}
+                        publicP={true}
+                        playingMediaId={playingMediaId}
+                        setPlayingMediaId={setPlayingMediaId}
+                        playerRefs={playerRefs}
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
 
-              <div className="portfolio-swiper-pagination" style={{ marginTop: 0, textAlign: 'center' }} />
-            </div>
-          )}
-        </div>
+                <div className="portfolio-swiper-pagination" style={{ marginTop: 0, textAlign: 'center' }} />
+              </div>
+            )}
+          </div>
 
-        <div>
-          <QrDetails
-            wallet={currentWallet}
-            user={userDetails}
-            amount={amount}
-            currency={currency}
-            username={user_name}
-            address={true}
-            currentWallet={currentWallet}
-            invoiceId={invoiceId}
-          />
+          <div>
+            <QrDetails
+              wallet={currentWallet}
+              user={userDetails}
+              amount={amount}
+              currency={currency}
+              username={user_name}
+              address={true}
+              currentWallet={currentWallet}
+              invoiceId={invoiceId}
+            />
+          </div>
         </div>
-      </div>
+      }
     </div>
   );
 };
@@ -203,6 +207,8 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
   const width = useWindowWidth();
   const { country, showNoticeModal } = useCountryLocation()
   const playerRefs = useRef({});
+  const queryParams = new URLSearchParams(location.search)
+  const amount = queryParams.get('amount')
 
 
   const { data: limits } = useQuery({
@@ -227,6 +233,13 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
       dataHandler("formattedAmount", value)
     );
   };
+
+  useEffect(() => {
+    if (amount) {
+      dataHandler("amount", amount);
+      dataHandler("formattedAmount", formatCurrency(amount, true));
+    }
+  }, [amount])
 
   useEffect(() => {
     dataHandler("amount", state.formattedAmount?.replaceAll(",", ""));

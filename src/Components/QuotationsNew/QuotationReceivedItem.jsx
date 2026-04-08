@@ -79,7 +79,6 @@ const QuotationReceivedItem = ({ item, activeItem, setActiveItem, index }) => {
                 />
             }
 
-            {/* bargain */}
             {
                 showBargainModal
                 &&
@@ -95,7 +94,6 @@ const QuotationReceivedItem = ({ item, activeItem, setActiveItem, index }) => {
                 />
             }
 
-            {/* cancel Modal */}
             {
                 showDeleteModal
                 &&
