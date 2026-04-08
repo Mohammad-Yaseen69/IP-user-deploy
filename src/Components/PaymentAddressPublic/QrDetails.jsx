@@ -23,7 +23,8 @@ const QrDetails = ({
   const ref = useRef(null);
   const [qrLink, setQrLink] = useState("");
   const [logoReady, setLogoReady] = useState(false);
-  const base_url = window.location.origin || 'my.insta-pay.ch';
+  const base_url = window.location.origin || 'https://my.insta-pay.ch';
+
   const [qrCode] = useState(new QRCodeStyling({
     width: 300,
     height: 300,

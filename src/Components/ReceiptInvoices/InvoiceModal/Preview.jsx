@@ -16,7 +16,7 @@ const Preview = ({ invoiceId, data, isPending, uploadData, mutate }) => {
 
 
     const qrCodeUrl = useMemo(() => {
-        const base = 'https://my.insta-pay.ch'
+        const base = window.location.origin || 'https://my.insta-pay.ch';
         return `${base}/invoice/qr/${userDetails?.username}/${invoiceId}`
     }, [invoiceId])
 

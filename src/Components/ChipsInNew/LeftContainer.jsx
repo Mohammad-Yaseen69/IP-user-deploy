@@ -29,6 +29,8 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
     const { userWallets } = useContext(UserContext)
     const [saving, setSaving] = useState(false)
 
+    const base_url = window.location.origin || 'https://my.insta-pay.ch';
+    
     useEffect(() => {
         setGeneralQRactive(currentWallet?.qrCode?.status === "true" ? true : false)
         setTitle(currentWallet?.qrCode?.title ?? "")
@@ -70,7 +72,7 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
     const [showShareModal, setShowShareModal] = useState(false)
 
     const copyHandler = () => {
-        navigator.clipboard.writeText(`https://my.insta-pay.ch/q/${currentWallet?.wallet_id}`)
+        navigator.clipboard.writeText(`${base_url}/q/${currentWallet?.wallet_id}`)
         toast.success("Address Copied Successfully!")
     }
 
@@ -161,7 +163,7 @@ const LeftContainer = ({ currentWallet, currency, setCurrency, setWalletRefresh,
                     <div className={styles.br_top}>
                         <Label>{t("Share your Insta-Pay unique payment link")}</Label>
                         <div className={styles.link}>
-                            <span>https://my.insta-pay.ch/q/{currentWallet?.wallet_id}</span>
+                            <span>{base_url}/q/{currentWallet?.wallet_id}</span>
                             <img alt="" src={copy} onClick={copyHandler} />
                         </div>
                     </div>

@@ -20,6 +20,8 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
     const [laoding, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
 
+    const base_url = window.location.origin || 'https://my.insta-pay.ch';
+    
     const handleInvite = async () => {
         setLoading(true)
         try {
@@ -149,7 +151,7 @@ const InviteFriendModal = ({ isOpen, toggle }) => {
                                     </div>
                                     <div style={{ display: "flex", flexDirection: "column", gap: ".3rem" }}>
                                         <strong>{t("Message")}: </strong>
-                                        <span>{t(message)} <br /> {`https://my.insta-pay.ch/auth/signup/${userDetails?.username}`}</span>
+                                        <span>{t(message)} <br /> {`${base_url}/auth/signup/${userDetails?.username}`}</span>
                                     </div>
                                 </div>
                             }
