@@ -31,8 +31,17 @@ const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor =
     const [error, setError] = useState("")
     const queryClient = useQueryClient()
 
+    const parseAmount = (value) => {
+        if (typeof value === 'number') return value;
+        if (typeof value === 'string') {
+            const cleaned = value.replace(/,/g, '');
+            const parsed = parseFloat(cleaned);
+            return isNaN(parsed) ? 0 : parsed;
+        }
+        return 0;
+    };
     useEffect(() => {
-        setCounterAmount(item?.amount)
+        setCounterAmount(parseAmount(item?.amount))
     }, [item])
 
     useEffect(() => {
@@ -146,8 +155,8 @@ const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor =
                                             value={counterAmount}
                                             onChange={(e) => {
                                                 if (e.target.value < 0) return;
-                                                setCounterType("Enter Custom")
-                                                setCounterAmount(e.target.value)
+                                                setCounterType("Enter Custom");
+                                                setCounterAmount(parseFloat(e.target.value));
                                             }}
                                             ref={inputRef}
                                         />
@@ -166,13 +175,12 @@ const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor =
                                                         setCounterAmount("")
                                                         return;
                                                     }
+                                                    const rawAmount = parseAmount(item?.amount);
                                                     const percentage = Number(it) / 100;
-                                                    console.log(percentage)
-                                                    const calculatedAmount = item?.amount * percentage;
-                                                    console.log(calculatedAmount)
-                                                    console.log(item?.amount)
-                                                    setCounterAmount(Number(item?.amount - calculatedAmount)?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
-                                                    setCounterType(it)
+                                                    const calculatedAmount = rawAmount * percentage;
+                                                    const newAmount = rawAmount - calculatedAmount;
+                                                    setCounterAmount(newAmount);
+                                                    setCounterType(it);
                                                 }}
                                             >
                                                 <span>{it?.includes("Custom") ? it : `-${it}%`}</span>
