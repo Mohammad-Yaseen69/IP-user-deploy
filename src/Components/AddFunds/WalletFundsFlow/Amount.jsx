@@ -58,10 +58,17 @@ const Amount = ({ data, dataHandler }) => {
                 max: walletData?.max_topup_amount ?? data?.limits?.max
             })
             // dataHandler("amount", walletData?.min_topup_amount ?? data?.limits?.min)
-            formatCurrency(formatCurrencyLocal(walletData?.min_topup_amount) ?? formatCurrencyLocal(data?.limits?.min), true, setFormattedAmount)
+
+            const currentAmountNum = parseFloat(String(formattedAmount ?? "0").replaceAll(",", ""));
+            const minAmountNum = parseFloat(String(walletData?.min_topup_amount ?? data?.limits?.min ?? "0").replaceAll(",", ""));
+
+            if (!currentAmountNum || currentAmountNum < minAmountNum) {
+                formatCurrency(formatCurrencyLocal(walletData?.min_topup_amount) ?? formatCurrencyLocal(data?.limits?.min), true, setFormattedAmount)
+            }
             setLoading(false)
         }
     }, [wallet_address, walletData])
+
 
     const limits = data?.limits || { min: 0, max: 0 };
 

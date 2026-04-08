@@ -38,7 +38,7 @@ const CryptoFund = ({ setAction }) => {
     const { authHeader } = useContext(UserContext)
     const [subStep, setSubStep] = useState(1);
     const [cryptoCurrency, setCryptoCurrency] = useState({})
-    const [amount, setAmount] = useState("")
+    const [amount, setAmount] = useState('10.00')
     const [exchangeRate, setExchangeRate] = useState({})
     const [loading, setLoading] = useState(false)
     const [exchangeRateError, setExchangeRateError] = useState("")
@@ -91,14 +91,14 @@ const CryptoFund = ({ setAction }) => {
         setLoading(true)
         setExchangeRateError(null)
         setExchangeRate({})
-        if (amount) {
+        if (amount && cryptoCurrency?.currency?.code) {
             let timeout;
             clearTimeout(timeout)
             timeout = setTimeout(() => {
                 getCryptoFeeDetails(amount)
             }, 500)
         }
-    }, [amount])
+    }, [amount, cryptoCurrency])
 
 
     const handleConfirm = async () => {
@@ -156,12 +156,14 @@ const CryptoFund = ({ setAction }) => {
             setAction("")
             setCryptoCurrency({})
         } else {
-            setAmount("")
+            setAmount('10.00')
             setExchangeRate({})
             setExchangeRateError(null)
             setSubStep(1)
         }
     }
+
+    console.log(amount, 'ya h wo amount')
 
     return (
         <>
@@ -340,7 +342,7 @@ const CryptoFund = ({ setAction }) => {
                             style={{
                                 minHeight: "80vh",
                                 display: "flex",
-                                justifyContent:"space-between",
+                                justifyContent: "space-between",
                                 flexDirection: "column"
                             }}
                         >
