@@ -22,6 +22,8 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = fal
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const title = queryParams.get("title")
+    const base_url = window.location.origin || 'https://my.insta-pay.ch';
+
     return (
 
         <>
@@ -38,7 +40,7 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = fal
                             <SocialModal
                                 isOpen={showShare}
                                 toggle={() => setShowShare(!showShare)}
-                                link={"https://my.insta-pay.ch"}
+                                link={base_url}
                             />
                         }
                         <div className={styles.top}>

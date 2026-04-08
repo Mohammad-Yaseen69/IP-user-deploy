@@ -16,6 +16,7 @@ const FailedTransaction = ({ showBack, backHandler }) => {
     const location = useLocation()
     const query = new URLSearchParams(location.search)
     const code = query.get("code")
+    const base_url = window.location.origin || 'https://my.insta-pay.ch';
 
     const error_message = () => {
         return errors.find(item => item?.code == code)?.message ?? "We cannot process your request at the moment, please try again later."
@@ -28,7 +29,7 @@ const FailedTransaction = ({ showBack, backHandler }) => {
                 <SocialModal
                     isOpen={showShare}
                     toggle={() => setShowShare(!showShare)}
-                    link={"https://my.insta-pay.ch"}
+                    link={base_url}
                 />
             }
             <div className={styles.top} style={{
