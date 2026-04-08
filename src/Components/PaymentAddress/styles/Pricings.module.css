@@ -1,5 +1,6 @@
 .container {
     height: 311px;
+    margin-bottom: 8px;
     display: flex;
     padding: var(--SPACING-spacing-2, 18px);
     flex-direction: column;
