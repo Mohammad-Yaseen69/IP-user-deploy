@@ -30,6 +30,7 @@ import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow'
 import useTopupLimitCheck from '../../../hooks/Payments/useTopupLimitCheck'
 import GeneralNoticeModal from '../../PaymentsNewer/GeneralNoticeModal'
 import PlaidBankTransfer from '../../AddFunds/WalletFundsFlow/PlaidBankTransfer'
+import { useQueryClient } from '@tanstack/react-query'
 
 const headings = ["Select Payment Type", "Review Payment"]
 
@@ -38,6 +39,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
     const { limitStatus, clearStatus } = useTopupLimitCheck(item?.currency?.code, +String(data?.amount)?.replaceAll(",", ""), data?.payment_type?.value)
     const { userDetails, authHeader, setProfileLockTime, verifyToken } = useContext(UserContext)
     const navigate = useNavigate()
+    const queryClient = useQueryClient()
 
     const disabledButton = useMemo(() => {
         switch (data.step) {
@@ -271,6 +273,9 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
             const dec = decryptData(res.data.data)
             dataHandler("transaction_details", dec)
             dataHandler("verified", true)
+            await queryClient.invalidateQueries({ queryKey: ['receivedPaymentRequests', userDetails?._id] })
+            await queryClient.invalidateQueries({ queryKey: ['sentPaymentRequests', userDetails?._id] })
+
         } catch (err) {
             console.log(err)
             const decrypted = decryptData(err.response.data.data)

@@ -7,12 +7,13 @@ import { cancelSubscriptionOrSchedulePayment } from "../ReceivedTransactionItem"
 import { useContext, useMemo, useState } from "react"
 import { UserContext } from "../../../Context/UserContext"
 import { calculateFinalDate } from "../SubscriptionDetails"
-
+import { useQueryClient } from "@tanstack/react-query"
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 const SentItem = ({ item, activeItem, setActiveItem, index, currentUser }) => {
     const { t } = useTranslation()
+    const queryClient = useQueryClient()
     const { authHeader, verifyToken } = useContext(UserContext)
     const item_date = item?.date;
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
@@ -175,7 +176,7 @@ const SentItem = ({ item, activeItem, setActiveItem, index, currentUser }) => {
                         {
                             (item?.status?.toLowerCase() === "pending" || item?.status?.toLowerCase() === "processing")
                             &&
-                            <Button color="danger" style={{ padding: "3px 18px" }} onClick={() => cancelSubscriptionOrSchedulePayment(item, authHeader, verifyToken)}>{t("Cancel")}</Button>
+                            <Button color="danger" style={{ padding: "3px 18px" }} onClick={() => cancelSubscriptionOrSchedulePayment(item, authHeader, verifyToken, queryClient)}>{t("Cancel")}</Button>
                         }
                     </div>
                 </div>

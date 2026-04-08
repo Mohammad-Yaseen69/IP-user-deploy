@@ -118,7 +118,8 @@ i18n
     fallbackLng: "en",
     debug: false,
     detection: {
-      order: ["localStorage", "navigator"], 
+      // order: ["localStorage", "navigator"], 
+      caches: [],
       lookupLocalStorage: "i18nextLng",
       cacheUserLanguage: false,
     },
