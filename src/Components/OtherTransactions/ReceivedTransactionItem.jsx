@@ -22,8 +22,8 @@ export const cancelSubscriptionOrSchedulePayment = async (item, authHeader, refe
         // console.log(dec)
         toast.success(dec?.message)
         refetchMethod()
-        queryClient.invalidateQueries(["sentPayments"]);
-        queryClient.invalidateQueries(["receivedPayments"]);
+        queryClient.invalidateQueries(["sentSchduled"]);
+        queryClient.invalidateQueries(["receivedSchduled"]);
 
     } catch (error) {
         const decrypted = decryptData(error?.response?.data?.data)

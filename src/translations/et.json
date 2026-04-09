@@ -792,8 +792,8 @@
   "Uzbek": "Uzbecjaka",
   "Georgian": "Gruzinsjaka",
   "Armenian": "Virmenska",
-  "Are you sure that you want to decline the offer?": "Loading...",
-  "Your quotation is declined": "Loading...",
-  "Accept": "Priynjati",
-  "File": "Loading..."
+  "Are you sure that you want to decline the offer?": "Taklifni rad etmoqchi ekanligingizga ishonchingiz komilmi?",
+  "Your quotation is declined": "Sizning taklifingiz rad etildi",
+  "Accept": "Qabul qilish",
+  "File": "Fayl"
 }

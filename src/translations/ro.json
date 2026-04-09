@@ -792,8 +792,8 @@
   "Uzbek": "Usbekisch",
   "Georgian": "Georgiano",
   "Armenian": "Armenien",
-  "Are you sure that you want to decline the offer?": "Loading...",
-  "Your quotation is declined": "Loading...",
-  "Accept": "Loading...",
-  "File": "Loading..."
+  "Are you sure that you want to decline the offer?": "¿Está seguro de que desea rechazar la oferta?",
+  "Your quotation is declined": "Su cotización ha sido rechazada.",
+  "Accept": "Aceptar",
+  "File": "Archivo"
 }

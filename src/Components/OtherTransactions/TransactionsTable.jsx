@@ -138,10 +138,10 @@ const TransactionsTable = () => {
     //                 };
 
     //                 await Promise.all([
-    //                     handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/subcribe-payment-request-w2w/${userDetails._id}`, setSentPayments),
-    //                     handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/schedule-payment-request-w2w/${userDetails._id}`, setSentPayments),
-    //                     handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/subcribe-payment-w2w/${userDetails._id}`, setReceivedPayments),
-    //                     handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/schedule-payment-w2w/${userDetails._id}`, setReceivedPayments),
+    //                     handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/subcribe-payment-request-w2w/${userDetails._id}`, setSentSchduled),
+    //                     handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/schedule-payment-request-w2w/${userDetails._id}`, setSentSchduled),
+    //                     handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/subcribe-payment-w2w/${userDetails._id}`, setReceivedSchduled),
+    //                     handleRequest(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/schedule-payment-w2w/${userDetails._id}`, setReceivedSchduled),
     //                 ]);
     //             }
     //         } catch (error) {
@@ -158,8 +158,8 @@ const TransactionsTable = () => {
     //         isMounted = false;
     //     };
     // }, [userDetails]);
-    const { data: sentPayments = [], isLoading: loadingSent } = useQuery({
-        queryKey: ["sentPayments", userDetails?._id],
+    const { data: sentSchduled = [], isLoading: loadingSent } = useQuery({
+        queryKey: ["sentSchduled", userDetails?._id],
         queryFn: async () => {
             if (!userDetails?._id) return [];
             const results = [];
@@ -188,8 +188,8 @@ const TransactionsTable = () => {
         },
         enabled: !!userDetails?._id,
     });
-    const { data: receivedPayments = [], isLoading: loadingReceived } = useQuery({
-        queryKey: ["receivedPayments", userDetails?._id],
+    const { data: receivedSchduled = [], isLoading: loadingReceived } = useQuery({
+        queryKey: ["receivedSchduled", userDetails?._id],
         queryFn: async () => {
             if (!userDetails?._id) return [];
             const results = [];
@@ -221,14 +221,14 @@ const TransactionsTable = () => {
 
     const isLoading = loadingSent || loadingReceived;
     const transsactions = useMemo(() => {
-        const all = [...sentPayments, ...receivedPayments];
+        const all = [...sentSchduled, ...receivedSchduled];
 
         if (active === "All") {
             return all ?? []
         }
         if (active === "Schedule Payments") return all.filter(item => !item?.recursive);
         return all.filter(item => item?.recursive);
-    }, [sentPayments, receivedPayments, active]);
+    }, [sentSchduled, receivedSchduled, active]);
 
     return (
         <div className={styles.table}>
