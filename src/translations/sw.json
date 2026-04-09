@@ -3019,6 +3019,7 @@
   "Georgian": "Kijojia",
   "Armenian": "Kiarmenia",
   "Are you sure that you want to decline the offer?": "Una uhakika kwamba unataka kukataa ofa hii?",
-  "Your quotation is declined": "Loading...",
-  "File": "Loading..."
+  "Your quotation is declined": "Sita maombi yako imekataliwa",
+  "File": "Faili",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Uthibitishaji wa biometriki umefanikiwa, Tutakuelekeza kwenye ukurasa wa dashibodi baada ya muda.\") : t('Tafadhali subiri tunapothibitisha biometriki yako..."
 }

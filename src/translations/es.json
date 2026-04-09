@@ -3024,7 +3024,8 @@
   "Uzbek": "uzbeko",
   "Georgian": "georgiano",
   "Armenian": "armenio",
-  "Are you sure that you want to decline the offer?": "Loading...",
+  "Are you sure that you want to decline the offer?": "¿Está seguro de que desea rechazar la oferta?",
   "Your quotation is declined": "Su cotización ha sido rechazada.",
-  "File": "Archivo"
+  "File": "Archivo",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Verificación biométrica exitosa. En breve le redirigiremos a la página del panel de control.\" : t('Espere mientras verificamos su información biométrica..."
 }

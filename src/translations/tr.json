@@ -3017,8 +3017,9 @@
   "Azerbaijani": "Azerbaycanlı",
   "Uzbek": "Özbekçe",
   "Georgian": "Gürcü",
-  "Armenian": "Ermeni",
-  "Are you sure that you want to decline the offer?": "Loading...",
-  "Your quotation is declined": "Loading...",
-  "File": "Dosya"
+  "Armenian": "Ermenice",
+  "Are you sure that you want to decline the offer?": "Teklifi reddetmek istediğinizden emin misiniz?",
+  "Your quotation is declined": "Teklifiniz reddedildi",
+  "File": "Dosya",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Biyometrik doğrulama başarılı, sizi birazdan kontrol paneli sayfasına yönlendireceğiz.) : t('Lütfen biyometrik verilerinizi doğrularken bekleyin..."
 }

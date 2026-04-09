@@ -3019,5 +3019,6 @@
   "Armenian": "亚美尼亚",
   "Are you sure that you want to decline the offer?": "你确定要拒绝这个提议吗？",
   "Your quotation is declined": "您的报价被拒绝",
-  "File": "文件"
+  "File": "文件",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "生物识别验证成功，稍后我们将把您重定向到控制面板页面。\") : t('请稍候，我们正在验证您的生物识别信息..."
 }

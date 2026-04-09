@@ -792,8 +792,9 @@
   "Uzbek": "Kiuzbeki",
   "Georgian": "Kijojia",
   "Armenian": "Kiarmenia",
-  "Are you sure that you want to decline the offer?": "Loading...",
-  "Your quotation is declined": "Loading...",
-  "Accept": "Loading...",
-  "File": "Loading..."
+  "Are you sure that you want to decline the offer?": "Je, una uhakika kwamba unataka kukataa ofa?",
+  "Your quotation is declined": "Kukataa ofa yako",
+  "Accept": "Kubali",
+  "File": "Faili",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Uthibitishaji wa biometriki umefanikiwa, Tutakuelekeza kwenye ukurasa wa dashibodi baada ya muda.\") : t('Tafadhali subiri tunapothibitisha biometriki yako..."
 }

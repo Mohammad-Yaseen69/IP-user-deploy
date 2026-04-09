@@ -2977,5 +2977,6 @@
   "Armenian": "Armenisch",
   "Are you sure that you want to decline the offer?": "Sind Sie sicher, dass Sie das Angebot ablehnen möchten?",
   "Your quotation is declined": "Ihr Angebot wurde abgelehnt.",
-  "File": "Datei"
+  "File": "Datei",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Biometrische Verifizierung erfolgreich. Sie werden in Kürze zum Dashboard weitergeleitet.\") : t('Bitte warten Sie, während wir Ihre biometrischen Daten überprüfen..."
 }

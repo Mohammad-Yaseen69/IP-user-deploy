@@ -795,5 +795,6 @@
   "Are you sure that you want to decline the offer?": "Είστε σίγουροι ότι θέλετε να απορρίψετε την προσφορά;",
   "Your quotation is declined": "Η προσφορά σας είναι διαθέσιμη.",
   "Accept": "Αποδοχή",
-  "File": "Μπεστάντ"
+  "File": "Μπεστάντ",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Biometrische verificatie geslaagd. We zullen u zo meteen doorverwijzen naar de dashboardpagina.\") : t('Even geduld alstublieft terwijl we uw biometrische gegevens verfiëren..."
 }

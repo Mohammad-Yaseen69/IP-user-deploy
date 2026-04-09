@@ -791,9 +791,10 @@
   "Azerbaijani": "orang Aserbajdsjan",
   "Uzbek": "Usbekistan",
   "Georgian": "Georgia",
-  "Armenian": "Armenia",
-  "Are you sure that you want to decline the offer?": "Loading...",
-  "Your quotation is declined": "Loading...",
-  "Accept": "Loading...",
-  "File": "Loading..."
+  "Armenian": "Armensk",
+  "Are you sure that you want to decline the offer?": "Er du sikker på at du vil avslå tilbudet?",
+  "Your quotation is declined": "Ditt tilbud er avslått",
+  "Accept": "Godta",
+  "File": "Fil",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Verifikasi biometrisk berhasil. Kami akan mengarahkan Anda ke halaman dasbor sebentar lagi. Mohon tunggu sementara kami memverifikasi biometric Anda..."
 }

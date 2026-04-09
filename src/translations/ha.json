@@ -2975,5 +2975,6 @@
   "Armenian": "Armeniya",
   "Are you sure that you want to decline the offer?": "Shin kana da tabbacin kana son ƙin tayin?",
   "Your quotation is declined": "An ƙi karɓar kuɗin da aka yi maka",
-  "File": "Fayil"
+  "File": "Fayil",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "An yi nasarar tabbatar da ingancin halitta, za mu tura ku zuwa shafin dashboard nan ba da jimawa ba.\"): t('Da fatan za a jira yayin da muke tabbatar da ingancin halitta..."
 }

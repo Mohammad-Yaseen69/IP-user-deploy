@@ -3016,7 +3016,8 @@
   "Uzbek": "Uzbekistan",
   "Georgian": "Georgia",
   "Armenian": "Armenia",
-  "Are you sure that you want to decline the offer?": "Loading...",
-  "Your quotation is declined": "Loading...",
-  "File": "Loading..."
+  "Are you sure that you want to decline the offer?": "Apakah Anda yakin ingin menolak tawaran tersebut?",
+  "Your quotation is declined": "Penawaran Anda ditolak",
+  "File": "Berkas",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Verifikasi biometrik berhasil. Kami akan mengarahkan Anda ke halaman dasbor sebentar lagi. Mohon tunggu sementara kami memverifikasi biometrik Anda..."
 }

@@ -223,13 +223,21 @@ const TransactionsTable = () => {
     const transsactions = useMemo(() => {
         const all = [...sentSchduled, ...receivedSchduled];
 
-        if (active === "All") {
-            return all ?? []
+        if (active === t("All")) {
+            return all ?? [];
         }
-        if (active === "Schedule Payments") return all.filter(item => !item?.recursive);
-        return all.filter(item => item?.recursive);
-    }, [sentSchduled, receivedSchduled, active]);
 
+        if (active === t("schedule payment")) {
+            return all.filter(item => !item?.recursive);
+        }
+
+        if (active === t("subscription payment")) {
+            return all.filter(item => item?.recursive);
+        }
+
+        return all;
+    }, [sentSchduled, receivedSchduled, active, t]);
+    console.log(transsactions)
     return (
         <div className={styles.table}>
             <div className={styles.menu}>

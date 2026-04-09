@@ -795,5 +795,6 @@
   "Are you sure that you want to decline the offer?": "¿Está seguro de que desea rechazar la oferta?",
   "Your quotation is declined": "Su cotización ha sido rechazada.",
   "Accept": "Aceptar",
-  "File": "Archivo"
+  "File": "Archivo",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Verificare biometrică exitosă. En breve le redirigiremos la pagina del panel de control.\" : t('Espere while verificamos su información biometric..."
 }

@@ -790,5 +790,17 @@
   "Azerbaijani": "Azərbaycan",
   "Uzbek": "Özbək",
   "Georgian": "Gürcü",
-  "Armenian": "Erməni"
+  "Armenian": "Erməni",
+  "For added security, please create a 4-digit \\n PIN to protect your session.": "Əlavə təhlükəsizlik üçün sessiyanızı qorumaq üçün 4 rəqəmli PIN yaradın.",
+  "2. Send <strong>“ Hi ”</strong> to <strong>@instapay_swiss</strong> and select <strong> QR QuickPay </strong>": "2. <strong>@instapay_swiss</strong>-ə <strong>“Salam”</strong> göndərin və <strong> QR QuickPay </strong> seçin.",
+  "You haven’t created any invoices yet.": "Hələ heç bir faktura yaratmamısınız.",
+  "You’ll be redirected to the InstaPay eShop dashboard to manage your shop and transactions. Please review and accept the Terms of Service to proceed.": "Mağazanızı və əməliyyatlarınızı idarə etmək üçün InstaPay eShop panelinə yönləndiriləcəksiniz. Davam etmək üçün Xidmət Şərtlərini nəzərdən keçirin və qəbul edin.",
+  "Instantly transfer money to non- InstaPay users with our secure wallet-to-wallet service. Send and receive funds hassle-free within seconds.": "Təhlükəsiz cüzdan-cüzdan xidmətimiz ilə InstaPay istifadəçisi olmayanlara dərhal pul köçürün. Bir neçə saniyə ərzində rahat şəkildə göndərin və qəbul edin.",
+  "This document serves as the company's official \\\"identity card,\\\" and it should be obtained from the local business registry. It reflects the current status of the business (active or closed).": "Bu sənəd şirkətin rəsmi \"şəxsiyyət vəsiqəsi\" kimi xidmət edir və yerli biznes qeydiyyatından əldə olunmalıdır. Bu, biznesin cari vəziyyətini (aktiv və ya bağlı) əks etdirir.",
+  "You haven’t created any plans yet": "Hələ heç bir plan yaratmamısınız",
+  "Are you sure that you want to decline the offer?": "Təklifi rədd etmək istədiyinizə əminsiniz?",
+  "Your quotation is declined": "Sizin təklifiniz rədd edildi",
+  "Accept": "Qəbul et",
+  "File": "Fayl",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Biometrik təsdiqləmə uğurla başa çatdı, sizi bir müddət sonra panel səhifəsinə yönləndirəcəyik. Biometrikinizi təsdiqləyərkən zəhmət olmasa gözləyin..."
 }

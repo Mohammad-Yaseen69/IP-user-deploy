@@ -794,5 +794,15 @@
   "Are you sure that you want to decline the offer?": "Ar tikrai norite atmesti pasiūlymą?",
   "Your quotation is declined": "Jūsų pasiūlymas atmestas",
   "Accept": "Priimti",
-  "File": "Failas"
+  "File": "Failas",
+  "We cannot process your request at the moment, please try again later.": "我们目前无法处理您的请求，请稍后再试.",
+  "The phone number or email already exists.": "该电话号码或电子邮件地址已存在.",
+  "You can now close this window and go back to chatbot": "您现在可以关闭此窗口并返回聊天机器人.",
+  "2. Send <strong>“ Hi ”</strong> to <strong>@instapay_swiss</strong> and select <strong> QR QuickPay </strong>": "2. 向 @instapay_swiss 发送\"Labas\"，然后选择二维码快速支付.",
+  "You haven’t created any invoices yet.": "您尚未创建任何发票.",
+  "You’ll be redirected to the InstaPay eShop dashboard to manage your shop and transactions. Please review and accept the Terms of Service to proceed.": "您将被重定向至 InstaPay eShop控制面板，以管理您的店铺和交易。请阅读并接受服务条款以继续.",
+  "Instantly transfer money to non- InstaPay users with our secure wallet-to-wallet service. Send and receive funds hassle-free within seconds.": "使用我们安全的钱包间转账服务，即可立即向非InstaPay用户转账。几秒钟内即可轻松收发款项.",
+  "This document serves as the company's official \\\"identity card,\\\" and it should be obtained from the local business registry. It reflects the current status of the business (active or closed).": "这份文件相当于公司的官方\"身份证\"，应该从当地商业登记处获取。它反映了公司目前的经营状态（正常营业或已关闭）.",
+  "You haven’t created any plans yet": "你还没有制定任何计划.",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "生物识别验证成功，稍后我们将把您重定向到控制面板页面。): t('请稍候，我们正在验证您的生物识别信息..."
 }

@@ -2834,8 +2834,7 @@
   "Total amount to pay": "Lapapọ iye lati san",
   "Payment purpose": "Idi owo sisan",
   "TRC20 Network only": "Nẹtiwọọki TRC20 nikan",
-  "Enter your name": "Loading...",
-  "Scan to pay": "Loading...",
+  "Enter your name": "Tẹ orukọ rẹ sii",
   "Maximum amount for guest pay is": "O pọju iye fun alejo sanwo ni",
   "Zip Code": "koodu Zip",
   "House No": "Ile No",
@@ -3016,7 +3015,8 @@
   "Uzbek": "Uzbeki",
   "Georgian": "Àwọn ará Georgian",
   "Armenian": "Arméníà",
-  "Are you sure that you want to decline the offer?": "Loading...",
+  "Are you sure that you want to decline the offer?": "Ṣe o da ọ loju pe o fẹ kọ ìfúnni naa sílẹ̀?",
   "Your quotation is declined": "A kọ̀ ìfúnni rẹ sílẹ̀",
-  "File": "Fáìlì"
+  "File": "Fáìlì",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Ìfìdíwọ̀n bíómẹ́trìkì yọrí sí rere, A ó darí rẹ sí ojú ìwé dáṣíbọ́ọ̀dì láìpẹ́.\"): t('Jọ̀wọ́ dúró títí a ó fi ṣàyẹ̀wò bíómẹ́trìkì rẹ..."
 }

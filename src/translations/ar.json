@@ -3018,5 +3018,6 @@
   "Armenian": "الأرمنية",
   "Are you sure that you want to decline the offer?": "هل أنت متأكد من رغبتك في رفض العرض؟",
   "Your quotation is declined": "تم رفض عرض الأسعار الخاص بك",
-  "File": "ملف"
+  "File": "ملف",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "تم التحقق من بياناتك البيومترية بنجاح، سنعيد توجيهك إلى صفحة لوحة التحكم بعد قليل.) : t('يرجى الانتظار ريثما نتحقق من بياناتك البيومترية..."
 }

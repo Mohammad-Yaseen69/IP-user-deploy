@@ -3019,6 +3019,7 @@
   "Georgian": "जॉर्जीयन्",
   "Armenian": "अर्मेनियाई",
   "Are you sure that you want to decline the offer?": "क्या आप वाकई इस प्रस्ताव को अस्वीकार करना चाहते हैं?",
-  "Your quotation is declined": "Loading...",
-  "File": "Loading..."
+  "Your quotation is declined": "आपका उद्धरण अस्वीकार कर दिया गया है",
+  "File": "लोड हो रहा है...",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "बायोमेट्रिक सत्यापन सफल रहा, हम आपको कुछ देर में डैशबोर्ड पेज पर रीडायरेक्ट कर देंगे। कृपया प्रतीक्षा करें जब तक हम आपके बायोमेट्रिक का सत्यापन नहीं कर लेते..."
 }
