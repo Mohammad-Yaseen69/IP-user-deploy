@@ -125,7 +125,7 @@ const InvoicePayment = () => {
   if (!data) {
     return (
       <Wrapper>
-        <h3 style={{ textAlign: "center", margin: "auto", zIndex: 100,padding: "24px" }}>{("This Invoice Does not exist")}</h3>
+        <h3 style={{ textAlign: "center", margin: "auto", zIndex: 100, padding: "24px" }}>{("This Invoice Does not exist")}</h3>
       </Wrapper>
     )
   }
@@ -135,7 +135,7 @@ const InvoicePayment = () => {
   if (!data.active) {
     return (
       <Wrapper>
-        <h3 style={{ textAlign: "center", margin: "auto", zIndex: 100,padding: "24px" }}>{("This Invoice is inactive!")}</h3>
+        <h3 style={{ textAlign: "center", margin: "auto", zIndex: 100, padding: "24px" }}>{("This Invoice is inactive!")}</h3>
       </Wrapper>
     )
   }

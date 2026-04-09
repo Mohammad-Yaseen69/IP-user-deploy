@@ -10,11 +10,12 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import { UserContext } from "../../Context/UserContext"
 import { useLocation } from "react-router"
 import useCountryLocation from "../../hooks/GeneralUse/useCountryLocation"
-
+import localforage from "localforage"
 const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }) => {
     const { i18n, t } = useTranslation()
     const [showDropDown, setShowDropDown] = useState()
-    const [currentLang, setCurrentLang] = useState(localStorage.getItem("i18nextLng"))
+    const [currentLang, setCurrentLang] = useState(defaultLanguage || "en")
+
     const [showModal, setShowModal] = useState(false)
     const { country: userCountryLocation, loading: countryLoading } = useCountryLocation()
 
@@ -163,7 +164,15 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
 
     const { authHeader, userDetails, setUserDetails } = useContext(UserContext)
 
-
+    useEffect(() => {
+        const loadLang = async () => {
+            const lang = await localforage.getItem("i18nextLng")
+            if (lang) {
+                setCurrentLang(lang)
+            }
+        }
+        loadLang()
+    }, [])
     // useEffect(() => {
     //     getLnagByCountry()
     // }, [])
@@ -218,54 +227,62 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
 
 
     useEffect(() => {
-        const userManuallySelected = localStorage.getItem("userSelectedLang")
+        const handleLanguage = async () => {
 
-        if (userDetails?.language) {
-            const targetLang = userDetails.language.toLowerCase()
-            const langItem = languageCountries.find(item =>
-                item.lang.toLowerCase() === targetLang ||
-                item.label.toLowerCase() === targetLang
-            )
-            if (langItem && i18n.language !== langItem.lang) {
-                i18n.changeLanguage(langItem.lang)
-                setCurrentLang(langItem.lang)
-                localStorage.setItem("i18nextLng", langItem.lang)
+            const userManuallySelected = await localforage.getItem("userSelectedLang", true)
+            const savedLang = await localforage.getItem("i18nextLng")
+
+            if (userDetails?.language) {
+                const targetLang = userDetails.language.toLowerCase()
+
+                const langItem = languageCountries.find(item =>
+                    item.lang.toLowerCase() === targetLang ||
+                    item.label.toLowerCase() === targetLang
+                )
+
+                if (langItem && i18n.language !== langItem.lang) {
+                    i18n.changeLanguage(langItem.lang)
+                    setCurrentLang(langItem.lang)
+                    await localforage.setItem("i18nextLng", langItem.lang)
+                }
+                return
             }
-            return
-        }
 
-        if (userManuallySelected) {
-            const saved = localStorage.getItem("i18nextLng")
-            if (saved && i18n.language !== saved) {
-                i18n.changeLanguage(saved)
-                setCurrentLang(saved)
+            if (userManuallySelected) {
+                if (savedLang && i18n.language !== savedLang) {
+                    i18n.changeLanguage(savedLang)
+                    setCurrentLang(savedLang)
+                }
+                return
             }
-            return
+
+            if (countryLoading) return
+
+            if (userCountryLocation) {
+                const detectedLang = countryLangMap[userCountryLocation] || 'en'
+
+                await localforage.removeItem("i18nextLng")
+                i18n.changeLanguage(detectedLang)
+                setCurrentLang(detectedLang)
+                await localforage.setItem("i18nextLng", detectedLang)
+                return
+            }
+
+            i18n.changeLanguage('en')
+            setCurrentLang('en')
+            await localforage.setItem("i18nextLng", 'en')
         }
 
-        if (countryLoading) return
+        handleLanguage()
 
-        if (userCountryLocation) {
-            const detectedLang = countryLangMap[userCountryLocation] || 'en'
-            localStorage.removeItem("i18nextLng")
-            i18n.changeLanguage(detectedLang)
-            setCurrentLang(detectedLang)
-            localStorage.setItem("i18nextLng", detectedLang)
-            return
-        }
-
-        i18n.changeLanguage('en')
-        setCurrentLang('en')
-        localStorage.setItem("i18nextLng", 'en')
-
-    }, [userDetails?.language, userCountryLocation, countryLoading])  
+    }, [userDetails?.language, userCountryLocation, countryLoading])
     useEffect(() => {
         const handlePosition = () => {
             const dropdown = dropdownRef.current
             if (!dropdown) return
             const rect = dropdown.getBoundingClientRect()
             const windowHeight = window.innerHeight
-            const dropdownHeight = 500 
+            const dropdownHeight = 500
             const shouldOpenUp = rect.bottom + dropdownHeight > windowHeight
             setOpenUp(shouldOpenUp)
         }
@@ -345,11 +362,11 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
                                 gap: "14px",
                                 padding: "12px 14px",
                                 background: currentLang === eng.lang ? "radial-gradient(4203.6% 250.48% at -13% 100%, #E64067 0%, #5926F0 55.65%, #4828A0 100%), radial-gradient(4203.6% 250.48% at -13% 100%, rgba(230, 64, 103, 0.10) 0%, rgba(89, 38, 240, 0.10) 55.65%, rgba(72, 40, 160, 0.10) 100%), #FFF" : "#f0f0f0",
-                            }} onClick={() => {
+                            }} onClick={async () => {
                                 i18n.changeLanguage(eng.lang)
                                 setCurrentLang(eng.lang)
-                                localStorage.setItem("i18nextLng", eng.lang)
-                                localStorage.setItem("userSelectedLang", "true")
+                                await localforage.setItem("i18nextLng", eng.lang)
+                                await localforage.setItem("userSelectedLang", true)
                                 setLanguage(eng.lang)
                             }}>
                                 <img src={eng.file_url} alt={eng.alpha3} style={{
@@ -373,11 +390,11 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
                                             gap: "14px",
                                             padding: "12px 14px",
                                             background: currentLang === item.lang ? "radial-gradient(4203.6% 250.48% at -13% 100%, #E64067 0%, #5926F0 55.65%, #4828A0 100%), radial-gradient(4203.6% 250.48% at -13% 100%, rgba(230, 64, 103, 0.10) 0%, rgba(89, 38, 240, 0.10) 55.65%, rgba(72, 40, 160, 0.10) 100%), #FFF" : "#f0f0f0",
-                                        }} onClick={() => {
+                                        }} onClick={async () => {
                                             i18n.changeLanguage(item.lang)
                                             setCurrentLang(item.lang)
-                                            localStorage.setItem("i18nextLng", item.lang)
-                                            localStorage.setItem("userSelectedLang", "true")
+                                            await localforage.setItem("i18nextLng", item.lang)
+                                            await localforage.setItem("userSelectedLang", true)
                                             setLanguage(item.lang)
                                         }}>
                                             <img src={item.file_url} alt={item.alpha3} style={{
@@ -463,11 +480,11 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
                                 background: currentLang === item.lang ? "radial-gradient(4203.6% 250.48% at -13% 100%, #E64067 0%, #5926F0 55.65%, #4828A0 100%), radial-gradient(4203.6% 250.48% at -13% 100%, rgba(230, 64, 103, 0.10) 0%, rgba(89, 38, 240, 0.10) 55.65%, rgba(72, 40, 160, 0.10) 100%), #FFF" : "#f0f0f0",
                                 flex: "1",
                                 cursor: "pointer"
-                            }} onClick={() => {
+                            }} onClick={async () => {
                                 i18n.changeLanguage(item.lang)
                                 setCurrentLang(item.lang)
-                                localStorage.setItem("i18nextLng", item.lang)
-                                localStorage.setItem("userSelectedLang", "true")
+                                await localforage.setItem("i18nextLng", item.lang)
+                                await localforage.setItem("userSelectedLang", true)
                                 toggleModal()
                                 setLanguage(item.lang)
                             }}>

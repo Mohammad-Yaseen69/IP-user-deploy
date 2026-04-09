@@ -80,7 +80,7 @@ const UserState = ({ children }) => {
     const [available, setAvailable] = useState(0)
     const [blocked, setBlocked] = useState(0)
     const [showAnotherLoginModal, setShowAnotherLoginModal] = useState(false)
-
+    const base_url = window.location.origin || 'https://my.insta-pay.ch';
 
 
     // mutations
@@ -430,7 +430,7 @@ const UserState = ({ children }) => {
             .then(res => {
                 const decrypted = decryptData(res.data.data)
                 const url = decrypted?.url.split("/signup/")
-                const formattedUrl = `https://my.insta-pay.ch/signup/${url[1]}`
+                const formattedUrl = `${base_url}/signup/${url[1]}`
                 setReferralLink(formattedUrl)
             })
     }

@@ -33,6 +33,7 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
     const [tooltip, setTooltip] = useState(false);
     const [isDraggable, setIsDraggable] = useState(false)
     const width = useWindowWidth()
+    const base_url = window.location.origin || 'https://my.insta-pay.ch';
     const handleClickOutside = (event) => {
         if (menuRef.current && !menuRef.current.contains(event.target)) {
             setShowMenu(false);
@@ -414,7 +415,7 @@ const PortfolioCard = ({ item, dragRef, dragOverRef, index, handleSort, pAddress
             <SocialModal
                 isOpen={showShareModal}
                 toggle={() => setShowShareModal(!showShareModal)}
-                link={"https://my.insta-pay.ch/profile/" + userDetails?.username}
+                link={`${base_url}/profile/` + userDetails?.username}
             />
             {
                 showEdit

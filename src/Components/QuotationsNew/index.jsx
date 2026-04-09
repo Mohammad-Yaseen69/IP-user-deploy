@@ -200,7 +200,13 @@ const Quotations = () => {
                             <div>{t("Date & Time")}</div>
                             {/* <div>{t("Title")}</div>
                         <div>{t("Description")}</div> */}
-                            <div>{t("Recipient")}</div>
+                            {
+                                active === "Received Quotations"
+                                    ?
+                                    <div>{t("Sender")}</div>
+                                    :
+                                    <div>{t("Receiver")}</div>
+                            }
                             <div>{t("Amount")}</div>
                             <div>{t("Revised Amount")}</div>
                             <div>{t("Status")}</div>

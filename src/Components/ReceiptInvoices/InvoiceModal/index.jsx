@@ -23,7 +23,9 @@ const initialData = {
     mode: "form",
     wallet: "",
     invoiceId: "",
-    generatingQr: true
+    generatingQr: true,
+    countryIsoCode: null,
+    specifyCountry: false
 }
 
 function reducer(state, action) {
@@ -70,11 +72,19 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
             dataHandler("invoiceId", inv.invoiceId)
             dataHandler("allowMultiple", inv.recurring)
             dataHandler("allowShipping", inv.shippingAddress)
+            dataHandler("countryIsoCode", inv.countryIsoCode)
+            if (inv.countryIsoCode) {
+                dataHandler("specifyCountry", true)
+            }
         }
     }, [isEdit, inv])
 
     const isInvalid = useMemo(() => {
-        return !data.title?.trim() || !data.description?.trim() || !data.amount || Number(data.amount) <= 0 || !data.wallet
+        const baseInvalid = !data.title?.trim() || !data.description?.trim() || !data.amount || Number(String(data.amount).replace(/,/g, "")) <= 0 || !data.wallet
+        if (data.specifyCountry) {
+            return baseInvalid || !data.countryIsoCode
+        }
+        return baseInvalid
     }, [data])
 
 
@@ -125,7 +135,8 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
             "shippingAddress": data.allowShipping,
             "amount": Number(data.amount.replace(",", "")),
             "currency": userWallets?.find(w => w._id === data.wallet)?.currency?.code,
-            "active": true
+            "active": true,
+            "countryIsoCode": data.countryIsoCode
         }
     }
 

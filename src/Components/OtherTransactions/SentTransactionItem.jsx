@@ -7,11 +7,13 @@ import { cancelSubscriptionOrSchedulePayment } from "./ReceivedTransactionItem.j
 import { UserContext } from "../../Context/UserContext.jsx"
 import SubscriptionDetails from "./SubscriptionDetails.jsx"
 import { useTranslation } from "react-i18next"
+import { useQueryClient } from "@tanstack/react-query"
 
 
 const SentTransactionItem = ({ color, item, activeItem, setActiveItem, index, currentUser }) => {
     const { t } = useTranslation()
     const [currentImage, setCurrentImage] = useState("")
+    const queryClient = useQueryClient()
     const item_date = item?.date
     const { authHeader, verifyToken } = useContext(UserContext)
     const recipient = useMemo(() => {
@@ -60,7 +62,7 @@ const SentTransactionItem = ({ color, item, activeItem, setActiveItem, index, cu
                         // pointerEvents: item?.status === "processing" || item?.status === "pending" ? "all" : "none",
                         cursor: item?.status === "processing" || item?.status === "pending" ? "pointer" : "not-allowed",
                     }}
-                        onClick={() => item?.status === "processing" || item?.status === "pending" ? cancelSubscriptionOrSchedulePayment(item, authHeader, verifyToken) : console.log("")}
+                        onClick={() => item?.status === "processing" || item?.status === "pending" ? cancelSubscriptionOrSchedulePayment(item, authHeader, verifyToken,queryClient) : console.log("")}
                     >
                         <X color="#fff" />
                     </div>

@@ -1,9 +1,9 @@
-import React, { useContext, useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import { Field, TextArea, TextInput, Select, Toggle } from '../UI/FormElements'
 import { useTranslation } from 'react-i18next'
-import { currencies } from '../../PaymentsNewer/InternationalFlow/StepOne'
 import { formatCurrency } from '../../../Helper/AmountFormat'
 import { UserContext } from '../../../Context/UserContext'
+import CountryDropDown from '../../AddBeneficiary/CountryDropDown'
 
 const Form = ({ data, inputFieldChange, dataHandler }) => {
     const { t } = useTranslation()
@@ -20,7 +20,7 @@ const Form = ({ data, inputFieldChange, dataHandler }) => {
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <Field label={t('Title')} required>
+            <Field label={t('Title')} required={!data.title}>
                 <div style={{ width: '100%' }}>
                     <TextInput value={data.title} onChange={inputFieldChange('title')} placeholder={t('Enter title')} maxLength={100} />
                     <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 4 }}>
@@ -28,7 +28,7 @@ const Form = ({ data, inputFieldChange, dataHandler }) => {
                     </div>
                 </div>
             </Field>
-            <Field label={t('Description')} required>
+            <Field label={t('Description')} required={!data.description}>
                 <div style={{ width: '100%' }}>
                     <TextArea
                         value={data.description}
@@ -50,7 +50,7 @@ const Form = ({ data, inputFieldChange, dataHandler }) => {
                     </div>
                 </div>
             </Field>
-            <Field label={t('Amount')} required>
+            <Field label={t('Amount')} required={!data.amount || Number(data.amount.replace(",", "")) === 0}>
                 <TextInput
                     value={data.amount}
                     onChange={(e) => {
@@ -64,9 +64,19 @@ const Form = ({ data, inputFieldChange, dataHandler }) => {
                     placeholder={t('0.00')}
                 />
             </Field>
-            <Field label={t('Receiving Wallet')} required>
+            <Field label={t('Receiving Wallet')} required={!data.wallet}>
                 <Select value={data.wallet} onChange={inputFieldChange('wallet')} options={walletOptions} placeholder={t('Select wallet')} />
             </Field>
+
+
+            {data.specifyCountry && (
+                <Field label={t('Country')} required={!data.countryIsoCode}>
+                    <CountryDropDown
+                        country={data.countryIsoCode}
+                        onSelect={(country) => dataHandler('countryIsoCode', country.alpha3)}
+                    />
+                </Field>
+            )}
 
             <Field toggle={true} label={t('Allow multiple payments for this invoice')}>
                 <Toggle checked={data.allowMultiple} onChange={() => dataHandler('allowMultiple', !data.allowMultiple)} />
@@ -74,6 +84,19 @@ const Form = ({ data, inputFieldChange, dataHandler }) => {
 
             <Field toggle={true} label={t('Allow shipping address')}>
                 <Toggle checked={data.allowShipping} onChange={() => dataHandler('allowShipping', !data.allowShipping)} />
+            </Field>
+
+            <Field toggle={true} label={t('Specify country')}>
+                <Toggle
+                    checked={data.specifyCountry}
+                    onChange={() => {
+                        const nextVal = !data.specifyCountry
+                        dataHandler('specifyCountry', nextVal)
+                        if (!nextVal) {
+                            dataHandler('countryIsoCode', null)
+                        }
+                    }}
+                />
             </Field>
         </div>
     )

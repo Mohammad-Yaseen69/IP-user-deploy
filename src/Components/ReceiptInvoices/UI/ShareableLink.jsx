@@ -10,7 +10,7 @@ const ShareableLink = ({ invoiceId, style, hideHeader = false }) => {
     const { userDetails } = useContext(UserContext)
 
     const shareLink = useMemo(() => {
-        const base = 'https://my.insta-pay.ch'
+    const base = window.location.origin || 'https://my.insta-pay.ch';
         return `${base}/invoice/${userDetails?.username}/${invoiceId}`
     }, [invoiceId])
     return (

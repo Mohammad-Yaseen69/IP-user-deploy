@@ -32,6 +32,8 @@ const qrCode = new QRCodeStyling({
     },
     backgroundOptions: { color: "#ffffff" },
 });
+    const base_url = window.location.origin || 'https://my.insta-pay.ch';
+
 
 const QrCode = () => {
     const [fileExt, setFileExt] = useState("png");
@@ -47,7 +49,7 @@ const QrCode = () => {
 
     const uploadQR = async (item) => {
         // const url = `https://my.instapay.ch/payments?payment_action=send_money&send_type=qr_pay&wallet_id=${item?.wallet_id}`
-        const url = `https://my.insta-pay.ch/q/${item?.wallet_id}`
+        const url = `${base_url}/q/${item?.wallet_id}`
         qrCode.update({ data: url });
         const fileName = `qrcode.${fileExt}`;
         const mimeType = `image/${fileExt === "jpg" ? "jpeg" : fileExt}`;

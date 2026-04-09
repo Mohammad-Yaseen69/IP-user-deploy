@@ -28,6 +28,7 @@ import PaypalDetails from "./PaypalDetails";
 import MobileWalletStatus from "./MobileWalletStatus";
 import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
 import { isCardValid, isPersonalInfoValid, isShippingValid } from "../../../utils/Functions/validations";
+import allCountries from "../../PaymentsNewer/CountriesData.json";
 
 const initialState = {
   loading: false,
@@ -86,7 +87,8 @@ const PayAsGuest = ({
   invoiceId,
   type = "payment_address",
   planId,
-  subscriptionId
+  subscriptionId,
+  countryIsoCode
 }) => {
   const { t } = useTranslation();
   const [data, dispatch] = useReducer(reducer, initialState);
@@ -109,6 +111,17 @@ const PayAsGuest = ({
       dataHandler("step", 2)
     }
   }, [type])
+
+  useEffect(() => {
+    if (isOpen && countryIsoCode) {
+      const selected = allCountries.find(c => c.alpha3 === countryIsoCode);
+      if (selected) {
+        dataHandler("country", selected);
+        dataHandler("step", 2);
+      }
+    }
+  }, [isOpen, countryIsoCode])
+
   const initiatePaypalPayment = async () => {
     dataHandler("loading", true);
     let formattedDob = data.dob;
@@ -430,7 +443,7 @@ const PayAsGuest = ({
         toggle();
         break;
       case 2:
-        if (type === "subscription") {
+        if (type === "subscription" || countryIsoCode) {
           toggle();
         } else {
           dataHandler("step", 1);
@@ -636,7 +649,7 @@ const PayAsGuest = ({
       }
     };
 
-    if (user?.level?._id) {
+    if (user?.level?._id && data?.country?.alpha3) {
       getPayouts();
     }
   }, [user, data?.country]);
