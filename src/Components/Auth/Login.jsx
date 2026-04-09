@@ -1336,8 +1336,28 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             {
                                                 resendTimer > 0
                                                     ? (methods.filter(m => m.avail).length > 1 && (lastOtpSentTo && ['sms', 'insta', 'wp', 'email'].includes(pendingOtpMethod || currentOtpMethod) && lastOtpSentTo !== (pendingOtpMethod || currentOtpMethod)) || (pendingOtpMethod && lastOtpSentTo !== currentOtpMethod))
-                                                        ? <span> {t(`You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : lastOtpSentTo === "wp" ? "Whatsapp" : lastOtpSentTo === 'email' ? 'Email' : 'Instagram'}, wait ${resendTimer} seconds to get code on ${(pendingOtpMethod || currentOtpMethod) === 'sms' ? 'SMS' : (pendingOtpMethod || currentOtpMethod) === "wp" ? "Whatsapp" : (pendingOtpMethod || currentOtpMethod) === 'email' ? 'Email' : 'Instagram'}`)} </span>
-                                                        :
+                                                        ?
+                                                        <span>
+                                                            {t("You have already requested code on")}{" "}
+                                                            {lastOtpSentTo === "sms"
+                                                                ? "SMS"
+                                                                : lastOtpSentTo === "wp"
+                                                                    ? "WhatsApp"
+                                                                    : lastOtpSentTo === "email"
+                                                                        ? "Email"
+                                                                        : "Instagram"}
+                                                            {", "}
+                                                            {t("wait")}{" "}
+                                                            {resendTimer}{" "}
+                                                            {t("seconds to get code on")}{" "}
+                                                            {(pendingOtpMethod || currentOtpMethod) === "sms"
+                                                                ? "SMS"
+                                                                : (pendingOtpMethod || currentOtpMethod) === "wp"
+                                                                    ? "WhatsApp"
+                                                                    : (pendingOtpMethod || currentOtpMethod) === "email"
+                                                                        ? "Email"
+                                                                        : "Instagram"}
+                                                        </span> :
                                                         currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" && <span>{t("Resend code in 30 seconds").replace("30", resendTimer)}</span>
                                                     :
                                                     <>

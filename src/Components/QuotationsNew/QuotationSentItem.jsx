@@ -119,6 +119,7 @@ const QuotationSentItem = ({ item, activeItem, setActiveItem, index }) => {
                     setActiveItem(0)
                 }
             }}>
+                <div>{item?.reference_id}</div>
                 <div>{new Date(item?.createdAt)?.toLocaleString()}</div>
                 <div>
                     {item?.reciever?.account_type === "individual" ? `${item?.reciever?.user?.first_name} ${item?.reciever?.user?.last_name}`?.slice(0, window.innerWidth < 1500 ? 16 : 20) + ".." : item?.reciever?.company?.company_name}

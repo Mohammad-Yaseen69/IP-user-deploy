@@ -52,17 +52,17 @@ const Steptwo = ({ data, dataHandler }) => {
                     </div>
                     <div className={styles.inp}>
                         <label>{t("First Name")}</label>
-                        <input type="text" value={data.first_name} onChange={e => dataHandler("first_name", e.target.value)} placeholder={t("Enter Your First Name")} />
+                        <input type="text" value={data.first_name} maxLength={30} onChange={e => dataHandler("first_name", e.target.value)} placeholder={t("Enter Your First Name")} />
                     </div>
                     <div className={styles.inp}>
                         <label>{t("Last Name")}</label>
-                        <input type="text" value={data.last_name} onChange={e => dataHandler("last_name", e.target.value)} placeholder={t("Enter Your Last Name")} />
+                        <input type="text" value={data.last_name} maxLength={30} onChange={e => dataHandler("last_name", e.target.value)} placeholder={t("Enter Your Last Name")} />
                     </div>
                 </> :
                 <>
                     <div className={styles.inp}>
                         <label>{t("Company Name")}:</label>
-                        <input type="text" value={data.company_name} onChange={e => dataHandler("company_name", e.target.value)} placeholder={t("Enter Your Company Name")} />
+                        <input type="text" value={data.company_name} maxLength={80} onChange={e => dataHandler("company_name", e.target.value)} placeholder={t("Enter Your Company Name")} />
                     </div>
                     <div className={styles.inp}>
                         <label>{t("Select Country")}:</label>

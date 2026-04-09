@@ -794,13 +794,8 @@
   "Your quotation is declined": "თქვენი შეთავაზება უარყოფილია",
   "Accept": "დამტკიცება",
   "File": "ფაილი",
-  "Samsung Galaxy S21 eSIM support": "ახალი Galaxy S21 eSIM",
-  "For added security, please create a 4-digit \\n PIN to protect your session.": "为了提高安全性，请创建一个 4 位数的 PIN 码来保护您的会话。",
-  "Add Payment Purpose and Reference": "添加付款用途和参考信息",
-  "We cannot process your request at the moment, please try again later.": "我们目前无法处理您的请求，请稍后再试.",
-  "The phone number or email already exists.": "该电话号码或电子邮件地址已存在.",
-  "You can now close this window and go back to chatbot": "您现在可以关闭此窗口并返回聊天机器人。",
-  "Choose your preferred external browser from the available options.": "从可用选项中选择您偏好的外部浏览器.",
-  "This document serves as the company's official \\\"identity card,\\\" and it should be obtained from the local business registry. It reflects the current status of the business (active or closed).": "这份文件相当于公司的官方\"身份证\"，应该从当地商业登记处获取。它反映了公司目前的经营状态（正常营业或已关闭）。",
-  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "生物识别验证成功，稍后我们将把您重定向到控制面板页面。\"): t('请稍候，我们正在验证您的生物识别信息..."
+  "For added security, please create a 4-digit \\n PIN to protect your session.": "დამატებითი უსაფრთხოების მიზნით, შექმენით 4-ნიშნა PIN კოდი თქვენი სესიის დასაცავად.",
+  "Choose your preferred external browser from the available options.": "აირჩიეთ სასურველი გარე ბრაუზერი ხელმისაწვდომი ვარიანტებიდან.",
+  "This document serves as the company's official \\\"identity card,\\\" and it should be obtained from the local business registry. It reflects the current status of the business (active or closed).": "ეს დოკუმენტი წარმოადგენს კომპანიის ოფიციალურ \"საიდენტიფიკაციო ბარათს\" და უნდა იყოს მიღებული ადგილობრივი ბიზნეს რეესტრიდან. იგი ასახავს ბიზნესის მიმდინარე მდგომარეობას (აქტიური ან დახურული).",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "ბიომეტრიული ვერიფიკაცია წარმატებით დასრულდა, ცოტა ხანში დაგვიბრუნებთ დეშბორდზე. გთხოვთ დაელოდოთ ბიომეტრიის ვერიფიკაციას..."
 }

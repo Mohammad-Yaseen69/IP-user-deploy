@@ -264,7 +264,6 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                 <CardBody className={styles.sc_body}>
 
 
-                                    {/* basic info */}
                                     <div className={styles.top}>
                                         <div ref={leftRef} className={styles.left}>
                                             <Profile dets={paymentAddressDetails} dp={dp} setDp={setDp} />

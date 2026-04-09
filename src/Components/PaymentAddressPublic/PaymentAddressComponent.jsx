@@ -23,7 +23,6 @@ import { flagCheck } from "../../utils/Functions";
 import useCountryLocation from "../../hooks/GeneralUse/useCountryLocation";
 import VpnModal from "../Auth/VpnModal";
 
-
 const QrDetails = lazy(() => import("./QrDetails"));
 const PayAsGuest = lazy(() => import("./PayAsGuest"));
 const InstaPayLoader = lazy(() => import("../Loader"));
@@ -109,7 +108,7 @@ export const LeftJsx = ({
 }) => {
   const queryParams = new URLSearchParams(location.search)
   const isFromQr = queryParams.get('fromQr')
-
+  const { t } = useTranslation()
   return (
     <div
       style={{
@@ -127,7 +126,7 @@ export const LeftJsx = ({
       {width > 1000 && (
         <div className={styles.left_top}>
           <AnimatedHeader />
-          <img src={ip} alt=""  onClick={() => window.location.href = "https://insta-pay.ch"} />
+          <img src={ip} alt="" onClick={() => window.location.href = "https://insta-pay.ch"} />
         </div>
       )}
       {!isFromQr &&
@@ -135,10 +134,10 @@ export const LeftJsx = ({
           <div>
             {(flagCheck("allowTitle", userDetails, "paymentAddress") ? title : "") || (flagCheck("allowDescription", userDetails, "paymentAddress") ? description : "") ? (
               <div className={styles.about}>
-                {flagCheck("allowTitle", userDetails, "paymentAddress") && <h4 style={{ marginBottom: "0px" }}>{title}</h4>}
+                {flagCheck("allowTitle", userDetails, "paymentAddress") && <h4 style={{ marginBottom: "0px" }}>{t(title)}</h4>}
                 {flagCheck("allowDescription", userDetails, "paymentAddress") && (
                   <p style={{ fontSize: "14px", fontWeight: 600, color: "#7E7E7E" }}>
-                    {description}
+                    {t(description)}
                   </p>
                 )}
               </div>
@@ -511,7 +510,7 @@ const PaymentAddressComponent = ({ userDetails, userVideos }) => {
                         }}
                       >
                         <AnimatedHeader mobileUI />
-                        <img src={ip} alt="" style={{ margin: "20px auto", width: "200px" }}  onClick={() => window.location.href = "https://insta-pay.ch"}/>
+                        <img src={ip} alt="" style={{ margin: "20px auto", width: "200px" }} onClick={() => window.location.href = "https://insta-pay.ch"} />
                       </div>
                     }
                   </div>
