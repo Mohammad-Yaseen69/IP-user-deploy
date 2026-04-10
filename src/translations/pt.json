@@ -2840,9 +2840,9 @@
   "Business Account": "Conta empresarial",
   "Total amount to pay": "Valor total a pagar",
   "Payment purpose": "Finalidade do pagamento",
-  "TRC20 Network only": "Somente rede TRC20",
-  "Enter your name": "Loading...",
-  "Scan to pay": "Loading...",
+  "TRC20 Network only": "Apenas rede TRC20",
+  "Enter your name": "Digite seu nome",
+  "Scan to pay": "Escanear para pagar",
   "Maximum amount for guest pay is": "O valor máximo para pagamento de hóspedes é",
   "Zip Code": "CEP",
   "House No": "Casa nº",
@@ -3023,5 +3023,9 @@
   "Azerbaijani": "azerbaijano",
   "Uzbek": "Uzbeque",
   "Georgian": "georgiano",
-  "Armenian": "armênio"
+  "Armenian": "armênio",
+  "Are you sure that you want to decline the offer?": "Tem certeza de que deseja recusar a oferta?",
+  "Your quotation is declined": "Sua cotação foi recusada.",
+  "File": "Arquivo",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Verificação biométrica concluída com sucesso. Você será redirecionado para a página do painel em instantes. Aguarde enquanto verificamos seus dados biométricos."
 }

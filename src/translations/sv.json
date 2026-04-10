@@ -790,6 +790,11 @@
   "Finnish": "finska",
   "Azerbaijani": "Èdè azerbajdzjanska",
   "Uzbek": "Uzbekiska",
-  "Georgian": "Àwọn ará georgiska",
-  "Armenian": "Arménien"
+  "Georgian": "Georgiska",
+  "Armenian": "Armeniska",
+  "Are you sure that you want to decline the offer?": "Är du säker på att du vill avböja erbjudandet?",
+  "Your quotation is declined": "Ditt erbjudande har avslagits",
+  "Accept": "Acceptera",
+  "File": "Fil",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Ìfìdíwọ̀n bíómẹ́trìkì yọrí sí rere, A ó darí rẹ sí ojú ìwé dáṣíbọ́ọ̀dì láìpẹ́.\"): t('Jọí̀ít óọí̀ót a fiọ́ít óọí̀ót ṣàyẹ̀wò bíómẹ́trìkì rẹ..."
 }

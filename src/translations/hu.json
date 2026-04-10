@@ -791,5 +791,10 @@
   "Azerbaijani": "azerbajdzsáni",
   "Uzbek": "üzbegisztáni",
   "Georgian": "gruziński",
-  "Armenian": "ormiański"
+  "Armenian": "ormiański",
+  "Are you sure that you want to decline the offer?": "Biztosan el akarja utasítani az ajánlatot?",
+  "Your quotation is declined": "Az Ön árajánlata elutasítva",
+  "Accept": "Elfogad",
+  "File": "Fájl",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "A biometrikus azonosítás sikeresen megtörtént. Hamarosan átirányítjuk a vezérlőpult oldalra.\") : t('Kérjük, várjon, miközben ellenőrizzük a biometrikus adatait..."
 }

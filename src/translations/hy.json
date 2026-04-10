@@ -790,6 +790,11 @@
   "Finnish": "ֆիննական",
   "Azerbaijani": "Ադրբեջանի",
   "Uzbek": "Ուսբեկական",
-  "Georgian": "գևորգերեն",
-  "Armenian": "Արմենիշ"
+  "Georgian": "վրացերեն",
+  "Armenian": "հայերեն",
+  "Are you sure that you want to decline the offer?": "Համոզվա՞ծ եք, որ ցանկանում եք մերժել առաջարկը։",
+  "Your quotation is declined": "Ձեր առաջարկը մերժվել է",
+  "Accept": "Ընդունել",
+  "File": "Ֆայլ",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Biometrische Verifizierung erfolgreich. Sie werden in Kürze zum Dashboard weitergeleitet.\") : t('Bitte warten Sie, während wir Ihre biometrischen Daten überprüfen..."
 }

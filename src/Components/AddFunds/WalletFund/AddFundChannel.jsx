@@ -121,7 +121,9 @@ const AddFundChannel = ({ setChannel, channel, setSubStep, thunesServices, setSh
                                             width: "19px",
                                             objectFit: "contain",
                                             aspectRatio: 1
-                                        }} />
+                                        }} 
+                                        loading="lazy"
+                                        />
                                     </div>
                                     <h5 style={{ marginBottom: 0, fontSize: "1.2rem" }}>
                                         {t(item?.name) + " "}

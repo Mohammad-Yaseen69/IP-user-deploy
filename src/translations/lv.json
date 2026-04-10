@@ -791,5 +791,10 @@
   "Azerbaijani": "الأذرية",
   "Uzbek": "أوزبكي",
   "Georgian": "Arābu Emirāts",
-  "Armenian": "الأرمنية"
+  "Armenian": "الأرمنية",
+  "Are you sure that you want to decline the offer?": "هل أنت متأكد أنك تريد رفض العرض؟",
+  "Your quotation is declined": "تم رفض عرض السعر الخاص بك",
+  "Accept": "يقبل",
+  "File": "ملف",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "تم التحقق من بياناتك البيومترية بنجاح، سنعيد توجيةف؉ةإهك لوحة التحكم بعد قليل.) : t('يرجى الانتظار ريثما نتح٧ناانقبملل البيومترية..."
 }
