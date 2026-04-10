@@ -791,5 +791,10 @@
   "Azerbaijani": "azerbajdžanskij",
   "Uzbek": "uzbekistanski",
   "Georgian": "Gruzijski",
-  "Armenian": "Armenski"
+  "Armenian": "Armenski",
+  "Are you sure that you want to decline the offer?": "Jeste li sigurni da želite odbiti ponudu?",
+  "Your quotation is declined": "Vaša citata je odbijena",
+  "Accept": "Prihvati",
+  "File": "Datoteka",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Biometrijska provjera prošla uspješno. Kroz neko vrijeme preusmjeravamo vas na stranicu panela upravljanja.\" : t('Požalite, doždite, dok ne provjerimo vaše biometrijske podatke..."
 }

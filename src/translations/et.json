@@ -791,5 +791,10 @@
   "Azerbaijani": "Азербайджанська",
   "Uzbek": "Uzbecjaka",
   "Georgian": "Gruzinsjaka",
-  "Armenian": "Virmenska"
+  "Armenian": "Virmenska",
+  "Are you sure that you want to decline the offer?": "Taklifni rad etmoqchi ekanligingizga ishonchingiz komilmi?",
+  "Your quotation is declined": "Sizning taklifingiz rad etildi",
+  "Accept": "Qabul qilish",
+  "File": "Fayl",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Біометрична перевірка успішна. Ми перенаправимо вас на сторінку панелі інструментів через деякий час.\") : t(\"Будь ласка, зачеприкай ваші біометричні...\""
 }

@@ -3022,5 +3022,9 @@
   "Azerbaijani": "azerbaïdjanais",
   "Uzbek": "Ouzbek",
   "Georgian": "géorgien",
-  "Armenian": "arménien"
+  "Armenian": "arménien",
+  "Are you sure that you want to decline the offer?": "Êtes-vous sûr de vouloir refuser l'offre ?",
+  "Your quotation is declined": "Votre devis est refusé",
+  "File": "Chargement",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Vérification biométrique réussie. Vous serez redirigé vers le tableau de bord dans quelques instants.) : t('Veuillez patienter pendant que nous vérifions vos données biométriques..."
 }

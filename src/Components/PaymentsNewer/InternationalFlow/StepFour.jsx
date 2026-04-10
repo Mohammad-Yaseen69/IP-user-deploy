@@ -301,7 +301,7 @@ const StepFour = ({
                   console.log(data.payment_type);
                 }}
               >
-                <img src={item.icon} alt="" className={styles.icon} />
+                <img src={item.icon} alt="" className={styles.icon} loading="lazy" />
                 <span>
                   {t(item.name)}
                   {item.value === "mobile" &&
@@ -337,9 +337,11 @@ const StepFour = ({
                     <img
                       src={i}
                       alt="i"
+                      loading="lazy"
+                      width={"35px"}
+                      height={"35px"}
                       style={{
-                        height: "35px",
-                        width: "35px",
+                      
                         objectFit: "contain",
                         marginLeft: "auto",
                       }}
