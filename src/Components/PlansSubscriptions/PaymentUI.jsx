@@ -40,7 +40,7 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
                 }
             },
             width: "15px",
-            disabled: true
+            // disabled: true
         },
         {
             label: "Pay with Crypto",

@@ -84,26 +84,23 @@ const UserDets = ({ croppedCover, cover, dp, croppedDp, userDetails, user_name, 
             });
         }
 
+        if (plansData && plansData.length > 0 && !isFromQr) {
+            buttons.push({
+                label: "View Plans",
+                onClick: () => setShowPlansModal(true),
+                disable: false,
+                purple: false,
+            });
+        }
+
         setActionsButtons(buttons);
 
-    }, [storeData, userDetails, invoice]);
-
-    useEffect(() => {
-        if (plansData && plansData.length > 0 && !isFromQr ) {
-            setActionsButtons(prev => [
-                ...prev,
-                {
-                    label: "View Plans",
-                    onClick: () => setShowPlansModal(true),
-                    disable: false,
-                    purple: false,
-                },
-            ]);
-        }
-    }, [plansData]);
+    }, [storeData, userDetails, invoice, plansData, isFromQr, user_name, navigate]);
 
 
 
+ 
+    console.log(actionButtons, "planData")
 
     return (
         <div className={styles.userDets} style={{ position: "relative" }} >

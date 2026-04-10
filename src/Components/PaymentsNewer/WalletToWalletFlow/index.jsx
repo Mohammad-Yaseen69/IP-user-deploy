@@ -167,6 +167,8 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
     const currency = queryParams.get("currency")
     const amount = queryParams.get("amount")
     const invoiceId = queryParams.get("invoiceId")
+    const planId = queryParams.get('planId')
+    const subscriptionId = queryParams.get('subscriptionId')
     const isShipping = queryParams.get("isShipping")
     const phone = queryParams.get("phone")
 
@@ -354,6 +356,17 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
             }
             payload.data.purpose = "OTHERS"
         }
+
+        if (planId) {
+            payload.data.plan_id = planId
+        }
+
+        if (subscriptionId && planId) {
+            payload.data.subscription_id = subscriptionId
+            payload.data.isSubscription = true
+            payload.data.plan_id = planId
+        }
+
         return payload
     }
 
@@ -1163,9 +1176,9 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                         <div className={styles.left}>
                                             <div className={styles.l_top}>
                                                 <h1>{t("Send Money")}</h1>
-                                                <h2>{data.step === 5 && data.showCard && data.payment_type?.value === "card"  ? t("Select Or Add Payment Card") : data.payment_type?.value === "bank_transfer" ? t("Europe Bank Transfer") : t(leftSideContent?.[data.step - 1])}</h2>
+                                                <h2>{data.step === 5 && data.showCard && data.payment_type?.value === "card" ? t("Select Or Add Payment Card") : data.payment_type?.value === "bank_transfer" ? t("Europe Bank Transfer") : t(leftSideContent?.[data.step - 1])}</h2>
                                             </div>
-                                            {data.step === 1 && !payment_type && data.currency?._id  && <RecentTransactions dataHandler={dataHandler} type={"wallet_to_wallet"} dataCurrency={data} />}
+                                            {data.step === 1 && !payment_type && data.currency?._id && <RecentTransactions dataHandler={dataHandler} type={"wallet_to_wallet"} dataCurrency={data} />}
                                             {
                                                 (data.step === 4 && !data.limitReached)
                                                 &&
@@ -1183,7 +1196,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                     plaidValues
                                                                     data={data}
                                                                     isInvoice={invoiceId ? true : false}
-                                                                    receiverFee={invoiceId & data.exchange_rate?.service_fee?.amount ? true : false}
+                                                                    receiverFee={(invoiceId) && data.exchange_rate?.service_fee?.amount ? true : false}
                                                                 />
                                                                 {
                                                                     data.payment_type?.value === "paypal" && !data?.exchange_rate?.paypal?.paypal_currency_supported
@@ -1558,7 +1571,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                     <ShippingDetails
                                                                         data={data}
                                                                         dataHandler={dataHandler}
-                                                                    /> 
+                                                                    />
                                                                 }
                                                                 {
                                                                     data.step === 1

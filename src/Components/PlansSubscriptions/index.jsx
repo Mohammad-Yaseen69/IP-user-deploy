@@ -69,7 +69,7 @@ const PlansSubscription = () => {
         )
     }
 
-    console.log(data)
+    console.log(data, 'data ')
 
     if (!data) {
         return (
@@ -79,7 +79,7 @@ const PlansSubscription = () => {
         )
     }
 
-    const url = data ? `/payments?payment_action=send_money&send_type=wallet&wallet_id=${data.receivingWallet?.wallet_id}&currency=${data.currency}&amount=${data.amount}&subscriptionId=${subscriptionId}&payment_type=subscription` : "/"
+    const url = data ? `/payments?payment_action=send_money&send_type=wallet&wallet_id=${data?.plan?.receivingWallet?.wallet_id}&currency=${data?.plan?.receivingWallet?.currency?.code}&amount=${data?.plan?.price}&subscriptionId=${subscriptionId}&planId=${data?.plan?.planId}&payment_type=plan` : "/"
 
     return (
         <Wrapper>
