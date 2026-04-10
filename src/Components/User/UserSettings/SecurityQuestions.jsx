@@ -103,7 +103,7 @@ const SecurityQuestions = ({ isCollapsed, setIsCollapsed }) => {
                                         ))
                                     }
                                 </Input>
-                                <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder="Answer To The Question" value={answerOne} onChange={e => setAnswerOne(e.target.value)} style={{ borderColor: isValidAnswer(answerOne) ? "#eeeeee" : "red" }} />
+                                <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder={t("Answer To The Question")} value={answerOne} onChange={e => setAnswerOne(e.target.value)} style={{ borderColor: isValidAnswer(answerOne) ? "#eeeeee" : "red" }} />
                             </FormGroup>
                         </Col>
                         <Col md="12">
@@ -117,7 +117,7 @@ const SecurityQuestions = ({ isCollapsed, setIsCollapsed }) => {
                                         ))
                                     }
                                 </Input>
-                                <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder="Answer To The Question" value={answerTwo} onChange={e => setAnswerTwo(e.target.value)} style={{ borderColor: isValidAnswer(answerTwo) ? "#eeeeee" : "red" }} />
+                                <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder={t("Answer To The Question")} value={answerTwo} onChange={e => setAnswerTwo(e.target.value)} style={{ borderColor: isValidAnswer(answerTwo) ? "#eeeeee" : "red" }} />
                             </FormGroup>
                         </Col>
                         <Col md="12">
@@ -131,7 +131,7 @@ const SecurityQuestions = ({ isCollapsed, setIsCollapsed }) => {
                                         ))
                                     }
                                 </Input>
-                                <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder="Answer To The Question" value={answerThree} onChange={e => setAnswerThree(e.target.value)} style={{ borderColor: isValidAnswer(answerThree) ? "#eeeeee" : "red" }} />
+                                <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder={t("Answer To The Question")} value={answerThree} onChange={e => setAnswerThree(e.target.value)} style={{ borderColor: isValidAnswer(answerThree) ? "#eeeeee" : "red" }} />
                             </FormGroup>
                         </Col>
                     </Row>

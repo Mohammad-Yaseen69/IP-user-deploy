@@ -3,13 +3,14 @@ import { UserContext } from '../../Context/UserContext'
 import usePlainFx from './usePlainFx'
 import { formatCurrency } from '../../Helper/AmountFormat'
 import { service_name_formatter } from '../../Components/TransactionsNewApi/TransactionItem'
+import { useTranslation } from 'react-i18next'
 
 const useTopupLimitCheck = (sendingCurrency, amount, paymentMethod) => {
     const { userDetails } = useContext(UserContext)
     const topupMethods = ["card", "paypal", "mobile_wallet", "bank_transfer"]
     const { getExchangeRate } = usePlainFx()
     const [limitStatus, setLimitStatus] = useState({ status: true, thresholdLimit: null, message: "" })
-
+    const { t } = useTranslation()
     useEffect(() => {
         const limitCheck = async () => {
             if (!userDetails) return
@@ -28,7 +29,11 @@ const useTopupLimitCheck = (sendingCurrency, amount, paymentMethod) => {
                 setLimitStatus({
                     status: false,
                     thresholdLimit,
-                    message: `The minimum transaction amount for ${service_name_formatter(paymentMethod)} payment method is ${sendingCurrency} ${formatCurrency(thresholdLimit)}. Please enter an amount higher than ${sendingCurrency} ${formatCurrency(thresholdLimit)} or select another method to continue this transaction.`
+                    message: t("The minimum transaction amount for {{paymentMethod}} payment method is {{currency}} {{amount}}. Please enter an amount higher than {{currency}} {{amount}} or select another method to continue this transaction.", {
+                        paymentMethod: service_name_formatter(paymentMethod),
+                        currency: sendingCurrency,
+                        amount: formatCurrency(thresholdLimit)
+                    })
                 })
             } else {
                 setLimitStatus({ status: true, thresholdLimit: null, message: "" })

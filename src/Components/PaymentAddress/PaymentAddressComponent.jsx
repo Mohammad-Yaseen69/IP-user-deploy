@@ -289,7 +289,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                         {
                                                             userDetails?.about_me?.length > 150
                                                             &&
-                                                            <p style={{ fontSize: "12px", color: "black", cursor: "pointer" }} onClick={() => setShowAboutModal(!showAboutModal)}>Read more {">"}</p>
+                                                            <p style={{ fontSize: "12px", color: "black", cursor: "pointer" }} onClick={() => setShowAboutModal(!showAboutModal)}>{t("Read more")} {">"}</p>
                                                         }
                                                         <Modal isOpen={showAboutModal} toggle={() => setShowAboutModal(!showAboutModal)}>
                                                             <ModalHeader toggle={() => setShowAboutModal(!showAboutModal)}>

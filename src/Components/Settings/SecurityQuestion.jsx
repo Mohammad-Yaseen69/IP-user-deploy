@@ -192,7 +192,7 @@ const SecurityQuestions = () => {
                                     ))
                                 }
                             </Input>
-                            <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder="Answer To The Question" value={answerOne} onChange={e => {
+                            <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder={t("Answer To The Question")} value={answerOne} onChange={e => {
                                 const value = e.target.value.slice(0, 50);
                                 setAnswerOne(value);
                             }} maxLength={50} style={{ borderColor: isValidAnswer(answerOne) ? "#eeeeee" : "red" }} />
@@ -228,7 +228,7 @@ const SecurityQuestions = () => {
                                     ))
                                 }
                             </Input>
-                            <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder="Answer To The Question" value={answerTwo} onChange={e => {
+                            <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder={t("Answer To The Question")} value={answerTwo} onChange={e => {
                                 const value = e.target.value.slice(0, 50);
                                 setAnswerTwo(value);
                             }} maxLength={50} style={{ borderColor: isValidAnswer(answerTwo) ? "#eeeeee" : "red" }} />
@@ -264,7 +264,7 @@ const SecurityQuestions = () => {
                                     ))
                                 }
                             </Input>
-                            <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder="Answer To The Question" value={answerThree} onChange={e => {
+                            <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder={t("Answer To The Question")} value={answerThree} onChange={e => {
                                 const value = e.target.value.slice(0, 50);
                                 setAnswerThree(value);
                             }} maxLength={50} style={{ borderColor: isValidAnswer(answerThree) ? "#eeeeee" : "red" }} />

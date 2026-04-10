@@ -22,7 +22,7 @@ const DeclineQuotation = ({ item, isOpen, toggle }) => {
 
     const queryClient = useQueryClient()
 
-    const { authHeader, verifyToken ,userDetails} = useContext(UserContext)
+    const { authHeader, verifyToken, userDetails } = useContext(UserContext)
 
     const declineQuotation = async () => {
         setIsDeleting(true)
@@ -32,7 +32,7 @@ const DeclineQuotation = ({ item, isOpen, toggle }) => {
             })
 
             const decrypted = decryptData(response.data.data)
-             await queryClient.invalidateQueries({ queryKey: ['receivedQuotations', userDetails?._id] })
+            await queryClient.invalidateQueries({ queryKey: ['receivedQuotations', userDetails?._id] })
             await queryClient.invalidateQueries({ queryKey: ['sentQuotations', userDetails?._id] })
 
             setStep(2)
@@ -62,7 +62,7 @@ const DeclineQuotation = ({ item, isOpen, toggle }) => {
                                 <div className={styles.btns}>
                                     <button disabled={isDeleting} className={styles.trs} onClick={toggle}>{t("Cancel")}</button>
                                     <button onClick={declineQuotation} disabled={isDeleting} className={styles.dec}>
-                                        {t("Decline the offer")}
+                                        {t("Decline The Offer")}
                                         <ChevronRight color='white' size={20} />
                                     </button>
                                 </div>
