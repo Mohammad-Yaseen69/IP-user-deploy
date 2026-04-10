@@ -3043,5 +3043,8 @@
   "Problem with the OTP?": "OTP کے ساتھ مسئلہ؟",
   "Google Authenticator Code\r": "Google Authenticator Code\r",
   "Resend code in {{timer}} seconds": "{{timer}} سیکنڈ میں کوڈ دوبارہ بھیجیں۔",
-  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "آپ پہلے ہی {{lastOtpMethod}} پر کوڈ کی درخواست کر چکے ہیں، {{nextOtpMethod}} پر کوڈ حاصل کرنے کے لیے {{timer}} سیکنڈ انتظار کریں۔"
+  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "آپ پہلے ہی {{lastOtpMethod}} پر کوڈ کی درخواست کر چکے ہیں، {{nextOtpMethod}} پر کوڈ حاصل کرنے کے لیے {{timer}} سیکنڈ انتظار کریں۔",
+  "Get paid instantly, sell, and stream — all from one link.": "فوری طور پر ادائیگی حاصل کریں، فروخت کریں اور سلسلہ بندی کریں — یہ سب ایک لنک سے۔",
+  "This is my payment address": "یہ میری ادائیگی کا پتہ ہے۔",
+  "Please wait while we verify your biometric...": "براہ کرم انتظار کریں جب تک ہم آپ کے بائیو میٹرک کی تصدیق کرتے ہیں..."
 }

@@ -821,5 +821,8 @@
   "Problem with the OTP?": "Máte problém s OTP?",
   "Google Authenticator Code\r": "Autentický kód Google",
   "Resend code in {{timer}} seconds": "Reinvia il kodice tra {{timer}} sekundy",
-  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Zdravím vás s kodexem s {{lastOtpMethod}}, zúčastníte se {{timer}} sekund za rýžoviště s kodexem s {{nextOtpMethod}}"
+  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Zdravím vás s kodexem s {{lastOtpMethod}}, zúčastníte se {{timer}} sekund za rýžoviště s kodexem s {{nextOtpMethod}}",
+  "Get paid instantly, sell, and stream — all from one link.": "Ricevi pagamenti istantanei, vendi a trasmetti in streaming, tutto tramite un unico link.",
+  "This is my payment address": "Loading...",
+  "Please wait while we verify your biometric...": "Loading..."
 }

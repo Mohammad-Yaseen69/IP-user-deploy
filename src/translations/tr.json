@@ -3045,5 +3045,8 @@
   "Problem with the OTP?": "OTP ile ilgili bir sorun mu var?",
   "Google Authenticator Code\r": "Google Authenticator Kodu",
   "Resend code in {{timer}} seconds": "Kodu {{timer}} saniye sonra yeniden gönder",
-  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "{{lastOtpMethod}} üzerinde zaten kod talebinde bulundunuz, {{nextOtpMethod}} üzerinde kod almak için {{timer}} saniye bekleyin."
+  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "{{lastOtpMethod}} üzerinde zaten kod talebinde bulundunuz, {{nextOtpMethod}} üzerinde kod almak için {{timer}} saniye bekleyin.",
+  "Get paid instantly, sell, and stream — all from one link.": "Anında ödeme alın, satış yapın ve yayın yapın — hepsi tek bir bağlantı üzerinden.",
+  "This is my payment address": "Bu benim ödeme adresim.",
+  "Please wait while we verify your biometric...": "Loading..."
 }

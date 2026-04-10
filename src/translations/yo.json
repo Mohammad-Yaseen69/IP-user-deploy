@@ -3043,5 +3043,8 @@
   "Problem with the OTP?": "Iṣoro pẹlu OTP?",
   "Google Authenticator Code\r": "Kóòdù Olùjẹ́rìí Google",
   "Resend code in {{timer}} seconds": "Tun fi koodu ranṣẹ ni awọn iṣẹju-aaya {{timer}}",
-  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "O ti beere fun koodu tẹlẹ lori {{lastOtpMethod}}, duro {{timer}} awọn aaya lati gba koodu lori {{nextOtpMethod}}"
+  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "O ti beere fun koodu tẹlẹ lori {{lastOtpMethod}}, duro {{timer}} awọn aaya lati gba koodu lori {{nextOtpMethod}}",
+  "Get paid instantly, sell, and stream — all from one link.": "Loading...",
+  "This is my payment address": "Loading...",
+  "Please wait while we verify your biometric...": "Jọwọ duro titi a o fi rii daju biometric rẹ..."
 }

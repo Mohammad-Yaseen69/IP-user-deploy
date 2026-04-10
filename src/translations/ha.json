@@ -3000,5 +3000,8 @@
   "Problem with the OTP?": "Matsalar OTP?",
   "Google Authenticator Code\r": "Lambar Tabbatarwa ta Google",
   "Resend code in {{timer}} seconds": "Sake aika lamba a cikin daƙiƙa {{timer}}",
-  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Kun riga kun nemi lambar akan {{lastOtpMethod}}, jira daƙiƙa {{timer}} don samun lambar akan {{nextOtpMethod}}"
+  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Kun riga kun nemi lambar akan {{lastOtpMethod}}, jira daƙiƙa {{timer}} don samun lambar akan {{nextOtpMethod}}",
+  "Get paid instantly, sell, and stream — all from one link.": "Loading...",
+  "This is my payment address": "Loading...",
+  "Please wait while we verify your biometric...": "Da fatan za a jira yayin da muke tabbatar da bayanan halittarka..."
 }

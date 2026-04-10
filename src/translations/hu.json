@@ -821,5 +821,8 @@
   "Problem with the OTP?": "Probléma az OTP-vel?",
   "Google Authenticator Code\r": "Google Hitelesítő kód",
   "Resend code in {{timer}} seconds": "Wyślij ponownie kod za {{timer}} másodperc",
-  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Już zażądałeś kodu dla {{lastOtpMethod}}, odczekaj {{timer}} másodperc, aby uzyskać kod dla {{nextOtpMethod}}"
+  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Już zażądałeś kodu dla {{lastOtpMethod}}, odczekaj {{timer}} másodperc, aby uzyskać kod dla {{nextOtpMethod}}",
+  "Get paid instantly, sell, and stream — all from one link.": "Otrzymuj płatności natychmiast, sprzedawaj i przesyłaj strumieniowo — wszystko za pośrednictwem jednego łącza.",
+  "This is my payment address": "Loading...",
+  "Please wait while we verify your biometric...": "Loading..."
 }

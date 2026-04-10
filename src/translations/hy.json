@@ -821,5 +821,8 @@
   "Problem with the OTP?": "Խնդիր կա՞ OTP-ի հետ։",
   "Google Authenticator Code\r": "Google Authenticator-ի կոդ",
   "Resend code in {{timer}} seconds": "Կոդը {{timer}} Sekunden erneut senden-ում",
-  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Sie haben bereits einen Code für {{lastOtpMethod}} angefordert. Warten Sie {{timer}} Sekunden, um den Code für {{nextOtpMethod}} zu erhalten:"
+  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Sie haben bereits einen Code für {{lastOtpMethod}} angefordert. Warten Sie {{timer}} Sekunden, um den Code für {{nextOtpMethod}} zu erhalten:",
+  "Get paid instantly, sell, and stream — all from one link.": "Loading...",
+  "This is my payment address": "Dies ist meine Zahlungsadresse",
+  "Please wait while we verify your biometric...": "Loading..."
 }

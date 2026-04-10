@@ -3050,5 +3050,8 @@
   "Problem with the OTP?": "Un problème avec le code OTP ?",
   "Google Authenticator Code\r": "Code d'authentification Google",
   "Resend code in {{timer}} seconds": "Renvoyer le code dans {{timer}} secondes",
-  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Vous avez déjà demandé du code sur {{lastOtpMethod}}, veuillez patienter {{timer}} secondes pour obtenir du code sur {{nextOtpMethod}}."
+  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Vous avez déjà demandé du code sur {{lastOtpMethod}}, veuillez patienter {{timer}} secondes pour obtenir du code sur {{nextOtpMethod}}.",
+  "Get paid instantly, sell, and stream — all from one link.": "Soyez payé instantanément, vendez et diffusez en streaming — le tout à partir d'un seul lien.",
+  "This is my payment address": "Voici mon adresse de paiement",
+  "Please wait while we verify your biometric...": "Veuillez patienter pendant que nous vérifions vos données biométriques..."
 }

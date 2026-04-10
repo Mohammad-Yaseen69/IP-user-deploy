@@ -821,5 +821,8 @@
   "Problem with the OTP?": "Er det noe galt med OTP?",
   "Google Authenticator Code\r": "Google-kode for åpenhet",
   "Resend code in {{timer}} seconds": "Kirim ulang kode dalam {{timer}} detik",
-  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Anda telah meminta code pada {{lastOtpMethod}}, tunggu {{timer}} detik untuk mendapatkan code pada {{nextOtpMethod}}"
+  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Anda telah meminta code pada {{lastOtpMethod}}, tunggu {{timer}} detik untuk mendapatkan code pada {{nextOtpMethod}}",
+  "Get paid instantly, sell, and stream — all from one link.": "Dapatkan bayaran instan, jual, og streaming — somuanya dari satu tautan.",
+  "This is my payment address": "Loading...",
+  "Please wait while we verify your biometric...": "Mohon tunggu sementara kami memverifikasi data biometric Anda..."
 }

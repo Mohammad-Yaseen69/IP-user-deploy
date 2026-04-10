@@ -3043,5 +3043,8 @@
   "Problem with the OTP?": "Ada masalah dengan OTP?",
   "Google Authenticator Code\r": "Kode Otentikasi Google",
   "Resend code in {{timer}} seconds": "Kirim ulang kode dalam {{timer}} detik",
-  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Anda telah meminta kode pada {{lastOtpMethod}}, tunggu {{timer}} detik untuk mendapatkan kode pada {{nextOtpMethod}}"
+  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Anda telah meminta kode pada {{lastOtpMethod}}, tunggu {{timer}} detik untuk mendapatkan kode pada {{nextOtpMethod}}",
+  "Get paid instantly, sell, and stream — all from one link.": "Dapatkan bayaran instan, jual, dan streaming — semuanya dari satu tautan.",
+  "This is my payment address": "Ini alamat pembayaran saya",
+  "Please wait while we verify your biometric...": "Mohon tunggu sementara kami memverifikasi data biometrik Anda..."
 }

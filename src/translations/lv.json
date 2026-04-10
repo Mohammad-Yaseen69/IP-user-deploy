@@ -821,5 +821,8 @@
   "Problem with the OTP?": "هل هناك مشكلة في رمز التحقق لمرة واحدة (OTP)؟",
   "Google Authenticator Code\r": "رمز تطبيق المصادقة من جوجل",
   "Resend code in {{timer}} seconds": "أعد إرسال الرمز خلال {{timer}} ثانية",
-  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "لقد طلبت رمزًا بالفعل على {{lastOtpMethod}}، انتظر {{timer}} ثانية ثانية للحصللح صلللز على {{nextOtpMethod}}"
+  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "لقد طلبت رمزًا بالفعل على {{lastOtpMethod}}، انتظر {{timer}} ثانية ثانية للحصللح صلللز على {{nextOtpMethod}}",
+  "Get paid instantly, sell, and stream — all from one link.": "Loading...",
+  "This is my payment address": "هذا هو عنوان الدفع الخاص بي",
+  "Please wait while we verify your biometric...": "Loading..."
 }

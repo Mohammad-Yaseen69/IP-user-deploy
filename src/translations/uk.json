@@ -3051,5 +3051,8 @@
   "Problem with the OTP?": "Проблема з одноразовим паролем?",
   "Google Authenticator Code\r": "Код Google Authenticator",
   "Resend code in {{timer}} seconds": "Надіслати код повторно через {{timer}} секунд",
-  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Ви вже запросили код для {{lastOtpMethod}}, зачекайте {{timer}} секунд, щоб отримати код для {{nextOtpMethod}}"
+  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Ви вже запросили код для {{lastOtpMethod}}, зачекайте {{timer}} секунд, щоб отримати код для {{nextOtpMethod}}",
+  "Get paid instantly, sell, and stream — all from one link.": "Loading...",
+  "This is my payment address": "Це моя платіжна адреса",
+  "Please wait while we verify your biometric...": "Будь ласка, зачекайте, поки ми перевіримо ваші біометричні дані..."
 }

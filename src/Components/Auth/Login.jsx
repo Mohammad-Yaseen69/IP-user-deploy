@@ -139,8 +139,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             if (data) {
                 setLoginData(data)
                 setShowQuickLogin(true)
-                setEmail(data?.credential)
                 setLoginMethod(data?.loginMethod)
+                setEmail(data?.credential)
             } else {
                 setShowQuickLogin(false)
             }
@@ -182,7 +182,9 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             setRestoreLoading(true)
         }
         const isAuth = method ? (method === "auth") : (currentOtpMethod === "auth");
-        const isInsta = method ? (method === "insta") : (currentOtpMethod === "insta" || currentOtpMethod !== "sms" && currentOtpMethod !== "email" && currentOtpMethod !== "wp");
+        const isInsta = method
+            ? (method === "insta")
+            : (currentOtpMethod === "insta");
         const isWp = method ? (method === "wp") : (currentOtpMethod === "wp");
         const isEmailOtp = method ? (method === "email") : (currentOtpMethod === "email");
 
@@ -394,7 +396,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         if (loginMethod === "email" && !loginData) {
             setEmail("")
         }
-    }, [loginMethod, loginData])
+    }, [loginMethod,])
 
     const getUserInfo = async (username) => {
         try {

@@ -3045,5 +3045,8 @@
   "Problem with the OTP?": "Tatizo na OTP?",
   "Google Authenticator Code\r": "Msimbo wa Kithibitishaji cha Google",
   "Resend code in {{timer}} seconds": "Tuma tena msimbo baada ya sekunde {{timer}}",
-  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Tayari umeomba msimbo kwenye {{lastOtpMethod}}, subiri sekunde {{timer}} ili kupata msimbo kwenye {{nextOtpMethod}}"
+  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Tayari umeomba msimbo kwenye {{lastOtpMethod}}, subiri sekunde {{timer}} ili kupata msimbo kwenye {{nextOtpMethod}}",
+  "Get paid instantly, sell, and stream — all from one link.": "Lipa papo hapo, uza, na usambaze — yote kutoka kwa kiungo kimoja.",
+  "This is my payment address": "Hii ni anwani yangu ya malipo",
+  "Please wait while we verify your biometric...": "Tafadhali subiri tunapothibitisha biometria yako..."
 }

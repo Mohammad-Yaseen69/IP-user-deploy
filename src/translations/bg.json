@@ -821,5 +821,8 @@
   "Problem with the OTP?": "Проблем с еднократната парола (OTP)?",
   "Google Authenticator Code\r": "Код на Google Authenticator",
   "Resend code in {{timer}} seconds": "Reenviar código em {{timer}} segundos",
-  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Искате да поискате код за {{lastOtpMethod}}, запазете {{timer}} втори път за получаване на код за {{nextOtpMethod}}"
+  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "Искате да поискате код за {{lastOtpMethod}}, запазете {{timer}} втори път за получаване на код за {{nextOtpMethod}}",
+  "Get paid instantly, sell, and stream — all from one link.": "Loading...",
+  "This is my payment address": "Loading...",
+  "Please wait while we verify your biometric...": "Aguarde enquanto verificamos seus dados biométricos..."
 }

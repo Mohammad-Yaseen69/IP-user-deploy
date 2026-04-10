@@ -827,5 +827,8 @@
   "Problem with the OTP?": "一次性密码有问题吗?",
   "Google Authenticator Code\r": "Google 身份验证器代码",
   "Resend code in {{timer}} seconds": "将在 {{timer}} 秒后重新发送验证码",
-  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "您已在 {{lastOtpMethod}} 上请求过验证码，请等待 {{ტაიმერი}} 秒以获取 {{nextOtpMethod}} 的验证"
+  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "您已在 {{lastOtpMethod}} 上请求过验证码，请等待 {{ტაიმერი}} 秒以获取 {{nextOtpMethod}} 的验证",
+  "Get paid instantly, sell, and stream — all from one link.": "Loading...",
+  "This is my payment address": "这是我的付款地址",
+  "Please wait while we verify your biometric...": "Loading..."
 }

@@ -3057,5 +3057,8 @@
   "Problem with the OTP?": "Problem with the OTP?",
   "Google Authenticator Code\r": "Google Authenticator Code\r",
   "Resend code in {{timer}} seconds": "Resend code in {{timer}} seconds",
-  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}"
+  "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}": "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}",
+  "Get paid instantly, sell, and stream — all from one link.": "Get paid instantly, sell, and stream — all from one link.",
+  "This is my payment address": "This is my payment address",
+  "Please wait while we verify your biometric...": "Please wait while we verify your biometric..."
 }
