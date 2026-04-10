@@ -71,7 +71,9 @@ const CommissionConversion = ({ isOpen, toggle, referralBalance = 0, defaultCurr
             setConfirmed(true)
             setToken(dec?.token)
         } catch (error) {
-            toast.error("Something went wrong while confirming the transaction!")
+            toast.error(
+                t("Something went wrong while confirming the transaction!")
+            );
             console.log(decryptData(error?.response?.data?.data))
         }
     }

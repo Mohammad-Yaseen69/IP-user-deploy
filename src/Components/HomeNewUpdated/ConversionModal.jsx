@@ -152,8 +152,7 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
     //             const dec = decryptData(res.data.data)
     //             setToken(dec?.token)
     //             setStep(prev => prev + 1)
-    //         } catch (error) {
-    //             toast.error("Something went wrong while confirming the transaction!")
+    //     } catch (error) {
     //             // console.log(decryptData(error?.response?.data?.data))
     //         }
     //     }
@@ -196,14 +195,14 @@ const ConversionModal = ({ isOpen, toggleModal, amount, exchangeAmount, currency
                 .catch(err => {
                     const decrypted = decryptData(err.response.data.data)
                     if (decrypted.message.toLowerCase() === "feature_not_allowed") {
-                        setError("Currency conversion not available in your country at the moment,  please try again later")
+                        setError(t("Currency conversion not available in your country at the moment,  please try again later"))
                         return
                     }
                     const error = LimitsErrorMessage(decrypted?.code ?? decrypted?.message)
                     if (error) {
                         setError(error)
                     } else {
-                        setError("We cannot process your request at the moment, please try again later.")
+                        setError(t("We cannot process your request at the moment, please try again later."))
                     }
                 })
                 .finally(() => {

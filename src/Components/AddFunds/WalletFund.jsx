@@ -437,7 +437,7 @@ const WalletFund = ({ setAction }) => {
                                                         <>
                                                             <FeesComponent
                                                                 receiverLabel={"You Will Get"}
-                                                                error={error}
+                                                                error={t(error)}
                                                                 feesLabel="Fees"
                                                                 sendingLabel="Sending"
                                                                 totalLabel="Amount To Pay"
@@ -496,7 +496,7 @@ const WalletFund = ({ setAction }) => {
                                                     subStep === 3 && !showPayers
                                                     &&
                                                     <AddFundChannel
-                                                        error={error}
+                                                        error={t(error)}
                                                         thunesProviders={thunesProviders}
                                                         thunesServices={thunesServices}
                                                         setSubStep={setSubStep}
@@ -515,7 +515,7 @@ const WalletFund = ({ setAction }) => {
                                                             provider={thunesProvider}
                                                             providers={thunesProviders}
                                                             setProvider={setThunesProvider}
-                                                            error={error}
+                                                            error={t(error)}
                                                         />
                                                         :
                                                         ""
@@ -639,7 +639,7 @@ const WalletFund = ({ setAction }) => {
                                     <>
                                         <FeesComponent
                                             receiverLabel={"You Will Get"}
-                                            error={error}
+                                            error={t(error)}
                                             feesLabel="Fees"
                                             sendingLabel="Sending"
                                             totalLabel="Amount To Pay"
@@ -785,7 +785,7 @@ const WalletFund = ({ setAction }) => {
                                             subStep === 3 && !showPayers
                                             &&
                                             <AddFundChannel
-                                                error={error}
+                                                error={t(error)}
                                                 thunesProviders={thunesProviders}
                                                 thunesServices={thunesServices}
                                                 setSubStep={setSubStep}
@@ -803,7 +803,7 @@ const WalletFund = ({ setAction }) => {
                                                     channel={channel}
                                                     provider={thunesProvider}
                                                     providers={thunesProviders}
-                                                    error={error}
+                                                    error={t(error)}
                                                     setProvider={setThunesProvider}
                                                 />
                                                 :
