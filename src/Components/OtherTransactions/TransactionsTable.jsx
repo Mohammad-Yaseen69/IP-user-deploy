@@ -16,6 +16,7 @@ import SentTransactionItem from "./SentTransactionItem";
 import ReceivedTransactionItem from "./ReceivedTransactionItem";
 import InstaPayLoader from "../Loader";
 import SentItem from "./Mobile/SentItem";
+import PlanSubscriptionTable from "./PlanSubscriptionTable";
 import ReceivedItem from "./Mobile/ReceivedItem";
 import { useQuery } from "@tanstack/react-query";
 const fetchTransactions = async (url, authHeader) => {
@@ -26,7 +27,7 @@ const fetchTransactions = async (url, authHeader) => {
 
 const TransactionsTable = () => {
     const { t } = useTranslation()
-    const [active, setActive] = useState("All")
+    const [active, setActive] = useState("all")
     const [activeItem, setActiveItem] = useState(0)
     const [dateRange, setDateRange] = useState({
         startDate: new Date(),
@@ -95,19 +96,29 @@ const TransactionsTable = () => {
             id: 1,
             name: t("All"),
             icon_white: sent_white,
-            icon_grey: sent_grey
+            icon_grey: sent_grey,
+            value: "all"
         },
         {
             id: 2,
-            name: t("schedule payment"),
+            name: t("Scheduled"),
             icon_white: sent_white,
-            icon_grey: sent_grey
+            icon_grey: sent_grey,
+            value: "schedule"
         },
         {
             id: 3,
-            name: t("subscription payment"),
+            name: t("Recurring"),
             icon_white: received_white,
-            icon_grey: received_grey
+            icon_grey: received_grey,
+            value: "recurring"
+        },
+        {
+            id: 4,
+            name: t("Plans Subscriptions"),
+            icon_white: received_white,
+            icon_grey: received_grey,
+            value: "plans"
         },
     ]
 
@@ -223,10 +234,10 @@ const TransactionsTable = () => {
     const transsactions = useMemo(() => {
         const all = [...sentPayments, ...receivedPayments];
 
-        if (active === "All") {
+        if (active === "all") {
             return all ?? []
         }
-        if (active === "Schedule Payments") return all.filter(item => !item?.recursive);
+        if (active === "schedule") return all.filter(item => !item?.recursive);
         return all.filter(item => item?.recursive);
     }, [sentPayments, receivedPayments, active]);
 
@@ -238,14 +249,14 @@ const TransactionsTable = () => {
                     {
                         menuData.map(item => (
                             <div key={item.id} style={{
-                                background: active === item.name ? "linear-gradient(346deg, #E64067 0%, #5926F0 55.65%, #4828A0 100%), #D9D9D9" : "#f8f8f8",
-                                boxShadow: active === item.name ? "0px 11.90068244934082px 8.655041694641113px rgba(89, 38, 240, 0.17)" : "none",
-                                color: active === item.name ? "white" : "#848484"
-                            }} className={styles.menu_item} onClick={() => setActive(item.name)}>
-                                <img src={active === item.name ? item.icon_white : item.icon_grey} style={{ width: "18px" }} />
+                                background: active === item.value ? "linear-gradient(346deg, #E64067 0%, #5926F0 55.65%, #4828A0 100%), #D9D9D9" : "#f8f8f8",
+                                boxShadow: active === item.value ? "0px 11.90068244934082px 8.655041694641113px rgba(89, 38, 240, 0.17)" : "none",
+                                color: active === item.value ? "white" : "#848484"
+                            }} className={styles.menu_item} onClick={() => setActive(item.value)}>
+                                <img src={active === item.value ? item.icon_white : item.icon_grey} style={{ width: "18px" }} />
                                 <span>{item.name}</span>
                                 {
-                                    active === item.name
+                                    active === item.value
                                     &&
                                     <div className={styles.dot}></div>
                                 }
@@ -269,69 +280,75 @@ const TransactionsTable = () => {
                     )}
                 </div>
             </div>
-            <div className={styles.tableWrapper}>
-                <div className={styles.table_header}>
-                    <div>{t("Date")}</div>
-                    <div>{t("Cycles/Time")}</div>
-                    <div>{t("Payment As")}</div>
-                    <div>{t("Payment Type")}</div>
-                    <div>{t("Name")}</div>
-                    <div>{t("Amount")}</div>
-                    <div>{t("Status")}</div>
-                    <div>{t("Actions")}</div>
-                    <div style={{ maxWidth: "15px" }}></div>
+            {active === "plans" ? (
+                <div className={styles.tableWrapper}>
+                    <PlanSubscriptionTable searchQuery={debouncedSearchQuery} />
                 </div>
-                <div className={styles.table_body}>
-                    {
-                        isLoading ?
-                            <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
-                                <InstaPayLoader />
-                            </div>
-                            :
-                            transsactions.length > 0
-                                ?
-                                transsactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((item, index) => {
-                                    let color;
-                                    if (item?.status?.toLowerCase() === "completed") { color = "#15bd43" };
-                                    if (item?.status?.toLowerCase() === "pending" || item?.status?.toLowerCase() === "processing") { color = "rgba(89, 38, 240, 0.55)" };
-                                    if (item?.status?.toLowerCase() === "cancelled") { color = "#ed1d1d" };
-                                    if (item?.status?.toLowerCase() === "declined") { color = "#ed1d1d" };
-                                    return (
-                                        <SentTransactionItem color={color} item={item} key={item._id} activeItem={activeItem} setActiveItem={setActiveItem} index={index} currentUser={userDetails} />
-                                    )
-                                })
+            ) : (
+                <div className={styles.tableWrapper}>
+                    <div className={styles.table_header}>
+                        <div>{t("Date")}</div>
+                        <div>{t("Cycles/Time")}</div>
+                        <div>{t("Payment As")}</div>
+                        <div>{t("Payment Type")}</div>
+                        <div>{t("Name")}</div>
+                        <div>{t("Amount")}</div>
+                        <div>{t("Status")}</div>
+                        <div>{t("Actions")}</div>
+                        <div style={{ maxWidth: "15px" }}></div>
+                    </div>
+                    <div className={styles.table_body}>
+                        {
+                            isLoading ?
+                                <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
+                                    <InstaPayLoader />
+                                </div>
                                 :
-                                <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No payment")}</span>
+                                transsactions.length > 0
+                                    ?
+                                    transsactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((item, index) => {
+                                        let color;
+                                        if (item?.status?.toLowerCase() === "completed") { color = "#15bd43" };
+                                        if (item?.status?.toLowerCase() === "pending" || item?.status?.toLowerCase() === "processing") { color = "rgba(89, 38, 240, 0.55)" };
+                                        if (item?.status?.toLowerCase() === "cancelled") { color = "#ed1d1d" };
+                                        if (item?.status?.toLowerCase() === "declined") { color = "#ed1d1d" };
+                                        return (
+                                            <SentTransactionItem color={color} item={item} key={item._id} activeItem={activeItem} setActiveItem={setActiveItem} index={index} currentUser={userDetails} />
+                                        )
+                                    })
+                                    :
+                                    <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No payment")}</span>
 
-                    }
-                </div>
+                        }
+                    </div>
 
-                {/* mobile */}
-                <div className={styles.table_body_mobile}>
-                    {
-                        isLoading ?
-                            <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
-                                <InstaPayLoader />
-                            </div>
-                            :
-                            transsactions.length > 0
-                                ?
-                                transsactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((item, index) => {
-                                    let color;
-                                    if (item?.status?.toLowerCase() === "completed") { color = "#15bd43" };
-                                    if (item?.status?.toLowerCase() === "pending" || item?.status?.toLowerCase() === "processing") { color = "rgba(89, 38, 240, 0.55)" };
-                                    if (item?.status?.toLowerCase() === "cancelled") { color = "#ed1d1d" };
-                                    if (item?.status?.toLowerCase() === "declined") { color = "#ed1d1d" };
-                                    return (
-                                        <SentItem color={color} item={item} key={item._id} activeItem={activeItem} setActiveItem={setActiveItem} index={index} currentUser={item?.[item?.type === "payment" ? "payment" : "request_payment"]?.receiver} />
-                                    )
-                                })
+                    {/* mobile */}
+                    <div className={styles.table_body_mobile}>
+                        {
+                            isLoading ?
+                                <div style={{ height: "300px", width: "300px", margin: "0 auto" }}>
+                                    <InstaPayLoader />
+                                </div>
                                 :
-                                <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No payment")}</span>
+                                transsactions.length > 0
+                                    ?
+                                    transsactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((item, index) => {
+                                        let color;
+                                        if (item?.status?.toLowerCase() === "completed") { color = "#15bd43" };
+                                        if (item?.status?.toLowerCase() === "pending" || item?.status?.toLowerCase() === "processing") { color = "rgba(89, 38, 240, 0.55)" };
+                                        if (item?.status?.toLowerCase() === "cancelled") { color = "#ed1d1d" };
+                                        if (item?.status?.toLowerCase() === "declined") { color = "#ed1d1d" };
+                                        return (
+                                            <SentItem color={color} item={item} key={item._id} activeItem={activeItem} setActiveItem={setActiveItem} index={index} currentUser={item?.[item?.type === "payment" ? "payment" : "request_payment"]?.receiver} />
+                                        )
+                                    })
+                                    :
+                                    <span style={{ textAlign: "center", marginTop: "2rem" }}>{t("No payment")}</span>
 
-                    }
+                        }
+                    </div>
                 </div>
-            </div>
+            )}
         </div >
     )
 }
