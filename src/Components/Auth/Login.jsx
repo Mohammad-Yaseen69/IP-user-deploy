@@ -147,8 +147,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 })
                 setLoginData(data)
                 setShowQuickLogin(true)
-                setEmail(data?.credential)
                 setLoginMethod(data?.loginMethod)
+                setEmail(data?.credential)
             } else {
                 setShowQuickLogin(false)
             }
@@ -297,7 +297,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         locationInput = await getLocation();
                     } catch (error) {
                         logger.error("Location error occured", {
-                            error: error
+                            code: error?.code,
+                            message: error?.message,
                         })
                         if (error.code === 1) {
                             if (rdd.isSafari || rdd.isMobileSafari) {
@@ -311,14 +312,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     });
                                 } catch (error2) {
                                     logger.error("Location error occured in safari", {
-                                        error: error2
+                                        code: error2?.code,
+                                        message: error2?.message,
                                     })
-                                    setPendingLoginData({ method, restoreAccount, isPendingRetry: true });
-                                    setShowLocationModal(true);
-                                    setIsPressed(false);
-                                    setMethodLoading(false);
-                                    setRestoreLoading(false);
-                                    return;
+
+                                    locationInput = {};
                                 }
                             } else {
                                 setPendingLoginData({ method, restoreAccount, isPendingRetry: true });
@@ -402,7 +400,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         if (loginMethod === "email" && !loginData) {
             setEmail("")
         }
-    }, [loginMethod, loginData])
+    }, [loginMethod,])
 
     const getUserInfo = async (username) => {
         try {
@@ -962,6 +960,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             loginMethod === "phone"
                                                 ?
                                                 <PhoneInput
+                                                    phone={email}
                                                     setPhone={setEmail}
                                                     country={country}
                                                 />
@@ -1356,9 +1355,38 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             {
                                                 resendTimer > 0
                                                     ? (methods.filter(m => m.avail).length > 1 && (lastOtpSentTo && ['sms', 'insta', 'wp', 'email'].includes(pendingOtpMethod || currentOtpMethod) && lastOtpSentTo !== (pendingOtpMethod || currentOtpMethod)) || (pendingOtpMethod && lastOtpSentTo !== currentOtpMethod))
-                                                        ? <span> {t(`You have already requested code on ${lastOtpSentTo === 'sms' ? 'SMS' : lastOtpSentTo === "wp" ? "Whatsapp" : lastOtpSentTo === 'email' ? 'Email' : 'Instagram'}, wait ${resendTimer} seconds to get code on ${(pendingOtpMethod || currentOtpMethod) === 'sms' ? 'SMS' : (pendingOtpMethod || currentOtpMethod) === "wp" ? "Whatsapp" : (pendingOtpMethod || currentOtpMethod) === 'email' ? 'Email' : 'Instagram'}`)} </span>
-                                                        :
-                                                        currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" && <span>{t("Resend code in 30 seconds").replace("30", resendTimer)}</span>
+                                                        ?
+                                                        <span>
+                                                            {t(
+                                                                "You have already requested code on {{lastOtpMethod}}, wait {{timer}} seconds to get code on {{nextOtpMethod}}",
+                                                                {
+                                                                    lastOtpMethod:
+                                                                        lastOtpSentTo === "sms"
+                                                                            ? "SMS"
+                                                                            : lastOtpSentTo === "wp"
+                                                                                ? "WhatsApp"
+                                                                                : lastOtpSentTo === "email"
+                                                                                    ? "Email"
+                                                                                    : "Instagram",
+
+                                                                    nextOtpMethod:
+                                                                        (pendingOtpMethod || currentOtpMethod) === "sms"
+                                                                            ? "SMS"
+                                                                            : (pendingOtpMethod || currentOtpMethod) === "wp"
+                                                                                ? "WhatsApp"
+                                                                                : (pendingOtpMethod || currentOtpMethod) === "email"
+                                                                                    ? "Email"
+                                                                                    : "Instagram",
+
+                                                                    timer: resendTimer,
+                                                                }
+                                                            )}
+                                                        </span> :
+                                                        currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" && <span>
+                                                            {t("Resend code in {{timer}} seconds", {
+                                                                timer: resendTimer,
+                                                            })}
+                                                        </span>
                                                     :
                                                     <>
                                                         {currentOtpMethod !== "auth" && currentOtpMethod !== "biometric" &&

@@ -41,11 +41,11 @@ const Form = ({ data, inputFieldChange, dataHandler }) => {
                     {/* Character Info */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
                         <span style={{ fontSize: 12, color: '#6b7280' }}>
-                            {t('You can type up to 250 characters')}
+                            {t('You can type up to 500 characters')}
                         </span>
 
-                        <span style={{ fontSize: 12, color: data?.description?.length === 250 ? 'red' : '#6b7280' }}>
-                            {(data?.description?.length ?? 0)} / 250
+                        <span style={{ fontSize: 12, color: data?.description?.length === 500 ? 'red' : '#6b7280' }}>
+                            {(data?.description?.length ?? 0)} / 500
                         </span>
                     </div>
                 </div>

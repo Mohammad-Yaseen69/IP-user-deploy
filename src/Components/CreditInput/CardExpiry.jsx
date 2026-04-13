@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 const CardExpiry = ({ content, setContent, isinVVC = false, guest }) => {
     const divRef = useRef(null);
-    const  {t} = useTranslation()
+    const { t } = useTranslation()
 
     // Function to sanitize input
     const sanitizeInput = (input) => {

@@ -420,12 +420,12 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                                     </div>
                                 </div>
                             }
-                            <img src={faded_lines} 
-                            alt="faded"
-                             width="130px"
-                            loading="lazy"
-                             style={{ position: "absolute", left: "-130px", display: complete ? "none" : "inherit", }}
-                              ref={svgRef} />
+                            <img src={faded_lines}
+                                alt="faded"
+                                width="130px"
+                                loading="lazy"
+                                style={{ position: "absolute", left: "-130px", display: complete ? "none" : "inherit", }}
+                                ref={svgRef} />
                             <Draggable axis="x" bounds="parent" onDrag={handleDrag}>
                                 <div
                                     style={{

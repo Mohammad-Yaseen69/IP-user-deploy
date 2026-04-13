@@ -364,7 +364,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
     return (
         <Modal isOpen={showModal} toggle={toggle}>
             <ModalHeader toggle={toggle}>
-                Send Money
+                {t("Send Money")}
             </ModalHeader>
             <ModalBody style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 {
@@ -501,7 +501,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                                 fontWeight: 600,
                                                 padding: "1rem 1.25rem"
                                             }}>
-                                            <option value="">Select Remark / Reason</option>
+                                            <option value="">{t("Select Remark / Reason")}</option>
                                             {
                                                 reasons.map(item => (
                                                     <option value={item.value} key={item.value}>{item.name}</option>
@@ -523,7 +523,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                                             display: "flex",
                                                             justifyContent: "space-between"
                                                         }}>
-                                                            <span style={{ color: "#a0a0a0" }}>Exchange Rate:</span>
+                                                            <span style={{ color: "#a0a0a0" }}>{t("Exchange Rate:")}</span>
                                                             <span style={{ color: "#a0a0a0" }}>{+exchangeRate?.wholesale_fx_rate?.toFixed(2) ?? ""} {exchangeRate?.destination?.currency ?? ""}</span>
                                                         </p>
                                                         <p style={{
@@ -531,7 +531,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                                             display: "flex",
                                                             justifyContent: "space-between"
                                                         }}>
-                                                            <span style={{ color: "#a0a0a0" }}>Tax</span>
+                                                            <span style={{ color: "#a0a0a0" }}>{t("Tax")}</span>
                                                             <span style={{ color: "#a0a0a0" }}>${+exchangeRate?.fee?.amount ?? ""}</span>
                                                         </p>
                                                         <p style={{
@@ -539,7 +539,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                                             display: "flex",
                                                             justifyContent: "space-between"
                                                         }}>
-                                                            <span style={{ fontWeight: "600" }}>How much they receive:</span>
+                                                            <span style={{ fontWeight: "600" }}>{t("How much they receive:")}</span>
                                                             <span style={{ fontWeight: "600" }}>{+exchangeRate?.destination?.amount?.toFixed(2) ?? ""} {exchangeRate?.destination?.currency ?? ""}</span>
                                                         </p>
                                                     </>
@@ -549,7 +549,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                                             exchangeError.includes("strictly positive value expected")
                                                             &&
                                                             <>
-                                                                <p style={{ marginBottom: 0, textAlign: "center", fontSize: ".8rem", fontWeight: 600 }}>Minimum transaction amount should be</p>
+                                                                <p style={{ marginBottom: 0, textAlign: "center", fontSize: ".8rem", fontWeight: 600 }}>{t("Minimum transaction amount should be")}</p>
                                                                 <h2 style={{ marginBottom: 0, textAlign: "center", fontSize: "1.4rem", fontWeight: 800 }}>{+service?.transaction_types?.C2C?.minimum_transaction_amount} {service?.currency}</h2>
                                                             </>
                                                         }
@@ -559,21 +559,21 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                                             <>
                                                                 {/* <p style={{ marginBottom: 0, textAlign: "center", fontSize: ".8rem", fontWeight: 600 }}>Maximum transaction amount should be</p>
                                         <h2 style={{ marginBottom: 0, textAlign: "center", fontSize: "1.4rem", fontWeight: 800 }}>{+service?.transaction_types?.C2C?.maximum_transaction_amount} {service?.currency}</h2> */}
-                                                                <p style={{ marginBottom: 0, textAlign: "center", fontSize: ".8rem", fontWeight: 600 }}>This amount exceeds our limit of <b>{+service?.transaction_types?.C2C?.maximum_transaction_amount.toLocaleString()} {service?.currency}</b> for a single transfer to  <b>{service.name}</b>.</p>
+                                                                <p style={{ marginBottom: 0, textAlign: "center", fontSize: ".8rem", fontWeight: 600 }}>{t("This amount exceeds our limit of")} <b>{+service?.transaction_types?.C2C?.maximum_transaction_amount.toLocaleString()} {service?.currency}</b> {t("for a single transfer to")}  <b>{service.name}</b>.</p>
                                                             </>
                                                         }
                                                         {
                                                             exchangeError.includes("1006001")
                                                             &&
                                                             <>
-                                                                <p style={{ marginBottom: 0, textAlign: "center", fontSize: ".8rem", fontWeight: 600 }}>You have entered an amount that exceeds our limit at the moment.</p>
+                                                                <p style={{ marginBottom: 0, textAlign: "center", fontSize: ".8rem", fontWeight: 600 }}>{t("You have entered an amount that exceeds our limit at the moment.")}</p>
                                                             </>
                                                         }
                                                         {
                                                             exchangeError.includes("Invalid Amount..")
                                                             &&
                                                             <>
-                                                                <h2 style={{ marginBottom: 0, textAlign: "center", fontSize: "1.4rem", fontWeight: 800 }}>Invalid Amount</h2>
+                                                                <h2 style={{ marginBottom: 0, textAlign: "center", fontSize: "1.4rem", fontWeight: 800 }}>{t("Invalid Amount")}</h2>
                                                             </>
                                                         }
                                                         {
@@ -587,8 +587,8 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                                             exchangeError.includes('An error occurred while creating the quotation')
                                                             &&
                                                             <>
-                                                                <h2 style={{ marginBottom: 0, textAlign: "center", fontSize: "1.4rem", fontWeight: 800 }}>Something went wrong.</h2>
-                                                                <p style={{ marginBottom: 0, textAlign: "center" }}>Please try again later</p>
+                                                                <h2 style={{ marginBottom: 0, textAlign: "center", fontSize: "1.4rem", fontWeight: 800 }}>{t("Something went wrong.")}</h2>
+                                                                <p style={{ marginBottom: 0, textAlign: "center" }}>{t("Please try again later")}</p>
                                                             </>
                                                         }
                                                     </>
@@ -612,7 +612,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                             disabled={!amount || !currency || !reason || exchangeError}
                                             onClick={createQuotation}
                                         >
-                                            <span>Confirm</span>
+                                            <span>{t("Confirm")}</span>
                                             <ChevronRight size={20} />
                                         </Button>
                                     </div>
@@ -639,7 +639,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
 
                                             <div style={{ background: "rgba(89, 38, 240, 0.08)", borderRadius: "16px", overflow: "hidden" }} className="i_t_selected">
                                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                                    <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem" }}>Country</span>
+                                                    <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem" }}>{t("Country")}</span>
                                                 </div>
                                                 <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }} className="i_t_s_coun">
                                                     <img src={country.file_url} alt={country.code} style={{ objectFit: "cover", borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)" }} draggable="false" />
@@ -649,7 +649,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
 
                                             <div style={{ background: "rgba(89, 38, 240, 0.08)", borderRadius: "16px" }} className="i_t_selected">
                                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                                    <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem" }}>Payout Channel</span>
+                                                    <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem" }}>{t("Payout Channel")}</span>
                                                 </div>
                                                 <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
                                                     <div style={{
@@ -673,7 +673,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                             </div>
                                             <div style={{ background: "rgba(89, 38, 240, 0.08)", borderRadius: "16px" }} className="i_t_selected">
                                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                                    <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem", fontWeight: 700 }}>You are sending</span>
+                                                    <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem", fontWeight: 700 }}>{t("You are sending")}</span>
                                                 </div>
                                                 <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
                                                     <span style={{ fontWeight: 700, fontSize: "1.4rem" }}>{amount} {currency}</span>
@@ -871,7 +871,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                                     verified
                                                         ?
                                                         <span style={{ fontSize: "12px", color: "#aeaeae", fontWeight: 600 }}>
-                                                            Moving To Next Step in <span style={{ color: "#5926f0", fontWeight: 800 }}>{timer}</span>
+                                                            {t("Moving To Next Step in")} <span style={{ color: "#5926f0", fontWeight: 800 }}>{timer}</span>
                                                         </span>
                                                         :
                                                         <>
@@ -911,7 +911,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                                                         :
                                                                         <>
                                                                             {"Didn't receive OTP? "}
-                                                                            <span style={{ color: "#5926f0", fontWeight: 800, cursor: "pointer" }} onClick={() => setResendTimer(90)}>Resend Now</span>
+                                                                            <span style={{ color: "#5926f0", fontWeight: 800, cursor: "pointer" }} onClick={() => setResendTimer(90)}>{t("Resend Now")}</span>
                                                                         </>
                                                                 }
 
@@ -933,7 +933,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                                                 onClick={() => createTransaction()}
                                                                 disabled={isAnyFieldEmpty}
                                                             >
-                                                                Verify <ChevronRight size={24} />
+                                                                {t("Verify")} <ChevronRight size={24} />
                                                             </Button>
                                                         </>
                                                 }
@@ -946,7 +946,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                     &&
                                     <>
                                         <div style={{ textAlign: 'center' }}>
-                                            <span style={{ color: "#8a8a8a", fontSize: "1.1rem" }}>You are transferring</span>
+                                            <span style={{ color: "#8a8a8a", fontSize: "1.1rem" }}>{t("You are transferring")}</span>
                                             <h4 style={{ fontSize: "2rem" }}>{currency} {amount}</h4>
                                         </div>
                                         <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
@@ -961,7 +961,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                                 color: "#8a8a8a",
                                                 fontSize: window.innerWidth > 1500 ? ".8rem" : ".6rem"
                                             }}>
-                                                Exchange Rate: <span style={{ color: "black", fontWeight: 600 }}>{+transactionDetails?.wholesale_fx_rate.toFixed(2)} {transactionDetails?.destination?.currency}</span>
+                                                {t("Exchange Rate:")} <span style={{ color: "black", fontWeight: 600 }}>{+transactionDetails?.wholesale_fx_rate.toFixed(2)} {transactionDetails?.destination?.currency}</span>
                                             </div>
                                             <div style={{
                                                 background: "rgba(89,38,240,0.06)",
@@ -974,7 +974,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                                 color: "#8a8a8a",
                                                 fontSize: window.innerWidth > 1500 ? ".8rem" : ".6rem"
                                             }}>
-                                                Conversion: <span style={{ color: "black", fontWeight: 600 }}>{transactionDetails?.destination?.amount} {transactionDetails?.destination?.currency}</span>
+                                                {t("Conversion:")} <span style={{ color: "black", fontWeight: 600 }}>{transactionDetails?.destination?.amount} {transactionDetails?.destination?.currency}</span>
                                             </div>
                                         </div>
                                         <div style={{
@@ -985,7 +985,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                             gap: ".5rem",
                                             borderRadius: "10px"
                                         }}>
-                                            <span style={{ minWidth: "100px", color: "#8a8a8a" }}>To Recipient:</span>
+                                            <span style={{ minWidth: "100px", color: "#8a8a8a" }}>{t("To Recipient:")}</span>
                                             <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
                                                 <div style={{
                                                     width: "30px",
@@ -1052,8 +1052,8 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                         ))
                         :
                         <div style={{ display: "flex", alignItems: "center", flexDirection: "column", width: "max-content", margin: "0 auto" }}>
-                            <span style={{ fontSize: "1rem", fontWeight: 600 }}>Please add payment method to this beneficiary to continue.</span>
-                            <Link to={`/beneficiaries/edit?user_id=${item._id}`} style={{ alignSelf: "flex-end", marginTop: ".4rem", textDecoration: "underline" }}>Add Now</Link>
+                            <span style={{ fontSize: "1rem", fontWeight: 600 }}>{t("Please add payment method to this beneficiary to continue.")}</span>
+                            <Link to={`/beneficiaries/edit?user_id=${item._id}`} style={{ alignSelf: "flex-end", marginTop: ".4rem", textDecoration: "underline" }}>{t("Add Now")}</Link>
                         </div>
                 }
             </ModalBody>

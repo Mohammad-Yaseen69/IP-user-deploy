@@ -70,7 +70,7 @@ const ItemMobile = ({ item, activeItem, setActiveItem, index, type }) => {
                 // console.log(decryptData(err.response.data.data))
             })
             .finally(() => {
-                verifyToken()
+                verifyToken(true)
                 setIsSaving(false)
             })
     }

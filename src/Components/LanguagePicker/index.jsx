@@ -232,6 +232,14 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
             const userManuallySelected = await localforage.getItem("userSelectedLang", true)
             const savedLang = await localforage.getItem("i18nextLng")
 
+
+            if (!isExtendedPage && savedLang && newLangs.includes(savedLang)) {
+                i18n.changeLanguage("en")
+                setCurrentLang("en")
+                await localforage.setItem("i18nextLng", "en")
+                await localforage.removeItem("userSelectedLang")
+                return
+            }
             if (userDetails?.language) {
                 const targetLang = userDetails.language.toLowerCase()
 
@@ -275,7 +283,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
 
         handleLanguage()
 
-    }, [userDetails?.language, userCountryLocation, countryLoading])
+    }, [userDetails?.language, userCountryLocation, countryLoading, isExtendedPage])
     useEffect(() => {
         const handlePosition = () => {
             const dropdown = dropdownRef.current

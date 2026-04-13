@@ -197,6 +197,7 @@ const Quotations = () => {
                     </div>
                     <div className={styles.tableWrapper}>
                         <div className={styles.table_header}>
+                            <div>{t("Reference ID")}</div>
                             <div>{t("Date & Time")}</div>
                             {/* <div>{t("Title")}</div>
                         <div>{t("Description")}</div> */}

@@ -169,7 +169,7 @@
     right: 1rem;
     width: fit-content;
     height: fit-content;
-    z-index: 10;
+    z-index: 9;
 }
 
 .inp_con input {

@@ -189,7 +189,7 @@ const PaymentFlow = ({ item, step, setStep, setStatus, verifyToken }) => {
                 messagee={"You have accepted the payment request successfully!"}
                 toggle={() => {
                     setShowSuccess(false)
-                    verifyToken()
+                    verifyToken(true)
                 }}
             />
             <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>

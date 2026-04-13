@@ -36,11 +36,11 @@ const CreatePin = () => {
     }, [loading, pinFields.data])
 
 
-    useEffect(( ) => {
-        if(lang){
+    useEffect(() => {
+        if (lang) {
             i18next.changeLanguage(lang)
         }
-    },[lang])
+    }, [lang])
 
 
     useEffect(() => {

@@ -113,7 +113,7 @@ const SubscriptionCalendar = () => {
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const method = queryParams.get("method")
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const platform = queryParams.get("platform")
   const lang = queryParams.get("lang") || "en"
 
@@ -231,7 +231,7 @@ const SubscriptionCalendar = () => {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="datepicker">Select a Date:</CustomLabel>
+                <CustomLabel htmlFor="datepicker">{t("Select a Date:")}</CustomLabel>
                 <MobileDatePicker
                   minDate={dayjs()}
                   id="datepicker"
@@ -246,7 +246,7 @@ const SubscriptionCalendar = () => {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="timepicker">Select a Time:</CustomLabel>
+                <CustomLabel htmlFor="timepicker">{t('Select a Time:')}</CustomLabel>
                 <MobileTimePicker
                   minTime={selectedDate.isSame(dayjs(), "day") ? dayjs().add(5, "minute") : null}
                   id="timepicker"
@@ -261,7 +261,7 @@ const SubscriptionCalendar = () => {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="timezone">Select a Timezone:</CustomLabel>
+                <CustomLabel htmlFor="timezone">{t("Select a Timezone:")}</CustomLabel>
                 <Autocomplete
                   fullWidth={true}
                   disablePortal
@@ -283,7 +283,7 @@ const SubscriptionCalendar = () => {
                 />
               </div>
               {!isTimeValid && (
-                <p style={{ color: "red", margin: ".7rem 0" }}>Please select a time at least 5 minutes from now.</p>
+                <p style={{ color: "red", margin: ".7rem 0" }}>{t("Please select a time at least 5 minutes from now.")}</p>
               )}
               <CustomSubmitButton
                 onClick={handleSubmit}
