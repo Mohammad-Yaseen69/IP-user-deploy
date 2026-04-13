@@ -142,6 +142,9 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         const getData = async () => {
             const data = await localforage.getItem("loginData")
             if (data) {
+                logger.info(`Local forage data for ${data?.name}`, {
+                    data
+                })
                 setLoginData(data)
                 setShowQuickLogin(true)
                 setEmail(data?.credential)
@@ -1136,25 +1139,25 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     <form onSubmit={verifyOTpHandler} className={styles.otp}>
                         <div className={styles.left}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            {(() => {
-                                switch (currentOtpMethod) {
-                                case "auth": return <img src={authenticatorBlack} alt="" width="32" />;
-                                case "insta": return <img src={instaBlack} alt="" width="32" />;
-                                case "wp": return <img src={whatsappBlack} alt="" width="32" />;
-                                case "sms": return <img src={smsIcon} alt="" width="32" />;
-                                case "email": return <img src={emailBlack} alt="" width="32" />;
-                                case "biometric": return <img src={biometricBlack} alt="" width="32" />;
-                                default: return null;
-                                }
-                            })()}
-                            <h1>
-                                {currentOtpMethod === "biometric" ? t("Biometric Verification") :
-                                currentOtpMethod === "auth" ? t("Google Authenticator") :
-                                currentOtpMethod === "insta" ? t("Instagram") : 
-                                currentOtpMethod === "wp" ? t("Whatsapp") :
-                                currentOtpMethod === "email" ? t("Email OTP Verification") :
-                                t("SMS Verification").replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")}
-                            </h1>
+                                {(() => {
+                                    switch (currentOtpMethod) {
+                                        case "auth": return <img src={authenticatorBlack} alt="" width="32" />;
+                                        case "insta": return <img src={instaBlack} alt="" width="32" />;
+                                        case "wp": return <img src={whatsappBlack} alt="" width="32" />;
+                                        case "sms": return <img src={smsIcon} alt="" width="32" />;
+                                        case "email": return <img src={emailBlack} alt="" width="32" />;
+                                        case "biometric": return <img src={biometricBlack} alt="" width="32" />;
+                                        default: return null;
+                                    }
+                                })()}
+                                <h1>
+                                    {currentOtpMethod === "biometric" ? t("Biometric Verification") :
+                                        currentOtpMethod === "auth" ? t("Google Authenticator") :
+                                            currentOtpMethod === "insta" ? t("Instagram") :
+                                                currentOtpMethod === "wp" ? t("Whatsapp") :
+                                                    currentOtpMethod === "email" ? t("Email OTP Verification") :
+                                                        t("SMS Verification").replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")}
+                                </h1>
                             </div>
                             <p>{t("Start Your InstaPay Journey Today!")}</p>
                             {width < 1000 && <LanguagePicker />}
