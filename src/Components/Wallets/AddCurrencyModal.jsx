@@ -158,16 +158,16 @@ const AddCurrencyModal = ({ isOpen, toggle, setSavedWalelt }) => {
             </Modal>
             <Modal isOpen={showSuccess}>
                 <ModalHeader toggle={() => setShowSuccess(!showSuccess)}>
-                    New Currency Added
+                    {t("New Currency Added")}
                 </ModalHeader>
                 <ModalBody>
                     <h5 className='modal-title' style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '2rem' }}>
                         <CheckCircle size={64} className="text-success" />
-                        Currency Added!
+                        {t("Currency Added!")}
                     </h5>
                     <div className="text-center">
                         <p className="mb-0">
-                            New {currency} wallet added successfully!
+                            {t("New")} {currency} {t("wallet added successfully!")}
                         </p>
                     </div>
                 </ModalBody>

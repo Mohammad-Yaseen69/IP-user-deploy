@@ -264,7 +264,6 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                 <CardBody className={styles.sc_body}>
 
 
-                                    {/* basic info */}
                                     <div className={styles.top}>
                                         <div ref={leftRef} className={styles.left}>
                                             <Profile dets={paymentAddressDetails} dp={dp} setDp={setDp} />
@@ -290,7 +289,7 @@ const PaymentAddressComponent = ({ userDetails, isOpen, setIsOpen }) => {
                                                         {
                                                             userDetails?.about_me?.length > 150
                                                             &&
-                                                            <p style={{ fontSize: "12px", color: "black", cursor: "pointer" }} onClick={() => setShowAboutModal(!showAboutModal)}>Read more {">"}</p>
+                                                            <p style={{ fontSize: "12px", color: "black", cursor: "pointer" }} onClick={() => setShowAboutModal(!showAboutModal)}>{t("Read more")} {">"}</p>
                                                         }
                                                         <Modal isOpen={showAboutModal} toggle={() => setShowAboutModal(!showAboutModal)}>
                                                             <ModalHeader toggle={() => setShowAboutModal(!showAboutModal)}>
