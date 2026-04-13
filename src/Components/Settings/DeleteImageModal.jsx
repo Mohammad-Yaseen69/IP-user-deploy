@@ -19,7 +19,7 @@ const DeleteImageModal = ({ isOpen, toggle, imageType }) => {
                 const decrypted = decryptData(res.data.data)
                 // console.log(decrypted)
                 setIsDeleting(false)
-                verifyToken()
+                verifyToken(true)
                 toggle()
                 navigate("/settings")
 

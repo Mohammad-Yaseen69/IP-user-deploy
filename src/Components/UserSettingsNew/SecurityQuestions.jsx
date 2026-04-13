@@ -9,7 +9,6 @@ import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import SuccessModal from './SuccessModal';
 import OTPConfirmation from './OTPConfirmation';
 import { useTranslation } from 'react-i18next';
-import { ta } from 'date-fns/locale';
 
 const SecurityQuestions = () => {
     const { userSecurityQues, authHeader, userDetails, setUserRefresh, getSecurityQuestions } = useContext(UserContext)
@@ -109,7 +108,7 @@ const SecurityQuestions = () => {
                                         ))
                                     }
                                 </Input>
-                                <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder={ta("Answer To The Question")} value={answerTwo} onChange={e => setAnswerTwo(e.target.value)} style={{ borderColor: isValidAnswer(answerTwo) ? "#eeeeee" : "red" }} />
+                                <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder={t("Answer To The Question")} value={answerTwo} onChange={e => setAnswerTwo(e.target.value)} style={{ borderColor: isValidAnswer(answerTwo) ? "#eeeeee" : "red" }} />
                             </FormGroup>
                         </Col>
                         <Col md="12">
@@ -123,7 +122,7 @@ const SecurityQuestions = () => {
                                         ))
                                     }
                                 </Input>
-                                <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder={ta("Answer To The Question")} value={answerThree} onChange={e => setAnswerThree(e.target.value)} style={{ borderColor: isValidAnswer(answerThree) ? "#eeeeee" : "red" }} />
+                                <Input disabled={!isEditable} className="form-control mt-2" type="text" placeholder={t("Answer To The Question")} value={answerThree} onChange={e => setAnswerThree(e.target.value)} style={{ borderColor: isValidAnswer(answerThree) ? "#eeeeee" : "red" }} />
                             </FormGroup>
                         </Col>
                     </Row>
@@ -152,7 +151,7 @@ const SecurityQuestions = () => {
                             <GradientButton value={t("Edit")} size="m" attr={{ onClick: () => setIsEditable(true), type: "button" }} />
                     }
                     <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-                        <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
+                        <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                         <ModalBody>
                             <OTPConfirmation callback={(setter) => UpdateQuestionHandler(setter)} setter={setShowSuccess} setterValue={true} hideOtp={() => setShowOtp(false)} />
                         </ModalBody>

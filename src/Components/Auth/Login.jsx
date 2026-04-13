@@ -297,7 +297,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         locationInput = await getLocation();
                     } catch (error) {
                         logger.error("Location error occured", {
-                            error: error
+                            code: error?.code,
+                            message: error?.message,
                         })
                         if (error.code === 1) {
                             if (rdd.isSafari || rdd.isMobileSafari) {
@@ -311,14 +312,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     });
                                 } catch (error2) {
                                     logger.error("Location error occured in safari", {
-                                        error: error2
+                                        code: error2?.code,
+                                        message: error2?.message,
                                     })
-                                    setPendingLoginData({ method, restoreAccount, isPendingRetry: true });
-                                    setShowLocationModal(true);
-                                    setIsPressed(false);
-                                    setMethodLoading(false);
-                                    setRestoreLoading(false);
-                                    return;
+
+                                    locationInput = {};
                                 }
                             } else {
                                 setPendingLoginData({ method, restoreAccount, isPendingRetry: true });

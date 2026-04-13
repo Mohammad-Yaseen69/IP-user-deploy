@@ -81,7 +81,7 @@ const Header = () => {
                 const dec = decryptData(res.data.data)
                 console.log(dec)
 
-                verifyToken()
+                verifyToken(true)
             })
             .catch(err => {
             })

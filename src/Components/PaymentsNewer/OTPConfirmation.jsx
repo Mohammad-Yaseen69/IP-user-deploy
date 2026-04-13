@@ -100,9 +100,7 @@ const OTPConfirmation = ({
             setIsExtended(false)
         }
     }, [verified, timer]);
-    useEffect(() => {
-        verifyToken()
-    }, [])
+   
 
     useEffect(() => {
         if (!verified && resendTimer > 0) {
