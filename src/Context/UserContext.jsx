@@ -101,7 +101,7 @@ const initialUserContext = {
     available: 0,
     setBlocked: () => { },
     blocked: 0,
-    processReceivingNonIpFunds: () => {},
+    processReceivingNonIpFunds: () => { },
     showAnotherLoginModal: false,
     setShowAnotherLoginModal: () => { },
 };

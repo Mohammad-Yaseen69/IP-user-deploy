@@ -2841,8 +2841,8 @@
   "Total amount to pay": "Importe total a pagar",
   "Payment purpose": "Finalidad del pago",
   "TRC20 Network only": "Solo red TRC20",
-  "Enter your name": "Loading...",
-  "Scan to pay": "Loading...",
+  "Enter your name": "Ingrese su nombre",
+  "Scan to pay": "Escanear para pagar",
   "Maximum amount for guest pay is": "El monto máximo a pagar por huésped es",
   "Zip Code": "Código postal",
   "House No": "Casa No.",
@@ -3023,5 +3023,9 @@
   "Azerbaijani": "azerbaiyano",
   "Uzbek": "uzbeko",
   "Georgian": "georgiano",
-  "Armenian": "armenio"
+  "Armenian": "armenio",
+  "Are you sure that you want to decline the offer?": "¿Está seguro de que desea rechazar la oferta?",
+  "Your quotation is declined": "Su cotización ha sido rechazada.",
+  "File": "Archivo",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Verificación biométrica exitosa. En breve le redirigiremos a la página del panel de control.\" : t('Espere mientras verificamos su información biométrica..."
 }

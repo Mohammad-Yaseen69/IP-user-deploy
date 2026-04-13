@@ -127,12 +127,27 @@ const SubscriptionDetails = ({ item, currentImage, setCurrentImage }) => {
                         ?
                         <div>
                             <span>{t("Next Transaction")}</span>
-
+                            {/* <div style={{ width: "fit-content", gap: "1rem" }}>
+                                <Button
+                                    style={{
+                                        background: "linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(277deg, #E64067 -9.52%, #5926F0 62.22%, #4828A0 119.38%)",
+                                        border: "none",
+                                        outline: "none",
+                                        borderRadius: "9px",
+                                        padding: ".5rem 1rem"
+                                    }}
+                                    onClick={() => setShowPaymentFlow(true)}
+                                >
+                                    {t("Pay Now")}
+                                </Button>
+                                <h5>{item?.date}</h5>
+                            </div> */}
                             <h5>{item?.date}</h5>
                         </div>
                         :
                         ""
                 }
+
                 <div>
                     <span>{t("Transaction Method")}</span>
                     <h5>{item?.type?.[0]?.toUpperCase()}{item?.type?.slice(1)}</h5>

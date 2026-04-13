@@ -2823,8 +2823,8 @@
   "Total amount to pay": "Totaal te betalen bedrag",
   "Payment purpose": "Betalingsdoel",
   "TRC20 Network only": "Alleen TRC20-netwerk",
-  "Enter your name": "Loading...",
-  "Scan to pay": "Loading...",
+  "Enter your name": "Voer uw naam in",
+  "Scan to pay": "Scan om te betalen",
   "Maximum amount for guest pay is": "Het maximale bedrag voor gastenbetaling is",
   "Zip Code": "Postcode",
   "House No": "Huis nr.",
@@ -3004,5 +3004,9 @@
   "Azerbaijani": "Azerbeidzjaans",
   "Uzbek": "Oezbeeks",
   "Georgian": "Georgisch",
-  "Armenian": "Armeens"
+  "Armenian": "Armeens",
+  "Are you sure that you want to decline the offer?": "Loading...",
+  "Your quotation is declined": "Uw offerte is afgewezen.",
+  "File": "Bestand",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Biometrische verificatie geslaagd. We zullen u zo meteen doorverwijzen naar de dashboardpagina.\") : t('Even geduld alstublieft terwijl we uw biometrische gegevens verifiëren..."
 }

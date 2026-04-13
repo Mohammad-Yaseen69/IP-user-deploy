@@ -1,4 +1,14 @@
 path_instructions:
+reviews:
+  profile: "chill"
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: true
+  review_status: true
+  collapse_walkthrough: false
+  auto_review:
+    enabled: true
+    drafts: false
   - path: "**/*.jsx"
     instructions: |
       You are reviewing a production React (MERN fintech) codebase.

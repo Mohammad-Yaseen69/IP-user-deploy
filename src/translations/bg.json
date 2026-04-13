@@ -791,5 +791,10 @@
   "Azerbaijani": "Азербайджан",
   "Uzbek": "Узбекистан",
   "Georgian": "грузински",
-  "Armenian": "Армения"
+  "Armenian": "Армения",
+  "Are you sure that you want to decline the offer?": "Сигурни ли сте, че искате да откажете офертата?",
+  "Your quotation is declined": "Вилата ви беше отхвърлена.",
+  "Accept": "Приемам",
+  "File": "Архив",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Verificação biométrica concluída com sucesso. Você será redirecionado para a página do paintel em instantes. Aguarde enquanto verificamos seus dados biométricos."
 }

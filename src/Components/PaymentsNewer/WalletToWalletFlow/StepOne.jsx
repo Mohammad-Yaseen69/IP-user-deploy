@@ -41,7 +41,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
             const users = dec?.users?.filter(item => item?._id !== userDetails?._id);
 
 
-            if (isOwn && (invoiceId || payment_type === "payment_address")) {
+            if (isOwn && (invoiceId || payment_type === "payment_address" || planId || subscriptionId)) {
                 dataHandler("error", "You can't send money to yourself.")
                 throw new Error("Failed")
             }
@@ -77,6 +77,8 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
     const invoiceId = queryParams.get("invoiceId")
     const payment_type = queryParams.get("payment_type")
     const phone = queryParams.get("phone")
+    const planId = queryParams.get('planId')
+    const subscriptionId = queryParams.get("subscriptionId")
 
     useEffect(() => {
         let timeout;
@@ -92,7 +94,7 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
                         if (payment_type === "payment_address") {
                             dataHandler("step", data.step + 2)
                         }
-                        else if (invoiceId) {
+                        else if (invoiceId || planId || subscriptionId) {
                             dataHandler("step", data.step + 3)
                         }
                         else {
@@ -105,10 +107,10 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
         return () => {
             clearTimeout(timeout)
         }
-    }, [wallet_id, search, data.first_time, invoiceId, payment_type, phone])
+    }, [wallet_id, search, data.first_time, invoiceId, payment_type, phone, planId, subscriptionId])
 
 
-    if ((invoiceId || payment_type === "payment_address") && !error) {
+    if ((invoiceId || payment_type === "payment_address" || planId || subscriptionId) && !error) {
         return (
             <div style={{ width: "80%", margin: "auto" }}>
                 <InstaPayLoader />

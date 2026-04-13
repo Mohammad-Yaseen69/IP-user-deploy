@@ -3017,5 +3017,9 @@
   "Azerbaijani": "azerbejdżański",
   "Uzbek": "uzbecki",
   "Georgian": "gruziński",
-  "Armenian": "ormiański"
+  "Armenian": "ormiański",
+  "Are you sure that you want to decline the offer?": "Czy na pewno chcesz odrzucić ofertę?",
+  "Your quotation is declined": "Twoja oferta została odrzucona",
+  "File": "Plik",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.\") : t('Please wait while we verify your biometric...": "Weryfikacja biometryczna przebiegła pomyślnie. Za chwilę zostaniesz przekierowany na stronę pulpitu nawigacyjnego.\") : t('Proszę czekać, weryfikujemy Twoje dane biometryczne..."
 }

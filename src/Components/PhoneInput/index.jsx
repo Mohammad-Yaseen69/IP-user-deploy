@@ -22,6 +22,10 @@ const PhoneInput = ({ setPhone, country, setCountry = () => { }, disabled = fals
 
     useEffect(() => {
         const dial_code = extractNumber(selectedCountry?.dial_code)
+        if (!number || number.trim() === "") {
+            setPhone("");
+            return;
+        }
         const formatted = `${dial_code ?? ""}${number ?? ""}`
         setPhone(formatted ?? "")
     }, [selectedCountry, number])
