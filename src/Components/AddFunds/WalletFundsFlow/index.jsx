@@ -944,14 +944,14 @@ const WalletFundsFlow = ({ setAction }) => {
                             <span>
                               {t("plaid_currency_not_supported", {
                                 currency: data.wallet?.currency?.code,
-                                defaultCurrency: "CHF",
+                                defaultCurrency: data?.exchange_rate?.plaid_currency,
                               })}
                             </span>
                           </div>
                           <ExtraContentOnFee
                             data={data}
                             fxRate={data.plaid_fx?.exchange_rate}
-                            fxCurrency={"CHF"}
+                            fxCurrency={data?.exchange_rate?.plaid_currency}
                             fxAmount={data.plaid_fx?.amount}
                           />
                         </>
