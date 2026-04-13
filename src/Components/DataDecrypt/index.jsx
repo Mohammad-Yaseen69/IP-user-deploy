@@ -83,7 +83,7 @@ const DataDecrypt = () => {
     const TEXT_COPY = 'Copy JSON'
     const TEXT_HINT = 'Decrypted JSON will appear here'
     const TEXT_SUCCESS = 'JSON copied to clipboard!'
-    
+
     const [str, setStr] = useState("")
     const [data, setData] = useState(null)
     const [error, setError] = useState("")
@@ -122,13 +122,13 @@ const DataDecrypt = () => {
                     {TEXT_DECRYPT}
                 </button>
                 {data && (
-                    <button 
-                        onClick={handleCopy} 
-                        style={{ 
-                            padding: '8px 12px', 
-                            border: '1px solid #059669', 
-                            background: '#059669', 
-                            color: '#fff', 
+                    <button
+                        onClick={handleCopy}
+                        style={{
+                            padding: '8px 12px',
+                            border: '1px solid #059669',
+                            background: '#059669',
+                            color: '#fff',
                             borderRadius: 6,
                             display: 'flex',
                             alignItems: 'center',

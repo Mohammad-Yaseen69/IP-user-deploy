@@ -93,7 +93,9 @@ const ConfirmQuote = ({ beneficiary, amount, currency, setConfirmed, setSubStep,
                 setConfirmed(true)
                 setToken(dec?.token)
             } catch (error) {
-                toast.error("Something went wrong while confirming the transaction!")
+                toast.error(
+                    t("Something went wrong while confirming the transaction!")
+                );
                 // console.log(decryptData(error?.response?.data?.data))
             }
         }
@@ -159,7 +161,7 @@ const ConfirmQuote = ({ beneficiary, amount, currency, setConfirmed, setSubStep,
                             >{t("edit")}</span>
                         </div>
                         <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
-                            <span style={{ fontWeight: 700, fontSize: "1.4rem"}}>{title}</span>
+                            <span style={{ fontWeight: 700, fontSize: "1.4rem" }}>{t(title)}</span>
                         </div>
                     </div>
                     {/* desciption */}

@@ -253,7 +253,7 @@ const RequestCalendar = () => {
                 />
               </div>
               {!isTimeValid && (
-                <p style={{ color: "red", margin: ".7rem 0" }}>Please select a time at least 5 minutes from now.</p>
+                <p style={{ color: "red", margin: ".7rem 0" }}>{t("Please select a time at least 5 minutes from now.")}</p>
               )}
               <CustomSubmitButton
                 onClick={handleSubmit}

@@ -147,8 +147,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 })
                 setLoginData(data)
                 setShowQuickLogin(true)
-                setEmail(data?.credential)
                 setLoginMethod(data?.loginMethod)
+                setEmail(data?.credential)
             } else {
                 setShowQuickLogin(false)
             }
@@ -402,7 +402,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         if (loginMethod === "email" && !loginData) {
             setEmail("")
         }
-    }, [loginMethod, loginData])
+    }, [loginMethod,])
 
     const getUserInfo = async (username) => {
         try {
@@ -962,6 +962,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             loginMethod === "phone"
                                                 ?
                                                 <PhoneInput
+                                                    phone={email}
                                                     setPhone={setEmail}
                                                     country={country}
                                                 />

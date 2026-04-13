@@ -382,7 +382,7 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                                         dataHandler={dataHandler}
                                         resendHandler={data.account_type === "individual" ? () => verifyPhoneOtp(data.phone_otp_values?.split(""), () => { }, 6, true) : signupHandler}
                                         verifyOTpHandler={data.account_type === "individual" ? verifyEmailOtp : verifyPhoneOtp}
-                                        timer={900}
+                                        timer={300}
                                         type="email"
                                         data={data}
                                     />

@@ -47,7 +47,7 @@ const StepThree = ({ data, dataHandler }) => {
                 style={width < 1000 ? {
                     height: "55vh",
                     display: "flex",
-                    justifyContent:"center"
+                    justifyContent: "center"
                 } : {}}
                 className={styles.container}
             >
