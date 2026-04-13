@@ -132,7 +132,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
 
                     <div className={styles.inpt_co}>
                         <label>
-                            {isReferenceRequired ? t("Ucard Number or Sharer ID") : t("Payment Reference")} {!isReferenceRequired && `(${t("Optional")})`}{" "}
+                            {isReferenceRequired ? `${t("Ucard Number or Sharer ID")}*` : t("Payment Reference")} {!isReferenceRequired && `(${t("Optional")})`}{" "}
                         </label>
                         <input
                             type="text"
