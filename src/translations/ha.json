@@ -3071,5 +3071,7 @@
   "Payment For {{type}} Verification": "Biyan Kuɗi Don Tabbatarwa {{type}}",
   "Please select a date at least 15 years ago or earlier.": "Da fatan za a zaɓi kwanan wata aƙalla shekaru 15 da suka wuce ko kuma a baya.",
   "Please select a date after one month from ${pass}.": "Da fatan za a zaɓi kwanan wata bayan wata ɗaya daga ${pass}.",
-  "Select an Ending Date:": "Zaɓi Ranar Ƙarshe:"
+  "Select an Ending Date:": "Zaɓi Ranar Ƙarshe:",
+  "Enter the code sent to your Whatsapp on {{phone}}": "Shigar da lambar da aka aika zuwa Whatsapp ɗinka akan {{phone}}",
+  "Enter the code sent to {{phone}} via {{service}}": "Shigar da lambar da aka aika zuwa {{phone}} ta hanyar {{service}}"
 }

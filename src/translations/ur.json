@@ -3023,9 +3023,6 @@
   "seconds to get code on": "کوڈ حاصل کرنے کے لیے سیکنڈ",
   "You have already requested code on": "آپ نے پہلے ہی کوڈ آن کی درخواست کی ہے۔",
   "wait": "انتظار کرو",
-  "Enter the code sent to your Whatsapp on": "اپنے Whatsapp پر بھیجے گئے کوڈ کو درج کریں۔",
-  "Enter the code sent to your Whatsapp on +41********4053": "+41*********4053 پر اپنے Whatsapp پر بھیجا گیا کوڈ درج کریں۔",
-  "Enter the code sent to +41********4053": "+41*********4053 پر بھیجا گیا کوڈ درج کریں۔",
   "Resend code in 30 seconds": "30 سیکنڈ میں کوڈ دوبارہ بھیجیں۔",
   "(Card Fee)": "(کارڈ فیس)",
   "Card (USD)": "کارڈ (USD)",
@@ -3113,5 +3110,10 @@
   "Payment For {{type}} Verification": "{{type}} تصدیق کے لیے ادائیگی",
   "Please select a date at least 15 years ago or earlier.": "براہ کرم کم از کم 15 سال پہلے یا اس سے پہلے کی تاریخ منتخب کریں۔",
   "Please select a date after one month from ${pass}.": "براہ کرم ${pass} سے ایک ماہ بعد کی تاریخ منتخب کریں۔",
-  "Select an Ending Date:": "ایک اختتامی تاریخ منتخب کریں:"
+  "Select an Ending Date:": "ایک اختتامی تاریخ منتخب کریں:",
+  "Enter the code sent to your Whatsapp on": "اپنے Whatsapp پر بھیجے گئے کوڈ کو درج کریں۔",
+  "Enter the code sent to your Whatsapp on +41********4053": "+41*********4053 پر اپنے Whatsapp پر بھیجا گیا کوڈ درج کریں۔",
+  "Enter the code sent to +41********4053": "+41*********4053 پر بھیجا گیا کوڈ درج کریں۔",
+  "Enter the code sent to your Whatsapp on {{phone}}": "{{phone}} پر آپ کے Whatsapp پر بھیجا گیا کوڈ درج کریں",
+  "Enter the code sent to {{phone}} via {{service}}": "{{phone}} کو {{service}} کے ذریعے بھیجا گیا کوڈ درج کریں"
 }

@@ -900,5 +900,7 @@
   "Payment For {{type}} Verification": "دفع رسوم التحقق من {{type}}",
   "Please select a date at least 15 years ago or earlier.": "يرجى اختيار تاريخ قبل 15 عامًا على الأقل.",
   "Please select a date after one month from ${pass}.": "يرجى اختيار تاريخ بعد شهر واحد من ${pass}.",
-  "Select an Ending Date:": "حدد تاريخ الانتهاء:"
+  "Select an Ending Date:": "حدد تاريخ الانتهاء:",
+  "Enter the code sent to your Whatsapp on {{phone}}": "أدخل الرمز المرسل إلى حسابك على واتساب على {{phone}}",
+  "Enter the code sent to {{phone}} via {{service}}": "أدخل الرمز المرسل إلى {{phone}} عبر {{service}}"
 }

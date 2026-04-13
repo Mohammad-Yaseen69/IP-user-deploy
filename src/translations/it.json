@@ -3121,5 +3121,7 @@
   "Payment For {{type}} Verification": "Pagamento per la verifica di {{type}}",
   "Please select a date at least 15 years ago or earlier.": "Seleziona una data di almeno 15 anni fa o precedente.",
   "Please select a date after one month from ${pass}.": "Seleziona una data successiva a un mese da ${pass}.",
-  "Select an Ending Date:": "Seleziona una data di fine:"
+  "Select an Ending Date:": "Seleziona una data di fine:",
+  "Enter the code sent to your Whatsapp on {{phone}}": "Inserisci il codice inviato al tuo WhatsApp sul {{phone}}",
+  "Enter the code sent to {{phone}} via {{service}}": "Inserisci il codice inviato a {{phone}} tramite {{service}}"
 }

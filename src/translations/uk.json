@@ -3121,5 +3121,7 @@
   "Payment For {{type}} Verification": "Оплата за перевірку {{type}}",
   "Please select a date at least 15 years ago or earlier.": "Будь ласка, виберіть дату щонайменше 15 років тому або раніше.",
   "Please select a date after one month from ${pass}.": "Будь ласка, виберіть дату після одного місяця з ${pass}.",
-  "Select an Ending Date:": "Виберіть кінцеву дату:"
+  "Select an Ending Date:": "Виберіть кінцеву дату:",
+  "Enter the code sent to your Whatsapp on {{phone}}": "Введіть код, надісланий на ваш WhatsApp на номер {{phone}}",
+  "Enter the code sent to {{phone}} via {{service}}": "Введіть код, надісланий на {{phone}} через {{service}}"
 }

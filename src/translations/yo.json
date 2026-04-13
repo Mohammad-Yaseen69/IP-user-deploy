@@ -3113,5 +3113,7 @@
   "Payment For {{type}} Verification": "Isanwo Fun Ijẹrisi {{type}}",
   "Please select a date at least 15 years ago or earlier.": "Jọ̀wọ́ yan ọjọ́ kan tí ó kéré tán ọdún mẹ́ẹ̀ẹ́dógún sẹ́yìn tàbí ṣáájú.",
   "Please select a date after one month from ${pass}.": "Jọ̀wọ́ yan ọjọ́ lẹ́yìn oṣù kan láti ${pass}.",
-  "Select an Ending Date:": "Yan Ọjọ́ Ìparí:"
+  "Select an Ending Date:": "Yan Ọjọ́ Ìparí:",
+  "Enter the code sent to your Whatsapp on {{phone}}": "Tẹ koodu ti a firanṣẹ si Whatsapp rẹ sii lori {{phone}}",
+  "Enter the code sent to {{phone}} via {{service}}": "Tẹ koodu ti a firanṣẹ si {{phone}} nipasẹ {{service}}"
 }

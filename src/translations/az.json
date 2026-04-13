@@ -900,5 +900,7 @@
   "Payment For {{type}} Verification": "{{tip}} सत्यापन के लिए भुगतान",
   "Please select a date at least 15 years ago or earlier.": "कृपया कम से कम 15 वर्ष पहले या उससे पहले पहला तिथि चुनें.",
   "Please select a date after one month from ${pass}.": "कृपया ${pass} से एक महीने बाद की तारीख चुन।",
-  "Select an Ending Date:": "समाप्ति तिथि चुनें:"
+  "Select an Ending Date:": "समाप्ति तिथि चुनें:",
+  "Enter the code sent to your Whatsapp on {{phone}}": "अपने फोन पर व्हाट्सएप पर भेजे गए कोडत करें.",
+  "Enter the code sent to {{phone}} via {{service}}": "{{xidmət}} के माध्यम से {{telefon}} पर भेजा गया कोड दर्ज"
 }

@@ -900,5 +900,7 @@
   "Payment For {{type}} Verification": "Plaćanje za verifikaciju {{type}}",
   "Please select a date at least 15 years ago or earlier.": "Molimo, odaberite datum koji nije bio prije manje od 15 godina ili ranije.",
   "Please select a date after one month from ${pass}.": "Odaberite datum nakon jednog mjeseca od ${pass}.",
-  "Select an Ending Date:": "Odaberite datum završetka:"
+  "Select an Ending Date:": "Odaberite datum završetka:",
+  "Enter the code sent to your Whatsapp on {{phone}}": "Unesite kod, ispravan na vaš WhatsApp-nomer {{phone}}",
+  "Enter the code sent to {{phone}} via {{service}}": "Unesite kod, poslan na broj {{phone}} preko {{service}}"
 }

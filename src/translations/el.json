@@ -900,5 +900,7 @@
   "Payment For {{type}} Verification": "Επιβεβαίωση {{type}}",
   "Please select a date at least 15 years ago or earlier.": "Selecteer een datum die minstens 15 jaar geleden of eerder is.",
   "Please select a date after one month from ${pass}.": "Επιλογή een datum die een maand na ${pass} ligt.",
-  "Select an Ending Date:": "Επιλέξτε ένα απόσπασμα:"
+  "Select an Ending Date:": "Επιλέξτε ένα απόσπασμα:",
+  "Enter the code sent to your Whatsapp on {{phone}}": "Ο κώδικας στο die naar je WhatsApp είναι ανανεωμένος στο {{τηλέφωνο}}.",
+  "Enter the code sent to {{phone}} via {{service}}": "Το Voer de code in die via {{service}} naar {{phone}} είναι άλλο."
 }

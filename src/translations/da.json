@@ -900,5 +900,7 @@
   "Payment For {{type}} Verification": "{{type}} Doğrulama İçin Ödeme",
   "Please select a date at least 15 years ago or earlier.": "Lesen Sie mehr als 15 Jahre nach der ersten Staffel.",
   "Please select a date after one month from ${pass}.": "Bitte beachten Sie, dass ${pass} nicht mehr verfügbar ist.",
-  "Select an Ending Date:": "Bitiş tarihini seçin:"
+  "Select an Ending Date:": "Bitiş tarihini seçin:",
+  "Enter the code sent to your Whatsapp on {{phone}}": "WhatsApp'ıza gönderilen kodu {{phone}} telefonuna girin.",
+  "Enter the code sent to {{phone}} via {{service}}": "{{service}} aracılığıyla {{phone}} adresine gönderilen kodu girin."
 }

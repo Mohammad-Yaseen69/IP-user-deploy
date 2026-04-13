@@ -905,5 +905,7 @@
   "Payment For {{type}} Verification": "{{turi}} tṣdyq ẩے ly̰ے ạdạẖy̰Ḱ",
   "Please select a date at least 15 years ago or earlier.": "brạہ ạrm ạm ạz ẩm 15 sạl پہlے yạ ạs sے pẖlے",
   "Please select a date after one month from ${pass}.": "brạہ کrm ${pass} sے ạy̰ḵ mạ bʿd ạy̰ tạrykh mntkẖb ạryẔ",
-  "Select an Ending Date:": "ạy̰ḵ ạạtạmy̰ tary̰kh mntkẖb ạryạ:"
+  "Select an Ending Date:": "ạy̰ḵ ạạtạmy̰ tary̰kh mntkẖb ạryạ:",
+  "Enter the code sent to your Whatsapp on {{phone}}": "{{telefon}} pr ạp ḩے Whatsapp pr bḾy̰jạ ghyạ ḩwḈ drj ḵry̰ḵ",
+  "Enter the code sent to {{phone}} via {{service}}": "{{telefon}} ḩw {{xizmat}} ḩے dẖryʿے bḾy̰jạ ḯyạ ḩwḈ drj ḵry̰ḵ"
 }

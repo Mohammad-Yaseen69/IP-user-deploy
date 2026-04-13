@@ -3115,5 +3115,7 @@
   "Payment For {{type}} Verification": "Malipo ya Uthibitishaji wa {{type}}",
   "Please select a date at least 15 years ago or earlier.": "Tafadhali chagua tarehe angalau miaka 15 iliyopita au mapema zaidi.",
   "Please select a date after one month from ${pass}.": "Tafadhali chagua tarehe baada ya mwezi mmoja kutoka ${pass}.",
-  "Select an Ending Date:": "Chagua Tarehe ya Mwisho:"
+  "Select an Ending Date:": "Chagua Tarehe ya Mwisho:",
+  "Enter the code sent to your Whatsapp on {{phone}}": "Ingiza msimbo uliotumwa kwenye WhatsApp yako kwenye {{phone}}",
+  "Enter the code sent to {{phone}} via {{service}}": "Ingiza msimbo uliotumwa kwa {{phone}} kupitia {{service}}"
 }

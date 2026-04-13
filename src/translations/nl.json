@@ -900,5 +900,7 @@
   "Payment For {{type}} Verification": "Betaling voor {{type}} verificatie",
   "Please select a date at least 15 years ago or earlier.": "Selecteer een datum die minstens 15 jaar geleden of eerder is.",
   "Please select a date after one month from ${pass}.": "Selecteer een datum die een maand na ${pass} ligt.",
-  "Select an Ending Date:": "Selecteer een einddatum:"
+  "Select an Ending Date:": "Selecteer een einddatum:",
+  "Enter the code sent to your Whatsapp on {{phone}}": "Voer de code in die naar je WhatsApp is verzonden op {{phone}}.",
+  "Enter the code sent to {{phone}} via {{service}}": "Voer de code in die via {{service}} naar {{phone}} is verzonden."
 }

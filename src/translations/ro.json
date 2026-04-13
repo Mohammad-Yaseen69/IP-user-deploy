@@ -900,5 +900,7 @@
   "Payment For {{type}} Verification": "Pago por verificación de {{type}}",
   "Please select a date at least 15 years ago or earlier.": "Selectați o dată de a face al menos 15 ani sau anterior.",
   "Please select a date after one month from ${pass}.": "Selectați o dată posterioară pentru a pleca de la ${pass}.",
-  "Select an Ending Date:": "Selectați o dată de finalizare:"
+  "Select an Ending Date:": "Selectați o dată de finalizare:",
+  "Enter the code sent to your Whatsapp on {{phone}}": "Introduceți codul care vă învidem prin WhatsApp pe telefonul dvs. {{phone}}.",
+  "Enter the code sent to {{phone}} via {{service}}": "Introduceți codul enviat a {{phone}} prin intermediul {{service}}"
 }

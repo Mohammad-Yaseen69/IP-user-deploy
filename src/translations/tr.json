@@ -3115,5 +3115,7 @@
   "Payment For {{type}} Verification": "{{type}} Doğrulama İçin Ödeme",
   "Please select a date at least 15 years ago or earlier.": "Lütfen en az 15 yıl öncesine ait bir tarih seçin.",
   "Please select a date after one month from ${pass}.": "Lütfen ${pass} tarihinden bir ay sonrasını seçin.",
-  "Select an Ending Date:": "Bitiş tarihini seçin:"
+  "Select an Ending Date:": "Bitiş tarihini seçin:",
+  "Enter the code sent to your Whatsapp on {{phone}}": "WhatsApp'ınıza gönderilen kodu {{phone}} telefonuna girin.",
+  "Enter the code sent to {{phone}} via {{service}}": "{{service}} aracılığıyla {{phone}} adresine gönderilen kodu girin."
 }

@@ -905,5 +905,7 @@
   "Payment For {{type}} Verification": "{{ტიპი}} 验证付款",
   "Please select a date at least 15 years ago or earlier.": "请选择至少15年前或更早的日期.",
   "Please select a date after one month from ${pass}.": "请从 ${pass} 中选择一个一个月后的日期.",
-  "Select an Ending Date:": "选择结束日期:"
+  "Select an Ending Date:": "选择结束日期:",
+  "Enter the code sent to your Whatsapp on {{phone}}": "请输入发送到您WhatsApp账号{{ტელეფონი}}的验证码",
+  "Enter the code sent to {{phone}} via {{service}}": "请输入通过 {{სერვისი}} 发送到 {{ტელეფონი}} 的验证码"
 }

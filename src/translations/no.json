@@ -900,5 +900,7 @@
   "Payment For {{type}} Verification": "Pembayaran Untuk Verifikasi {{type}}",
   "Please select a date at least 15 years ago or earlier.": "Silakan pilih tanggal setidaknya 15 tahun yang lalu atau lebih awal.",
   "Please select a date after one month from ${pass}.": "Silakan pilih tanggal setelah satu bulan dari ${pass}.",
-  "Select an Ending Date:": "Velg Berakhir-tegnet:"
+  "Select an Ending Date:": "Velg Berakhir-tegnet:",
+  "Enter the code sent to your Whatsapp on {{phone}}": "Masukkan kode yang dikirim ke WhatsApp Anda di {{phone}}",
+  "Enter the code sent to {{phone}} via {{service}}": "Masukkan kode yang dikirim ke {{phone}} melalui {{service}}"
 }

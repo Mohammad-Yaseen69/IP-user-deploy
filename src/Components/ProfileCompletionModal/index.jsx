@@ -59,7 +59,7 @@ const ProfileCompletionModal = ({ setShowModal, profileIncompleteReason, kyc = f
                         flexDirection: "column"
                     }}>
                         <div style={{
-                            borderRadius: "10px", background: "white", width: "33px", height: "33px", display: "flex", alignItems: "center", justifyContent: "center"
+                            borderRadius: "10px 10px 0 0", background: "white", width: "fit-content", height: "33px", display: "flex", alignItems: "center", justifyContent: "center"
                         }}>
                             <LanguagePicker size={"16"} />
                         </div>
