@@ -182,9 +182,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             setRestoreLoading(true)
         }
         const isAuth = method ? (method === "auth") : (currentOtpMethod === "auth");
-        const isInsta = method
-            ? (method === "insta")
-            : (currentOtpMethod === "insta");
+        const isInsta = method ? (method === "insta") : (currentOtpMethod === "insta" || currentOtpMethod !== "sms" && currentOtpMethod !== "email" && currentOtpMethod !== "wp");
         const isWp = method ? (method === "wp") : (currentOtpMethod === "wp");
         const isEmailOtp = method ? (method === "email") : (currentOtpMethod === "email");
 
@@ -956,6 +954,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             loginMethod === "phone"
                                                 ?
                                                 <PhoneInput
+                                                    phone={email}
                                                     setPhone={setEmail}
                                                     country={country}
                                                 />
