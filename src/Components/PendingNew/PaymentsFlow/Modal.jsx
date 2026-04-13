@@ -413,7 +413,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                     <Receipt
                                         data={data}
                                         backHandler={() => {
-                                            verifyToken()
+                                            verifyToken(true)
                                             toggle()
                                         }}
                                         showBack={true}
