@@ -49,7 +49,7 @@ const InvoiceDetails = ({ data, isSubscription = false }) => {
                 </div>
 
                 {country && (
-                    <div>
+                    <div style={{ display: "flex", alignItems: "center" }}>
                         <span>{t("Country")}</span>
                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                             <img

@@ -44,24 +44,24 @@ const QuotationSentItem = ({ item, activeItem, setActiveItem, index }) => {
     const badgeColor = useMemo(() => {
         switch (item?.status?.toLowerCase()) {
             case "initiated":
-            case "bargain":
-                return "#ADD8E6"
-            case "completed":
-                return "#28A745"
-            case "rejected":
-                return "#DC3545"
-            case "cancelled":
-                return "#C82333"
-            case "submitted":
+            case "sent":
                 return "#FFA500"
-            case "available":
-                return "#007BFF"
-            case "confirmed":
-                return "#218838"
-            case "reversed":
-                return "#FFC107"
+            case "accepted":
+                return "#28A745"
             case "declined":
-                return "#C82333"
+                return "#DC3545"
+            // case "cancelled":
+            //     return "#C82333"
+            // case "submitted":
+            //     return "#FFA500"
+            // case "available":
+            //     return "#007BFF"
+            // case "confirmed":
+            //     return "#218838"
+            // case "reversed":
+            //     return "#FFC107"
+            // case "declined":
+            //     return "#C82333"
             default:
                 return "#FFA500"
                 break;

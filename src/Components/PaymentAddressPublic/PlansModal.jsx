@@ -51,7 +51,7 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
             />
         </svg>
     );
-    // const url = data ? `/payments?payment_action=send_money&send_type=wallet&wallet_id=${data.receivingWallet?.wallet_id}&currency=${data.currency}&amount=${data.amount}&isShipping=${data.shippingAddress}&payment_type=invoice` : "/"
+    const path = selectedPlan ? `/payments?payment_action=send_money&send_type=wallet&wallet_id=${selectedPlan.receivingWallet?.wallet_id}&currency=${selectedPlan.receivingWallet?.currency?.code}&amount=${selectedPlan.price}&planId=${selectedPlan?.planId}&payment_type=plan` : "/"
 
 
     const actionButtons = [
@@ -63,13 +63,12 @@ const PlansModal = ({ isOpen, toggle, plansData, dataHandler, isLoading, user, u
                     const toNavigate = `${import.meta.env.VITE_PUBLIC_URL}/login?redirect=${encodeURIComponent('/')}`
                     openInNewTab(toNavigate)
                 } else {
-                    const path = '/';
                     sessionStorage.setItem("path", path);
                     navigate(path)
                 }
             },
             width: "13px",
-            disabled: true
+            // disabled: true
         },
         {
             label: "Pay with Crypto",

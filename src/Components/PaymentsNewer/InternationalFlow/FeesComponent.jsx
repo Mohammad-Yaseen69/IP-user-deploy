@@ -36,7 +36,7 @@ const FeesComponent = ({ data, sendingLabel = "Sending", exchangeRateLabel = "Ex
                         <span>{t(receiverLabel)}</span>
                         <p>{Number(cleanString(data?.exchange_rate?.receiver?.amount))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })}
                             {data.exchange_rate?.receiver?.currency}
-                            {(receiverFee || (isInvoice && data.exchange_rate?.service_fee?.amount)) && ` (fee ${Number(cleanString(isInvoice ? data.exchange_rate?.service_fee?.amount : data?.exchange_rate?.fee?.paymentAddressFee))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} ${isInvoice ? data.exchange_rate?.service_fee?.currency : data.exchange_rate?.sending?.currency})`}
+                            {(receiverFee || (isInvoice && data.exchange_rate?.service_fee?.amount)) && ` (fee ${Number(cleanString(isInvoice ? data.exchange_rate?.service_fee?.amount || data.exchange_rate?.service_fee?.value : data?.exchange_rate?.fee?.paymentAddressFee))?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} ${isInvoice ? data.exchange_rate?.service_fee?.currency : data.exchange_rate?.sending?.currency})`}
                         </p>
                     </div>
                 }

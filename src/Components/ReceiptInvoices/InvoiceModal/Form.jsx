@@ -69,14 +69,6 @@ const Form = ({ data, inputFieldChange, dataHandler }) => {
             </Field>
 
 
-            {data.specifyCountry && (
-                <Field label={t('Country')} required={!data.countryIsoCode}>
-                    <CountryDropDown
-                        country={data.countryIsoCode}
-                        onSelect={(country) => dataHandler('countryIsoCode', country.alpha3)}
-                    />
-                </Field>
-            )}
 
             <Field toggle={true} label={t('Allow multiple payments for this invoice')}>
                 <Toggle checked={data.allowMultiple} onChange={() => dataHandler('allowMultiple', !data.allowMultiple)} />
@@ -98,8 +90,19 @@ const Form = ({ data, inputFieldChange, dataHandler }) => {
                     }}
                 />
             </Field>
+
+            {data.specifyCountry && (
+                <Field label={t('Country')} required={!data.countryIsoCode}>
+                    <CountryDropDown
+                        country={data.countryIsoCode}
+                        onSelect={(country) => dataHandler('countryIsoCode', country.alpha3)}
+                    />
+                </Field>
+            )}
+
         </div>
     )
 }
 
 export default Form
+    
