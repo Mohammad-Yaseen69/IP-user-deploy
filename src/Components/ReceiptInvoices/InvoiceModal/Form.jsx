@@ -78,7 +78,7 @@ const Form = ({ data, inputFieldChange, dataHandler }) => {
                 <Toggle checked={data.allowShipping} onChange={() => dataHandler('allowShipping', !data.allowShipping)} />
             </Field>
 
-            <Field toggle={true} label={t('Specify country')}>
+            <Field toggle={true} label={t("Specify country")}>
                 <Toggle
                     checked={data.specifyCountry}
                     onChange={() => {
