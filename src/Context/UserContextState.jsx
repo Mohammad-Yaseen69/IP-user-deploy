@@ -208,8 +208,8 @@ const UserState = ({ children }) => {
     }
 
 
-    const verifyToken = () => {
-        if (!window.location.pathname.includes("auth") && !userDetails && Object.keys(userDetails || {}).length === 0) {
+    const verifyToken = (isFetchRequired = false) => {
+        if ((!window.location.pathname.includes("auth") && !userDetails && Object.keys(userDetails || {}).length === 0) || isFetchRequired) {
             axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/account/auth/${token}`)
                 .then(res => {
                     const decrypted = decryptData(res.data.data)

@@ -53,7 +53,7 @@ const Settings = () => {
                                 <h4>{t("Settings")}</h4>
                                 <TopRight />
                             </div>
-                            <div style={{ marginBottom: "-50px" }}>
+                            <div style={{ marginBottom: "-50px", zIndex: 1, position: "relative" }}>
                                 <Cover />
                                 <Header />
                             </div>
