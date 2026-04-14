@@ -39,7 +39,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const isQuickLoginRef = useRef(false)
     const redirectQuery = params.get("redirect");
     const redirect = location?.state?.redirect ?? (redirectQuery ? decodeURIComponent(redirectQuery) : null)
-    const isPhoneNumber = /^\d{9,20}$/g;
+    const isPhoneNumber = /^\d{9,20}$/;
     const isEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const [emailVerified, setEmailVerified] = useState(false)
     const [email, setEmail] = useState("")
@@ -76,6 +76,18 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [pendingLoginData, setPendingLoginData] = useState(null)
     const [capturedSecurityData, setCapturedSecurityData] = useState(null)
     const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const normalizeCredential = (value) => (value ?? "").toString().trim().toLowerCase();
+    const getResolvedCredential = () => {
+        const fromState = normalizeCredential(email);
+        if (fromState) return fromState;
+
+        if (isQuickLoginRef.current) {
+            const fromQuickLogin = normalizeCredential(loginData?.credential);
+            if (fromQuickLogin) return fromQuickLogin;
+        }
+
+        return "";
+    };
     const [methods, setMethods] = useState([
         {
             avail: false,
@@ -123,6 +135,16 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const checkEmailHandler = (e) => {
         e.preventDefault()
         setIsPressed(true)
+        setIsLoginError("")
+        const credential = getResolvedCredential();
+        if (!isPhoneNumber.test(credential) && !isEmail.test(credential)) {
+            setIsLoginError("Uh-Oh! Please enter a valid email or phone number.")
+            setIsPressed(false)
+            return
+        }
+        if (credential !== email) {
+            setEmail(credential)
+        }
         setEmailVerified(true)
         setIsPressed(false)
     }
@@ -142,7 +164,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     useEffect(() => {
         const getData = async () => {
             const data = await localforage.getItem("loginData")
-            if (data) {
+            const savedCredential = normalizeCredential(data?.credential)
+            if (data && savedCredential) {
                 logger.info(`Local forage data for ${data?.name}`, {
                     data
                 })
@@ -150,8 +173,10 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 setLoginData(data)
                 setShowQuickLogin(true)
                 setLoginMethod(data?.loginMethod)
-                setEmail(data?.credential)
+                setEmail(savedCredential)
             } else {
+                isQuickLoginRef.current = false
+                setLoginData(null)
                 setShowQuickLogin(false)
             }
             setIsDataLoaded(true);
@@ -191,15 +216,33 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         if (restoreAccount) {
             setRestoreLoading(true)
         }
+        const credential = getResolvedCredential();
+        const credentialIsEmail = isEmail.test(credential);
+        const isCredentialValid = isPhoneNumber.test(credential) || credentialIsEmail;
+
+        if (!isCredentialValid) {
+            setIsLoginError("Uh-Oh! Please enter a valid email or phone number.")
+            setIsPressed(false)
+            setMethodLoading(false)
+            if (restoreAccount) {
+                setRestoreLoading(false)
+            }
+            return
+        }
+
+        if (credential !== email) {
+            setEmail(credential)
+        }
+
         const isAuth = method ? (method === "auth") : (currentOtpMethod === "auth");
         const isInsta = method ? (method === "insta") : (currentOtpMethod === "insta" || currentOtpMethod !== "sms" && currentOtpMethod !== "email" && currentOtpMethod !== "wp");
         const isWp = method ? (method === "wp") : (currentOtpMethod === "wp");
         const isEmailOtp = method ? (method === "email") : (currentOtpMethod === "email");
 
 
-        const credentials = isEmail.test(email)
+        const credentials = credentialIsEmail
             ? {
-                email,
+                email: credential,
                 password,
                 authenticator: isAuth,
                 platform: (isInsta && !isInstagramBrowser) ? "instagram" : isWp ? "whatsapp" : isEmailOtp ? "email" : "email",
@@ -207,13 +250,14 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 ...(restoreAccount && { restoreAccount: true })
             }
             : {
-                phone: email,
+                phone: credential,
                 password,
                 authenticator: isAuth,
                 platform: (isInsta && !isInstagramBrowser) ? "instagram" : isWp ? "whatsapp" : isEmailOtp ? "email" : "",
                 first_time: firstTime,
                 ...(restoreAccount && { restoreAccount: true })
             };
+        console.log("payload of the data :", credentials)
         const encrypted = encryptData(credentials)
         axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/send-login-otp`, {
             data: encrypted
@@ -342,7 +386,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 }
                 const decrypted = decryptData(error?.response?.data?.data)
                 if (decrypted.message === "Account not found!" || decrypted.message === "Incorrect Password!" || decrypted.message?.toLowerCase()?.includes("incorrect") || decrypted.message === "User not found!") {
-                    setIsLoginError(`Uh-Oh! The password/${isEmail.test(email) ? "email" : "phone number"} you entered is wrong.`)
+                    setIsLoginError(`Uh-Oh! The password/${credentialIsEmail ? "email" : "phone number"} you entered is wrong.`)
                 }
                 if (decrypted.message?.toLowerCase()?.includes("inactive")) {
                     setIsLoginError(`Uh-Oh! Your account is not active anymore.`)
@@ -376,7 +420,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
     }, [profileLockTIme, i18next.language])
     useLayoutEffect(() => {
-        console.log(email)
+        // console.log(email)
         if (!isDataLoaded) return;
         if (isQuickLoginRef.current) return;
 
@@ -456,7 +500,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
     const performSecurityChecks = async (isVpnAllowed, input = null) => {
         setIsPressed(true);
-        const ipInfo = await getUserInfo(email);
+        const ipInfo = await getUserInfo(getResolvedCredential());
 
         const finishSecurityChecks = async (locationData = {}) => {
             setCapturedSecurityData({ ipInfo, locationData });
@@ -506,11 +550,12 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         localStorage.setItem("login", true)
         localStorage.setItem("token", token)
         setUserDetails(userAccount)
+        const credential = getResolvedCredential();
         setData({
             pfp: userAccount?.profileImage?.url,
             name: userAccount?.account_type === "individual" ? userAccount?.first_name + " " + userAccount?.last_name : userAccount?.company_name,
             loginMethod: loginMethod,
-            credential: email,
+            credential,
         })
 
         const ipInfo = capturedSecurityData?.ipInfo;
@@ -613,9 +658,10 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         e.preventDefault()
         setIsPressed(true)
         setIsLoginError("")
-        const credentials = isEmail.test(email)
-            ? { email, password, token: loginToken, code: otp || otpValues.join("") }
-            : { phone: email, password, token: loginToken, code: otp || otpValues.join("") }
+        const credential = getResolvedCredential();
+        const credentials = isEmail.test(credential)
+            ? { email: credential, password, token: loginToken, code: otp || otpValues.join("") }
+            : { phone: credential, password, token: loginToken, code: otp || otpValues.join("") }
 
         const encrypted = encryptData(credentials)
 
@@ -726,10 +772,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             setIsPressed(true)
             setIsLoginError("")
             setBiometricLoading(true)
+            const credential = getResolvedCredential();
 
-            const emailOrPhone = isEmail.test(email) ?
-                { email: email } :
-                { phone: email }
+            const emailOrPhone = isEmail.test(credential) ?
+                { email: credential } :
+                { phone: credential }
 
             const response1 = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/login-biometric-challenge`, {
                 data: encryptData(emailOrPhone)
@@ -767,7 +814,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                     return dec2
                 } catch (err) {
                     const serverErr = err?.response?.data?.data ? decryptData(err.response.data.data) : err
-                    logger.error(`Biometric verification failed! for ${email}`, {
+                    logger.error(`Biometric verification failed! for ${credential}`, {
                         credentials,
                         serverError: serverErr,
                         attempt,
@@ -881,13 +928,14 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
 
     const getOtpLabel = () => {
-        const maskedEmail = `${email.slice(0, email.length - 4).split("").map(() => "*").join("")}${email.slice(email.length - 4)}`;
+        const credential = getResolvedCredential();
+        const maskedEmail = `${credential.slice(0, credential.length - 4).split("").map(() => "*").join("")}${credential.slice(credential.length - 4)}`;
 
-        const maskedPhone = isEmail.test(email)
-            ? `${email.slice(0, 4).split("").map(_ => "*").join("")}${email.slice(4)}`
+        const maskedPhone = isEmail.test(credential)
+            ? `${credential.slice(0, 4).split("").map(_ => "*").join("")}${credential.slice(4)}`
             : maskedEmail;
 
-        const service = email.slice(0, 3) === "971" ? "Whatsapp" : "SMS";
+        const service = credential.slice(0, 3) === "971" ? "Whatsapp" : "SMS";
 
         switch (currentOtpMethod) {
             case "auth": return t("Google Authenticator Code");
@@ -897,6 +945,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             default: return t("Enter the code sent to {{phone}} via {{service}}", { phone: `\u200E${maskedPhone}\u200E`, service });
         }
     };
+    const resolvedCredential = getResolvedCredential();
+    const isCredentialValid = isPhoneNumber.test(resolvedCredential) || isEmail.test(resolvedCredential);
 
     return (
         <>
@@ -1115,7 +1165,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     {t("Back")}
                                 </button>
                             }
-                            <button type="submit" className={styles.form_btn} disabled={isLoginError || isPressed || (showQuickLogin ? emailVerified ? !password : false : emailVerified ? !password || (!isPhoneNumber.test(email) && !isEmail.test(email)) : (!isPhoneNumber.test(email) && !isEmail.test(email)))}>
+                            <button type="submit" className={styles.form_btn} disabled={isLoginError || isPressed || (showQuickLogin ? (emailVerified ? !password : false) : (emailVerified ? !password || !isCredentialValid : !isCredentialValid))}>
                                 <span>{
                                     !emailVerified
                                         ?
@@ -1171,7 +1221,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                             currentOtpMethod === "insta" ? t("Instagram") :
                                                 currentOtpMethod === "wp" ? t("Whatsapp") :
                                                     currentOtpMethod === "email" ? t("Email OTP Verification") :
-                                                        t("SMS Verification").replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")}
+                                                        t("SMS Verification").replace("SMS", resolvedCredential.slice(0, 3) === "971" ? "Whatsapp" : "SMS")}
                                 </h1>
                             </div>
                             <p>{t("Start Your InstaPay Journey Today!")}</p>

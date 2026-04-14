@@ -29,8 +29,10 @@ const PlaidBankTransfer = ({
   initiatePayload,
   endpoint = "",
   handleBackClick,
-  successMessage
+  successMessage,
+  closeBtnText
 }) => {
+  console.log("successMessages ",successMessage)
   const { userDetails, authHeader, setProfileLockTime } = useContext(UserContext);
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -98,10 +100,6 @@ const PlaidBankTransfer = ({
       setSelectedBankId(null);
     }
   };
-
-
-
-
   const { mutateAsync: initiatePlaidPayment, isPending: isInitiatingPlaid } = useMutation({
     mutationFn: async ({ otp }) => {
       const initiatePayloadResponse = {
@@ -473,7 +471,7 @@ const PlaidBankTransfer = ({
             style={{ color: "black", textAlign: "center", marginBottom: "0px" }}
           >
             {t(
-              successMessage || type !== "add_funds" ? "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window" : "Payment authorized successfully! Your wallet will be credited once the transfer is complete.",
+              successMessage ? successMessage :type !== "add_funds" ? "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window" : "Payment authorized successfully! Your wallet will be credited once the transfer is complete.",
             )}
           </h4>
         </div>
@@ -558,9 +556,7 @@ const PlaidBankTransfer = ({
           )}
           {plaidStep === 4 && (
             <button onClick={onBackClickHandler}>
-              {type === "payment_address"
-                ? t("Close")
-                : type === "add_funds" ? t("Go To Transactions") : t("Go back to wallets")}
+              {closeBtnText || type === "payment_address" ? t("Close") : type === "add_funds" ? t("Go To Transactions") : t("Go back to wallets")}
               {window.innerWidth > 1000 && <ChevronRight size={18} />}
             </button>
           )}
