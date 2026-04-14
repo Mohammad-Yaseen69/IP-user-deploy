@@ -12,8 +12,8 @@
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-     "optimize": "node scripts/optimizeImages.js"
-
+    "optimize": "node scripts/optimizeImages.js",
+    "i18n:check": "eslint src/ -c eslint.i18n.config.js"
   },
   "dependencies": {
     "@asseinfo/react-kanban": "^2.2.0",
@@ -148,8 +148,10 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
     "jsdom": "^26.1.0",
+    "knip": "^5.88.1",
     "rollup-plugin-visualizer": "^6.0.3",
     "sharp": "^0.34.5",
+    "typescript": "^6.0.2",
     "vite": "^6.3.5",
     "vitest": "^3.2.4"
   },
