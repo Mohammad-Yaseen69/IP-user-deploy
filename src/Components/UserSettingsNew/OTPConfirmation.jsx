@@ -40,7 +40,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
 
     useEffect(() => {
         if (type === "email") {
-            setResendTimer(900)
+            setResendTimer(300)
         } else {
             setResendTimer(90)
         }
@@ -226,8 +226,13 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                     :
                                     (
                                         authType === "sms"
-                                            ?
-                                            t(`A one-time verification code has been sent to your ${(userDetails?.email || type === "email") ? "email address" : ""} ${!inBasic ? "and" : ""} ${type === "phone" ? "phone number." : ""}`).replace("phone", userDetails.phone?.slice(0, 3) === "971" ? "whatsapp" : "phone")
+                                            ? `${t("A one-time verification code has been sent to your")} ${(userDetails?.email || type === "email") ? "email address" : ""
+                                            }${!inBasic ? " and " : ""}${type === "phone"
+                                                ? (userDetails?.phone?.slice(0, 3) === "971"
+                                                    ? "whatsapp number."
+                                                    : "phone number.")
+                                                : ""
+                                            }`
                                             :
                                             t("Enter a code shown in the app to make sure everything works fine.")
                                     )
@@ -274,7 +279,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                             inputRefs?.current?.[0]?.focus()
                                             setOTPValues(Array(numberOfFields).fill(''))
                                             if (type === "email") {
-                                                setResendTimer(900)
+                                                setResendTimer(300)
                                             } else {
                                                 setResendTimer(120)
                                             }
@@ -307,7 +312,7 @@ const OTPConfirmation = ({ setter, callback, setterValue, hideOtp, type = "", pr
                                                 setOTPValues(Array(numberOfFields).fill(''))
                                                 resendHandler()
                                                 if (type === 'email') {
-                                                    setResendTimer(900)
+                                                    setResendTimer(300)
                                                 } else {
                                                     setResendTimer(90)
                                                 }

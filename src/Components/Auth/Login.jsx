@@ -36,6 +36,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const { t } = useTranslation()
     const location = useLocation();
     const params = new URLSearchParams(location.search || "");
+    const isQuickLoginRef = useRef(false)
     const redirectQuery = params.get("redirect");
     const redirect = location?.state?.redirect ?? (redirectQuery ? decodeURIComponent(redirectQuery) : null)
     const isPhoneNumber = /^\d{9,20}$/g;
@@ -75,6 +76,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const [pendingLoginData, setPendingLoginData] = useState(null)
     const [capturedSecurityData, setCapturedSecurityData] = useState(null)
     const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const [locationLoading, setLocationLoading] = useState(false);
     const [methods, setMethods] = useState([
         {
             avail: false,
@@ -145,6 +147,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 logger.info(`Local forage data for ${data?.name}`, {
                     data
                 })
+                isQuickLoginRef.current = true
                 setLoginData(data)
                 setShowQuickLogin(true)
                 setLoginMethod(data?.loginMethod)
@@ -162,22 +165,34 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         await localforage.setItem("loginData", data)
     }
 
-    const loginHandler = async (e, method = undefined, restoreAccount = false) => {
+    const loginHandler = async (e, method = undefined, restoreAccount = false, isFirstTime = false) => {
         e.preventDefault()
         setIsPressed(true)
         setIsLoginError("")
 
         const getLocation = () => {
+            setLocationLoading(true);
             return new Promise((resolve, reject) => {
                 if (!navigator.geolocation) {
+                    setLocationLoading(false);
                     resolve(null);
                     return;
                 }
-                navigator.geolocation.getCurrentPosition(resolve, reject, {
-                    timeout: 20000,
-                    enableHighAccuracy: true,
-                    maximumAge: 0
-                });
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        setLocationLoading(false);
+                        resolve(pos);
+                    },
+                    (err) => {
+                        setLocationLoading(false);
+                        reject(err);
+                    },
+                    {
+                        timeout: 20000,
+                        enableHighAccuracy: true,
+                        maximumAge: 0
+                    }
+                );
             });
         };
 
@@ -201,7 +216,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 password,
                 authenticator: isAuth,
                 platform: (isInsta && !isInstagramBrowser) ? "instagram" : isWp ? "whatsapp" : isEmailOtp ? "email" : "email",
-                first_time: firstTime,
+                first_time: isFirstTime || firstTime,
                 ...(restoreAccount && { restoreAccount: true })
             }
             : {
@@ -209,14 +224,10 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 password,
                 authenticator: isAuth,
                 platform: (isInsta && !isInstagramBrowser) ? "instagram" : isWp ? "whatsapp" : isEmailOtp ? "email" : "",
-                first_time: firstTime,
+                first_time: isFirstTime || firstTime,
                 ...(restoreAccount && { restoreAccount: true })
             };
         const encrypted = encryptData(credentials)
-
-
-
-
         axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/send-login-otp`, {
             data: encrypted
         })
@@ -303,12 +314,23 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         if (error.code === 1) {
                             if (rdd.isSafari || rdd.isMobileSafari) {
                                 try {
+                                    setLocationLoading(true);
                                     locationInput = await new Promise((resolve, reject) => {
-                                        navigator.geolocation.getCurrentPosition(resolve, reject, {
-                                            timeout: 10000,
-                                            enableHighAccuracy: true,
-                                            maximumAge: 0
-                                        });
+                                        navigator.geolocation.getCurrentPosition(
+                                            (pos) => {
+                                                setLocationLoading(false);
+                                                resolve(pos);
+                                            },
+                                            (err) => {
+                                                setLocationLoading(false);
+                                                reject(err);
+                                            },
+                                            {
+                                                timeout: 10000,
+                                                enableHighAccuracy: true,
+                                                maximumAge: 0
+                                            }
+                                        );
                                     });
                                 } catch (error2) {
                                     logger.error("Location error occured in safari", {
@@ -326,6 +348,18 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 setRestoreLoading(false);
                                 return;
                             }
+                        } else if (error.code === 3) {
+                            setIsLoginError("Location access timed out. Please ensure GPS is enabled and try again.")
+                            setIsPressed(false);
+                            setMethodLoading(false);
+                            setRestoreLoading(false);
+                            return;
+                        } else {
+                            setIsLoginError("Unable to retrieve your location. Please check your browser settings.")
+                            setIsPressed(false);
+                            setMethodLoading(false);
+                            setRestoreLoading(false);
+                            return;
                         }
 
                         console.warn("Geolocation warning:", error);
@@ -378,7 +412,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
     }, [profileLockTIme, i18next.language])
     useLayoutEffect(() => {
+        console.log(email)
         if (!isDataLoaded) return;
+        if (isQuickLoginRef.current) return;
+
+        if (showQuickLogin) return;
         if (loginMethod === "email") return;
         if (!email) {
             console.warn("Invalid email/phone blocked: empty input");
@@ -676,10 +714,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             newOTPValues[index] = char;
         });
         setCurrentActiveInput(6)
-
         setOTPValues(newOTPValues);
-
-
         const isEmpty = newOTPValues.some(val => val === '');
         setIsAnyFieldEmpty(isEmpty);
         if (!isEmpty) {
@@ -881,6 +916,23 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     }
 
 
+    const getOtpLabel = () => {
+        const maskedEmail = `${email.slice(0, email.length - 4).split("").map(() => "*").join("")}${email.slice(email.length - 4)}`;
+
+        const maskedPhone = isEmail.test(email)
+            ? `${email.slice(0, 4).split("").map(_ => "*").join("")}${email.slice(4)}`
+            : maskedEmail;
+
+        const service = email.slice(0, 3) === "971" ? "Whatsapp" : "SMS";
+
+        switch (currentOtpMethod) {
+            case "auth": return t("Google Authenticator Code");
+            case "insta": return t("Enter the code sent to your Instagram Account");
+            case "wp": return t("Enter the code sent to your Whatsapp on {{phone}}", { phone: `\u200E${maskedEmail}\u200E` });
+            case "email": return t("Enter the code sent to your email");
+            default: return t("Enter the code sent to {{phone}} via {{service}}", { phone: `\u200E${maskedPhone}\u200E`, service });
+        }
+    };
 
     return (
         <>
@@ -938,7 +990,14 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 </ModalFooter>
             </Modal>
 
-            <form autoComplete="off" onSubmit={emailVerified ? loginHandler : checkEmailHandler} className={styles.form_details} style={width > 1000 ? { opacity: step === 1 ? 1 : 0, pointerEvents: step === 1 ? "all" : "none" } : { display: step === 1 ? "inherit" : "none" }}>
+            <form
+                autoComplete="off"
+                onSubmit={(e) => {
+                    emailVerified ? loginHandler(e, undefined, false, true) : checkEmailHandler(e)
+                }}
+                className={styles.form_details}
+                style={width > 1000 ? { opacity: step === 1 ? 1 : 0, pointerEvents: step === 1 ? "all" : "none" } : { display: step === 1 ? "inherit" : "none" }}
+            >
                 <div className={styles.left}>
                     <h1>{t("Login")}</h1>
                     <p>{t("Start Your InstaPay Journey Today!")}</p>
@@ -1067,6 +1126,16 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         <div className={styles.input_error}>
                             <AlertTriangle size={17} color="#F32D2D" />
                             <span>{profileLockTIme > 0 ? isLoginError : t(isLoginError)}</span>
+                        </div>
+                    }
+                    {
+                        locationLoading
+                        &&
+                        <div className={styles.location_status}>
+                            <div className={styles.loader_dots}>
+                                <span>.</span><span>.</span><span>.</span>
+                            </div>
+                            <span>{t("Reading Location...")}</span>
                         </div>
                     }
                     <div className={styles.center_bottom}>
@@ -1199,39 +1268,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     </div>
                                 ) : (
                                     <div className={styles.otp_inp}>
-                                        <label>
-                                            {
-                                                currentOtpMethod === "auth"
-                                                    ?
-                                                    t("Google Authenticator Code")
-                                                    :
-                                                    currentOtpMethod === "insta"
-                                                        ?
-                                                        t("Enter the code sent to your Instagram Account")
-                                                        :
-                                                        currentOtpMethod === "wp"
-                                                            ?
-                                                            t(`Enter the code sent to your Whatsapp on +41********4053`)
-                                                                .replace(
-                                                                    "+41********4053",
-                                                                    `${email.slice(0, email.length - 4).split("").map(() => "*").join("")}${email.slice(email.length - 4)}`
-                                                                )
-                                                            :
-                                                            currentOtpMethod === "email"
-                                                                ?
-                                                                t("Enter the code sent to your email")
-                                                                :
-                                                                t(`Enter the code sent to +41********4053`)
-                                                                    .replace(
-                                                                        "+41********4053",
-                                                                        isEmail.test(email)
-                                                                            ?
-                                                                            `${email.slice(0, 4).split("").map(_ => "*").join("")}${email.slice(4)}`
-                                                                            :
-                                                                            `${email.slice(0, email.length - 4).split("").map(() => "*").join("")}${email.slice(email.length - 4)}`
-                                                                    ).replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")
-                                            }
-                                        </label>
+                                        <label>{getOtpLabel()}</label>
+
                                         <FaceAnimation currentInput={currentActiveInput} verification={otpVerified} isCorrect={isOtpCorrect} startTyping />
                                         <div
                                             style={{ animation: otpVerified && !isOtpCorrect ? "horizontal-shaking 0.5s ease-in-out" : "" }}

@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
-import styles from "./styles/index.module.scss"
+import axios from 'axios'
+import { useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { UserContext } from '../../Context/UserContext'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
-import axios from 'axios'
 import { service_name_formatter } from '../TransactionsNewApi/TransactionItem'
+import styles from "./styles/index.module.scss"
+
 
 const Socials = () => {
     const { t } = useTranslation()
