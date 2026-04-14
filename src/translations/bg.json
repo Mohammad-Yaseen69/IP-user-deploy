@@ -923,5 +923,6 @@
   "Add Funds Failed": "Добавяне на неправилно подредени фонове.",
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Assim que sua conta estiver regularizada e se você atender aos requisitos, encerraremos sua conta e excluiremos seus dados. Precisamos reter alguns de seus dados por motivos legais e regulatórios. Para saber mais, консултирайте се с политиката на поверителност.",
   "Redirecting you to Login Page in": "Você será redirecionado para a página de login.",
-  "seconds": "секунди"
+  "seconds": "секунди",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Verificação biométrica concluída com sucesso. Você será redirecionado para a página do paintel de controle em instantes."
 }

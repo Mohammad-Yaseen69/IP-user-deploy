@@ -3093,5 +3093,6 @@
   "Re-Enter Card Details": "Kartendaten erneut eingeben",
   "Add Funds Failed": "Geld hinzufügen fehlgeschlagen",
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Sobald Ihr Konto bereinigt ist und Sie die Voraussetzungen erfüllen, schließen wir Ihr Konto und löschen Ihre Daten. Aus rechtlichen und regulatorischen Gründen müssen wir einige Ihrer Daten aufbewahren. Weitere Informationen finden Sie in unseren Datenschutzbestimmungen.",
-  "Redirecting you to Login Page in": "Sie werden zur Anmeldeseite weitergeleitet in"
+  "Redirecting you to Login Page in": "Sie werden zur Anmeldeseite weitergeleitet in",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Die biometrische Verifizierung war erfolgreich. Sie werden in Kürze zur Dashboard-Seite weitergeleitet."
 }

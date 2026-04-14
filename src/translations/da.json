@@ -923,5 +923,6 @@
   "Add Funds Failed": "Para Ekleme Başarısız Oldu",
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Bitte beachten Sie, dass das Gerät nicht ordnungsgemäß funktioniert. Es ist nicht erforderlich, dass Sie die Geräte erneut öffnen. Daha fazla bilgi için gizlilik politikamıza bakın.",
   "Redirecting you to Login Page in": "Sizi Giriş Sayfasına yönlendiriyoruz.",
-  "seconds": "saniyeler"
+  "seconds": "saniyeler",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Biyometrik doğrulama başarılı, sizi birazdan control paneli sayfasına yönlendireceğiz."
 }

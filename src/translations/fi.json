@@ -923,5 +923,6 @@
   "Add Funds Failed": "Kuongeza Fedha Kumeshindwa",
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Mara tu akaunti yako itakapokuwa imefunguliwa, na ikiwa unastahiki, tutafunga akaunti yako na kufuta data yako. Tunahitaji uhifadhi baadhi ya data yako kwa sababu za kisheria na udhibiti. Ili kupata maelezo zaidi, tazama yetu",
   "Redirecting you to Login Page in": "Kukuelekeza kwenye Ukurasa wa Kuingia",
-  "seconds": "sekuntia"
+  "seconds": "sekuntia",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Uthibitishaji wa kibiometriki umefanikiwa, Tutakuelekeza kwenye ukurasa wa dashibodi baada ya muda."
 }

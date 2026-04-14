@@ -3132,5 +3132,6 @@
   "Re-Enter Card Details": "أعد إدخال بيانات البطاقة",
   "Add Funds Failed": "فشلت عملية إضافة الأموال",
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "بمجرد تسوية حسابك، وإذا كنت مؤهلاً، فسنغلق حسابك ونحذف بياناتك. نحتاج إلى الاحتفاظ ببعض بياناتك لأسباب قانونية وتنظيمية. لمعرفة المزيد، راجع سياسة الخصوصية الخاصة بنا.",
-  "Redirecting you to Login Page in": "سيتم تحويلك إلى صفحة تسجيل الدخول في"
+  "Redirecting you to Login Page in": "سيتم تحويلك إلى صفحة تسجيل الدخول في",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "تم التحقق من البيانات البيومترية بنجاح، وسنقوم بإعادة توجيهك إلى صفحة لوحة التحكم بعد قليل."
 }

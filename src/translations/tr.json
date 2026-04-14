@@ -3134,5 +3134,6 @@
   "Re-Enter Card Details": "Kart Bilgilerini Tekrar Girin",
   "Add Funds Failed": "Para Ekleme Başarısız Oldu",
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Hesabınız temizlendikten sonra ve uygun şartları taşıyorsanız, hesabınızı kapatıp verilerinizi sileceğiz. Yasal ve düzenleyici nedenlerle bazı verilerinizi saklamamız gerekiyor. Daha fazla bilgi için gizlilik politikamıza bakın.",
-  "Redirecting you to Login Page in": "Sizi Giriş Sayfasına yönlendiriyoruz."
+  "Redirecting you to Login Page in": "Sizi Giriş Sayfasına yönlendiriyoruz.",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Biyometrik doğrulama başarılı, sizi birazdan kontrol paneli sayfasına yönlendireceğiz."
 }

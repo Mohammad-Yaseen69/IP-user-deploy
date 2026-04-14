@@ -923,5 +923,6 @@
   "Add Funds Failed": "Αποτυχία σε περίπτωση απώλειας χρημάτων",
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Ο λογαριασμός Zodra uw είναι vrijgegeven en u in aanmerking komt, sluiten we uw account en verwijderen we uw gegevens. We moeten echter een deel van uw gegevens bewaren om wettelijke en regelgevende redenen. Για περισσότερες πληροφορίες.",
   "Redirecting you to Login Page in": "U wordt doorgestuurd naar de inlogpagina.",
-  "seconds": "δευτερεύων"
+  "seconds": "δευτερεύων",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Biometrische verificatie geslaagd. Ο πίνακας οργάνων είναι πολύ σημαντικός."
 }

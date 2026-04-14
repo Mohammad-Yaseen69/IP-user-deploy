@@ -928,5 +928,6 @@
   "Add Funds Failed": "添加资金失败",
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "一旦您的账户信息清理完毕，并且您符合相关条件，我们将关闭您的账户并删除您的数据。出于法律和监管方面的原因，我们需要保留您的部分数据。了解更多信息，请参阅我们的[链接].",
   "Redirecting you to Login Page in": "正在将您重定向到登录页面",
-  "seconds": "秒"
+  "seconds": "秒",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "生物识别验证成功，稍后我们将把您重定向到控制面板页面。"
 }

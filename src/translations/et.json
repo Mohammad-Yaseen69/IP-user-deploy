@@ -923,5 +923,6 @@
   "Add Funds Failed": "Не вдалося додати кошти",
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Щойно ваш обліковий запис буде очищено, і якщо ви відповідаєте вимогам, ми закриємо його дані. Нам потрібно, щоб ви зберігали деякі свої дані з юридичних та регуляторних причин. Щоб дізнатися більше, перегляньте наші",
   "Redirecting you to Login Page in": "Перенаправлення на сторінку входу в",
-  "seconds": "sekundit"
+  "seconds": "sekundit",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Біометрична перевірка успішна. Ми перенаправимо вас на сторінку панелі керування через деякий час."
 }

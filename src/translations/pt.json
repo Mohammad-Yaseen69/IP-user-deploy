@@ -3140,5 +3140,6 @@
   "Re-Enter Card Details": "Insira novamente os dados do cartão",
   "Add Funds Failed": "A adição de fundos falhou.",
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Assim que sua conta estiver regularizada e se você atender aos requisitos, encerraremos sua conta e excluiremos seus dados. Precisamos reter alguns de seus dados por motivos legais e regulatórios. Para saber mais, consulte nossa política de privacidade.",
-  "Redirecting you to Login Page in": "Você será redirecionado para a página de login."
+  "Redirecting you to Login Page in": "Você será redirecionado para a página de login.",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Verificação biométrica concluída com sucesso. Você será redirecionado para a página do painel de controle em instantes."
 }

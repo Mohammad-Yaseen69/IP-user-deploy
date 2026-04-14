@@ -3134,5 +3134,6 @@
   "Re-Enter Card Details": "कार्ड का विवरण दोबारा दर्ज करें",
   "Add Funds Failed": "धनराशि जोड़ने में विफलता",
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "एक बार जब आपका खाता साफ़ हो जाएगा, और यदि आप पात्र हैं, तो हम आपका खाता बंद कर देंगे और आपका डेटा हटा देंगे। हमें कानूनी और नियामक कारणों से आपका कुछ डेटा अपने पास रखना आवश्यक है। अधिक जानने के लिए, हमारी गोपनीयता नीति देखें।",
-  "Redirecting you to Login Page in": "आपको लॉगिन पेज पर रीडायरेक्ट किया जा रहा है"
+  "Redirecting you to Login Page in": "आपको लॉगिन पेज पर रीडायरेक्ट किया जा रहा है",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "बायोमेट्रिक सत्यापन सफल रहा, हम आपको कुछ देर में डैशबोर्ड पेज पर रीडायरेक्ट कर देंगे।"
 }

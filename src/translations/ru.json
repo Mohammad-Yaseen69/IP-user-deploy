@@ -3055,5 +3055,6 @@
   "Re-Enter Card Details": "Повторно введите данные карты.",
   "Add Funds Failed": "Добавление средств не удалось.",
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "После того, как ваш аккаунт будет очищен, и если вы соответствуете требованиям, мы закроем ваш аккаунт и удалим ваши данные. Нам необходимо сохранить часть ваших данных по юридическим и нормативным причинам. Для получения дополнительной информации см. наш раздел «Условия и положения».",
-  "Redirecting you to Login Page in": "Перенаправляем вас на страницу входа в систему."
+  "Redirecting you to Login Page in": "Перенаправляем вас на страницу входа в систему.",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Биометрическая верификация прошла успешно. Через некоторое время мы перенаправим вас на страницу панели управления."
 }

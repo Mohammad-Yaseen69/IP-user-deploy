@@ -923,5 +923,6 @@
   "Add Funds Failed": "Geld toevoegen mislukt",
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Zodra uw account is vrijgegeven en u in aanmerking komt, sluiten we uw account en verwijderen we uw gegevens. We moeten echter een deel van uw gegevens bewaren om wettelijke en regelgevende redenen. Zie onze privacyverklaring voor meer informatie.",
   "Redirecting you to Login Page in": "U wordt doorgestuurd naar de inlogpagina.",
-  "seconds": "seconden"
+  "seconds": "seconden",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Biometrische verificatie geslaagd. U wordt zo meteen doorgestuurd naar het dashboard."
 }

@@ -923,5 +923,6 @@
   "Add Funds Failed": "Error al agregar fondos",
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Una vez que su cuenta esté libre de deudas, y si cumple con los requisitos, cerraremos su cuenta y eliminaremos sus datos. Necesitamos conservar algunos de sus datos por razones legales y reglamentarias. Para obtener más información, consulte nuestra",
   "Redirecting you to Login Page in": "Redireccionándote a la página de inicio de sesión en",
-  "seconds": "artículos de segunda clase"
+  "seconds": "artículos de segunda clase",
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "La verificación biométrica se ha realizado correctamente. En breve le redirigiremos a la página del panel de control."
 }
