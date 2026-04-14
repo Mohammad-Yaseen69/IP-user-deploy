@@ -3127,7 +3127,7 @@
   "Select Payment Method": "Select Payment Method",
   "Payment For {{type}} Verification": "Payment For {{type}} Verification",
   "Please select a date at least 15 years ago or earlier.": "Please select a date at least 15 years ago or earlier.",
-  "Please select a date after one month from ${pass}.": "Please select a date after one month from ${pass}.",
+  "Please select a date after one month from {pass}.": "Please select a date after one month from ${pass}.",
   "Select an Ending Date:": "Select an Ending Date:",
   "Enter the code sent to your Whatsapp on {{phone}}": "Enter the code sent to your Whatsapp on {{phone}}",
   "Enter the code sent to {{phone}} via {{service}}": "Enter the code sent to {{phone}} via {{service}}",
