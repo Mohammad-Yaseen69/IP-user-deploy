@@ -69,7 +69,7 @@ const SessionExpireModal = ({ isOpen, toggle }) => {
                 </div>
                 <h4 style={{ color: "orange" }}>{t("Session Expired")}</h4>
                 <p>{t("You have been logged out for security reasons, please login again to continue.")}</p>
-                <span style={{ color: "rgb(89 89 89)", fontWeight: 500 }}>Redirecting you to Login Page in <strong>{timer}</strong> seconds.</span>
+                <span style={{ color: "rgb(89 89 89)", fontWeight: 500 }}>{t("Redirecting you to Login Page in")} <strong>{timer}</strong> {t("seconds")}.</span>
             </ModalBody>
         </Modal>
     )

@@ -123,14 +123,14 @@ const CardDetails = ({ setSubStep, cardNumber, setCardNumber, expiry, setExpiry,
       {/* delete modal */}
       <Modal isOpen={showDeleteModal} toggle={toggleDeleteModal}>
         <ModalHeader toggle={toggleDeleteModal}>
-          Delete Card Info
+          {t("Delete Card Info")}
         </ModalHeader>
         <ModalBody>
-          Are you sure, you want to remove this card details ending with these "{currentCard?.last4}" 4 digits?
+          {t("Are you sure, you want to remove this card details ending with these ")}"{currentCard?.last4}" 4 digits?
         </ModalBody>
         <ModalFooter>
           <Button color='danger' onClick={deleteCard} disabled={isDeleting} style={{ borderRadius: "8px", padding: ".7rem 1.5rem" }}>
-            Delete
+            {t("Delete")}
           </Button>
         </ModalFooter>
       </Modal>
@@ -216,7 +216,7 @@ const CardDetails = ({ setSubStep, cardNumber, setCardNumber, expiry, setExpiry,
           />
           <div style={{ display: "flex", alignItems: "center", gap: ".4rem", cursor: "pointer", marginTop: ".7rem" }}>
             <Input id='save_info' style={{ cursor: "pointer" }} type="checkbox" checked={saveCard} onChange={e => setSaveCard(e.target.checked)} />
-            <label style={{ marginBottom: 0, color: "#8b8b8b", cursor: "pointer" }} htmlFor='save_info'>Save details to use next time.</label>
+            <label style={{ marginBottom: 0, color: "#8b8b8b", cursor: "pointer" }} htmlFor='save_info'>{t("Save details to use next time.")}</label>
           </div>
         </div>
       </div>

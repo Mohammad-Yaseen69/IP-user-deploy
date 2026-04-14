@@ -319,7 +319,7 @@ const Verification = () => {
                                 <option value="" disabled="">{t("Select")}</option>
                                 {
                                     industries.map(item => (
-                                        <option value={item} key={item}>{item}</option>
+                                        <option value={item} key={item}>{t(item)}</option>
                                     ))
                                 }
                                 {

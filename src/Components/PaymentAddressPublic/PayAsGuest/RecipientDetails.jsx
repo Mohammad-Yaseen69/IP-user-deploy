@@ -20,7 +20,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
             if (selected <= minDate) {
                 dataHandler("dob", date.format ? date.format("YYYY-MM-DD") : date.toISOString().split("T")[0]);
             } else {
-                toast.error("Please select a date at least 15 years ago or earlier.");
+                toast.error(t("Please select a date at least 15 years ago or earlier."));
             }
         } else {
             dataHandler("dob", "");

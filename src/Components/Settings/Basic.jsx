@@ -88,7 +88,7 @@ const Basic = ({ setCurrentTab }) => {
             if (selected <= minDate) {
                 setDateOfBirth(date.format("YYYY-MM-DD"));
             } else {
-                toast.error('Please select a date at least 15 years ago or earlier.');
+                toast.error(t('Please select a date at least 15 years ago or earlier.'));
             }
         } else {
             setDateOfBirth("");
@@ -459,7 +459,7 @@ const Basic = ({ setCurrentTab }) => {
                     setCurrentTab={setCurrentTab}
                 />
                 <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-                    <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
+                    <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                     <ModalBody>
                         <OTPConfirmation
                             type={userDetails?.account_type === "individual" ? "email" : "phone"}
@@ -610,7 +610,7 @@ const Basic = ({ setCurrentTab }) => {
                                 color: "white",
                                 marginTop: "1rem"
                             }}>
-                                Username may includes only alphabets, numbers and _ (underscores).
+                                {t("Username may includes only alphabets, numbers and _ (underscores).")}
                             </div>
                         }
                     </FormGroup>
