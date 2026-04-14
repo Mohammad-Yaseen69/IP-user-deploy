@@ -11,6 +11,7 @@ import CryptoJS from "crypto-js";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import RedirectButton from "../../CommonElements/RedirectButton";
 import i18next from "i18next";
+import { useTranslation } from "react-i18next";
 
 // Styled components for custom styling
 const CustomDatePickerContainer = styled.div`
@@ -80,7 +81,7 @@ const SuccessImage = styled.img`
 
 export default function SubscriptionRequestEndDate() {
   const tomorrow = dayjs().add(1, "day"); // Get tomorrow's date
-
+  const { t } = useTranslation()
   const [selectedDate, setSelectedDate] = useState(tomorrow);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -216,7 +217,7 @@ export default function SubscriptionRequestEndDate() {
                 }}
               >
                 <CustomLabel htmlFor="datepicker">
-                  Select an Ending Date:
+                  {t("Select an Ending Date:")}
                 </CustomLabel>
                 <MobileDatePicker
                   id="datepicker"
@@ -228,8 +229,9 @@ export default function SubscriptionRequestEndDate() {
               </div>
               {!isValidDate && (
                 <p style={{ color: "red" }}>
-                  {`Please select a date after one month from ${pass}.`}
-                </p>
+                  {
+                    t("Please select a date after one month from {{pass}}", { pass })
+                  }                </p>
               )}
               {error && <p style={{ color: "red" }}>{error}</p>}
               <CustomSubmitButton

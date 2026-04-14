@@ -116,7 +116,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
         if (selected <= minDate) {
             setDob(e.target.value);
         } else {
-            toast.error('Please select a date at least 15 years ago or earlier.');
+            toast.error(t('Please select a date at least 15 years ago or earlier.'));
         }
     };
 

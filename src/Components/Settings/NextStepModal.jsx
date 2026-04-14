@@ -3,6 +3,7 @@ import styles from "./styles/MissingStepsModal.module.scss"
 import { auth, bank, passport, social } from "./Modal_Icons"
 import { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../../Context/UserContext'
+import { useTranslation } from 'react-i18next'
 
 const steps = [
     {
@@ -34,7 +35,7 @@ const steps = [
 const NextStepModal = ({ isOpen, toggle, setCurrentTab }) => {
     const { missingTabsData } = useContext(UserContext)
     const [data, setData] = useState([])
-
+    const { t } = useTranslation()
 
 
     useEffect(() => {
@@ -54,11 +55,11 @@ const NextStepModal = ({ isOpen, toggle, setCurrentTab }) => {
             <ModalBody>
                 <div style={{ alignItems: window.innerWidth < 1000 && "center" }} className={styles.container}>
                     <h1>
-                        Please complete these important steps for a seamless experience.
+                        {t("Please complete these important steps for a seamless experience.")}
                     </h1>
 
                     <p>
-                        Click on an option to get started
+                        {t("Click on an option to get started")}
                     </p>
 
 
@@ -74,13 +75,13 @@ const NextStepModal = ({ isOpen, toggle, setCurrentTab }) => {
                                     }}
                                 >
                                     <img src={step.icon} alt="" />
-                                    <span>{step.text}</span>
+                                    <span>{t(step.text)}</span>
                                 </div>
                             ))
                         }
                     </div>
 
-                    <button onClick={toggle}>Close</button>
+                    <button onClick={toggle}>{t("Close")}</button>
                 </div>
             </ModalBody>
         </Modal >

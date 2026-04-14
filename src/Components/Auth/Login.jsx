@@ -36,6 +36,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const { t } = useTranslation()
     const location = useLocation();
     const params = new URLSearchParams(location.search || "");
+    const isQuickLoginRef = useRef(false)
     const redirectQuery = params.get("redirect");
     const redirect = location?.state?.redirect ?? (redirectQuery ? decodeURIComponent(redirectQuery) : null)
     const isPhoneNumber = /^\d{9,20}$/g;
@@ -145,6 +146,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 logger.info(`Local forage data for ${data?.name}`, {
                     data
                 })
+                isQuickLoginRef.current = true
                 setLoginData(data)
                 setShowQuickLogin(true)
                 setLoginMethod(data?.loginMethod)
@@ -213,10 +215,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 ...(restoreAccount && { restoreAccount: true })
             };
         const encrypted = encryptData(credentials)
-
-
-
-
         axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/send-login-otp`, {
             data: encrypted
         })
@@ -378,7 +376,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
     }, [profileLockTIme, i18next.language])
     useLayoutEffect(() => {
+        console.log(email)
         if (!isDataLoaded) return;
+        if (isQuickLoginRef.current) return;
+
+        if (showQuickLogin) return;
         if (loginMethod === "email") return;
         if (!email) {
             console.warn("Invalid email/phone blocked: empty input");
@@ -676,10 +678,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             newOTPValues[index] = char;
         });
         setCurrentActiveInput(6)
-
         setOTPValues(newOTPValues);
-
-
         const isEmpty = newOTPValues.some(val => val === '');
         setIsAnyFieldEmpty(isEmpty);
         if (!isEmpty) {
@@ -881,6 +880,23 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     }
 
 
+    const getOtpLabel = () => {
+        const maskedEmail = `${email.slice(0, email.length - 4).split("").map(() => "*").join("")}${email.slice(email.length - 4)}`;
+
+        const maskedPhone = isEmail.test(email)
+            ? `${email.slice(0, 4).split("").map(_ => "*").join("")}${email.slice(4)}`
+            : maskedEmail;
+
+        const service = email.slice(0, 3) === "971" ? "Whatsapp" : "SMS";
+
+        switch (currentOtpMethod) {
+            case "auth": return t("Google Authenticator Code");
+            case "insta": return t("Enter the code sent to your Instagram Account");
+            case "wp": return t("Enter the code sent to your Whatsapp on {{phone}}", { phone: `\u200E${maskedEmail}\u200E` });
+            case "email": return t("Enter the code sent to your email");
+            default: return t("Enter the code sent to {{phone}} via {{service}}", { phone: `\u200E${maskedPhone}\u200E`, service });
+        }
+    };
 
     return (
         <>
@@ -1199,39 +1215,8 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                     </div>
                                 ) : (
                                     <div className={styles.otp_inp}>
-                                        <label>
-                                            {
-                                                currentOtpMethod === "auth"
-                                                    ?
-                                                    t("Google Authenticator Code")
-                                                    :
-                                                    currentOtpMethod === "insta"
-                                                        ?
-                                                        t("Enter the code sent to your Instagram Account")
-                                                        :
-                                                        currentOtpMethod === "wp"
-                                                            ?
-                                                            t(`Enter the code sent to your Whatsapp on +41********4053`)
-                                                                .replace(
-                                                                    "+41********4053",
-                                                                    `${email.slice(0, email.length - 4).split("").map(() => "*").join("")}${email.slice(email.length - 4)}`
-                                                                )
-                                                            :
-                                                            currentOtpMethod === "email"
-                                                                ?
-                                                                t("Enter the code sent to your email")
-                                                                :
-                                                                t(`Enter the code sent to +41********4053`)
-                                                                    .replace(
-                                                                        "+41********4053",
-                                                                        isEmail.test(email)
-                                                                            ?
-                                                                            `${email.slice(0, 4).split("").map(_ => "*").join("")}${email.slice(4)}`
-                                                                            :
-                                                                            `${email.slice(0, email.length - 4).split("").map(() => "*").join("")}${email.slice(email.length - 4)}`
-                                                                    ).replace("SMS", email.slice(0, 3) === "971" ? "Whatsapp" : "SMS")
-                                            }
-                                        </label>
+                                        <label>{getOtpLabel()}</label>
+
                                         <FaceAnimation currentInput={currentActiveInput} verification={otpVerified} isCorrect={isOtpCorrect} startTyping />
                                         <div
                                             style={{ animation: otpVerified && !isOtpCorrect ? "horizontal-shaking 0.5s ease-in-out" : "" }}

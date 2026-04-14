@@ -50,7 +50,7 @@ const EditMyProfile = ({ isCollapsed, setIsCollapsed }) => {
     if (selected <= minDate) {
       setDateOfBirth(e.target.value);
     } else {
-      alert('Please select a date at least 15 years ago or earlier.');
+      alert(t('Please select a date at least 15 years ago or earlier.'));
     }
   };
 

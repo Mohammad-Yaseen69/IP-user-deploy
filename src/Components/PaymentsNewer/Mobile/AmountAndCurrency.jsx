@@ -606,7 +606,7 @@ const AmountAndCurrency = ({ setStep, amount, setAmount, currency, setCurrency, 
                 (sendType === "card" && showOthers)
                     ?
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: ".6rem", color: "green" }}>
-                        <Check /> <span>Cards Details added</span>
+                        <Check /> <span>{t("Cards Details added")}</span>
                     </div>
                     : ""
             }
@@ -689,7 +689,7 @@ const AmountAndCurrency = ({ setStep, amount, setAmount, currency, setCurrency, 
                         savedCards?.length > 0
                         &&
                         <div style={{ display: "flex", gap: ".5rem", alignItems: "center" }}>
-                            <span style={{ whiteSpace: "nowrap" }}>Saved Cards: </span>
+                            <span style={{ whiteSpace: "nowrap" }}>{t("Saved Cards:")} </span>
                             <div style={{
                                 overflowX: "auto",
                                 display: "flex",
@@ -731,7 +731,7 @@ const AmountAndCurrency = ({ setStep, amount, setAmount, currency, setCurrency, 
                         />
                         <div style={{ display: "flex", alignItems: "center", gap: ".4rem", cursor: "pointer" }}>
                             <Input id='save_info' style={{ cursor: "pointer" }} type="checkbox" checked={saveCard} onChange={e => setSaveCard(e.target.checked)} />
-                            <label style={{ marginBottom: 0, color: "#8b8b8b", cursor: "pointer" }} htmlFor='save_info'>Save details to use next time.</label>
+                            <label style={{ marginBottom: 0, color: "#8b8b8b", cursor: "pointer" }} htmlFor='save_info'>{t("Save details to use next time.")}</label>
                         </div>
                     </div>
                 </>
