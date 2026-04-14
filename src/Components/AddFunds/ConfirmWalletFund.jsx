@@ -332,7 +332,7 @@ const ConfirmWalletFund = ({ setSubStep, wallet = {}, amount, payoutChannel, car
                         `For security and compatibility, we currently accept only cards issued in the same country as your InstaPay account. Please use a card issued in ${userDetails?.country_name} to complete your transaction.`,
                         `Thank you for your understanding!`
                     ]}
-                    title="Add Funds Failed"
+                    title={"Add Funds Failed"}
                     reEnter={() => setSubStep(4)}
                 />
             }

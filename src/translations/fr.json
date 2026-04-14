@@ -3122,5 +3122,22 @@
   "Please select a date after one month from ${pass}.": "Veuillez sélectionner une date après un mois à partir de ${pass}.",
   "Select an Ending Date:": "Sélectionnez une date de fin :",
   "Enter the code sent to your Whatsapp on {{phone}}": "Saisissez le code envoyé sur votre WhatsApp au {{phone}}",
-  "Enter the code sent to {{phone}} via {{service}}": "Saisissez le code envoyé au {{phone}} via {{service}}"
+  "Enter the code sent to {{phone}} via {{service}}": "Saisissez le code envoyé au {{phone}} via {{service}}",
+  "Bank Transfer (Europe)": "Virement bancaire (Europe)",
+  "Bank Transfer (Europe Only)": "Virement bancaire (Europe uniquement)",
+  "Connect Bank": "Connect Bank",
+  "Add Funds to Wallet": "Ajouter des fonds au portefeuille",
+  "Save for future use": "Conserver pour une utilisation future",
+  "Sending Amount": "Montant envoyé",
+  "Amount in CHF": "Montant en CHF",
+  "Cards Details added": "Détails des cartes ajoutés",
+  "Save details to use next time.": "Enregistrez ces informations pour les utiliser la prochaine fois.",
+  "Pay via": "Payer via",
+  "Are you sure, you want to remove this card details ending with these ": "Êtes-vous sûr de vouloir supprimer les informations de cette carte se terminant par ceci ?",
+  "Saved Cards:": "Cartes sauvegardées :",
+  "Invalid Credit/Debit Card": "Carte de crédit/débit invalide",
+  "Re-Enter Card Details": "Saisir à nouveau les détails de la carte",
+  "Add Funds Failed": "L'ajout de fonds a échoué",
+  "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Une fois votre compte régularisé, et si vous remplissez les conditions requises, nous le fermerons et supprimerons vos données. Nous devons toutefois conserver certaines de vos données pour des raisons légales et réglementaires. Pour en savoir plus, consultez notre politique de confidentialité.",
+  "Redirecting you to Login Page in": "Vous serez redirigé vers la page de connexion."
 }

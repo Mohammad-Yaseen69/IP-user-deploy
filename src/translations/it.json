@@ -3123,5 +3123,22 @@
   "Please select a date after one month from ${pass}.": "Seleziona una data successiva a un mese da ${pass}.",
   "Select an Ending Date:": "Seleziona una data di fine:",
   "Enter the code sent to your Whatsapp on {{phone}}": "Inserisci il codice inviato al tuo WhatsApp sul {{phone}}",
-  "Enter the code sent to {{phone}} via {{service}}": "Inserisci il codice inviato a {{phone}} tramite {{service}}"
+  "Enter the code sent to {{phone}} via {{service}}": "Inserisci il codice inviato a {{phone}} tramite {{service}}",
+  "Bank Transfer (Europe)": "Bonifico bancario (Europa)",
+  "Bank Transfer (Europe Only)": "Bonifico bancario (solo per l'Europa)",
+  "Connect Bank": "Connect Bank",
+  "Add Funds to Wallet": "Aggiungi fondi al portafoglio",
+  "Save for future use": "Salva per un utilizzo futuro",
+  "Sending Amount": "Importo da inviare",
+  "Amount in CHF": "Importo in CHF",
+  "Cards Details added": "Dettagli delle carte aggiunti",
+  "Save details to use next time.": "Salva i dettagli per utilizzarli la prossima volta.",
+  "Pay via": "Paga tramite",
+  "Are you sure, you want to remove this card details ending with these ": "Sei sicuro di voler rimuovere i dettagli di questa carta che terminano con questi",
+  "Saved Cards:": "Carte salvate:",
+  "Invalid Credit/Debit Card": "Carta di credito/debito non valida",
+  "Re-Enter Card Details": "Reinserisci i dati della carta",
+  "Add Funds Failed": "Aggiunta fondi non riuscita",
+  "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Una volta che il tuo account sarà in regola e se ne avrai diritto, chiuderemo il tuo account ed elimineremo i tuoi dati. Dobbiamo conservare alcuni dei tuoi dati per motivi legali e normativi. Per saperne di più, consulta la nostra",
+  "Redirecting you to Login Page in": "Reindirizzamento alla pagina di accesso in"
 }

@@ -3130,5 +3130,22 @@
   "Please select a date after one month from ${pass}.": "Please select a date after one month from ${pass}.",
   "Select an Ending Date:": "Select an Ending Date:",
   "Enter the code sent to your Whatsapp on {{phone}}": "Enter the code sent to your Whatsapp on {{phone}}",
-  "Enter the code sent to {{phone}} via {{service}}": "Enter the code sent to {{phone}} via {{service}}"
+  "Enter the code sent to {{phone}} via {{service}}": "Enter the code sent to {{phone}} via {{service}}",
+  "Bank Transfer (Europe)": "Bank Transfer (Europe)",
+  "Bank Transfer (Europe Only)": "Bank Transfer (Europe Only)",
+  "Connect Bank": "Connect Bank",
+  "Add Funds to Wallet": "Add Funds to Wallet",
+  "Save for future use": "Save for future use",
+  "Sending Amount": "Sending Amount",
+  "Amount in CHF": "Amount in CHF",
+  "Cards Details added": "Cards Details added",
+  "Save details to use next time.": "Save details to use next time.",
+  "Pay via": "Pay via",
+  "Are you sure, you want to remove this card details ending with these ": "Are you sure, you want to remove this card details ending with these ",
+  "Saved Cards:": "Saved Cards:",
+  "Invalid Credit/Debit Card": "Invalid Credit/Debit Card",
+  "Re-Enter Card Details": "Re-Enter Card Details",
+  "Add Funds Failed": "Add Funds Failed",
+  "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our",
+  "Redirecting you to Login Page in": "Redirecting you to Login Page in"
 }

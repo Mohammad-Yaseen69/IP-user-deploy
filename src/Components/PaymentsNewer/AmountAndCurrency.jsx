@@ -565,7 +565,7 @@ const AmountAndCurrency = ({ setSubStep, amount, setAmount, currency, setCurrenc
                     <div
                         style={{ margin: "", textAlign: "center", color: "#5926f0", fontWeight: 600, fontSize: ".7rem", cursor: "pointer" }}
                         onClick={() => setSendType(prev => prev === "card" ? "wallet" : "card")}
-                    >Pay via {sendType === "card" ? "wallet" : "card"}</div>
+                    >{t("Pay via")} {sendType === "card" ? "wallet" : "card"}</div>
                 }
                 {
                     loading
@@ -757,7 +757,7 @@ const AmountAndCurrency = ({ setSubStep, amount, setAmount, currency, setCurrenc
                     (sendType === "card" && showOthers)
                         ?
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: ".6rem", color: "green" }}>
-                            <Check /> <span>Cards Details added</span>
+                            <Check /> <span>{t("Cards Details added")}</span>
                         </div>
                         : ""
                 }
@@ -882,7 +882,7 @@ const AmountAndCurrency = ({ setSubStep, amount, setAmount, currency, setCurrenc
                             />
                             <div style={{ display: "flex", alignItems: "center", gap: ".4rem", cursor: "pointer" }}>
                                 <Input id='save_info' style={{ cursor: "pointer" }} type="checkbox" checked={saveCard} onChange={e => setSaveCard(e.target.checked)} />
-                                <label style={{ marginBottom: 0, color: "#8b8b8b", cursor: "pointer" }} htmlFor='save_info'>Save details to use next time.</label>
+                                <label style={{ marginBottom: 0, color: "#8b8b8b", cursor: "pointer" }} htmlFor='save_info'>{t("Save details to use next time.")}</label>
                             </div>
                         </div>
                     </>

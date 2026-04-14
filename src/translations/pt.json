@@ -3123,5 +3123,22 @@
   "Please select a date after one month from ${pass}.": "Por favor, selecione uma data após um mês a partir de ${pass}.",
   "Select an Ending Date:": "Selecione uma data de término:",
   "Enter the code sent to your Whatsapp on {{phone}}": "Digite o código enviado para o seu WhatsApp em {{phone}}",
-  "Enter the code sent to {{phone}} via {{service}}": "Digite o código enviado para {{phone}} através de {{service}}"
+  "Enter the code sent to {{phone}} via {{service}}": "Digite o código enviado para {{phone}} através de {{service}}",
+  "Bank Transfer (Europe)": "Transferência bancária (Europa)",
+  "Bank Transfer (Europe Only)": "Transferência bancária (somente para a Europa)",
+  "Connect Bank": "Connect Bank",
+  "Add Funds to Wallet": "Adicionar fundos à carteira",
+  "Save for future use": "Salvar para uso futuro",
+  "Sending Amount": "Valor a enviar",
+  "Amount in CHF": "Valor em CHF",
+  "Cards Details added": "Detalhes dos cartões adicionados",
+  "Save details to use next time.": "Salve os detalhes para usar na próxima vez.",
+  "Pay via": "Pagar via",
+  "Are you sure, you want to remove this card details ending with these ": "Tem certeza de que deseja remover os dados deste cartão que terminam com estes?",
+  "Saved Cards:": "Cartões salvos:",
+  "Invalid Credit/Debit Card": "Cartão de crédito/débito inválido",
+  "Re-Enter Card Details": "Insira novamente os dados do cartão",
+  "Add Funds Failed": "A adição de fundos falhou.",
+  "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Assim que sua conta estiver regularizada e se você atender aos requisitos, encerraremos sua conta e excluiremos seus dados. Precisamos reter alguns de seus dados por motivos legais e regulatórios. Para saber mais, consulte nossa política de privacidade.",
+  "Redirecting you to Login Page in": "Você será redirecionado para a página de login."
 }

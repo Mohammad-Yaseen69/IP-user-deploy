@@ -3073,5 +3073,22 @@
   "Please select a date after one month from ${pass}.": "Da fatan za a zaɓi kwanan wata bayan wata ɗaya daga ${pass}.",
   "Select an Ending Date:": "Zaɓi Ranar Ƙarshe:",
   "Enter the code sent to your Whatsapp on {{phone}}": "Shigar da lambar da aka aika zuwa Whatsapp ɗinka akan {{phone}}",
-  "Enter the code sent to {{phone}} via {{service}}": "Shigar da lambar da aka aika zuwa {{phone}} ta hanyar {{service}}"
+  "Enter the code sent to {{phone}} via {{service}}": "Shigar da lambar da aka aika zuwa {{phone}} ta hanyar {{service}}",
+  "Bank Transfer (Europe)": "Canja wurin Banki (Turai)",
+  "Bank Transfer (Europe Only)": "Canja wurin Banki (Turai kawai)",
+  "Connect Bank": "Haɗin Bankin",
+  "Add Funds to Wallet": "Ƙara Kuɗi zuwa Wallet",
+  "Save for future use": "Ajiye don amfani a nan gaba",
+  "Sending Amount": "Adadin da aka aika",
+  "Amount in CHF": "Adadin CHF",
+  "Cards Details added": "An ƙara cikakkun bayanai na katunan",
+  "Save details to use next time.": "Ajiye bayanai don amfani a lokaci na gaba.",
+  "Pay via": "Biya ta hanyar",
+  "Are you sure, you want to remove this card details ending with these ": "Shin ka tabbata, kana son cire bayanan wannan katin da suka ƙare da waɗannan",
+  "Saved Cards:": "Katunan da aka Ajiye:",
+  "Invalid Credit/Debit Card": "Katin Kiredit/Debit mara inganci",
+  "Re-Enter Card Details": "Sake Shigar da Bayanan Kati",
+  "Add Funds Failed": "Ƙara Kuɗi Ba a Yi Nasara ba",
+  "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Da zarar asusunka ya bayyana, kuma idan ka cancanta, za mu rufe asusunka mu goge bayananka. Muna buƙatar ka riƙe wasu daga cikin bayananka saboda dalilai na doka da ƙa'idoji. Don ƙarin koyo, duba namu",
+  "Redirecting you to Login Page in": "Yana tura ku zuwa Shafin Shiga ciki"
 }

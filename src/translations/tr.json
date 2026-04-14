@@ -3117,5 +3117,22 @@
   "Please select a date after one month from ${pass}.": "Lütfen ${pass} tarihinden bir ay sonrasını seçin.",
   "Select an Ending Date:": "Bitiş tarihini seçin:",
   "Enter the code sent to your Whatsapp on {{phone}}": "WhatsApp'ınıza gönderilen kodu {{phone}} telefonuna girin.",
-  "Enter the code sent to {{phone}} via {{service}}": "{{service}} aracılığıyla {{phone}} adresine gönderilen kodu girin."
+  "Enter the code sent to {{phone}} via {{service}}": "{{service}} aracılığıyla {{phone}} adresine gönderilen kodu girin.",
+  "Bank Transfer (Europe)": "Banka Havalesi (Avrupa)",
+  "Bank Transfer (Europe Only)": "Banka Havalesi (Sadece Avrupa)",
+  "Connect Bank": "Connect Bank",
+  "Add Funds to Wallet": "Cüzdana Para Ekle",
+  "Save for future use": "İleride kullanmak üzere kaydet",
+  "Sending Amount": "Gönderilen Tutar",
+  "Amount in CHF": "Miktar (CHF cinsinden)",
+  "Cards Details added": "Kart bilgileri eklendi.",
+  "Save details to use next time.": "Bir dahaki sefere kullanmak üzere bilgileri kaydedin.",
+  "Pay via": "Ödeme yöntemi:",
+  "Are you sure, you want to remove this card details ending with these ": "Bu kart bilgilerini silmek istediğinizden emin misiniz?",
+  "Saved Cards:": "Kaydedilen Kartlar:",
+  "Invalid Credit/Debit Card": "Geçersiz Kredi/Banka Kartı",
+  "Re-Enter Card Details": "Kart Bilgilerini Tekrar Girin",
+  "Add Funds Failed": "Para Ekleme Başarısız Oldu",
+  "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Hesabınız temizlendikten sonra ve uygun şartları taşıyorsanız, hesabınızı kapatıp verilerinizi sileceğiz. Yasal ve düzenleyici nedenlerle bazı verilerinizi saklamamız gerekiyor. Daha fazla bilgi için gizlilik politikamıza bakın.",
+  "Redirecting you to Login Page in": "Sizi Giriş Sayfasına yönlendiriyoruz."
 }

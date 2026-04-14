@@ -36,6 +36,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
     const { t } = useTranslation()
     const location = useLocation();
     const params = new URLSearchParams(location.search || "");
+    const isQuickLoginRef = useRef(false)
     const redirectQuery = params.get("redirect");
     const redirect = location?.state?.redirect ?? (redirectQuery ? decodeURIComponent(redirectQuery) : null)
     const isPhoneNumber = /^\d{9,20}$/g;
@@ -145,6 +146,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 logger.info(`Local forage data for ${data?.name}`, {
                     data
                 })
+                isQuickLoginRef.current = true
                 setLoginData(data)
                 setShowQuickLogin(true)
                 setLoginMethod(data?.loginMethod)
@@ -213,10 +215,6 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 ...(restoreAccount && { restoreAccount: true })
             };
         const encrypted = encryptData(credentials)
-
-
-
-
         axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/account/send-login-otp`, {
             data: encrypted
         })
@@ -378,7 +376,11 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         }
     }, [profileLockTIme, i18next.language])
     useLayoutEffect(() => {
+        console.log(email)
         if (!isDataLoaded) return;
+        if (isQuickLoginRef.current) return;
+
+        if (showQuickLogin) return;
         if (loginMethod === "email") return;
         if (!email) {
             console.warn("Invalid email/phone blocked: empty input");
@@ -676,10 +678,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
             newOTPValues[index] = char;
         });
         setCurrentActiveInput(6)
-
         setOTPValues(newOTPValues);
-
-
         const isEmpty = newOTPValues.some(val => val === '');
         setIsAnyFieldEmpty(isEmpty);
         if (!isEmpty) {

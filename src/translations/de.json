@@ -3076,5 +3076,22 @@
   "Please select a date after one month from ${pass}.": "Bitte wählen Sie ein Datum nach einem Monat ab ${pass}.",
   "Select an Ending Date:": "Wählen Sie ein Enddatum:",
   "Enter the code sent to your Whatsapp on {{phone}}": "Gib den an deine WhatsApp-Nummer {{phone}} gesendeten Code ein.",
-  "Enter the code sent to {{phone}} via {{service}}": "Geben Sie den Code ein, der über {{service}} an {{phone}} gesendet wurde."
+  "Enter the code sent to {{phone}} via {{service}}": "Geben Sie den Code ein, der über {{service}} an {{phone}} gesendet wurde.",
+  "Bank Transfer (Europe)": "Banküberweisung (Europa)",
+  "Bank Transfer (Europe Only)": "Banküberweisung (nur Europa)",
+  "Connect Bank": "Connect Bank",
+  "Add Funds to Wallet": "Guthaben zum Wallet hinzufügen",
+  "Save for future use": "Für spätere Verwendung speichern",
+  "Sending Amount": "Sendebetrag",
+  "Amount in CHF": "Betrag in CHF",
+  "Cards Details added": "Kartendetails hinzugefügt",
+  "Save details to use next time.": "Speichern Sie die Details, um sie beim nächsten Mal zu verwenden.",
+  "Pay via": "Bezahlen Sie über",
+  "Are you sure, you want to remove this card details ending with these ": "Sind Sie sicher, dass Sie diese Kartendaten, die mit diesen enden, entfernen möchten?",
+  "Saved Cards:": "Gespeicherte Karten:",
+  "Invalid Credit/Debit Card": "Ungültige Kredit-/Debitkarte",
+  "Re-Enter Card Details": "Kartendaten erneut eingeben",
+  "Add Funds Failed": "Geld hinzufügen fehlgeschlagen",
+  "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Sobald Ihr Konto bereinigt ist und Sie die Voraussetzungen erfüllen, schließen wir Ihr Konto und löschen Ihre Daten. Aus rechtlichen und regulatorischen Gründen müssen wir einige Ihrer Daten aufbewahren. Weitere Informationen finden Sie in unseren Datenschutzbestimmungen.",
+  "Redirecting you to Login Page in": "Sie werden zur Anmeldeseite weitergeleitet in"
 }

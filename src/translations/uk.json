@@ -3123,5 +3123,22 @@
   "Please select a date after one month from ${pass}.": "Будь ласка, виберіть дату після одного місяця з ${pass}.",
   "Select an Ending Date:": "Виберіть кінцеву дату:",
   "Enter the code sent to your Whatsapp on {{phone}}": "Введіть код, надісланий на ваш WhatsApp на номер {{phone}}",
-  "Enter the code sent to {{phone}} via {{service}}": "Введіть код, надісланий на {{phone}} через {{service}}"
+  "Enter the code sent to {{phone}} via {{service}}": "Введіть код, надісланий на {{phone}} через {{service}}",
+  "Bank Transfer (Europe)": "Банківський переказ (Європа)",
+  "Bank Transfer (Europe Only)": "Банківський переказ (лише для Європи)",
+  "Connect Bank": "Підключити банк",
+  "Add Funds to Wallet": "Додати кошти до гаманця",
+  "Save for future use": "Збережіть для подальшого використання",
+  "Sending Amount": "Сума відправлення",
+  "Amount in CHF": "Сума у ​​швейцарських франках",
+  "Cards Details added": "Додано деталі картки",
+  "Save details to use next time.": "Збережіть дані для використання наступного разу.",
+  "Pay via": "Оплата через",
+  "Are you sure, you want to remove this card details ending with these ": "Ви впевнені, що хочете видалити дані цієї картки, що закінчуються на ці?",
+  "Saved Cards:": "Збережені картки:",
+  "Invalid Credit/Debit Card": "Недійсна кредитна/дебетова картка",
+  "Re-Enter Card Details": "Повторно введіть дані картки",
+  "Add Funds Failed": "Не вдалося додати кошти",
+  "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Щойно ваш обліковий запис буде очищено, і якщо ви відповідаєте вимогам, ми закриємо його та видалимо ваші дані. Нам потрібно, щоб ви зберігали деякі свої дані з юридичних та регуляторних причин. Щоб дізнатися більше, перегляньте наші",
+  "Redirecting you to Login Page in": "Перенаправлення на сторінку входу в"
 }

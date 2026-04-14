@@ -3115,5 +3115,22 @@
   "Enter the code sent to your Whatsapp on +41********4053": "+41*********4053 پر اپنے Whatsapp پر بھیجا گیا کوڈ درج کریں۔",
   "Enter the code sent to +41********4053": "+41*********4053 پر بھیجا گیا کوڈ درج کریں۔",
   "Enter the code sent to your Whatsapp on {{phone}}": "{{phone}} پر آپ کے Whatsapp پر بھیجا گیا کوڈ درج کریں",
-  "Enter the code sent to {{phone}} via {{service}}": "{{phone}} کو {{service}} کے ذریعے بھیجا گیا کوڈ درج کریں"
+  "Enter the code sent to {{phone}} via {{service}}": "{{phone}} کو {{service}} کے ذریعے بھیجا گیا کوڈ درج کریں",
+  "Bank Transfer (Europe)": "بینک ٹرانسفر (یورپ)",
+  "Bank Transfer (Europe Only)": "بینک ٹرانسفر (صرف یورپ)",
+  "Connect Bank": "کنیکٹ بینک",
+  "Add Funds to Wallet": "والیٹ میں فنڈز شامل کریں۔",
+  "Save for future use": "مستقبل کے استعمال کے لیے محفوظ کریں۔",
+  "Sending Amount": "بھیجی جانے والی رقم",
+  "Amount in CHF": "CHF میں رقم",
+  "Cards Details added": "کارڈز کی تفصیلات شامل کی گئیں۔",
+  "Save details to use next time.": "اگلی بار استعمال کرنے کے لیے تفصیلات محفوظ کریں۔",
+  "Pay via": "کے ذریعے ادائیگی کریں۔",
+  "Are you sure, you want to remove this card details ending with these ": "کیا آپ کو یقین ہے کہ آپ ان پر ختم ہونے والے کارڈ کی تفصیلات کو ہٹانا چاہتے ہیں۔ ",
+  "Saved Cards:": "محفوظ کردہ کارڈز:",
+  "Invalid Credit/Debit Card": "غلط کریڈٹ/ڈیبٹ کارڈ",
+  "Re-Enter Card Details": "کارڈ کی تفصیلات دوبارہ درج کریں۔",
+  "Add Funds Failed": "فنڈز شامل کرنے میں ناکام",
+  "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "ایک بار جب آپ کا اکاؤنٹ صاف ہو جاتا ہے، اور اگر آپ اہل ہیں، تو ہم آپ کا اکاؤنٹ بند کر دیں گے اور آپ کا ڈیٹا حذف کر دیں گے۔ ہمیں قانونی اور ریگولیٹری وجوہات کی بنا پر آپ کے کچھ ڈیٹا کو برقرار رکھنے کی ضرورت ہے۔ مزید جاننے کے لیے، ہمارا دیکھیں",
+  "Redirecting you to Login Page in": "آپ کو لاگ ان پیج پر ری ڈائریکٹ کیا جا رہا ہے۔"
 }

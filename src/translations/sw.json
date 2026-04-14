@@ -3117,5 +3117,22 @@
   "Please select a date after one month from ${pass}.": "Tafadhali chagua tarehe baada ya mwezi mmoja kutoka ${pass}.",
   "Select an Ending Date:": "Chagua Tarehe ya Mwisho:",
   "Enter the code sent to your Whatsapp on {{phone}}": "Ingiza msimbo uliotumwa kwenye WhatsApp yako kwenye {{phone}}",
-  "Enter the code sent to {{phone}} via {{service}}": "Ingiza msimbo uliotumwa kwa {{phone}} kupitia {{service}}"
+  "Enter the code sent to {{phone}} via {{service}}": "Ingiza msimbo uliotumwa kwa {{phone}} kupitia {{service}}",
+  "Bank Transfer (Europe)": "Uhamisho wa Benki (Ulaya)",
+  "Bank Transfer (Europe Only)": "Uhamisho wa Benki (Ulaya Pekee)",
+  "Connect Bank": "Unganisha Benki",
+  "Add Funds to Wallet": "Ongeza Fedha kwenye Pochi",
+  "Save for future use": "Hifadhi kwa matumizi ya baadaye",
+  "Sending Amount": "Kiasi cha Kutuma",
+  "Amount in CHF": "Kiasi katika CHF",
+  "Cards Details added": "Maelezo ya Kadi yameongezwa",
+  "Save details to use next time.": "Hifadhi maelezo ili utumie wakati mwingine.",
+  "Pay via": "Lipa kupitia",
+  "Are you sure, you want to remove this card details ending with these ": "Una uhakika, unataka kuondoa maelezo ya kadi hii yanayoishia na haya",
+  "Saved Cards:": "Kadi Zilizohifadhiwa:",
+  "Invalid Credit/Debit Card": "Kadi ya Mkopo/Debiti Batili",
+  "Re-Enter Card Details": "Weka tena Maelezo ya Kadi",
+  "Add Funds Failed": "Kuongeza Fedha Kumeshindwa",
+  "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Mara tu akaunti yako itakapokuwa imefunguliwa, na ikiwa unastahiki, tutafunga akaunti yako na kufuta data yako. Tunahitaji uhifadhi baadhi ya data yako kwa sababu za kisheria na udhibiti. Ili kupata maelezo zaidi, tazama yetu",
+  "Redirecting you to Login Page in": "Kukuelekeza kwenye Ukurasa wa Kuingia"
 }

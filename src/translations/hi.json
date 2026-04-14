@@ -3117,5 +3117,22 @@
   "Please select a date after one month from ${pass}.": "कृपया ${pass} से एक महीने बाद की तारीख चुनें।",
   "Select an Ending Date:": "समाप्ति तिथि चुनें:",
   "Enter the code sent to your Whatsapp on {{phone}}": "अपने फोन पर व्हाट्सएप पर भेजे गए कोड को दर्ज करें।",
-  "Enter the code sent to {{phone}} via {{service}}": "{{service}} के माध्यम से {{phone}} पर भेजा गया कोड दर्ज करें"
+  "Enter the code sent to {{phone}} via {{service}}": "{{service}} के माध्यम से {{phone}} पर भेजा गया कोड दर्ज करें",
+  "Bank Transfer (Europe)": "बैंक हस्तांतरण (यूरोप)",
+  "Bank Transfer (Europe Only)": "बैंक ट्रांसफर (केवल यूरोप में)",
+  "Connect Bank": "कनेक्ट बैंक",
+  "Add Funds to Wallet": "वॉलेट में धनराशि जोड़ें",
+  "Save for future use": "भविष्य में उपयोग के लिए सहेजें",
+  "Sending Amount": "भेजी गई राशि",
+  "Amount in CHF": "राशि (CHF में)",
+  "Cards Details added": "कार्ड विवरण जोड़े गए",
+  "Save details to use next time.": "अगली बार उपयोग करने के लिए विवरण सहेजें।",
+  "Pay via": "के माध्यम से भुगतान करें",
+  "Are you sure, you want to remove this card details ending with these ": "क्या आप वाकई इस कार्ड की जानकारी को हटाना चाहते हैं जिसके अंत में ये अक्षर हों?",
+  "Saved Cards:": "सहेजे गए कार्ड:",
+  "Invalid Credit/Debit Card": "अमान्य क्रेडिट/डेबिट कार्ड",
+  "Re-Enter Card Details": "कार्ड का विवरण दोबारा दर्ज करें",
+  "Add Funds Failed": "धनराशि जोड़ने में विफलता",
+  "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "एक बार जब आपका खाता साफ़ हो जाएगा, और यदि आप पात्र हैं, तो हम आपका खाता बंद कर देंगे और आपका डेटा हटा देंगे। हमें कानूनी और नियामक कारणों से आपका कुछ डेटा अपने पास रखना आवश्यक है। अधिक जानने के लिए, हमारी गोपनीयता नीति देखें।",
+  "Redirecting you to Login Page in": "आपको लॉगिन पेज पर रीडायरेक्ट किया जा रहा है"
 }

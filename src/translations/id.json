@@ -3115,5 +3115,22 @@
   "Please select a date after one month from ${pass}.": "Silakan pilih tanggal setelah satu bulan dari ${pass}.",
   "Select an Ending Date:": "Pilih Tanggal Berakhir:",
   "Enter the code sent to your Whatsapp on {{phone}}": "Masukkan kode yang dikirim ke WhatsApp Anda di {{phone}}",
-  "Enter the code sent to {{phone}} via {{service}}": "Masukkan kode yang dikirim ke {{phone}} melalui {{service}}"
+  "Enter the code sent to {{phone}} via {{service}}": "Masukkan kode yang dikirim ke {{phone}} melalui {{service}}",
+  "Bank Transfer (Europe)": "Transfer Bank (Eropa)",
+  "Bank Transfer (Europe Only)": "Transfer Bank (Khusus Eropa)",
+  "Connect Bank": "Connect Bank",
+  "Add Funds to Wallet": "Tambahkan Dana ke Dompet",
+  "Save for future use": "Simpan untuk penggunaan di masa mendatang",
+  "Sending Amount": "Jumlah yang Dikirim",
+  "Amount in CHF": "Jumlah dalam CHF",
+  "Cards Details added": "Detail Kartu ditambahkan",
+  "Save details to use next time.": "Simpan detail ini untuk digunakan lain kali.",
+  "Pay via": "Bayar melalui",
+  "Are you sure, you want to remove this card details ending with these ": "Apakah Anda yakin ingin menghapus detail kartu ini yang berakhiran dengan ini?",
+  "Saved Cards:": "Kartu Tersimpan:",
+  "Invalid Credit/Debit Card": "Kartu Kredit/Debit Tidak Valid",
+  "Re-Enter Card Details": "Masukkan Kembali Detail Kartu",
+  "Add Funds Failed": "Penambahan Dana Gagal",
+  "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Setelah akun Anda bersih, dan jika Anda memenuhi syarat, kami akan menutup akun Anda dan menghapus data Anda. Kami perlu menyimpan sebagian data Anda untuk alasan hukum dan peraturan. Untuk mempelajari lebih lanjut, lihat kebijakan privasi kami.",
+  "Redirecting you to Login Page in": "Mengarahkan Anda ke Halaman Login di"
 }
