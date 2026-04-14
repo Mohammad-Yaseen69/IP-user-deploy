@@ -3141,5 +3141,17 @@
   "Add Funds Failed": "Aggiunta fondi non riuscita",
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Una volta che il tuo account sarà in regola e se ne avrai diritto, chiuderemo il tuo account ed elimineremo i tuoi dati. Dobbiamo conservare alcuni dei tuoi dati per motivi legali e normativi. Per saperne di più, consulta la nostra",
   "Redirecting you to Login Page in": "Reindirizzamento alla pagina di accesso in",
-  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Verifica biometrica completata con successo. Verrai reindirizzato alla pagina della dashboard a breve."
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Verifica biometrica completata con successo. Verrai reindirizzato alla pagina della dashboard a breve.",
+  "Your payment has been successful, please close this modal or refresh the page and start your verification.": "Il pagamento è andato a buon fine. Chiudi questa finestra modale oppure aggiorna la pagina e avvia la verifica.",
+  "Close Modal": "Chiudi la finestra modale",
+  "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window": "Pagamento autorizzato correttamente, il destinatario riceverà l'importo una volta completato il trasferimento, ora puoi chiudere questa finestra",
+  "Payment authorized successfully! Your wallet will be credited once the transfer is complete.": "Pagamento autorizzato con successo! Il tuo portafoglio verrà accreditato al termine del trasferimento.",
+  "Go back to wallets": "Torna ai portafogli",
+  "Go To Transactions": "Vai alle transazioni",
+  "Enter your bank IBAN": "Inserisci il tuo codice IBAN bancario",
+  "Type in the IBAN of the bank account you'll be transferring from:": "Inserisci l'IBAN del conto bancario da cui effettuerai il bonifico:",
+  "characters": "caratteri",
+  "Transaction Error": "Errore di transazione",
+  "Google Two Factor Authentication Is Now Linked To Your Instapay Account.": "L'autenticazione a due fattori di Google è ora collegata al tuo account Instapay.",
+  "Please add your email first.": "Inserisci prima il tuo indirizzo email."
 }

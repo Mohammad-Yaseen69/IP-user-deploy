@@ -3148,5 +3148,17 @@
   "Add Funds Failed": "Add Funds Failed",
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our",
   "Redirecting you to Login Page in": "Redirecting you to Login Page in",
-  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Biometric verification successful, We will redirect you to the dashboard page in a while."
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Biometric verification successful, We will redirect you to the dashboard page in a while.",
+  "Your payment has been successful, please close this modal or refresh the page and start your verification.": "Your payment has been successful, please close this modal or refresh the page and start your verification.",
+  "Close Modal": "Close Modal",
+  "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window": "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window",
+  "Payment authorized successfully! Your wallet will be credited once the transfer is complete.": "Payment authorized successfully! Your wallet will be credited once the transfer is complete.",
+  "Go back to wallets": "Go back to wallets",
+  "Go To Transactions": "Go To Transactions",
+  "Enter your bank IBAN": "Enter your bank IBAN",
+  "Type in the IBAN of the bank account you'll be transferring from:": "Type in the IBAN of the bank account you'll be transferring from:",
+  "characters": "characters",
+  "Transaction Error": "Transaction Error",
+  "Google Two Factor Authentication Is Now Linked To Your Instapay Account.": "Google Two Factor Authentication Is Now Linked To Your Instapay Account.",
+  "Please add your email first.": "Please add your email first."
 }

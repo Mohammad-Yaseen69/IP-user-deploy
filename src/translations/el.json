@@ -924,5 +924,17 @@
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Ο λογαριασμός Zodra uw είναι vrijgegeven en u in aanmerking komt, sluiten we uw account en verwijderen we uw gegevens. We moeten echter een deel van uw gegevens bewaren om wettelijke en regelgevende redenen. Για περισσότερες πληροφορίες.",
   "Redirecting you to Login Page in": "U wordt doorgestuurd naar de inlogpagina.",
   "seconds": "δευτερεύων",
-  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Biometrische verificatie geslaagd. Ο πίνακας οργάνων είναι πολύ σημαντικός."
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Biometrische verificatie geslaagd. Ο πίνακας οργάνων είναι πολύ σημαντικός.",
+  "Your payment has been successful, please close this modal or refresh the page and start your verification.": "Το Uw betaling είναι επιτυχές. Sluit dit venster of vernieuw de pagina om uw verificatie te starten.",
+  "Close Modal": "Σκούτι τον φεγγάρι",
+  "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window": "Betaling succesvol geautoriseerd. De ontvanger ontvangt het bedrag zodra de overschrijving είναι βολτοειδές. U kunt dit venster nu sluiten.",
+  "Payment authorized successfully! Your wallet will be credited once the transfer is complete.": "Betaling succesvol geautoriseerd! Το Uw portemonnee wordt bijgeschreven zodra de overdracht είναι βολτοειδές.",
+  "Go back to wallets": "Γκα τερούγκ ναάρ πορτεμονέες",
+  "Go To Transactions": "Συναλλαγές Ga naar",
+  "Enter your bank IBAN": "Δείτε το IBAN της τράπεζάς σας.",
+  "Type in the IBAN of the bank account you'll be transferring from:": "Voer het IBAN-nummer in van de bankrekening waarvan u het geld wilt overmaken:",
+  "characters": "πρόσωπα",
+  "Transaction Error": "Συναλλαγή",
+  "Google Two Factor Authentication Is Now Linked To Your Instapay Account.": "Το tweefactorauthenticatie van Google είναι ένας λογαριασμός Instapay.",
+  "Please add your email first.": "Έβαλες την πρώτη σου διεύθυνση ηλεκτρονικού ταχυδρομείου."
 }

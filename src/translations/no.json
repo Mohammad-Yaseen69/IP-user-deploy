@@ -924,5 +924,17 @@
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Setelah akun Anda bersih, dan jika Anda memenuhi syarat, kami akan menutup akun Anda og menghapus data Anda. Kami perlu menyimpan sebagian data Anda untuk alasan hukum dan peraturan. Untuk mempelajari lebih lanjut, lihat kebijakan privatasi kami.",
   "Redirecting you to Login Page in": "Mengarahkan Anda ke Halaman Logg inn di",
   "seconds": "detik",
-  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Verifikasi biometrisk berhasil, kami akan mengarahkan Anda ke halaman dasbor sebentar lagi."
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Verifikasi biometrisk berhasil, kami akan mengarahkan Anda ke halaman dasbor sebentar lagi.",
+  "Your payment has been successful, please close this modal or refresh the page and start your verification.": "Pembayaran Anda berhasil, silakan tutup jendela pop-up ini eller segarkan halaman and mulai verifikasi Anda.",
+  "Close Modal": "Tutup Modal",
+  "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window": "Pembayaran berhasil diotorisasi, penerima akan menerima jumlah tersebut setelah transfer selesai, Anda sekarang dapat menutup jendela ini.",
+  "Payment authorized successfully! Your wallet will be credited once the transfer is complete.": "Pembayaran berhasil diotorisasi! Saldo dompet Anda akan bertambah setelah transfer selesai.",
+  "Go back to wallets": "Kembali ke dompet",
+  "Go To Transactions": "Buka Transaksi",
+  "Enter your bank IBAN": "Bruk IBAN-kontoen din",
+  "Type in the IBAN of the bank account you'll be transferring from:": "Masukkan IBAN konto banktempat Anda akan melakukan overføring:",
+  "characters": "karakter",
+  "Transaction Error": "Kesalahan Transaksi",
+  "Google Two Factor Authentication Is Now Linked To Your Instapay Account.": "Autentikasi Dua Faktor Google Kini Terhubung ke Akun Instapay Anda.",
+  "Please add your email first.": "Silakan tambahkan e-post Anda terlebih dahulu."
 }
