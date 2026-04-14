@@ -924,5 +924,17 @@
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Una vez que su cuenta esté libre de deudas, y si cumple con los requisitos, cerraremos su cuenta y eliminaremos sus datos. Necesitamos conservar algunos de sus datos por razones legales y reglamentarias. Para obtener más información, consulte nuestra",
   "Redirecting you to Login Page in": "Redireccionándote a la página de inicio de sesión en",
   "seconds": "artículos de segunda clase",
-  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "La verificación biométrica se ha realizado correctamente. En breve le redirigiremos a la página del panel de control."
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "La verificación biométrica se ha realizado correctamente. En breve le redirigiremos a la página del panel de control.",
+  "Your payment has been successful, please close this modal or refresh the page and start your verification.": "Su pago se ha realizado correctamente. Por favor, cierre esta ventana emergente o actualice la página para iniciar la verificación.",
+  "Close Modal": "Cerrar modal",
+  "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window": "Pago autorizado con éxito. El destinatario recibirá el importe una vez completada la transferencia. Ahora puede cerrar esta ventana.",
+  "Payment authorized successfully! Your wallet will be credited once the transfer is complete.": "¡Pago autorizado con éxito! El importe se abonará en tu monedero una vez completada la transferencia.",
+  "Go back to wallets": "Volver a las carteras",
+  "Go To Transactions": "Ir a Transacciones",
+  "Enter your bank IBAN": "Introduzca su IBAN bancario.",
+  "Type in the IBAN of the bank account you'll be transferring from:": "Introduce el IBAN de la cuenta bancaria desde la que realizarás la transferencia:",
+  "characters": "personajes",
+  "Transaction Error": "Error de transacción",
+  "Google Two Factor Authentication Is Now Linked To Your Instapay Account.": "La autenticación de dos factores de Google ahora está vinculada a tu cuenta de Instapay.",
+  "Please add your email first.": "Por favor, introduce primero tu correo electrónico."
 }

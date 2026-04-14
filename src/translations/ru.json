@@ -3056,5 +3056,17 @@
   "Add Funds Failed": "Добавление средств не удалось.",
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "После того, как ваш аккаунт будет очищен, и если вы соответствуете требованиям, мы закроем ваш аккаунт и удалим ваши данные. Нам необходимо сохранить часть ваших данных по юридическим и нормативным причинам. Для получения дополнительной информации см. наш раздел «Условия и положения».",
   "Redirecting you to Login Page in": "Перенаправляем вас на страницу входа в систему.",
-  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Биометрическая верификация прошла успешно. Через некоторое время мы перенаправим вас на страницу панели управления."
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Биометрическая верификация прошла успешно. Через некоторое время мы перенаправим вас на страницу панели управления.",
+  "Your payment has been successful, please close this modal or refresh the page and start your verification.": "Ваш платеж успешно оплачен. Пожалуйста, закройте это всплывающее окно или обновите страницу и начните верификацию.",
+  "Close Modal": "Закрыть модальное окно",
+  "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window": "Платеж успешно авторизован, получатель получит сумму после завершения перевода. Теперь вы можете закрыть это окно.",
+  "Payment authorized successfully! Your wallet will be credited once the transfer is complete.": "Платеж успешно авторизован! После завершения перевода средства будут зачислены на ваш кошелек.",
+  "Go back to wallets": "Вернуться к кошелькам",
+  "Go To Transactions": "Перейти к транзакциям",
+  "Enter your bank IBAN": "Введите свой банковский IBAN.",
+  "Type in the IBAN of the bank account you'll be transferring from:": "Введите IBAN банковского счета, с которого вы будете переводить средства:",
+  "characters": "персонажи",
+  "Transaction Error": "Ошибка транзакции",
+  "Google Two Factor Authentication Is Now Linked To Your Instapay Account.": "Теперь двухфакторная аутентификация Google привязана к вашему аккаунту Instapay.",
+  "Please add your email first.": "Пожалуйста, сначала укажите свой адрес электронной почты."
 }

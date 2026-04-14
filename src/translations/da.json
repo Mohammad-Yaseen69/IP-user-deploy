@@ -924,5 +924,17 @@
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "Bitte beachten Sie, dass das Gerät nicht ordnungsgemäß funktioniert. Es ist nicht erforderlich, dass Sie die Geräte erneut öffnen. Daha fazla bilgi için gizlilik politikamıza bakın.",
   "Redirecting you to Login Page in": "Sizi Giriş Sayfasına yönlendiriyoruz.",
   "seconds": "saniyeler",
-  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Biyometrik doğrulama başarılı, sizi birazdan control paneli sayfasına yönlendireceğiz."
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "Biyometrik doğrulama başarılı, sizi birazdan control paneli sayfasına yönlendireceğiz.",
+  "Your payment has been successful, please close this modal or refresh the page and start your verification.": "Wenn Sie das Problem gelöst haben, müssen Sie sich die Zeit nehmen, um den Fehler zu beheben.",
+  "Close Modal": "Kapat",
+  "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window": "Nachdem ich die Übertragung beendet hatte, war die Übertragung noch nicht abgeschlossen, und ich konnte nichts dagegen tun.",
+  "Payment authorized successfully! Your wallet will be credited once the transfer is complete.": "Ödeme başarıyla onaylandı! Transfer tamamlandıktan sonra cüzdanınıza para yatırılacaktır.",
+  "Go back to wallets": "Cüzdanlara geri dön",
+  "Go To Transactions": "İşlemlere Git",
+  "Enter your bank IBAN": "IBAN-Nummer der Bank.",
+  "Type in the IBAN of the bank account you'll be transferring from:": "Zur Überweisung der Bankverbindung mit folgender IBAN-Nummer:",
+  "characters": "charaktere",
+  "Transaction Error": "İşlem Hatası",
+  "Google Two Factor Authentication Is Now Linked To Your Instapay Account.": "Google İki Faktörlü Kimlik Doğrulama Artık Instapay Hesabınıza Bağlı.",
+  "Please add your email first.": "Bitte senden Sie keine E-Mail-Adresse an die E-Mail-Adresse."
 }

@@ -929,5 +929,17 @@
   "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need yo retain some of your data for legal and regulatory reasons. To learn more, see our": "一旦您的账户信息清理完毕，并且您符合相关条件，我们将关闭您的账户并删除您的数据。出于法律和监管方面的原因，我们需要保留您的部分数据。了解更多信息，请参阅我们的[链接].",
   "Redirecting you to Login Page in": "正在将您重定向到登录页面",
   "seconds": "秒",
-  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "生物识别验证成功，稍后我们将把您重定向到控制面板页面。"
+  "Biometric verification successful, We will redirect you to the dashboard page in a while.": "生物识别验证成功，稍后我们将把您重定向到控制面板页面。",
+  "Your payment has been successful, please close this modal or refresh the page and start your verification.": "您的付款已成功，请关闭此弹窗或刷新页面并开始验证.",
+  "Close Modal": "关闭模态框",
+  "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window": "付款已成功授权，收款人将在转账完成后收到款项，您现在可以关闭此的",
+  "Payment authorized successfully! Your wallet will be credited once the transfer is complete.": "付款已成功授权！转账完成后，款项将记入您的钱包。",
+  "Go back to wallets": "返回钱包",
+  "Go To Transactions": "前往交易记录",
+  "Enter your bank IBAN": "请输入您的银行IBAN",
+  "Type in the IBAN of the bank account you'll be transferring from:": "请输入您要从中转账的银行账户的 IBAN:",
+  "characters": "人物",
+  "Transaction Error": "交易错误",
+  "Google Two Factor Authentication Is Now Linked To Your Instapay Account.": "谷歌双重认证现已关联至您的 Instapay 账户.",
+  "Please add your email first.": "请先添加您的邮箱地址."
 }
