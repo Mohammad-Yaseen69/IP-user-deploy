@@ -87,7 +87,7 @@ const TwoFactorAuth = () => {
             const decrypted = await decryptData(response.data.data)
 
             console.log(decrypted)
-            verifyToken()
+            verifyToken(true)
             callback()
         } catch (error) {
             toast.error("Cannot disable both.")
