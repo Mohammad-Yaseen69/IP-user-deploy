@@ -28,11 +28,13 @@ const uploadQR = async (formData) => {
     return decryptData(response.data.data)?.data
 }
 
-const getInvoiceList = async (accountId, skip = 0, limit = 10, query) => {
-    const response = await axios.get(`${path}/get-invoices-list/${accountId}/${skip}/${limit}?search=${query}`, {
+const getInvoiceList = async (accountId, page, limit, query) => {
+    const response = await axios.get(`${path}/get-invoices-list/${accountId}/${page}/${limit}?search=${query}`, {
         headers: getAuthHeader()
     })
-    return decryptData(response.data.data)?.data
+    const encrypted = response?.data?.data
+    const decrypted = decryptData(encrypted)
+    return decrypted || { data: [], pagination: {} }
 }
 
 const getInvoiceUsingId = async (invoiceId) => {

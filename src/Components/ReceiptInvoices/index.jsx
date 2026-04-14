@@ -1,35 +1,46 @@
-import React, { useContext, useMemo, useState } from 'react'
-import styles from "./styles/index.module.scss"
+import { useQuery } from '@tanstack/react-query'
+import { useContext, useState } from 'react'
+import { ChevronLeft, ChevronRight, Search } from 'react-feather'
 import { useTranslation } from 'react-i18next'
+import { UserContext } from '../../Context/UserContext'
+import useWindowWidth from '../../utils/useWindowWidth'
+import InstaPayLoader from '../Loader'
 import TopRight from '../topRight'
 import InvoiceModal from './InvoiceModal'
-import { Search } from 'react-feather'
-import date from "./files/date.png"
-import NoInvoiceScreen from './UI/NoInvoiceScreen'
-import { useQuery } from '@tanstack/react-query'
-import { getInvoiceList } from './queries'
-import { UserContext } from '../../Context/UserContext'
-import InstaPayLoader from '../Loader'
 import InvoiceTable from './InvoiceTable'
-import useWindowWidth from '../../utils/useWindowWidth'
-import { AiOutlineConsoleSql } from 'react-icons/ai'
+import { getInvoiceList } from './queries'
+import styles from "./styles/index.module.scss"
+import NoInvoiceScreen from './UI/NoInvoiceScreen'
+import { useDebounce } from '../../hooks/useDebounce/useDebounce'
+import Paginations from '../../Common/Component/Paginations'
 
 const ReceiptInvoice = () => {
     const { t } = useTranslation()
     const [showModal, setShowModal] = useState(false)
     const [search, setSearch] = useState("")
+    const [page, setPage] = useState(1)
+    const [limit, setLimit] = useState(10)
     const width = useWindowWidth()
+    const debouncedSearch = useDebounce(search, 500)
+
     const [editModal, setEditModal] = useState({
         open: false,
         invoice: null
     })
     const { userDetails } = useContext(UserContext)
 
-    const { isLoading, data = [], isRefetching } = useQuery({
-        queryKey: ["GetInvoicesList", search.trim().toLowerCase()],
-        queryFn: () => getInvoiceList(userDetails?._id, 1, 100, search.trim().toLowerCase()),
+    const { isLoading, data, isRefetching } = useQuery({
+        queryKey: ["GetInvoicesList", debouncedSearch.trim().toLowerCase(), page, limit],
+        queryFn: () => getInvoiceList(userDetails?._id, page, limit, debouncedSearch ? debouncedSearch.trim().toLowerCase() : ""
+        ),
+        enabled: !!userDetails?._id,
+        keepPreviousData: false
     })
+    const invoices = data?.data || []
+    const total = data?.pagination?.totalRecords || 0
+    const totalPages = data?.pagination?.totalPages || 1
 
+    console.log("data", data)
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -40,43 +51,50 @@ const ReceiptInvoice = () => {
                 {width > 1000 && <TopRight />}
             </div>
 
-            {isLoading && !isRefetching ? <div style={{ width: "70%", margin: "auto" }}><InstaPayLoader /></div> : <>
-                {data?.length < 1 &&
-                    <NoInvoiceScreen setShowModal={setShowModal} />
-                }
 
-                {data?.length >= 1 &&
-                    <div className={styles.receiptsCont}>
-                        <div className={styles.head}>
-                            <h5>
-                                {t("My recent Invoices:")}
-                            </h5>
-                            <button style={width < 500 ? { justifyContent: "center", alignItems: "center", display: "flex", width: "40px", height: "40px" } : {}} onClick={() => setShowModal(true)}>
-                                <span style={{ fontSize: width < 500 ? "24px" : '14px', marginLeft: width < 500 && "5px" }}>
-                                    +
-                                </span>
-                                {width > 500 && t("Create New Invoice")}
-                            </button>
-                        </div>
 
-                        <div className={styles.searchCont}>
-                            <div className={styles.search}>
-                                <Search />
-                                <input
-                                    type="text"
-                                    value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
-                                    placeholder={t('Search for Invoice')}
-                                />
-                            </div>
-                        </div>
-                        <InvoiceTable
-                            setEditModal={setEditModal}
-                            filteredInvoices={data || []}
+
+            <div className={styles.receiptsCont}>
+                <div className={styles.head}>
+                    <h5>
+                        {t("My recent Invoices:")}
+                    </h5>
+                    <button style={width < 500 ? { justifyContent: "center", alignItems: "center", display: "flex", width: "40px", height: "40px" } : {}} onClick={() => setShowModal(true)}>
+                        <span style={{ fontSize: width < 500 ? "24px" : '14px', marginLeft: width < 500 && "5px" }}>
+                            +
+                        </span>
+                        {width > 500 && t("Create New Invoice")}
+                    </button>
+                </div>
+
+                <div className={styles.searchCont}>
+                    <div className={styles.search}>
+                        <Search />
+                        <input
+                            type="text"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            placeholder={t('Search for Invoice')}
                         />
                     </div>
-                }
-            </>}
+                </div>
+
+
+                {isLoading && !isRefetching ? (
+                    <InstaPayLoader />
+                ) : invoices.length < 1 ? (
+                    <NoInvoiceScreen setShowModal={setShowModal} />
+                ) : (
+                    <>
+                        <InvoiceTable
+                            setEditModal={setEditModal}
+                            filteredInvoices={invoices}
+                        />
+
+                        <Paginations page={page} totalPages={totalPages} setPage={setPage} limit={limit} setLimit={setLimit} /></>)}
+
+            </div>
+
 
             <InvoiceModal isOpen={showModal} toggle={() => setShowModal(false)} />
             <InvoiceModal
