@@ -936,5 +936,22 @@
   "characters": "wahusika",
   "Transaction Error": "Muamalan hylkääminen",
   "Google Two Factor Authentication Is Now Linked To Your Instapay Account.": "Uthibitishaji wa Google Two Factor Sasa Umeunganishwa ja Akaunti Yako ya Instapay.",
-  "Please add your email first.": "Tafadhali ongeza barua pepe yako kwanza."
+  "Please add your email first.": "Tafadhali ongeza barua pepe yako kwanza.",
+  "Confirm Deletion": "Thibitisha Kufutwa",
+  "Are you sure you want to delete this invoice?": "Una uhakika unataka kufuta ankara hii?",
+  "Add New": "Ongeza Mpya",
+  "Plans Subscriptions": "Usajili wa Mipango",
+  "Scheduled": "Imepangwa",
+  "Start Date": "Kuanzan kaupungit",
+  "Next Billing": "Malipo Yanayofuata",
+  "Subscription ID": "Kitambulisho cha Usajili",
+  "Plan Name": "Jina la Mpango",
+  "Reading Location...": "Mahali pa Kusomea...",
+  "Sender": "Mtumaji",
+  "Reference ID": "Kitambulisho cha Marejeleo",
+  "About Me:": "Kuhusu Mimi:",
+  "Previous Dates are invalid.": "Tarehe zilizopita si sahihi.",
+  "Your Invoice is updated!": "Ankara, toivottavasti!",
+  "We can't process your request at this moment please try again later.": "Hatuwezi kushughulikia ombi lako kwa sasa tafadhali jaribu tena baadaye.",
+  "Instagram": "Instagramissa"
 }

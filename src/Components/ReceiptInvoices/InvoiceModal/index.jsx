@@ -98,7 +98,7 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
         mutationFn: (payload) => addInvoice(payload),
         onError: (error) => {
             const dec = decryptData(error?.response?.data?.data)
-            toast.error(dec.message || "We can't process your request at this moment please try again later.")
+            toast.error(dec.message || t("We can't process your request at this moment please try again later."))
         },
         onSuccess: () => {
             dataHandler("mode", 'preview')
@@ -108,10 +108,10 @@ const InvoiceModal = ({ isOpen, toggle, isEdit, inv }) => {
         mutationFn: ({ invoiceId, payload }) => editInvoice(invoiceId, payload),
         onError: (error) => {
             const dec = error?.response?.data?.data ? decryptData(error?.response?.data?.data) : error.response.data
-            toast.error(dec.message || "We can't process your request at this moment please try again later.")
+            toast.error(dec.message || t("We can't process your request at this moment please try again later."))
         },
         onSuccess: () => {
-            toast.success("Your Invoice is updated!")
+            toast.success(t("Your Invoice is updated!"))
             queryClient.invalidateQueries({ queryKey: ["GetInvoicesList"] })
             onClose()
         }

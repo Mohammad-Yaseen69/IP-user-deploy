@@ -936,5 +936,22 @@
   "characters": "likovi",
   "Transaction Error": "Ošibka transakcije",
   "Google Two Factor Authentication Is Now Linked To Your Instapay Account.": "Sada je dvofaktorna autentifikacija Google povezana s vašim računom Instapay.",
-  "Please add your email first.": "Molim vas, prvo unesite svoju adresu elektronske pošte."
+  "Please add your email first.": "Molim vas, prvo unesite svoju adresu elektronske pošte.",
+  "Confirm Deletion": "Podtvrditʹ udalenie",
+  "Are you sure you want to delete this invoice?": "Jeste li sigurni, želite li izbrisati ovaj račun?",
+  "Add New": "Dodaj novo",
+  "Plans Subscriptions": "Tarifnye plany Podpiski",
+  "Scheduled": "Planirano",
+  "Start Date": "Početni datum",
+  "Next Billing": "Sljedeći platež",
+  "Subscription ID": "Identifikator potpisa",
+  "Plan Name": "Naziv plana",
+  "Reading Location...": "Mjesto čitanja...",
+  "Sender": "Pošiljatelj",
+  "Reference ID": "Identifikator ssylke",
+  "About Me:": "O meni:",
+  "Previous Dates are invalid.": "Predyduŝie daty nedejstvitelʹny.",
+  "Your Invoice is updated!": "Vaš račun ažuriran!",
+  "We can't process your request at this moment please try again later.": "U ovom trenutku ne možemo obraditi vaš zahtjev. Molimo, poprobujte pozže.",
+  "Instagram": "Instagram"
 }

@@ -3106,5 +3106,21 @@
   "characters": "Charaktere",
   "Transaction Error": "Transaktionsfehler",
   "Google Two Factor Authentication Is Now Linked To Your Instapay Account.": "Die Google-Zwei-Faktor-Authentifizierung ist jetzt mit Ihrem Instapay-Konto verknüpft.",
-  "Please add your email first.": "Bitte geben Sie zuerst Ihre E-Mail-Adresse an."
+  "Please add your email first.": "Bitte geben Sie zuerst Ihre E-Mail-Adresse an.",
+  "Confirm Deletion": "Löschung bestätigen",
+  "Are you sure you want to delete this invoice?": "Möchten Sie diese Rechnung wirklich löschen?",
+  "Plans Subscriptions": "Abonnementpläne",
+  "Scheduled": "Geplant",
+  "Start Date": "Startdatum",
+  "Next Billing": "Nächste Abrechnung",
+  "Subscription ID": "Abonnement-ID",
+  "Plan Name": "Planname",
+  "Reading Location...": "Leseort...",
+  "Sender": "Absender",
+  "Reference ID": "Referenz-ID",
+  "About Me:": "Über mich:",
+  "Previous Dates are invalid.": "Frühere Datumsangaben sind ungültig.",
+  "Your Invoice is updated!": "Ihre Rechnung wurde aktualisiert!",
+  "We can't process your request at this moment please try again later.": "Ihre Anfrage kann momentan nicht bearbeitet werden. Bitte versuchen Sie es später erneut.",
+  "Instagram": "Instagram"
 }

@@ -936,5 +936,22 @@
   "characters": "isiklik",
   "Transaction Error": "Помилка транзакції",
   "Google Two Factor Authentication Is Now Linked To Your Instapay Account.": "Двофакторна автентифікація Google тепер пов’язана з вашим обліковим записом Instapay.",
-  "Please add your email first.": "Будь ласка, спочатку додайте свою електронну адресу."
+  "Please add your email first.": "Будь ласка, спочатку додайте свою електронну адресу.",
+  "Confirm Deletion": "Підтвердити видалення",
+  "Are you sure you want to delete this invoice?": "Ви впевнені, що хочете видалити цей рахунок-фактуру?",
+  "Add New": "Uued uudised",
+  "Plans Subscriptions": "Плани Передплати",
+  "Scheduled": "Заплановано",
+  "Start Date": "Data potšatku",
+  "Next Billing": "Наступний рахунок",
+  "Subscription ID": "Ідентифікатор підписки",
+  "Plan Name": "Nazva plaan",
+  "Reading Location...": "Місцезнаходження в Редінгу...",
+  "Sender": "Õiguslik",
+  "Reference ID": "Ідентифікатор посилання",
+  "About Me:": "Minu poolt:",
+  "Previous Dates are invalid.": "Попередні дати недійсні.",
+  "Your Invoice is updated!": "Ваш рахунок-фактуру оновлено!",
+  "We can't process your request at this moment please try again later.": "Наразі ми не можемо обробити ваш запит, будь ласка, спробуйте пізніше.",
+  "Instagram": "Instagram"
 }
