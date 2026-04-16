@@ -183,7 +183,9 @@ const SchedulePayment = (props) => {
                             }
                         </div>
                         {
-                            showDateError && <span style={{ color: "red", fontWeight: 500, fontSize: ".7rem", paddingLeft: "1rem" }}>Previous Dates are invalid.</span>
+                            showDateError && <span style={{ color: "red", fontWeight: 500, fontSize: ".7rem", paddingLeft: "1rem" }}>
+                                {t("Previous Dates are invalid.")}
+                            </span>
                         }
 
                         <div style={{
@@ -214,7 +216,7 @@ const SchedulePayment = (props) => {
                         </div>
                         {timeError && (
                             <span style={{ color: "red", fontWeight: 500, fontSize: ".7rem", paddingLeft: "1rem" }}>
-                                Selected time must be at least 5 minutes from now.
+                                {t("Selected time must be at least 5 minutes from now.")}
                             </span>
                         )}
                     </CardBody>

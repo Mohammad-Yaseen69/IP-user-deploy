@@ -936,5 +936,22 @@
   "characters": "الشخصيات",
   "Transaction Error": "خطأ في المعاملة",
   "Google Two Factor Authentication Is Now Linked To Your Instapay Account.": "تم ربط خاصية المصادقة الثنائية من جوجل بحسابك علٳايابايإن.",
-  "Please add your email first.": "يرجى إضافة بريدك الإلكتروني أولاً."
+  "Please add your email first.": "يرجى إضافة بريدك الإلكتروني أولاً.",
+  "Confirm Deletion": "تأكيد الحذف",
+  "Are you sure you want to delete this invoice?": "هل أنت متأكد من رغبتك في حذف هذه الفاتورة؟",
+  "Add New": "إضافة جديد",
+  "Plans Subscriptions": "خطط الاشتراكات",
+  "Scheduled": "Mālpils",
+  "Start Date": "تاريخ البدء",
+  "Next Billing": "الفاتورة التالية",
+  "Subscription ID": "معرف الاشتراك",
+  "Plan Name": "اسم الخطة",
+  "Reading Location...": "Mana mīļākā...",
+  "Sender": "Mārī",
+  "Reference ID": "رقم المرجع",
+  "About Me:": "ْعَنِّي:",
+  "Previous Dates are invalid.": "التواريخ السابقة غير صالحة.",
+  "Your Invoice is updated!": "تم تحديث فاتورتك!",
+  "We can't process your request at this moment please try again later.": "لا يمكننا معالجة طلبك في هذه اللحظة، يرجى المحاورة محاورة محاورة في هذه اللحظة، يرجى الننا لاحقاً.",
+  "Instagram": "انستغرام"
 }

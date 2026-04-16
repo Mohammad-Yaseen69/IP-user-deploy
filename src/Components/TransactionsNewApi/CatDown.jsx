@@ -11,7 +11,6 @@ import DeleteModal from './DeleteModal'
 import { useTranslation } from "react-i18next";
 
 const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }) => {
-    // dropdown
     const dropdownRef = useRef(null)
     const { t } = useTranslation()
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -19,26 +18,20 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
         setIsDropdownOpen(prev => !prev)
     }
 
-    // modals
     const [showEditModal, setShowEditModal] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
 
-    // temp
     const [tempItem, setTempItem] = useState(null)
 
-    // const current categories
     const [categories, setCategories] = useState([])
     const [searchedCategories, setSearchedCategories] = useState([{ _id: 1, name: "Hello World" }])
 
-    // others
     const [isSaving, setIsSaving] = useState(false)
 
-    // search field
 
     console.log(isEditMode)
     const [searchTerm, setSearchTerm] = useState("")
 
-    // api data 
     const { authHeader, userDetails } = useContext(UserContext)
 
     useEffect(() => {
@@ -145,7 +138,6 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
         }
 
         if (isDropdownOpen) {
-            // Delay adding the listener to the next tick
             timeoutId = setTimeout(() => {
                 document.addEventListener('click', handleClickOutside);
             }, 0);
@@ -287,7 +279,7 @@ const CatDown = ({ selectedCategories, setSelectedCategories, isEditMode, item }
                                     width: "100%"
                                 }}>
                                     <div style={{ height: "10px", width: "10px", background: "#0000002e", borderRadius: "10px" }} />
-                                    <span style={{ fontWeight: 700 }}>Add New "{searchTerm}"</span>
+                                    <span style={{ fontWeight: 700 }}>{t("Add New")} &quot;{searchTerm}&quot;</span>
                                 </div>
                             </div>
                         }

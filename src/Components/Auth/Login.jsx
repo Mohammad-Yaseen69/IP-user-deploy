@@ -88,6 +88,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
 
         return "";
     };
+    const [locationLoading, setLocationLoading] = useState(false);
     const [methods, setMethods] = useState([
         {
             avail: false,
@@ -189,22 +190,34 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
         await localforage.setItem("loginData", data)
     }
 
-    const loginHandler = async (e, method = undefined, restoreAccount = false) => {
+    const loginHandler = async (e, method = undefined, restoreAccount = false, isFirstTime = false) => {
         e.preventDefault()
         setIsPressed(true)
         setIsLoginError("")
 
         const getLocation = () => {
+            setLocationLoading(true);
             return new Promise((resolve, reject) => {
                 if (!navigator.geolocation) {
+                    setLocationLoading(false);
                     resolve(null);
                     return;
                 }
-                navigator.geolocation.getCurrentPosition(resolve, reject, {
-                    timeout: 20000,
-                    enableHighAccuracy: true,
-                    maximumAge: 0
-                });
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        setLocationLoading(false);
+                        resolve(pos);
+                    },
+                    (err) => {
+                        setLocationLoading(false);
+                        reject(err);
+                    },
+                    {
+                        timeout: 20000,
+                        enableHighAccuracy: true,
+                        maximumAge: 0
+                    }
+                );
             });
         };
 
@@ -246,7 +259,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 password,
                 authenticator: isAuth,
                 platform: (isInsta && !isInstagramBrowser) ? "instagram" : isWp ? "whatsapp" : isEmailOtp ? "email" : "email",
-                first_time: firstTime,
+                first_time: isFirstTime || firstTime,
                 ...(restoreAccount && { restoreAccount: true })
             }
             : {
@@ -254,7 +267,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 password,
                 authenticator: isAuth,
                 platform: (isInsta && !isInstagramBrowser) ? "instagram" : isWp ? "whatsapp" : isEmailOtp ? "email" : "",
-                first_time: firstTime,
+                first_time: isFirstTime || firstTime,
                 ...(restoreAccount && { restoreAccount: true })
             };
         console.log("payload of the data :", credentials)
@@ -345,12 +358,23 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         if (error.code === 1) {
                             if (rdd.isSafari || rdd.isMobileSafari) {
                                 try {
+                                    setLocationLoading(true);
                                     locationInput = await new Promise((resolve, reject) => {
-                                        navigator.geolocation.getCurrentPosition(resolve, reject, {
-                                            timeout: 10000,
-                                            enableHighAccuracy: true,
-                                            maximumAge: 0
-                                        });
+                                        navigator.geolocation.getCurrentPosition(
+                                            (pos) => {
+                                                setLocationLoading(false);
+                                                resolve(pos);
+                                            },
+                                            (err) => {
+                                                setLocationLoading(false);
+                                                reject(err);
+                                            },
+                                            {
+                                                timeout: 10000,
+                                                enableHighAccuracy: true,
+                                                maximumAge: 0
+                                            }
+                                        );
                                     });
                                 } catch (error2) {
                                     logger.error("Location error occured in safari", {
@@ -368,6 +392,18 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                 setRestoreLoading(false);
                                 return;
                             }
+                        } else if (error.code === 3) {
+                            setIsLoginError("Location access timed out. Please ensure GPS is enabled and try again.")
+                            setIsPressed(false);
+                            setMethodLoading(false);
+                            setRestoreLoading(false);
+                            return;
+                        } else {
+                            setIsLoginError("Unable to retrieve your location. Please check your browser settings.")
+                            setIsPressed(false);
+                            setMethodLoading(false);
+                            setRestoreLoading(false);
+                            return;
                         }
 
                         console.warn("Geolocation warning:", error);
@@ -1004,7 +1040,14 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                 </ModalFooter>
             </Modal>
 
-            <form autoComplete="off" onSubmit={emailVerified ? loginHandler : checkEmailHandler} className={styles.form_details} style={width > 1000 ? { opacity: step === 1 ? 1 : 0, pointerEvents: step === 1 ? "all" : "none" } : { display: step === 1 ? "inherit" : "none" }}>
+            <form
+                autoComplete="off"
+                onSubmit={(e) => {
+                    emailVerified ? loginHandler(e, undefined, false, true) : checkEmailHandler(e)
+                }}
+                className={styles.form_details}
+                style={width > 1000 ? { opacity: step === 1 ? 1 : 0, pointerEvents: step === 1 ? "all" : "none" } : { display: step === 1 ? "inherit" : "none" }}
+            >
                 <div className={styles.left}>
                     <h1>{t("Login")}</h1>
                     <p>{t("Start Your InstaPay Journey Today!")}</p>
@@ -1133,6 +1176,16 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                         <div className={styles.input_error}>
                             <AlertTriangle size={17} color="#F32D2D" />
                             <span>{profileLockTIme > 0 ? isLoginError : t(isLoginError)}</span>
+                        </div>
+                    }
+                    {
+                        locationLoading
+                        &&
+                        <div className={styles.location_status}>
+                            <div className={styles.loader_dots}>
+                                <span>.</span><span>.</span><span>.</span>
+                            </div>
+                            <span>{t("Reading Location...")}</span>
                         </div>
                     }
                     <div className={styles.center_bottom}>

@@ -94,7 +94,7 @@ const Recursive = ({
                                         height: "22px",
                                         width: "22px",
                                         objectFit: "contain",
-                                    }}/>
+                                    }} />
                             </div>
                             <h5 style={{ marginBottom: 0 }}>{t("Subscription Payment")}</h5>
                         </div>
@@ -108,7 +108,7 @@ const Recursive = ({
                                     border: "none",
                                     background: "transparent",
                                     padding: 0,
-                                   display: "flex",
+                                    display: "flex",
                                     alignItems: "center",
                                     color: "#888",
                                     transition: "color 0.2s",
@@ -209,7 +209,9 @@ const Recursive = ({
                             }
                         </div>
                         {
-                            showDateError && <span style={{ color: "red", fontWeight: 500, fontSize: ".7rem", paddingLeft: "1rem" }}>Previous Dates are invalid.</span>
+                            showDateError && <span style={{ color: "red", fontWeight: 500, fontSize: ".7rem", paddingLeft: "1rem" }}>
+                                {t("Previous Dates are invalid.")}
+                            </span>
                         }
 
 

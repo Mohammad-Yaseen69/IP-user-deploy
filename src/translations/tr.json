@@ -3147,5 +3147,21 @@
   "characters": "karakterler",
   "Transaction Error": "İşlem Hatası",
   "Google Two Factor Authentication Is Now Linked To Your Instapay Account.": "Google İki Faktörlü Kimlik Doğrulama Artık Instapay Hesabınıza Bağlı.",
-  "Please add your email first.": "Lütfen önce e-posta adresinizi ekleyin."
+  "Please add your email first.": "Lütfen önce e-posta adresinizi ekleyin.",
+  "Confirm Deletion": "Silme işlemini onaylayın",
+  "Are you sure you want to delete this invoice?": "Bu faturayı silmek istediğinizden emin misiniz?",
+  "Plans Subscriptions": "Planlar Abonelikler",
+  "Scheduled": "Planlanmış",
+  "Start Date": "Başlangıç ​​Tarihi",
+  "Next Billing": "Sonraki Fatura",
+  "Subscription ID": "Abonelik Kimliği",
+  "Plan Name": "Plan Adı",
+  "Reading Location...": "Okuma Konumu...",
+  "Sender": "Gönderen",
+  "Reference ID": "Referans Kimliği",
+  "About Me:": "Hakkımda:",
+  "Previous Dates are invalid.": "Önceki tarihler geçersizdir.",
+  "Your Invoice is updated!": "Faturanız güncellendi!",
+  "We can't process your request at this moment please try again later.": "Şu anda isteğinizi işleme alamıyoruz, lütfen daha sonra tekrar deneyin.",
+  "Instagram": "Instagram"
 }

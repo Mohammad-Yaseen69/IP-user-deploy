@@ -220,7 +220,8 @@ const SchedulePayment = ({ setSubStep, scheduleDate, setScheduleDate, scheduleTi
                         </div>
                         {showDateError && (
                             <span style={{ color: "red", fontWeight: 500, fontSize: ".7rem", paddingLeft: "1rem" }}>
-                                Previous Dates are invalid.
+                                {t("Previous Dates are invalid.")}
+                                
                             </span>
                         )}
 
@@ -252,7 +253,7 @@ const SchedulePayment = ({ setSubStep, scheduleDate, setScheduleDate, scheduleTi
                         </div>
                         {timeError && (
                             <span style={{ color: "red", fontWeight: 500, fontSize: ".7rem", paddingLeft: "1rem" }}>
-                                Selected time must be at least 5 minutes from now.
+                                {t("Selected time must be at least 5 minutes from now.")}
                             </span>
                         )}
                     </CardBody>

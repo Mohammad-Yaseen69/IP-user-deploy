@@ -170,7 +170,9 @@ const Recursive = (props) => {
                             }
                         </div>
                         {
-                            showDateError && <span style={{ color: "red", fontWeight: 500, fontSize: ".7rem", paddingLeft: "1rem" }}>Previous Dates are invalid.</span>
+                            showDateError && <span style={{ color: "red", fontWeight: 500, fontSize: ".7rem", paddingLeft: "1rem" }}>
+                                {t("Previous Dates are invalid.")}
+                            </span>
                         }
 
 

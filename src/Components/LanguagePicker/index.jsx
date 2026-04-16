@@ -286,16 +286,21 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
     }, [userDetails?.language, userCountryLocation, countryLoading, isExtendedPage])
     useEffect(() => {
         const handlePosition = () => {
+            if (!showDropDown) return;
             const dropdown = dropdownRef.current
             if (!dropdown) return
             const rect = dropdown.getBoundingClientRect()
             const windowHeight = window.innerHeight
-            const dropdownHeight = 500
+            const dropdownHeight = dropdown.offsetHeight
             const shouldOpenUp = rect.bottom + dropdownHeight > windowHeight
             setOpenUp(shouldOpenUp)
         }
 
-        handlePosition()
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                handlePosition()
+            })
+        })
         window.addEventListener("resize", handlePosition)
         return () => window.removeEventListener("resize", handlePosition)
     }, [showDropDown])
@@ -338,6 +343,8 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
                             position: "absolute",
                             top: openUp ? "auto" : "90%",
                             bottom: openUp ? "90%" : "auto",
+                            // top:"90%",
+                            // bottom:"auto",
                             left: "0",
                             display: "flex",
                             flexDirection: "column",

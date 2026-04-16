@@ -3145,5 +3145,21 @@
   "characters": "karakter",
   "Transaction Error": "Kesalahan Transaksi",
   "Google Two Factor Authentication Is Now Linked To Your Instapay Account.": "Autentikasi Dua Faktor Google Kini Terhubung ke Akun Instapay Anda.",
-  "Please add your email first.": "Silakan tambahkan email Anda terlebih dahulu."
+  "Please add your email first.": "Silakan tambahkan email Anda terlebih dahulu.",
+  "Confirm Deletion": "Konfirmasi Penghapusan",
+  "Are you sure you want to delete this invoice?": "Apakah Anda yakin ingin menghapus faktur ini?",
+  "Plans Subscriptions": "Paket Langganan",
+  "Scheduled": "Terjadwal",
+  "Start Date": "Tanggal Mulai",
+  "Next Billing": "Penagihan Berikutnya",
+  "Subscription ID": "ID Langganan",
+  "Plan Name": "Nama Rencana",
+  "Reading Location...": "Lokasi Bacaan...",
+  "Sender": "Pengirim",
+  "Reference ID": "ID Referensi",
+  "About Me:": "Tentang Saya:",
+  "Previous Dates are invalid.": "Tanggal sebelumnya tidak valid.",
+  "Your Invoice is updated!": "Faktur Anda telah diperbarui!",
+  "We can't process your request at this moment please try again later.": "Saat ini kami tidak dapat memproses permintaan Anda, silakan coba lagi nanti.",
+  "Instagram": "Instagram"
 }
