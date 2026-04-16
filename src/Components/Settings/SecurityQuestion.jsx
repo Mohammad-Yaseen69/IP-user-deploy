@@ -315,7 +315,7 @@ const SecurityQuestions = () => {
                         }}>{t("Edit")}</Button>
                 }
                 <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-                    <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
+                    <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                     <ModalBody>
                         <OTPConfirmation
                             callback={UpdateQuestionHandler}

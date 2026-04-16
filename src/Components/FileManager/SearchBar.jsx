@@ -1,7 +1,9 @@
 import React, { Fragment } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Form, FormGroup, Input } from 'reactstrap';
 
 const SearchBar = ({ searchTerm, setSearchTerm }) => {
+  const {t} = useTranslation();
   const handleChange = (event) => {
     event.preventDefault();
     setSearchTerm(event.target.value);
@@ -16,7 +18,7 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => {
             type="text"
             value={searchTerm}
             onChange={(e) => handleChange(e)}
-            placeholder="Search..."
+            placeholder={t("Search...")}
           />
         </FormGroup>
       </Form>
