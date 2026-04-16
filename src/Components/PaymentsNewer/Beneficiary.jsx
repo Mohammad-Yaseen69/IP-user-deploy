@@ -393,13 +393,13 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                                                                 <img src={countries.filter(it => it.name.toLowerCase() === user_searched?.country_name?.toLowerCase())[0]?.file_url} alt="flag" style={{ borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)", width: "40px" }} className="i_t_flag" draggable="false" />
                                                                 {/* <span style={{ fontSize: "1rem", fontWeight: "700" }}>{countries.filter(it => it.name.toLowerCase() === user_searched?.country?.toLowerCase())[0]?.name}</span> */}
                                                             </div>
-                                                            {beneficiary.some(it => it._id === user_searched?._id) ? <Check style={{ fontWeight: "900" }} color="green" /> : <BsThreeDots />}
+                                                            {beneficiary?.some(it => it?._id === user_searched?._id) ? <Check style={{ fontWeight: "900" }} color="green" /> : <BsThreeDots />}
                                                         </div>
                                                     </div>
                                                     {
                                                         user_searched?.about_me
                                                         &&
-                                                        <p style={{ margin: ".5rem 45px 0", WebkitLineClamp: 3, overflow: "hidden", textOverflow: "ellipsis" }}><strong>About: </strong>{user_searched?.about_me}</p>
+                                                        <p style={{ margin: ".5rem 45px 0", WebkitLineClamp: 3, overflow: "hidden", textOverflow: "ellipsis" }}><strong>{t("About:")} </strong>{user_searched?.about_me}</p>
                                                     }
                                                 </div>
                                             ))

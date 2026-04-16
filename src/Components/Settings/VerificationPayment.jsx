@@ -89,7 +89,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
         const [contentMonth, contentYear] = expiry.split("/").map(Number);
         const currentDate = new Date();
         const currentMonth = currentDate.getMonth() + 1;
-        const currentYear = currentDate.getFullYear() % 100; // Get last two digits of the year
+        const currentYear = currentDate.getFullYear() % 100;
 
         const isValidExpiry = contentYear > currentYear ||
             (contentYear === currentYear && contentMonth > currentMonth);
@@ -490,6 +490,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                         }
                         {(step === 2 && payoutChannel?.value === "bank") &&
                             <PlaidBankTransfer
+                                closeBtnText={t("Close Modal")}
                                 type='verification_payment'
                                 initiatePayload={() => ({})}
                                 endpoint='/api/plaid/kyc'
@@ -502,7 +503,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                 handleBackClick={() => {
                                     setStep(1)
                                 }}
-                                successMessage={'Payment authorized successfully, you will be able to continue your KYC Verification once the transaction is completed, you can now close this window now.'}
+                                successMessage={'Your payment has been successful, please close this modal or refresh the page and start your verification.'}
                             />
                         }
                         {
