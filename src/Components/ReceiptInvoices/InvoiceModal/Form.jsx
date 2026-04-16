@@ -35,7 +35,7 @@ const Form = ({ data, inputFieldChange, dataHandler }) => {
                         onChange={inputFieldChange('description')}
                         placeholder={t('Enter description')}
                         rows={5}
-                        maxLength={250}
+                        maxLength={500}
                     />
 
                     {/* Character Info */}
