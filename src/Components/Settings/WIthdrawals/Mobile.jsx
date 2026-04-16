@@ -58,13 +58,13 @@ const Mobile = ({ values, changeHandler, isEditMode, payers, country, payerLoadi
                             textAlign: "center",
                             fontSize: "1rem",
                             fontWeight: "500"
-                        }}>No payers for this withdrawal method!</div>
+                        }}>{t("No payers for this withdrawal method!")}</div>
                         :
                         <>
                             <FormGroup style={{ flex: 1, margin: 0, width: "100%", marginBottom: "1rem" }}>
                                 <Label className="col-form-label">{t("Please Select A Payer")} </Label>
                                 <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ minWidth: "150px", width: "100%" }} type="select" value={values.mobile_money_provider} onChange={changeHandler} name='mobile_money_provider'>
-                                    <option value="">Select your mobile money wallet</option>
+                                    <option value="">{t("Select your mobile money wallet")}</option>
                                     {
                                         payers.map(item => (
                                             <option value={item?.id}>{item?.name}</option>
@@ -112,7 +112,7 @@ const Mobile = ({ values, changeHandler, isEditMode, payers, country, payerLoadi
                                                 style={{ border: 'none', background: 'transparent', fontWeight: 600 }}
                                                 onChange={(e) => {
                                                     const inp = handleChange(e)
-                                                    if (inp === null || inp === undefined) return; 
+                                                    if (inp === null || inp === undefined) return;
 
                                                     const dialCode = CountryBasedPhone[country.alpha3]?.dial_code?.replace("+", "")
                                                     changeHandler({ target: { value: `${dialCode}${inp}`, name: "mobile_wallet_account_number" } })

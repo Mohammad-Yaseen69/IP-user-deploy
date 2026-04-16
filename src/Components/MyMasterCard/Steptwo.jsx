@@ -29,7 +29,7 @@ const Steptwo = ({ cardType, setStep, userDetails, applePay, googlePay }) => {
 
                     <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
                         <span className={styles.cardDetail}>
-                            {t("Virtual Card : ")}{cardType[0].toUpperCase() + cardType.slice(1)} {t("Card (USD)")}
+                            {t("Virtual Card :")}{cardType[0].toUpperCase() + cardType.slice(1)} {t("Card (USD)")}
 
                         </span>
                         <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>

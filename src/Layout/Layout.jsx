@@ -24,6 +24,7 @@ import FinancialInfoModal from "../Components/FinancialInfoModal";
 import success from "../Components/Auth/files/success.gif"
 import SocketsService from "../Services/Socket";
 import AnotherLoginModal from "../Components/AnotherLoginModal";
+import { useTranslation } from "react-i18next";
 
 
 
@@ -43,6 +44,7 @@ const MobileSbContextProvider = ({ children }) => {
 const Layout = ({ children, classNames, ...rest }) => {
   const { setTogglSidebar, sidebar_types } =
     useContext(CheckContext);
+    const {t} = useTranslation()
   const location = useLocation();
   const query = new URLSearchParams(location.search)
   const benId = query.get("user_id")
@@ -234,12 +236,12 @@ const Layout = ({ children, classNames, ...rest }) => {
       >
         <ModalHeader>
           <span style={{ fontSize: "22px", fontWeight: 600, color: "red" }}>
-            No Internet Connection
+            {t("No Internet Connection")}
           </span>
         </ModalHeader>
         <ModalBody>
           <div>
-            <h4>Looks like your internet is disconnect, please connect to the Internet to keep using Instapay.</h4>
+            <h4>{t("Looks like your internet is disconnect, please connect to the Internet to keep using Instapay.")}</h4>
           </div>
         </ModalBody>
       </Modal>
@@ -295,12 +297,12 @@ const Layout = ({ children, classNames, ...rest }) => {
         }
         <Modal toggle={() => setShowSuccessModal(false)} isOpen={showSuccessModal}>
           <ModalHeader toggle={() => setShowSuccessModal(false)}>
-            {("Questions Added")}
+            {t("Questions Added")}
           </ModalHeader>
           <ModalBody>
             <div style={{ display: "flex", alignItems: "center", justifyContent: 'center', flexDirection: 'column' }}>
               <img width={300} src={success} alt="" loading="lazy" />
-              <h4 style={{ textAlign: "center" }}>{("Your Financial Questions are all added successfully.")}</h4>
+              <h4 style={{ textAlign: "center" }}>{t("Your Financial Questions are all added successfully.")}</h4>
             </div>
           </ModalBody>
         </Modal>
