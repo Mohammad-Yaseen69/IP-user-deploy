@@ -497,7 +497,10 @@ const PayAsGuest = ({
 
     if (data.step === 4) {
       if (data.payment_type?.value === "card") {
-        disabled = !isPersonalInfoValid(data, false) || !data.customerTown || !data.customerStreet || (isShipping ? !isShippingValid(data.shippingDetails) : false);
+        disabled =
+         !isPersonalInfoValid(data, false) || 
+         (isShipping ? !isShippingValid(data.shippingDetails) : false) || 
+         ((data?.country?.alpha3 === "USA" || data?.country?.alpha3 === "CAN") && (!data.customerTown || !data.customerStreet))
       }
     }
 

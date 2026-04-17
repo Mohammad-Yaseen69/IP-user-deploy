@@ -131,7 +131,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
                                     required={data.payment_type?.value === "card"}
                                 />
                             </div>
-                            <div className={styles.inpt_co}>
+                            {/* <div className={styles.inpt_co}>
                                 <label>
                                     {t("Customer County")}{" "}
                                 </label>
@@ -147,7 +147,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
                                 />
 
 
-                            </div>
+                            </div> */}
                         </>
                     }
 
