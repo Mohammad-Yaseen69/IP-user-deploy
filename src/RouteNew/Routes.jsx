@@ -34,7 +34,6 @@ const Quotations = lazy(() => import('../Components/QuotationsNew'));
 const ReferralsNew = lazy(() => import('../Components/ReferralsNew'));
 // const Settings = lazy(() => import('../Components/Settings'));
 const TransactionsNewApi = lazy(() => import('../Components/TransactionsNewApi'));
-const UserSettings = lazy(() => import('../Components/User/UserSettings'));
 const UserProfile = lazy(() => import('../Components/UserProfile'));
 const UserProfilePublic = lazy(() => import('../Components/UserProfilePublic'));
 const UserSettingsNew = lazy(() => import('../Components/UserSettings'));
@@ -93,7 +92,6 @@ export const routes = [
     { path: "/my-profile", component: <ProfileTest /> },
     { path: "/users/settings", component: <UserSettingsNew /> },
     { path: "/users/settings-new", component: <UserSettingsUpdated /> },
-    { path: "/users/settings/extra", component: <UserSettings /> },
     { path: "/profile/:user_name", component: <UserProfilePublic /> },
     { path: "/add-funds", component: <AddFunds /> },
     { path: "/add-funds/card/:type", component: <AddFunds /> },
