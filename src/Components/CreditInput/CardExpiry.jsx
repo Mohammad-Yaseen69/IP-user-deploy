@@ -107,7 +107,7 @@ const CardExpiry = ({ content, setContent, isinVVC = false, guest }) => {
                     error && content.length > 3
                     &&
                     <div className={styles.error}>
-                        {error}
+                        {t(error)}
                     </div>
                 }
             </div>
