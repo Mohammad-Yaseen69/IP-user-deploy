@@ -74,8 +74,8 @@ const DeleteAccount = () => {
                     </div>
                     <div className="p-3 bg-light rounded-lg text-secondary mb-4">
                         {t(
-                            "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need \nto retain some of your data for legal and regulatory reasons. To learn more, see our "
-                        )}{" "}
+                            "Once your account is clear, and if you're eligible, we'll close your account and delete your data. We need \nto retain some of your data for legal and regulatory reasons. To learn more, see our"
+                        )}
                         &nbsp;
                         <span className="text-primary cursor-pointer">
                             {t("privacy statement")}

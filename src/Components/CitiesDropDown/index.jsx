@@ -11,7 +11,7 @@ const getCities = async (iso2) => {
     return decryptData(res.data.data)?.data;
 }
 
-const CitiesDropDown = ({ userCity, setUserCity, disabled = false, iso_3 = "", isState, title = "Select City", stateData, background = "#fff" }) => {
+const CitiesDropDown = ({ userCity, setUserCity, disabled = false, iso_3 = "", isState, title = "Select City", stateData, background = "#fff", }) => {
     const { t } = useTranslation()
     const [isOpen, setIsOpen] = useState(false);
     const cityInputRef = useRef()
@@ -107,7 +107,6 @@ const CitiesDropDown = ({ userCity, setUserCity, disabled = false, iso_3 = "", i
 
             </DropdownToggle>
             <DropdownMenu style={{ maxHeight: "350px", overflowY: "auto", overflowX: "auto", width: "100%" }}>
-                {/* Show manual entry message and option if no results and searchTerm is not empty */}
                 {filtered?.length === 0 && searchTerm && !isState && (
                     <>
                         <div style={{ padding: '0.5rem 1rem', color: '#d9534f', fontWeight: 500, background: '#f6f6f6', borderBottom: '1px solid #f8f8f8' }}>

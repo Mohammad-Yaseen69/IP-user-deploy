@@ -36,7 +36,7 @@ const DeleteAccount = ({ isCollapsed, setIsCollapsed }) => {
     return (
         <Card id="delete_account">
             <CardHeader className={`pb-0 ${isCollapsed ? 'collapsed' : 'expanded'}`} onClick={toggleAccordion}>
-                <H4 attrH4={{ className: 'card-title mb-0' }}>Delete Your Account</H4>
+                <H4 attrH4={{ className: 'card-title mb-0' }}>{t("Delete Your Account")}</H4>
                 <div className="card-options">
                     {isCollapsed ? <ChevronDown /> : <ChevronUp />}
                 </div>

@@ -31,7 +31,7 @@ const DeleteAccount = () => {
     return (
         <Card id="delete_account">
             <CardHeader className={`pb-0 expanded`}>
-                <H4 attrH4={{ className: 'card-title mb-0' }}>Delete Your Account</H4>
+                <H4 attrH4={{ className: 'card-title mb-0' }}>{t("Delete Your Account")}</H4>
             </CardHeader>
             <div className={`accordion-body expanded`}>
                 <CardBody>
