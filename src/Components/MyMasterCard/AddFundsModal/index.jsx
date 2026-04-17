@@ -674,7 +674,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
                     transaction={cardTransactionDetails}
                     amount={cardTransactionDetails?.amount}
                     url={`${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm${selectedSaveCard?._id ? "-chatbot" : ""}-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
-                    tokenUrl={() => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm${selectedSaveCard?._id ? "-chatbot" : ""}-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.token}`}
+                    tokenUrl={() => `${import.meta.env.VITE_IP_DEV_API}/api/trust-payment/confirm${selectedSaveCard?._id ? "-chatbot" : ""}-vcc-topup/${cardTransactionDetails?.transaction_id}/${cardTransactionDetails?.transactionToken}`}
                 />
                 :
                 <></>
