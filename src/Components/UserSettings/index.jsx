@@ -9,7 +9,7 @@ const UserSettings = () => {
         <div className={styles.container}>
             <div className={styles.top}>
                 <h4>{t("Settings")}</h4>
-                <TopRight />
+                <TopRight />  
             </div>
             <Settings />
         </div>

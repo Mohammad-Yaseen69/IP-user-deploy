@@ -1,21 +1,6 @@
 import React, { useLayoutEffect, useState } from 'react'
 import Routers from "./RouteNew"
 import CustomizerProvider from './Helper/Customizer/CustomizerProvider'
-// import FilterProvider from "./Helper/filter/FilterProvider"
-// import CartProvider from './Helper/cart/CartProvider';
-// import ProductProvider from './Helper/product/ProductProvider';
-// import WishListProvider from "./Helper/wishlist/WishProvider"
-// import EmailProvider from "./Helper/email/EmailProvider"
-// import ChatProvider pfrom "./Helper/chat-app/ChatProvider"
-// import BookmarkProvider from "./Helper/bookmark/BookmarkProvider"
-// import ContactProvider from './Helper/Contact/ContactProvider'
-// import TaskProvider from './Helper/task-app/TaskProvider'
-// import TodoProvider from "./Helper/Todo/TodoProvider"
-// import TableProvider from "./Helper/Table/TableProvider"
-// import Leatning from "./Helper/Leatning/LearningProvider"
-// import FAQProvider from './Helper/Faq/FaqProvider'
-// import GoogleChartProvider from "./Helper/GoogleChart/GoogleChartProvider"
-// import ChartistProvider from "./Helper/Chartist/ChartistProvider"
 import AnimationThemeProvider from './Helper/AnimationTheme/AnimationThemeProvider'
 import UserState from './Context/UserContextState'
 import InactivityWrapper from './InactivityWrapper'
