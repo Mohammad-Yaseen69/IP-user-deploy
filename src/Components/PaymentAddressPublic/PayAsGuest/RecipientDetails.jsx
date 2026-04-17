@@ -127,6 +127,17 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
                                     required={data.payment_type?.value === "card"}
                                 />
                             </div>
+                            <div className={styles.inpt_co}>
+                                <label>
+                                    {t("Customer Country")}{" "}
+                                </label>
+                                <input
+                                    type="text"
+                                    value={data.customer_county}
+                                    onChange={(e) => dataHandler("customer_county", e.target.value)}
+                                    required={data.payment_type?.value === "card"}
+                                />
+                            </div>
                         </>
                     }
 

@@ -81,7 +81,7 @@ const Verification = () => {
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_IP_DEV_API}/api/user/verification/user_${userDetails?.user?._id}`,
+                `${import.meta.env.VITE_IP_DEV_API}/api/user/verification-1/user_${userDetails?.user?._id}`,
                 { data: encrypted },
                 { headers: authHeader }
             );

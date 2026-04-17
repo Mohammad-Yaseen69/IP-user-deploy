@@ -189,7 +189,7 @@ const ProfileComponent = () => {
                                 <div className={styles.item} key={item.name}>
                                     <div className={styles.left}>
                                         <img src={item.icon} alt={item.name} />
-                                        <span>{item.name}</span>
+                                        <span>{t(item.name)}</span>
                                     </div>
                                     <div className={styles.right}>
                                         {

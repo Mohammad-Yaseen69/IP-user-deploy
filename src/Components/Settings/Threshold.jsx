@@ -95,7 +95,7 @@ const Threshold = ({ userDetails, authHeader }) => {
             setShowPassword(false)
             setEditMode(false)
 
-            toast.success("Threshold updated successfully")
+            toast.success(t("Threshold updated successfully"))
         } catch (error) {
             const dec = decryptData(error?.response?.data?.data)
             console.log(dec)
