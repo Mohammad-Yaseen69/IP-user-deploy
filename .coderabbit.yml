@@ -1,62 +1,64 @@
 path_instructions:
-reviews:
-  profile: "chill"
-  request_changes_workflow: false
-  high_level_summary: true
-  poem: true
-  review_status: true
-  collapse_walkthrough: false
-  auto_review:
-    enabled: true
-    drafts: false
   - path: "**/*.jsx"
-    instructions: |
-      You are reviewing a production React (MERN fintech) codebase.
+    reviews:
+      profile: "chill"
+      request_changes_workflow: false
+      high_level_summary: true
+      poem: true
+      review_status: true
+      collapse_walkthrough: false
 
-      ⚠️ ONLY report REAL issues. Avoid theoretical or speculative warnings.
+      auto_review:
+        enabled: true
+        drafts: false
 
-      ## 🔴 Report ONLY if:
-      - Code will crash (undefined, null access, .map on undefined)
-      - Syntax errors or duplicate declarations
-      - Infinite loops (useEffect without proper dependency)
-      - API call errors (missing try/catch or .catch)
-      - Incorrect HTTP usage (GET with body, wrong endpoints)
-      - State causing re-render loops or app freeze
-      - Unhandled Promise rejections
-      - Anything that breaks functionality or UI
+      instructions: |
+        You are reviewing a production React (MERN fintech) codebase.
 
-      ## 🟠 Report if it clearly causes bugs:
-      - Wrong dependency array in useEffect (causing real issue)
-      - Duplicate API calls due to logic mistake
-      - Missing cleanup causing memory leak (only if impactful)
+        ⚠️ ONLY report REAL issues. Avoid theoretical or speculative warnings.
 
-      ## ❌ DO NOT report:
-      - Architecture suggestions
-      - Performance micro-optimizations
-      - Hypothetical issues (e.g., "might cause flicker")
-      - Suggestions like "consider using X instead"
-      - Style, formatting, or preference-based comments
+        ## 🔴 Report ONLY if:
+        - Code will crash (undefined, null access, .map on undefined)
+        - Syntax errors or duplicate declarations
+        - Infinite loops (useEffect without proper dependency)
+        - API call errors (missing try/catch or .catch)
+        - Incorrect HTTP usage (GET with body, wrong endpoints)
+        - State causing re-render loops or app freeze
+        - Unhandled Promise rejections
+        - Anything that breaks functionality or UI
 
-      ## 🎯 Focus:
-      - Actual runtime errors
-      - Console errors
-      - Crashes
-      - Broken logic
+        ## 🟠 Report if it clearly causes bugs:
+        - Wrong dependency array in useEffect (causing real issue)
+        - Duplicate API calls due to logic mistake
+        - Missing cleanup causing memory leak (only if impactful)
 
-      ## 🗂️ Response format:
-      - 📍 File & line
-      - 🔴/🟠 Severity
-      - ❌ Issue
-      - ✅ Fix (short)
+        ## ❌ DO NOT report:
+        - Architecture suggestions
+        - Performance micro-optimizations
+        - Hypothetical issues
+        - Style or preference-based comments
+
+        ## 🎯 Focus:
+        - Runtime errors
+        - Console errors
+        - Crashes
+        - Broken logic
+
+        ## 🗂️ Response format:
+        - 📍 File & line
+        - 🔴/🟠 Severity
+        - ❌ Issue
+        - ✅ Fix (short)
 
   - path: "**/*.js"
-    instructions: |
-      Same rules as JSX.
+    reviews:
+      instructions: |
+        Same rules as JSX.
 
-      Focus ONLY on:
-      - Runtime errors
-      - API failures
-      - Crashes
-      - Incorrect logic
+        Focus ONLY on:
+        - Runtime errors
+        - API failures
+        - Crashes
+        - Incorrect logic
 
-      Ignore all non-breaking suggestions.
+        Ignore all non-breaking suggestions.
