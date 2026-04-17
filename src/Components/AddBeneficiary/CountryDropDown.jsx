@@ -22,14 +22,14 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
     }, []);
 
     useEffect(() => {
-        if (allowedCountries.length > 0) {
-            let filtered = countriesInDiffLangs[i18n.language].filter(coun => {
-                return allowedCountries.some(item => coun.alpha3 === item.country_iso_code);
+        if (allowedCountries?.length > 0) {
+            let filtered = countriesInDiffLangs[i18n.language]?.filter(coun => {
+                return allowedCountries?.some(item => coun?.alpha3 === item?.country_iso_code);
             });
 
             if (filteringList.length > 0) {
                 filtered = filtered.filter(coun => {
-                    return filteringList.some(item => coun.alpha3 === item.country_iso_code)
+                    return filteringList.some(item => coun?.alpha3 === item?.country_iso_code)
                 })
                 setCountries(filtered);
                 setCountriesLoaded(true);
@@ -54,17 +54,17 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
     });
 
     useEffect(() => {
-        if (searchTerm.trim() === '') {
+        if (searchTerm?.trim() === '') {
             setFilteredCountries(countries);
         }
         else {
-            const fuseResults = fuse.search(searchTerm).map(result => result.item);
-            if (fuseResults.length > 0) {
+            const fuseResults = fuse?.search(searchTerm)?.map(result => result?.item);
+            if (fuseResults?.length > 0) {
                 setFilteredCountries(fuseResults);
             }
             else {
-                const filtered = countries.filter(Country =>
-                    t(Country.name).toLowerCase().includes(searchTerm.toLowerCase()) || Country.name.toLowerCase().includes(searchTerm.toLowerCase())
+                const filtered = countries?.filter(Country =>
+                    t(Country?.name)?.toLowerCase()?.includes(searchTerm?.toLowerCase()) || Country?.name?.toLowerCase().includes(searchTerm?.toLowerCase())
                 );
                 setFilteredCountries(filtered);
             }
@@ -73,7 +73,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
 
     useEffect(() => {
         if (country && countriesLoaded) {
-            const filtered = countries.filter(item => item?.alpha3 === country || item.name.toLowerCase() === country.toLowerCase())?.[0];
+            const filtered = countries?.filter(item => item?.alpha3 === country || item?.name?.toLowerCase() === country?.toLowerCase())?.[0];
             setSelectedCountry(filtered);
         }
         setFilteredCountries(countries)
@@ -104,13 +104,13 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
                 {
                     isOpen
                         ?
-                        <input style={{ border: "none", outline: "none", padding: 0, margin: 0, height: "100%", width: "100%", background: "transparent" }} placeholder={t('Search Country')} ref={countryInputRef} onClick={(e) => e.stopPropagation()} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} onFocus={() => setIsCountryInFocus(true)} onBlur={() => setIsCountryInFocus(false)} />
+                        <input style={{ border: "none", outline: "none", padding: 0, margin: 0, height: "100%", width: "100%", background: "transparent" }} placeholder={t('Search Country')} ref={countryInputRef} onClick={(e) => e.stopPropagation()} value={searchTerm} onChange={e => setSearchTerm(e?.target?.value)} onFocus={() => setIsCountryInFocus(true)} onBlur={() => setIsCountryInFocus(false)} />
                         :
                         <>
                             {selectedCountry ? (
                                 <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-                                    <img src={selectedCountry.file_url}
-                                        alt={selectedCountry.code}
+                                    <img src={selectedCountry?.file_url}
+                                        alt={selectedCountry?.code}
                                         width="41"
                                         height="27"
                                         loading="lazy"
@@ -118,7 +118,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
                                         className="i_t_flag"
                                         draggable="false"
                                     />
-                                    <span style={{ fontWeight: 700, ...countryNameSize }}>{t(selectedCountry.name)}</span>
+                                    <span style={{ fontWeight: 700, ...countryNameSize }}>{t(selectedCountry?.name)}</span>
                                 </div>
                             ) : <span style={{ color: "#a8a8a8" }}>{t("Select Country")}</span>}
                         </>
@@ -126,9 +126,9 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
             </DropdownToggle>
             <DropdownMenu style={{ maxHeight: "350px", overflowY: "auto", overflowX: "auto", width: "100%" }}>
                 {
-                    filteredCountries.map((country) => (
-                        <DropdownItem key={country.code} onClick={() => handleBugSelect(country)} style={{ opacity: 1, color: "black" }}>
-                            <div key={country.code} style={{
+                    filteredCountries?.map((country) => (
+                        <DropdownItem key={country?.code} onClick={() => handleBugSelect(country)} style={{ opacity: 1, color: "black" }}>
+                            <div key={country?.code} style={{
                                 display: "flex",
                                 alignItems: "center",
                                 gap: "1rem",
@@ -136,8 +136,8 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
                                 cursor: "pointer",
                                 borderRadius: "10px"
                             }}>
-                                <img src={country.file_url}
-                                    alt={country.code}
+                                <img src={country?.file_url}
+                                    alt={country?.code}
                                     width="41"
                                     height="27"
                                     loading="lazy"
@@ -145,7 +145,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
                                     className="i_t_flag"
                                     draggable="false"
                                 />
-                                <span style={{ fontWeight: 700 }}>{t(country.name)}</span>
+                                <span style={{ fontWeight: 700 }}>{t(country?.name)}</span>
                             </div>
                         </DropdownItem>
                     ))}
