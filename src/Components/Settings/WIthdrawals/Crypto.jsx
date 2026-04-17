@@ -14,7 +14,7 @@ const Crypto = ({ values, changeHandler, isEditMode, payers }) => {
                         textAlign: "center",
                         fontSize: "1rem",
                         fontWeight: "500"
-                    }}>No payers for this withdrawal method!</div>
+                    }}>{t("No payers for this withdrawal method!")}</div>
                     :
                     <>
                         <FormGroup style={{ flex: 1, margin: 0, width: "100%", marginBottom: "1rem" }}>

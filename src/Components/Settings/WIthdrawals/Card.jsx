@@ -6,7 +6,7 @@ import InstaPayLoader from '../../Loader';
 import { UserContext } from '../../../Context/UserContext';
 import NeemaBenExtrasFields from '../../AddBeneficiary/NeemaBenExtrasFields';
 
-const CardP = ({ values, changeHandler, isEditMode, payers, cardExtras, serviceFieldInfoValidate, services, handleCardExtraChange, setBankError, bankError, payerLoading,  basicExtras, fieldInfoValidate, setBasicExtras, handleBasicExtraChange, alpha3, country }) => {
+const CardP = ({ values, changeHandler, isEditMode, payers, cardExtras, serviceFieldInfoValidate, services, handleCardExtraChange, setBankError, bankError, payerLoading, basicExtras, fieldInfoValidate, setBasicExtras, handleBasicExtraChange, alpha3, country }) => {
     const { t } = useTranslation()
 
     const handleMonthKeyPress = (event) => {
@@ -53,13 +53,13 @@ const CardP = ({ values, changeHandler, isEditMode, payers, cardExtras, serviceF
                             textAlign: "center",
                             fontSize: "1rem",
                             fontWeight: "500"
-                        }}>No payers for this withdrawal method!</div>
+                        }}>{t("No payers for this withdrawal method!")}</div>
                         :
                         <>
                             <FormGroup style={{ flex: 1, margin: 0, width: "100%", marginBottom: "1rem" }}>
                                 <Label className="col-form-label">{t("Please Select A Payer")}  <span className="req_star">*</span></Label>
                                 <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ minWidth: "150px", width: "100%" }} type="select" value={values.card_payer} onChange={changeHandler} name='card_payer'>
-                                    <option value="">Select your bank</option>
+                                    <option value="">{t("Select your bank")}</option>
                                     {
                                         payers.map(item => (
                                             <option value={item?.id}>{item?.name}</option>
@@ -76,11 +76,11 @@ const CardP = ({ values, changeHandler, isEditMode, payers, cardExtras, serviceF
                                     gap: "1rem"
                                 }}>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
-                                        <Label className="col-form-label" htmlFor="card-holder-name">Card Holder Name <span className="req_star">*</span></Label>
+                                        <Label className="col-form-label" htmlFor="card-holder-name">{t("Card Holder Name")}<span className="req_star">*</span></Label>
                                         <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} type="text" placeholder="Card holder name" name="card_holder_one" value={values.card_holder_one} onChange={changeHandler} />
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0, position: "relative" }}>
-                                        <Label className="col-form-label" htmlFor="card-number">Card Number <span className="req_star">*</span></Label>
+                                <Label className="col-form-label" htmlFor="card-number">{t("Card Number")} <span className="req_star">*</span></Label>
                                         <Input disabled={!isEditMode} readOnly={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} name="card_number_one" placeholder='Card Number' required type="number" value={values.card_number_one} onChange={e => {
                                             changeHandler(e)
                                             if (userWithdrawals?.some(item => item?.card?.[0]?.card_number === e.target.value)) {
@@ -101,7 +101,7 @@ const CardP = ({ values, changeHandler, isEditMode, payers, cardExtras, serviceF
                                     </FormGroup>
                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                         <Label className="col-form-label" htmlFor="card-expiry">
-                                            Expiry Date <span className="req_star">*</span>
+                                            {t("Expiry Date")} <span className="req_star">*</span>
                                         </Label>
                                         <div className="d-flex">
                                             <Input disabled={!isEditMode} readOnly={!isEditMode}

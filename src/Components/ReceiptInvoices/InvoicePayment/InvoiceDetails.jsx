@@ -40,7 +40,7 @@ const InvoiceDetails = ({ data, isSubscription = false }) => {
                     </div>
                 }
                 <div>
-                    <span>
+                    <span >
                         {isSubscription ? t("Plan ID") : t("Invoice ID")}
                     </span>
                     <h4>
@@ -69,7 +69,10 @@ const InvoiceDetails = ({ data, isSubscription = false }) => {
                         <span>
                             {isSubscription ? t("Plan Description") : t("Invoice Description")}
                         </span>
-                        <h2>
+                        <h2 style={{
+                            wordBreak: "break-word",
+                            overflowWrap: "break-word",
+                        }}>
                             {data?.plan?.description || data.description}
                         </h2>
                     </div>
@@ -79,7 +82,7 @@ const InvoiceDetails = ({ data, isSubscription = false }) => {
                         <span>
                             {t("Billing Cycle")}
                         </span>
-                        <h2>
+                        <h2 >
                             {data?.plan?.billingCycle}
                         </h2>
                     </div>

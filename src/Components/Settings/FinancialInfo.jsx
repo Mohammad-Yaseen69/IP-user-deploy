@@ -263,7 +263,7 @@ const FinancialInfo = () => {
                                     </defs>
                                 </svg>
 
-                                <input value={search} onChange={(e) => setSearch(e.target.value)} question_key="text" placeholder='Search...' style={{ border: "none", outline: "none", background: "transparent", fontWeight: 600 }} />
+                                <input value={search} onChange={(e) => setSearch(e.target.value)} question_key="text" placeholder={t('Search...')} style={{ border: "none", outline: "none", background: "transparent", fontWeight: 600 }} />
                             </div>
 
                             <div className={styles.dropDownCont}>

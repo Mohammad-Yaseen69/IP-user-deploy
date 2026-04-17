@@ -9,9 +9,11 @@ import CustomContext from "../../../../Helper/Customizer";
 import RemoveBookmark from "./RemoveBookmark";
 import { Bookmark } from "react-feather";
 import BookmarkContext from "../../../../Helper/bookmark";
+import { useTranslation } from "react-i18next";
 
 const Bookmarks = () => {
   const { bookMarkClass } = useContext(BookmarkContext);
+  const { t } = useTranslation();
   const mainmenu = SEARCHMENU
   const { setIsClose } = useContext(CustomContext);
   const [searchValue, setSearchValue] = useState("");
@@ -87,7 +89,7 @@ const Bookmarks = () => {
               <UL>
                 <LI>
                   <div className="bookmark-dropdown flip-back-content">
-                    <Input type="text" placeholder="search..." defaultValue={searchValue} onChange={(e) => handleSearchKeyword(e.target.value)} />
+                    <Input type="text" placeholder={t("search...")} defaultValue={searchValue} onChange={(e) => handleSearchKeyword(e.target.value)} />
                     <ListOfMenu removeFix={removeFixCallback} bookmarkItems={bookmarkItems} setCallbackBookmark={setCallbackBookmark} searchValue={searchValue} setBookmarkItems={setBookmarkItems} searchResult={searchResult} setSearchResult={setSearchResult} />
                     <EmpltyClass searchIcon={searchIcon} />
                   </div>

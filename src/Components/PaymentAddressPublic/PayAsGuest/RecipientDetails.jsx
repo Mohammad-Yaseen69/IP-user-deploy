@@ -5,7 +5,8 @@ import ShippingDetails from "../../ReceiptInvoices/InvoicePaymentQr/ShippingDeta
 import PhoneInput from "../../PhoneInput";
 import styles from "./styles/index.module.css";
 import { toast } from "react-toastify";
-
+import CitiesDropDown from "../../CitiesDropDown";
+import USCounties from "./USCounties.json";
 
 const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }) => {
     const { t } = useTranslation();
@@ -26,6 +27,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
             dataHandler("dob", "");
         }
     };
+    console.log(USCounties)
     return (
         <MuiPickersUtilsProvider utils={DateMomentUtils}>
             <div style={{ height: "100%", overflow: "auto" }}>
@@ -126,6 +128,23 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
                                     onChange={(e) => dataHandler("customerStreet", e.target.value)}
                                     required={data.payment_type?.value === "card"}
                                 />
+                            </div>
+                            <div className={styles.inpt_co}>
+                                <label>
+                                    {t("Customer County")}{" "}
+                                </label>
+                                <CitiesDropDown
+                                    country={data.customer_county}
+                                    isState={true}
+                                    setUserCity={v => dataHandler("customer_county", { ...data.customer_county, city: v })}
+                                    userCity={data.customer_county?.city}
+                                    iso_3={data.customer_county?.state_code}
+                                    stateData={USCounties}
+                                    title='Select County'
+                                    background='#f6f6f6'
+                                />
+
+
                             </div>
                         </>
                     }
