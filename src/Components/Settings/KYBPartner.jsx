@@ -111,7 +111,7 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
             }
             const encrypted = encryptData(payload)
             // console.log(encrypted)
-            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/company/verification-1/partner_${partner?._id}`, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/company/verification/partner_${partner?._id}`, {
                 data: encrypted
             }, {
                 headers: authHeader

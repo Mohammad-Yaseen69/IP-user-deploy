@@ -241,7 +241,11 @@ const TransactionItem = ({ item, activeItem, setActiveItem, index, fromReferral 
 
                 {vvc &&
                     <div style={{ color: item?.type === "credit" ? "green" : "red" }}>
-                        {symbol}{formatCurrency(item?.billAmount)} {item?.type === "credit" ? "+" : "-"}
+                        {item?.billCurrency ?
+                            `${item?.billCurrency} ${formatCurrency(item?.billAmount)}` :
+                            `${item?.currency} ${formatCurrency(item?.txAmount)}`
+                        }
+                        {item?.type === "credit" ? "+" : "-"}
                     </div>
                 }
 
