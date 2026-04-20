@@ -111,9 +111,9 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
             );
 
             const walletPromises = activeWallets.map(async (item) => {
-                if (item?.currency?.code === "USD") return item?.balance?.available >= (amount || 3.99) ? item : null;
+                if (item?.currency?.code === "USD") return item?.balance?.available >= (amount || userDetails?.country?.kyc_fee) ? item : null;
                 try {
-                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=USD&to=${item?.currency?.code}&amount=${amount || 4}`, {
+                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=USD&to=${item?.currency?.code}&amount=${amount || userDetails?.country?.kyc_fee}`, {
                         headers: authHeader
                     });
                     const dec = decryptData(res?.data?.data);
@@ -639,7 +639,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                     onClick={!isKYB ? verify : toggle}
                                     disabled={loading}
                                 >
-                                    {!isKYB ? t("Close") : t("Proceed")}
+                                    {!isKYB ? t("Procees") : t("Close")}
                                 </Button>
                             </div>
                         </>
