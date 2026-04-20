@@ -124,29 +124,35 @@ const Verification = () => {
     };
 
     const handleStartVerification = async () => {
-        const isChanged =
-            message !== (userDetails?.user?.desc || "") ||
-            occupation !== (userDetails?.user?.occupation || "") ||
-            sourceOfFund !== (userDetails?.user?.source_of_funds || "");
+        // const isChanged =
+        //     message !== (userDetails?.user?.desc || "") ||
+        //     occupation !== (userDetails?.user?.occupation || "") ||
+        //     sourceOfFund !== (userDetails?.user?.source_of_funds || "");
+        let paymentRequired = true
 
-        if (isChanged) {
-            try {
-                await mutateAsync({
-                    account_id: userDetails?._id,
-                    occupation: occupation === "Other" ? occupationOther : occupation,
-                    desc: message,
-                    source_of_funds: sourceOfFund
-                });
+        try {
+            const response = await mutateAsync({
+                account_id: userDetails?._id,
+                occupation: occupation === "Other" ? occupationOther : occupation,
+                desc: message,
+                source_of_funds: sourceOfFund
+            });
 
-                verifyToken(true)
-            } catch (error) {
-                const dec = decryptData(error?.response?.data?.data)
-                toast.error(dec?.message || "We are unable to process your request at the moment, please try again later.");
-                return;
+            console.log(response, "response from api")
+            if (response.isPaymentRequired === false) {
+                paymentRequired = false
             }
+
+
+            await verifyToken(true)
+        } catch (error) {
+            const dec = decryptData(error?.response?.data?.data)
+            toast.error(dec?.message || "We are unable to process your request at the moment, please try again later.");
+            return;
         }
 
-        if (userDetails?.kyc_verification_paid) {
+
+        if (userDetails?.kyc_verification_paid || !paymentRequired) {
             handleVerify();
         } else {
             setShowVerificationModal(true);
@@ -206,8 +212,6 @@ const Verification = () => {
     useLayoutEffect(() => {
         if (userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "needs-review" || userDetails?.user?.kyc_status === "processing" || userDetails?.paypal_transaction === "processing") {
             setShowGuide(false)
-        } else {
-            setShowGuide(true)
         }
     }, [userDetails])
 
