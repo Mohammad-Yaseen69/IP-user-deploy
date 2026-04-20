@@ -30,12 +30,12 @@ const BroadcastSignup = () => {
                     :
                     <Modal isOpen={showModal}>
                         <ModalHeader>
-                            Pass This Security
+                            {t("Pass This Security")}
                         </ModalHeader>
                         <ModalBody>
                             <FormGroup>
-                                <Label>Enter The Secret Key</Label>
-                                <Input placeholder="Enter the secret key" value={pass} onChange={e => setPass(e.target.value)} />
+                                <Label>{t("Enter The Secret Key")}</Label>
+                                <Input placeholder={t("Enter the secret key")} value={pass} onChange={e => setPass(e.target.value)} />
                             </FormGroup>
                             <div style={{ display: "flex", justifyContent: "flex-end" }}>
                                 <Button style={{
@@ -50,7 +50,7 @@ const BroadcastSignup = () => {
                                         toast.error("Invalid Secret")
                                     }
                                 }}>
-                                    Submit
+                                    {t("Submit")}
                                 </Button>
                             </div>
                         </ModalBody>

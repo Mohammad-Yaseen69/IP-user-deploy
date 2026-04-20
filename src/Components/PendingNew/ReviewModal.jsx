@@ -249,7 +249,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                             <div style={{ maxHeight: "330px", overflowY: "auto", marginTop: "1.5rem" }}>
                                 {item?.seller_comment &&
                                     <div className={styles.reviews}>
-                                        <h5>Seller Review:</h5>
+                                        <h5>{t("Seller Review:")}</h5>
                                         <div className={styles.reviews_body}>
                                             <div className={styles.review_card}>
                                                 <div className={styles.rc_top}>
@@ -281,7 +281,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                                     sellerReply
                                     &&
                                     <div className={styles.reviews}>
-                                        <h5>Seller Reply:</h5>
+                                        <h5>{t("Seller Reply:")}</h5>
                                         <div className={styles.reviews_body}>
                                             <div className={styles.review_card}>
                                                 <div className={styles.rc_top}>
@@ -310,9 +310,9 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                             <CardBody className={styles.rating_body}>
                                 <div className={styles.left}>
                                     <p style={{ maxWidth: "15ch", textAlign: "center" }}>
-                                        {item?.receiver?.user?.first_name} has left the review.
+                                        {item?.receiver?.user?.first_name} {t("has left the review.")}
                                     </p>
-                                    <span style={{ maxWidth: "15ch", textAlign: "center" }}>Rate and Review them to reveal their review.</span>
+                                    <span style={{ maxWidth: "15ch", textAlign: "center" }}>{t("Rate and Review them to reveal their review.")}</span>
                                 </div>
                                 <Card style={{ marginBottom: 0 }} className={styles.right}>
                                     <CardBody className={styles.right_body}>
@@ -344,7 +344,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                             sellerStep > 1
                             &&
                             <div className={styles.reviews}>
-                                {item?.buyer_comment && <h5>Buyer Review:</h5>}
+                                {item?.buyer_comment && <h5>{t("Buyer Review:")}</h5>}
                                 <div className={styles.reviews_body}>
                                     <div className={styles.review_card}>
                                         <div className={styles.rc_top}>
@@ -367,7 +367,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                                                 <div className={styles.rc_reply_form}>
                                                     <Input type="textarea" className="form-control" placeholder="Write a reply to buyer's review" value={sellerReply} onChange={e => setSellerReply(e.target.value)} readOnly={sellerStep > 2} />
                                                     <div>
-                                                        <Button onClick={() => setShowReplyForm(false)}>Cancel</Button>
+                                                        <Button onClick={() => setShowReplyForm(false)}>{t("Cancel")}</Button>
                                                         <Button onClick={createReplyToBuyerReview} disabled={!sellerReply || isSavingReply}>{isSavingReply ? "Posting Reply" : "Post Reply"}</Button>
                                                     </div>
                                                 </div>
@@ -377,7 +377,7 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                                                         if (sellerStep < 3) {
                                                             setShowReplyForm(true)
                                                         }
-                                                    }} style={{ opacity: sellerStep < 3 ? 1 : .7 }}>Publicly Reply</div>
+                                                    }} style={{ opacity: sellerStep < 3 ? 1 : .7 }}>{t("Publicly Reply")}</div>
                                                     {/* <div className={styles.rc_b_helpful}>
                                                         <span>Helpful</span>
                                                         <AiTwotoneLike size={21} color="black" />
@@ -391,14 +391,14 @@ const ReviewModal = ({ title = "Review History", isOpen, toggle, item, type }) =
                                                 <div className={replyStyles.rc_top}>
                                                     <div className={replyStyles.rct_left}>
                                                         <div className={replyStyles.rctl_top}>
-                                                            <span>Replied to </span>
+                                                            <span>{t("Replied to")} </span>
                                                             <div>{item?.receiver?.user?.first_name || item?.receiver?.user?.company_name}</div>
                                                         </div>
                                                         <div className={replyStyles.rctl_bottom}>
                                                             <div className={replyStyles.rctl_dp}>{item?.sender?.user?.first_name?.[0] || item?.sender?.user?.company_name?.[0]}</div>
                                                             <div className={replyStyles.rctl_dets}>
                                                                 <div className={replyStyles.seller_res_badge}>
-                                                                    Seller Response
+                                                                    {t("Seller Response")}
                                                                 </div>
                                                                 <h5>{item?.sender?.user?.first_name || item?.sender?.user?.company_name} {item?.sender?.user?.last_name || ''}</h5>
                                                                 <span>{item?.sender?.account_type}</span>

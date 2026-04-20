@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, userDetails, checkFileStatus, isReadOnly }) => {
     const existingFile = userDetails?.company?.kyb_files?.find(f => f.document_name === docName)
     const [localFile, setLocalFile] = useState(null)
+    const { t } = useTranslation();
 
     const handleFileChange = (e) => {
         const file = e.target.files[0]
@@ -40,18 +41,18 @@ const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, 
             {existingFile && !localFile && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <span style={{ fontWeight: 500 }}>
-                        Uploaded: <a href={existingFile.file_link} target="_blank" rel="noopener noreferrer">{existingFile.key?.split('/')?.[2]}</a>
+                        {t("Uploaded")}: <a href={existingFile.file_link} target="_blank" rel="noopener noreferrer">{existingFile.key?.split('/')?.[2]}</a>
                     </span>
                 </div>
             )}
             {localFile && (
                 <div style={{ color: 'green', fontWeight: 500 }}>
-                    Selected: {localFile.name}
+                    {t("Selected")}: {localFile.name}
                 </div>
             )}
             {!isReadOnly && <Input type='file' name={docName} onChange={handleFileChange} style={{ maxWidth: 300 }} />}
             {existingFile && !localFile && (
-                <small style={{ color: '#888' }}>Choose a new file to replace the existing one.</small>
+                <small style={{ color: '#888' }}>{t("Choose a new file to replace the existing one.")}</small>
             )}
         </div>
     )
@@ -109,8 +110,7 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                             <ul>
                                 <li>{t("Brand or trading names")}</li>
                                 <li>{t("Value Added Tax (VAT) number")}</li>
-                                <li>{t("List of Ultimate Beneficial Owners (UBOs) - this is mandatory in some countries,")}
-                                    {t("otherwise, it may be provided as a separate document.")}</li>
+                                <li>{t("List of Ultimate Beneficial Owners (UBOs) - this is mandatory in some countries,otherwise, it may be provided as a separate document.")}</li>
                             </ul>
                         </div>
                     </ModalBody>
@@ -132,18 +132,14 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                     <ModalHeader toggle={() => setModalTwo(!modalTwo)}>{t("Details")}</ModalHeader>
                     <ModalBody>
                         <div className={styles.content}>
-                            <p>This document validates an individual's authority to represent the company</p>
+                            <p>{t("This document validates an individual's authority to represent the company")}</p>
                             <br />
-                            <p>Typically, the legal representative is named in the company's registry extract.
-                                However, if this is not the case, a document such as a Power of Attorney or
-                                Delegation of Powers must be secured.</p>
+                            <p>{t("Typically, the legal representative is named in the company's registry extract. However, if this is not the case, a document such as a Power of Attorney or Delegation of Powers must be secured.")}</p>
                             <br />
-                            <p>Power of Attorney/Delegation of Powers:</p>
+                            <p>{t("Power of Attorney/Delegation of Powers:")}</p>
 
                             <ul>
-                                <li>The individual conferring the authority must be legitimately entitled to do so.
-                                    In other words, this individual should be listed as a legal representative in the
-                                    company's registry extract.</li>
+                                <li>{t("The individual conferring the authority must be legitimately entitled to do so. In other words, this individual should be listed as a legal representative in the company's registry extract.")}</li>
                             </ul>
                         </div>
                     </ModalBody>
@@ -153,7 +149,7 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                 <FormGroup>
                     <Label>{t("Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation")} <Info className={styles.info_icon} size={16} onClick={() => setModalThree(!modalThree)} /></Label>
                     <FileUploadWithPreview
-                        docName={`Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation`}
+                        docName={t(`Ownership Structure and Ultimate Beneficial Owners (UBOs) Documentation`)}
                         setCompanyFiles={setCompanyFiles}
                         setCompanyFileNames={setCompanyFileNames}
                         userDetails={userDetails}
@@ -166,13 +162,10 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                     <ModalHeader toggle={() => setModalThree(!modalThree)}>{t("Details")}</ModalHeader>
                     <ModalBody>
                         <div className={styles.content}>
-                            <p>Evidence of the company's listing on the relevant stock exchange should be provided.
-                                This could be a page from the stock exchange website displaying the company's
-                                details.</p>
+                            <p>{t("Evidence of the company's listing on the relevant stock exchange should be provided. This could be a page from the stock exchange website displaying the company's details.")}</p>
+
                             <br />
-                            <p>If less than 76% of the company's shares are publicly owned, all shareholders who
-                                own or control more than 25% of the shares will be subject to Ultimate Beneficial
-                                Owner (UBO) verification requirements.</p>
+                            <p>{t("If less than 76% of the company's shares are publicly owned, all shareholders who own or control more than 25% of the shares will be subject to Ultimate Beneficial Owner (UBO) verification requirements.")}</p>
                         </div>
                     </ModalBody>
                 </Modal>
@@ -192,24 +185,21 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                 <Modal isOpen={modalFour} toggle={() => setModalFour(!modalFour)} style={{ minWidth: '60vw' }}>
                     <ModalHeader toggle={() => setModalFour(!modalFour)}>{t("Details")}</ModalHeader>
                     <ModalBody>
+
                         <div className={styles.content}>
-                            <p>The identification document must be government-issued, bearing a photograph of the
-                                individual. All identification documents must be written in the Latin alphabet. If not, a
-                                certified translation will be required.</p>
+                            <p>{t("The identification document must be government-issued, bearing a photograph of the individual. All identification documents must be written in the Latin alphabet. If not, a certified translation will be required.")}</p>
                             <br />
-                            <p>The following documents are accepted:</p>
+                            <p>{t("The following documents are accepted:")}</p>
                             <ul>
-                                <li>Valid National Identity Card</li>
-                                <li>Valid Passport</li>
-                                <li>Valid Resident Permits - These will be accepted only if issued by a European country.</li>
+                                <li>{t("Valid National Identity Card")}</li>
+                                <li>{t("Valid Passport")}</li>
+                                <li>{t("Valid Resident Permits - These will be accepted only if issued by a European country.")}</li>
                             </ul>
                             <br />
-                            <p>Only legal representatives are subject to the identification document collection process.</p>
+                            <p>{t("Only legal representatives are subject to the identification document collection process.")}</p>
                             <br />
                             <p>
-                                <strong>Additional Requirement: </strong> In cases involving a Power of Attorney or Delegation of
-                                Powers, both parties (the individual granting authority and the one receiving it) must
-                                provide a copy of their ID.
+                                <strong>{t("Additional Requirement: ")}</strong> {t("In cases involving a Power of Attorney or Delegation of Powers, both parties (the individual granting authority and the one receiving it) must provide a copy of their ID.")}
                             </p>
                         </div>
                     </ModalBody>
@@ -230,19 +220,16 @@ const PubliclyTradedCompanyDocs = ({ setCompanyFiles, setCompanyFileNames, check
                 <Modal isOpen={modalFive} toggle={() => setModalFive(!modalFive)} style={{ minWidth: '60vw' }}>
                     <ModalHeader toggle={() => setModalFive(!modalFive)}>{t("Details")}</ModalHeader>
                     <ModalBody>
+
                         <div className={styles.content}>
                             <ul>
-                                <li>Utility Bill (such as gas, electricity, telephone or mobile phone bill); or
-                                    A document issued by a government department that shows the End-user’s address
-                                    and name (ex. Residential Certificate); or</li>
-                                <li>Bank Statement; or</li>
-                                <li>A document issued by a government department that shows the End-user’s address
-                                    and name (ex. Residential Certificate)</li>
+                                <li>{t("Utility Bill (such as gas, electricity, telephone or mobile phone bill); or A document issued by a government department that shows the End-user’s address and name (ex. Residential Certificate); or")}</li>
+                                <li>{t("Bank Statement; or")}</li>
+                                <li>{t("A document issued by a government department that shows the End-user’s address and name (ex. Residential Certificate)")}</li>
                             </ul>
                             <br />
                             <p>
-                                <strong>Note: </strong> Kemit Kingdom retains the right to request any additional documents or further information necessary for conducting thorough verifications, in line with its legal
-                                obligations.
+                                <strong>{t("Note: ")}</strong> {t("Kemit Kingdom retains the right to request any additional documents or further information necessary for conducting thorough verifications, in line with its legal obligations.")}
                             </p>
                         </div>
                     </ModalBody>

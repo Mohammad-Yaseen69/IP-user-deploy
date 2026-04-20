@@ -27,17 +27,17 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
 
     const updatePartnerHandler = async () => {
         if (userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved") {
-            toast.error("All actions are blocked as the business is verified.");
+            toast.error(t("All actions are blocked as the business is verified."));
             return;
         }
 
         if (!isEmailValid(partnerEmail)) {
-            toast.error("Please enter a valid email address.");
+            toast.error(t("Please enter a valid email address."));
             return;
         }
 
         if (partners.find((p, i) => p.email.toLowerCase() === partnerEmail.toLowerCase() && i !== index)) {
-            toast.error("A director with this email already exists.");
+            toast.error(t("A director with this email already exists."));
             return;
         }
 
@@ -268,23 +268,22 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
                 <UploadAdditionalKYB files={partnerFiles} isOpen={showAdditionalModal} toggle={() => setShowAdditionalModal(!showAdditionalModal)} user_id={userDetails?._id} type="partner" partner_id={partner?._id} />
             }
 
-            {/* edit modal */}
             <Modal isOpen={showEditModal} toggle={() => setShowEditModal(!showEditModal)}>
                 <ModalHeader toggle={() => setShowEditModal(!showEditModal)}>
-                    Edit Director
+                    {t("Edit Director")}
                 </ModalHeader>
                 <ModalBody>
                     <FormGroup>
-                        <Label>Director Name</Label>
-                        <Input placeholder="Director Name" value={partnerName} onChange={e => setPartnerName(e.target.value)} />
+                        <Label>{t("Director Name")}</Label>
+                        <Input placeholder={t("Director Name")} value={partnerName} onChange={e => setPartnerName(e.target.value)} />
                     </FormGroup>
                     <FormGroup>
-                        <Label>Director Email</Label>
-                        <Input placeholder="Director Email" value={partnerEmail} onChange={e => setPartnerEmail(e.target.value)} />
+                        <Label>{t("Director Email")}</Label>
+                        <Input placeholder={t("Director Email")} value={partnerEmail} onChange={e => setPartnerEmail(e.target.value)} />
                     </FormGroup>
                     <FormGroup>
-                        <Label>Director Designation</Label>
-                        <Input placeholder="Director Designation" value={partnerDesignation} onChange={e => setPartnerDesignation(e.target.value)} />
+                        <Label>{t("Director Designation")}</Label>
+                        <Input placeholder={t("Director Designation")} value={partnerDesignation} onChange={e => setPartnerDesignation(e.target.value)} />
                     </FormGroup>
                 </ModalBody>
                 <ModalFooter>
@@ -302,13 +301,12 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
             </Modal>
 
 
-            {/* delete modal */}
             <Modal isOpen={showDeleteModal} toggle={() => setShowDeleteModal(!showDeleteModal)}>
                 <ModalHeader toggle={() => setShowDeleteModal(!showDeleteModal)}>
-                    Delete Director
+                    {t("Delete Director")}
                 </ModalHeader>
                 <ModalBody>
-                    <p>Are you sure, you want to remove {partner?.name} as partner?</p>
+                    <p>{t("Are you sure, you want to remove")} {partner?.name} {t("as partner?")}</p>
                 </ModalBody>
                 <ModalFooter>
                     <Button style={{
@@ -318,7 +316,7 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
                     }}
                         onClick={() => setShowDeleteModal(!showDeleteModal)}
                     >
-                        Cancel
+                        {t("Cancel")}
                     </Button>
                     <Button style={{
                         background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
@@ -328,7 +326,7 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
                         disabled={updating}
                         onClick={deletePartnerHandler}
                     >
-                        {updating ? "Deleting" : "Delete"}
+                        {updating ? t("Deleting") : t("Delete")}
                     </Button>
                 </ModalFooter>
             </Modal>
