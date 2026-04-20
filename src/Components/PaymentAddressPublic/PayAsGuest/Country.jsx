@@ -97,7 +97,7 @@ const Country = ({ data, dataHandler, username }) => {
             <h3>{data?.country?.name}</h3>
           </div>
         ) : (
-          <h3>Select From The List</h3>
+          <h3>{t("Select From The List")}</h3>
         )}
         <ChevronDown />
       </div>
@@ -129,7 +129,7 @@ const Country = ({ data, dataHandler, username }) => {
               </div>
             ))
           ) : (
-            <div>No Results</div>
+            <div>{t("No Results")}</div>
           )}
         </div>
       </div>

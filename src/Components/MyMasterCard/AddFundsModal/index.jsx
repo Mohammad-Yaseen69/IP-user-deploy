@@ -1,32 +1,32 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
-import styles from "../styles/addFunds.module.scss"
-import { Modal, ModalBody, ModalHeader } from 'reactstrap'
-import { AddFunds, Receipt, Currency, CircleCheck } from '../files'
-import ContactBox from '../PaymentModal/ContactBox'
-import onboardStyles from "../styles/onboard.module.scss"
-import PaymentSelect from '../PaymentModal/PaymentSelectStep'
-import PaymentStep from '../PaymentModal/PaymentStep'
-import ConfirmationStep from '../PaymentModal/ConfirmationStep'
-import SuccessStep from '../PaymentModal/SuccessStep'
-import { UserContext } from '../../../Context/UserContext'
-import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
-import { CARD_TYPES } from '../../CreditInput/CreditCardTypes';
-import axios from 'axios'
-import { formatCurrency } from '../../../Helper/AmountFormat'
-import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
-import { toast } from 'react-toastify'
-import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
-import { useNavigate } from 'react-router'
-import SideProgress from './SideProgress'
-import useWindowWidth from '../../../utils/useWindowWidth'
-import { createShambeToken } from '../../../Helper/CreateToken'
-import TrustpaymentPage from '../../AddFunds/WalletFund/CreditTransaction'
-import { useTranslation } from 'react-i18next'
-import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow';
 import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
+import { useContext, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
+import { toast } from 'react-toastify'
+import { Modal, ModalBody, ModalHeader } from 'reactstrap'
+import { UserContext } from '../../../Context/UserContext'
+import { formatCurrency } from '../../../Helper/AmountFormat'
+import { createShambeToken } from '../../../Helper/CreateToken'
+import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
+import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import { apiWrapper } from '../../../utils/Functions/apiWrapper'
+import useWindowWidth from '../../../utils/useWindowWidth'
+import TrustpaymentPage from '../../AddFunds/WalletFund/CreditTransaction'
+import { CARD_TYPES } from '../../CreditInput/CreditCardTypes'
+import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow'
 import ErrorModal from '../../PaymentsNewer/InternationalFlow/ErrorModal'
 import { LimitsErrorMessage } from '../../PaymentsNewer/OTPConfirmation'
+import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
+import { AddFunds, CircleCheck, Currency, Receipt } from '../files'
+import ConfirmationStep from '../PaymentModal/ConfirmationStep'
+import ContactBox from '../PaymentModal/ContactBox'
+import PaymentSelect from '../PaymentModal/PaymentSelectStep'
+import PaymentStep from '../PaymentModal/PaymentStep'
+import SuccessStep from '../PaymentModal/SuccessStep'
+import styles from "../styles/addFunds.module.scss"
+import onboardStyles from "../styles/onboard.module.scss"
+import SideProgress from './SideProgress'
 
 const PLACEHOLDER_CARD_TYPE = {
     type: 'placeholder',
@@ -160,7 +160,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         };
         const type = getCardTypeByValue(cardDetail.cardNumber)
         if (!type || cardDetail.cardNumber.length < type?.maxCardNumberLength) {
-            setCardNumberError("Invalid Card Number")
+            setCardNumberError(t("Invalid Card Number"))
         } else {
             setCardNumberError("")
         }
@@ -180,8 +180,8 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
     const sendOtp = async () => {
         const data = {
             data: {
-                token: feeDetails.token,
-                accountId: userDetails._id
+                token: feeDetails?.token,
+                accountId: userDetails?._id
             },
             type: codeType
         }
@@ -193,7 +193,7 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
         }
 
         if (paymentType === "card") {
-            data.data.token = feeDetails.token
+            data.data.token = feeDetails?.token
             if (selectedSaveCard?._id) {
                 data.data.pan = selectedSaveCard?._id
             } else {
@@ -210,11 +210,11 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
                 headers: authHeader
             })
 
-            const dec = decryptData(res.data.data)
+            const dec = decryptData(res?.data?.data)
             setshowOtpModal(true)
             setToken(dec?.token)
         } catch {
-            toast.error("We couldn't process your request at the moment! please try again later.")
+            toast.error(t("We couldn't process your request at the moment! please try again later."))
         }
         finally {
             setDisabled(false)
@@ -349,8 +349,6 @@ const AddFundsModal = ({ isOpen, setOpen, vvcCardType, card, setCurrentCardDetai
             token: token,
             type: codeType,
         }
-
-
         const enc = encryptData(data)
         setLoading(true)
         try {
