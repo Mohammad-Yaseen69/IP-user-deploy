@@ -36,7 +36,10 @@ const Preview = ({ invoiceId, data, isPending, uploadData, mutate }) => {
                                     color: "#8E8E8E", fontSize: "12px", wordBreak: "break-word",
                                     overflowWrap: "break-word"
                                 }}>{t('Title')}:</div>
-                                <div style={{ whiteSpace: 'pre-wrap', fontSize: "14px", marginTop: "5px" }}>{data.title}</div>
+                                <div style={{
+                                    whiteSpace: 'pre-wrap', fontSize: "14px", marginTop: "5px", wordBreak: "break-word",
+                                    overflowWrap: "break-word"
+                                }}>{data.title}</div>
                             </div>
                             <div style={{ marginBottom: 8 }}>
                                 <div style={{ color: "#8E8E8E", fontSize: "12px" }}>{t('Description')}:</div>
