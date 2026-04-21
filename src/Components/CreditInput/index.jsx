@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import CardNumberInput from './CardNumberInput'
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import CardCVC from './CardCvc';
-import { CARD_TYPES } from './CreditCardTypes';
 import CardExpiry from './CardExpiry';
 import CardHolderName from './CardHolderName';
+import CardNumberInput from './CardNumberInput';
+import { CARD_TYPES } from './CreditCardTypes';
 
 export const PLACEHOLDER_CARD_TYPE = {
     type: 'placeholder',
@@ -26,9 +27,8 @@ const CreditCardInput = ({
     setCardNumberError = () => { },
     guest
 }) => {
-    // card type
     const [cardType, setCardType] = useState(PLACEHOLDER_CARD_TYPE);
-
+    const { t } = useTranslation();
     useEffect(() => {
         const getCardTypeByValue = function getCardTypeByValue(value) {
             return CARD_TYPES.filter(function (cardType) {
@@ -37,7 +37,7 @@ const CreditCardInput = ({
         };
         const type = getCardTypeByValue(cardNumber)
         if (!type || cardNumber.length < type?.maxCardNumberLength) {
-            setCardNumberError("Invalid Card Number")
+            setCardNumberError(t("Invalid Card Number"))
         } else {
             setCardNumberError("")
         }
@@ -71,7 +71,7 @@ const CreditCardInput = ({
                 />
                 <CardExpiry
                     content={cardExpiry}
-                    guest={guest}   
+                    guest={guest}
                     setContent={setCardExpiry}
                 />
             </div>
