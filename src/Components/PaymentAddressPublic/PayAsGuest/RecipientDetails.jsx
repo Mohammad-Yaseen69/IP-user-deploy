@@ -7,6 +7,7 @@ import styles from "./styles/index.module.css";
 import { toast } from "react-toastify";
 import CitiesDropDown from "../../CitiesDropDown";
 import USCounties from "./USCounties.json";
+import CANCounties from "./CANCounties.json";
 
 const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }) => {
     const { t } = useTranslation();
@@ -27,7 +28,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
             dataHandler("dob", "");
         }
     };
-    console.log(USCounties)
+
     return (
         <MuiPickersUtilsProvider utils={DateMomentUtils}>
             <div style={{ height: "100%", overflow: "auto" }}>
@@ -106,8 +107,7 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
                     </div>
 
                     {
-                        data.payment_type?.value === "card" &&
-                        (data?.country?.alpha3 === "USA" || data?.country?.alpha3 === "CAN") &&
+                        data.payment_type?.value === "card" && (data?.country?.alpha3 === "USA" || data?.country?.alpha3 === "CAN") &&
                         <>
                             <div className={styles.inpt_co}>
                                 <label>
@@ -131,23 +131,20 @@ const RecipientDetails = ({ data, dataHandler, isShipping, isReferenceRequired }
                                     required={data.payment_type?.value === "card"}
                                 />
                             </div>
-                            {/* <div className={styles.inpt_co}>
+                            <div className={styles.inpt_co}>
                                 <label>
                                     {t("Customer County")}{" "}
                                 </label>
                                 <CitiesDropDown
                                     country={data.customer_county}
                                     isState={true}
-                                    setUserCity={v => dataHandler("customer_county", { ...data.customer_county, city: v })}
-                                    userCity={data.customer_county?.city}
-                                    iso_3={data.customer_county?.state_code}
-                                    stateData={USCounties}
+                                    setUserCity={v => dataHandler("customer_county", v)}
+                                    userCity={data.customer_county}
+                                    stateData={data?.country?.alpha3 === "USA" ? USCounties : CANCounties}
                                     title='Select County'
                                     background='#f6f6f6'
                                 />
-
-
-                            </div> */}
+                            </div>
                         </>
                     }
 
