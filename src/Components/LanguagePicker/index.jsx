@@ -11,7 +11,7 @@ import { UserContext } from "../../Context/UserContext"
 import { useLocation } from "react-router"
 import useCountryLocation from "../../hooks/GeneralUse/useCountryLocation"
 import localforage from "localforage"
-const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }) => {
+const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage, shouldOpenUpRequired = false }) => {
     const { i18n, t } = useTranslation()
     const [showDropDown, setShowDropDown] = useState()
     const [currentLang, setCurrentLang] = useState(defaultLanguage || "en")
@@ -20,7 +20,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
     const { country: userCountryLocation, loading: countryLoading } = useCountryLocation()
 
     const toggleModal = () => setShowModal(!showModal)
-    const [openUp, setOpenUp] = useState(false)
+    const [openUp, setOpenUp] = useState(shouldOpenUpRequired)
     const { pathname } = useLocation()
 
     const languageCountries = [
@@ -293,7 +293,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage }
             const windowHeight = window.innerHeight
             const dropdownHeight = dropdown.offsetHeight
             const shouldOpenUp = rect.bottom + dropdownHeight > windowHeight
-            setOpenUp(shouldOpenUp)
+            setOpenUp(shouldOpenUp || shouldOpenUpRequired)
         }
 
         requestAnimationFrame(() => {
