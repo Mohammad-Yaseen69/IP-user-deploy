@@ -69,7 +69,7 @@ const LanguagePicker = ({ size = "24", backgroundWhite, newUI, defaultLanguage, 
         })
         return map
     }, [])
-    const isExtendedPage = /^\/pay\/[^/]+$/.test(pathname) || /^\/invoice\/[^/]+\/[^/]+$/.test(pathname);
+    const isExtendedPage = /^\/pay\/[^/]+$/.test(pathname) || /^\/invoice\/[^/]+\/[^/]+$/.test(pathname) || pathname === "/profile/yaseen";
     const newLangs = ["ro", "bg", "lt", "cs", "hr", "et", "lv", "hu", "el", "sv", "no", "da", "fi", "az", "uz", "ka", "hy"]
     // const filtered = countries.filter(it => languageCountries.some(item => item.name === "India" ? it.name === item.name : it.name.includes(item.name))).map(coun => {
     const filtered = countries

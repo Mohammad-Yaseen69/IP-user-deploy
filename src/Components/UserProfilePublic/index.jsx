@@ -1,11 +1,11 @@
-import ProfileComponent from "./ProfileComponent"
-import styles from "../TransactionsNewApi/styles/index.module.scss"
-import { useTranslation } from "react-i18next"
-import TopRight from "../topRight"
 import { useContext } from "react"
+import { useTranslation } from "react-i18next"
 import { UserContext } from "../../Context/UserContext"
-import { Button } from "reactstrap"
 import SearchComponent from "../HomeNewUpdated/Search"
+import LanguagePicker from "../LanguagePicker"
+import TopRight from "../topRight"
+import styles from "../TransactionsNewApi/styles/index.module.scss"
+import ProfileComponent from "./ProfileComponent"
 
 const UserProfilePublic = () => {
     const { t } = useTranslation()
@@ -17,22 +17,41 @@ const UserProfilePublic = () => {
                 window.innerWidth > 1000
                     ?
                     <div className={styles.container}>
-                        <div className={styles.top}>
-                            <div style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}>
+                        <div
+                            className={styles.top}
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: userDetails?._id ? "space-between" : "space-between"
+                            }}
+                        >
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "1rem",
+                                    width: "100%",
+                                    justifyContent: "space-between"
+                                }}
+                            >
                                 <h4 style={{ marginBottom: 0 }}>{t("User Profile")}</h4>
-                                {
-                                    userDetails
-                                    &&
-                                    <SearchComponent
-                                        showOthers={false}
-                                    />
-                                }
+
+                                {userDetails && <SearchComponent showOthers={false} />}
                             </div>
-                            {
-                                userDetails?._id
-                                &&
+
+                            {userDetails?._id ? (
                                 <TopRight />
-                            }
+                            ) : (
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        gap: "1rem",
+                                        alignItems: "center"
+                                    }}
+                                >
+                                    <LanguagePicker />
+                                </div>
+                            )}
                         </div>
                         <ProfileComponent />
                     </div>

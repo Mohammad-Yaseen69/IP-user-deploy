@@ -53,7 +53,7 @@ const ReportModal = ({ user, isOpen, toggle, setReported }) => {
                 </Col>
                 <Col>
                     <Label>{t("Note")}</Label>
-                    <Input type='textarea' placeholder='Enter the report details' value={details} onChange={e => setDetails(e.target.value)} style={{
+                    <Input type='textarea' placeholder={t('Enter the report details')} value={details} onChange={e => setDetails(e.target.value)} style={{
                         resize: "none",
                         height: "150px"
                     }} />
@@ -70,7 +70,7 @@ const ReportModal = ({ user, isOpen, toggle, setReported }) => {
                     onClick={reportHandler}
                     disabled={!reason || !details || isReporting}
                 >
-                    {isReporting ? "Reporting" : "Report"}
+                    {isReporting ? t("Reporting") : t("Report")}
                 </Button>
             </ModalFooter>
         </Modal>

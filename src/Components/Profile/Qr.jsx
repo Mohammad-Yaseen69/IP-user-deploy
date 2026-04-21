@@ -72,7 +72,7 @@ const Qr = ({ currentRevTab, averageRatingAsBuyer, averageRatingAsSeller, totalR
                         />
                     </div>
                     <div className={styles.qr_info}>
-                        <h5>InstaPay ID:</h5>
+                        <h5>{t("InstaPay ID")}:</h5>
                         <div className={`${styles.qri_box} ${styles.qri_box_p}`}>
                             <span>INSTA-{userWallet?.wallet_id}</span>
                             <img src={copy} alt="c" style={{ cursor: "pointer" }} onClick={() => {
