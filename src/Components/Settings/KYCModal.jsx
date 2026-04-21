@@ -27,7 +27,7 @@ const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
 
 
     const replacePoaWithPOA = (description) => {
-        return description.replace(/PoA/g, "Proof of Address");
+        return description?.replace(/PoA/g, "Proof of Address");
     };
     return (
         <Modal isOpen={showModal} toggle={() => setShowModal(!showModal)} style={{ ...modalStyle, minWidth: "60wv" }}>
