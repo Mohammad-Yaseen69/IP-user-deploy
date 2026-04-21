@@ -25,7 +25,7 @@ const PrivateCompanyDocs = () => {
                     <ModalBody>
                         <div className={styles.content}>
                             <p>
-                                {t("This document serves as the company's official "identity card, " and it should be obtained from the local business registry. It reflects the current status of the business (active or closed).")}
+                                {t("This document serves as the company's official \"identity card,\" and it should be obtained from the local business registry. It reflects the current status of the business (active or closed).")}
                             </p>
                             <br />
                             <p>
