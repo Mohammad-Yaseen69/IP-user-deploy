@@ -3293,5 +3293,22 @@
   "Incorrect phone number, please enter a correct phone number": "Número de telefone incorreto. Por favor, insira um número de telefone correto.",
   "Crypto Transaction Failed!": "Transação criptográfica falhou!",
   "No plans available": "Não há planos disponíveis",
-  "Select a payment option to continue:": "Selecione uma opção de pagamento para continuar:"
+  "Select a payment option to continue:": "Selecione uma opção de pagamento para continuar:",
+  "Please add username to your profile to create a personalized public profile page.": "Adicione um nome de usuário ao seu perfil para criar uma página de perfil pública personalizada.",
+  "Facebook": "Facebook",
+  "About": "Sobre",
+  "Read more": "Leia mais",
+  "Request Payment": "Solicitar pagamento",
+  "Reported": "Denunciado",
+  "My Portfolio:": "Meu portfólio:",
+  "Recent Reviews:": "Avaliações recentes:",
+  "No Seller Reviews Found": "Nenhuma avaliação do vendedor encontrada",
+  "Reporting": "Relatórios",
+  "Wallet ID:": "ID da carteira:",
+  "Select State": "Selecione o estado",
+  "No Portfolio Items Found": "Nenhum item encontrado no portfólio",
+  "Drag/Drop or upload a file (photo/video/pdf)": "Arraste e solte ou carregue um arquivo (foto/vídeo/PDF).",
+  "Add New Portfolio ItemDrag/Drop or upload a file (photo/video/pdf)": "Adicionar novo item ao portfólio: Arraste e solte ou carregue um arquivo (foto/vídeo/PDF).",
+  "No Buyer Reviews Found": "Nenhuma avaliação de comprador encontrada",
+  "Ucard Number or Sharer ID": "Número do Ucard ou ID de compartilhamento"
 }

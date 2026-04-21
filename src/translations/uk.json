@@ -3293,5 +3293,22 @@
   "Incorrect phone number, please enter a correct phone number": "Неправильний номер телефону, будь ласка, введіть правильний номер телефону",
   "Crypto Transaction Failed!": "Криптовалюта не вдалася!",
   "No plans available": "Немає доступних планів",
-  "Select a payment option to continue:": "Виберіть варіант оплати, щоб продовжити:"
+  "Select a payment option to continue:": "Виберіть варіант оплати, щоб продовжити:",
+  "Please add username to your profile to create a personalized public profile page.": "Будь ласка, додайте ім'я користувача до свого профілю, щоб створити персоналізовану публічну сторінку профілю.",
+  "Facebook": "Фейсбук",
+  "About": "Про нас",
+  "Read more": "Читати далі",
+  "Request Payment": "Запит на оплату",
+  "Reported": "Повідомлено",
+  "My Portfolio:": "Моє портфоліо:",
+  "Recent Reviews:": "Недавні відгуки:",
+  "No Seller Reviews Found": "Відгуків про продавців не знайдено",
+  "Reporting": "Звітність",
+  "Wallet ID:": "Ідентифікатор гаманця:",
+  "Select State": "Виберіть штат",
+  "No Portfolio Items Found": "Не знайдено елементів портфоліо",
+  "Drag/Drop or upload a file (photo/video/pdf)": "Перетягніть/відпустіть або завантажте файл (фото/відео/pdf)",
+  "Add New Portfolio ItemDrag/Drop or upload a file (photo/video/pdf)": "Додати новий елемент портфоліоПеретягнути або завантажити файл (фото/відео/pdf)",
+  "No Buyer Reviews Found": "Відгуків покупців не знайдено",
+  "Ucard Number or Sharer ID": "Номер Ucard або ідентифікатор акціонера"
 }

@@ -3301,5 +3301,22 @@
   "Incorrect phone number, please enter a correct phone number": "Incorrect phone number, please enter a correct phone number",
   "Crypto Transaction Failed!": "Crypto Transaction Failed!",
   "No plans available": "No plans available",
-  "Select a payment option to continue:": "Select a payment option to continue:"
+  "Select a payment option to continue:": "Select a payment option to continue:",
+  "Please add username to your profile to create a personalized public profile page.": "Please add username to your profile to create a personalized public profile page.",
+  "Facebook": "Facebook",
+  "About": "About",
+  "Read more": "Read more",
+  "Request Payment": "Request Payment",
+  "Reported": "Reported",
+  "My Portfolio:": "My Portfolio:",
+  "Recent Reviews:": "Recent Reviews:",
+  "No Seller Reviews Found": "No Seller Reviews Found",
+  "Reporting": "Reporting",
+  "Wallet ID:": "Wallet ID:",
+  "Select State": "Select State",
+  "No Portfolio Items Found": "No Portfolio Items Found",
+  "Drag/Drop or upload a file (photo/video/pdf)": "Drag/Drop or upload a file (photo/video/pdf)",
+  "Add New Portfolio ItemDrag/Drop or upload a file (photo/video/pdf)": "Add New Portfolio ItemDrag/Drop or upload a file (photo/video/pdf)",
+  "No Buyer Reviews Found": "No Buyer Reviews Found",
+  "Ucard Number or Sharer ID": "Ucard Number or Sharer ID"
 }

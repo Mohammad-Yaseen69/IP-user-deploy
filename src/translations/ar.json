@@ -3280,5 +3280,22 @@
   "Incorrect phone number, please enter a correct phone number": "رقم الهاتف غير صحيح، يرجى إدخال رقم هاتف صحيح",
   "Crypto Transaction Failed!": "فشلت عملية تحويل العملات الرقمية!",
   "No plans available": "لا توجد خطط متاحة",
-  "Select a payment option to continue:": "اختر طريقة الدفع للمتابعة:"
+  "Select a payment option to continue:": "اختر طريقة الدفع للمتابعة:",
+  "Please add username to your profile to create a personalized public profile page.": "يرجى إضافة اسم المستخدم إلى ملفك الشخصي لإنشاء صفحة تعريف عامة مخصصة.",
+  "Facebook": "فيسبوك",
+  "About": "عن",
+  "Read more": "اقرأ المزيد",
+  "Request Payment": "طلب الدفع",
+  "Reported": "تم الإبلاغ عنه",
+  "My Portfolio:": "ملف أعمالي:",
+  "Recent Reviews:": "المراجعات الحديثة:",
+  "No Seller Reviews Found": "لم يتم العثور على تقييمات للبائع",
+  "Reporting": "إعداد التقارير",
+  "Wallet ID:": "معرّف المحفظة:",
+  "Select State": "اختر الولاية",
+  "No Portfolio Items Found": "لم يتم العثور على عناصر في المحفظة",
+  "Drag/Drop or upload a file (photo/video/pdf)": "اسحب/أفلت أو حمّل ملفًا (صورة/فيديو/ملف PDF)",
+  "Add New Portfolio ItemDrag/Drop or upload a file (photo/video/pdf)": "إضافة عنصر جديد إلى محفظة أعمالك: اسحب/أفلت أو حمّل ملفًا (صورة/فيديو/ملف PDF)",
+  "No Buyer Reviews Found": "لم يتم العثور على أي تقييمات للمشترين",
+  "Ucard Number or Sharer ID": "رقم بطاقة الطالب أو معرف المشاركة"
 }

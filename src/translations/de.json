@@ -3246,5 +3246,20 @@
   "Incorrect phone number, please enter a correct phone number": "Falsche Telefonnummer. Bitte geben Sie eine korrekte Telefonnummer ein.",
   "Crypto Transaction Failed!": "Krypto-Transaktion fehlgeschlagen!",
   "No plans available": "Es sind keine Tarife verfügbar",
-  "Select a payment option to continue:": "Wählen Sie eine Zahlungsoption, um fortzufahren:"
+  "Select a payment option to continue:": "Wählen Sie eine Zahlungsoption, um fortzufahren:",
+  "Please add username to your profile to create a personalized public profile page.": "Bitte fügen Sie Ihrem Profil einen Benutzernamen hinzu, um eine personalisierte öffentliche Profilseite zu erstellen.",
+  "Facebook": "Facebook",
+  "About": "Um",
+  "Read more": "Mehr lesen",
+  "Request Payment": "Zahlungsanforderung",
+  "Reported": "Gemeldet",
+  "My Portfolio:": "Mein Portfolio:",
+  "Recent Reviews:": "Aktuelle Rezensionen:",
+  "No Seller Reviews Found": "Keine Verkäuferbewertungen gefunden",
+  "Reporting": "Berichterstattung",
+  "Wallet ID:": "Wallet-ID:",
+  "Select State": "Bundesland auswählen",
+  "Add New Portfolio ItemDrag/Drop or upload a file (photo/video/pdf)": "Neuen Portfolioeintrag hinzufügen: Datei (Foto/Video/PDF) per Drag & Drop hinzufügen oder hochladen",
+  "No Buyer Reviews Found": "Keine Käuferbewertungen gefunden",
+  "Ucard Number or Sharer ID": "Ucard-Nummer oder Sharer-ID"
 }

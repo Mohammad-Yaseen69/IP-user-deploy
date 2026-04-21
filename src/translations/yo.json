@@ -3280,5 +3280,22 @@
   "Incorrect phone number, please enter a correct phone number": "Nọ́mbà fóònù tí kò tọ́, jọ̀wọ́ tẹ nọ́mbà fóònù tó tọ́ sí i",
   "Crypto Transaction Failed!": "Ìṣòwò Krypto ti kùnà!",
   "No plans available": "Ko si awọn eto to wa",
-  "Select a payment option to continue:": "Yan àṣàyàn ìsanwó kan láti tẹ̀síwájú:"
+  "Select a payment option to continue:": "Yan àṣàyàn ìsanwó kan láti tẹ̀síwájú:",
+  "Please add username to your profile to create a personalized public profile page.": "Jọ̀wọ́ fi orúkọ olùlò kún ìwífún rẹ láti ṣẹ̀dá ojú ìwé ìwífún gbogbogbò tí a ṣe fún ara ẹni.",
+  "Facebook": "Facebook",
+  "About": "Nípa",
+  "Read more": "Ka siwaju",
+  "Request Payment": "Beere fun Isanwo",
+  "Reported": "Ti royin",
+  "My Portfolio:": "Àkójọpọ̀ mi:",
+  "Recent Reviews:": "Àwọn Àtúnyẹ̀wò Tuntun:",
+  "No Seller Reviews Found": "A ko ri awon atunyẹwo olutaja rara",
+  "Reporting": "Ìjábọ̀",
+  "Wallet ID:": "Nọ́mbà ìdámọ̀ àpò owó:",
+  "Select State": "Yan Ìpínlẹ̀",
+  "No Portfolio Items Found": "A ko ri awon ohun elo Portfolio",
+  "Drag/Drop or upload a file (photo/video/pdf)": "Fa/Já sílẹ̀ tàbí gbé fáìlì kan sókè (fọ́tò/fídíò/pdf)",
+  "Add New Portfolio ItemDrag/Drop or upload a file (photo/video/pdf)": "Fi Àkójọpọ̀ Tuntun kún ItemFrag/Ju silẹ tabi gbe faili kan soke (fọto/fidio/pdf)",
+  "No Buyer Reviews Found": "A ko ri awon atunyẹwo olura kankan",
+  "Ucard Number or Sharer ID": "Nọ́mbà Ucard tàbí ID Pínpín"
 }

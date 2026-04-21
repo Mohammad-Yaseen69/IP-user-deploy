@@ -3282,5 +3282,22 @@
   "Incorrect phone number, please enter a correct phone number": "Yanlış telefon numarası, lütfen doğru telefon numarasını girin.",
   "Crypto Transaction Failed!": "Kripto para işlemi başarısız oldu!",
   "No plans available": "Mevcut plan yok.",
-  "Select a payment option to continue:": "Devam etmek için lütfen bir ödeme seçeneği belirleyin:"
+  "Select a payment option to continue:": "Devam etmek için lütfen bir ödeme seçeneği belirleyin:",
+  "Please add username to your profile to create a personalized public profile page.": "Kişiselleştirilmiş herkese açık profil sayfası oluşturmak için lütfen profilinize kullanıcı adınızı ekleyin.",
+  "Facebook": "Facebook",
+  "About": "Hakkında",
+  "Read more": "Devamını oku",
+  "Request Payment": "Ödeme Talebi",
+  "Reported": "Bildirildi",
+  "My Portfolio:": "Portfolyom:",
+  "Recent Reviews:": "Son Yorumlar:",
+  "No Seller Reviews Found": "Satıcı yorumu bulunamadı.",
+  "Reporting": "Raporlama",
+  "Wallet ID:": "Cüzdan Kimliği:",
+  "Select State": "Eyalet Seçin",
+  "No Portfolio Items Found": "Portföyde hiçbir öğe bulunamadı.",
+  "Drag/Drop or upload a file (photo/video/pdf)": "Dosyayı sürükleyip bırakın veya yükleyin (fotoğraf/video/pdf)",
+  "Add New Portfolio ItemDrag/Drop or upload a file (photo/video/pdf)": "Yeni Portföy Öğesi Ekle: Sürükle bırak veya dosya yükle (fotoğraf/video/pdf)",
+  "No Buyer Reviews Found": "Alıcı Yorumu Bulunamadı",
+  "Ucard Number or Sharer ID": "Ucard Numarası veya Paylaşımcı Kimliği"
 }

@@ -3280,5 +3280,22 @@
   "Incorrect phone number, please enter a correct phone number": "غلط فون نمبر، براہ کرم ایک درست فون نمبر درج کریں۔",
   "Crypto Transaction Failed!": "کرپٹو ٹرانزیکشن ناکام!",
   "No plans available": "کوئی منصوبہ دستیاب نہیں ہے۔",
-  "Select a payment option to continue:": "جاری رکھنے کے لیے ادائیگی کا اختیار منتخب کریں:"
+  "Select a payment option to continue:": "جاری رکھنے کے لیے ادائیگی کا اختیار منتخب کریں:",
+  "Please add username to your profile to create a personalized public profile page.": "ذاتی نوعیت کا عوامی پروفائل صفحہ بنانے کے لیے براہ کرم اپنے پروفائل میں صارف نام شامل کریں۔",
+  "Facebook": "فیس بک",
+  "About": "کے بارے میں",
+  "Read more": "مزید پڑھیں",
+  "Request Payment": "ادائیگی کی درخواست کریں۔",
+  "Reported": "رپورٹ کیا",
+  "My Portfolio:": "میرا پورٹ فولیو:",
+  "Recent Reviews:": "حالیہ جائزے:",
+  "No Seller Reviews Found": "کوئی بیچنے والے کے جائزے نہیں ملے",
+  "Reporting": "رپورٹنگ",
+  "Wallet ID:": "Wallet ID:",
+  "Select State": "ریاست منتخب کریں۔",
+  "No Portfolio Items Found": "کوئی پورٹ فولیو آئٹمز نہیں ملا",
+  "Drag/Drop or upload a file (photo/video/pdf)": "فائل کو گھسیٹیں/ چھوڑیں یا اپ لوڈ کریں (تصویر/ویڈیو/پی ڈی ایف)",
+  "Add New Portfolio ItemDrag/Drop or upload a file (photo/video/pdf)": "نیا پورٹ فولیو آئٹم شامل کریں ڈریگ/ڈراپ یا فائل اپ لوڈ کریں (تصویر/ویڈیو/پی ڈی ایف)",
+  "No Buyer Reviews Found": "کوئی خریدار کے جائزے نہیں ملے",
+  "Ucard Number or Sharer ID": "یوکارڈ نمبر یا شیئرر آئی ڈی"
 }

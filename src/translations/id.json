@@ -3280,5 +3280,22 @@
   "Incorrect phone number, please enter a correct phone number": "Nomor telepon salah, harap masukkan nomor telepon yang benar.",
   "Crypto Transaction Failed!": "Transaksi Kripto Gagal!",
   "No plans available": "Tidak ada paket yang tersedia.",
-  "Select a payment option to continue:": "Pilih opsi pembayaran untuk melanjutkan:"
+  "Select a payment option to continue:": "Pilih opsi pembayaran untuk melanjutkan:",
+  "Please add username to your profile to create a personalized public profile page.": "Silakan tambahkan nama pengguna ke profil Anda untuk membuat halaman profil publik yang dipersonalisasi.",
+  "Facebook": "Facebook",
+  "About": "Tentang",
+  "Read more": "Baca selengkapnya",
+  "Request Payment": "Permintaan Pembayaran",
+  "Reported": "Dilaporkan",
+  "My Portfolio:": "Portofolio Saya:",
+  "Recent Reviews:": "Ulasan Terbaru:",
+  "No Seller Reviews Found": "Tidak ditemukan ulasan penjual.",
+  "Reporting": "Pelaporan",
+  "Wallet ID:": "ID Dompet:",
+  "Select State": "Pilih Negara Bagian",
+  "No Portfolio Items Found": "Tidak ada item portofolio yang ditemukan.",
+  "Drag/Drop or upload a file (photo/video/pdf)": "Seret/jatuhkan atau unggah file (foto/video/pdf)",
+  "Add New Portfolio ItemDrag/Drop or upload a file (photo/video/pdf)": "Tambahkan Item Portofolio BaruSeret/Jatuhkan atau unggah file (foto/video/pdf)",
+  "No Buyer Reviews Found": "Tidak ditemukan ulasan pembeli.",
+  "Ucard Number or Sharer ID": "Nomor Ucard atau ID Sharer"
 }
