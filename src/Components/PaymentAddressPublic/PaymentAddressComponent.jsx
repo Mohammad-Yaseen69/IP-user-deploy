@@ -120,7 +120,7 @@ export const LeftJsx = ({
     >
       {width > 1000 &&
         <div style={{ position: "absolute", bottom: "10px", right: "10px" }}>
-          {flagCheck("allowMultiLanguage", userDetails, "paymentAddress") && <LanguagePicker defaultLanguage={userDetails.langauge} newUI={true} />}
+          {flagCheck("allowMultiLanguage", userDetails, "paymentAddress") && <LanguagePicker shouldOpenUpRequired={true} defaultLanguage={userDetails.langauge} newUI={true} />}
         </div>
       }
       {width > 1000 && (
