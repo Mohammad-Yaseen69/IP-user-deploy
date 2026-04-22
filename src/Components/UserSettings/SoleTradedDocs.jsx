@@ -15,38 +15,40 @@ const SoleTradedDocs = () => {
             <h5>{t("Documents Required:")}</h5>
             <div>
                 <FormGroup>
-                    <Label>{t("Sole Trader's Registry Extract (Entity's Registration/Creation Document)")}</Label>
+                    <Label>{t("Sole Trader's Registry Extract (Entity's Registration/Creation Document)")}
+                        <Info className={styles.info_icon} size={16} onClick={() => setModalOne(!modalOne)} />
+                    </Label>
                     <Input type='file' />
                 </FormGroup>
                 <Modal isOpen={modalOne} toggle={() => setModalOne(!modalOne)} style={{ minWidth: "60vw" }}>
                     <ModalHeader toggle={() => setModalOne(!modalOne)}>{t("Details")}</ModalHeader>
                     <ModalBody>
-                            <div className={styles.content}>
-                                <p>
-                                    {t("This document serves as a local registry for sole traders, required in countries where such registration is mandatory. The document verifies that the individual is engaged in a professional activity as a sole trader. The name of this document varies from country to country.")}
-                                </p>
-                                <br />
-                                <p>
-                                    {t("Where applicable, the document should not be older than 3 months.")}
-                                </p>
-                                <br />
-                                <p>{t("The document must contain:")}</p>
-                                <br />
-                                <ul>
-                                    <li>{t("Individual's name")}</li>
-                                    <li>{t("Date and place of birth")}</li>
-                                    <li>{t("Residential address")}</li>
-                                    <li>{t("Nationality")}</li>
-                                    <li>{t("Registration number")}</li>
-                                </ul>
-                                <br />
-                                <p>{t("If applicable, the document should also include:")}</p>
-                                <br />
-                                <ul>
-                                    <li>{t("Brand or trading names")}</li>
-                                    <li>{t("Value Added Tax (VAT) number")}</li>
-                                </ul>
-                            </div>
+                        <div className={styles.content}>
+                            <p>
+                                {t("This document serves as a local registry for sole traders, required in countries where such registration is mandatory. The document verifies that the individual is engaged in a professional activity as a sole trader. The name of this document varies from country to country.")}
+                            </p>
+                            <br />
+                            <p>
+                                {t("Where applicable, the document should not be older than 3 months.")}
+                            </p>
+                            <br />
+                            <p>{t("The document must contain:")}</p>
+                            <br />
+                            <ul>
+                                <li>{t("Individual's name")}</li>
+                                <li>{t("Date and place of birth")}</li>
+                                <li>{t("Residential address")}</li>
+                                <li>{t("Nationality")}</li>
+                                <li>{t("Registration number")}</li>
+                            </ul>
+                            <br />
+                            <p>{t("If applicable, the document should also include:")}</p>
+                            <br />
+                            <ul>
+                                <li>{t("Brand or trading names")}</li>
+                                <li>{t("Value Added Tax (VAT) number")}</li>
+                            </ul>
+                        </div>
                     </ModalBody></Modal>
             </div>
             <div>
