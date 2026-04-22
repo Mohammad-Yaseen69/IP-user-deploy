@@ -42,12 +42,10 @@ const SearchComponent = ({ showS = false, showOthers = true }) => {
             }
         };
 
-        // Clear the previous timeout
         if (debounceTimeout) {
             clearTimeout(debounceTimeout);
         }
 
-        // Set a new timeout for 2 seconds
         if (search.length > 0) {
             const timeoutId = setTimeout(() => {
                 searchUser();
@@ -159,7 +157,7 @@ const SearchComponent = ({ showS = false, showOthers = true }) => {
                                                                 ))
                                                                 :
                                                                 <div style={{ padding: "1rem 3.5rem", background: "white", fontSize: "15px", fontWeight: "600" }}>
-                                                                    No User Found
+                                                                    {t("No User Found")}
                                                                 </div>
                                                         }
                                                     </>
