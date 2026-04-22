@@ -52,6 +52,7 @@ export const sourceOfFunds = [
 const Verification = () => {
     const { t } = useTranslation()
     const navigate = useNavigate()
+
     const { userDetails, authHeader, verifyToken } = useContext(UserContext)
     const [message, setMessage] = useState("")
     const [showAdditionalModal, setShowAdditionalModal] = useState(false)

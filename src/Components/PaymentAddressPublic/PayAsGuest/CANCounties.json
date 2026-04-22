@@ -1,0 +1,182 @@
+[
+    {
+        "province": "Ontario",
+        "name": "Toronto",
+        "code": "ON-TOR"
+    },
+    {
+        "province": "Ontario",
+        "name": "Ottawa",
+        "code": "ON-OTT"
+    },
+    {
+        "province": "Ontario",
+        "name": "Mississauga",
+        "code": "ON-MIS"
+    },
+    {
+        "province": "Ontario",
+        "name": "Brampton",
+        "code": "ON-BRA"
+    },
+    {
+        "province": "Ontario",
+        "name": "Hamilton",
+        "code": "ON-HAM"
+    },
+    {
+        "province": "Ontario",
+        "name": "London",
+        "code": "ON-LON"
+    },
+    {
+        "province": "Ontario",
+        "name": "Markham",
+        "code": "ON-MAR"
+    },
+    {
+        "province": "Ontario",
+        "name": "Vaughan",
+        "code": "ON-VAU"
+    },
+    {
+        "province": "Ontario",
+        "name": "Kitchener",
+        "code": "ON-KIT"
+    },
+    {
+        "province": "Ontario",
+        "name": "Windsor",
+        "code": "ON-WIN"
+    },
+    {
+        "province": "Quebec",
+        "name": "Montreal",
+        "code": "QC-MTL"
+    },
+    {
+        "province": "Quebec",
+        "name": "Quebec City",
+        "code": "QC-QC"
+    },
+    {
+        "province": "Quebec",
+        "name": "Laval",
+        "code": "QC-LAV"
+    },
+    {
+        "province": "Quebec",
+        "name": "Gatineau",
+        "code": "QC-GAT"
+    },
+    {
+        "province": "Quebec",
+        "name": "Longueuil",
+        "code": "QC-LON"
+    },
+    {
+        "province": "British Columbia",
+        "name": "Vancouver",
+        "code": "BC-VAN"
+    },
+    {
+        "province": "British Columbia",
+        "name": "Surrey",
+        "code": "BC-SUR"
+    },
+    {
+        "province": "British Columbia",
+        "name": "Burnaby",
+        "code": "BC-BUR"
+    },
+    {
+        "province": "British Columbia",
+        "name": "Richmond",
+        "code": "BC-RIC"
+    },
+    {
+        "province": "British Columbia",
+        "name": "Kelowna",
+        "code": "BC-KEL"
+    },
+    {
+        "province": "British Columbia",
+        "name": "Victoria",
+        "code": "BC-VIC"
+    },
+    {
+        "province": "Alberta",
+        "name": "Calgary",
+        "code": "AB-CAL"
+    },
+    {
+        "province": "Alberta",
+        "name": "Edmonton",
+        "code": "AB-EDM"
+    },
+    {
+        "province": "Alberta",
+        "name": "Red Deer",
+        "code": "AB-RED"
+    },
+    {
+        "province": "Alberta",
+        "name": "Lethbridge",
+        "code": "AB-LET"
+    },
+    {
+        "province": "Manitoba",
+        "name": "Winnipeg",
+        "code": "MB-WIN"
+    },
+    {
+        "province": "Saskatchewan",
+        "name": "Saskatoon",
+        "code": "SK-SAS"
+    },
+    {
+        "province": "Saskatchewan",
+        "name": "Regina",
+        "code": "SK-REG"
+    },
+    {
+        "province": "Nova Scotia",
+        "name": "Halifax",
+        "code": "NS-HAL"
+    },
+    {
+        "province": "New Brunswick",
+        "name": "Moncton",
+        "code": "NB-MON"
+    },
+    {
+        "province": "New Brunswick",
+        "name": "Saint John",
+        "code": "NB-SJ"
+    },
+    {
+        "province": "Newfoundland and Labrador",
+        "name": "St. John's",
+        "code": "NL-STJ"
+    },
+    {
+        "province": "Prince Edward Island",
+        "name": "Charlottetown",
+        "code": "PE-CHA"
+    },
+    {
+        "province": "Northwest Territories",
+        "name": "Yellowknife",
+        "code": "NT-YEL"
+    },
+    {
+        "province": "Yukon",
+        "name": "Whitehorse",
+        "code": "YT-WHI"
+    },
+    {
+        "province": "Nunavut",
+        "name": "Iqaluit",
+        "code": "NU-IQA"
+    }
+]
