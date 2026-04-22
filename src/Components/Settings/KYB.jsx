@@ -18,6 +18,7 @@ import { useMutation } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { format } from 'date-fns'
 import { isEmailValid } from '../../utils/Functions/validations'
+import { apiWrapper } from '../../utils/Functions/apiWrapper'
 
 
 function getFirstLargeFileName(files) {
@@ -49,10 +50,7 @@ const getFeeAmount = async ({ payload, authHeader }) => {
 
 const KYB = () => {
     const { t } = useTranslation()
-    const { userDetails, authHeader, setUserDetails } = useContext(UserContext)
-    const { mutateAsync } = useMutation({
-        mutationFn: (payload) => getFeeAmount({ payload, authHeader }),
-    })
+    const { userDetails, authHeader, setUserDetails, verifyToken } = useContext(UserContext)
     const [isLoading, setIsLoading] = useState(false)
     const [registrationNum, setRegistrationNum] = useState("")
     const [taxId, setTaxId] = useState("")
@@ -63,6 +61,29 @@ const KYB = () => {
 
     // partners
     const [partners, setPartners] = useState([])
+
+    const { mutateAsync } = useMutation({
+        mutationFn: (payload) => getFeeAmount({ payload, authHeader }),
+    })
+
+    const { mutateAsync: processWithoutCharge } = useMutation({
+        mutationFn: () => apiWrapper({
+            endpoint: "/api/company/process-kyb-without-charge",
+            method: "POST"
+        }),
+        onSuccess: (res) => {
+            if (res.partnersProcessed) {
+                toast.success("Your KYB status has been updated to Initiated, and Emails have been sent to all the directors.")
+            } else {
+                toast.info("Your KYB has been processed successfully.")
+            }
+            verifyToken(true)
+        },
+        onError: (error) => {
+            const dec = decryptData(error?.response?.data?.data)
+            toast.error(dec.message || "We are unable to process your request at the moment. please try again later!")
+        }
+    })
 
     useEffect(() => {
         let isMounted = true;
@@ -171,6 +192,7 @@ const KYB = () => {
                 setAdding(false)
                 setShowAddModal(false)
                 setPartners(prev => [data.partner, ...prev])
+
                 // console.log(data)
 
                 setPartnerName("")
@@ -208,8 +230,12 @@ const KYB = () => {
             const data = await mutateAsync({
                 payment_type: "card"
             })
-            setFeeAmount(data?.base_fee_breakdown?.base_fee_usd)
-            setShowPaymentModal(true);
+            if (data?.isPaymentRequired) {
+                setFeeAmount(data?.base_fee_breakdown?.base_fee_usd)
+                setShowPaymentModal(true);
+            } else {
+                await processWithoutCharge()
+            }
             return;
         }
 
@@ -241,7 +267,7 @@ const KYB = () => {
             console.log(compnanyFileNames?.filter(name => !compnanyFiles.find(f => f.document_name === name)))
 
             if (userDetails?.company?.kyb_files?.length === 0) {
-                partners.forEach((partner, index) => {
+                partners.filter(partner => !partner?._id).forEach((partner, index) => {
                     formdata.append(`partners[${index}]`, JSON.stringify(partner));
                 });
             }
@@ -251,12 +277,16 @@ const KYB = () => {
             })
 
             const decrypted = decryptData(res.data.data)
+            setUserDetails(prev => ({ ...prev, company: decrypted?.results?.company }))
             const data = await mutateAsync({
                 payment_type: "card"
             })
-            setFeeAmount(data?.base_fee_breakdown?.base_fee_usd)
-            setUserDetails(prev => ({ ...prev, company: decrypted?.results?.company }))
-            setShowPaymentModal(true)
+            if (data?.isPaymentRequired) {
+                setFeeAmount(data?.base_fee_breakdown?.base_fee_usd)
+                setShowPaymentModal(true);
+            } else {
+                await processWithoutCharge()
+            }
             console.log(decrypted)
         } catch (error) {
             console.log(error)
@@ -498,7 +528,7 @@ const KYB = () => {
                     </Card>
                 }
                 {
-                    companyType && !userDetails?.kyb_verification_paid &&
+                    companyType && (!userDetails?.kyb_verification_paid || userDetails?.company?.kyb_status === "declined") &&
                     <Button
                         style={{
                             background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
