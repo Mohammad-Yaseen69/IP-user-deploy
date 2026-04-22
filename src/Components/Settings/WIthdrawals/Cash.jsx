@@ -13,7 +13,17 @@ const Cash = ({ values, changeHandler, isEditMode, payers, cashExtras, serviceFi
             changeHandler({ target: { name: "cash_payer", value: payers?.[0]?.id } })
         }
     }, [payers])
-
+    const documentTypes = [
+        { value: "PASSPORT", label: "Passport" },
+        { value: "NATIONAL_ID", label: "National Identity Card" },
+        { value: "DRIVING_LICENSE", label: "Driving License" },
+        { value: "SOCIAL_SECURITY", label: "Social Security Card/Number" },
+        { value: "SENIOR_CITIZEN_ID", label: "Senior Citizen Identification Card" },
+        { value: "RESIDENT_CARD", label: "Permanent Residency Identification Card" },
+        { value: "PAN_CARD", label: "PAN Card" },
+        { value: "HEALTH_CARD", label: "Health Insurance Card/Number" },
+        { value: "EMPLOYER_ID", label: "Employer Identification Card" }
+    ];
     const { userWithdrawals } = useContext(UserContext)
     return (
         <>
@@ -40,7 +50,7 @@ const Cash = ({ values, changeHandler, isEditMode, payers, cashExtras, serviceFi
                                     <option value="">{t("Select cash pickup partner")}</option>
                                     {
                                         payers.map(item => (
-                                            <option value={item?.id}>{item?.name}</option>
+                                            <option  value={item?.id}>{item?.name}</option>
                                         ))
                                     }
                                 </Input>
@@ -61,16 +71,11 @@ const Cash = ({ values, changeHandler, isEditMode, payers, cashExtras, serviceFi
                                                 setBankError("You can't add same withdrawal twice.")
                                             }
                                         }}>
-                                            <option value="PASSPORT">Passport</option>
-                                            <option value="NATIONAL_ID">National Identity Card</option>
-                                            <option value="DRIVING_LICENSE">Driving License</option>
-                                            <option value="SOCIAL_SECURITY">Social Security Card/Number</option>
-                                            <option value="SENIOR_CITIZEN_ID">Senior Citizen Identification Card</option>
-                                            <option value="RESIDENT_CARD">Permanent Residency Identification Card</option>
-                                            <option value="PAN_CARD">PAN Card</option>
-                                            <option value="HEALTH_CARD">Health Insurance Card/Number</option>
-                                            <option value="EMPLOYER_ID">Employer Identification Card</option>
-                                        </Input>
+                                            {documentTypes.map((item, i) => (
+                                                <option key={i} value={item.value}>
+                                                    {t(item.label)}
+                                                </option>
+                                            ))}  </Input>
                                         {
                                             bankError &&
                                             <div style={{
