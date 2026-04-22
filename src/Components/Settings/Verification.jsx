@@ -51,6 +51,7 @@ export const sourceOfFunds = [
 
 const Verification = () => {
     const { t } = useTranslation()
+    const navigate = useNavigate()
     const { userDetails, authHeader, verifyToken } = useContext(UserContext)
     const [message, setMessage] = useState("")
     const [showAdditionalModal, setShowAdditionalModal] = useState(false)
@@ -185,7 +186,7 @@ const Verification = () => {
         }
 
 
-        if (status?.toLowerCase() === "success" && (!userDetails?.kyc_verification_paid && (userDetails?.user?.kyc_status !== "approved" || userDetails?.user?.kyc_status !== "verified"))) {
+        if (status?.toLowerCase() === "success" && (!userDetails?.kyc_verification_paid && userDetails?.user?.kyc_status !== "approved" && userDetails?.user?.kyc_status !== "verified")) {
             if (userDetails?.paypal_transaction !== "processing" && payment_through === "paypal") {
                 updateProcessingCheck()
                 setProcessing("processing")
@@ -196,14 +197,22 @@ const Verification = () => {
     console.log(userDetails?.paypal_transaction)
 
 
+    const clearStatus = () => {
+        setStatusModal("")
+        navigate({
+            pathname: location.pathname,
+            search: "?tab=verification"
+        }, { replace: true })
+    }
+
     useEffect(() => {
         setProcessing(userDetails?.paypal_transaction)
 
         if (status) {
-            if (userDetails?.user?.kyc_status !== "approved" || userDetails?.user?.kyc_status !== "verified") {
+            if (userDetails?.user?.kyc_status !== "approved" && userDetails?.user?.kyc_status !== "verified") {
                 setStatusModal(status?.toLowerCase())
             } else {
-                setStatusModal("")
+                clearStatus()
             }
         }
     }, [status, userDetails])
@@ -211,10 +220,10 @@ const Verification = () => {
     const [showGuide, setShowGuide] = useState(true)
 
     useLayoutEffect(() => {
-        if (userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "needs-review" || userDetails?.user?.kyc_status === "processing" || userDetails?.paypal_transaction === "processing") {
+        if (userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "needs-review" || userDetails?.user?.kyc_status === "processing" || userDetails?.paypal_transaction === "processing" || !status) {
             setShowGuide(false)
         }
-    }, [userDetails])
+    }, [userDetails, status])
 
     const error_message = () => {
         return errors.find(item => item?.code == code)?.message ?? "We cannot process your request at the moment, please try again later."
@@ -238,7 +247,7 @@ const Verification = () => {
             {
                 statusModal
                 &&
-                <Modal isOpen={statusModal}>
+                <Modal isOpen={statusModal} toggle={clearStatus}>
                     <ModalBody>
                         {
                             processing === "processing" ?
@@ -267,11 +276,16 @@ const Verification = () => {
                                     statusModal === "success"
                                         ?
                                         <p className="mb-0">{t("KYC Fee has been paid successfully!")}
-                                            <span style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }} onClick={() => userDetails?.kyc_verification_paid ? handleVerify() : setStatusModal("")}>{t("Continue")}</span></p>
+                                            <span style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }} onClick={() => {
+                                                if (userDetails?.kyc_verification_paid) {
+                                                    handleVerify()
+                                                }
+                                                clearStatus()
+                                            }}>{t("Continue")}</span></p>
                                         :
                                         <p className="mb-0">{t(error_message())} <br /> <span style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }} onClick={() => {
                                             setShowVerificationModal(true)
-                                            setStatusModal("")
+                                            clearStatus()
                                         }}>{t("Start again!")}</span></p>
                             }
                         </div>
