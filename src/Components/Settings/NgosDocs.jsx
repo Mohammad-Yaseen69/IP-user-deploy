@@ -1,9 +1,9 @@
-import React, { useState, useContext, useTransition } from 'react'
-import { FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap'
-import styles from "./styles/doctype.module.css"
+import { useContext, useState } from 'react'
 import { CheckCircle, Info } from 'react-feather'
-import { UserContext } from '../../Context/UserContext'
 import { useTranslation } from 'react-i18next'
+import { FormGroup, Input, Label, Modal, ModalBody, ModalHeader } from 'reactstrap'
+import { UserContext } from '../../Context/UserContext'
+import styles from "./styles/doctype.module.css"
 const FileUploadWithPreview = ({ docName, setCompanyFiles, setCompanyFileNames, userDetails, checkFileStatus, isReadOnly }) => {
     const existingFile = userDetails?.company?.kyb_files?.find(f => f.document_name === docName)
     const [localFile, setLocalFile] = useState(null)
@@ -64,11 +64,11 @@ const NgosDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus, isRea
     const [modalFive, setModalFive] = useState(false)
     const [modalSix, setModalSix] = useState(false)
     const { userDetails } = useContext(UserContext)
-    const { t } = useTransition()
+    const { t } = useTranslation()
 
     return (
         <div className={styles.container}>
-            <h5>{t("Documents Required:")} </h5>
+            <h5>{t("Documents Required:")}</h5>
             <div>
                 <FormGroup>
                     <Label>{t("Entity's Registry Extract (Entity'sRegistration/Creation Document)")} <Info className={styles.info_icon} size={16} onClick={() => setModalOne(!modalOne)} /></Label>

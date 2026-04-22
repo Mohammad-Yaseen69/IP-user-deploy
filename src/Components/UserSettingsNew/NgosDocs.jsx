@@ -4,6 +4,7 @@ import styles from "./styles/doctype.module.css"
 import { Info } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 const NgosDocs = () => {
+    
     const { t } = useTranslation()
     const [modalOne, setModalOne] = useState(false)
     const [modalTwo, setModalTwo] = useState(false)

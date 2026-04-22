@@ -168,9 +168,16 @@ const Verification = () => {
     const status = queryParams.get("status")
     const code = queryParams.get("code")
     const payment_through = queryParams.get("payment_through")
+    const refreshData = queryParams.get("refreshData")
     const ft = queryParams.get("ft")
     const [statusModal, setStatusModal] = useState(false)
     const [processing, setProcessing] = useState("")
+
+    useEffect(() => {
+        if (refreshData) {
+            navigate(`${location.pathname}?tab=verification`, { replace: true })
+        }
+    }, [refreshData])
 
     useEffect(() => {
         const updateProcessingCheck = async () => {
@@ -195,7 +202,6 @@ const Verification = () => {
         }
     }, [status, userDetails])
 
-    console.log(userDetails?.paypal_transaction)
 
 
     const clearStatus = () => {

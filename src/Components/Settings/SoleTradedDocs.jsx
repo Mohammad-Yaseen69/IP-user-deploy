@@ -69,7 +69,9 @@ const SoleTradedDocs = ({ setCompanyFiles, setCompanyFileNames, checkFileStatus,
             <h5>{t("Documents Required:")}</h5>
             <div>
                 <FormGroup>
-                    <Label>{t("Sole Trader's Registry Extract (Entity's Registration/Creation Document)")}</Label>
+                    <Label>{t("Sole Trader's Registry Extract (Entity's Registration/Creation Document)")}
+                        <Info className={styles.info_icon} size={16} onClick={() => setModalOne(!modalOne)} />
+                    </Label>
                     <FileUploadWithPreview
                         docName={t(`Sole Trader's Registry Extract (Entity's Registration/Creation Document)`)}
                         setCompanyFiles={setCompanyFiles}
