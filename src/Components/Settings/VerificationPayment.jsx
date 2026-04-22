@@ -187,7 +187,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                 type: codeType
             }
 
-            const endpoint = `/api/${payoutChannel?.value === "mobile_wallet" ? "collection" : partnerId ? "partner" : isKYB ? "company" : "user"}/${payoutChannel?.value === "mobile_wallet" ? "" : 'charge-'}${partnerId ? "kyc" : isKYB ? "kyb" : "kyc"}`
+            const endpoint = `/api/${payoutChannel?.value === "mobile_wallet" ? "collection" : isKYB ? "company" : "user"}/${payoutChannel?.value === "mobile_wallet" ? "" : 'charge-'}${partnerId ? "partner-kyc" : isKYB ? "kyb" : "kyc"}`
 
             console.log(endpoint)
 
@@ -588,11 +588,11 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                 </ModalBody>
             </Modal>
             <Modal isOpen={showSuccess} toggle={() => {
-                checkAuth()
+                verifyToken(true)
                 setShowSuccess(false)
             }}>
                 <ModalHeader toggle={() => {
-                    checkAuth()
+                    verifyToken(true)
                     setShowSuccess(false)
                 }}
                 >
