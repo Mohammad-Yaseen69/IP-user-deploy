@@ -14,7 +14,9 @@ const SoleTradedDocs = () => {
             <h5>{t("Documents Required:")}</h5>
             <div>
                 <FormGroup>
-                    <Label>{t("Sole Trader's Registry Extract (Entity's Registration/Creation Document)")}</Label>
+                    <Label>{t("Sole Trader's Registry Extract (Entity's Registration/Creation Document)")}
+                        <Info className={styles.info_icon} size={16} onClick={() => setModalOne(!modalOne)} />
+                    </Label>
                     <Input type='file' />
                 </FormGroup>
                 <Modal isOpen={modalOne} toggle={() => setModalOne(!modalOne)} style={{ minWidth: "60vw" }}>
