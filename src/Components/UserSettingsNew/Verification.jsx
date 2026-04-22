@@ -16,7 +16,25 @@ const Verification = () => {
     const [message, setMessage] = useState("")
     const [occupation, setOccupation] = useState("")
     const [showAdditionalModal, setShowAdditionalModal] = useState(false)
-
+    const occupations = [
+        { value: "", label: "Select", disabled: true },
+        { value: "Arts & Entertainment", label: "Arts & Entertainment" },
+        { value: "Banking & Finance", label: "Banking & Finance" },
+        { value: "Education & Research", label: "Education & Research" },
+        { value: "Engineering & Construction", label: "Engineering & Construction" },
+        { value: "Healthcare & Medicine", label: "Healthcare & Medicine" },
+        { value: "Information Technology & Services", label: "Information Technology & Services" },
+        { value: "Legal & Compliance", label: "Legal & Compliance" },
+        { value: "Manufacturing & Production", label: "Manufacturing & Production" },
+        { value: "Marketing & Sales", label: "Marketing & Sales" },
+        { value: "Non-profit & Charity", label: "Non-profit & Charity" },
+        { value: "Real Estate & Property", label: "Real Estate & Property" },
+        { value: "Retail & Wholesale", label: "Retail & Wholesale" },
+        { value: "Science & Pharmaceuticals", label: "Science & Pharmaceuticals" },
+        { value: "Transport & Logistics", label: "Transport & Logistics" },
+        { value: "Travel & Tourism", label: "Travel & Tourism" },
+        { value: "other", label: "Other" }
+    ];
     const handleVerify = async () => {
         const postData = {
             first_name: userDetails?.user?.first_name,
@@ -122,24 +140,22 @@ const Verification = () => {
                     <Col md="12" className='mb-4'>
                         <div>
                             <Label className="form-label">{t("Select Occupation")}</Label>
-                            <Input type="select" className="form-control" value={occupation} onChange={e => setOccupation(e.target.value)} disabled={userDetails?.user?.kyc_status === "approved"}>
-                                <option value="" disabled="">Select</option>
-                                <option value="Arts & Entertainment">Arts & Entertainment</option>
-                                <option value="Banking & Finance">Banking & Finance</option>
-                                <option value="Education & Research">Education & Research</option>
-                                <option value="Engineering & Construction">Engineering & Construction</option>
-                                <option value="Healthcare & Medicine">Healthcare & Medicine</option>
-                                <option value="Information Technology & Services">Information Technology & Services</option>
-                                <option value="Legal & Compliance">Legal & Compliance</option>
-                                <option value="Manufacturing & Production">Manufacturing & Production</option>
-                                <option value="Marketing & Sales">Marketing & Sales</option>
-                                <option value="Non-profit & Charity">Non-profit & Charity</option>
-                                <option value="Real Estate & Property">Real Estate & Property</option>
-                                <option value="Retail & Wholesale">Retail & Wholesale</option>
-                                <option value="Science & Pharmaceuticals">Science & Pharmaceuticals</option>
-                                <option value="Transport & Logistics">Transport & Logistics</option>
-                                <option value="Travel & Tourism">Travel & Tourism</option>
-                                <option value="other">Other</option>
+                            <Input
+                                type="select"
+                                className="form-control"
+                                value={occupation}
+                                onChange={e => setOccupation(e.target.value)}
+                                disabled={userDetails?.user?.kyc_status === "approved"}
+                            >
+                                {occupations.map((item, index) => (
+                                    <option
+                                        key={index}
+                                        value={item.value}
+                                        disabled={item.disabled || false}
+                                    >
+                                        {t(item.label)}
+                                    </option>
+                                ))}
                             </Input>
                         </div>
                     </Col>

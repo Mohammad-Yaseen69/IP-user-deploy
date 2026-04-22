@@ -70,13 +70,10 @@ const ProfileComponent = () => {
     ])
     const [showMore, setShowMore] = useState(false)
 
-    // get user name from params
     const { user_name } = useParams()
 
-    // covers
     const covers = [cover_1, cover_2, cover_3]
 
-    // user details
     const [userCover, setUserCover] = useState(covers[Math.trunc(Math.random() * 3)])
     const [userDp, setUserDp] = useState("")
     const [userDetails, setUserDetails] = useState("")
@@ -201,7 +198,6 @@ const ProfileComponent = () => {
 
     const [showAboutModal, setShowAboutModal] = useState(false)
 
-    // report 
     const [showReportModal, setShowReportModal] = useState(false)
     const [reported, setReported] = useState(false)
     const { userDetails: loggedInUser, authHeader } = useContext(UserContext)
@@ -326,7 +322,6 @@ const ProfileComponent = () => {
                                     </div>
 
 
-                                    {/* social info */}
                                     <div className={styles.social_info} style={{ flexWrap: "wrap" }}>
                                         {
                                             socials_data.slice(0, showMore ? socials_data.length - 1 : 3).map(item => (

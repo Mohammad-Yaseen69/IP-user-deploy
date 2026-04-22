@@ -156,7 +156,7 @@ const StepOne = ({ data, dataHandler, allowed, wallet }) => {
                                             lineHeight: 1.3,
                                             letterSpacing: '-0.28px'
                                         }}>
-                                            <strong>{wallet?.currency?.code} </strong> is not supported by Paypal, <strong>USD</strong> will be used as the default currency.
+                                            <strong>{wallet?.currency?.code} </strong> {t("is not supported by Paypal,")} <strong>USD</strong> {t("will be used as the default currency.")}
                                         </span>
                                     </div>
                                     <div style={{

@@ -4,13 +4,13 @@ import { Button, Col, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader }
 import { UserContext } from '../../Context/UserContext'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
-
+import { useTranslation } from 'react-i18next'
 const ReportModal = ({ user, isOpen, toggle, setReported }) => {
     const [reason, setReason] = useState("")
     const [details, setDetails] = useState("")
     const [isReporting, setIsReporting] = useState(false)
     const { userDetails, authHeader } = useContext(UserContext)
-
+    const { t } = useTranslation()
     const reportHandler = () => {
         setIsReporting(true)
         const data = encryptData({
@@ -38,22 +38,22 @@ const ReportModal = ({ user, isOpen, toggle, setReported }) => {
 
     return (
         <Modal isOpen={isOpen} toggle={toggle}>
-            <ModalHeader toggle={toggle}>Report {user?.first_name} {user?.last_name}</ModalHeader>
+            <ModalHeader toggle={toggle}>{t("Report")} {user?.first_name} {user?.last_name}</ModalHeader>
             <ModalBody>
                 <Col>
-                    <Label>Reason</Label>
+                    <Label>{t("Reason")}</Label>
                     <Input type='select' value={reason} onChange={e => setReason(e.target.value)}>
-                        <option value="" disabled>--Select-A-Reason--</option>
-                        <option value="Fraudulent Acitivity">Fraudulent Acitivity</option>
-                        <option value="Harrasment or Abuse">Harrasment or Abuse</option>
-                        <option value="Scamming">Scamming</option>
-                        <option value="Impersonation">Impersonation</option>
-                        <option value="Rule Violation">Rule Violation</option>
+                        <option value="" disabled>{t("--Select-A-Reason--")}</option>
+                        <option value="Fraudulent Acitivity">{t("Fraudulent Activity")}</option>
+                        <option value="Harrasment or Abuse">{t("Harassment or Abuse")}</option>
+                        <option value="Scamming">{t("Scamming")}</option>
+                        <option value="Impersonation">{t("Impersonation")}</option>
+                        <option value="Rule Violation">{t("Rule Violation")}</option>
                     </Input>
                 </Col>
                 <Col>
-                    <Label>Note</Label>
-                    <Input type='textarea' placeholder='Enter the report details' value={details} onChange={e => setDetails(e.target.value)} style={{
+                    <Label>{t("Note")}</Label>
+                    <Input type='textarea' placeholder={t('Enter the report details')} value={details} onChange={e => setDetails(e.target.value)} style={{
                         resize: "none",
                         height: "150px"
                     }} />
@@ -70,7 +70,7 @@ const ReportModal = ({ user, isOpen, toggle, setReported }) => {
                     onClick={reportHandler}
                     disabled={!reason || !details || isReporting}
                 >
-                    {isReporting ? "Reporting" : "Report"}
+                    {isReporting ? t("Reporting") : t("Report")}
                 </Button>
             </ModalFooter>
         </Modal>

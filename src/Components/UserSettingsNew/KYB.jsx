@@ -26,7 +26,6 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
     };
 
 
-    // partners
     const [partners, setPartners] = useState([])
 
     useEffect(() => {
@@ -68,7 +67,6 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
     }, [userDetails]);
 
 
-    // add states
     const [adding, setAdding] = useState(false)
     const [showAddModal, setShowAddModal] = useState(false)
     const [partnerName, setPartnerName] = useState("")
@@ -106,7 +104,6 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
         }
     }
 
-    // company typs
     const company_types = [
         'Private Limited Companies or equivalent',
         "Publicly Listed Companies",
@@ -184,23 +181,23 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
                                     background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                                     border: "none",
                                     outline: "none"
-                                }} onClick={() => setShowAddModal(!showAddModal)}>Add New Partner</Button>
+                                }} onClick={() => setShowAddModal(!showAddModal)}>{t("Add New Partne")}r</Button>
                                 <Modal isOpen={showAddModal} toggle={() => setShowAddModal(!showAddModal)}>
                                     <ModalHeader toggle={() => setShowAddModal(!showAddModal)}>
-                                        Add New Partner
+                                        {t("Add New Partner")}
                                     </ModalHeader>
                                     <ModalBody>
                                         <FormGroup>
-                                            <Label>Partner Name</Label>
-                                            <Input placeholder="Partner Name" value={partnerName} onChange={e => setPartnerName(e.target.value)} />
+                                            <Label>{t("Partner Name")}</Label>
+                                            <Input placeholder={t("Partner Name")} value={partnerName} onChange={e => setPartnerName(e.target.value)} />
                                         </FormGroup>
                                         <FormGroup>
-                                            <Label>Partner Email</Label>
-                                            <Input placeholder="Partner Email" value={partnerEmail} onChange={e => setPartnerEmail(e.target.value)} />
+                                            <Label>{t("Partner Email")}</Label>
+                                            <Input placeholder={t("Partner Email")} value={partnerEmail} onChange={e => setPartnerEmail(e.target.value)} />
                                         </FormGroup>
                                         <FormGroup>
-                                            <Label>Partner Designation</Label>
-                                            <Input placeholder="Partner Email" value={partnerDesignation} onChange={e => setPartnerDesignation(e.target.value)} />
+                                            <Label>{t("Partner Designation")}</Label>
+                                            <Input placeholder={t("Partner Designation")} value={partnerDesignation} onChange={e => setPartnerDesignation(e.target.value)} />
                                         </FormGroup>
                                     </ModalBody>
                                     <ModalFooter>
@@ -228,10 +225,10 @@ const KYB = ({ isCollapsed, setIsCollapsed }) => {
                                         <Table responsive>
                                             <thead>
                                                 <tr>
-                                                    <td>Name</td>
-                                                    <td>Email</td>
-                                                    <td>Designation</td>
-                                                    <td>Actions</td>
+                                                    <td>{t("Name")}</td>
+                                                    <td>{t("Email")}</td>
+                                                    <td>{t("Designation")}</td>
+                                                    <td>{t("Actions")}</td>
                                                 </tr>
                                             </thead>
                                             <tbody>
