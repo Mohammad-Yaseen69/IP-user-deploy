@@ -175,7 +175,7 @@ const Verification = () => {
 
     useEffect(() => {
         if (refreshData) {
-            navigate(`${location.pathname}?tab=verification`, { replace: true })
+            window.location.href = `${location.pathname}?tab=verification`
         }
     }, [refreshData])
 
