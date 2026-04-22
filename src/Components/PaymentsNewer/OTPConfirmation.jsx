@@ -14,6 +14,7 @@ import { resendHandler } from '../../Helper/SendOTP';
 import { useNavigate } from 'react-router';
 import TrustpaymentPage from '../AddFunds/WalletFund/CreditTransaction';
 import { apiErrorMessage } from './InternationalFlow';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const possibleErrors = {
     sdl400: "Daily Sending Limit exceeded",
@@ -63,6 +64,8 @@ const OTPConfirmation = ({
     isExternalWithdrawal,
 }) => {
     const { t } = useTranslation()
+    const queryClient = useQueryClient()
+
     const numberOfFields = 6;
     const [otpValues, setOTPValues] = useState(Array(numberOfFields).fill(''));
     const inputRefs = useRef(Array(numberOfFields).fill(null));
@@ -100,7 +103,7 @@ const OTPConfirmation = ({
             setIsExtended(false)
         }
     }, [verified, timer]);
-   
+
 
     useEffect(() => {
         if (!verified && resendTimer > 0) {
@@ -352,8 +355,8 @@ const OTPConfirmation = ({
                     const decrypted = decryptData(res.data.data)
                     setIsSaving(false)
                     setTransactionDetails(decrypted?.quotation)
-                    // console.log(decrypted?.quotation)
                     setVerified(true)
+                    queryClient.invalidateQueries({ queryKey: ['sentQuotations', userDetails?._id] })
                 })
                 .catch(err => {
                     setIsSaving(false)
