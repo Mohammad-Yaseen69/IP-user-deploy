@@ -979,7 +979,6 @@
   "This document should be either:": "Αυτό το έγγραφο θα πρέπει να είναι είτε:",
   "A proof of creation of the entity: This document typically provides the entity's details, creation date, and purpose.": "Απόδειξη δημιουργίας της οντότητας: Αυτό το έγγραφο συνήθως παρέχει τα στοιχεία της οντότητας, την ημερομηνία δημιουργίας και τον σκοπό.",
   "\"A local registry extract:": "\"Ένα απόσπασμα τοπικού μητρώου:",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Απαιτούμενο σύμφωνα με τους κανονισμούς της χώρας, το παρόν έγγραφο χρησιμεύει ως η τρέχουσα «ταυτότητα» της οντότητας, υποδεικνύοντας την κατάστασή της (ενεργή ή κλειστή).",
   "If a registry extract exists, it must not be older than 3 months.": "Εάν υπάρχει απόσπασμα μητρώου, δεν πρέπει να είναι παλαιότερο των 3 μηνών.",
   "Entity name": "Όνομα οντότητας",
   "Registration number (if applicable, based on the country's requirements)": "Αριθμός μητρώου (εάν υπάρχει, βάσει των απαιτήσεων της χώρας)",
@@ -1187,5 +1186,18 @@
   "Phone Number": "Αριθμός τηλεφώνου",
   "Ucard Number or Sharer ID": "Αριθμός Ucard ή αναγνωριστικό κοινόχρηστου",
   "Email": "E-mail",
-  "Optional": "Προαιρετικός"
+  "Optional": "Προαιρετικός",
+  "Required as per the country's regulations, this document serves as the current \"identity card\" for the entity, indicating its status (active or closed).": "Απαιτούμενο σύμφωνα με τους κανονισμούς της χώρας, το παρόν έγγραφο χρησιμεύει ως η τρέχουσα «ταυτότητα» της οντότητας, υποδεικνύοντας την κατάστασή της (ενεργή ή κλειστή).",
+  "⚠ VPN/TOR detected": "⚠ Εντοπίστηκε VPN/TOR",
+  "Make sure all your account details are correct to avoid any delays in receiving your funds.": "Βεβαιωθείτε ότι όλα τα στοιχεία του λογαριασμού σας είναι σωστά για να αποφύγετε τυχόν καθυστερήσεις στην παραλαβή των χρημάτων σας.",
+  "Step 02 – Select Receiving Accounts": "Βήμα 02 – Επιλογή Λογαριασμών Λήψης",
+  "Mobile wallets/mobile money": "Κινητά πορτοφόλια/κινητά χρήματα",
+  "Cash pick-up locations": "Σημεία παραλαβής μετρητών",
+  "Step 05 – Save and Confirm": "Βήμα 05 – Αποθήκευση και επιβεβαίωση",
+  "Once you’ve added all your accounts, save the settings. Now you’re ready to receive payments instantly!": "Μόλις προσθέσετε όλους τους λογαριασμούς σας, αποθηκεύστε τις ρυθμίσεις. Τώρα είστε έτοιμοι να λαμβάνετε πληρωμές άμεσα!",
+  "Step 01 – Go to Settings": "Βήμα 01 – Μεταβείτε στις Ρυθμίσεις",
+  "No subscriptions found": "Δεν βρέθηκαν συνδρομές",
+  "Valid Resident Permits (only if issued by a European country)": "Έγκυρες άδειες παραμονής (μόνο εάν έχουν εκδοθεί από ευρωπαϊκή χώρα)",
+  "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Λειτουργία του/των ατόμου/ων. Αυτές οι πληροφορίες θα επαληθευτούν με το Καταστατικό, ώστε να διασφαλιστεί ότι η λειτουργία του ατόμου του επιτρέπει να δεσμεύει την οντότητα. Αυτό είναι ιδιαίτερα σημαντικό όταν ο αιτών δεν είναι ο πρόεδρος και άλλες λειτουργίες έχουν περιορισμένη εξουσία εκπροσώπησης, όπως αναφέρεται στο Καταστατικό.",
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Απαιτούμενο σύμφωνα με τους κανονισμούς της χώρας, το παρόν έγγραφο χρησιμεύει ως η τρέχουσα «ταυτότητα» της οντότητας, υποδεικνύοντας την κατάστασή της (ενεργή ή κλειστή)."
 }

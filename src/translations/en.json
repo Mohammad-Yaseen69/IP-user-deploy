@@ -3201,7 +3201,6 @@
   "Choose a new file to replace the existing one.": "Choose a new file to replace the existing one.",
   "A proof of creation of the entity: This document typically provides the entity's details, creation date, and purpose.": "A proof of creation of the entity: This document typically provides the entity's details, creation date, and purpose.",
   "\"A local registry extract:": "\"A local registry extract:",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).",
   "The Articles of Association serve as the constitutional document of the entity outlining its operating rules.": "The Articles of Association serve as the constitutional document of the entity outlining its operating rules.",
   "There is no time constraint on this document, meaning the most recent versi requested. Typically, these types of entities require at least one annual meeting that may result in an updated version of the Articles of Association.": "There is no time constraint on this document, meaning the most recent versi requested. Typically, these types of entities require at least one annual meeting that may result in an updated version of the Articles of Association.",
   "Examples of changes that could occur include updates to the entity's name, address, purpose, management board, roles, responsibilities, etc.": "Examples of changes that could occur include updates to the entity's name, address, purpose, management board, roles, responsibilities, etc.",
@@ -3318,5 +3317,18 @@
   "Drag/Drop or upload a file (photo/video/pdf)": "Drag/Drop or upload a file (photo/video/pdf)",
   "Add New Portfolio ItemDrag/Drop or upload a file (photo/video/pdf)": "Add New Portfolio ItemDrag/Drop or upload a file (photo/video/pdf)",
   "No Buyer Reviews Found": "No Buyer Reviews Found",
-  "Ucard Number or Sharer ID": "Ucard Number or Sharer ID"
+  "Ucard Number or Sharer ID": "Ucard Number or Sharer ID",
+  "Required as per the country's regulations, this document serves as the current \"identity card\" for the entity, indicating its status (active or closed).": "Required as per the country's regulations, this document serves as the current \"identity card\" for the entity, indicating its status (active or closed).",
+  "⚠ VPN/TOR detected": "⚠ VPN/TOR detected",
+  "Make sure all your account details are correct to avoid any delays in receiving your funds.": "Make sure all your account details are correct to avoid any delays in receiving your funds.",
+  "Step 02 – Select Receiving Accounts": "Step 02 – Select Receiving Accounts",
+  "Mobile wallets/mobile money": "Mobile wallets/mobile money",
+  "Cash pick-up locations": "Cash pick-up locations",
+  "Step 05 – Save and Confirm": "Step 05 – Save and Confirm",
+  "Once you’ve added all your accounts, save the settings. Now you’re ready to receive payments instantly!": "Once you’ve added all your accounts, save the settings. Now you’re ready to receive payments instantly!",
+  "Step 01 – Go to Settings": "Step 01 – Go to Settings",
+  "No subscriptions found": "No subscriptions found",
+  "Valid Resident Permits (only if issued by a European country)": "Valid Resident Permits (only if issued by a European country)",
+  "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.",
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed)."
 }

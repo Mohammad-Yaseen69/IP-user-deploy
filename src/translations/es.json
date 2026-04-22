@@ -979,7 +979,6 @@
   "This document should be either:": "Este documento debe ser:",
   "A proof of creation of the entity: This document typically provides the entity's details, creation date, and purpose.": "Prueba de creación de la entidad: Este documento suele proporcionar los datos de la entidad, la fecha de creación y su finalidad.",
   "\"A local registry extract:": "\"Un extracto del registro local:",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Este documento, exigido según la normativa del país, sirve como \"tarjeta de identidad\" vigente para la entidad e indica su estado (activa o cerrada).",
   "If a registry extract exists, it must not be older than 3 months.": "Si existe un extracto del registro, no debe tener una antigüedad superior a 3 meses.",
   "Entity name": "Nombre de la entidad",
   "Registration number (if applicable, based on the country's requirements)": "Número de registro (si procede, según los requisitos del país)",
@@ -1187,5 +1186,18 @@
   "Phone Number": "Número de teléfono",
   "Ucard Number or Sharer ID": "Número de Ucard o ID de Sharer",
   "Email": "Correo electrónico",
-  "Optional": "Opcional"
+  "Optional": "Opcional",
+  "Required as per the country's regulations, this document serves as the current \"identity card\" for the entity, indicating its status (active or closed).": "Este documento, exigido según la normativa del país, sirve como \"tarjeta de identidad\" vigente para la entidad e indica su estado (activa o cerrada).",
+  "⚠ VPN/TOR detected": "⚠ VPN/TOR detectado",
+  "Make sure all your account details are correct to avoid any delays in receiving your funds.": "Asegúrese de que todos los datos de su cuenta sean correctos para evitar retrasos en la recepción de sus fondos.",
+  "Step 02 – Select Receiving Accounts": "Paso 02 – Seleccionar cuentas receptoras",
+  "Mobile wallets/mobile money": "Monederos móviles/dinero móvil",
+  "Cash pick-up locations": "Lugares para retirar efectivo",
+  "Step 05 – Save and Confirm": "Paso 05 – Guardar y confirmar",
+  "Once you’ve added all your accounts, save the settings. Now you’re ready to receive payments instantly!": "Una vez que hayas añadido todas tus cuentas, guarda la configuración. ¡Ya puedes recibir pagos al instante!",
+  "Step 01 – Go to Settings": "Paso 01 – Ve a Configuración",
+  "No subscriptions found": "No se encontraron suscripciones",
+  "Valid Resident Permits (only if issued by a European country)": "Permisos de residencia válidos (solo si han sido expedidos por un país europeo)",
+  "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Función de la(s) persona(s). Esta información se cotejará con los Estatutos para asegurar que la función de la persona le permite obligar a la entidad. Esto es especialmente importante cuando el solicitante no es el presidente y otras funciones tienen autoridad de representación limitada, según lo estipulado en los Estatutos.",
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Este documento, exigido según la normativa del país, sirve como \"tarjeta de identidad\" vigente para la entidad e indica su estado (activa o cerrada)."
 }

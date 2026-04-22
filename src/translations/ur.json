@@ -3185,7 +3185,7 @@
   "Choose a new file to replace the existing one.": "موجودہ فائل کو تبدیل کرنے کے لیے ایک نئی فائل کا انتخاب کریں۔",
   "A proof of creation of the entity: This document typically provides the entity's details, creation date, and purpose.": "ہستی کی تخلیق کا ثبوت: یہ دستاویز عام طور پر ہستی کی تفصیلات، تخلیق کی تاریخ اور مقصد فراہم کرتی ہے۔",
   "\"A local registry extract:": "\"ایک مقامی رجسٹری اقتباس:",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "ملک کے ضوابط کے مطابق ضروری ہے، یہ دستاویز ادارے کے لیے موجودہ \\\"شناختی کارڈ\\\" کے طور پر کام کرتی ہے، جو اس کی حیثیت (فعال یا بند) کی نشاندہی کرتی ہے۔",
+  "Required as per the country's regulations, this document serves as the current \"identity card\" for the entity, indicating its status (active or closed).": "ملک کے ضوابط کے مطابق ضروری ہے، یہ دستاویز ادارے کے لیے موجودہ \\\"شناختی کارڈ\\\" کے طور پر کام کرتی ہے، جو اس کی حیثیت (فعال یا بند) کی نشاندہی کرتی ہے۔",
   "The Articles of Association serve as the constitutional document of the entity outlining its operating rules.": "ایسوسی ایشن کے مضامین ادارے کی آئینی دستاویز کے طور پر کام کرتے ہیں جو اس کے آپریٹنگ قوانین کا خاکہ پیش کرتے ہیں۔",
   "There is no time constraint on this document, meaning the most recent versi requested. Typically, these types of entities require at least one annual meeting that may result in an updated version of the Articles of Association.": "اس دستاویز میں وقت کی کوئی پابندی نہیں ہے، جس کا مطلب ہے کہ سب سے حالیہ ورژن کی درخواست کی گئی ہے۔ عام طور پر، اس قسم کے اداروں کو کم از کم ایک سالانہ میٹنگ کی ضرورت ہوتی ہے جس کے نتیجے میں آرٹیکلز آف ایسوسی ایشن کا تازہ ترین ورژن ہو سکتا ہے۔",
   "* Appointment/Removal/Changes on Board of Management Members:": "بورڈ آف مینجمنٹ ممبران کی تقرری/ ہٹانا/ تبدیلیاں:",
@@ -3297,5 +3297,16 @@
   "Drag/Drop or upload a file (photo/video/pdf)": "فائل کو گھسیٹیں/ چھوڑیں یا اپ لوڈ کریں (تصویر/ویڈیو/پی ڈی ایف)",
   "Add New Portfolio ItemDrag/Drop or upload a file (photo/video/pdf)": "نیا پورٹ فولیو آئٹم شامل کریں ڈریگ/ڈراپ یا فائل اپ لوڈ کریں (تصویر/ویڈیو/پی ڈی ایف)",
   "No Buyer Reviews Found": "کوئی خریدار کے جائزے نہیں ملے",
-  "Ucard Number or Sharer ID": "یوکارڈ نمبر یا شیئرر آئی ڈی"
+  "Ucard Number or Sharer ID": "یوکارڈ نمبر یا شیئرر آئی ڈی",
+  "⚠ VPN/TOR detected": "⚠ VPN/TOR کا پتہ چلا",
+  "Make sure all your account details are correct to avoid any delays in receiving your funds.": "اس بات کو یقینی بنائیں کہ آپ کے اکاؤنٹ کی تمام تفصیلات درست ہیں تاکہ آپ کے فنڈز کی وصولی میں کسی تاخیر سے بچا جا سکے۔",
+  "Step 02 – Select Receiving Accounts": "مرحلہ 02 – وصول کرنے والے اکاؤنٹس کو منتخب کریں۔",
+  "Mobile wallets/mobile money": "موبائل بٹوے/موبائل منی",
+  "Cash pick-up locations": "کیش لینے کے مقامات",
+  "Step 05 – Save and Confirm": "مرحلہ 05 - محفوظ کریں اور تصدیق کریں۔",
+  "Once you’ve added all your accounts, save the settings. Now you’re ready to receive payments instantly!": "اپنے تمام اکاؤنٹس کو شامل کرنے کے بعد، ترتیبات کو محفوظ کریں۔ اب آپ فوری طور پر ادائیگیاں وصول کرنے کے لیے تیار ہیں!",
+  "Step 01 – Go to Settings": "مرحلہ 01 - ترتیبات پر جائیں۔",
+  "No subscriptions found": "کوئی رکنیت نہیں ملی",
+  "Valid Resident Permits (only if issued by a European country)": "درست رہائشی اجازت نامے (صرف اس صورت میں جب کسی یورپی ملک نے جاری کیا ہو)",
+  "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "فرد (افراد) کا کام۔ اس معلومات کی آرٹیکلز آف ایسوسی ایشن کے ساتھ کراس تصدیق کی جائے گی تاکہ یہ یقینی بنایا جا سکے کہ فرد کا کام انہیں ادارے کو پابند کرنے کی اجازت دیتا ہے۔ یہ خاص طور پر اہم ہے جب درخواست دہندہ صدر نہیں ہے، اور دیگر افعال میں محدود نمائندگی کا اختیار ہوتا ہے جیسا کہ ایسوسی ایشن کے مضامین میں بیان کیا گیا ہے۔"
 }

@@ -979,7 +979,6 @@
   "This document should be either:": "Tämän asiakirjan tulisi olla joko:",
   "A proof of creation of the entity: This document typically provides the entity's details, creation date, and purpose.": "Todiste yksikön luomisesta: Tämä asiakirja sisältää tyypillisesti yksikön tiedot, luomispäivämäärän ja tarkoituksen.",
   "\"A local registry extract:": "\"Paikallisen rekisteriotteen ote:",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Maan määräysten edellyttämä tämä asiakirja toimii yhteisön nykyisenä \"henkilöllisyystodistuksena\" ja osoittaa sen tilan (aktiivinen tai suljettu).",
   "If a registry extract exists, it must not be older than 3 months.": "Jos rekisteriote on olemassa, se ei saa olla yli 3 kuukautta vanha.",
   "Entity name": "Yksikön nimi",
   "Registration number (if applicable, based on the country's requirements)": "Rekisterinumero (jos sovellettavissa, maan vaatimusten mukaisesti)",
@@ -1187,5 +1186,18 @@
   "Phone Number": "Puhelinnumero",
   "Ucard Number or Sharer ID": "Ucard-numero tai jakajatunnus",
   "Email": "Sähköposti",
-  "Optional": "Valinnainen"
+  "Optional": "Valinnainen",
+  "Required as per the country's regulations, this document serves as the current \"identity card\" for the entity, indicating its status (active or closed).": "Maan määräysten edellyttämä tämä asiakirja toimii yhteisön nykyisenä \"henkilöllisyystodistuksena\" ja osoittaa sen tilan (aktiivinen tai suljettu).",
+  "⚠ VPN/TOR detected": "⚠ VPN/TOR havaittu",
+  "Make sure all your account details are correct to avoid any delays in receiving your funds.": "Varmista, että kaikki tilitietosi ovat oikein, jotta varojen vastaanottamisessa ei ole viiveitä.",
+  "Step 02 – Select Receiving Accounts": "Vaihe 02 – Valitse vastaanottavat tilit",
+  "Mobile wallets/mobile money": "Mobiililompakot/mobiiliraha",
+  "Cash pick-up locations": "Käteisen noutopaikat",
+  "Step 05 – Save and Confirm": "Vaihe 05 – Tallenna ja vahvista",
+  "Once you’ve added all your accounts, save the settings. Now you’re ready to receive payments instantly!": "Kun olet lisännyt kaikki tilisi, tallenna asetukset. Nyt olet valmis vastaanottamaan maksuja välittömästi!",
+  "Step 01 – Go to Settings": "Vaihe 01 – Siirry asetuksiin",
+  "No subscriptions found": "Ei tilauksia löytynyt",
+  "Valid Resident Permits (only if issued by a European country)": "Voimassa olevat oleskeluluvat (vain jos ne on myöntänyt jokin Euroopan maa)",
+  "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Henkilön/henkilöiden tehtävänimike. Nämä tiedot tarkistetaan yhtiöjärjestyksen kanssa sen varmistamiseksi, että henkilön tehtävänimike sallii hänen sitoa yhteisöä. Tämä on erityisen tärkeää silloin, kun hakija ei ole toimitusjohtaja ja muilla tehtävillä on yhtiöjärjestyksessä mainitut rajoitetut edustusvaltuudet.",
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Maan määräysten edellyttämä tämä asiakirja toimii yhteisön nykyisenä \"henkilöllisyystodistuksena\" ja osoittaa sen tilan (aktiivinen tai suljettu)."
 }

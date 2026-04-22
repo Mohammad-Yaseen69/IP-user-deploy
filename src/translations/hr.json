@@ -979,7 +979,6 @@
   "This document should be either:": "Ovaj dokument treba biti ili:",
   "A proof of creation of the entity: This document typically provides the entity's details, creation date, and purpose.": "Dokaz o stvaranju entiteta: Ovaj dokument obično sadrži podatke o entitetu, datum stvaranja i svrhu.",
   "\"A local registry extract:": "\"Izvod iz lokalnog registra:\"",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Ovaj dokument, koji je obavezan prema državnim propisima, služi kao trenutna \"osobna iskaznica\" za subjekt, pokazujući njegov status (aktivan ili zatvoren).",
   "If a registry extract exists, it must not be older than 3 months.": "Ako postoji izvadak iz registra, ne smije biti stariji od 3 mjeseca.",
   "Entity name": "Naziv entiteta",
   "Registration number (if applicable, based on the country's requirements)": "Registracijski broj (ako je primjenjivo, na temelju zahtjeva zemlje)",
@@ -1186,5 +1185,18 @@
   "Phone Number": "Broj telefona",
   "Ucard Number or Sharer ID": "Broj Ucard kartice ili ID dijeljenja",
   "Email": "E-pošta",
-  "Optional": "Izborno"
+  "Optional": "Izborno",
+  "Required as per the country's regulations, this document serves as the current \"identity card\" for the entity, indicating its status (active or closed).": "Ovaj dokument, koji je obavezan prema državnim propisima, služi kao trenutna \"osobna iskaznica\" za subjekt, pokazujući njegov status (aktivan ili zatvoren).",
+  "⚠ VPN/TOR detected": "⚠ Otkriven VPN/TOR",
+  "Make sure all your account details are correct to avoid any delays in receiving your funds.": "Provjerite jesu li svi podaci o vašem računu točni kako biste izbjegli kašnjenja u primanju sredstava.",
+  "Step 02 – Select Receiving Accounts": "Korak 02 – Odaberite račune primatelja",
+  "Mobile wallets/mobile money": "Mobilni novčanici/mobilni novac",
+  "Cash pick-up locations": "Mjesta za preuzimanje gotovine",
+  "Step 05 – Save and Confirm": "Korak 05 – Spremi i potvrdi",
+  "Once you’ve added all your accounts, save the settings. Now you’re ready to receive payments instantly!": "Nakon što dodate sve svoje račune, spremite postavke. Sada ste spremni za trenutno primanje uplata!",
+  "Step 01 – Go to Settings": "Korak 01 – Idite na Postavke",
+  "No subscriptions found": "Nisu pronađene pretplate",
+  "Valid Resident Permits (only if issued by a European country)": "Važeće boravišne dozvole (samo ako ih je izdala europska zemlja)",
+  "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Funkcija pojedinca/pojedinaca. Ove će se informacije unakrsno provjeriti sa Statutom kako bi se osiguralo da funkcija pojedinca dopušta obvezivanje subjekta. To je posebno važno kada podnositelj zahtjeva nije predsjednik, a druge funkcije imaju ograničene ovlasti zastupanja kako je navedeno u Statutu.",
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Ovaj dokument, koji je obavezan prema državnim propisima, služi kao trenutna \"osobna iskaznica\" za subjekt, pokazujući njegov status (aktivan ili zatvoren)."
 }

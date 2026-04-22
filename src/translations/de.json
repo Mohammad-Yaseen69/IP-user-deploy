@@ -3146,7 +3146,6 @@
   "Choose a new file to replace the existing one.": "Wählen Sie eine neue Datei aus, um die vorhandene zu ersetzen.",
   "A proof of creation of the entity: This document typically provides the entity's details, creation date, and purpose.": "Ein Nachweis über die Gründung der juristischen Person: Dieses Dokument enthält in der Regel Angaben zur juristischen Person, das Gründungsdatum und den Zweck.",
   "\"A local registry extract:": "„Ein lokaler Registerauszug:",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Dieses Dokument ist gemäß den Bestimmungen des Landes erforderlich und dient als aktueller „Ausweis“ der Organisation, aus dem ihr Status (aktiv oder geschlossen) hervorgeht.",
   "The Articles of Association serve as the constitutional document of the entity outlining its operating rules.": "Die Satzung dient als Verfassungsdokument der Organisation und legt deren Betriebsregeln fest.",
   "There is no time constraint on this document, meaning the most recent versi requested. Typically, these types of entities require at least one annual meeting that may result in an updated version of the Articles of Association.": "Für dieses Dokument gibt es keine zeitliche Beschränkung; es wird die aktuellste Version benötigt. Üblicherweise benötigen solche Organisationen mindestens eine jährliche Versammlung, die gegebenenfalls zu einer Aktualisierung der Satzung führt.",
   "Examples of changes that could occur include updates to the entity's name, address, purpose, management board, roles, responsibilities, etc.": "Beispiele für mögliche Änderungen sind Aktualisierungen des Namens, der Adresse, des Zwecks, des Vorstands, der Rollen, der Verantwortlichkeiten usw. der Organisation.",
@@ -3261,5 +3260,18 @@
   "Select State": "Bundesland auswählen",
   "Add New Portfolio ItemDrag/Drop or upload a file (photo/video/pdf)": "Neuen Portfolioeintrag hinzufügen: Datei (Foto/Video/PDF) per Drag & Drop hinzufügen oder hochladen",
   "No Buyer Reviews Found": "Keine Käuferbewertungen gefunden",
-  "Ucard Number or Sharer ID": "Ucard-Nummer oder Sharer-ID"
+  "Ucard Number or Sharer ID": "Ucard-Nummer oder Sharer-ID",
+  "Required as per the country's regulations, this document serves as the current \"identity card\" for the entity, indicating its status (active or closed).": "Dieses Dokument ist gemäß den Bestimmungen des Landes erforderlich und dient als aktueller „Ausweis“ der Organisation, aus dem ihr Status (aktiv oder geschlossen) hervorgeht.",
+  "⚠ VPN/TOR detected": "⚠ VPN/TOR erkannt",
+  "Make sure all your account details are correct to avoid any delays in receiving your funds.": "Bitte stellen Sie sicher, dass alle Ihre Kontodaten korrekt sind, um Verzögerungen beim Empfang Ihrer Gelder zu vermeiden.",
+  "Step 02 – Select Receiving Accounts": "Schritt 02 – Empfangskonten auswählen",
+  "Mobile wallets/mobile money": "Mobile Geldbörsen/Mobiles Geld",
+  "Cash pick-up locations": "Bargeldabholstellen",
+  "Step 05 – Save and Confirm": "Schritt 05 – Speichern und Bestätigen",
+  "Once you’ve added all your accounts, save the settings. Now you’re ready to receive payments instantly!": "Sobald Sie alle Ihre Konten hinzugefügt haben, speichern Sie die Einstellungen. Jetzt können Sie Zahlungen sofort empfangen!",
+  "Step 01 – Go to Settings": "Schritt 01 – Gehen Sie zu den Einstellungen",
+  "No subscriptions found": "Keine Abonnements gefunden",
+  "Valid Resident Permits (only if issued by a European country)": "Gültige Aufenthaltsgenehmigungen (nur wenn sie von einem europäischen Land ausgestellt wurden)",
+  "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Funktion der Person(en). Diese Angaben werden mit der Satzung abgeglichen, um sicherzustellen, dass die Funktion der Person sie zur Vertretung der Organisation berechtigt. Dies ist insbesondere dann wichtig, wenn der Antragsteller nicht der Präsident ist und andere Funktionen gemäß der Satzung nur eine eingeschränkte Vertretungsbefugnis haben.",
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Dieses Dokument ist gemäß den Bestimmungen des Landes erforderlich und dient als aktueller „Ausweis“ der Organisation, aus dem ihr Status (aktiv oder geschlossen) hervorgeht."
 }

@@ -6,7 +6,6 @@
   "This document should be either:": "Bu sənəd aşağıdakılardan biri olmalıdır:",
   "A proof of creation of the entity: This document typically provides the entity's details, creation date, and purpose.": "Müəssisənin yaradılmasının sübutu: Bu sənəd adətən müəssisənin təfərrüatlarını, yaradılma tarixini və məqsədini təqdim edir.",
   "\"A local registry extract:": "\"Yerli reyestrdən çıxarış:",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Ölkənin qaydalarına uyğun olaraq tələb olunan bu sənəd, qurumun statusunu (aktiv və ya bağlanmış) göstərən cari \"şəxsiyyət vəsiqəsi\" kimi xidmət edir.",
   "If a registry extract exists, it must not be older than 3 months.": "Əgər reyestr çıxarışı mövcuddursa, o, 3 aydan köhnə olmamalıdır.",
   "Entity name": "Müəssisənin adı",
   "Registration number (if applicable, based on the country's requirements)": "Qeydiyyat nömrəsi (əgər varsa, ölkənin tələblərinə əsasən)",
@@ -310,5 +309,18 @@
   "Ucard Number or Sharer ID": "UCard Nömrəsi və ya Paylaşımçı ID-si",
   "Email": "E-poçt",
   "Optional": "Könüllü",
-  "Please select a date at least 15 years ago or earlier.": "Zəhmət olmasa, ən azı 15 il əvvəl və ya daha əvvəl bir tarix seçin."
+  "Please select a date at least 15 years ago or earlier.": "Zəhmət olmasa, ən azı 15 il əvvəl və ya daha əvvəl bir tarix seçin.",
+  "Required as per the country's regulations, this document serves as the current \"identity card\" for the entity, indicating its status (active or closed).": "Ölkənin qaydalarına uyğun olaraq tələb olunan bu sənəd, qurumun statusunu (aktiv və ya bağlanmış) göstərən cari \"şəxsiyyət vəsiqəsi\" kimi xidmət edir.",
+  "⚠ VPN/TOR detected": "⚠ VPN/TOR aşkarlandı",
+  "Make sure all your account details are correct to avoid any delays in receiving your funds.": "Vəsaitlərinizin alınmasında gecikmələrin qarşısını almaq üçün bütün hesab məlumatlarınızı düzgün daxil etdiyinizdən əmin olun.",
+  "Step 02 – Select Receiving Accounts": "Addım 02 – Qəbul edən Hesabları Seçin",
+  "Mobile wallets/mobile money": "Mobil cüzdanlar/mobil pullar",
+  "Cash pick-up locations": "Nağd pul götürmə yerləri",
+  "Step 05 – Save and Confirm": "Addım 05 – Yadda saxla və təsdiqlə",
+  "Once you’ve added all your accounts, save the settings. Now you’re ready to receive payments instantly!": "Bütün hesablarınızı əlavə etdikdən sonra parametrləri yadda saxlayın. İndi ödənişləri dərhal almağa hazırsınız!",
+  "Step 01 – Go to Settings": "Addım 01 – Parametrlərə keçin",
+  "No subscriptions found": "Abunəlik tapılmadı",
+  "Valid Resident Permits (only if issued by a European country)": "Etibarlı Yaşayış İcazələri (yalnız Avropa ölkəsi tərəfindən verildikdə)",
+  "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Fərdin(lərin) funksiyası. Bu məlumat, fərdin funksiyasının qurumla əlaqə qurmasına imkan verdiyini təmin etmək üçün Nizamnamə ilə çarpaz təsdiqlənəcək. Bu, xüsusilə ərizəçinin prezident olmadığı və Nizamnamədə göstərildiyi kimi digər funksiyaların məhdud təmsilçilik səlahiyyətləri olduqda vacibdir.",
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Ölkənin qaydalarına uyğun olaraq tələb olunan bu sənəd, qurumun statusunu (aktiv və ya bağlanmış) göstərən cari \"şəxsiyyət vəsiqəsi\" kimi xidmət edir."
 }

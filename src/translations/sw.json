@@ -3187,7 +3187,7 @@
   "Choose a new file to replace the existing one.": "Chagua faili mpya ili kubadilisha iliyopo.",
   "A proof of creation of the entity: This document typically provides the entity's details, creation date, and purpose.": "Uthibitisho wa kuundwa kwa huluki: Hati hii kwa kawaida hutoa maelezo ya huluki, tarehe ya kuundwa, na madhumuni yake.",
   "\"A local registry extract:": "\"Dondoo la usajili wa ndani:",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Ikihitajika kulingana na kanuni za nchi, hati hii hutumika kama \"kitambulisho\" cha sasa cha shirika, ikionyesha hali yake (inayotumika au imefungwa).",
+  "Required as per the country's , this document serves as the current \"identity card\" for the entity, indicating its status (active or closed).": "Ikihitajika kulingana na kanuni za nchi, hati hii hutumika kama \"kitambulisho\" cha sasa cha shirika, ikionyesha hali yake (inayotumika au imefungwa).",
   "The Articles of Association serve as the constitutional document of the entity outlining its operating rules.": "Hati za Ushirika hutumika kama hati ya kikatiba ya chombo hicho inayoelezea sheria zake za uendeshaji.",
   "There is no time constraint on this document, meaning the most recent versi requested. Typically, these types of entities require at least one annual meeting that may result in an updated version of the Articles of Association.": "Hakuna kizuizi cha muda kwenye hati hii, ikimaanisha toleo la hivi karibuni lililoombwa. Kwa kawaida, aina hizi za vyombo zinahitaji angalau mkutano mmoja wa kila mwaka ambao unaweza kusababisha toleo lililosasishwa la Makala ya Chama.",
   "* Appointment/Removal/Changes on Board of Management Members:": "* Uteuzi/Kuondolewa/Mabadiliko kwenye Wajumbe wa Bodi ya Usimamizi:",
@@ -3299,5 +3299,18 @@
   "Drag/Drop or upload a file (photo/video/pdf)": "Buruta/Angusha au pakia faili (picha/video/pdf)",
   "Add New Portfolio ItemDrag/Drop or upload a file (photo/video/pdf)": "Ongeza Kipengee Kipya cha KwinginekoBuruta/Achilia au pakia faili (picha/video/pdf)",
   "No Buyer Reviews Found": "Hakuna Maoni ya Mnunuzi Yaliyopatikana",
-  "Ucard Number or Sharer ID": "Nambari ya Ucard au Kitambulisho cha Mshiriki"
+  "Ucard Number or Sharer ID": "Nambari ya Ucard au Kitambulisho cha Mshiriki",
+  "Required as per the country's regulations, this document serves as the current \"identity card\" for the entity, indicating its status (active or closed).": "Ikihitajika kulingana na kanuni za nchi, hati hii hutumika kama \"kitambulisho\" cha sasa cha shirika, ikionyesha hali yake (inayotumika au imefungwa).",
+  "⚠ VPN/TOR detected": "⚠ VPN/TOR imegunduliwa",
+  "Make sure all your account details are correct to avoid any delays in receiving your funds.": "Hakikisha maelezo yote ya akaunti yako ni sahihi ili kuepuka ucheleweshaji wowote wa kupokea pesa zako.",
+  "Step 02 – Select Receiving Accounts": "Hatua ya 02 - Chagua Akaunti za Kupokea",
+  "Mobile wallets/mobile money": "Pochi za simu/pesa za simu",
+  "Cash pick-up locations": "Maeneo ya kuchukua pesa taslimu",
+  "Step 05 – Save and Confirm": "Hatua ya 05 - Hifadhi na Uthibitishe",
+  "Once you’ve added all your accounts, save the settings. Now you’re ready to receive payments instantly!": "Ukishaongeza akaunti zako zote, hifadhi mipangilio. Sasa uko tayari kupokea malipo mara moja!",
+  "Step 01 – Go to Settings": "Hatua ya 01 - Nenda kwenye Mipangilio",
+  "No subscriptions found": "Hakuna usajili uliopatikana",
+  "Valid Resident Permits (only if issued by a European country)": "Vibali Halali vya Ukazi (ikiwa tu vimetolewa na nchi ya Ulaya)",
+  "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Kazi ya mtu binafsi/watu. Taarifa hii itathibitishwa na Hati za Ushirika ili kuhakikisha kwamba kazi ya mtu binafsi inamruhusu kuifunga taasisi hiyo. Hii ni muhimu hasa wakati mwombaji si rais, na kazi zingine zina mamlaka ndogo ya uwakilishi kama ilivyoelezwa katika Hati za Ushirika.",
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Ikihitajika kulingana na kanuni za nchi, hati hii hutumika kama \"kitambulisho\" cha sasa cha shirika, ikionyesha hali yake (inayotumika au imefungwa)."
 }

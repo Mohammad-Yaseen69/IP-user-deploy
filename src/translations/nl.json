@@ -979,7 +979,6 @@
   "This document should be either:": "Dit document moet aan een van de volgende voorwaarden voldoen:",
   "A proof of creation of the entity: This document typically provides the entity's details, creation date, and purpose.": "Een bewijs van oprichting van de entiteit: Dit document bevat doorgaans de gegevens van de entiteit, de oprichtingsdatum en het doel ervan.",
   "\"A local registry extract:": "\"Een uittreksel uit het lokale register:",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Dit document, dat vereist is volgens de nationale regelgeving, dient als de huidige \"identiteitskaart\" van de entiteit en geeft de status ervan aan (actief of gesloten).",
   "If a registry extract exists, it must not be older than 3 months.": "Als er een uittreksel uit het register beschikbaar is, mag dit niet ouder zijn dan 3 maanden.",
   "Entity name": "Entiteitsnaam",
   "Registration number (if applicable, based on the country's requirements)": "Registratienummer (indien van toepassing, op basis van de vereisten van het betreffende land)",
@@ -1187,5 +1186,18 @@
   "Phone Number": "Telefoonnummer",
   "Ucard Number or Sharer ID": "Ucard-nummer of deler-ID",
   "Email": "E-mail",
-  "Optional": "Optioneel"
+  "Optional": "Optioneel",
+  "Required as per the country's regulations, this document serves as the current \"identity card\" for the entity, indicating its status (active or closed).": "Dit document, dat vereist is volgens de nationale regelgeving, dient als de huidige \"identiteitskaart\" van de entiteit en geeft de status ervan aan (actief of gesloten).",
+  "⚠ VPN/TOR detected": "⚠ VPN/TOR gedetecteerd",
+  "Make sure all your account details are correct to avoid any delays in receiving your funds.": "Zorg ervoor dat al uw accountgegevens correct zijn om vertraging bij de ontvangst van uw geld te voorkomen.",
+  "Step 02 – Select Receiving Accounts": "Stap 2 – Selecteer de ontvangende rekeningen",
+  "Mobile wallets/mobile money": "Mobiele portemonnees/mobiel geld",
+  "Cash pick-up locations": "Locaties waar contant geld kan worden opgehaald",
+  "Step 05 – Save and Confirm": "Stap 5 – Opslaan en bevestigen",
+  "Once you’ve added all your accounts, save the settings. Now you’re ready to receive payments instantly!": "Nadat je al je accounts hebt toegevoegd, sla je de instellingen op. Nu ben je klaar om direct betalingen te ontvangen!",
+  "Step 01 – Go to Settings": "Stap 1 – Ga naar Instellingen",
+  "No subscriptions found": "Geen abonnementen gevonden",
+  "Valid Resident Permits (only if issued by a European country)": "Geldige verblijfsvergunningen (alleen indien afgegeven door een Europees land)",
+  "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Functie van de persoon/personen. Deze informatie zal worden vergeleken met de statuten om te garanderen dat de functie van de persoon/personen hem/haar in staat stelt de entiteit te binden. Dit is met name belangrijk wanneer de aanvrager niet de voorzitter is en andere functies een beperkte vertegenwoordigingsbevoegdheid hebben, zoals vermeld in de statuten.",
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Dit document, dat vereist is volgens de nationale regelgeving, dient als de huidige \"identiteitskaart\" van de entiteit en geeft de status ervan aan (actief of gesloten)."
 }
