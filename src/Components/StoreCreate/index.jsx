@@ -107,7 +107,7 @@ const StoreCreate = () => {
                         ))}
                     </div>
                     <button onClick={() => setShowModal(true)}>{t("Get Started / Create Shop")}</button>
-                    <p className={styles.links}>
+                    {/* <p className={styles.links}>
                         <span className={styles.link}>
                             {t("eShop Guide")}
                         </span>
@@ -116,7 +116,7 @@ const StoreCreate = () => {
                             · {t("FAQS")}
                         </span>
 
-                    </p>
+                    </p> */}
                 </div>
                 <div className={styles.right}>
                     <img src={bg} alt="Store Illustration" loading="lazy" />

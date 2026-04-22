@@ -135,10 +135,10 @@ const AccountItem = ({ data, ssa }) => {
                                 </span>
                             </>
                             :
-                            <span style={{ fontWeight: 600 }}>Coming Soon</span>
+                            <span style={{ fontWeight: 600 }}>{t("Coming Soon")}</span>
                     }
                     <Modal isOpen={showDelOtp} toggle={() => setShowDelOtp(!showDelOtp)}>
-                        <ModalHeader toggle={() => setShowDelOtp(!showDelOtp)}>Confirm</ModalHeader>
+                        <ModalHeader toggle={() => setShowDelOtp(!showDelOtp)}>{t("Confirm")}</ModalHeader>
                         <ModalBody>
                             <OTPConfirmation callback={(setter) => setter(true)} setter={() => { }} setterValue={false} hideOtp={() => setShowDelOtp(false)} />
                         </ModalBody>
@@ -146,23 +146,23 @@ const AccountItem = ({ data, ssa }) => {
                 </div>
             </div>
             <Modal isOpen={showModal} toggle={() => setShowModal(!showModal)}>
-                <ModalHeader toggle={() => setShowModal(!showModal)}>Activate Account</ModalHeader>
+                <ModalHeader toggle={() => setShowModal(!showModal)}>{t("Activate Account")}</ModalHeader>
                 <ModalBody style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
-                    <h5 style={{ fontSize: "1.5rem" }}>Enter the below code in Chatbot</h5>
+                    <h5 style={{ fontSize: "1.5rem" }}>{t("Enter the below code in Chatbot")}       </h5>
                     <h6 style={{ color: "green", fontSize: "1.1rem" }}>{conLink}</h6>
-                    <p style={{ marginBottom: "0" }}>Code will expire in <span style={{ fontSize: "1.1rem", fontWeight: "700" }}>{timer}</span> seconds</p>
+                    <p style={{ marginBottom: "0" }}>{t("Code will expire in")} <span style={{ fontSize: "1.1rem", fontWeight: "700" }}>{timer}</span> {t("seconds")}</p>
                 </ModalBody>
             </Modal>
             <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-                <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
+                <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation callback={(setter) => otpCallback(setter)} setter={setChecked} setterValue={false} hideOtp={() => setShowOtp(false)} />
                 </ModalBody>
             </Modal>
             <Modal isOpen={noUser} toggle={() => setNoUser(!noUser)}>
-                <ModalHeader toggle={() => setNoUser(!noUser)}>No Username</ModalHeader>
+                <ModalHeader toggle={() => setNoUser(!noUser)}>{t("No Username")}</ModalHeader>
                 <ModalBody>
-                    <h5>You haven't set the username yet. <span style={{ color: "#5926f0", fontWeight: 700, cursor: "pointer" }} onClick={() => {
+                    <h5>{t("You haven't set the username yet.")} <span style={{ color: "#5926f0", fontWeight: 700, cursor: "pointer" }} onClick={() => {
                         setNoUser(!noUser)
                         ssa(true)
                         const scrollOptions = {
@@ -172,7 +172,7 @@ const AccountItem = ({ data, ssa }) => {
                             top: 400,
                         };
                         document.querySelector("#basic")?.scrollIntoView(scrollOptions)
-                    }}>Set Now</span></h5>
+                    }}>{t("Set Now")}</span></h5>
                 </ModalBody>
             </Modal>
         </div>

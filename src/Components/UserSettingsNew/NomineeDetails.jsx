@@ -112,16 +112,16 @@ const NomineeDetails = ({ nominee, setNominee }) => {
                 </div>
                 <div className={styles.top_right}>
                     <div className={styles.inp_con}>
-                        <Label>Full Name</Label>
+                        <Label>{t("Full Name")}</Label>
                         <Input placeholder={t(`Nominee's Full Name`)} value={fullName} disabled={!isEditMode} readOnly={!isEditMode} onChange={e => setFullName(e.target.value)} />
                     </div>
                     <div className={styles.mul_inp}>
                         <div className={styles.inp_con}>
-                            <Label>Date Of Birth</Label>
+                            <Label>{t("Date Of Birth")}</Label>
                             <Input type='date' placeholder={`Nominee's Date Of Birth`} value={dob} disabled={!isEditMode} readOnly={!isEditMode} onChange={e => setDob(e.target.value)} />
                         </div>
                         <div className={styles.inp_con}>
-                            <Label>Gender</Label>
+                            <Label>{t("Gender")}</Label>
                             <Input type='select' value={gender} disabled={!isEditMode} readOnly={!isEditMode} onChange={e => setGender(e.target.value)}>
                                 <option value="" disabled>--{t("Select Gender")}--</option>
                                 <option value="male">{t("Male")}</option>
@@ -133,9 +133,9 @@ const NomineeDetails = ({ nominee, setNominee }) => {
             </div>
             <div className={styles.mul_inp}>
                 <div className={styles.inp_con}>
-                    <Label>Relation with Nominee</Label>
+                    <Label>{t("Relation with Nominee")}</Label>
                     <Input type='select' value={relationship} disabled={!isEditMode} readOnly={!isEditMode} onChange={e => setRelationship(e.target.value)}>
-                    <option value="" disabled>--{t("Select Relation")}--</option>
+                        <option value="" disabled>--{t("Select Relation")}--</option>
                         <option value="brother">{t("Brother")}</option>
                         <option value="sister">{t("Sister")}</option>
                         <option value="son">{t("Son")}</option>
@@ -143,7 +143,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
                     </Input>
                 </div>
                 <div className={styles.inp_con}>
-                    <Label>Nominee Contact Number</Label>
+                    <Label>{t("Nominee Contact Number")}</Label>
                     <PhoneInput
                         placeholder="Enter Phone number"
                         value={contact}
@@ -165,8 +165,8 @@ const NomineeDetails = ({ nominee, setNominee }) => {
                 </div>
             </div>
             <div className={styles.inp_con}>
-                <Label>Nominee Address</Label>
-                <Input type='textarea' placeholder='Nominee Permanent Address' value={address} disabled={!isEditMode} readOnly={!isEditMode} onChange={e => setAddress(e.target.value)} />
+                <Label>{t("Nominee Address")}</Label>
+                <Input type='textarea' placeholder={t("Nominee Permanent Address")} value={address} disabled={!isEditMode} readOnly={!isEditMode} onChange={e => setAddress(e.target.value)} />
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "1.5rem", gap: "1rem" }}>
                 {
@@ -184,7 +184,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
                                     setIsEditMode(false)
                                 }}
                             >
-                                Cancel
+                                {t("Cancel")}
                             </Button>
                             <Button
                                 style={{
@@ -196,7 +196,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
                                 onClick={() => setShowOtp(true)}
                                 disabled={!fullName || !userImage || !dob || !address || !relationship || !gender || !contact || contact.length < 9}
                             >
-                                Save
+                                {t("Save")}
                             </Button>
                         </>
                         :
@@ -210,7 +210,7 @@ const NomineeDetails = ({ nominee, setNominee }) => {
                                 }}
                                 onClick={() => setShowDelOtp(true)}
                             >
-                                Delete Nominee
+                                {t("Delete Nominee")}
                             </Button>
                             <Button
                                 style={{
@@ -223,19 +223,19 @@ const NomineeDetails = ({ nominee, setNominee }) => {
                                     setIsEditMode(true)
                                 }}
                             >
-                                Update Nominee
+                                {t("Update Nominee")}
                             </Button>
                         </>
                 }
             </div>
             <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-                <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
+                <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation callback={(setter) => updateNomineeHandler(setter)} setter={setShowSuccess} setterValue={true} hideOtp={() => setShowOtp(false)} />
                 </ModalBody>
             </Modal>
             <Modal isOpen={showDelOtp} toggle={() => setShowDelOtp(!showDelOtp)}>
-                <ModalHeader toggle={() => setShowDelOtp(!showDelOtp)}>Confirm</ModalHeader>
+                <ModalHeader toggle={() => setShowDelOtp(!showDelOtp)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation callback={(setter) => deleteNomineeHandler(setter)} setter={setShowSuccess} setterValue={true} hideOtp={() => setShowDelOtp(false)} />
                 </ModalBody>

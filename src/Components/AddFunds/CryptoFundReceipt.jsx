@@ -1,8 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { Card, CardBody } from "reactstrap";
 
 const isBig = window.innerWidth > 1000
 
 const CryptoFundReceipt = ({ cryptoCurrency, amount }) => {
+    const {t} = useTranslation()
     return (
         <Card style={{
             height: "100%",
@@ -20,7 +22,7 @@ const CryptoFundReceipt = ({ cryptoCurrency, amount }) => {
                 boxShadow: isBig ? "0px 2px 20px -5.704601287841797px rgba(89, 38, 240, 0.07)" : "none"
             }} className="conf_cont">
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "1.5rem" }}>
-                    <h5 style={{ fontSize: "1rem", color: "#a8a8a8" }}>You Are Sending</h5>
+                    <h5 style={{ fontSize: "1rem", color: "#a8a8a8" }}>{t("You Are Sending")}</h5>
                     <h4 style={{ fontWeight: "900" }} className="f_s_3r">${amount}</h4>
                 </div>
 
@@ -63,7 +65,7 @@ const CryptoFundReceipt = ({ cryptoCurrency, amount }) => {
                         alignItems: "center",
                         flex: "1"
                     }}>
-                        <span style={{ color: "#808080", fontWeight: 500, whiteSpace: "nowrap" }}>Estimated Price: 1 {cryptoCurrency.value.toUpperCase()} = {cryptoCurrency.price} USD</span>
+                        <span style={{ color: "#808080", fontWeight: 500, whiteSpace: "nowrap" }}>{t("Estimated Price: 1")} {cryptoCurrency.value.toUpperCase()} = {cryptoCurrency.price} USD</span>
                     </div>
                     <div style={{
                         display: "flex",
@@ -74,7 +76,7 @@ const CryptoFundReceipt = ({ cryptoCurrency, amount }) => {
                         alignItems: "center",
                         flex: "1"
                     }}>
-                        <span style={{ color: "#808080", fontWeight: 500 }}>Transaction Fee: $1.32</span>
+                        <span style={{ color: "#808080", fontWeight: 500 }}>{t("Transaction Fee")}: $1.32</span>
                     </div>
                 </div>
 
@@ -88,8 +90,8 @@ const CryptoFundReceipt = ({ cryptoCurrency, amount }) => {
                     padding: ".5rem",
                     borderRadius: "16px"
                 }}>
-                    <span style={{ color: "#a6a4ac" }}>Network: </span>
-                    <h4 style={{ marginBottom: "0", fontSize: "1rem", fontWeight: 600 }}>Network will be shown</h4>
+                    <span style={{ color: "#a6a4ac" }}>{t("Network")}: </span>
+                    <h4 style={{ marginBottom: "0", fontSize: "1rem", fontWeight: 600 }}>{t("Network will be shown")}</h4>
                 </div>
             </CardBody>
         </Card>

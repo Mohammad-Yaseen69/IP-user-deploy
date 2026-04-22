@@ -24,10 +24,11 @@ import ApiKey from './ApiKey'
 import AvatarEditor from 'react-avatar-editor';
 import Nominee from './Nominee'
 import KYB from './KYB'
+import { useTranslation } from 'react-i18next'
 
 const Settings = () => {
     const [activeTab, setActiveTab] = useState("basic")
-
+    const { t } = useTranslation()
     const { userDetails, authHeader, setUserRefresh } = useContext(UserContext)
     const [coverPhoto, setCoverPhoto] = useState(cover)
     const [showDelModal, setShowDelModal] = useState(false)
@@ -192,7 +193,7 @@ const Settings = () => {
                             }}>
                                 <label htmlFor="cover_photo" onClick={toggleMenu} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", marginBottom: "0", cursor: "pointer" }}>
                                     <Camera size={18} />
-                                    <span style={{ whiteSpace: "nowrap" }}>Edit Cover Photo</span>
+                                    <span style={{ whiteSpace: "nowrap" }}>{t("Edit Cover Photo")}</span>
                                 </label>
                                 {
                                     userDetails?.profileImage?.url
@@ -203,14 +204,14 @@ const Settings = () => {
                                             setIsEditing(true)
                                         }}>
                                             <Camera size={18} />
-                                            <span style={{ whiteSpace: "nowrap" }}>Adjust Cover Photo</span>
+                                            <span style={{ whiteSpace: "nowrap" }}>{t("Adjust Cover Photo")}</span>
                                         </label>
                                         <label style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", marginBottom: "0", cursor: "pointer" }} onClick={() => {
                                             setShowDelModal(true)
                                             toggleMenu()
                                         }} >
                                             <Trash2 size={18} />
-                                            <span style={{ whiteSpace: "nowrap" }}>Remove Cover Photo</span>
+                                            <span style={{ whiteSpace: "nowrap" }}>{t("Remove Cover Photo")}</span>
                                         </label>
                                     </>
                                 }

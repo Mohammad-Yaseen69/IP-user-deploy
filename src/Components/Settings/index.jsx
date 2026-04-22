@@ -78,9 +78,9 @@ const Settings = () => {
                                                     padding: "2.5rem 1rem"
                                                 }}>
                                                     <div style={{ fontSize: "1.2rem", fontWeight: "700" }}>
-                                                        Complete your profile data before proceeding with identity verification.
+                                                        {t("Complete your profile data before proceeding with identity verification.")}
                                                     </div>
-                                                    <span>Note: Fill in all required fields in the "Basic Info".</span>
+                                                    <span>{t("Note: Fill in all required fields in the \"Basic Info\".")}</span>
                                                     <div style={{
                                                         display: "flex",
                                                         gap: "1rem",

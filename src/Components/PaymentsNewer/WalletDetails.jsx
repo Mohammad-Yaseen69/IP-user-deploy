@@ -175,11 +175,11 @@ const WalletDetails = ({ setWallet, setSubStep, wallet }) => {
                     )
                         ?
                         <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
-                            <p style={{ marginBottom: 0, fontWeight: 600 }}>Please follow these examples: </p>
-                            <div>Wallet ID: <strong>GY68J782</strong></div>
-                            <div>InstaPay/Intagram Username: <strong>instauser</strong></div>
-                            <div>Email: <strong>user@email.com</strong></div>
-                            <div>Phone Number: <strong>44795396600</strong> (With Country Code)</div>
+                            <p style={{ marginBottom: 0, fontWeight: 600 }}>{t("Please follow these examples:")} </p>
+                            <div>{t("Wallet ID:")} <strong>GY68J782</strong></div>
+                            <div>{t("InstaPay/Instagram Username:")} <strong>instauser</strong></div>
+                            <div>{t("Email:")} <strong>user@email.com</strong></div>
+                            <div>{t("Phone Number:")} <strong>44795396600</strong> {t("(With Country Code)")}</div>
                         </div>
                         : ""
                 }
@@ -292,7 +292,7 @@ const WalletDetails = ({ setWallet, setSubStep, wallet }) => {
                                             </div>
                                         ))
                                         :
-                                        <div>No wallets</div>
+                                        <div>{t("No wallets")}</div>
                                 }
                             </div>
                         </div>

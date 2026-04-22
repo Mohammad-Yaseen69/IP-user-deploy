@@ -9,6 +9,7 @@ import { UserContext } from '../../Context/UserContext';
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 const MainContent = () => {
     const [file, setFile] = useState(null)
@@ -20,7 +21,7 @@ const MainContent = () => {
     const [isUploading, setIsUploading] = useState(false)
     const [processedUsers, setProcessedUsers] = useState([])
     const navigate = useNavigate()
-
+    const { t } = useTranslation()
     const handleChangeStatus = ({ meta, file }, status) => {
 
         if (file) {
@@ -130,18 +131,18 @@ const MainContent = () => {
         <Card>
             <CardHeader>
                 <h4>
-                    Add Onboarding Users
+                    {t("Add Onboarding Users")}
                 </h4>
             </CardHeader>
             <CardBody>
-                <h5>Upload/Drop XLSX File Here: </h5>
+                <h5>{t("Upload/Drop XLSX File Here:")}</h5>
                 <div style={{ display: "flex", gap: "2rem" }}>
                     <Dropzone
                         onChangeStatus={handleChangeStatus}
                         maxFiles={1}
                         multiple={false}
                         canCancel={false}
-                        inputContent="Upload/Drop XLSX File Here"
+                        inputContent={t("Upload/Drop XLSX File Here")}
                         styles={{
                             dropzone: { height: 200, flex: 1 },
                             dropzoneActive: { borderColor: "green" },
@@ -160,37 +161,37 @@ const MainContent = () => {
                                                 ?
                                                 <>
                                                     <div>
-                                                        <p>Successfully sent Email to {successCount}/{csvData.length} users.</p>
-                                                        <p>Failed to send Email to {errorCount}/{csvData.length} users.</p>
+                                                        <p>{t("Successfully sent Email to")} {successCount}/{csvData.length} {t("users.")}</p>
+                                                        <p>{t("Failed to send Email to")} {errorCount}/{csvData.length} {t("users.")}</p>
                                                     </div>
                                                     <div style={{ display: "flex", justifyContent: "flex-end" }}>
                                                         <Button style={{
                                                             background: 'linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)',
                                                             border: 'none',
                                                             outline: 'none',
-                                                        }} onClick={() => navigate("/onboarding/add-users")}>Reset</Button>
+                                                        }} onClick={() => navigate("/onboarding/add-users")}>{t("Reset")}</Button>
                                                     </div>
                                                 </>
                                                 :
                                                 <>
-                                                    <p>{csvData.length} users fetched from file, Do you want to start the process?</p>
+                                                    <p>{csvData.length} {t("users fetched from file, Do you want to start the process?")}</p>
                                                     <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
                                                         <Button style={{
                                                             background: 'linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)',
                                                             border: 'none',
                                                             outline: 'none',
-                                                        }} disabled={isUploading} onClick={() => navigate("/onboarding/add-users")}>Cancel</Button>
+                                                        }} disabled={isUploading} onClick={() => navigate("/onboarding/add-users")}>{t("Cancel")}</Button>
                                                         <Button style={{
                                                             background: 'linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)',
                                                             border: 'none',
                                                             outline: 'none',
-                                                        }} disabled={isUploading} onClick={handleUploadData}>Yes, Start It.</Button>
+                                                        }} disabled={isUploading} onClick={handleUploadData}>{t("Yes, Start It.")}</Button>
                                                     </div>
                                                 </>
                                         }
                                     </div>
                                     :
-                                    <p style={{ textAlign: "center" }}>Upload The File To Start The Process!</p>
+                                    <p style={{ textAlign: "center" }}>{t("Upload The File To Start The Process!")}</p>
                             }
                         </CardBody>
                     </Card>
@@ -200,22 +201,22 @@ const MainContent = () => {
                     &&
                     <Card>
                         <CardHeader style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <h5>Fetched Users</h5>
+                            <h5>{t("Fetched Users")}</h5>
                             <Button style={{
                                 background: 'linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)',
                                 border: 'none',
                                 outline: 'none',
-                            }} onClick={handleExtractFailedUsers}>Extract Failed Users</Button>
+                            }} onClick={handleExtractFailedUsers}>{t("Extract Failed Users")}</Button>
                         </CardHeader>
                         <CardBody>
                             <Table>
                                 <thead>
                                     <tr>
-                                        <td>First Name</td>
-                                        <td>Last Name</td>
-                                        <td>Email Address</td>
-                                        <td>Phone Number</td>
-                                        <td>Status</td>
+                                        <td>{t("First Name")}</td>
+                                        <td>{t("Last Name")}</td>
+                                        <td>{t("Email Address")}</td>
+                                        <td>{t("Phone Number")}</td>
+                                        <td>{t("Status")}</td>
                                     </tr>
                                 </thead>
                                 <tbody>

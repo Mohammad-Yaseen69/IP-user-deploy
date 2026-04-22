@@ -130,7 +130,7 @@ const PayWithCrypto = ({ data = {}, dataHandler, type = "payment_address", invoi
         if (numberCheck === "Verified") {
             cryptoTransactionHandler()
         } else {
-            toast.error("Incorrect phone number, please enter a correct phone number")
+            toast.error(t("Incorrect phone number, please enter a correct phone number"))
         }
     }
 
