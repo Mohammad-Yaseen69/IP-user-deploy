@@ -165,6 +165,7 @@ const Verification = () => {
     const queryParams = new URLSearchParams(location.search)
     const status = queryParams.get("status")
     const code = queryParams.get("code")
+    const payment_through = queryParams.get("payment_through")
     const ft = queryParams.get("ft")
     const [statusModal, setStatusModal] = useState(false)
     const [processing, setProcessing] = useState("")
@@ -185,7 +186,7 @@ const Verification = () => {
 
 
         if (status?.toLowerCase() === "success" && (!userDetails?.kyc_verification_paid && (userDetails?.user?.kyc_status !== "approved" || userDetails?.user?.kyc_status !== "verified"))) {
-            if (userDetails?.paypal_transaction !== "processing") {
+            if (userDetails?.paypal_transaction !== "processing" && payment_through === "paypal") {
                 updateProcessingCheck()
                 setProcessing("processing")
             }
