@@ -37,6 +37,8 @@ const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
     const isDiditFormat = (item) => {
         return item && typeof item === "object" && ("node_id" in item || "feature" in item || "risk" in item);
     };
+
+
     const renderNormalComments = (comments, sectionStatus) => {
         return comments.map((comment, index) => (
             <div key={index} style={{ marginLeft: "34px", marginBottom: "6px" }}>
