@@ -33,45 +33,66 @@
 
 .missingDiv {
     display: flex;
-    padding: var(--Gaps-Gap-Large, 16px);
+    padding: 16px;
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--Gaps-Gap-Large, 16px);
+    gap: 12px;
     align-self: stretch;
-    border-radius: 5px;
-    background: #FFE3C2;
+    border-radius: 12px;
+    background: #FFF4E5;
+    border: 1px solid #FFE3C2;
+    margin-bottom: 16px;
 }
 
-.missingDiv div {
+.missingContent {
     display: flex;
-    align-items: flex-start;
-    gap: 9.758px;
-    align-self: stretch;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
 }
 
-.missingDiv h4 {
-    color: #000;
-    margin-bottom: 0;
-    font-size: 10.646px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%;
-    /* 15.968px */
-}
-
-.missingDiv button {
+.infoIcon {
+    width: 20px;
+    height: 20px;
+    background: #EB8C1D;
+    border-radius: 50%;
+    flex-shrink: 0;
     display: flex;
-    padding: var(--Gaps-Gap-Medium, 12px) var(--Corner-Radius-XXLarge-Roundness, 24px);
     justify-content: center;
     align-items: center;
-    border-radius: 6px;
-    color: var(--COLORS-Neutral-100, #FFF);
-    border: none;
+    color: white;
+    font-weight: 700;
     font-size: 12px;
-    font-style: normal;
+}
+
+
+
+.missingDiv h4 {
+    color: #333;
+    margin-bottom: 0;
+    font-size: 14px;
     font-weight: 600;
-    background: var(--COLORS-Primary-300, #5926F0);
-    align-self: stretch;
+    line-height: 1.4;
+}
+
+.viewStepsBtn {
+    display: flex;
+    padding: 10px 20px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    color: #FFF;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    background: #5926F0;
+    align-self: flex-start;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.viewStepsBtn:hover {
+    background: #4828A0;
 }
 
 .tabIcon {
@@ -86,13 +107,18 @@
 }
 
 .customDropdownList {
-    margin-top: 15px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    margin-top: 8px;
     background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    z-index: 10;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    /* z-index: 100; */
+    max-height: 300px;
     overflow-y: auto;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .customDropdownOption {
