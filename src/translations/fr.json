@@ -3193,7 +3193,6 @@
   "Choose a new file to replace the existing one.": "Choisissez un nouveau fichier pour remplacer celui existant.",
   "A proof of creation of the entity: This document typically provides the entity's details, creation date, and purpose.": "Preuve de création de l'entité : ce document fournit généralement les détails de l'entité, sa date de création et son objet.",
   "\"A local registry extract:": "\"Extrait du registre local :",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Exigé en vertu de la réglementation du pays, ce document fait office de « carte d'identité » actuelle pour l'entité, indiquant son statut (active ou fermée).",
   "The Articles of Association serve as the constitutional document of the entity outlining its operating rules.": "Les statuts constituent le document constitutionnel de l'entité et définissent ses règles de fonctionnement.",
   "There is no time constraint on this document, meaning the most recent versi requested. Typically, these types of entities require at least one annual meeting that may result in an updated version of the Articles of Association.": "Ce document n'est soumis à aucune limite de temps ; la version la plus récente est donc requise. Généralement, ce type d'entités exige au moins une assemblée générale annuelle, qui peut aboutir à une mise à jour des statuts.",
   "Examples of changes that could occur include updates to the entity's name, address, purpose, management board, roles, responsibilities, etc.": "Les changements qui pourraient survenir incluent notamment la mise à jour du nom, de l'adresse, de l'objet, du conseil d'administration, des rôles, des responsabilités, etc. de l'entité.",
@@ -3310,5 +3309,18 @@
   "Drag/Drop or upload a file (photo/video/pdf)": "Glissez-déposez ou téléchargez un fichier (photo/vidéo/pdf)",
   "Add New Portfolio ItemDrag/Drop or upload a file (photo/video/pdf)": "Ajouter un nouvel élément au portfolio : glisser-déposer ou télécharger un fichier (photo/vidéo/pdf)",
   "No Buyer Reviews Found": "Aucun avis d'acheteur trouvé",
-  "Ucard Number or Sharer ID": "Numéro Ucard ou identifiant de partageur"
+  "Ucard Number or Sharer ID": "Numéro Ucard ou identifiant de partageur",
+  "Required as per the country's regulations, this document serves as the current \"identity card\" for the entity, indicating its status (active or closed).": "Exigé en vertu de la réglementation du pays, ce document fait office de « carte d’identité » actuelle pour l’entité, indiquant son statut (active ou fermée).",
+  "⚠ VPN/TOR detected": "⚠ VPN/TOR détecté",
+  "Make sure all your account details are correct to avoid any delays in receiving your funds.": "Veuillez vous assurer que toutes les informations relatives à votre compte sont correctes afin d'éviter tout retard dans la réception de vos fonds.",
+  "Step 02 – Select Receiving Accounts": "Étape 02 – Sélectionner les comptes de réception",
+  "Mobile wallets/mobile money": "portefeuilles mobiles/argent mobile",
+  "Cash pick-up locations": "Points de retrait d'espèces",
+  "Step 05 – Save and Confirm": "Étape 05 – Enregistrer et confirmer",
+  "Once you’ve added all your accounts, save the settings. Now you’re ready to receive payments instantly!": "Une fois tous vos comptes ajoutés, enregistrez les paramètres. Vous êtes maintenant prêt à recevoir des paiements instantanément !",
+  "Step 01 – Go to Settings": "Étape 01 – Accédez aux paramètres",
+  "No subscriptions found": "Aucun abonnement trouvé",
+  "Valid Resident Permits (only if issued by a European country)": "Permis de séjour valides (uniquement s'ils ont été délivrés par un pays européen)",
+  "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Fonction de la ou des personnes concernées. Ces informations seront vérifiées au regard des statuts afin de s'assurer que la fonction de la personne lui permet d'engager l'entité. Ceci est particulièrement important lorsque le demandeur n'est pas le président et que d'autres fonctions confèrent un pouvoir de représentation limité, tel que stipulé dans les statuts.",
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Exigé en vertu de la réglementation du pays, ce document fait office de « carte d’identité » actuelle pour l’entité, indiquant son statut (active ou fermée)."
 }

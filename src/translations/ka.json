@@ -806,7 +806,6 @@
   "This document should be either:": "ეს დოკუმენტი უნდა იყოს შემდეგი:",
   "A proof of creation of the entity: This document typically provides the entity's details, creation date, and purpose.": "ერთეულის შექმნის დამადასტურებელი საბუთი: ეს დოკუმენტი, როგორც წესი, შეიცავს ერთეულის დეტალებს, შექმნის თარიღს და მიზანს.",
   "\"A local registry extract:": "„ადგილობრივი რეესტრის ამონაწერი:“",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "ქვეყნის რეგულაციების თანახმად, ეს დოკუმენტი წარმოადგენს სუბიექტის მიმდინარე „პირადობის მოწმობას“, რაც მიუთითებს მის სტატუსზე (აქტიური თუ დახურული).",
   "If a registry extract exists, it must not be older than 3 months.": "თუ რეესტრის ამონაწერი არსებობს, ის არ უნდა იყოს 3 თვეზე ძველი.",
   "Entity name": "ორგანიზაციის სახელი",
   "Registration number (if applicable, based on the country's requirements)": "რეგისტრაციის ნომერი (ასეთის არსებობის შემთხვევაში, ქვეყნის მოთხოვნების გათვალისწინებით)",
@@ -1022,5 +1021,18 @@
   "Ucard Number or Sharer ID": "Ucard-ის ნომერი ან გაზიარების ID",
   "Email": "ელ. ფოსტა",
   "Optional": "არასავალდებულო",
-  "Please select a date at least 15 years ago or earlier.": "გთხოვთ, აირჩიოთ თარიღი მინიმუმ 15 წლის წინ ან უფრო ადრე."
+  "Please select a date at least 15 years ago or earlier.": "გთხოვთ, აირჩიოთ თარიღი მინიმუმ 15 წლის წინ ან უფრო ადრე.",
+  "Required as per the country's regulations, this document serves as the current \"identity card\" for the entity, indicating its status (active or closed).": "ქვეყნის რეგულაციების თანახმად, ეს დოკუმენტი წარმოადგენს სუბიექტის მიმდინარე „პირადობის მოწმობას“, რაც მიუთითებს მის სტატუსზე (აქტიური თუ დახურული).",
+  "⚠ VPN/TOR detected": "⚠ აღმოჩენილია VPN/TOR",
+  "Make sure all your account details are correct to avoid any delays in receiving your funds.": "დარწმუნდით, რომ თქვენი ანგარიშის ყველა მონაცემი სწორია, რათა თავიდან აიცილოთ თანხის მიღებასთან დაკავშირებული ნებისმიერი შეფერხება.",
+  "Step 02 – Select Receiving Accounts": "ნაბიჯი 02 – მიმღები ანგარიშების არჩევა",
+  "Mobile wallets/mobile money": "მობილური საფულეები/მობილური ფული",
+  "Cash pick-up locations": "ნაღდი ფულის აღების ადგილები",
+  "Step 05 – Save and Confirm": "ნაბიჯი 05 – შენახვა და დადასტურება",
+  "Once you’ve added all your accounts, save the settings. Now you’re ready to receive payments instantly!": "ყველა ანგარიშის დამატების შემდეგ, შეინახეთ პარამეტრები. ახლა თქვენ მზად ხართ გადახდების მყისიერად მისაღებად!",
+  "Step 01 – Go to Settings": "ნაბიჯი 01 – გადადით პარამეტრებში",
+  "No subscriptions found": "გამოწერები ვერ მოიძებნა",
+  "Valid Resident Permits (only if issued by a European country)": "მოქმედი ბინადრობის ნებართვები (მხოლოდ იმ შემთხვევაში, თუ გაცემულია ევროპული ქვეყნის მიერ)",
+  "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "ფიზიკური პირის/პირების ფუნქცია. ეს ინფორმაცია გადამოწმდება ასოციაციის წესდებასთან იმის უზრუნველსაყოფად, რომ ფიზიკური პირის ფუნქცია საშუალებას აძლევს მას, სავალდებულო გახადოს იურიდიული პირი. ეს განსაკუთრებით მნიშვნელოვანია, როდესაც განმცხადებელი არ არის პრეზიდენტი და სხვა ფუნქციებს აქვთ შეზღუდული წარმომადგენლობითი უფლებამოსილება, როგორც ეს მითითებულია ასოციაციის წესდებაში.",
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "ქვეყნის რეგულაციების თანახმად, ეს დოკუმენტი წარმოადგენს სუბიექტის მიმდინარე „პირადობის მოწმობას“, რაც მიუთითებს მის სტატუსზე (აქტიური თუ დახურული)."
 }

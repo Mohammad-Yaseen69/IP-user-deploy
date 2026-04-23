@@ -6,7 +6,6 @@
   "This document should be either:": "Šis dokumentas turėtų būti arba:",
   "A proof of creation of the entity: This document typically provides the entity's details, creation date, and purpose.": "Subjekto sukūrimo įrodymas: šiame dokumente paprastai pateikiama subjekto informacija, sukūrimo data ir tikslas.",
   "\"A local registry extract:": "\"Vietinio registro išrašas:",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Šis dokumentas, kurio reikalaujama pagal šalies reglamentus, yra dabartinė subjekto „asmens tapatybės kortelė“, nurodanti jo būseną (aktyvi arba uždaryta).",
   "If a registry extract exists, it must not be older than 3 months.": "Jei yra registro išrašas, jis negali būti senesnis nei 3 mėnesiai.",
   "Entity name": "Subjekto pavadinimas",
   "Registration number (if applicable, based on the country's requirements)": "Registracijos numeris (jei taikoma, atsižvelgiant į šalies reikalavimus)",
@@ -310,5 +309,18 @@
   "Ucard Number or Sharer ID": "UCard numeris arba bendrintojo ID",
   "Email": "El. paštas",
   "Optional": "Pasirinktinai",
-  "Please select a date at least 15 years ago or earlier.": "Pasirinkite datą, kuri yra bent prieš 15 metų arba ankstesnė."
+  "Please select a date at least 15 years ago or earlier.": "Pasirinkite datą, kuri yra bent prieš 15 metų arba ankstesnė.",
+  "Required as per the country's regulations, this document serves as the current \"identity card\" for the entity, indicating its status (active or closed).": "Šis dokumentas, kurio reikalaujama pagal šalies reglamentus, yra dabartinė subjekto „asmens tapatybės kortelė“, nurodanti jo būseną (aktyvi arba uždaryta).",
+  "⚠ VPN/TOR detected": "⚠ Aptiktas VPN/TOR",
+  "Make sure all your account details are correct to avoid any delays in receiving your funds.": "Įsitikinkite, kad visi jūsų sąskaitos duomenys yra teisingi, kad išvengtumėte vėlavimų gaunant lėšas.",
+  "Step 02 – Select Receiving Accounts": "2 veiksmas – pasirinkite gaunamas sąskaitas",
+  "Mobile wallets/mobile money": "Mobiliosios piniginės / mobilieji pinigai",
+  "Cash pick-up locations": "Grynųjų pinigų atsiėmimo vietos",
+  "Step 05 – Save and Confirm": "5 veiksmas – išsaugoti ir patvirtinti",
+  "Once you’ve added all your accounts, save the settings. Now you’re ready to receive payments instantly!": "Pridėję visas paskyras, išsaugokite nustatymus. Dabar galite akimirksniu gauti mokėjimus!",
+  "Step 01 – Go to Settings": "1 veiksmas. Eikite į nustatymus",
+  "No subscriptions found": "Nerasta jokių prenumeratų",
+  "Valid Resident Permits (only if issued by a European country)": "Galiojantys leidimai gyventi (tik jei išduoti Europos šalies)",
+  "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Asmens (-ų) pareigos. Ši informacija bus sutikrinta su įstatais, siekiant užtikrinti, kad asmens pareigos leistų jam įpareigoti subjektą. Tai ypač svarbu, kai pareiškėjas nėra prezidentas, o kitos pareigos turi ribotus atstovavimo įgaliojimus, kaip nurodyta įstatuose.",
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Šis dokumentas, kurio reikalaujama pagal šalies reglamentus, yra dabartinė subjekto „asmens tapatybės kortelė“, nurodanti jo būseną (aktyvi arba uždaryta)."
 }
