@@ -979,7 +979,6 @@
   "This document should be either:": "Dette dokument skal enten være:",
   "A proof of creation of the entity: This document typically provides the entity's details, creation date, and purpose.": "Et bevis for oprettelse af enheden: Dette dokument indeholder typisk enhedens oplysninger, oprettelsesdato og formål.",
   "\"A local registry extract:": "\"Et lokalt registeruddrag:",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Dette dokument, der kræves i henhold til landets regler, fungerer som det aktuelle \"identitetskort\" for enheden, der angiver dens status (aktiv eller lukket).",
   "If a registry extract exists, it must not be older than 3 months.": "Hvis der findes et registeruddrag, må det ikke være ældre end 3 måneder.",
   "Entity name": "Enhedsnavn",
   "Registration number (if applicable, based on the country's requirements)": "Registreringsnummer (hvis relevant, baseret på landets krav)",
@@ -1187,5 +1186,18 @@
   "Phone Number": "Telefonnummer",
   "Ucard Number or Sharer ID": "Ucard-nummer eller deler-ID",
   "Email": "E-mail",
-  "Optional": "Valgfri"
+  "Optional": "Valgfri",
+  "Required as per the country's regulations, this document serves as the current \"identity card\" for the entity, indicating its status (active or closed).": "Dette dokument, der kræves i henhold til landets regler, fungerer som det aktuelle \"identitetskort\" for enheden, der angiver dens status (aktiv eller lukket).",
+  "⚠ VPN/TOR detected": "⚠ VPN/TOR registreret",
+  "Make sure all your account details are correct to avoid any delays in receiving your funds.": "Sørg for, at alle dine kontooplysninger er korrekte for at undgå forsinkelser i modtagelsen af ​​dine penge.",
+  "Step 02 – Select Receiving Accounts": "Trin 02 – Vælg modtagende konti",
+  "Mobile wallets/mobile money": "Mobile tegnebøger/mobilpenge",
+  "Cash pick-up locations": "Kontantafhentningssteder",
+  "Step 05 – Save and Confirm": "Trin 05 – Gem og bekræft",
+  "Once you’ve added all your accounts, save the settings. Now you’re ready to receive payments instantly!": "Når du har tilføjet alle dine konti, skal du gemme indstillingerne. Nu er du klar til at modtage betalinger med det samme!",
+  "Step 01 – Go to Settings": "Trin 01 – Gå til Indstillinger",
+  "No subscriptions found": "Ingen abonnementer fundet",
+  "Valid Resident Permits (only if issued by a European country)": "Gyldige opholdstilladelser (kun hvis udstedt af et europæisk land)",
+  "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Person(er)s funktion. Disse oplysninger vil blive krydsverificeret med vedtægterne for at sikre, at personens funktion giver dem ret til at forpligte enheden. Dette er især vigtigt, når ansøgeren ikke er præsidenten, og andre funktioner har begrænset repræsentationsmyndighed som angivet i vedtægterne.",
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Dette dokument, der kræves i henhold til landets regler, fungerer som det aktuelle \"identitetskort\" for enheden, der angiver dens status (aktiv eller lukket)."
 }

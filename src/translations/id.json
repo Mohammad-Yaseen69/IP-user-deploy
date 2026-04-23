@@ -3185,7 +3185,6 @@
   "Choose a new file to replace the existing one.": "Pilih file baru untuk menggantikan file yang sudah ada.",
   "A proof of creation of the entity: This document typically provides the entity's details, creation date, and purpose.": "Bukti pendirian entitas: Dokumen ini biasanya memuat detail entitas, tanggal pendirian, dan tujuannya.",
   "\"A local registry extract:": "\"Cuplikan registri lokal:",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Sesuai dengan peraturan negara, dokumen ini berfungsi sebagai \"kartu identitas\" terkini untuk entitas tersebut, yang menunjukkan statusnya (aktif atau ditutup).",
   "The Articles of Association serve as the constitutional document of the entity outlining its operating rules.": "Anggaran Dasar berfungsi sebagai dokumen konstitusional entitas yang menguraikan aturan operasionalnya.",
   "There is no time constraint on this document, meaning the most recent versi requested. Typically, these types of entities require at least one annual meeting that may result in an updated version of the Articles of Association.": "Tidak ada batasan waktu untuk dokumen ini, artinya versi terbaru yang diminta. Biasanya, jenis entitas ini memerlukan setidaknya satu rapat tahunan yang dapat menghasilkan versi terbaru dari Anggaran Dasar.",
   "* Appointment/Removal/Changes on Board of Management Members:": "* Pengangkatan/Pemberhentian/Perubahan Anggota Dewan Manajemen:",
@@ -3297,5 +3296,18 @@
   "Drag/Drop or upload a file (photo/video/pdf)": "Seret/jatuhkan atau unggah file (foto/video/pdf)",
   "Add New Portfolio ItemDrag/Drop or upload a file (photo/video/pdf)": "Tambahkan Item Portofolio BaruSeret/Jatuhkan atau unggah file (foto/video/pdf)",
   "No Buyer Reviews Found": "Tidak ditemukan ulasan pembeli.",
-  "Ucard Number or Sharer ID": "Nomor Ucard atau ID Sharer"
+  "Ucard Number or Sharer ID": "Nomor Ucard atau ID Sharer",
+  "Required as per the country's regulations, this document serves as the current \"identity card\" for the entity, indicating its status (active or closed).": "Sesuai dengan peraturan negara, dokumen ini berfungsi sebagai \"kartu identitas\" terkini untuk entitas tersebut, yang menunjukkan statusnya (aktif atau ditutup).",
+  "⚠ VPN/TOR detected": "⚠ VPN/TOR terdeteksi",
+  "Make sure all your account details are correct to avoid any delays in receiving your funds.": "Pastikan semua detail akun Anda benar untuk menghindari penundaan dalam menerima dana Anda.",
+  "Step 02 – Select Receiving Accounts": "Langkah 02 – Pilih Akun Penerima",
+  "Mobile wallets/mobile money": "Dompet digital/uang digital",
+  "Cash pick-up locations": "Lokasi pengambilan uang tunai",
+  "Step 05 – Save and Confirm": "Langkah 05 – Simpan dan Konfirmasi",
+  "Once you’ve added all your accounts, save the settings. Now you’re ready to receive payments instantly!": "Setelah Anda menambahkan semua akun Anda, simpan pengaturannya. Sekarang Anda siap menerima pembayaran secara instan!",
+  "Step 01 – Go to Settings": "Langkah 01 – Buka Pengaturan",
+  "No subscriptions found": "Tidak ditemukan langganan.",
+  "Valid Resident Permits (only if issued by a European country)": "Izin Tinggal yang Sah (hanya jika dikeluarkan oleh negara Eropa)",
+  "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Fungsi individu. Informasi ini akan diverifikasi silang dengan Anggaran Dasar untuk memastikan bahwa fungsi individu tersebut memungkinkan mereka untuk mengikat entitas. Hal ini sangat penting terutama ketika pemohon bukan presiden, dan fungsi lain memiliki wewenang perwakilan yang terbatas sebagaimana tercantum dalam Anggaran Dasar.",
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Sesuai dengan peraturan negara, dokumen ini berfungsi sebagai \"kartu identitas\" terkini untuk entitas tersebut, yang menunjukkan statusnya (aktif atau ditutup)."
 }

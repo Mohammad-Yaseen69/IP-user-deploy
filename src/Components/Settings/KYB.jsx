@@ -464,7 +464,7 @@ const KYB = () => {
                                 outline: "none"
                             }}
                                 disabled={userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved"}
-                                onClick={() => setShowAddModal(!showAddModal)}>Add New Director</Button>
+                                onClick={() => setShowAddModal(!showAddModal)}>{t("Add New Director")}</Button>
                             <Modal isOpen={showAddModal} toggle={() => setShowAddModal(!showAddModal)}>
                                 <ModalHeader toggle={() => setShowAddModal(!showAddModal)}>
                                     {t("Add New Director")}

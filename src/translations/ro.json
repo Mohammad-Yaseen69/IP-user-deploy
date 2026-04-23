@@ -979,7 +979,6 @@
   "This document should be either:": "Acest document ar trebui să fie fie:",
   "A proof of creation of the entity: This document typically provides the entity's details, creation date, and purpose.": "O dovadă a creării entității: Acest document oferă de obicei detaliile entității, data creării și scopul acesteia.",
   "\"A local registry extract:": "„Un extras din registrul local:",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Obligatoriu conform reglementărilor țării, acest document servește drept „carte de identitate” actuală pentru entitate, indicând statutul acesteia (activă sau închisă).",
   "If a registry extract exists, it must not be older than 3 months.": "Dacă există un extras de registru, acesta nu trebuie să fie mai vechi de 3 luni.",
   "Entity name": "Numele entității",
   "Registration number (if applicable, based on the country's requirements)": "Număr de înregistrare (dacă este cazul, în funcție de cerințele țării)",
@@ -1187,5 +1186,18 @@
   "Phone Number": "Număr de telefon",
   "Ucard Number or Sharer ID": "Număr Ucard sau ID partajator",
   "Email": "E-mail",
-  "Optional": "Opțional"
+  "Optional": "Opțional",
+  "Required as per the country's regulations, this document serves as the current \"identity card\" for the entity, indicating its status (active or closed).": "Obligatoriu conform reglementărilor țării, acest document servește drept „carte de identitate” actuală pentru entitate, indicând statutul acesteia (activă sau închisă).",
+  "⚠ VPN/TOR detected": "⚠ VPN/TOR detectat",
+  "Make sure all your account details are correct to avoid any delays in receiving your funds.": "Asigurați-vă că toate detaliile contului dumneavoastră sunt corecte pentru a evita orice întârziere în primirea fondurilor.",
+  "Step 02 – Select Receiving Accounts": "Pasul 02 – Selectați conturile destinatare",
+  "Mobile wallets/mobile money": "Portofele mobile/bani mobili",
+  "Cash pick-up locations": "Locații de ridicare a numerarului",
+  "Step 05 – Save and Confirm": "Pasul 05 – Salvați și confirmați",
+  "Once you’ve added all your accounts, save the settings. Now you’re ready to receive payments instantly!": "După ce ați adăugat toate conturile, salvați setările. Acum sunteți gata să primiți plăți instantaneu!",
+  "Step 01 – Go to Settings": "Pasul 01 – Accesați Setări",
+  "No subscriptions found": "Nu s-au găsit abonamente",
+  "Valid Resident Permits (only if issued by a European country)": "Permise de ședere valabile (numai dacă sunt emise de o țară europeană)",
+  "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Funcția persoanei (persoanelor). Aceste informații vor fi verificate încrucișat cu Actul Constitutiv pentru a se asigura că funcția persoanei respective îi permite să angajeze entitatea. Acest lucru este deosebit de important atunci când solicitantul nu este președinte, iar alte funcții au autoritate de reprezentare limitată, așa cum se prevede în Actul Constitutiv.",
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Obligatoriu conform reglementărilor țării, acest document servește drept „carte de identitate” actuală pentru entitate, indicând statutul acesteia (activă sau închisă)."
 }
