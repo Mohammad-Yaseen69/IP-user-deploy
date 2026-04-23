@@ -61,7 +61,6 @@ const Quotations = () => {
     const {
         data: receivedQuotations = [],
         isLoading: isLoadingReceived,
-        
     } = useQuery({
         queryKey: ['receivedQuotations', userDetails?._id],
         queryFn: async () => {
