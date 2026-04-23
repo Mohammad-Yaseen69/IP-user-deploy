@@ -62,7 +62,6 @@ const RightContainer = ({ setCurrentWallet, showBusinessModal, setShowBusinessMo
     ]), [userWallets])
 
 
-
     return (
         <div style={{
             display: "flex",

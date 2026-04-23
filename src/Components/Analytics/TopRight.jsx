@@ -127,7 +127,7 @@ const TopRight = ({ data, reports, currentWallet, setApiDates, isLoading }) => {
                 return `${value}00`
             }
         }
-        else{
+        else {
             return `${value}.00`
         }
     }

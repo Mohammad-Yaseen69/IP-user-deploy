@@ -40,6 +40,10 @@ class SocketsService {
             setTimeout(() => {
                 document.title = "InstaPay"
             }, 5000);
+
+            if (this.onPrivateMessage) {
+                this.onPrivateMessage(data)
+            }
         });
 
 

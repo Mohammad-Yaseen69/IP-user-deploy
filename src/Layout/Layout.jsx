@@ -25,6 +25,7 @@ import success from "../Components/Auth/files/success.gif"
 import SocketsService from "../Services/Socket";
 import AnotherLoginModal from "../Components/AnotherLoginModal";
 import { useTranslation } from "react-i18next";
+import { useQueryClient } from "@tanstack/react-query";
 
 
 
@@ -44,9 +45,10 @@ const MobileSbContextProvider = ({ children }) => {
 const Layout = ({ children, classNames, ...rest }) => {
   const { setTogglSidebar, sidebar_types } =
     useContext(CheckContext);
-    const {t} = useTranslation()
+  const { t } = useTranslation()
   const location = useLocation();
   const query = new URLSearchParams(location.search)
+  const queryClient = useQueryClient()
   const benId = query.get("user_id")
   const [isOnline, setIsOnline] = useState(navigator.onLine)
   const [showOfflineModal, setShowOfflineModal] = useState()
@@ -188,7 +190,10 @@ const Layout = ({ children, classNames, ...rest }) => {
       socketsService.connect();
       const userId = userDetails?._id;
       socketsService.connectToServer(userId, false, null, null, () => setShowAnotherLoginModal(true));
-
+      socketsService.onPrivateMessage = () => {
+        queryClient.invalidateQueries({ queryKey: ['receivedQuotations'] })
+        queryClient.invalidateQueries({ queryKey: ['sentQuotations'] })
+      }
       return () => {
         socketsService.disconnect();
       };
@@ -364,10 +369,10 @@ const Layout = ({ children, classNames, ...rest }) => {
             </>
         }
         {
-          showAnotherLoginModal && 
-          <AnotherLoginModal 
-            isOpen={showAnotherLoginModal} 
-            toggle={() => setShowAnotherLoginModal(false)} 
+          showAnotherLoginModal &&
+          <AnotherLoginModal
+            isOpen={showAnotherLoginModal}
+            toggle={() => setShowAnotherLoginModal(false)}
           />
         }
       </MobileSbContextProvider>

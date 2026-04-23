@@ -83,7 +83,6 @@ const UserState = ({ children }) => {
     const base_url = window.location.origin || 'https://my.insta-pay.ch';
 
 
-    // mutations
     const { data: registeredBenApiData, isLoading: benLoading } = useQuery({
         queryKey: ["RegisteredBeneficiaries", userDetails?._id],
         queryFn: () => getRegisteredBeneficiariesFn(authHeader),
