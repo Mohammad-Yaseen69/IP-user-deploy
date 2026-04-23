@@ -240,7 +240,11 @@ const UserState = ({ children }) => {
                     if (!decrypted?.tfa) {
                         setMissingTabsData(prev => prev.includes("tfa") ? prev : [...prev, "tfa"]);
                     }
-                    if ((decrypted?.user?.kyc_status === "declined" || !decrypted.user?.kyc_status)) {
+                    const isKycMissing = decrypted?.account_type === 'business' 
+                        ? (decrypted?.company?.kyb_status === "declined" || !decrypted.company?.kyb_status)
+                        : (decrypted?.user?.kyc_status === "declined" || !decrypted.user?.kyc_status);
+
+                    if (isKycMissing) {
                         setMissingTabsData(prev => prev.includes("kyc") ? prev : [...prev, "kyc"]);
                     }
                     if (!decrypted?.insta_username && !decrypted?.telegram_bot) {
@@ -297,7 +301,11 @@ const UserState = ({ children }) => {
                 if (!decrypted?.tfa) {
                     setMissingTabsData(prev => prev.includes("tfa") ? prev : [...prev, "tfa"]);
                 }
-                if ((decrypted?.user?.kyc_status === "declined" || !decrypted.user?.kyc_status)) {
+                const isKycMissing = decrypted?.account_type === 'business' 
+                    ? (decrypted?.company?.kyb_status === "declined" || !decrypted.company?.kyb_status)
+                    : (decrypted?.user?.kyc_status === "declined" || !decrypted.user?.kyc_status);
+
+                if (isKycMissing) {
                     setMissingTabsData(prev => prev.includes("kyc") ? prev : [...prev, "kyc"]);
                 }
                 if (!decrypted?.insta_username && !decrypted?.telegram_bot) {
