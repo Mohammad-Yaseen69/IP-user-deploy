@@ -62,7 +62,7 @@ const KYB = () => {
     // partners
     const [partners, setPartners] = useState([])
 
-    const { mutateAsync } = useMutation({
+    const { mutateAsync, isPending } = useMutation({
         mutationFn: (payload) => getFeeAmount({ payload, authHeader }),
     })
 
@@ -124,16 +124,26 @@ const KYB = () => {
     }, [userDetails]);
 
     useEffect(() => {
-        if (!userDetails?.kyb_verification_paid) {
-            if (userDetails?.company?.kyb_files?.length > 0) {
-                setCompanyFiles(userDetails.company.kyb_files)
-                setCompanyFileNames(userDetails?.company?.kyb_files?.map(f => f?.document_name))
-                setTaxId(userDetails?.company?.tax_id)
-                setRegistrationNum(userDetails?.company?.registration_number)
-                if (userDetails?.company?.date_of_incorporation) {
-                    const [day, month, year] = userDetails.company.date_of_incorporation.split("-")
-                    setDateOfI(new Date(`${year}-${month}-${day}`))
+        if (userDetails?.company) {
+            const { tax_id, registration_number, date_of_incorporation, kyb_files } = userDetails.company;
+
+            if (tax_id && !taxId) {
+                setTaxId(tax_id);
+            }
+            if (registration_number && !registrationNum) {
+                setRegistrationNum(registration_number);
+            }
+            if (date_of_incorporation && !dateOfI) {
+                const parts = date_of_incorporation.split("-");
+                if (parts.length === 3) {
+                    const [day, month, year] = parts;
+                    setDateOfI(new Date(`${year}-${month}-${day}`));
                 }
+            }
+
+            if (kyb_files?.length > 0 && compnanyFiles.length === 0) {
+                setCompanyFiles(kyb_files);
+                setCompanyFileNames(kyb_files.map(f => f?.document_name));
             }
         }
     }, [userDetails])
@@ -536,7 +546,7 @@ const KYB = () => {
                             outline: "none",
                             alignSelf: "flex-end "
                         }}
-                        disabled={isReadOnly || isUploading || compnanyFiles?.length === 0 || partners?.length === 0 || !taxId || !dateOfI || !registrationNum || compnanyFileNames.length < requiredFilesLength}
+                        disabled={isReadOnly || isUploading || compnanyFiles?.length === 0 || partners?.length === 0 || !taxId || !dateOfI || !registrationNum || compnanyFileNames.length < requiredFilesLength || isPending}
                         onClick={uploadKybFiles}
                     >{t("Submit")}</Button>
                 }
@@ -552,6 +562,7 @@ const KYB = () => {
                         amount={feeAmount}
                         partnerId={partnerVerification?._id}
                         getFeeDetails={mutateAsync}
+                        isGettingFee={isPending}
                     />
                 }
             </CardBody>

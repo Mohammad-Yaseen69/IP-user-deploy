@@ -50,7 +50,7 @@ const paymentChannels = [
 ]
 
 
-const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading, source_of_funds, isKYB, amount, getFeeDetails, partnerId }) => {
+const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading, source_of_funds, isKYB, amount, getFeeDetails, partnerId, isGettingFee }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [step, setStep] = useState(1)
@@ -565,6 +565,8 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                     )
                                     ||
                                     saving
+                                    ||
+                                    isGettingFee
                                 }
                                 onClick={handleClick}
                             >{t("Next")}</Button>
