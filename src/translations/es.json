@@ -1199,5 +1199,14 @@
   "No subscriptions found": "No se encontraron suscripciones",
   "Valid Resident Permits (only if issued by a European country)": "Permisos de residencia válidos (solo si han sido expedidos por un país europeo)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Función de la(s) persona(s). Esta información se cotejará con los Estatutos para asegurar que la función de la persona le permite obligar a la entidad. Esto es especialmente importante cuando el solicitante no es el presidente y otras funciones tienen autoridad de representación limitada, según lo estipulado en los Estatutos.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Este documento, exigido según la normativa del país, sirve como \"tarjeta de identidad\" vigente para la entidad e indica su estado (activa o cerrada)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Este documento, exigido según la normativa del país, sirve como \"tarjeta de identidad\" vigente para la entidad e indica su estado (activa o cerrada).",
+  "No Action Allowed": "No se permite ninguna acción.",
+  "Not-Initiated": "No iniciado",
+  "This is a list of devices that have logged into your account.": "Esta es una lista de los dispositivos que han iniciado sesión en tu cuenta.",
+  "Additional Details": "Detalles adicionales",
+  "Enter the company name": "Introduzca el nombre de la empresa",
+  "Id Type": "Tipo de identificación",
+  "Select Relationship": "Seleccionar relación",
+  "Representative Details": "Detalles del representante",
+  "Address line": "Línea de dirección"
 }

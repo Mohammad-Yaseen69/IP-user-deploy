@@ -1199,5 +1199,14 @@
   "No subscriptions found": "Δεν βρέθηκαν συνδρομές",
   "Valid Resident Permits (only if issued by a European country)": "Έγκυρες άδειες παραμονής (μόνο εάν έχουν εκδοθεί από ευρωπαϊκή χώρα)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Λειτουργία του/των ατόμου/ων. Αυτές οι πληροφορίες θα επαληθευτούν με το Καταστατικό, ώστε να διασφαλιστεί ότι η λειτουργία του ατόμου του επιτρέπει να δεσμεύει την οντότητα. Αυτό είναι ιδιαίτερα σημαντικό όταν ο αιτών δεν είναι ο πρόεδρος και άλλες λειτουργίες έχουν περιορισμένη εξουσία εκπροσώπησης, όπως αναφέρεται στο Καταστατικό.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Απαιτούμενο σύμφωνα με τους κανονισμούς της χώρας, το παρόν έγγραφο χρησιμεύει ως η τρέχουσα «ταυτότητα» της οντότητας, υποδεικνύοντας την κατάστασή της (ενεργή ή κλειστή)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Απαιτούμενο σύμφωνα με τους κανονισμούς της χώρας, το παρόν έγγραφο χρησιμεύει ως η τρέχουσα «ταυτότητα» της οντότητας, υποδεικνύοντας την κατάστασή της (ενεργή ή κλειστή).",
+  "No Action Allowed": "Δεν επιτρέπεται ενέργεια",
+  "Not-Initiated": "Μη Ξεκινημένο",
+  "This is a list of devices that have logged into your account.": "Αυτή είναι μια λίστα συσκευών που έχουν συνδεθεί στον λογαριασμό σας.",
+  "Additional Details": "Πρόσθετες λεπτομέρειες",
+  "Enter the company name": "Εισαγάγετε το όνομα της εταιρείας",
+  "Id Type": "Τύπος Αναγνωριστικού",
+  "Select Relationship": "Επιλογή σχέσης",
+  "Representative Details": "Στοιχεία Εκπροσώπου",
+  "Address line": "Γραμμή διεύθυνσης"
 }

@@ -1034,5 +1034,14 @@
   "No subscriptions found": "გამოწერები ვერ მოიძებნა",
   "Valid Resident Permits (only if issued by a European country)": "მოქმედი ბინადრობის ნებართვები (მხოლოდ იმ შემთხვევაში, თუ გაცემულია ევროპული ქვეყნის მიერ)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "ფიზიკური პირის/პირების ფუნქცია. ეს ინფორმაცია გადამოწმდება ასოციაციის წესდებასთან იმის უზრუნველსაყოფად, რომ ფიზიკური პირის ფუნქცია საშუალებას აძლევს მას, სავალდებულო გახადოს იურიდიული პირი. ეს განსაკუთრებით მნიშვნელოვანია, როდესაც განმცხადებელი არ არის პრეზიდენტი და სხვა ფუნქციებს აქვთ შეზღუდული წარმომადგენლობითი უფლებამოსილება, როგორც ეს მითითებულია ასოციაციის წესდებაში.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "ქვეყნის რეგულაციების თანახმად, ეს დოკუმენტი წარმოადგენს სუბიექტის მიმდინარე „პირადობის მოწმობას“, რაც მიუთითებს მის სტატუსზე (აქტიური თუ დახურული)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "ქვეყნის რეგულაციების თანახმად, ეს დოკუმენტი წარმოადგენს სუბიექტის მიმდინარე „პირადობის მოწმობას“, რაც მიუთითებს მის სტატუსზე (აქტიური თუ დახურული).",
+  "No Action Allowed": "მოქმედება დაუშვებელია",
+  "Not-Initiated": "არაინიცირებული",
+  "This is a list of devices that have logged into your account.": "ეს არის თქვენს ანგარიშში შესული მოწყობილობების სია.",
+  "Additional Details": "დამატებითი დეტალები",
+  "Enter the company name": "შეიყვანეთ კომპანიის სახელი",
+  "Id Type": "ID ტიპი",
+  "Select Relationship": "აირჩიეთ ურთიერთობა",
+  "Representative Details": "წარმომადგენლის დეტალები",
+  "Address line": "მისამართის ხაზი"
 }

@@ -3310,5 +3310,14 @@
   "No subscriptions found": "未找到订阅",
   "Valid Resident Permits (only if issued by a European country)": "有效的居留许可（仅限由欧洲国家签发的许可）",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "申请人的职务。此信息将与公司章程进行交叉核对，以确保申请人的职务允许其代表公司行事。这一点在申请人并非总裁，且公司章程中规定的其他职务的代表权限有限的情况下尤为重要。",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "根据该国法规的要求，该文件是该实体的当前“身份证”，表明其状态（活跃或关闭）。"
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "根据该国法规的要求，该文件是该实体的当前“身份证”，表明其状态（活跃或关闭）。",
+  "No Action Allowed": "禁止任何操作。",
+  "Not-Initiated": "未入门",
+  "This is a list of devices that have logged into your account.": "这是已登录您帐户的设备列表。",
+  "Additional Details": "更多详情",
+  "Enter the company name": "请输入公司名称",
+  "Id Type": "ID 类型",
+  "Select Relationship": "选择关系",
+  "Representative Details": "代表性详情",
+  "Address line": "地址线"
 }

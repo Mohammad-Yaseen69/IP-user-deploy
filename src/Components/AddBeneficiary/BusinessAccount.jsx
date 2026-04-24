@@ -512,7 +512,7 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
                                     style={{ flex: 1, minWidth: "250px" }}
                                     id="last-name"
                                     type="text"
-                                    placeholder='Enter the company name'
+                                    placeholder={t('Enter the company name')}
                                     required
                                     pattern="[A-Za-z]+"
                                     title="(A to Z | a to z)"
@@ -530,7 +530,7 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
                                     id="email"
                                     name="email"
                                     type="email"
-                                    placeholder='Email Address'
+                                    placeholder={t('Email Address')}
                                     title="abc@xyz.com"
                                     value={formData.email}
                                     onChange={inputChangeHandler}
@@ -602,7 +602,7 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
                             </FormGroup>
                             <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                 <Label className="col-form-label" htmlFor="postal_code">{t("Postal Code")}</Label>
-                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="postal_code" id="postal_code" type="text" placeholder='Address line' value={formData.postal_code} onChange={inputChangeHandler} disabled={isFieldsDisabled} readOnly={isFieldsDisabled} />
+                                <Input className="form-control" style={{ flex: 1, minWidth: "250px" }} name="postal_code" id="postal_code" type="text" placeholder={t('Address line')} value={formData.postal_code} onChange={inputChangeHandler} disabled={isFieldsDisabled} readOnly={isFieldsDisabled} />
                             </FormGroup>
                         </div>
                     </FormGroup>

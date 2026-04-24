@@ -322,5 +322,14 @@
   "No subscriptions found": "Nerasta jokių prenumeratų",
   "Valid Resident Permits (only if issued by a European country)": "Galiojantys leidimai gyventi (tik jei išduoti Europos šalies)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Asmens (-ų) pareigos. Ši informacija bus sutikrinta su įstatais, siekiant užtikrinti, kad asmens pareigos leistų jam įpareigoti subjektą. Tai ypač svarbu, kai pareiškėjas nėra prezidentas, o kitos pareigos turi ribotus atstovavimo įgaliojimus, kaip nurodyta įstatuose.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Šis dokumentas, kurio reikalaujama pagal šalies reglamentus, yra dabartinė subjekto „asmens tapatybės kortelė“, nurodanti jo būseną (aktyvi arba uždaryta)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Šis dokumentas, kurio reikalaujama pagal šalies reglamentus, yra dabartinė subjekto „asmens tapatybės kortelė“, nurodanti jo būseną (aktyvi arba uždaryta).",
+  "No Action Allowed": "Veiksmai neleidžiami",
+  "Not-Initiated": "Neinicijuotas",
+  "This is a list of devices that have logged into your account.": "Tai yra įrenginių, kurie prisijungė prie jūsų paskyros, sąrašas.",
+  "Additional Details": "Papildoma informacija",
+  "Enter the company name": "Įveskite įmonės pavadinimą",
+  "Id Type": "ID tipas",
+  "Select Relationship": "Pasirinkite ryšį",
+  "Representative Details": "Atstovo duomenys",
+  "Address line": "Adreso eilutė"
 }

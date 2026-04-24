@@ -1199,5 +1199,14 @@
   "No subscriptions found": "Geen abonnementen gevonden",
   "Valid Resident Permits (only if issued by a European country)": "Geldige verblijfsvergunningen (alleen indien afgegeven door een Europees land)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Functie van de persoon/personen. Deze informatie zal worden vergeleken met de statuten om te garanderen dat de functie van de persoon/personen hem/haar in staat stelt de entiteit te binden. Dit is met name belangrijk wanneer de aanvrager niet de voorzitter is en andere functies een beperkte vertegenwoordigingsbevoegdheid hebben, zoals vermeld in de statuten.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Dit document, dat vereist is volgens de nationale regelgeving, dient als de huidige \"identiteitskaart\" van de entiteit en geeft de status ervan aan (actief of gesloten)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Dit document, dat vereist is volgens de nationale regelgeving, dient als de huidige \"identiteitskaart\" van de entiteit en geeft de status ervan aan (actief of gesloten).",
+  "No Action Allowed": "Geen actie toegestaan",
+  "Not-Initiated": "Niet gestart",
+  "This is a list of devices that have logged into your account.": "Dit is een lijst met apparaten die op uw account zijn ingelogd.",
+  "Additional Details": "Aanvullende details",
+  "Enter the company name": "Voer de bedrijfsnaam in",
+  "Id Type": "ID-type",
+  "Select Relationship": "Selecteer relatie",
+  "Representative Details": "Representatieve details",
+  "Address line": "Adresregel"
 }

@@ -3312,5 +3312,14 @@
   "No subscriptions found": "कोई सदस्यता नहीं मिली",
   "Valid Resident Permits (only if issued by a European country)": "वैध निवास परमिट (केवल तभी जब किसी यूरोपीय देश द्वारा जारी किया गया हो)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "संबंधित व्यक्ति/व्यक्तियों का पद। इस जानकारी का सत्यापन संस्था के नियमों और शर्तों के साथ किया जाएगा ताकि यह सुनिश्चित हो सके कि संबंधित व्यक्ति का पद संस्था को बाध्य करने के लिए उसे बाध्य करता है। यह विशेष रूप से तब महत्वपूर्ण है जब आवेदक अध्यक्ष न हो, और संस्था के नियमों और शर्तों में उल्लिखित अन्य पदों के लिए प्रतिनिधित्व का अधिकार सीमित हो।",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "देश के नियमों के अनुसार आवश्यक, यह दस्तावेज़ संस्था के लिए वर्तमान \"पहचान पत्र\" के रूप में कार्य करता है, जो इसकी स्थिति (सक्रिय या बंद) को दर्शाता है।"
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "देश के नियमों के अनुसार आवश्यक, यह दस्तावेज़ संस्था के लिए वर्तमान \"पहचान पत्र\" के रूप में कार्य करता है, जो इसकी स्थिति (सक्रिय या बंद) को दर्शाता है।",
+  "No Action Allowed": "कोई कार्रवाई अनुमत नहीं है",
+  "Not-Initiated": "आरंभ नहीं किया गया",
+  "This is a list of devices that have logged into your account.": "यह उन डिवाइसों की सूची है जिन्होंने आपके खाते में लॉग इन किया है।",
+  "Additional Details": "अतिरिक्त विवरण",
+  "Enter the company name": "कंपनी का नाम दर्ज करें",
+  "Id Type": "आईडी प्रकार",
+  "Select Relationship": "संबंध चुनें",
+  "Representative Details": "प्रतिनिधि विवरण",
+  "Address line": "पता पंक्ति"
 }

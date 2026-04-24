@@ -1198,5 +1198,14 @@
   "No subscriptions found": "Բաժանորդագրություններ չեն գտնվել",
   "Valid Resident Permits (only if issued by a European country)": "Գործող բնակության թույլտվություններ (միայն եթե տրվել են եվրոպական երկրի կողմից)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Անհատ(ներ)ի գործառույթը։ Այս տեղեկատվությունը կհամեմատվի Հիմնադրամի կանոնադրության հետ՝ ապահովելու համար, որ անհատի գործառույթը թույլ է տալիս նրանց պարտավորեցնել կազմակերպությանը։ Սա հատկապես կարևոր է, երբ դիմորդը նախագահը չէ, և այլ գործառույթներն ունեն սահմանափակ ներկայացուցչական լիազորություններ, ինչպես նշված է Հիմնադրամի կանոնադրության մեջ։",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Երկրի կանոնակարգերի համաձայն պահանջվող այս փաստաթուղթը ծառայում է որպես կազմակերպության ներկայիս «անձնական քարտ», որը ցույց է տալիս դրա կարգավիճակը (ակտիվ կամ փակ):"
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Երկրի կանոնակարգերի համաձայն պահանջվող այս փաստաթուղթը ծառայում է որպես կազմակերպության ներկայիս «անձնական քարտ», որը ցույց է տալիս դրա կարգավիճակը (ակտիվ կամ փակ):",
+  "No Action Allowed": "Գործողություն թույլատրված չէ",
+  "Not-Initiated": "Չի նախաձեռնվել",
+  "This is a list of devices that have logged into your account.": "Սա ձեր հաշվին մուտք գործած սարքերի ցանկն է։",
+  "Additional Details": "Լրացուցիչ մանրամասներ",
+  "Enter the company name": "Մուտքագրեք ընկերության անվանումը",
+  "Id Type": "ՀԾ տեսակը",
+  "Select Relationship": "Ընտրեք հարաբերությունը",
+  "Representative Details": "Ներկայացուցչի մանրամասները",
+  "Address line": "Հասցեի տող"
 }
