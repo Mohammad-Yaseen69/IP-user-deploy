@@ -14,7 +14,7 @@ const CountryCode = ({ country, selectedCountry, setSelectedCountry, setCountry,
     const { allowedCountries } = useContext(UserContext)
 
     const countriesData = useMemo(() => {
-        return countriesInDiffLangs[i18n.language]
+        return (countriesInDiffLangs?.[i18n?.language] ?? [])
             ?.map(item => {
                 const phoneDetails = CountryBasedPhone?.[item?.alpha3]
                 return {
@@ -25,53 +25,56 @@ const CountryCode = ({ country, selectedCountry, setSelectedCountry, setCountry,
             .filter(item => {
                 return allowedCountries?.some(it => it?.country_iso_code === item?.alpha3)
             })
-    }, [allowedCountries, countriesInDiffLangs, CountryBasedPhone, i18n.language])
+    }, [allowedCountries, i18n?.language])
 
-    const fuse = new Fuse(countriesData, {
+    const fuse = new Fuse(countriesData ?? [], {
         keys: ["name"],
         threshold: 0.3,
     });
 
     const searchedCountries = useMemo(() => {
-        if (!searchTerm) return countriesData;
+        if (!searchTerm) return countriesData ?? [];
 
-        const fuseResults = fuse.search(searchTerm)?.map(result => result.item);
+        const fuseResults = fuse.search(searchTerm)?.map(result => result?.item) ?? [];
         if (fuseResults.length > 0) {
             return fuseResults
         } else {
-            return countriesData.filter(item => {
-                return item?.dial_code?.toString()?.includes(searchTerm) || item?.alpha3?.toLowerCase()?.includes(searchTerm?.toLowerCase()) || t(item?.name)?.toLowerCase()?.includes(searchTerm?.toLowerCase()) || t(item?.secondary_name)?.toLowerCase()?.includes(searchTerm?.toLowerCase()) || item?.secondary_name?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+            return (countriesData ?? []).filter(item => {
+                return item?.dial_code?.toString()?.includes(searchTerm)
+                    || item?.alpha3?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+                    || t(item?.name)?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+                    || t(item?.secondary_name)?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+                    || item?.secondary_name?.toLowerCase()?.includes(searchTerm?.toLowerCase())
             })
         }
-
     }, [searchTerm, countriesData])
 
     const [firstTime, setFirstTime] = useState(true)
-    // selected
+
     useEffect(() => {
         if (country && countriesData?.length > 0) {
-            const filtered = countriesData?.filter(item => item.alpha3 === country)?.[0]
+            const filtered = countriesData?.filter(item => item?.alpha3 === country)?.[0]
             console.log(filtered)
             setSelectedCountry(filtered)
             if (firstTime && !number) {
-                const formatted = phone?.replace(filtered?.dial_code?.replace("+", "")?.replace("-", ""), "")
+                const dialCode = filtered?.dial_code?.replace("+", "")?.replace("-", "") ?? ""
+                const formatted = phone?.replace(dialCode, "") ?? ""
                 setNumber(formatted)
                 setFirstTime(false)
             }
         }
     }, [countriesData, country, firstTime])
 
-    // dropdown
     const [showList, setShowList] = useState(false)
     const toggleDropDown = () => {
-        setShowList(!showList);
+        setShowList(prev => !prev);
         setSearchTerm("")
     }
 
     const dropdownRef = useRef(null);
 
     const handleClickOutside = useCallback((event) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        if (dropdownRef?.current && !dropdownRef.current.contains(event.target)) {
             setShowList(false);
         }
     }, []);
@@ -95,7 +98,7 @@ const CountryCode = ({ country, selectedCountry, setSelectedCountry, setCountry,
         <>
             <div className={styles.container} style={{ opacity: disabledDropdown ? .9 : 1, pointerEvents: disabledDropdown ? "none" : "all" }}>
                 <div className={styles.selected} onClick={disabledDropdown ? () => { } : toggleDropDown}>
-                    <img src={selectedCountry?.file_url} alt={selectedCountry?.code} />
+                    <img src={selectedCountry?.file_url} alt={selectedCountry?.code ?? ""} />
                     <span>{selectedCountry?.dial_code}</span>
                     {!hideIcon && <ChevronDown size={10} />}
                 </div>
@@ -106,14 +109,14 @@ const CountryCode = ({ country, selectedCountry, setSelectedCountry, setCountry,
                 <div className={styles.dropdown} ref={dropdownRef} style={{ zIndex: 99999999999 }}>
                     <input type="search" placeholder='Search Country' ref={inputRef} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
                     {
-                        searchedCountries?.map(item => (
+                        (searchedCountries ?? [])?.map(item => (
                             <div className={styles.dropdown_item} key={item?.name} onClick={() => {
                                 setNumber("")
                                 setCountry(item)
                                 setSelectedCountry(item)
                                 toggleDropDown()
                             }}>
-                                <img src={item?.file_url} alt={item?.code} />
+                                <img src={item?.file_url} alt={item?.code ?? ""} />
                                 <span>{t(item?.name)}  ({item?.dial_code})</span>
                             </div>
                         ))
