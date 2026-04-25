@@ -28,7 +28,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
             });
 
             if (filteringList.length > 0) {
-                filtered = filtered.filter(coun => {
+                filtered = filtered?.filter(coun => {
                     return filteringList.some(item => coun?.alpha3 === item?.country_iso_code)
                 })
                 setCountries(filtered);
