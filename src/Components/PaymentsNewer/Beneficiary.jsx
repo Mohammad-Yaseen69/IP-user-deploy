@@ -331,7 +331,7 @@ const PaymentsBeneficiary = ({ beneficiary, setBeneficiary, setSubStep, type = "
                                 } */}
                                 {
                                     isError &&
-                                    <div style={{ textAlign: "center", margin: "1rem 0" }}>{isError}</div>
+                                    <div style={{ textAlign: "center", margin: "1rem 0" }}>{t(isError)}</div>
                                 }
                                 {
                                     searched.length > 0 &&
