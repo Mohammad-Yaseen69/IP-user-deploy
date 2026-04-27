@@ -11,19 +11,31 @@ import { useTranslation } from "react-i18next"
 import { capitalizeStatus } from "../PendingNew/ItemMobile"
 import { isEmailValid } from "../../utils/Functions/validations"
 import { toast } from "react-toastify"
+import { useMutation } from "@tanstack/react-query"
+import { apiWrapper } from "../../utils/Functions/apiWrapper"
 
 const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPartnerVerification }) => {
 
     const [showEditModal, setShowEditModal] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [updating, setUpdating] = useState(false)
-    const { authHeader, userDetails, checkAuth } = useContext(UserContext)
+    const { authHeader, userDetails, checkAuth, verifyToken } = useContext(UserContext)
     const [partnerName, setPartnerName] = useState(partner?.name)
     const [partnerEmail, setPartnerEmail] = useState(partner?.email)
     const [partnerDesignation, setPartnerDesignation] = useState(partner?.designation)
     const [emailSent, setEmailSent] = useState(false)
     const [showAdditionalModal, setShowAdditionalModal] = useState(false)
     const { t } = useTranslation()
+
+    const { mutateAsync: getPartnerStatus, isPending } = useMutation({
+        mutationFn: (partnerId) => apiWrapper({
+            endpoint: `/api/company/partner-attempt-status/${partnerId}`
+        }),
+        onError: (error) => {
+            const dec = decryptData(error?.response?.data?.data)
+            toast.error(dec?.message || 'We are unable to process your request. Please try again later.')
+        }
+    })
 
     const updatePartnerHandler = async () => {
         if (userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved") {
@@ -111,13 +123,14 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
             }
             const encrypted = encryptData(payload)
             // console.log(encrypted)
-            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/company/verification/partner_${partner?._id}`, {
+            const response = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/company/verification-1/partner_${partner?._id}`, {
                 data: encrypted
             }, {
                 headers: authHeader
             })
             const data = await decryptData(response.data.data)
             // console.log(data)
+            verifyToken(true)
             setUpdating(false)
             setEmailSent(true)
             setTimeout(() => {
@@ -136,6 +149,18 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
     useEffect(() => {
         setPartnerFiles(partner?.kyb_additional_file)
     }, [partners, partner])
+
+    const handleRepayment = async () => {
+        const response = await getPartnerStatus(partner?._id)
+        console.log(response)
+
+        if (response.isPaymentRequired) {
+            setModalOpen(true)
+            setPartnerVerification(partner)
+        } else {
+            sendEmailVerification()
+        }
+    }
 
     return (
         <tr>
@@ -209,10 +234,8 @@ const KYBPartner = ({ partner, partners, setPartners, index, setModalOpen, setPa
                         display: "flex", alignItems: "center"
                     }}
                         title="Verify"
-                        onClick={() => {
-                            setModalOpen(true)
-                            setPartnerVerification(partner)
-                        }}
+                        disabled={isPending || updating}
+                        onClick={handleRepayment}
                     >
                         <RefreshCw size={15} />
                     </Button>

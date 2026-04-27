@@ -5,51 +5,53 @@ import { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../../Context/UserContext'
 import { useTranslation } from 'react-i18next'
 
-const steps = [
-    {
-        text: "Google Authenticator",
-        link: "Two Factor Authentication",
-        icon: auth,
-        type: "tfa"
-    },
-    {
-        text: "Add receiving/withdrawal account",
-        link: "Receiving Accounts",
-        icon: bank,
-        type: "withdrawls"
-    },
-    {
-        text: "Connect chatbot (Instagram/Telegram)",
-        link: "My Social Network Accounts",
-        icon: social,
-        type: "social"
-    },
-    {
-        text: "Verify identity",
-        link: "Identity Verification",
-        icon: passport,
-        type: "kyc"
-    }
-]
-
 const NextStepModal = ({ isOpen, toggle, setCurrentTab }) => {
-    const { missingTabsData } = useContext(UserContext)
+    const { missingTabsData, userDetails } = useContext(UserContext)
     const [data, setData] = useState([])
     const { t } = useTranslation()
 
+    const steps = [
+        {
+            text: "Google Authenticator",
+            link: "Two Factor Authentication",
+            icon: auth,
+            type: "tfa"
+        },
+        {
+            text: "Add receiving/withdrawal account",
+            link: "Receiving Accounts",
+            icon: bank,
+            type: "withdrawls"
+        },
+        {
+            text: "Connect chatbot (Instagram/Telegram)",
+            link: "My Social Network Accounts",
+            icon: social,
+            type: "social"
+        },
+        {
+            text: userDetails?.account_type === "business" ? "Verify Business" : "Verify identity",
+            link: userDetails?.account_type === "business" ? "Business Verification" : "Identity Verification",
+            icon: passport,
+            type: "kyc"
+        }
+    ]
 
     useEffect(() => {
         const getData = () => {
             const arr = []
             missingTabsData.forEach(item => {
                 const m = steps.find(step => step.type === item)
-                arr.push(m)
+                if (m) {
+                    arr.push(m)
+                }
             });
             setData(arr)
         }
 
         getData()
-    }, [missingTabsData])
+    }, [missingTabsData, userDetails?.account_type])
+
     return (
         <Modal style={{ margin: '0 auto' }} className="next-step-modal" centered={true} isOpen={isOpen} toggle={toggle}>
             <ModalBody>

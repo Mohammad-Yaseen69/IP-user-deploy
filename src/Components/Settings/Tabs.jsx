@@ -110,6 +110,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                 name: "Business Verification",
                 icon: iv,
                 active_icon: iv_active,
+                tabType: 'kyc'
             } :
 
             {
@@ -208,6 +209,11 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             }
         }
     }, [userDetails])
+
+    const isKycApproved = userDetails?.account_type === 'business'
+        ? (userDetails?.company?.kyb_status === "approved" || userDetails?.company?.kyb_status === "verified")
+        : userDetails?.user?.kyc_status === "approved";
+
     return (
         <div style={{ overflowX: width < 1000 && "visible" }} className={styles.container}>
             {(missingTabsData.length > 0 && width > 1000 && profileCompleted) &&
@@ -219,7 +225,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                         <div
                             style={{ padding: '12px 5px', width: '100%' }}
                             key={item.name}
-                            className={`${styles.tab} ${currentTab === item.name ? styles.active : ""} ${((item.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item.name !== "Verification" && !ft && userDetails?.user?.kyc_status !== "approved")) ? styles.disabled : ""} ${(userDetails?.country?.kyc_required && item.name !== "Verification") ? styles.kyc : ""}`}
+                            className={`${styles.tab} ${currentTab === item.name ? styles.active : ""} ${((item.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item.name !== "Verification" && !ft && !isKycApproved)) ? styles.disabled : ""} ${(userDetails?.country?.kyc_required && item.name !== "Verification") ? styles.kyc : ""}`}
                             onClick={() => {
                                 window.history.replaceState(null, null, "")
                                 setCurrentTab(item.name)
@@ -245,15 +251,15 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
             {missingTabsData.length > 0 && width < 1000 && profileCompleted
                 &&
                 <div className={styles.missingDiv}>
-                    <div>
-                        <span style={{ width: '14px', height: '14px', background: "#EB8C1D", borderRadius: '50%', flexShrink: "0", display: "flex", justifyContent: "center", alignItems: 'center', color: 'white', fontWeight: 600 }}>
+                    <div className={styles.missingContent}>
+                        <span className={styles.infoIcon}>
                             i
                         </span>
                         <h4>
                             {t("Please complete these important steps for a seamless experience.")}
                         </h4>
                     </div>
-                    <button onClick={() => setShowMissingModal(true)}>{t("View the Steps")}</button>
+                    <button className={styles.viewStepsBtn} onClick={() => setShowMissingModal(true)}>{t("View the Steps")}</button>
                 </div>
             }
 
@@ -290,7 +296,7 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                         <div className={styles.customDropdownList} tabIndex={-1}>
                             {tabsData.filter(item => item.name.length > 0).map(item => {
                                 const isDisabled = (item.name !== "Basic Info" && profileIncompleteReason === "basic") ||
-                                    (userDetails?.country?.kyc_required && item.name !== "Verification" && !ft && userDetails?.user?.kyc_status !== "approved");
+                                    (userDetails?.country?.kyc_required && item.name !== "Verification" && !ft && !isKycApproved);
                                 return (
                                     <div
                                         key={item.name}
@@ -336,9 +342,9 @@ const Tabs = ({ currentTab, setCurrentTab, account_type = "individual" }) => {
                 tabsData.filter(item => (item.name.length > 0 && (!missingTabs.some(i => i.name === item.name) && width > 1000))).map(item => (
                     <div
                         key={item.name}
-                        className={`${styles.tab} ${currentTab === item.name ? styles.active : ""} ${((item.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item.name !== "Verification" && !ft && userDetails?.user?.kyc_status !== "approved")) ? styles.disabled : ""} ${(userDetails?.country?.kyc_required && item.name !== "Verification") ? styles.kyc : ""}`}
+                        className={`${styles.tab} ${currentTab === item.name ? styles.active : ""} ${((item.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item.name !== "Verification" && !ft && !isKycApproved)) ? styles.disabled : ""} ${(userDetails?.country?.kyc_required && item.name !== "Verification") ? styles.kyc : ""}`}
                         onClick={() => {
-                            if ((item.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item.name !== "Verification" && !ft && userDetails?.user?.kyc_status !== "approved")) return;
+                            if ((item.name !== "Basic Info" && profileIncompleteReason === "basic") || (userDetails?.country?.kyc_required && item.name !== "Verification" && !ft && !isKycApproved)) return;
                             window.history.replaceState(null, null, "")
                             setCurrentTab(item.name)
                             verifyToken()

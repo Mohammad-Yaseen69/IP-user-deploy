@@ -107,10 +107,10 @@ const CitiesDropDown = ({ userCity, setUserCity, disabled = false, iso_3 = "", i
 
             </DropdownToggle>
             <DropdownMenu style={{ maxHeight: "350px", overflowY: "auto", overflowX: "auto", width: "100%" }}>
-                {filtered?.length === 0 && searchTerm && !isState && (
+                {filtered?.length === 0 && searchTerm && (
                     <>
                         <div style={{ padding: '0.5rem 1rem', color: '#d9534f', fontWeight: 500, background: '#f6f6f6', borderBottom: '1px solid #f8f8f8' }}>
-                            {t("If you can not find your city in the list just enter manually.")}
+                            {t("If you can not find your {{item}} in the list just enter manually.", { item: t(title).toLowerCase().replace("select ", "") })}
                         </div>
                         <DropdownItem
                             key="manual-entry"
@@ -121,7 +121,7 @@ const CitiesDropDown = ({ userCity, setUserCity, disabled = false, iso_3 = "", i
                             }}
                             style={{ color: '#5926F0', fontWeight: 700 }}
                         >
-                            {t("Set city as")}: <span style={{ fontWeight: 700 }}>&apos;{searchTerm}&apos;</span>
+                            {t("Set as")}: <span style={{ fontWeight: 700 }}>&apos;{searchTerm}&apos;</span>
                         </DropdownItem>
                     </>
                 )}
@@ -146,7 +146,7 @@ export default CitiesDropDown;
 
 const DropdownRenderItem = ({ item, setItem, setSearchTerm, isState }) => {
     return (
-        <DropdownItem key={item.code} onClick={() => {
+        <DropdownItem key={item.code || item?.fips} onClick={() => {
             if (isState) {
                 setItem(item?.name, item?.isoCode?.replace("US-", ""))
             } else {
