@@ -63,6 +63,7 @@ const InvoicePayment = lazy(() => import("../Components/ReceiptInvoices/InvoiceP
 const InvoicePaymentQr = lazy(() => import("../Components/ReceiptInvoices/InvoicePaymentQr"))
 const PlansSubscription = lazy(() => import("../Components/PlansSubscriptions"))
 const StoreCreate = lazy(() => import("../Components/StoreCreate"))
+const GuestLogin = lazy(() => import("../Components/guestDashboard/auth"))
 
 
 export const routes = [
@@ -149,5 +150,9 @@ export const authRoutes = [
     { path: `/forgot-password`, component: <AuthNew /> },
     { path: `/signup`, component: <Auth /> },
     { path: `/signup/:code`, component: <Auth /> },
+    { path: "*", component: <NotFound type='Page' /> }
+]
+export const guestRoutes = [
+    { path: `/guestSession/Guestlogin`, component: <GuestLogin /> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
