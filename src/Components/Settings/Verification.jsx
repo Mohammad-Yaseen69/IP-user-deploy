@@ -16,6 +16,8 @@ import VerificationGuide from './VerificationGuide';
 import errors from "../AddFunds/TrustPaymentErrors.json"
 import { AiOutlineClockCircle } from 'react-icons/ai';
 import { logger } from '@sentry/react';
+import { useMutation } from '@tanstack/react-query';
+import { apiWrapper } from '../../utils/Functions/apiWrapper';
 
 const industries = [
     "Arts & Entertainment",
@@ -49,13 +51,26 @@ export const sourceOfFunds = [
 
 const Verification = () => {
     const { t } = useTranslation()
-    const { userDetails, authHeader } = useContext(UserContext)
+    const navigate = useNavigate()
+
+    const { userDetails, authHeader, verifyToken } = useContext(UserContext)
     const [message, setMessage] = useState("")
     const [showAdditionalModal, setShowAdditionalModal] = useState(false)
     const [occupation, setOccupation] = useState("")
     const [sourceOfFund, setSourceOfFund] = useState("")
     const [occupationOther, setOccupationOther] = useState("")
     const [loading, setLoading] = useState(false)
+
+    const { mutateAsync, isPending } = useMutation({
+        mutationFn: (payload) => apiWrapper({
+            endpoint: `/api/user/update-kyc-details`,
+            method: "PUT",
+            payload,
+            isEncrypted: true,
+        })
+    })
+
+    const isVerificationButtonHidden = userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "needs-review" || userDetails?.paypal_transaction === "processing";
 
     useEffect(() => {
         setMessage(userDetails?.user?.desc ?? "")
@@ -101,12 +116,48 @@ const Verification = () => {
             // console.log("try ran in handlesend");
         } catch (error) {
 
-            toast.error("We cannot process your request at the moment, please try again later.")
+            toast.error("We cannot process your request at the moment, please try again later.")
             // console.log("try ran in error", error);
             // console.log(decryptData(error?.response?.data?.data));
         }
         finally {
             setLoading(false)
+        }
+    };
+
+    const handleStartVerification = async () => {
+        // const isChanged =
+        //     message !== (userDetails?.user?.desc || "") ||
+        //     occupation !== (userDetails?.user?.occupation || "") ||
+        //     sourceOfFund !== (userDetails?.user?.source_of_funds || "");
+        let paymentRequired = true
+
+        try {
+            const response = await mutateAsync({
+                account_id: userDetails?._id,
+                occupation: occupation === "Other" ? occupationOther : occupation,
+                desc: message,
+                source_of_funds: sourceOfFund
+            });
+
+            console.log(response, "response from api")
+            if (response.isPaymentRequired === false) {
+                paymentRequired = false
+            }
+
+
+            await verifyToken(true)
+        } catch (error) {
+            const dec = decryptData(error?.response?.data?.data)
+            toast.error(dec?.message || "We are unable to process your request at the moment, please try again later.");
+            return;
+        }
+
+
+        if (userDetails?.kyc_verification_paid || !paymentRequired) {
+            handleVerify();
+        } else {
+            setShowVerificationModal(true);
         }
     };
 
@@ -116,9 +167,17 @@ const Verification = () => {
     const queryParams = new URLSearchParams(location.search)
     const status = queryParams.get("status")
     const code = queryParams.get("code")
+    const payment_through = queryParams.get("payment_through")
+    const refreshData = queryParams.get("refreshData")
     const ft = queryParams.get("ft")
     const [statusModal, setStatusModal] = useState(false)
     const [processing, setProcessing] = useState("")
+
+    useEffect(() => {
+        if (refreshData) {
+            window.location.href = `${location.pathname}?tab=verification`
+        }
+    }, [refreshData])
 
     useEffect(() => {
         const updateProcessingCheck = async () => {
@@ -135,25 +194,32 @@ const Verification = () => {
         }
 
 
-        if (status?.toLowerCase() === "success" && (!userDetails?.kyc_verification_paid && (userDetails?.user?.kyc_status !== "approved" || userDetails?.user?.kyc_status !== "verified"))) {
-            if (userDetails?.paypal_transaction !== "processing") {
+        if (status?.toLowerCase() === "success" && (!userDetails?.kyc_verification_paid && userDetails?.user?.kyc_status !== "approved" && userDetails?.user?.kyc_status !== "verified")) {
+            if (userDetails?.paypal_transaction !== "processing" && payment_through === "paypal") {
                 updateProcessingCheck()
                 setProcessing("processing")
             }
         }
     }, [status, userDetails])
 
-    console.log(userDetails?.paypal_transaction)
 
+
+    const clearStatus = () => {
+        setStatusModal("")
+        navigate({
+            pathname: location.pathname,
+            search: "?tab=verification"
+        }, { replace: true })
+    }
 
     useEffect(() => {
         setProcessing(userDetails?.paypal_transaction)
 
         if (status) {
-            if (userDetails?.user?.kyc_status !== "approved" || userDetails?.user?.kyc_status !== "verified") {
+            if (userDetails?.user?.kyc_status !== "approved" && userDetails?.user?.kyc_status !== "verified") {
                 setStatusModal(status?.toLowerCase())
             } else {
-                setStatusModal("")
+                clearStatus()
             }
         }
     }, [status, userDetails])
@@ -161,15 +227,13 @@ const Verification = () => {
     const [showGuide, setShowGuide] = useState(true)
 
     useLayoutEffect(() => {
-        if (userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "needs-review" || userDetails?.user?.kyc_status === "processing" || userDetails?.paypal_transaction === "processing") {
+        if (userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "needs-review" || userDetails?.user?.kyc_status === "processing" || userDetails?.paypal_transaction === "processing" || !status) {
             setShowGuide(false)
-        } else {
-            setShowGuide(true)
         }
-    }, [userDetails])
+    }, [userDetails, status])
 
     const error_message = () => {
-        return errors.find(item => item?.code == code)?.message ?? "We cannot process your request at the moment, please try again later."
+        return errors.find(item => item?.code == code)?.message ?? "We cannot process your request at the moment, please try again later."
     }
     return (
         <Card id='verification'>
@@ -190,7 +254,7 @@ const Verification = () => {
             {
                 statusModal
                 &&
-                <Modal isOpen={statusModal}>
+                <Modal isOpen={statusModal} toggle={clearStatus}>
                     <ModalBody>
                         {
                             processing === "processing" ?
@@ -219,11 +283,16 @@ const Verification = () => {
                                     statusModal === "success"
                                         ?
                                         <p className="mb-0">{t("KYC Fee has been paid successfully!")}
-                                            <span style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }} onClick={() => userDetails?.kyc_verification_paid ? handleVerify() : setStatusModal("")}>{t("Continue")}</span></p>
+                                            <span style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }} onClick={() => {
+                                                if (userDetails?.kyc_verification_paid) {
+                                                    handleVerify()
+                                                }
+                                                clearStatus()
+                                            }}>{t("Continue")}</span></p>
                                         :
                                         <p className="mb-0">{t(error_message())} <br /> <span style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }} onClick={() => {
                                             setShowVerificationModal(true)
-                                            setStatusModal("")
+                                            clearStatus()
                                         }}>{t("Start again!")}</span></p>
                             }
                         </div>
@@ -309,13 +378,13 @@ const Verification = () => {
                     <Col md="12" className='mb-4'>
                         <div>
                             <Label className="form-label">{t("Briefly describe yourself and explain your reasons for using InstaPay.")}</Label>
-                            <Input type="textarea" className="form-control" rows="5" placeholder={t("Enter Your Message")} value={message} onChange={e => setMessage(e.target.value)} disabled={userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "pending" || userDetails?.user?.kyc_status === "needs-review"} />
+                            <Input type="textarea" className="form-control" rows="5" placeholder={t("Enter Your Message")} value={message} onChange={e => setMessage(e.target.value)} disabled={isVerificationButtonHidden} />
                         </div>
                     </Col>
                     <Col md="12" className='mb-4'>
                         <div>
                             <Label className="form-label">{t("Select Occupation")}</Label>
-                            <Input type="select" className="form-control" value={occupation} onChange={e => setOccupation(e.target.value)} disabled={userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "pending" || userDetails?.user?.kyc_status === "needs-review"}>
+                            <Input type="select" className="form-control" value={occupation} onChange={e => setOccupation(e.target.value)} disabled={isVerificationButtonHidden}>
                                 <option value="" disabled="">{t("Select")}</option>
                                 {
                                     industries.map(item => (
@@ -338,7 +407,7 @@ const Verification = () => {
                     <Col md="12" className='mb-4'>
                         <div>
                             <Label className="form-label">{t("Select Source Of Fund")}</Label>
-                            <Input type="select" className="form-control" disabled={userDetails?.user?.kyc_status === "approved" || userDetails?.user?.kyc_status === "pending" || userDetails?.user?.kyc_status === "needs-review"} value={sourceOfFund} onChange={e => setSourceOfFund(e.target.value)}>
+                            <Input type="select" className="form-control" disabled={isVerificationButtonHidden} value={sourceOfFund} onChange={e => setSourceOfFund(e.target.value)}>
                                 <option value="" disabled="">{t("Select")}</option>
                                 {
                                     sourceOfFunds.map(item => (
@@ -401,16 +470,12 @@ const Verification = () => {
                                     border: "none",
                                     outline: "none",
                                     borderRadius: "10px"
-                                }} disabled={loading || !message || !(occupation === "Other" ? occupationOther : occupation) || !(
+                                }} disabled={loading || isPending || !message || !(occupation === "Other" ? occupationOther : occupation) || !(
                                     userDetails?.user?.kyc_status !== "declined" ||
                                     userDetails?.user?.kyc_status !== "unverified"
                                 )} onClick={() => {
                                     logger.info(`User ${userDetails?.first_name || userDetails?.company_name} ${userDetails?.last_name} clicked on start verification his status is ${userDetails?.user?.kyc_status} and paid status is ${userDetails?.kyc_verification_paid}`)
-                                    if (userDetails?.kyc_verification_paid) {
-                                        handleVerify()
-                                    } else {
-                                        setShowVerificationModal(true)
-                                    }
+                                    handleStartVerification()
                                 }}>
                                     {t("Start Verification")}
                                 </Button>

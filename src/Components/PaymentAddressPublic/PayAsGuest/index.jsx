@@ -255,6 +255,7 @@ const PayAsGuest = ({
         payment_type: type,
         customer_town: data.customerTown,
         customer_street: data.customerStreet,
+        customer_county: data.customer_county
       };
 
       if (planId) {
@@ -500,7 +501,7 @@ const PayAsGuest = ({
         disabled =
          !isPersonalInfoValid(data, false) || 
          (isShipping ? !isShippingValid(data.shippingDetails) : false) || 
-         ((data?.country?.alpha3 === "USA" || data?.country?.alpha3 === "CAN") && (!data.customerTown || !data.customerStreet))
+         ((data?.country?.alpha3 === "USA" || data?.country?.alpha3 === "CAN") && (!data.customerTown || !data.customerStreet || !data.customer_county))
       }
     }
 
