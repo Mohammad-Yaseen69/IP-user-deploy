@@ -44,7 +44,7 @@ const Socials = () => {
                 const index1 = arr.findIndex(social => social.name.trim() === "Facebook:");
                 const index2 = arr.findIndex(social => social.name.trim() === "Telegram:");
 
-                arr[index2].followers = userDetails?.telegram_bot ? "connected" : "not connected"
+                arr[index2].followers = userDetails?.telegram_bot ? t("connected") : t("not connected")
                 const temp = arr[index1]
 
                 arr[index1] = arr[index2]
@@ -71,7 +71,7 @@ const Socials = () => {
                     socials_data.slice(0, showMore ? socials_data.length : 3).map(item => (
                         <div className={styles.item} key={item.name}>
                             <div className={styles.left}>
-                                <span>{item.name}</span>
+                                <span>{t(item.name)}</span>
                                 {
                                     item?.name?.toLowerCase()?.includes("instagram") && userDetails?.insta_username
                                         ?
@@ -84,7 +84,7 @@ const Socials = () => {
                                 {
                                     item.followers !== null
                                     &&
-                                    <span>{item.followers}</span>
+                                    <span>{t(item.followers)}</span>
                                 }
                                 <div>{">"}</div>
                             </div>
@@ -101,7 +101,7 @@ const Socials = () => {
                                     {
                                         item.followers !== null
                                         &&
-                                        <span>{item.followers}</span>
+                                        <span>{t(item.followers)}</span>
                                     }
                                     <div>{">"}</div>
                                 </div>
