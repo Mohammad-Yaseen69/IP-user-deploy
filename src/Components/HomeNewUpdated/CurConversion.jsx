@@ -180,7 +180,7 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
     const handleBlur = (e) => {
         formatCurrency(e.target.value, true, setFormattedAmount);
     };
-
+    const errorCode = error?.split("Error Code: ")[1];
     useEffect(() => {
         setEnteredCurrency(String(formattedAmount)?.replaceAll(",", ""))
     }, [formattedAmount])
@@ -244,7 +244,8 @@ const CurConversion = ({ extCurrency = "", showHeading = true }) => {
                             }}></div>
                             <input type="text" placeholder={t("Exchanged Amount")} value={fxDet?.receiver?.amount?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 6 }) ?? ""} disabled />
                         </div>
-                        {error && <p style={{ fontWeight: 600, color: "orange" }}>{error} </p>}
+                        {error && <p style={{ fontWeight: 600, color: "orange" }}>    {t("We are unable to process your request at the moment, please try again later! Error Code: {{code}}", { code: errorCode })}
+                        </p>}
                         <button
                             style={{
                                 opacity: !enteredCurrency || !resultCurrency || !userCurrency || !exchangedCurrency || invalid || exchangedCurrency === userCurrency ? ".7" : 1,

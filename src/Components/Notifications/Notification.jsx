@@ -5,11 +5,11 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { Badge } from 'reactstrap'
 import { UserContext } from '../../Context/UserContext'
+import { useTranslation } from 'react-i18next'
 
 function calculateDateDifference(inputDate) {
     const inputDateTime = new Date(inputDate);
     const currentDate = new Date();
-
     const differenceInMilliseconds = currentDate - inputDateTime;
     const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
 
@@ -50,6 +50,7 @@ const Notification = ({ notification, currentUser }) => {
     const [status, setStatus] = useState(notification?.status)
     const [link, setLink] = useState("")
     const { userDetails } = useContext(UserContext)
+    const { t } = useTranslation()
 
     useEffect(() => {
         // console.log(notification)
@@ -168,9 +169,9 @@ const Notification = ({ notification, currentUser }) => {
                             {calculateDateDifference(notification?.createdAt)}
                         </span>
                     </div>
-                    <Badge style={{ fontSize: ".45rem", borderRadius: "3px" }}>{currentUser?.account_type?.toUpperCase()}</Badge>
-                    <h5 style={{ fontSize: ".7rem", fontWeight: 600, marginBottom: 0, color: "black", marginTop: "5px" }}>{notification?.title}</h5>
-                    <p style={{ fontSize: ".6rem", color: "#a8a8a8", marginBottom: 0 }}>{notification?.desc}</p>
+                    <Badge style={{ fontSize: ".45rem", borderRadius: "3px" }}>{t(currentUser?.account_type?.toUpperCase())}</Badge>
+                    <h5 style={{ fontSize: ".7rem", fontWeight: 600, marginBottom: 0, color: "black", marginTop: "5px" }}>{t(notification?.title)}</h5>
+                    <p style={{ fontSize: ".6rem", color: "#a8a8a8", marginBottom: 0 }}>{t(notification?.desc)}</p>
                 </div>
             </div>
             {

@@ -101,7 +101,7 @@ const HomeNewUpdated = () => {
                     return {
                         ...currency,
                         price: price,
-                        increment: "0.00%", // Binance ticker/price doesn't provide 24h change
+                        increment: "0.00%",
                     };
                 }));
             } catch (error) {
