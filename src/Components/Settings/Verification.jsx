@@ -172,10 +172,15 @@ const Verification = () => {
     const ft = queryParams.get("ft")
     const [statusModal, setStatusModal] = useState(false)
     const [processing, setProcessing] = useState("")
+    const [showRefreshScreen, setShowRefreshScreen] = useState(refreshData === "true")
 
     useEffect(() => {
         if (refreshData) {
-            window.location.href = `${location.pathname}?tab=verification`
+            // Remove refreshData from URL on initial load
+            const url = new URL(window.location.href);
+            url.searchParams.delete("refreshData");
+            window.history.replaceState({}, "", url.toString());
+            setShowRefreshScreen(true)
         }
     }, [refreshData])
 
@@ -235,6 +240,61 @@ const Verification = () => {
     const error_message = () => {
         return errors.find(item => item?.code == code)?.message ?? "We cannot process your request at the moment, please try again later."
     }
+
+    if (showRefreshScreen) {
+        return (
+            <div style={{ 
+                // width: "100vw", 
+                // height: "100vh", 
+                background: "#fff", 
+                display: "flex", 
+                flexDirection: "column", 
+                justifyContent: "center", 
+                alignItems: "center",
+                gap: "1.5rem",
+            }}>
+                <AiOutlineClockCircle size={80} className="text-warning" />
+                <h2 style={{ 
+                    color: "#1a1a1a", 
+                    fontWeight: 600,
+                    textAlign: "center",
+                    maxWidth: "500px",
+                    lineHeight: 1.4
+                }}>
+                    {t("Your KYC Verification is currently being processed")}
+                </h2>
+                <p style={{ 
+                    color: "#666", 
+                    fontSize: "1rem", 
+                    textAlign: "center",
+                    maxWidth: "400px",
+                    lineHeight: 1.6
+                }}>
+                    {t("Please refresh the page to get the latest verification status. This may take a few moments.")}
+                </p>
+                <Button 
+                    style={{ 
+                        background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)", 
+                        border: "none", 
+                        outline: "none", 
+                        borderRadius: "10px",
+                        padding: "12px 32px",
+                        fontSize: "1rem",
+                        fontWeight: 500,
+                        marginTop: "0.5rem"
+                    }}
+                    onClick={() => {
+                        const url = new URL(window.location.href);
+                        url.searchParams.delete("refreshData");
+                        window.location.href = url.toString();
+                    }}
+                >
+                    {t("Refresh Page")}
+                </Button>
+            </div>
+        )
+    }
+
     return (
         <Card id='verification'>
             {
