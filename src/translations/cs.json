@@ -1198,5 +1198,14 @@
   "No subscriptions found": "Nenalezeny žádné předplatné",
   "Valid Resident Permits (only if issued by a European country)": "Platná povolení k pobytu (pouze pokud byla vydána evropskou zemí)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Funkce osoby (osob). Tyto informace budou ověřeny se stanovami, aby se zajistilo, že funkce dané osoby jí umožňuje zavazovat subjekt. To je obzvláště důležité, pokud žadatel není prezidentem a ostatní funkce mají omezenou pravomoc zastupovat subjekt, jak je uvedeno ve stanovách.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Tento dokument, který je vyžadován dle předpisů dané země, slouží jako aktuální „občanský průkaz“ subjektu a uvádí jeho stav (aktivní nebo uzavřený)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Tento dokument, který je vyžadován dle předpisů dané země, slouží jako aktuální „občanský průkaz“ subjektu a uvádí jeho stav (aktivní nebo uzavřený).",
+  "No Action Allowed": "Žádná akce není povolena",
+  "Not-Initiated": "Nezahájeno",
+  "This is a list of devices that have logged into your account.": "Toto je seznam zařízení, která se přihlásila k vašemu účtu.",
+  "Additional Details": "Další podrobnosti",
+  "Enter the company name": "Zadejte název společnosti",
+  "Id Type": "Typ ID",
+  "Select Relationship": "Vyberte vztah",
+  "Representative Details": "Detaily zástupce",
+  "Address line": "Řádek adresy"
 }

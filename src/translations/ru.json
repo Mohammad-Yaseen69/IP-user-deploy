@@ -3268,5 +3268,14 @@
   "No subscriptions found": "Подписки не найдены",
   "Valid Resident Permits (only if issued by a European country)": "Действующий вид на жительство (только если он выдан европейской страной)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Должностные обязанности лица (лиц). Эта информация будет проверена в соответствии с Уставом, чтобы убедиться, что должностные обязанности лица позволяют ему представлять интересы организации. Это особенно важно, когда заявитель не является президентом, а другие должностные лица имеют ограниченные полномочия по представлению интересов, как указано в Уставе.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Этот документ, требуемый в соответствии с законодательством страны, служит действующим «удостоверением личности» организации, указывающим на ее статус (действующая или закрытая)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Этот документ, требуемый в соответствии с законодательством страны, служит действующим «удостоверением личности» организации, указывающим на ее статус (действующая или закрытая).",
+  "No Action Allowed": "Действия запрещены",
+  "Not-Initiated": "Непосвященный",
+  "This is a list of devices that have logged into your account.": "Это список устройств, которые вошли в вашу учетную запись.",
+  "Additional Details": "Дополнительные сведения",
+  "Enter the company name": "Введите название компании",
+  "Id Type": "Тип идентификатора",
+  "Select Relationship": "Выберите тип отношений",
+  "Representative Details": "Представительские данные",
+  "Address line": "Адресная строка"
 }

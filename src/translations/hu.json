@@ -1198,5 +1198,14 @@
   "No subscriptions found": "Nem található előfizetés",
   "Valid Resident Permits (only if issued by a European country)": "Érvényes tartózkodási engedélyek (csak akkor, ha európai ország állította ki)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "A személy(ek) beosztása. Ezeket az információkat összevetik az alapszabályzattal annak biztosítása érdekében, hogy a személy beosztása lehetővé teszi számára a szervezet nevében való kötelezettségvállalást. Ez különösen fontos, ha a kérelmező nem az elnök, és más beosztású személyek korlátozott képviseleti jogkörrel rendelkeznek az alapszabályban foglaltak szerint.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Az ország előírásai szerint ez a dokumentum a szervezet aktuális „személyi igazolványaként” szolgál, jelezve annak státuszát (aktív vagy zárt)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Az ország előírásai szerint ez a dokumentum a szervezet aktuális „személyi igazolványaként” szolgál, jelezve annak státuszát (aktív vagy zárt).",
+  "No Action Allowed": "Nincs engedélyezett művelet",
+  "Not-Initiated": "Nem beavatott",
+  "This is a list of devices that have logged into your account.": "Ez azon eszközök listája, amelyek bejelentkeztek a fiókodba.",
+  "Additional Details": "További részletek",
+  "Enter the company name": "Írja be a cég nevét",
+  "Id Type": "Azonosító típusa",
+  "Select Relationship": "Kapcsolat kiválasztása",
+  "Representative Details": "Képviselői adatok",
+  "Address line": "Cím sor"
 }

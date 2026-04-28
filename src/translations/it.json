@@ -3321,5 +3321,14 @@
   "No subscriptions found": "Nessun abbonamento trovato",
   "Valid Resident Permits (only if issued by a European country)": "Permessi di soggiorno validi (solo se rilasciati da un paese europeo)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Funzione dell'individuo/degli individui. Queste informazioni saranno verificate incrociandole con lo statuto sociale per accertare che la funzione dell'individuo gli consenta di vincolare l'ente. Ciò è particolarmente importante quando il richiedente non è il presidente e altre funzioni hanno un'autorità di rappresentanza limitata, come stabilito nello statuto sociale.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Questo documento, richiesto dalle normative nazionali, funge da \"carta d'identità\" valida per l'entità, indicandone lo stato (attiva o chiusa)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Questo documento, richiesto dalle normative nazionali, funge da \"carta d'identità\" valida per l'entità, indicandone lo stato (attiva o chiusa).",
+  "No Action Allowed": "Nessuna azione consentita",
+  "Not-Initiated": "Non avviato",
+  "This is a list of devices that have logged into your account.": "Questo è l'elenco dei dispositivi che hanno effettuato l'accesso al tuo account.",
+  "Additional Details": "Ulteriori dettagli",
+  "Enter the company name": "Inserisci il nome dell'azienda",
+  "Id Type": "Tipo ID",
+  "Select Relationship": "Seleziona alimentazione",
+  "Representative Details": "Dettagli rappresentativi",
+  "Address line": "Riga dell'indirizzo"
 }

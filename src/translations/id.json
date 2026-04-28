@@ -3309,5 +3309,14 @@
   "No subscriptions found": "Tidak ditemukan langganan.",
   "Valid Resident Permits (only if issued by a European country)": "Izin Tinggal yang Sah (hanya jika dikeluarkan oleh negara Eropa)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Fungsi individu. Informasi ini akan diverifikasi silang dengan Anggaran Dasar untuk memastikan bahwa fungsi individu tersebut memungkinkan mereka untuk mengikat entitas. Hal ini sangat penting terutama ketika pemohon bukan presiden, dan fungsi lain memiliki wewenang perwakilan yang terbatas sebagaimana tercantum dalam Anggaran Dasar.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Sesuai dengan peraturan negara, dokumen ini berfungsi sebagai \"kartu identitas\" terkini untuk entitas tersebut, yang menunjukkan statusnya (aktif atau ditutup)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Sesuai dengan peraturan negara, dokumen ini berfungsi sebagai \"kartu identitas\" terkini untuk entitas tersebut, yang menunjukkan statusnya (aktif atau ditutup).",
+  "No Action Allowed": "Tidak Ada Tindakan yang Diizinkan",
+  "Not-Initiated": "Belum Diinisiasi",
+  "This is a list of devices that have logged into your account.": "Ini adalah daftar perangkat yang telah masuk ke akun Anda.",
+  "Additional Details": "Detail Tambahan",
+  "Enter the company name": "Masukkan nama perusahaan",
+  "Id Type": "Jenis ID",
+  "Select Relationship": "Pilih Hubungan",
+  "Representative Details": "Rincian Perwakilan",
+  "Address line": "Baris alamat"
 }
