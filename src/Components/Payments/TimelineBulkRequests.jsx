@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
-import { Table, Button } from 'reactstrap';
-import { Check, Edit } from 'react-feather';
-import { VerticalTimelineElement } from 'react-vertical-timeline-component';
+import { useState } from 'react';
+import { Table } from 'reactstrap';
 import TBRItem from './TBRItem';
+import { useTranslation } from 'react-i18next';
 
 const TimelineBulkRequests = ({ mobileView, setStepNumber, beneficiaries, srr }) => {
     const [completed, setCompleted] = useState(false);
     const [data, setData] = useState(beneficiaries);
     const [editRowIndex, setEditRowIndex] = useState(-1);
     const [editedData, setEditedData] = useState([...data]);
-
+    const {t} = useTranslation()
     const handleEdit = (index) => {
         setEditRowIndex(index);
         setEditedData([...data]);
@@ -96,11 +95,11 @@ const TimelineBulkRequests = ({ mobileView, setStepNumber, beneficiaries, srr })
                 <Table responsive>
                     <thead>
                         <tr>
-                            <th>Recipients</th>
-                            <th>Amount</th>
-                            <th>Currency</th>
-                            <th>Recipient Currency</th>
-                            <th>Action</th>
+                            <th>{t("Recipients")}</th>
+                            <th>{t("Amount")}</th>
+                            <th>{t("Currency")}</th>
+                            <th>{t("Recipient Currency")}</th>
+                            <th>{t("Action")}</th>
                         </tr>
                     </thead>
                     <tbody>

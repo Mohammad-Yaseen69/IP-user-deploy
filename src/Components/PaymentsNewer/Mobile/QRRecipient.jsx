@@ -1,12 +1,11 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import invite from "../files/invite.png"
-import countries from "../CountriesData.json"
 import { useLocation, useNavigate } from 'react-router'
-import InviteFriendModal from '../InviteFriendModal'
-import styles from "../../QuickQrPay/styles/index.module.scss"
-import copy from "../../QuickQrPay/files/copy.svg"
 import { toast } from 'react-toastify'
+import copy from "../../QuickQrPay/files/copy.svg"
+import styles from "../../QuickQrPay/styles/index.module.scss"
+import countries from "../CountriesData.json"
+import InviteFriendModal from '../InviteFriendModal'
 
 const QRRecipient = ({ wallet, dataHandler }) => {
     const { t } = useTranslation()
@@ -43,7 +42,7 @@ const QRRecipient = ({ wallet, dataHandler }) => {
                         <h2>{wallet?.first_name || wallet?.company_name?.[0]} {wallet?.last_name}</h2>
                         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                             <p>@{wallet?.username}</p>
-                            <span>{wallet?.account_type === "individual" ? "Personal" : "Business"} Account</span>
+                            <span>{wallet?.account_type === "individual" ? t("Personal") : t("Business")} {t("Account")}</span>
                         </div>
 
                         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
@@ -55,7 +54,7 @@ const QRRecipient = ({ wallet, dataHandler }) => {
                     <div className={styles.w_info}>
                         <div>
                             <p>{wallet?.wallet_id}</p>
-                            <span>{wallet?.currency?.code} Wallet</span>
+                            <span>{wallet?.currency?.code} {t("Wallet")}</span>
                         </div>
                         <img src={copy} alt="" onClick={() => {
                             navigator.clipboard.writeText(wallet?.wallet_id)

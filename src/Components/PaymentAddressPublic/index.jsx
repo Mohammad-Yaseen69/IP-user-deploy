@@ -192,7 +192,7 @@ const PaymentAddressPublic = () => {
                                             :
                                             <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                                                 <CardBody>
-                                                    <CardText>Sending to a payment address is not available on this level.<Link onClick={verifyToken} to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>Go back to Home.</Link></CardText>
+                                                    <CardText>{t("Sending to a payment address is not available on this level.")}<Link onClick={verifyToken} to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>Go back to Home.</Link></CardText>
                                                 </CardBody>
                                             </Card>
                                     )
@@ -249,7 +249,7 @@ const PaymentAddressPublic = () => {
                                             :
                                             <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                                                 <CardBody>
-                                                    <CardText>Sending to a payment address is not available on this level.<Link onClick={verifyToken} to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>Go back to Home.</Link></CardText>
+                                                    <CardText>{t("Sending to a payment address is not available on this level.")}<Link onClick={verifyToken} to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>Go back to Home.</Link></CardText>
                                                 </CardBody>
                                             </Card>
                                     )

@@ -1,19 +1,19 @@
-import { useTranslation } from "react-i18next";
-import styles from "./styles/index.module.scss"
-import TopRight from "../topRight";
-import SpecificQrs from "./SpecificQrs";
 import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import { Info } from "react-feather";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { Card, CardBody, CardText } from "reactstrap";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { UserContext } from "../../Context/UserContext";
 import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
-import { useContext, useEffect, useState } from "react"
-import { Info } from "react-feather";
-import MobileComponent from "./MobileComponent";
-import { Swiper, SwiperSlide } from "swiper/react";
-import vt from "./view_trans.png"
-import { Card, CardBody, CardText } from "reactstrap";
-import { Link } from "react-router-dom";
-import LeftContainer from "./LeftContainer";
 import QrGenerate from "../Settings/QrGenerate";
+import TopRight from "../topRight";
+import LeftContainer from "./LeftContainer";
+import MobileComponent from "./MobileComponent";
+import SpecificQrs from "./SpecificQrs";
+import styles from "./styles/index.module.scss";
+import vt from "./view_trans.png";
 
 const ChipsInNew = () => {
     const { userWallets, authHeader, userDetails, setWalletRefresh, getUserWallets } = useContext(UserContext)
@@ -147,7 +147,7 @@ const ChipsInNew = () => {
                     :
                     <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                         <CardBody>
-                            <CardText>Not supported on this level.<Link to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>Go back to Home.</Link></CardText>
+                            <CardText>{t("Not supported on this level.")}<Link to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>Go back to Home.</Link></CardText>
                         </CardBody>
                     </Card>
             }

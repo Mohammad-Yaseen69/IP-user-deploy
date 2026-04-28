@@ -24,10 +24,10 @@ const UserProfile = () => {
                         :
                         <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                             <CardBody>
-                                <CardText>Please add username to your profile to create a personalized public profile page. <Link to={"/settings?tab=basic"} style={{ textDecoration: "underline", fontWeight: 600 }}>Add Now</Link></CardText>
-                            </CardBody>
-                        </Card>
-                }
+                                <CardText>{t("Please add username to your profile to create a personalized public profile page.")} <Link to={"/settings?tab=basic"} style={{ textDecoration: "underline", fontWeight: 600 }}>{t("Add Now")}</Link></CardText>
+                                    </CardBody>
+                                </Card>
+                        }
             </div>
             <div className={styles.mobile}>
                 {
@@ -37,7 +37,7 @@ const UserProfile = () => {
                         :
                         <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                             <CardBody>
-                                <CardText>Please add username to your profile to create a personalized public profile page. <Link to={"/settings?tab=basic"} style={{ textDecoration: "underline", fontWeight: 600 }}>Add Now</Link></CardText>
+                                <CardText>{t("Please add username to your profile to create a personalized public profile page.")} <Link to={"/settings?tab=basic"} style={{ textDecoration: "underline", fontWeight: 600 }}>{t("Add Now")}</Link></CardText>
                             </CardBody>
                         </Card>
                 }

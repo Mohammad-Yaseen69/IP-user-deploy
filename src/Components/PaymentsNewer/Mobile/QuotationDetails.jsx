@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { UserContext } from '../../../Context/UserContext'
-import styles from "./styles/AmountAndCurrency.module.css"
-import { Button, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
+import { useContext, useEffect, useState } from 'react'
 import { Plus, Trash2 } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { FaRegFilePdf, FaRegFileVideo } from 'react-icons/fa'
-import ImagePreviewModal from '../../ImagePreviewModal.jsx'
+import { Button, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
+import { UserContext } from '../../../Context/UserContext'
 import { formatCurrency } from '../../../Helper/AmountFormat.js'
+import ImagePreviewModal from '../../ImagePreviewModal.jsx'
+import styles from "./styles/AmountAndCurrency.module.css"
 
 let timeout;
 
@@ -196,13 +196,11 @@ const QuotationDetails = ({ amount, currency, setAmount, setCurrency, title, set
                 </div>
             </div>
 
-            {/* remove img modal */}
             <ImagePreviewModal isOpen={showPreview} toggle={() => setShowPreview(!showPreview)} currentImage={currentImage} />
 
-            {/* remove file modal */}
             <Modal isOpen={showDelModal} toggle={() => setShowDelModal(!showDelModal)}>
-                <ModalHeader toggle={() => setShowDelModal(!showDelModal)}>Confirm Removing File</ModalHeader>
-                <ModalBody>Are you sure, you want to remove this file?</ModalBody>
+                <ModalHeader toggle={() => setShowDelModal(!showDelModal)}>{t("Confirm Removing File")}</ModalHeader>
+                <ModalBody>{t("Are you sure, you want to remove this file?")}</ModalBody>
                 <ModalFooter>
                     <Button style={{
                         background: "linear-gradient(to right, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), linear-gradient(to left, #E64067 0%, #5926F0 55.65%, #4828A0",
@@ -212,7 +210,7 @@ const QuotationDetails = ({ amount, currency, setAmount, setCurrency, title, set
                         const filtered = files.filter((_, i) => i !== currentItem)
                         setFiles(filtered)
                         setShowDelModal(false)
-                    }}>Remove</Button>
+                    }}>{t("Remove")}</Button>
                 </ModalFooter>
             </Modal>
 

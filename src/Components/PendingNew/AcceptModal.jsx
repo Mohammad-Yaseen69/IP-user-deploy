@@ -1,19 +1,19 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
+import { useContext, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
+import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { Button, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import { UserContext } from '../../Context/UserContext'
-import axios from 'axios'
-import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
-import { useNavigate } from 'react-router'
-import { useTranslation } from 'react-i18next'
-import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
+import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import SuccessModal from '../AddBeneficiary/SuccessModal'
-import { toast } from 'react-toastify'
 import InstaPayLoader from '../Loader'
-import { Link } from 'react-router-dom'
-import { LimitsErrorMessage } from '../PaymentsNewer/OTPConfirmation'
 import ErrorModal from '../PaymentsNewer/InternationalFlow/ErrorModal'
-import { useQueryClient } from '@tanstack/react-query'
+import { LimitsErrorMessage } from '../PaymentsNewer/OTPConfirmation'
+import OTPConfirmation from '../UserSettingsNew/OTPConfirmation'
 
 const AcceptModal = ({ isOpen, toggle, item }) => {
     const { userWallets, authHeader, userDetails, verifyToken } = useContext(UserContext)
@@ -177,7 +177,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
                 message={error}
             />
             <Modal isOpen={isOpen}>
-                <ModalHeader toggle={toggle}>Accept Request</ModalHeader>
+                <ModalHeader toggle={toggle}>{t("Accept Request")}</ModalHeader>
                 {
                     showOtp
                         ?
@@ -197,7 +197,7 @@ const AcceptModal = ({ isOpen, toggle, item }) => {
                         :
                         <>
                             <ModalBody>
-                                <Label>Choose Your Wallet</Label>
+                                <Label>{t("Choose Your Wallet")}</Label>
                                 <Input type='select' value={currentWallet} onChange={e => setCurrentWallet(e.target.value)}>
                                     <option value="" disabled>--SELECT-WALLET--</option>
                                     {

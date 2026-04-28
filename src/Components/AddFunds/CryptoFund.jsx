@@ -189,8 +189,8 @@ const CryptoFund = ({ setAction }) => {
                                 }}>
                                     <div style={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between", }}>
                                         <h4 className="head_left_side">
-                                            {subStep === 1 && "Choose the Crypto that you intend to liquidate!"}
-                                            {subStep === 2 && "Enter the amount you want to topup."}
+                                            {subStep === 1 && t("Choose the Crypto that you intend to liquidate!")}
+                                            {subStep === 2 && t("Enter the amount you want to topup.")}
                                         </h4>
 
                                         {
@@ -209,7 +209,7 @@ const CryptoFund = ({ setAction }) => {
                                             }} className="confirm_container">
                                                 <h4 style={{ color: "#5936f0", wordBreak: "normal" }} className="head_confirm">Your payment is confirmed</h4>
                                                 <video src={c_vid} autoPlay loop="true" style={{ height: "100%", width: "100%", objectFit: "cover", mixBlendMode: "multiply" }}></video>
-                                                <p>Thanks for using InstaPay</p>
+                                                <p>{t("Thanks for using InstaPay")}</p>
                                             </div>
                                         }
                                         {
@@ -223,11 +223,11 @@ const CryptoFund = ({ setAction }) => {
                                                         {loading && <div style={{ height: "100px", width: "100px", margin: "0 auto" }}><InstaPayLoader /></div>}
                                                         {!loading && !exchangeRateError &&
                                                             <FeesComponent
-                                                                receiverLabel={"You Will Get"}
+                                                                receiverLabel={t("You Will Get")}
                                                                 error={exchangeRateError}
-                                                                feesLabel="Fees"
-                                                                sendingLabel="Sending Amount"
-                                                                totalLabel="Total Amount"
+                                                                feesLabel={t("Fees")}
+                                                                sendingLabel={t("Sending Amount")}
+                                                                totalLabel={t("Total Amount")}
                                                                 data={{ exchange_rate: exchangeRate }}
                                                             />
                                                         }

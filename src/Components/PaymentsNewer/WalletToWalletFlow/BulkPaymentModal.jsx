@@ -183,7 +183,7 @@ const BulkPaymentModal = ({ isOpen, onClose, onNext, initialRecipients = [] }) =
 
                     {csvRows.length > 0 ? (
                         <div className={styles.tableSection}>
-                            <h6>{t("Recipients Preview")} ({csvRows.length} row{csvRows.length !== 1 ? "s" : ""})</h6>
+                            <h6>{t("Recipients Preview")} ({csvRows.length} {t("row")}{csvRows.length !== 1 ? "s" : ""})</h6>
                             <div className={styles.tableWrapper}>
                                 <TimelineBulkRequests
                                     beneficiaries={csvRows}

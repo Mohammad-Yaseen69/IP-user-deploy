@@ -1402,7 +1402,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                                 </>
                                 :
                                 <>
-                                    <h4 className={styles.finalize_head}>Finalize Your Process</h4>
+                                    <h4 className={styles.finalize_head}>{t("Finalize Your Process")}</h4>
                                     <div className={styles.input_container} style={{ width: "70%", marginTop: winWidth ? "60px" : "100px" }}>
                                         <label>{t("Referral Code")} ({t("Optional")})</label>
                                         <input type="text" placeholder="eg: IMTIAZ0307" value={referralCode} onChange={e => setReferralCode(e.target.value.toLowerCase())} />

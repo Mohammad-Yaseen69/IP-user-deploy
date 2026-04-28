@@ -199,7 +199,7 @@ export default function SubscriptionRequest() {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="datepicker">Select a Date:</CustomLabel>
+                <CustomLabel htmlFor="datepicker">{t("Select a Date:")}</CustomLabel>
                 <MobileDatePicker
                   id="datepicker"
                   value={selectedDate}
@@ -215,7 +215,7 @@ export default function SubscriptionRequest() {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="timezone">Select a Timezone:</CustomLabel>
+                <CustomLabel htmlFor="timezone">{t("Select a Timezone:")}</CustomLabel>
                 <Autocomplete
                   fullWidth={true}
                   disablePortal

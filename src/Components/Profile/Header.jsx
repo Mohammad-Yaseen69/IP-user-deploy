@@ -43,7 +43,7 @@ const Header = () => {
                 }
                 <div className={styles.basic_dets}>
                     <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
-                        <div className={styles.badge}>{userDetails?.account_type === "individual" ? "Personal" : "Business"} Account</div>
+                        <div className={styles.badge}>{userDetails?.account_type === "individual" ? "Personal" : "Business"} {t("Account")}</div>
                         {/* <div className={styles.badge} style={{ background: userDetails?.user?.kyc_status === "approved" ? "green" : "grey" }}>{userDetails?.user?.kyc_status === "approved" ? "Verified" : "Unverified"}</div> */}
                         {
                             userDetails?.kyc_status === "approved"
@@ -69,7 +69,7 @@ const Header = () => {
                         {
                             userDetails?.about_me?.length > 150
                             &&
-                            <p style={{ fontSize: "12px", color: "black", cursor: "pointer" }} onClick={() => setShowAboutModal(!showAboutModal)}>Read more {">"}</p>
+                            <p style={{ fontSize: "12px", color: "black", cursor: "pointer" }} onClick={() => setShowAboutModal(!showAboutModal)}>{t("Read more")} {">"}</p>
                         }
                         <Modal isOpen={showAboutModal} toggle={() => setShowAboutModal(!showAboutModal)}>
                             <ModalHeader toggle={() => setShowAboutModal(!showAboutModal)}>

@@ -1,9 +1,11 @@
+import { useTranslation } from "react-i18next"
 import styles from "./styles/item.module.css"
 import { useNavigate } from "react-router"
 
 
 const RefItem = ({ item }) => {
     const navigate = useNavigate()
+    const {t} = useTranslation()
     return (
         <>
             <div className={styles.country}>
@@ -26,12 +28,12 @@ const RefItem = ({ item }) => {
                         <button className={styles.visit_btn} onClick={() => {
                             navigate(`/profile/${item?.username}`)
                         }}>
-                            Visit Profile
+                            {t("Visit Profile")}
                         </button>
                     </div>
                     :
                     <div className={styles.name}>
-                        No Profile Link
+                        {t("No Profile Link")}
                     </div>
             }
             <div style={{ display: "flex", justifyContent: "" }}>

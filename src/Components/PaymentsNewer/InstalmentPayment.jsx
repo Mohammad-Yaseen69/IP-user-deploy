@@ -82,7 +82,7 @@ const InstalmentPayment = (props) => {
                                     objectFit: "contain"
                                 }} />
                             </div>
-                            <h5>Instalment Payment</h5>
+                            <h5>{t("Instalment Payment")}</h5>
                         </div>
                     </CardBody>
                 </Card>
@@ -103,7 +103,7 @@ const InstalmentPayment = (props) => {
                             alignItems: 'center',
                             borderRadius: "12px",
                         }}>
-                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>Total Amount</p>
+                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{t("Total Amount")}</p>
                             <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{amount} {currency}</p>
                         </div>
 
@@ -118,7 +118,7 @@ const InstalmentPayment = (props) => {
                             marginTop: "1rem",
                             position: "relative"
                         }}>
-                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>Interest %</p>
+                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{t("Interest")} %</p>
                             <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>12%</p>
                         </div>
 
@@ -133,7 +133,7 @@ const InstalmentPayment = (props) => {
                             marginTop: "1rem",
                             position: "relative"
                         }}>
-                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>Billing Date</p>
+                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{t("Billing Date")}</p>
                             <input readOnly style={{
                                 background: "#fff",
                                 background: "linear-gradient(to right,#E64067, #5926F0, #4828A0)",
@@ -173,7 +173,7 @@ const InstalmentPayment = (props) => {
                             borderRadius: "12px",
                             marginTop: "1rem"
                         }}>
-                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>No of terms</p>
+                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{t("No of terms")}</p>
                             <div style={{
                                 background: "#fff",
                                 boxShadow: "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
