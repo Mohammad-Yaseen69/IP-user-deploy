@@ -24,7 +24,7 @@ const useChannels = ({ setLoading, setActive, countryIsoCode, countryId, setCurr
     const getCountryFields = async (alpha3, service, bankCountryIso) => {
         const receivingType = isBusiness ? "B" : "C"
         const sendingType = userDetails?.account_type === "individual" ? "C" : "B"
-        const type = `${sendingType}2${receivingType}` 
+        const type = `${sendingType}2${receivingType}`
         console.log(receivingType, isBusiness)
         try {
             const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment/get-required-fields/${bankCountryIso ? bankCountryIso : alpha3}/${service?.id}/${type}?destinationType=${neemaMethodIDs[service?.method?.split(" ")?.[0]?.toLowerCase()] ?? service?.id}`, {
@@ -64,31 +64,67 @@ const useChannels = ({ setLoading, setActive, countryIsoCode, countryId, setCurr
             const getChannels = async () => {
                 setFieldsInfo(null)
                 axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/payment/services/${countryIsoCode}/${userDetails?.country?.country_iso_code}`, { headers: authHeader })
-                    .then(res => {
+                    .then(async (res) => {
                         const decrypted = decryptData(res.data.data)
-                        setServices(decrypted?.services || [])
-                        console.log(decrypted?.services)
-                        if (decrypted?.services?.length > 0) {
+
+                        let mappedServices = decrypted?.services?.map(item => {
+                            const serviceName = item?.method?.split(" - ")?.[0]
+                            const updatedServiceName = serviceName === "cards" ? "payment card" : serviceName
+                            return {
+                                ...item,
+                                name: updatedServiceName,
+                                vendor: item?.method?.split(" - ")?.[1]?.toLowerCase()
+                            };
+                        }) || [];
+
+                        console.log(mappedServices)
+                        if (mappedServices?.length > 0) {
                             for (const ser of decrypted.services) {
                                 getCountryFields(countryIsoCode, ser)
                             }
                         }
 
-                        const mobile = decrypted?.services?.find(item => item?.method?.toLowerCase()?.includes("mobile"))
+                        const mobile = mappedServices?.find(item => item?.method?.toLowerCase()?.includes("mobile"))
+
+
+
+                        console.log(mappedServices, " mapped services", mobile)
                         if (mobile) {
-                            const data = { country: countryIsoCode, id: mobile.id }
-                            const encrypted = encryptData(data)
-                            axios.post(`${import.meta.env.VITE_THUNES_API}/payerInfo`, {
-                                data: encrypted
-                            }, { headers: authHeader })
-                                .then(res => {
-                                    const dec = decryptData(res.data.data)
-                                    setMobileProviders(dec)
-                                })
-                                .catch(err => {
-                                    toast.error(decryptData(err.response.data.data))
-                                })
+
+                            const receivingType = isBusiness ? "B" : "C"
+                            const sendingType = userDetails?.account_type === "individual" ? "C" : "B"
+                            const transaction_type = `${sendingType}2${receivingType}`
+
+                            const data = {
+                                country: countryIsoCode,
+                                service: mobile?.name,
+                                vendor: mobile?.vendor,
+                                transaction_type
+                            }
+
+                            // const data = { country: countryIsoCode, id: mobile.id }
+                            // const encrypted = encryptData(data)
+                            const res = await axios.post(`${import.meta.env.VITE_IP_DEV_API}/api/payment/payers`, data, { headers: authHeader })
+                            const dec = decryptData(res.data.data)
+                            let providers = [];
+
+                            if (Array.isArray(dec) && dec.length > 0) {
+                                providers = dec
+                            } else if (dec?.destinations && Array.isArray(dec.destinations) && dec.destinations.length > 0) {
+                                providers = dec.destinations.map(p => ({
+                                    id: p?.destinationId,
+                                    name: p?.destinationName,
+                                }));
+                            } else {
+                                mappedServices = mappedServices.filter(item => !item?.method?.toLowerCase()?.includes("mobile"))
+                            }
+
+                            setMobileProviders(providers)
+
+
                         }
+
+                        setServices(mappedServices)
                     })
                     .catch(err => {
                         // console.log(decryptData(err?.response?.data?.data))

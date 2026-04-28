@@ -388,13 +388,9 @@ const EditBeneficiary = () => {
             setBankCountryCode(user?.bank_details?.[0]?.extras?.country_iso_code && "")
             setCardExtras(prev => user?.card?.[0]?.extras ?? prev)
             setAccNumType(user?.bank_details?.[0]?.iban ? "IBAN" : "Swift")
-        }
-    }, [user, isEditMode])
 
-
-    useEffect(() => {
-        const handleDefaultActiveMethod = () => {
-            switch (formData.account_type[0]?.toLowerCase()) {
+            const accountType = user?.account_type?.[0]?.toLowerCase() || (typeof user?.account_type === 'string' ? user.account_type.toLowerCase() : "");
+            switch (accountType) {
                 case "bank":
                     setActive(1)
                     break;
@@ -414,13 +410,10 @@ const EditBeneficiary = () => {
                     setActive(5)
             }
         }
+    }, [user, isEditMode])
 
 
 
-        if (formData) {
-            handleDefaultActiveMethod()
-        }
-    }, [formData])
 
     useEffect(() => {
         if (edit) {
@@ -653,6 +646,7 @@ const EditBeneficiary = () => {
                                                             setCountryCode(filtered?.code)
                                                             setCountry(selectedCountry?.name)
                                                             setCountryIsoCode(selectedCountry?.alpha3)
+                                                            setCity("")
                                                             const country_id = filteringCountries.find(item => item?.country_iso_code === selectedCountry.alpha3)?._id
                                                             setCountryId(country_id)
                                                         }} country={countryIsoCode} disabled={!isEditMode} />
@@ -660,12 +654,19 @@ const EditBeneficiary = () => {
                                                     <FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                         <Label className="col-form-label" htmlFor="city">{t("City")} <span className="req_star">*</span></Label>
                                                         {/* <Input readOnly={!isEditMode} disabled={!isEditMode} className="form-control" style={{ flex: 1, minWidth: "250px" }} id="city" type="text" placeholder='City/Town' onKeyPress={handleChangeAlpha} required name="city" value={formData?.city} onChange={inputChangeHandler} /> */}
-                                                        <CitiesDropDown country={country} userCity={city} setUserCity={(selectedCity) => {
-                                                            setCity(selectedCity)
-                                                            if (selectedCity) {
-                                                                setMissingFields(prev => prev.filter(field => field !== "city"))
-                                                            }
-                                                        }} styles={{ flex: 1, minWidth: "250px", border: missingFields.includes("city") && clicked ? "1px solid red" : "1px solid #e9e9e9" }} disabled={!isEditMode} iso_3={countryCode} />
+                                                        <CitiesDropDown
+                                                            country={country}
+                                                            userCity={city}
+                                                            setUserCity={(selectedCity) => {
+                                                                setCity(selectedCity)
+                                                                if (selectedCity) {
+                                                                    setMissingFields(prev => prev.filter(field => field !== "city"))
+                                                                }
+                                                            }}
+                                                            styles={{ flex: 1, minWidth: "250px", border: missingFields.includes("city") && clicked ? "1px solid red" : "1px solid #e9e9e9" }}
+                                                            disabled={!isEditMode}
+                                                            iso_3={countryIsoCode}
+                                                        />
                                                     </FormGroup>
                                                     <FormGroup style={{ flex: 1, margin: 0 }}>
                                                         <Label className="col-form-label" htmlFor="postal_code">{t("Postal Code")}</Label>
@@ -744,7 +745,7 @@ const EditBeneficiary = () => {
                                             </FormGroup>
                                             <div onClick={() => setShowAdditional(!showAdditional)} style={{ color: "red", fontSize: ".8rem", fontWeight: "500", margin: ".75rem 0 1.5rem", cursor: "pointer" }}>{showAdditional ? "-" : "+"} {t("Additional Information")}</div>
                                             <div style={{
-                                                display: "flex", 
+                                                display: "flex",
                                                 flexWrap: "wrap",
                                                 gap: "1rem",
                                                 opacity: showAdditional ? 1 : 0,
@@ -811,12 +812,17 @@ const EditBeneficiary = () => {
                                                                         ?
                                                                         <FormGroup FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
                                                                             <Label className="col-form-label">{t(service_name_formatter(item))}</Label>
-                                                                            <CountryDropDown onSelect={(selectedCountry) => {
-                                                                                if (selectedCountry?.name?.toLowerCase()?.includes("bolivia")) {
-                                                                                    selectedCountry.name = "Bolivia, Plurinational State of bolivia"
-                                                                                }
-                                                                                handleAddtionalFieldChange({ target: { name: item, value: selectedCountry?.alpha3 } })
-                                                                            }} country={additionFields[item]} filteringList={filteringCountries} disabled={!isEditMode} />
+                                                                            <CountryDropDown
+                                                                                onSelect={(selectedCountry) => {
+                                                                                    if (selectedCountry?.name?.toLowerCase()?.includes("bolivia")) {
+                                                                                        selectedCountry.name = "Bolivia, Plurinational State of bolivia"
+                                                                                    }
+                                                                                    handleAddtionalFieldChange({ target: { name: item, value: selectedCountry?.alpha3 } })
+                                                                                }}
+                                                                                country={additionFields[item]}
+                                                                                filteringList={filteringCountries}
+                                                                                disabled={!isEditMode}
+                                                                            />
                                                                         </FormGroup>
                                                                         :
                                                                         <FormGroup FormGroup style={{ flex: 1, margin: 0, minWidth: "250px" }}>
