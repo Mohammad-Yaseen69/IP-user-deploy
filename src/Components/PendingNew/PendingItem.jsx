@@ -240,7 +240,7 @@ const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "re
                 <div className={more_info.sent_more}>
                     <div className={more_info.sm_left}>
                         <span>
-                            You Requested
+                            {t("You Requested")}
                         </span>
                         <h4>
                             {item?.currency?.code} {item?.amount ? item?.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ""}
@@ -248,7 +248,7 @@ const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "re
                     </div>
                     <div className={more_info.sm_right}>
                         <div className={more_info.smr_left}>
-                            <span>Via: </span>
+                            <span>{t("Via:")} </span>
                             <div>
                                 <p>{currentWallet?.currency?.code} </p>
                                 <span>{currentWallet?.currency?.code} {currentWallet?.balance?.available?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>

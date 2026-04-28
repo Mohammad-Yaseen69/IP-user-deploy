@@ -201,7 +201,7 @@ const Basic = () => {
                             disabled={!isEditMode}
                             readOnly={!isEditMode}
                             type="text"
-                            placeholder="Company"
+                            placeholder={t("Company")}
                             value={company}
                             onChange={(e) => setCompany(e.target.value)}
                         />
@@ -216,7 +216,7 @@ const Basic = () => {
                                 disabled={!isEditMode}
                                 readOnly={!isEditMode}
                                 type="text"
-                                placeholder="First Name"
+                                placeholder={t("First Name")}
                                 value={firstName}
                                 onChange={(e) => setFirstName(e.target.value)}
                             />
@@ -228,7 +228,7 @@ const Basic = () => {
                                 disabled={!isEditMode}
                                 readOnly={!isEditMode}
                                 type="text"
-                                placeholder="Last Name"
+                                placeholder={t("Last Name")}
                                 value={lastName}
                                 onChange={(e) => setLastName(e.target.value)}
                             />
@@ -241,7 +241,7 @@ const Basic = () => {
                     <input
                         className={`form-control ${styles.input}`}
                         type="text"
-                        placeholder="Username"
+                        placeholder={t("Username")}
                         value={username}
                         onChange={(e) => {
                             setUsername(e.target.value.toLowerCase());
@@ -263,7 +263,7 @@ const Basic = () => {
                         readOnly={!isEditMode}
                         className={`form-control ${styles.input}`}
                         rows="5"
-                        placeholder="Enter About your description"
+                        placeholder={t("Enter About your description")}
                         value={aboutMe}
                         onChange={(e) => setAboutMe(e.target.value)}
                     />
@@ -278,9 +278,9 @@ const Basic = () => {
                         readOnly={!isEditMode}
                         className={`form-control ${styles.input}`}
                     >
-                        <option value="">--Select-Gender--</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
+                        <option value="">{t("--Select-Gender--")}</option>
+                        <option value="Male">{t("Male")}</option>
+                        <option value="Female">{t("Female")}</option>
                     </select>
                 </div>
 
@@ -303,7 +303,7 @@ const Basic = () => {
                     <input
                         className={`form-control ${styles.input}`}
                         type="email"
-                        placeholder="Email"
+                        placeholder={t("Email")}
                         value={email}
                         onChange={(e) => e.target.value}
                         readOnly={email}
@@ -314,7 +314,7 @@ const Basic = () => {
                 <div className={styles.i_l_con}>
                     <label className={`form-label ${styles.label}`}>{t("Phone Number")}</label>
                     <PhoneInput
-                        placeholder="Enter Phone number"
+                        placeholder={t("Enter Phone number")}
                         value={phone}
                         onChange={(e) => e}
                         country={countryCode?.toLowerCase()}
@@ -342,7 +342,7 @@ const Basic = () => {
                         disabled={!isEditMode}
                         readOnly={!isEditMode}
                         type="text"
-                        placeholder="Home Address"
+                        placeholder={t("Home Address")}
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                     />
@@ -358,7 +358,7 @@ const Basic = () => {
                         readOnly={!isEditMode}
                         className={`form-control ${styles.input}`}
                     >
-                        <option value="" disabled>--Select-City--</option>
+                        <option value="" disabled>{t("--Select-City--")}</option>
                    
                     </select>
                 </div>
@@ -391,7 +391,7 @@ const Basic = () => {
                         disabled={!isEditMode}
                         readOnly={!isEditMode}
                         type="number"
-                        placeholder="ZIP Code"
+                        placeholder={t("ZIP Code")}
                         value={postalCode}
                         onChange={(e) => setPostalCode(e.target.value)}
                     />
@@ -404,21 +404,21 @@ const Basic = () => {
                             ?
                             <>
                                 <button onClick={_ => setIsEditMode(false)}>
-                                    Cancel
+                                    {t("Cancel")}
                                 </button>
                                 <button onClick={editProfileHandler} disabled={isSaving}>
                                     {
                                         isSaving
                                             ?
-                                            "Updating Your Profile"
+                                            t("Updating Your Profile")
                                             :
-                                            "Update Your Profile"
+                                            t("Update Your Profile")
                                     }
                                 </button>
                             </>
                             :
                             <button onClick={_ => setIsEditMode(true)}>
-                                Edit Your Profile
+                                {t("Edit Your Profile")}
                             </button>
                     }
                 </div>

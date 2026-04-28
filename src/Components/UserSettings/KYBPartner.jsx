@@ -7,10 +7,12 @@ import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
 import axios from "axios"
 import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
 import UploadAdditionalKYB from "./UploadAdditionalKYB"
+import { useTranslation } from 'react-i18next'
 
 const KYBPartner = ({ partner, partners, setPartners, index }) => {
 
     const [showEditModal, setShowEditModal] = useState(false)
+    const { t } = useTranslation()
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [updating, setUpdating] = useState(false)
     const { authHeader, userDetails, checkAuth } = useContext(UserContext)
@@ -214,20 +216,20 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
             {/* edit modal */}
             <Modal isOpen={showEditModal} toggle={() => setShowEditModal(!showEditModal)}>
                 <ModalHeader toggle={() => setShowEditModal(!showEditModal)}>
-                    Edit Partner
+                    {t("Edit Partner")}
                 </ModalHeader>
                 <ModalBody>
                     <FormGroup>
-                        <Label>Partner Name</Label>
-                        <Input placeholder="Partner Name" value={partnerName} onChange={e => setPartnerName(e.target.value)} />
+                        <Label>{t("Partner Name")}</Label>
+                        <Input placeholder={t("Partner Name")} value={partnerName} onChange={e => setPartnerName(e.target.value)} />
                     </FormGroup>
                     <FormGroup>
-                        <Label>Partner Email</Label>
-                        <Input placeholder="Partner Email" value={partnerEmail} onChange={e => setPartnerEmail(e.target.value)} />
+                        <Label>{t("Partner Email")}</Label>
+                        <Input placeholder={t("Partner Email")} value={partnerEmail} onChange={e => setPartnerEmail(e.target.value)} />
                     </FormGroup>
                     <FormGroup>
-                        <Label>Partner Designation</Label>
-                        <Input placeholder="Partner Designation" value={partnerDesignation} onChange={e => setPartnerDesignation(e.target.value)} />
+                        <Label>{t("Partner Designation")}</Label>
+                        <Input placeholder={t("Partner Designation")} value={partnerDesignation} onChange={e => setPartnerDesignation(e.target.value)} />
                     </FormGroup>
                 </ModalBody>
                 <ModalFooter>
@@ -239,7 +241,7 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
                         disabled={updating || !partnerName || !partnerEmail || !partnerDesignation}
                         onClick={updatePartnerHandler}
                     >
-                        {updating ? "Updating" : "Update"}
+                        {updating ? t("Updating") : t("Update")}
                     </Button>
                 </ModalFooter>
             </Modal>
@@ -248,10 +250,10 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
             {/* delete modal */}
             <Modal isOpen={showDeleteModal} toggle={() => setShowDeleteModal(!showDeleteModal)}>
                 <ModalHeader toggle={() => setShowDeleteModal(!showDeleteModal)}>
-                    Delete Partner
+                    {t("Delete Partner")}
                 </ModalHeader>
                 <ModalBody>
-                    <p>Are you sure, you want to remove {partner?.name} as partner?</p>
+                    <p>{t("Are you sure, you want to remove")} {partner?.name} {t("as partner?")}</p>
                 </ModalBody>
                 <ModalFooter>
                     <Button style={{
@@ -261,7 +263,7 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
                     }}
                         onClick={() => setShowDeleteModal(!showDeleteModal)}
                     >
-                        Cancel
+                        {t("Cancel")}
                     </Button>
                     <Button style={{
                         background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
@@ -271,7 +273,7 @@ const KYBPartner = ({ partner, partners, setPartners, index }) => {
                         disabled={updating}
                         onClick={deletePartnerHandler}
                     >
-                        {updating ? "Deleting" : "Delete"}
+                        {updating ? t("Deleting") : t("Delete")}
                     </Button>
                 </ModalFooter>
             </Modal>

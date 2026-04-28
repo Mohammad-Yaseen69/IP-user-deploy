@@ -842,7 +842,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                                                             fontWeight: "600"
                                                         }}
                                                     >
-                                                        Re-Take
+                                                        {t("Re-Take")}
                                                     </Label>
                                                     <Label htmlFor="dp"
                                                         style={{
@@ -856,7 +856,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                                                             fontWeight: "600"
                                                         }}
                                                     >
-                                                        Re-Upload
+                                                        {t("Re-Upload")}
                                                     </Label>
                                                 </div>
                                                 <input type="file" id="dp" hidden onChange={handleFileChange} accept="image/*" />
@@ -970,11 +970,11 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                                         }}>{t("Coming Soon!")}</div>
                                         <div className={styles.acc_type} style={{ opacity: 0, pointerEvents: "none" }} onClick={() => accTypeHandler("individual")}>
                                             <IndividualSVG size={window.innerWidth > 450 ? 184 : 145} color={selectedAccountType === "individual" ? "#5926f0" : "#d5d5d5"} isActive={selectedAccountType === "individual"} />
-                                            <span style={{ color: selectedAccountType === "individual" ? "#5926f0" : "#000" }}>Individual</span>
+                                            <span style={{ color: selectedAccountType === "individual" ? "#5926f0" : "#000" }}>{t("Individual")}</span>
                                         </div>
                                         <div className={styles.acc_type} style={{ opacity: 0, pointerEvents: "none" }} onClick={() => accTypeHandler("business")}>
                                             <BusinessSVG size={window.innerWidth > 450 ? 184 : 145} color={selectedAccountType === "business" ? "#5926f0" : "#d5d5d5"} isActive={selectedAccountType === "business"} />
-                                            <span style={{ color: selectedAccountType === "business" ? "#5926f0" : "#000" }}>Business</span>
+                                            <span style={{ color: selectedAccountType === "business" ? "#5926f0" : "#000" }}>{t("Business")}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -992,7 +992,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                 <>
                     <Wizard current={step - 1} total={6} />
                     <div className={styles.top_text}>
-                        <h3>{t("Enter Your")} {selectedAccountType === "individual" ? t("Personal") : t("Business")} Details</h3>
+                        <h3>{t("Enter Your")} {selectedAccountType === "individual" ? t("Personal") : t("Business")} {t("Details")}</h3>
                         <p>{t("Start Your Instapay Journey Today!")}</p>
                     </div>
                     <div className={styles.input_group}>
@@ -1011,7 +1011,7 @@ const SIgnupForm = ({ step, setStep, setIsLoginForm, setRegistrationCompleted })
                                             <img src={country.file_url} alt={country.alpha3} />
                                             <span>{t(country.name)}</span>
                                         </div>
-                                        <button onClick={() => setShowCountryDropdown(true)}>edit</button>
+                                        <button onClick={() => setShowCountryDropdown(true)}>{t("edit")}</button>
                                     </div>
                                     :
                                     <input type="text" placeholder={t("Search your country")} value={countrySearch} onChange={e => setCountrySearch(e.target.value)} />

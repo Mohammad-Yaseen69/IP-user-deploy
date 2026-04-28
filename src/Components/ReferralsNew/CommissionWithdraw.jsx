@@ -121,26 +121,26 @@ const CommissionWithdraw = ({ isOpen, toggle, referralBalance = 0, defaultCurren
                                             onChange={e => setWithdrawal(e.target.value)}
                                             style={{ marginTop: "1rem" }}
                                         >
-                                            <option value="">Select-Withdrawal-Option</option>
+                                            <option value="">{t("Select-Withdrawal-Option")}</option>
                                             {
                                                 userWithdrawals?.bank_details?.length > 0
                                                 &&
-                                                <option value={"bank_details"}>Bank Deposit</option>
+                                                <option value={"bank_details"}>{t("Bank Deposit")}</option>
                                             }
                                             {
                                                 userWithdrawals?.mobile_wallet?.length > 0
                                                 &&
-                                                <option value={"mobile_wallet"}>Mobile Wallet</option>
+                                                <option value={"mobile_wallet"}>{t("Mobile Wallet")}</option>
                                             }
                                             {
                                                 userWithdrawals?.card_payment?.length > 0
                                                 &&
-                                                <option value={"card_payment"}>Card Payment</option>
+                                                <option value={"card_payment"}>{t("Card Payment")}</option>
                                             }
                                             {
                                                 userWithdrawals?.cash_pickup?.length > 0
                                                 &&
-                                                <option value={"cash_pickup"}>Cash Pickup</option>
+                                                <option value={"cash_pickup"}>{t("Cash Pickup")}</option>
                                             }
                                         </Input>
                                         {
@@ -149,9 +149,9 @@ const CommissionWithdraw = ({ isOpen, toggle, referralBalance = 0, defaultCurren
                                     </>
                                     :
                                     <div style={{ marginTop: "1rem" }}>
-                                        <span>You haven't added any withdrawal channel. <Link to={"/settings?tab=withdrawal"}
+                                        <span>{t("You haven't added any withdrawal channel.")} <Link to={"/settings?tab=withdrawal"}
                                             style={{ color: "#5926f0", fontWeight: "700", textDecoration: "underline", cursor: "pointer" }}
-                                        >Add Withdrawals</Link></span>
+                                        >{t("Add Withdrawals")}</Link></span>
                                     </div>
                             }
                         </>

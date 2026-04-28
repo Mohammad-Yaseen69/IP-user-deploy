@@ -50,7 +50,7 @@ const WalletReceipt = ({ walletDetails, transactionDetails, amount, currency, se
                                     color: "#8a8a8a",
                                     fontSize: ".8rem"
                                 }}>
-                                    Total:
+                                    {t("Total")}:
                                     <span style={{ fontWeight: 600, fontSize: ".9rem" }}>{transactionDetails?.total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {currency}</span>
                                 </div>
                                 <div style={{
@@ -65,7 +65,7 @@ const WalletReceipt = ({ walletDetails, transactionDetails, amount, currency, se
                                     color: "#8a8a8a",
                                     fontSize: ".8rem"
                                 }}>
-                                    Fees:
+                                    {t("Fees")}:
                                     <span style={{ fontWeight: 600, fontSize: ".9rem" }}>{transactionDetails?.fee.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {currency}</span>
                                 </div>
                             </>
@@ -86,7 +86,7 @@ const WalletReceipt = ({ walletDetails, transactionDetails, amount, currency, se
                                     color: "#8a8a8a",
                                     fontSize: ".8rem"
                                 }}>
-                                    Cycles:
+                                    {t("Cycles")}:
                                     <span style={{ fontWeight: 600, fontSize: ".9rem" }}>{transactionDetails?.cycles}</span>
                                 </div>
                                 <div style={{
@@ -100,7 +100,7 @@ const WalletReceipt = ({ walletDetails, transactionDetails, amount, currency, se
                                     color: "#8a8a8a",
                                     fontSize: ".8rem"
                                 }}>
-                                    Starts From:
+                                    {t("Starts From")}:
                                     <span style={{ fontWeight: 600, fontSize: ".9rem" }}>{transactionDetails?.date}</span>
                                 </div>
                             </>
@@ -115,7 +115,7 @@ const WalletReceipt = ({ walletDetails, transactionDetails, amount, currency, se
                         gap: ".5rem",
                         borderRadius: "10px"
                     }}>
-                        <span style={{ minWidth: "30px", color: "#8a8a8a" }}>To:</span>
+                        <span style={{ minWidth: "30px", color: "#8a8a8a" }}>{t("To")}:</span>
                         <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
                             <span style={{ fontWeight: 600, fontSize: ".9rem" }}>{`${walletDetails?.first_name || walletDetails?.company_name} ${walletDetails?.last_name}`} (INSTA-{walletDetails.wallet_id})</span>
                         </div>

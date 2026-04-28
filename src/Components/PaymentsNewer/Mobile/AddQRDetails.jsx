@@ -104,11 +104,11 @@ const AddQRDetails = ({ setSubStep, dataHandler, sendPaymentType }) => {
         <div className={styles.container}>
             <div className={styles.method_selection}>
                 <div style={{ background: method === "qr" && "#5926F0", width: "38%" }} onClick={() => setMethod("qr")} className={styles.tab}>
-                    <span style={{ color: method === "qr" && "#FFF" }}>Scan Qr</span>
+                    <span style={{ color: method === "qr" && "#FFF" }}>{t("Scan Qr")}</span>
                 </div>
 
                 <div style={{ background: method === "code" && "#5926F0", width: "62%" }} onClick={() => setMethod("code")} className={styles.tab}>
-                    <span style={{ color: method === "code" && "#FFF", }}>Enter Merchant Code</span>
+                    <span style={{ color: method === "code" && "#FFF", }}>{t("Enter Merchant Code")}</span>
                 </div>
             </div>
 
@@ -143,7 +143,7 @@ const AddQRDetails = ({ setSubStep, dataHandler, sendPaymentType }) => {
 
             {method === "code" && (
                 <div className={styles.code_cont}>
-                    <h5 style={{ width: "100%" }}>Enter the Merchant Code</h5>
+                    <h5 style={{ width: "100%" }}>{t("Enter the Merchant Code")}</h5>
 
                     <div style={{ position: "relative", width: "100%" }}>
                         <input value={result} onChange={(e) => setResult(e.target.value.toUpperCase())} type="text" maxLength={8} />
@@ -158,10 +158,10 @@ const AddQRDetails = ({ setSubStep, dataHandler, sendPaymentType }) => {
                         <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
                             <img src={addU} alt="" />
                             <h6 style={{marginBottom: "0px"}}>
-                                Recipient Not on InstaPay?
+                                {t("Recipient Not on InstaPay?")}
                             </h6>
                         </div>
-                        <button onClick={() => setIsOpen(true)}><p>Invite them</p></button>
+                        <button onClick={() => setIsOpen(true)}><p>{t("Invite them")}</p></button>
                     </div>
                     {walletError && <p className={styles.error} style={{ fontWeight: 600, color: "red" }}>{walletError}</p>}
                 </div>
