@@ -3310,5 +3310,14 @@
   "No subscriptions found": "لم يتم العثور على أي اشتراكات",
   "Valid Resident Permits (only if issued by a European country)": "تصاريح الإقامة السارية (فقط إذا كانت صادرة عن دولة أوروبية)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "وظيفة الفرد/الأفراد. سيتم التحقق من هذه المعلومات ومطابقتها مع النظام الأساسي للتأكد من أن وظيفة الفرد تخوّله إلزام الكيان. وهذا أمر بالغ الأهمية، خاصةً إذا لم يكن مقدم الطلب هو الرئيس، وكانت صلاحيات التمثيل للوظائف الأخرى محدودة كما هو منصوص عليه في النظام الأساسي.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "وفقًا للوائح الدولة، فإن هذه الوثيقة بمثابة \"بطاقة الهوية\" الحالية للكيان، والتي تشير إلى حالته (نشط أو مغلق)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "وفقًا للوائح الدولة، فإن هذه الوثيقة بمثابة \"بطاقة الهوية\" الحالية للكيان، والتي تشير إلى حالته (نشط أو مغلق).",
+  "No Action Allowed": "ممنوع اتخاذ أي إجراء",
+  "Not-Initiated": "غير مُبادر",
+  "This is a list of devices that have logged into your account.": "هذه قائمة بالأجهزة التي سجلت الدخول إلى حسابك.",
+  "Additional Details": "تفاصيل إضافية",
+  "Enter the company name": "أدخل اسم الشركة",
+  "Id Type": "نوع المعرف",
+  "Select Relationship": "تحديد العلاقة",
+  "Representative Details": "تفاصيل الممثل",
+  "Address line": "خط العنوان"
 }

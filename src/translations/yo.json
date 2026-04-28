@@ -3309,5 +3309,14 @@
   "No subscriptions found": "A ko ri awọn iforukọsilẹ kankan",
   "Valid Resident Permits (only if issued by a European country)": "Àwọn ìwé àṣẹ olùgbé tí ó wúlò (tí orílẹ̀-èdè Yúróòpù bá fúnni nìkan)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Iṣẹ́(àwọn) ẹni kọ̀ọ̀kan. A ó fi àwọn ìwífún yìí hàn pẹ̀lú Àdéhùn Ìgbìmọ̀ láti rí i dájú pé iṣẹ́ ẹni kọ̀ọ̀kan gbà wọ́n láyè láti so ẹgbẹ́ náà pọ̀. Èyí ṣe pàtàkì ní pàtàkì nígbà tí olùbéèrè kò bá ṣe ààrẹ, àti nígbà tí àwọn iṣẹ́ mìíràn ní àṣẹ ìṣojú tó lopin gẹ́gẹ́ bí a ti sọ nínú Àdéhùn Ìgbìmọ̀.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Gẹ́gẹ́ bí ìlànà orílẹ̀-èdè náà, ìwé yìí ń ṣiṣẹ́ gẹ́gẹ́ bí \"káàdì ìdánimọ̀\" lọ́wọ́lọ́wọ́ fún àjọ náà, tí ó ń fi ipò rẹ̀ hàn (tí ó ń ṣiṣẹ́ tàbí tí a ti pa)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Gẹ́gẹ́ bí ìlànà orílẹ̀-èdè náà, ìwé yìí ń ṣiṣẹ́ gẹ́gẹ́ bí \"káàdì ìdánimọ̀\" lọ́wọ́lọ́wọ́ fún àjọ náà, tí ó ń fi ipò rẹ̀ hàn (tí ó ń ṣiṣẹ́ tàbí tí a ti pa).",
+  "No Action Allowed": "Kò sí ìgbésẹ̀ tí a gbà láàyè",
+  "Not-Initiated": "Kò-Bẹ̀rẹ̀",
+  "This is a list of devices that have logged into your account.": "Àkójọ àwọn ẹ̀rọ tí wọ́n ti wọlé sí àkọọ́lẹ̀ rẹ nìyí.",
+  "Additional Details": "Àwọn Àfikún Àwọn Àlàyé",
+  "Enter the company name": "Tẹ orukọ ile-iṣẹ naa sii",
+  "Id Type": "Irú ID",
+  "Select Relationship": "Yan Ìbáṣepọ̀",
+  "Representative Details": "Àwọn Àlàyé Aṣojú",
+  "Address line": "Ìlà àdírẹ́sì"
 }

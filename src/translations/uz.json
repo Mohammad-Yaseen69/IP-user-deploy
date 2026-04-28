@@ -1203,5 +1203,14 @@
   "No subscriptions found": "Obunalar topilmadi",
   "Valid Resident Permits (only if issued by a European country)": "Amaldagi yashash ruxsatnomalari (faqat Yevropa davlati tomonidan berilgan bo'lsa)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Shaxs(lar)ning funksiyasi. Ushbu ma'lumot shaxsning funksiyasi ularga tashkilot bilan bog'lanish imkonini berishini ta'minlash uchun Tashkilot Nizomi bilan o'zaro tasdiqlanadi. Bu, ayniqsa, ariza beruvchi prezident bo'lmaganda va Tashkilot Nizomida ko'rsatilganidek, boshqa funksiyalar cheklangan vakillik vakolatiga ega bo'lganda muhimdir.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Mamlakat qoidalariga muvofiq talab qilinadigan ushbu hujjat tashkilotning amaldagi \"shaxsni tasdiqlovchi hujjat\" bo'lib xizmat qiladi va uning maqomini (faol yoki yopiq) ko'rsatadi."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Mamlakat qoidalariga muvofiq talab qilinadigan ushbu hujjat tashkilotning amaldagi \"shaxsni tasdiqlovchi hujjat\" bo'lib xizmat qiladi va uning maqomini (faol yoki yopiq) ko'rsatadi.",
+  "No Action Allowed": "Hech qanday harakatga ruxsat berilmaydi",
+  "Not-Initiated": "Boshlanmagan",
+  "This is a list of devices that have logged into your account.": "Bu sizning hisobingizga kirgan qurilmalar ro'yxati.",
+  "Additional Details": "Qo'shimcha ma'lumotlar",
+  "Enter the company name": "Kompaniya nomini kiriting",
+  "Id Type": "ID turi",
+  "Select Relationship": "Aloqani tanlang",
+  "Representative Details": "Vakil tafsilotlari",
+  "Address line": "Manzil qatori"
 }

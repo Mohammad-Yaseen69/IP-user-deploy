@@ -3322,5 +3322,14 @@
   "No subscriptions found": "Nenhuma assinatura encontrada",
   "Valid Resident Permits (only if issued by a European country)": "Autorizações de residência válidas (apenas se emitidas por um país europeu)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Função do(s) indivíduo(s). Esta informação será verificada junto aos Estatutos Sociais para garantir que a função do indivíduo lhe permita vincular a entidade. Isto é particularmente importante quando o requerente não é o presidente e outras funções têm poderes de representação limitados, conforme estipulado nos Estatutos Sociais.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Exigido de acordo com as normas do país, este documento serve como o \"documento de identidade\" atual da entidade, indicando seu status (ativa ou encerrada)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Exigido de acordo com as normas do país, este documento serve como o \"documento de identidade\" atual da entidade, indicando seu status (ativa ou encerrada).",
+  "No Action Allowed": "Nenhuma ação permitida",
+  "Not-Initiated": "Não iniciado",
+  "This is a list of devices that have logged into your account.": "Esta é uma lista dos dispositivos que acessaram sua conta.",
+  "Additional Details": "Detalhes adicionais",
+  "Enter the company name": "Digite o nome da empresa",
+  "Id Type": "Tipo de ID",
+  "Select Relationship": "Selecionar relacionamento",
+  "Representative Details": "Detalhes do representante",
+  "Address line": "Linha de endereço"
 }

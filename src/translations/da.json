@@ -1199,5 +1199,14 @@
   "No subscriptions found": "Ingen abonnementer fundet",
   "Valid Resident Permits (only if issued by a European country)": "Gyldige opholdstilladelser (kun hvis udstedt af et europæisk land)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Person(er)s funktion. Disse oplysninger vil blive krydsverificeret med vedtægterne for at sikre, at personens funktion giver dem ret til at forpligte enheden. Dette er især vigtigt, når ansøgeren ikke er præsidenten, og andre funktioner har begrænset repræsentationsmyndighed som angivet i vedtægterne.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Dette dokument, der kræves i henhold til landets regler, fungerer som det aktuelle \"identitetskort\" for enheden, der angiver dens status (aktiv eller lukket)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Dette dokument, der kræves i henhold til landets regler, fungerer som det aktuelle \"identitetskort\" for enheden, der angiver dens status (aktiv eller lukket).",
+  "No Action Allowed": "Ingen handling tilladt",
+  "Not-Initiated": "Ikke-initieret",
+  "This is a list of devices that have logged into your account.": "Dette er en liste over enheder, der er logget ind på din konto.",
+  "Additional Details": "Yderligere detaljer",
+  "Enter the company name": "Indtast firmanavnet",
+  "Id Type": "Id-type",
+  "Select Relationship": "Vælg relation",
+  "Representative Details": "Repræsentantoplysninger",
+  "Address line": "Adresselinje"
 }

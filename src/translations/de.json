@@ -3273,5 +3273,14 @@
   "No subscriptions found": "Keine Abonnements gefunden",
   "Valid Resident Permits (only if issued by a European country)": "Gültige Aufenthaltsgenehmigungen (nur wenn sie von einem europäischen Land ausgestellt wurden)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Funktion der Person(en). Diese Angaben werden mit der Satzung abgeglichen, um sicherzustellen, dass die Funktion der Person sie zur Vertretung der Organisation berechtigt. Dies ist insbesondere dann wichtig, wenn der Antragsteller nicht der Präsident ist und andere Funktionen gemäß der Satzung nur eine eingeschränkte Vertretungsbefugnis haben.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Dieses Dokument ist gemäß den Bestimmungen des Landes erforderlich und dient als aktueller „Ausweis“ der Organisation, aus dem ihr Status (aktiv oder geschlossen) hervorgeht."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Dieses Dokument ist gemäß den Bestimmungen des Landes erforderlich und dient als aktueller „Ausweis“ der Organisation, aus dem ihr Status (aktiv oder geschlossen) hervorgeht.",
+  "No Action Allowed": "Keine Aktion erlaubt",
+  "Not-Initiated": "Nicht eingeweiht",
+  "This is a list of devices that have logged into your account.": "Dies ist eine Liste der Geräte, die sich in Ihr Konto eingeloggt haben.",
+  "Additional Details": "Weitere Details",
+  "Enter the company name": "Geben Sie den Firmennamen ein",
+  "Id Type": "ID-Typ",
+  "Select Relationship": "Beziehung auswählen",
+  "Representative Details": "Repräsentantendetails",
+  "Address line": "Adresszeile"
 }

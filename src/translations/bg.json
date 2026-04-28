@@ -1199,5 +1199,14 @@
   "No subscriptions found": "Няма намерени абонаменти",
   "Valid Resident Permits (only if issued by a European country)": "Валидни разрешения за пребиваване (само ако са издадени от европейска държава)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Функция на лицето/лицата. Тази информация ще бъде сверена с Устава, за да се гарантира, че функцията на лицето му позволява да обвързва организацията. Това е особено важно, когато заявителят не е президент и другите функции имат ограничени представителни правомощия, както е посочено в Устава.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Изисква се съгласно разпоредбите на страната, този документ служи като актуална „лична карта“ за юридическото лице, посочваща неговия статус (активно или затворено)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Изисква се съгласно разпоредбите на страната, този документ служи като актуална „лична карта“ за юридическото лице, посочваща неговия статус (активно или затворено).",
+  "No Action Allowed": "Не е разрешено действие",
+  "Not-Initiated": "Не е инициирано",
+  "This is a list of devices that have logged into your account.": "Това е списък с устройства, които са влезли във вашия акаунт.",
+  "Additional Details": "Допълнителни подробности",
+  "Enter the company name": "Въведете името на фирмата",
+  "Id Type": "Тип идентификатор",
+  "Select Relationship": "Изберете връзка",
+  "Representative Details": "Данни за представителя",
+  "Address line": "Адресен ред"
 }

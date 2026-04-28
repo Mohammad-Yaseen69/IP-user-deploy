@@ -3310,5 +3310,14 @@
   "No subscriptions found": "Abonelik bulunamadı.",
   "Valid Resident Permits (only if issued by a European country)": "Geçerli Oturma İzinleri (yalnızca bir Avrupa ülkesi tarafından verilmişse)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Kişinin/kişilerin görevi. Bu bilgi, kişinin görevinin kuruluşu bağlayıcı nitelikte olup olmadığını doğrulamak için Ana Sözleşme ile karşılaştırılacaktır. Bu, özellikle başvuranın başkan olmadığı ve Ana Sözleşmede belirtildiği gibi diğer görevlerin sınırlı temsil yetkisine sahip olduğu durumlarda önemlidir.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Ülke düzenlemeleri gereği zorunlu olan bu belge, kuruluşun mevcut \"kimlik kartı\" görevi görerek durumunu (aktif veya kapalı) gösterir."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Ülke düzenlemeleri gereği zorunlu olan bu belge, kuruluşun mevcut \"kimlik kartı\" görevi görerek durumunu (aktif veya kapalı) gösterir.",
+  "No Action Allowed": "Hiçbir işlem yapılamaz.",
+  "Not-Initiated": "Başlatılmadı",
+  "This is a list of devices that have logged into your account.": "Bu, hesabınıza giriş yapmış cihazların listesidir.",
+  "Additional Details": "Ek Ayrıntılar",
+  "Enter the company name": "Şirket adını girin",
+  "Id Type": "Kimlik Türü",
+  "Select Relationship": "İlişki Seç",
+  "Representative Details": "Temsilci Bilgileri",
+  "Address line": "Adres satırı"
 }

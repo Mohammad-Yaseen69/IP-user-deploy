@@ -3266,5 +3266,14 @@
   "No subscriptions found": "Babu biyan kuɗi da aka samu",
   "Valid Resident Permits (only if issued by a European country)": "Izinin zama mai inganci (idan ƙasar Turai ce ta bayar da shi)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Aikin mutum(s). Za a tabbatar da wannan bayanin tare da Dokokin Ƙungiyar don tabbatar da cewa aikin mutum yana ba su damar ɗaure ƙungiyar. Wannan yana da mahimmanci musamman lokacin da mai nema ba shine shugaban ƙasa ba, kuma sauran ayyuka suna da ikon wakilci mai iyaka kamar yadda aka bayyana a cikin Dokokin Ƙungiyar.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Ana buƙatar wannan takarda kamar yadda dokokin ƙasar suka tanada, tana aiki a matsayin \"katin shaida\" na yanzu ga ƙungiyar, tana nuna matsayinta (mai aiki ko a rufe)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Ana buƙatar wannan takarda kamar yadda dokokin ƙasar suka tanada, tana aiki a matsayin \"katin shaida\" na yanzu ga ƙungiyar, tana nuna matsayinta (mai aiki ko a rufe).",
+  "No Action Allowed": "Ba a yarda da wani aiki ba",
+  "Not-Initiated": "Ba a fara ba",
+  "This is a list of devices that have logged into your account.": "Wannan jerin na'urori ne da suka shiga asusunka.",
+  "Additional Details": "Ƙarin Bayani",
+  "Enter the company name": "Shigar da sunan kamfanin",
+  "Id Type": "Nau'in ID",
+  "Select Relationship": "Zaɓi Alaƙa",
+  "Representative Details": "Cikakkun Bayanan Wakili",
+  "Address line": "Layin adireshi"
 }

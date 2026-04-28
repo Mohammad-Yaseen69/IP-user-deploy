@@ -322,5 +322,14 @@
   "No subscriptions found": "Abunəlik tapılmadı",
   "Valid Resident Permits (only if issued by a European country)": "Etibarlı Yaşayış İcazələri (yalnız Avropa ölkəsi tərəfindən verildikdə)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Fərdin(lərin) funksiyası. Bu məlumat, fərdin funksiyasının qurumla əlaqə qurmasına imkan verdiyini təmin etmək üçün Nizamnamə ilə çarpaz təsdiqlənəcək. Bu, xüsusilə ərizəçinin prezident olmadığı və Nizamnamədə göstərildiyi kimi digər funksiyaların məhdud təmsilçilik səlahiyyətləri olduqda vacibdir.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Ölkənin qaydalarına uyğun olaraq tələb olunan bu sənəd, qurumun statusunu (aktiv və ya bağlanmış) göstərən cari \"şəxsiyyət vəsiqəsi\" kimi xidmət edir."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Ölkənin qaydalarına uyğun olaraq tələb olunan bu sənəd, qurumun statusunu (aktiv və ya bağlanmış) göstərən cari \"şəxsiyyət vəsiqəsi\" kimi xidmət edir.",
+  "No Action Allowed": "Heç bir hərəkətə icazə verilmir",
+  "Not-Initiated": "Başlanğıcsız",
+  "This is a list of devices that have logged into your account.": "Bu, hesabınıza daxil olan cihazların siyahısıdır.",
+  "Additional Details": "Əlavə Məlumatlar",
+  "Enter the company name": "Şirkət adını daxil edin",
+  "Id Type": "Şəxsiyyət Növü",
+  "Select Relationship": "Əlaqəni seçin",
+  "Representative Details": "Nümayəndənin təfərrüatları",
+  "Address line": "Ünvan sətri"
 }

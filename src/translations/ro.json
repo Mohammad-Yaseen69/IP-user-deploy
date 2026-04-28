@@ -1199,5 +1199,14 @@
   "No subscriptions found": "Nu s-au găsit abonamente",
   "Valid Resident Permits (only if issued by a European country)": "Permise de ședere valabile (numai dacă sunt emise de o țară europeană)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Funcția persoanei (persoanelor). Aceste informații vor fi verificate încrucișat cu Actul Constitutiv pentru a se asigura că funcția persoanei respective îi permite să angajeze entitatea. Acest lucru este deosebit de important atunci când solicitantul nu este președinte, iar alte funcții au autoritate de reprezentare limitată, așa cum se prevede în Actul Constitutiv.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Obligatoriu conform reglementărilor țării, acest document servește drept „carte de identitate” actuală pentru entitate, indicând statutul acesteia (activă sau închisă)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Obligatoriu conform reglementărilor țării, acest document servește drept „carte de identitate” actuală pentru entitate, indicând statutul acesteia (activă sau închisă).",
+  "No Action Allowed": "Nicio acțiune permisă",
+  "Not-Initiated": "Neinițiat",
+  "This is a list of devices that have logged into your account.": "Aceasta este o listă de dispozitive care s-au conectat la contul dvs.",
+  "Additional Details": "Detalii suplimentare",
+  "Enter the company name": "Introduceți numele companiei",
+  "Id Type": "Tip ID",
+  "Select Relationship": "Selectați relația",
+  "Representative Details": "Detalii reprezentant",
+  "Address line": "Linie de adresă"
 }

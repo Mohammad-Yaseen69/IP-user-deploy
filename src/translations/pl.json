@@ -3310,5 +3310,14 @@
   "No subscriptions found": "Nie znaleziono subskrypcji",
   "Valid Resident Permits (only if issued by a European country)": "Ważne zezwolenia na pobyt (tylko jeśli wydane przez kraj europejski)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Funkcja danej osoby/osób. Informacje te zostaną zweryfikowane ze statutem, aby upewnić się, że funkcja danej osoby pozwala jej na reprezentowanie podmiotu. Jest to szczególnie ważne, gdy wnioskodawca nie jest prezesem, a inne funkcje mają ograniczone uprawnienia do reprezentacji, zgodnie ze statutem.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Dokument ten jest wymagany zgodnie z przepisami obowiązującymi w danym kraju i pełni funkcję aktualnego „dowodu tożsamości” podmiotu, wskazując jego status (aktywny lub zamknięty)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Dokument ten jest wymagany zgodnie z przepisami obowiązującymi w danym kraju i pełni funkcję aktualnego „dowodu tożsamości” podmiotu, wskazując jego status (aktywny lub zamknięty).",
+  "No Action Allowed": "Brak działań",
+  "Not-Initiated": "Niezainicjowany",
+  "This is a list of devices that have logged into your account.": "Oto lista urządzeń, które zalogowały się na Twoje konto.",
+  "Additional Details": "Dodatkowe szczegóły",
+  "Enter the company name": "Wprowadź nazwę firmy",
+  "Id Type": "Typ identyfikatora",
+  "Select Relationship": "Wybierz relację",
+  "Representative Details": "Szczegóły przedstawiciela",
+  "Address line": "Linia adresu"
 }

@@ -3312,5 +3312,14 @@
   "No subscriptions found": "Hakuna usajili uliopatikana",
   "Valid Resident Permits (only if issued by a European country)": "Vibali Halali vya Ukazi (ikiwa tu vimetolewa na nchi ya Ulaya)",
   "Function of the individual(s). This information will be cross-verified with the Articles of Association to ensure that the individual's function permits them to bind the entity. This is particularly important when the applicant is not the president, and other  functions have limited representation authority as stated in the Articles of Association.": "Kazi ya mtu binafsi/watu. Taarifa hii itathibitishwa na Hati za Ushirika ili kuhakikisha kwamba kazi ya mtu binafsi inamruhusu kuifunga taasisi hiyo. Hii ni muhimu hasa wakati mwombaji si rais, na kazi zingine zina mamlaka ndogo ya uwakilishi kama ilivyoelezwa katika Hati za Ushirika.",
-  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Ikihitajika kulingana na kanuni za nchi, hati hii hutumika kama \"kitambulisho\" cha sasa cha shirika, ikionyesha hali yake (inayotumika au imefungwa)."
+  "Required as per the country's regulations, this document serves as the current \\\"identity card\\\" for the entity, indicating its status (active or closed).": "Ikihitajika kulingana na kanuni za nchi, hati hii hutumika kama \"kitambulisho\" cha sasa cha shirika, ikionyesha hali yake (inayotumika au imefungwa).",
+  "No Action Allowed": "Hakuna Kitendo Kinachoruhusiwa",
+  "Not-Initiated": "Haijaanzishwa",
+  "This is a list of devices that have logged into your account.": "Hii ni orodha ya vifaa ambavyo vimeingia kwenye akaunti yako.",
+  "Additional Details": "Maelezo ya Ziada",
+  "Enter the company name": "Ingiza jina la kampuni",
+  "Id Type": "Aina ya Kitambulisho",
+  "Select Relationship": "Chagua Uhusiano",
+  "Representative Details": "Maelezo ya Mwakilishi",
+  "Address line": "Mstari wa anwani"
 }
