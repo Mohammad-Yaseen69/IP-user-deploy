@@ -46,6 +46,8 @@ const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHa
         const isEmpty = newOTPValues.some(val => val === '');
         setIsAnyFieldEmpty(isEmpty);
         if (!isEmpty) {
+            if (isLoading) return;
+            dataHandler("loading", true);
             callback(newOTPValues.join(""))
         }
     };
@@ -98,6 +100,7 @@ const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHa
     useEffect(() => {
         const handleKeyDown = (event) => {
             if (event.key === 'Enter') {
+                if (isLoading || isAnyFieldEmpty) return;
                 buttonRef.current?.click();
             }
         };
