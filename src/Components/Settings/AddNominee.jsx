@@ -14,6 +14,12 @@ import { BeneficiaryRelation, friendsAndFamily } from '../../utils/Data'
 import africanCountries from "../../Data/AfricanCountries.json"
 import { toast } from 'react-toastify'
 import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
+import DateMomentUtils from '@date-io/moment';
+import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+
+const currentDate = new Date();
+const maxDate = currentDate;
+const minDate = new Date(currentDate.getFullYear() - 100, currentDate.getMonth(), currentDate.getDate());
 
 
 const AddNominee = ({ setNominee, setAddNominee }) => {
@@ -112,6 +118,21 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
         }
     }, [debouncedAddress, position, addressInFocus]);
 
+    const handleDateChange = (date) => {
+        if (date) {
+            const selected = new Date(date);
+            if (selected <= maxDate && selected >= minDate) {
+                setDob(date.format("YYYY-MM-DD"));
+            } else if (selected > maxDate) {
+                toast.error(t('Future dates are not allowed.'));
+            } else {
+                toast.error(t('Date cannot be more than 150 years old.'));
+            }
+        } else {
+            setDob("");
+        }
+    }
+
     const addNomineeHandler = () => {
         setLoading(true)
         const formData = new FormData();
@@ -155,149 +176,192 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
     }
 
     return (
-        <div>
-            <div className={styles.top}>
-                <div className={styles.img_container}>
+        <MuiPickersUtilsProvider utils={DateMomentUtils}>
+            <div>
+                <div className={styles.top}>
+                    <div className={styles.img_container}>
+                        {
+                            image
+                                ?
+                                <img src={image} alt="nominee photo" />
+                                :
+                                <label htmlFor='file' className={styles.upload}>
+                                    <Camera size={30} />
+                                    <span>{t("Upload Photo")}</span>
+                                    <input type="file" name="file" id="file" value={image} onChange={handleImageSelect} hidden />
+                                </label>
+                        }
+                    </div>
+                    <div className={styles.top_right}>
+                        <div className={styles.inp_con}>
+                            <Label style={{ display: "flex", alignItems: 'center' }}>{t("Name")} <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
+                            <Input placeholder={t(`Nominee's Full Name`)} value={fullName} onChange={e => setFullName(e.target.value)} />
+                        </div>
+                        <div className={styles.mul_inp}>
+                            <div className={styles.inp_con}>
+                                <Label>{t("Date Of Birth")}  <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
+                                <DatePicker
+                                    format="YYYY/MM/DD"
+                                    className="form-control custom-datepicker"
+                                    style={{
+                                        background: "#fff",
+                                        border: "1px solid #eeeeee",
+                                        borderRadius: "6px",
+                                        boxShadow: "none",
+                                        padding: "0px",
+                                        display: 'flex',
+                                        justifyContent: "center",
+                                        position: "static"
+                                    }}
+                                    value={dob || null}
+                                    onChange={handleDateChange}
+                                    placeholder="YYYY/MM/DD"
+                                    maxDate={maxDate}
+                                    minDate={minDate}
+
+                                    InputProps={{
+                                        disableUnderline: true,
+                                        style: {
+                                            background: '#fff',
+                                            border: 'none',
+                                            boxShadow: 'none',
+                                            padding: '0 10px',
+                                            minHeight: '40px',
+                                            fontWeight: 500,
+                                        }
+                                    }}
+                                    inputProps={{
+                                        style: {
+                                            background: '#fff',
+                                            border: 'none',
+                                            boxShadow: 'none',
+                                            padding: '2px 0px',
+                                            minHeight: '40px',
+                                        }
+                                    }}
+                                    clearable
+                                    autoOk
+                                />
+                            </div>
+                            <div className={styles.inp_con}>
+                                <Label>{t("Gender")}  <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
+                                <Input type='select' value={gender} onChange={e => setGender(e.target.value)}>
+                                    <option value="" disabled>--{t("Select Gender")}--</option>
+                                    <option value="male">{t("Male")}</option>
+                                    <option value="female">{t("Female")}</option>
+                                    <option value="other">{t("Other")}</option>
+                                </Input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style={{ marginBottom: '15px' }} className={styles.mul_inp}>
+                    <div className={styles.inp_con}>
+                        <Label>{t("Relationship with Nominee")}  <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
+                        <NestedDropdown
+                            child={friendsAndFamily}
+                            parent={BeneficiaryRelation}
+                            value={relationship}
+                            setter={(val) => {
+                                setRelationship(val)
+                            }}
+                            defaultValue='Relationship with Nominee'
+                            subKey="Friends & Family"
+                            style={{ borderColor: '#eeeeee' }}
+                        />
+                    </div>
+                    <div className={styles.inp_con}>
+                        <Label>{t("Nominee Contact Number")}  <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
+                        <PhoneInput
+                            placeholder="Enter Phone number"
+                            phone={contact}
+                            setPhone={(e) => {
+                                setContact(e)
+                            }}
+                            customStyles={{
+                                boxShadow: "inline",
+                                border: '1px solid #eeeeee'
+                            }}
+                            setCountry={(e) => {
+                                setCountryIsoCode(e.alpha3)
+                            }}
+                            country={userDetails.country_iso_code}
+                        />
+
+                    </div>
+                </div>
+                <div style={{ position: "relative" }} className={styles.inp_con}>
+                    <Label>{t("Nominee Address")}  <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
+                    <Input
+                        type='textarea'
+                        placeholder={t('Nominee Permanent Address')}
+                        value={address}
+                        onChange={e => setAddress(e.target.value)}
+                        onFocus={() => setAddressInFocus(true)}
+                        onBlur={() => {
+                            setTimeout(() => {
+                                setAddressInFocus(false)
+                            }, 100)
+                        }}
+                    />
                     {
-                        image
+                        addressInFocus && addresses.length > 0
                             ?
-                            <img src={image} alt="nominee photo" />
+                            <div style={{
+                                top: "104%",
+                                left: 0,
+                                background: "white",
+                                display: "flex",
+                                flexDirection: "column",
+                                borderRadius: ".5rem",
+                                maxHeight: "40vh",
+                                overflowY: "auto",
+                                border: "1px solid #eee",
+                                width: "100%"
+                            }}>
+                                {
+                                    addresses.map(item => (
+                                        <div
+                                            key={item}
+                                            onMouseDown={(e) => {
+                                                // Prevent blur event from firing before click
+                                                e.preventDefault();
+                                                setAddress(item)
+                                                setAddressInFocus(false);
+                                            }}
+                                            style={{
+                                                padding: "1rem",
+                                                cursor: "pointer",
+                                                fontSize: ".8rem",
+                                                fontWeight: 500
+                                            }}
+                                        >
+                                            {item}
+                                        </div>
+                                    ))
+                                }
+                            </div>
                             :
-                            <label htmlFor='file' className={styles.upload}>
-                                <Camera size={30} />
-                                <span>{t("Upload Photo")}</span>
-                                <input type="file" name="file" id="file" value={image} onChange={handleImageSelect} hidden />
-                            </label>
+                            ""
                     }
                 </div>
-                <div className={styles.top_right}>
-                    <div className={styles.inp_con}>
-                        <Label style={{ display: "flex", alignItems: 'center' }}>{t("Name")} <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
-                        <Input placeholder={t(`Nominee's Full Name`)} value={fullName} onChange={e => setFullName(e.target.value)} />
-                    </div>
-                    <div className={styles.mul_inp}>
-                        <div className={styles.inp_con}>
-                            <Label>{t("Date Of Birth")}  <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
-                            <Input type='date' placeholder={`Nominee's Date Of Birth`} value={dob} onChange={e => setDob(e.target.value)} />
-                        </div>
-                        <div className={styles.inp_con}>
-                            <Label>{t("Gender")}  <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
-                            <Input type='select' value={gender} onChange={e => setGender(e.target.value)}>
-                                <option value="" disabled>--{t("Select Gender")}--</option>
-                                <option value="male">{t("Male")}</option>
-                                <option value="female">{t("Female")}</option>
-                                <option value="other">{t("Other")}</option>
-                            </Input>
-                        </div>
-                    </div>
+                <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "1.5rem" }}>
+                    <Button
+                        style={{
+                            background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                            border: "inline",
+                            outline: "inline",
+                            borderRadius: "10px"
+                        }}
+                        onClick={NumberValidation}
+                        disabled={!fullName || !image || !dob || !address || !relationship || !gender || !contact || contact.length < 9 || loading}
+                    >
+                        {t("Save")}
+                    </Button>
                 </div>
+                <SuccessModal isOpen={showSuccess} toggle={() => setShowSuccess(!showSuccess)} />
             </div>
-            <div style={{ marginBottom: '15px' }} className={styles.mul_inp}>
-                <div className={styles.inp_con}>
-                    <Label>{t("Relationship with Nominee")}  <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
-                    <NestedDropdown
-                        child={friendsAndFamily}
-                        parent={BeneficiaryRelation}
-                        value={relationship}
-                        setter={(val) => {
-                            setRelationship(val)
-                        }}
-                        defaultValue='Relationship with Nominee'
-                        subKey="Friends & Family"
-                        style={{ borderColor: '#eeeeee' }}
-                    />
-                </div>
-                <div className={styles.inp_con}>
-                    <Label>{t("Nominee Contact Number")}  <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
-                    <PhoneInput
-                        placeholder="Enter Phone number"
-                        phone={contact}
-                        setPhone={(e) => {
-                            setContact(e)
-                        }}
-                        customStyles={{
-                            boxShadow: "inline",
-                            border: '1px solid #eeeeee'
-                        }}
-                        setCountry={(e) => {
-                            setCountryIsoCode(e.alpha3)
-                        }}
-                        country={userDetails.country_iso_code}
-                    />
-
-                </div>
-            </div>
-            <div style={{ position: "relative" }} className={styles.inp_con}>
-                <Label>{t("Nominee Address")}  <span style={{ color: "red", fontSize: '13px', display: "inline" }}>*</span></Label>
-                <Input
-                    type='textarea'
-                    placeholder={t('Nominee Permanent Address')}
-                    value={address}
-                    onChange={e => setAddress(e.target.value)}
-                    onFocus={() => setAddressInFocus(true)}
-                    onBlur={() => {
-                        setTimeout(() => {
-                            setAddressInFocus(false)
-                        }, 100)
-                    }}
-                />
-                {
-                    addressInFocus && addresses.length > 0
-                        ?
-                        <div style={{
-                            top: "104%",
-                            left: 0,
-                            background: "white",
-                            display: "flex",
-                            flexDirection: "column",
-                            borderRadius: ".5rem",
-                            maxHeight: "40vh",
-                            overflowY: "auto",
-                            border: "1px solid #eee",
-                            width: "100%"
-                        }}>
-                            {
-                                addresses.map(item => (
-                                    <div
-                                        key={item}
-                                        onMouseDown={(e) => {
-                                            // Prevent blur event from firing before click
-                                            e.preventDefault();
-                                            setAddress(item)
-                                            setAddressInFocus(false);
-                                        }}
-                                        style={{
-                                            padding: "1rem",
-                                            cursor: "pointer",
-                                            fontSize: ".8rem",
-                                            fontWeight: 500
-                                        }}
-                                    >
-                                        {item}
-                                    </div>
-                                ))
-                            }
-                        </div>
-                        :
-                        ""
-                }
-            </div>
-            <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "1.5rem" }}>
-                <Button
-                    style={{
-                        background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
-                        border: "inline",
-                        outline: "inline",
-                        borderRadius: "10px"
-                    }}
-                    onClick={NumberValidation}
-                    disabled={!fullName || !image || !dob || !address || !relationship || !gender || !contact || contact.length < 9 || loading}
-                >
-                    {t("Save")}
-                </Button>
-            </div>
-            <SuccessModal isOpen={showSuccess} toggle={() => setShowSuccess(!showSuccess)} />
-        </div>
+        </MuiPickersUtilsProvider>
     )
 }
 

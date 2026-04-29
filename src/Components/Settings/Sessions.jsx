@@ -7,7 +7,11 @@ import { UserContext } from '../../Context/UserContext';
 
 const Sessions = () => {
     const { t } = useTranslation()
-    const { userSessions } = useContext(UserContext)
+    const { userSessions, getSessions } = useContext(UserContext)
+
+    useEffect(() => {
+        getSessions()
+    }, [])
 
     return (
         <Card>
