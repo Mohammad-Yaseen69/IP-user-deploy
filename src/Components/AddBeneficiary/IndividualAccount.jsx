@@ -216,12 +216,21 @@ const IndividualAccount = ({ mobileView, handleChangeNumber, toggleSuccess, filt
                 if (item === "swift_bic_code" && accNumType === "Swift") return false
                 return true
             })
+
+        if (accNumType === "IBAN" && ibanSwift < 14) {
+            setCompletedBank(false)
+            return;
+        } else if (accNumType === "Swift" && ibanSwift < 7) {
+            setCompletedBank(false)
+            return;
+        }
+
         if (formData.bank_name && formData.branch_name && formData.bank_account_number && (isAfricanBank ? true : formData.bank_postal_code) && formData.bank_branch_street && formData.bank_city && formData.bank_province && resultKeys?.every(item => bankExtras?.[item]?.length > 0)) {
             setCompletedBank(true)
         } else {
             setCompletedBank(false)
         }
-    }, [formData, bankExtras, services])
+    }, [formData, bankExtras, services, accNumType, ibanSwift])
 
     useEffect(() => {
         if (cashPickupType && cashPickupNumber && Object.keys(cashExtras).filter(item => serviceFieldInfoValidate(services?.find(item => item?.method?.toLowerCase()?.includes("cash")), "credit_party_identifiers_accepted", item, fieldsInfo)).every(item => cashExtras?.[item]?.length > 0)) {
