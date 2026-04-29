@@ -145,7 +145,7 @@ const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor =
                                             {t("Enter Counter Amount")}
                                         </span>
                                         <div className={styles.badge} style={{ background: badgeColor }}>
-                                            {counterType.includes("Custom") ? "" : "-"}{counterType}{counterType.includes("Custom") ? "" : "%"} Applied
+                                            {counterType.includes("Custom") ? "" : "-"}{counterType}{counterType.includes("Custom") ? "" : "%"} {t("Applied")}
                                         </div>
                                     </div>
                                     <h5 style={{ display: "flex", gap: ".7rem" }}>
@@ -218,7 +218,7 @@ const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor =
                                             {t("Countered Offer")}
                                         </span>
                                         <div className={styles.badge} style={{ background: badgeColor }}>
-                                            {counterType.includes("Custom") ? "" : "-"}{counterType}{counterType.includes("Custom") ? "" : "%"} Applied
+                                            {counterType.includes("Custom") ? "" : "-"}{counterType}{counterType.includes("Custom") ? "" : "%"} {t("Applied")}
                                         </div>
                                     </div>
                                     <h5>
@@ -282,7 +282,7 @@ const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor =
                                                 {t("Enter Counter Amount")}
                                             </span>
                                             <div className={styles.badge} style={{ background: badgeColor }}>
-                                                -{counterType}% Applied
+                                                -{counterType}% {t("Applied")}
                                             </div>
                                         </div>
                                         <h5 style={{ display: "flex", gap: ".7rem" }}>
@@ -342,7 +342,7 @@ const BargainQuotation = ({ item, isOpen, toggle, type = "bargain", badgeColor =
                                                 {t("Countered Offer")}
                                             </span>
                                             <div className={styles.badge} style={{ background: badgeColor }}>
-                                                -{counterType}% Applied
+                                                -{counterType}% {t("Applied")}
                                             </div>
                                         </div>
                                         <h5>

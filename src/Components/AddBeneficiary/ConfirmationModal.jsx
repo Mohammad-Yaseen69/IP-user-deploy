@@ -1,12 +1,13 @@
+import { useTranslation } from "react-i18next"
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap"
 
 const ConfirmationModal = ({ isOpen, toggle, onConfirm, onCancel }) => {
+    const { t } = useTranslation()
     return (
         <Modal isOpen={isOpen} toggle={toggle}>
-            <ModalHeader toggle={toggle}>Confirm</ModalHeader>
+            <ModalHeader toggle={toggle}>{t("Confirm")}</ModalHeader>
             <ModalBody>
-                Beneficiary country and Bank country doesn't match, Updating the bank details will also update the beneficiary's details, (i.e: country, city, phone number, card details, mobile wallet details, cash pickup details, etc.).
-            </ModalBody>
+                {t("Beneficiary country and Bank country doesn't match, Updating the bank details will also update the beneficiary's details, (i.e: country, city, phone number, card details, mobile wallet details, cash pickup details, etc.).")}            </ModalBody>
             <ModalFooter>
                 <Button style={{
                     border: "none",
@@ -19,7 +20,7 @@ const ConfirmationModal = ({ isOpen, toggle, onConfirm, onCancel }) => {
                     alignItems: "center",
                     padding: ".6rem 2rem"
                 }}
-                    className="i_t_button" onClick={onCancel}>Cancel</Button>
+                    className="i_t_button" onClick={onCancel}>{t("Cancel")}</Button>
                 <Button style={{
                     border: "none",
                     outline: "none",
@@ -31,7 +32,7 @@ const ConfirmationModal = ({ isOpen, toggle, onConfirm, onCancel }) => {
                     alignItems: "center",
                     padding: ".6rem 2rem"
                 }}
-                    className="i_t_button" onClick={onConfirm}>Proceed</Button>
+                    className="i_t_button" onClick={onConfirm}>{t("Proceed")}</Button>
             </ModalFooter>
         </Modal>
     )

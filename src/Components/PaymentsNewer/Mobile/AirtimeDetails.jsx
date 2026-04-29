@@ -1,18 +1,18 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
-import styles from "./styles/AirlineDetails.module.css"
+import axios from 'axios'
+import { countries } from 'country-list-json'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import Draggable from 'react-draggable'
+import { Check, ChevronRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import PhoneInput from 'react-phone-input-2'
-import { Input, Label } from 'reactstrap'
-import { countries } from 'country-list-json'
-import { UserContext } from '../../../Context/UserContext'
-import axios from 'axios'
-import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { toast } from 'react-toastify'
+import { Input, Label } from 'reactstrap'
+import { UserContext } from '../../../Context/UserContext'
+import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import InstaPayLoader from '../../Loader'
-import { Check, ChevronRight } from 'react-feather'
 import faded_lines from "../files/faded_lines.png"
-import Draggable from 'react-draggable'
+import styles from "./styles/AirlineDetails.module.css"
 
 let timeout;
 
@@ -373,7 +373,7 @@ const AirtimeDetails = ({ setSubStep, service, providers, serviceType, setServic
                                             border: "1px solid rgba(0, 0, 0, 0.13)",
                                             background: "#FFF",
                                         }} type='select' value={serviceType} onChange={e => setServiceType(e.target.value)}>
-                                            <option value="" disabled>--Select-A-Service--</option>
+                                            <option value="" disabled>{t("--Select-A-Service--")}</option>
                                             {subServices.map(item => (
                                                 <option value={item?.id}>{item?.name}</option>
                                             ))}
@@ -402,7 +402,7 @@ const AirtimeDetails = ({ setSubStep, service, providers, serviceType, setServic
                                                                 border: "1px solid rgba(0, 0, 0, 0.13)",
                                                                 background: "#FFF",
                                                             }} type='select' value={packages} onChange={e => setPackages(e.target.value)}>
-                                                                <option value="" disabled>--Select-A-Package--</option>
+                                                                <option value="" disabled>{t("--Select-A-Package--")}</option>
                                                                 {subServicesProvider?.map(item => (
                                                                     <option value={item?.id}>{item?.name}</option>
                                                                 ))}

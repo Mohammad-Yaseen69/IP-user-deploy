@@ -1,18 +1,17 @@
-import React, { useState } from "react";
-import dayjs from "dayjs";
-import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
+import styled from "@emotion/styled";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { Autocomplete, TextField } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
-import styled from "@emotion/styled";
 import axios from "axios";
-import { useLocation, useParams } from "react-router-dom";
-import { useTimezones } from "../../Context/TimezoneContext";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { Autocomplete, TextField } from "@mui/material";
-import RedirectButton from "../../CommonElements/RedirectButton";
-import { useTranslation } from "react-i18next";
+import dayjs from "dayjs";
 import i18next from "i18next";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useLocation, useParams } from "react-router-dom";
+import RedirectButton from "../../CommonElements/RedirectButton";
+import { useTimezones } from "../../Context/TimezoneContext";
 
 // Styled components for custom styling
 const CustomDatePickerContainer = styled.div`
@@ -204,7 +203,7 @@ export default function SubscriptionCalendar() {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="datepicker">Select a Date:</CustomLabel>
+                <CustomLabel htmlFor="datepicker">{t("Select a Date:")}</CustomLabel>
                 <MobileDatePicker
                   minDate={dayjs()}
                   id="datepicker"
@@ -220,7 +219,7 @@ export default function SubscriptionCalendar() {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="timezone">Select a Timezone:</CustomLabel>
+                <CustomLabel htmlFor="timezone">{t("Select a Timezone:")}</CustomLabel>
                 <Autocomplete
                   fullWidth={true}
                   disablePortal

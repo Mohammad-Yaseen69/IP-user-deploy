@@ -131,6 +131,17 @@ i18n
     interpolation: {
       escapeValue: false,
     },
+    saveMissing: true,
+    missingKeyHandler: (lngs, ns, key) => {
+      console.log(lngs, ns, key, "missing thing");
+      fetch('/save-missing-key', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ key }),
+      }).catch(err => console.error('Failed to save missing key:', err));
+    }
   });
 
 export default i18n;

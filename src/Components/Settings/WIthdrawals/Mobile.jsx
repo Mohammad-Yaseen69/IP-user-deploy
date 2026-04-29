@@ -1,12 +1,10 @@
-import { countries } from 'country-list-json'
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import PhoneInput from '../../PhoneInput'
 import { FormGroup, Input, Label } from 'reactstrap'
-import InstaPayLoader from '../../Loader'
 import { UserContext } from '../../../Context/UserContext'
-import CountryBasedPhone from "../../PhoneInput/PhoneNumberBasedOnCountry.json"
 import NeemaBenExtrasFields from '../../AddBeneficiary/NeemaBenExtrasFields'
+import InstaPayLoader from '../../Loader'
+import CountryBasedPhone from "../../PhoneInput/PhoneNumberBasedOnCountry.json"
 
 
 const Mobile = ({ values, changeHandler, isEditMode, payers, country, payerLoading, setBankError, bankError, index, basicExtras, fieldInfoValidate, setBasicExtras, handleBasicExtraChange, alpha3 }) => {

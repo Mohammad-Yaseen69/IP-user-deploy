@@ -469,7 +469,7 @@ const PaymentsFlowModal = ({ isOpen, toggle, data, dataHandler, item }) => {
                                                                                 lineHeight: 1.3,
                                                                                 letterSpacing: '-0.28px'
                                                                             }}>
-                                                                                <strong>{data?.exchange_rate?.paypal?.fee?.currency}</strong> is not supported by Paypal, <strong>USD</strong> will be used as the default currency.
+                                                                                <strong>{data?.exchange_rate?.paypal?.fee?.currency}</strong> {t("is not supported by Paypal,")} <strong>USD</strong> {t("will be used as the default currency.")}
                                                                             </span>
                                                                         </div>
                                                                         <div style={{

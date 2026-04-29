@@ -9,6 +9,7 @@ import { Button } from "reactstrap"
 import { Camera, MoreHorizontal, Trash2 } from "react-feather"
 import DeleteImageModal from "./DeleteImageModal"
 import { toast } from "react-toastify"
+import { useTranslation } from "react-i18next"
 
 const Cover = () => {
     const [coverPhoto, setCoverPhoto] = useState(cover)
@@ -20,7 +21,7 @@ const Cover = () => {
     const [position, setPosition] = useState({ x: 0.5, y: 0.5 });
     const [isSaving, setIsSaving] = useState(false)
     const mainContainerRef = useRef(null)
-
+    const {t} = useTranslation()
     useEffect(() => {
         if (userDetails) {
             setCoverPhoto(userDetails?.coverImage?.url || cover)
@@ -177,7 +178,7 @@ const Cover = () => {
                             }}>
                                 <label htmlFor="cover_photo" onClick={toggleMenu} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", marginBottom: "0", cursor: "pointer" }}>
                                     <Camera size={18} />
-                                    <span style={{ whiteSpace: "nowrap" }}>Edit Cover Photo</span>
+                                    <span style={{ whiteSpace: "nowrap" }}>{t("Edit Cover Photo")}</span>
                                 </label>
                                 {
                                     userDetails?.profileImage?.url
@@ -188,14 +189,14 @@ const Cover = () => {
                                             setIsEditing(true)
                                         }}>
                                             <Camera size={18} />
-                                            <span style={{ whiteSpace: "nowrap" }}>Adjust Cover Photo</span>
+                                            <span style={{ whiteSpace: "nowrap" }}>{t("Adjust Cover Photo")}</span>
                                         </label>
                                         <label style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", marginBottom: "0", cursor: "pointer" }} onClick={() => {
                                             setShowDelModal(true)
                                             toggleMenu()
                                         }} >
                                             <Trash2 size={18} />
-                                            <span style={{ whiteSpace: "nowrap" }}>Remove Cover Photo</span>
+                                            <span style={{ whiteSpace: "nowrap" }}>{t("Remove Cover Photo")}</span>
                                         </label>
                                     </>
                                 }

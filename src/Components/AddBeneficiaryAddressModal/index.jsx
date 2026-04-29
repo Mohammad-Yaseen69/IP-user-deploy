@@ -86,7 +86,7 @@ const AddBeneficiaryAddressModal = ({ isOpen, toggle, beneficiaries = [], close,
 
     return (
         <Modal isOpen={isOpen} style={{ maxWidth: "920px", width: "100vw" }}>
-            <ModalHeader toggle={close}>Add Addresses For Beneficiaries ({beneficiaries.findIndex(i => i?._id === current) + 1}/{beneficiaries.length})</ModalHeader>
+            <ModalHeader toggle={close}>{t("Add Addresses For Beneficiaries")} ({beneficiaries.findIndex(i => i?._id === current) + 1}/{beneficiaries.length})</ModalHeader>
             <ModalBody>
                 <Swiper
                     ref={swiperRef}
@@ -110,15 +110,15 @@ const AddBeneficiaryAddressModal = ({ isOpen, toggle, beneficiaries = [], close,
                                         <div className={styles.bt_dets}>
                                             <h4>{item?.first_name} {item?.last_name}</h4>
                                             <div>
-                                                <span>Country: </span>
+                                                <span>{t("Country")}: </span>
                                                 <strong>{item?.country_name}</strong>
                                             </div>
                                             <div>
-                                                <span>Phone: </span>
+                                                <span>{t("Phone")}: </span>
                                                 <strong>{item?.phone}</strong>
                                             </div>
                                             <div>
-                                                <span>Email: </span>
+                                                <span>{t("Email")}: </span>
                                                 <strong>{item?.email}</strong>
                                             </div>
                                         </div>

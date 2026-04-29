@@ -94,7 +94,7 @@ const AddBeneficiaryRequiredFields = ({ isOpen, toggle, beneficiary, close, requ
             <ModalHeader style={{ width: "100%" }}>
                 <div style={{ display: "flex", minWidth: "100%", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
                     <p style={{marginBottom: "0"}}>
-                        Add Required Fields For Beneficiary
+                        {t("Add Required Fields For Beneficiary")}
                     </p>
                     <X onClick={close} />
                 </div>
@@ -106,22 +106,22 @@ const AddBeneficiaryRequiredFields = ({ isOpen, toggle, beneficiary, close, requ
                         <div className={styles.bt_dets}>
                             <h4>{beneficiary?.first_name} {beneficiary?.last_name}</h4>
                             <div>
-                                <span>Country: </span>
+                                <span>{t("Country")}: </span>
                                 <strong>{beneficiary?.country_name}</strong>
                             </div>
                             <div>
-                                <span>Phone: </span>
+                                <span>{t("Phone")}: </span>
                                 <strong>{beneficiary?.phone}</strong>
                             </div>
                             <div>
-                                <span>Email: </span>
+                                <span>{t("Email")}: </span>
                                 <strong>{beneficiary?.email}</strong>
                             </div>
                         </div>
                     </div>
                     {fields.map((field, index) => (
                         <FormGroup key={index} className={service_name_formatter(field.name)}>
-                            <Label>Please Enter {service_name_formatter(field.name)} to Procced</Label>
+                            <Label>{t("Please Enter")} {service_name_formatter(field.name)} {t("to Proceed")}</Label>
                             <Input
                                 type="text"
                                 value={field.value}
@@ -132,7 +132,7 @@ const AddBeneficiaryRequiredFields = ({ isOpen, toggle, beneficiary, close, requ
                     ))}
                     {extraFields?.map((field, index) => (
                         <FormGroup key={index} className={styles.field}>
-                            <Label>Please Enter Your {service_name_formatter(field.name)}</Label>
+                            <Label>{t("Please Enter Your")} {service_name_formatter(field.name)}</Label>
                             <Input
                                 type="text"
                                 value={field.value}

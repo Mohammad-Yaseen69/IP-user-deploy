@@ -166,7 +166,7 @@ const BulkPaymentModal = ({ isOpen, onClose, onNext, initialRecipients = [] }) =
                             />
                             <div>
                                 <Upload size={14} />
-                                {csvRows.length > 0 ? "Re-upload CSV" : "Upload CSV"}
+                                {csvRows.length > 0 ? t("Re-upload CSV") : t("Upload CSV")}
                             </div>
                         </label>
                     </div>
@@ -183,7 +183,7 @@ const BulkPaymentModal = ({ isOpen, onClose, onNext, initialRecipients = [] }) =
 
                     {csvRows.length > 0 ? (
                         <div className={styles.tableSection}>
-                            <h6>{t("Recipients Preview")} ({csvRows.length} row{csvRows.length !== 1 ? "s" : ""})</h6>
+                            <h6>{t("Recipients Preview")} ({csvRows.length} {t("row")}{csvRows.length !== 1 ? "s" : ""})</h6>
                             <div className={styles.tableWrapper}>
                                 <TimelineBulkRequests
                                     beneficiaries={csvRows}

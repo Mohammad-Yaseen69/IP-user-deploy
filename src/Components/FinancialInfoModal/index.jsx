@@ -477,7 +477,7 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
                                             <div>
                                                 {toggle
                                                     &&
-                                                    <p onClick={toggle} style={{ fontSize: "10px", fontWeight: 600, color: 'white', marginBottom: '10px', cursor: "pointer" }}>Cancel</p>
+                                                    <p onClick={toggle} style={{ fontSize: "10px", fontWeight: 600, color: 'white', marginBottom: '10px', cursor: "pointer" }}>{t("Cancel")}</p>
                                                 }
                                                 <span className={styles.label}>{t("Individual")}</span>
                                             </div>
@@ -519,7 +519,7 @@ const FinancialInfoModal = ({ isOpen, toggle, toggleOnSuccess, setShowSuccessMod
                                             <div>
                                                 {toggle
                                                     &&
-                                                    <p onClick={toggle} style={{ fontSize: "10px", fontWeight: 600, color: 'white', marginBottom: '10px', cursor: "pointer" }}>Cancel</p>
+                                                    <p onClick={toggle} style={{ fontSize: "10px", fontWeight: 600, color: 'white', marginBottom: '10px', cursor: "pointer" }}>{t("Cancel")}</p>
                                                 }
                                                 <span className={styles.label}>{t("Individual")}</span>
                                             </div>

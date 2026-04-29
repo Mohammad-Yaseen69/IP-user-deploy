@@ -4,12 +4,13 @@ import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import { UserContext } from '../../Context/UserContext'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
 import { useNavigate } from 'react-router'
+import { useTranslation } from 'react-i18next'
 
 const DeleteImageModal = ({ isOpen, toggle, imageType }) => {
     const [isDeleting, setIsDeleting] = useState(false)
     const { userDetails, authHeader, setUserRefresh } = useContext(UserContext)
     const navigate = useNavigate()
-
+   const {t} = useTranslation()
     const deleteHandler = () => {
         setIsDeleting(true)
         axios.delete(`${import.meta.env.VITE_IP_DEV_API}/api/account/delete-${imageType.toLowerCase()}-picture/${userDetails._id}`, {
@@ -35,11 +36,13 @@ const DeleteImageModal = ({ isOpen, toggle, imageType }) => {
     return (
         <Modal isOpen={isOpen} toggle={toggle}>
             <ModalHeader toggle={toggle}>
-                Delete {imageType} Picture
+                {t("Delete")} {imageType} {t("Picture")}
             </ModalHeader>
             <ModalBody>
-                Are you sure, you want to delete you {imageType} Picture?
-            </ModalBody>
+                {t("Are you sure, you want to delete your {{imageType}} picture?", {
+                    imageType: imageType
+                })
+                }             </ModalBody>
             <ModalFooter>
                 <Button
                     onClick={toggle}
@@ -50,7 +53,7 @@ const DeleteImageModal = ({ isOpen, toggle, imageType }) => {
                         borderRadius: "10px"
                     }}
                 >
-                    Cancel
+                    {t("Cancel")}
                 </Button>
                 <Button
                     onClick={deleteHandler}
@@ -62,7 +65,7 @@ const DeleteImageModal = ({ isOpen, toggle, imageType }) => {
                         borderRadius: "10px"
                     }}
                 >
-                    {isDeleting ? "Deleting" : "Delete"}
+                    {isDeleting ? t("Deleting") : t("Delete")}
                 </Button>
             </ModalFooter>
         </Modal>

@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { AlertTriangle, ChevronRight } from 'react-feather'
-import LanguagePicker from '../../LanguagePicker'
 import { useTranslation } from 'react-i18next'
-import styles from "../styles/index.module.css"
 import { UserContext } from '../../../Context/UserContext'
+import LanguagePicker from '../../LanguagePicker'
 import { smsIcon, whatsappIcon } from "../files"
+import styles from "../styles/index.module.css"
 
 const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = "phone", data, dataHandler, isWhatsappDefault }) => {
     const { t } = useTranslation()
@@ -190,11 +190,11 @@ const OtpConfirmation = ({ verifyOTpHandler, resendHandler, timer = 120, type = 
                                     style={{ display: 'flex', alignItems: "center", gap: "7px", padding: '10px 15px', boxShadow: "0px 0px 4px #0000002e", borderRadius: "6px", cursor: resendTimer !== 0 ? "not-allowed" : "pointer" }}>
                                     <img style={{ width: '24px' }} src={currentMethod === "sms" ? whatsappIcon : smsIcon} alt="" />
                                     <span style={{ fontWeight: 600, color: 'black' }}>
-                                        Verify Using {currentMethod === "sms" ? "Whatsapp" : "SMS"}
+                                        {t("Verify Using")} {currentMethod === "sms" ? "Whatsapp" : "SMS"}
                                     </span>
                                 </span>
 
-                                {showToolTip && <span style={{ fontWeight: 600, fontSize: '10px', backgroundColor: "gray", padding: '1px 3px', borderRadius: "3px", color: 'white', position: "absolute", bottom: "-20px", right: '-40px' }}>Wait For the Timer</span>}
+                                {showToolTip && <span style={{ fontWeight: 600, fontSize: '10px', backgroundColor: "gray", padding: '1px 3px', borderRadius: "3px", color: 'white', position: "absolute", bottom: "-20px", right: '-40px' }}>{t("Wait For the Timer")}</span>}
                             </div>
                         }
                         <div style={{ marginTop: '20px' }} className={styles.toggle_sms}>

@@ -1,23 +1,17 @@
-import axios from "axios"
-import styles from "../TransactionsNewApi/styles/index.module.scss"
-import { Check, ChevronDown, ChevronRight, MoreHorizontal, X } from "react-feather"
-import { useTranslation } from "react-i18next"
-import { encryptData } from "../../Helper/EssentilaMethods/Encryption"
-import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
-import { useState, useEffect, useContext, useRef, useLayoutEffect } from "react"
-import countries from "../PaymentsNewer/CountriesData.json"
-import more_info from "./more_info.module.scss"
-import { reviews } from "../UserProfile/ProfileComponent"
-import Rating from "react-rating"
-import PaymentFlow from "./PaymentFlow"
-import { useLocation, useNavigate } from "react-router"
-import { UserContext } from "../../Context/UserContext"
-import { Button } from "reactstrap"
-import ReviewModal from "./ReviewModal"
-import ImagePreviewModal from "../ImagePreviewModal.jsx"
-import t_styles from "../TransactionsNewApi/Mobile/TransactionItemMobile.module.css"
-import PendingItemDetails from "./PendingItemDetails.jsx"
 import { useQueryClient } from "@tanstack/react-query"
+import axios from "axios"
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react"
+import { Check, ChevronDown, ChevronRight, X } from "react-feather"
+import { useTranslation } from "react-i18next"
+import { useLocation, useNavigate } from "react-router"
+import { Button } from "reactstrap"
+import { UserContext } from "../../Context/UserContext"
+import { decryptData } from "../../Helper/EssentilaMethods/Decryption"
+import countries from "../PaymentsNewer/CountriesData.json"
+import styles from "../TransactionsNewApi/styles/index.module.scss"
+import more_info from "./more_info.module.scss"
+import PendingItemDetails from "./PendingItemDetails.jsx"
+import ReviewModal from "./ReviewModal"
 
 
 const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "received", authHeader }) => {
@@ -240,7 +234,7 @@ const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "re
                 <div className={more_info.sent_more}>
                     <div className={more_info.sm_left}>
                         <span>
-                            You Requested
+                            {t("You Requested")}
                         </span>
                         <h4>
                             {item?.currency?.code} {item?.amount ? item?.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ""}
@@ -248,7 +242,7 @@ const PendingItem = ({ color, item, activeItem, setActiveItem, index, type = "re
                     </div>
                     <div className={more_info.sm_right}>
                         <div className={more_info.smr_left}>
-                            <span>Via: </span>
+                            <span>{t("Via:")} </span>
                             <div>
                                 <p>{currentWallet?.currency?.code} </p>
                                 <span>{currentWallet?.currency?.code} {currentWallet?.balance?.available?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>

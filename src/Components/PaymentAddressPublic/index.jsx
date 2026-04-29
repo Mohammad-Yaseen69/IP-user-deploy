@@ -182,7 +182,7 @@ const PaymentAddressPublic = () => {
                                             :
                                             <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                                                 <CardBody>
-                                                    <CardText>Sending to a payment address is not available on this level.<Link onClick={verifyToken} to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>Go back to Home.</Link></CardText>
+                                                    <CardText>{t("Sending to a payment address is not available on this level.")}<Link onClick={verifyToken} to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>Go back to Home.</Link></CardText>
                                                 </CardBody>
                                             </Card>
                                     )
@@ -207,9 +207,37 @@ const PaymentAddressPublic = () => {
                             {
                                 loading
                                     ?
-                                    <div style={{ position: "fixed", top: 0, left: 0, height: "100vh", width: "100vw" }}>
-                                        <InstaPayLoader />
-                                    </div>
+                                    (
+                                        currentUser?.level?.payment_address?.send
+                                            ?
+                                            (
+                                                userDetails
+                                                    ?
+                                                    <>
+                                                        {/* <div className={styles.go_back} style={{marginBottom: "12px"}} onClick={() => window.history.back()}>
+                                                            <ChevronLeft size={18} color='white' />
+                                                            <span>
+                                                                {t("Go back (Cancel Payment)")}
+                                                            </span>
+                                                        </div> */}
+
+                                                        <PaymentAddressComponent userVideos={userVideos} userDetails={userDetails} />
+                                                    </>
+                                                    :
+                                                    <NotFound type='Page' />
+                                                // <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
+                                                //     <CardBody>
+                                                //         <CardText>Page Unavailable.<Link onClick={verifyToken} to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>Go back to Home.</Link></CardText>
+                                                //     </CardBody>
+                                                // </Card>
+                                            )
+                                            :
+                                            <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
+                                                <CardBody>
+                                                    <CardText>{t("Sending to a payment address is not available on this level.")}<Link onClick={verifyToken} to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>Go back to Home.</Link></CardText>
+                                                </CardBody>
+                                            </Card>
+                                    )
                                     :
                                     currentUser
                                         ?
@@ -228,7 +256,7 @@ const PaymentAddressPublic = () => {
                                                 :
                                                 <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                                                     <CardBody>
-                                                        <CardText>Sending to a payment address is not available on this level.<Link onClick={verifyToken} to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>Go back to Home.</Link></CardText>
+                                                        <CardText>{t("Sending to a payment address is not available on this level.")}<Link onClick={verifyToken} to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>Go back to Home.</Link></CardText>
                                                     </CardBody>
                                                 </Card>
                                         )

@@ -1,19 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Check, ChevronRight, X } from 'react-feather'
-import { useTranslation } from 'react-i18next'
-import { Button, Card, CardBody, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import axios from 'axios';
+import { useContext, useEffect, useState } from 'react';
+import { Check, ChevronRight } from 'react-feather';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import { Button, Card, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import logo_w from "../../../assets/images/logo/logo_white.png";
 import { UserContext } from '../../../Context/UserContext';
 import { decryptData } from '../../../Helper/EssentilaMethods/Decryption';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import green from "../files/gy_card.png"
-import purple from "../files/pb_card.png"
-import red from "../files/rb_card.png"
-import { toast } from 'react-toastify';
-import logo_w from "../../../assets/images/logo/logo_white.png"
-import CreditCardInput from '../../CreditInput';
-import styles from "../../PaymentsNewer/InternationalFlow/styles/creditcard.module.css"
 import { encryptData } from '../../../Helper/EssentilaMethods/Encryption';
+import CreditCardInput from '../../CreditInput';
+import styles from "../../PaymentsNewer/InternationalFlow/styles/creditcard.module.css";
+import green from "../files/gy_card.png";
+import purple from "../files/pb_card.png";
+import red from "../files/rb_card.png";
 
 const imgs = [green, purple, red]
 const isBig = window.innerWidth > 1000
@@ -126,7 +125,7 @@ const CardDetails = ({ setSubStep, cardNumber, setCardNumber, expiry, setExpiry,
           {t("Delete Card Info")}
         </ModalHeader>
         <ModalBody>
-          {t("Are you sure, you want to remove this card details ending with these ")}"{currentCard?.last4}" 4 digits?
+          {t("Are you sure, you want to remove this card details ending with these ")}"{currentCard?.last4}" {t("4 digits?")}
         </ModalBody>
         <ModalFooter>
           <Button color='danger' onClick={deleteCard} disabled={isDeleting} style={{ borderRadius: "8px", padding: ".7rem 1.5rem" }}>
@@ -153,8 +152,7 @@ const CardDetails = ({ setSubStep, cardNumber, setCardNumber, expiry, setExpiry,
             ?
             <>
               <h5>{t("Select Payment Card")}</h5>
-              asdfadfasdfa
-              asdfadfasdf
+
               <div className={styles.cards}>
                 {
                   savedCards.map(item => (

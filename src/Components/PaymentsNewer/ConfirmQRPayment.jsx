@@ -1,18 +1,17 @@
-import { Card, CardBody } from "reactstrap";
-import { Check, ChevronRight } from "react-feather";
+import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
+import { Check, ChevronRight } from "react-feather";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
+import { Card, CardBody } from "reactstrap";
+import { UserContext } from "../../Context/UserContext";
+import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
+import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
+import faded_lines from "./files/faded_lines.png";
 import SelectedAmountAndCurrency from "./SelectedAmountAndCurrency";
 import SelectedWallet from "./SelectedWallet";
-import faded_lines from "./files/faded_lines.png"
-import SelectedPaymentType from "./SelectedPaymentType";
-import { UserContext } from "../../Context/UserContext";
-import { useNavigate } from "react-router";
-import { encryptData } from "../../Helper/EssentilaMethods/Encryption";
-import axios from "axios";
-import { decryptData } from "../../Helper/EssentilaMethods/Decryption";
-import { toast } from "react-toastify";
 
 const ConfirmQRPayment = ({ amount, currency, setConfirmed, setSubStep, wallet, paymentDetails, setToken }) => {
     const { t } = useTranslation()
@@ -129,7 +128,7 @@ const ConfirmQRPayment = ({ amount, currency, setConfirmed, setSubStep, wallet, 
                 boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)"
             }}>
                 <div style={{ display: "flex", flexDirection: "column", }} className="conf_cont">
-                    <h4 className="text-center">You Selected<br />QR Payment</h4>
+                    <h4 className="text-center">{t("You Selected")}<br />{t("QR Payment")}</h4>
                     <SelectedAmountAndCurrency amount={amount} currency={currency} setSubStep={setSubStep} step={2} />
                     <SelectedWallet wallet={wallet} setSubStep={setSubStep} />
                 </div>

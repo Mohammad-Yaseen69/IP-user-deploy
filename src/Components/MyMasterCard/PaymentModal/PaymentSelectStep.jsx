@@ -30,7 +30,7 @@ const options = [
     },
     {
         type: "bank",
-        text: "Bank transfer (coming soon)",
+        text: "Bank transfer (coming soon)",
         icon: Bank,
         hoverIcon: Bank_h,
         comingSoon: true

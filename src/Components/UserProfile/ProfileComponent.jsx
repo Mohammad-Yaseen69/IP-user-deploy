@@ -154,7 +154,7 @@ const ProfileComponent = () => {
                                 <h4>{userDetails?.user?.first_name || userDetails?.company?.company_name} {userDetails?.user?.last_name || ''}</h4>
                                 <div className={styles.country}>
                                     <img src={userCountry?.file_url} alt={userCountry?.alpha3} style={{ boxShadow: "0 0 5px #afafaf" }} />
-                                    <span>{userCountry?.name}</span>
+                                    <span>{t(userCountry?.name)}</span>
                                 </div>
                             </div>
                         </div>

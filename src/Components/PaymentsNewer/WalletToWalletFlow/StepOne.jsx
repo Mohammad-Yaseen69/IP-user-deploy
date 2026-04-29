@@ -19,12 +19,6 @@ const StepOne = ({ data, dataHandler, cardToWallet, style }) => {
     const { authHeader, userDetails, benLoading } = useContext(UserContext)
     const [error, setError] = useState("")
     const [expandRecent, setExpandRecent] = useState(false)
-
-
-
-
-
-
     const performSearch = async (query) => {
         setExpandRecent(false)
         dataHandler("loading", true);

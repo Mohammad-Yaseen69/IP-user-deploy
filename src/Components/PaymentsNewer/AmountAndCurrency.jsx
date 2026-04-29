@@ -840,7 +840,7 @@ const AmountAndCurrency = ({ setSubStep, amount, setAmount, currency, setCurrenc
                             savedCards?.length > 0
                             &&
                             <div style={{ display: "flex", gap: ".5rem", alignItems: "center" }}>
-                                <span style={{ whiteSpace: "nowrap" }}>Saved Cards: </span>
+                                <span style={{ whiteSpace: "nowrap" }}>{t("Saved Cards")}: </span>
                                 <div style={{
                                     overflowX: "auto",
                                     display: "flex",

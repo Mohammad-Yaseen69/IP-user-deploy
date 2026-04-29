@@ -10,6 +10,7 @@ import seemless from "./files/seemless.svg"
 import { Button } from "reactstrap"
 import { ChevronRight } from "react-feather"
 import { useNavigate } from "react-router"
+import { useTranslation } from 'react-i18next'
 
 const data = [
     {
@@ -39,18 +40,19 @@ const RegistrationCompleted = ({
     setIsLoginForm
 }) => {
     const navigate = useNavigate()
+    const { t } = useTranslation()
     return (
         <div className={styles.container}>
             <div className={styles.left}>
-                <h1>Registration Completed</h1>
-                <h2>Unleash The Potential Of Social Media Payments with InstaPay</h2>
-                <h3>Few clicks away from transforming your life!</h3>
+                <h1>{t("Registration Completed")}</h1>
+                <h2>{t("Unleash The Potential Of Social Media Payments with InstaPay")}</h2>
+                <h3>{t("Few clicks away from transforming your life!")}</h3>
                 <img src={logo} alt="Instapay" />
             </div>
             <div className={styles.right}>
                 <FormLogo />
-                <h2>Unlock the Future of Finance</h2>
-                <h3>Verify Your Identity and get the most out of it!</h3>
+                <h2>{t("Unlock the Future of Finance")}</h2>
+                <h3>{t("Verify Your Identity and get the most out of it!")}</h3>
                 <div className={styles.adv}>
                     {
                         data.map(item => (
@@ -63,14 +65,14 @@ const RegistrationCompleted = ({
                         ))
                     }
                 </div>
-                <p>& More..</p>
+                <p>{t("& More..")}</p>
 
                 <Button onClick={() => {
                     setStep(1)
                     setIsLoginForm(true)
                     navigate("/login")
                 }}>
-                    <span>Verify Your Account</span>
+                    <span>{t("Verify Your Account")}</span>
                     <ChevronRight />
                 </Button>
             </div>

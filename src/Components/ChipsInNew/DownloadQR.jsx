@@ -17,7 +17,7 @@ const DownloadQR = ({ isOpen, toggle, qrCode, wallet }) => {
                 padding: 0
             }}>
                 <div className={styles.left}>
-                    <h2>{t("Download your QR Code")}</h2>
+                    <h2>{t("Download Your QR Code")}</h2>
                     <p>{t("Share your QR Code or pay link to instantly get paid in your insta wallet.")}</p>
 
                     <div className={styles.buttons}>
@@ -34,7 +34,7 @@ const DownloadQR = ({ isOpen, toggle, qrCode, wallet }) => {
                     <a href={active === "sticker" ? qrCode : `/download-qr-poster/${wallet?.wallet_id}`} download={active === "sticker"} target='_blank'>
                         <button className={styles.button}>
                             <img src={download} alt="" />
-                            <span>Download</span>
+                            <span>{t("Download")}</span>
                         </button>
                     </a>
                 </div>

@@ -282,7 +282,7 @@ const TransactionItemDetails = ({ item, badgeColor, desc, internationalReceiver,
                         }
                         <div className={styles.r_item}>
                             <span>{t("As")}: </span>
-                            <p className={styles.p_type}>{asLabel}</p>
+                            <p className={styles.p_type}>{t(asLabel)}</p>
                         </div>
 
                         {

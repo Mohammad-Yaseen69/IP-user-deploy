@@ -5,10 +5,11 @@ import json_img from "./files/json.png"
 import txt from "./files/txt.png"
 import xls from "./files/xlsx.jpeg"
 import csv_img from "./csv.jpeg";
+import { useTranslation } from 'react-i18next';
 
 const CSVMTabs = () => {
     const [activeTab, setActiveTab] = useState('CSV');
-
+   const {t} = useTranslation()
     const handleTabClick = (tabName) => {
         setActiveTab(tabName);
     };
@@ -50,7 +51,7 @@ const CSVMTabs = () => {
 
     return (
         <div>
-            <h5 className='text-center mb-2'>View example formats of supported files.</h5>
+            <h5 className='text-center mb-2'>{t("View example formats of supported files.")}</h5>
             <div style={{ display: "flex", marginBottom: "1rem" }}>
                 <Button color='transparent' onClick={() => handleTabClick('CSV')}
                     style={{
@@ -165,7 +166,7 @@ const CSVMTabs = () => {
                         fontSize: ".8rem",
                         fontWeight: 600,
                         textDecoration: "underline",
-                    }}>Download Sample File.</a>
+                    }}>{t("Download Sample File.")}</a>
                 </div>
             </div>
         </div>

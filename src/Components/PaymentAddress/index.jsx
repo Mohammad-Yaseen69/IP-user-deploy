@@ -39,14 +39,14 @@ const PaymentAddress = () => {
                                                 :
                                                 <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                                                     <CardBody>
-                                                        <CardText>Please add username to your profile to create a personalized payment address page. <Link to={"/settings?tab=basic"} style={{ textDecoration: "underline", fontWeight: 600 }}>Add Now</Link></CardText>
+                                                        <CardText>{t("Please add username to your profile to create a personalized payment address page.")} <Link to={"/settings?tab=basic"} style={{ textDecoration: "underline", fontWeight: 600 }}>Add Now</Link></CardText>
                                                     </CardBody>
                                                 </Card>
                                         )
                                         :
                                         <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                                             <CardBody>
-                                                <CardText>Currently not supported on this level.</CardText>
+                                                <CardText>{t("Currently not supported on this level.")}</CardText>
                                             </CardBody>
                                         </Card>
                                 }
@@ -67,14 +67,14 @@ const PaymentAddress = () => {
                                                 :
                                                 <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                                                     <CardBody>
-                                                        <CardText>Please add username to your profile to create a personalized payment address page. <Link to={"/settings?tab=basic"} style={{ textDecoration: "underline", fontWeight: 600 }}>Add Now</Link></CardText>
+                                                        <CardText>{t("Please add username to your profile to create a personalized payment address page.")} <Link to={"/settings?tab=basic"} style={{ textDecoration: "underline", fontWeight: 600 }}>Add Now</Link></CardText>
                                                     </CardBody>
                                                 </Card>
                                         )
                                         :
                                         <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                                             <CardBody>
-                                                <CardText>Currently not supported on this level.</CardText>
+                                                <CardText>{t("Currently not supported on this level.")}</CardText>
                                             </CardBody>
                                         </Card>
                                 }
