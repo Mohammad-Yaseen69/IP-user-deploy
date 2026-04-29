@@ -125,7 +125,7 @@ const QuotationSentItem = ({ item, activeItem, setActiveItem, index }) => {
                     {item?.reciever?.account_type === "individual" ? `${item?.reciever?.user?.first_name} ${item?.reciever?.user?.last_name}`?.slice(0, window.innerWidth < 1500 ? 16 : 20) + ".." : item?.reciever?.company?.company_name}
                 </div>
                 <div>{item?.amount_reciever_currency?.currency?.code} {item?.amount ? item?.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ""}</div>
-                <div>{item?.revised_amount ? `${item?.amount_reciever_currency?.currency?.code} ${item?.revised_amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "None"}</div>
+                <div>{item?.revised_amount ? `${item?.amount_reciever_currency?.currency?.code} ${item?.revised_amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : t("None")}</div>
                 <div>
                     <div style={{
                         background: badgeColor,
