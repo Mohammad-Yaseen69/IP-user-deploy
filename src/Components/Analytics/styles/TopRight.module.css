@@ -190,6 +190,8 @@
     gap: 50px;
     align-items: center;
     justify-content: center;
+    position: relative;
+    z-index: 9;
 }
 
 .chart_container {
@@ -364,6 +366,8 @@
 
     .chart_categories {
         gap: 20px;
+        position: relative;
+        z-index: 9;
     }
 
     .chart_container {

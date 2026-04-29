@@ -10,7 +10,7 @@ import errors from "../../AddFunds/TrustPaymentErrors.json"
 import { useLocation } from "react-router"
 
 
-const FailedTransaction = ({ showBack, backHandler }) => {
+const FailedTransaction = ({ showBack, backHandler, isPublic }) => {
     const { t } = useTranslation()
     const [showShare, setShowShare] = useState(false)
     const location = useLocation()
@@ -22,7 +22,13 @@ const FailedTransaction = ({ showBack, backHandler }) => {
         return errors.find(item => item?.code == code)?.message ?? "We cannot process your request at the moment, please try again later."
     }
     return (
-        <div className={styles.container}>
+        <div
+            className={styles.container}
+            style={isPublic ? {
+                height: "100vh",
+                justifyContent: "space-between"
+            } : {}}
+        >
             {
                 showShare
                 &&
@@ -51,7 +57,7 @@ const FailedTransaction = ({ showBack, backHandler }) => {
                 </div>
                 <img src={failed_gif} alt="" />
             </div>
-            <div className={styles.trx_details}>
+            <div style={{ flex: isPublic && 0 }} className={styles.trx_details}>
                 <div className={styles.td_top}>
                     <h4>{t("")}</h4>
                     <div className={styles.actions}>

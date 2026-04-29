@@ -110,7 +110,7 @@ const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHa
     }, []);
     return (
         <Modal isOpen={isOpen} contentClassName="overflow-hidden" style={{ borderRadius: "1rem", width: "100vw", maxWidth: window.innerWidth > 1000 ? "800px" : "96vw", overflow: "hidden" }}>
-            <ModalBody  className={styles.body}>
+            <ModalBody className={styles.body}>
                 <div className={styles.left}>
                     <h5>
                         {
@@ -227,6 +227,7 @@ const OtpConfirmation = ({ isOpen, toggle, callback, data, dataHandler, resendHa
                             disabled={isLoading || isAnyFieldEmpty}
                             onClick={() => {
                                 if (isLoading) return;
+                                dataHandler("loading", true);
                                 callback(otpValues.join(""))
                             }}
                             ref={buttonRef}

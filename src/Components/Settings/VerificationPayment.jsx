@@ -50,7 +50,7 @@ const paymentChannels = [
 ]
 
 
-const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading, source_of_funds, isKYB, amount, getFeeDetails, partnerId }) => {
+const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading, source_of_funds, isKYB, amount, getFeeDetails, partnerId, isGettingFee }) => {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [step, setStep] = useState(1)
@@ -111,9 +111,9 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
             );
 
             const walletPromises = activeWallets.map(async (item) => {
-                if (item?.currency?.code === "USD") return item?.balance?.available >= (amount || 3.99) ? item : null;
+                if (item?.currency?.code === "USD") return item?.balance?.available >= (amount || userDetails?.country?.kyc_fee) ? item : null;
                 try {
-                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=USD&to=${item?.currency?.code}&amount=${amount || 4}`, {
+                    const res = await axios.get(`${import.meta.env.VITE_IP_DEV_API}/api/wallet/get-plain-exchange-rate?from=USD&to=${item?.currency?.code}&amount=${amount || userDetails?.country?.kyc_fee}`, {
                         headers: authHeader
                     });
                     const dec = decryptData(res?.data?.data);
@@ -187,7 +187,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                 type: codeType
             }
 
-            const endpoint = `/api/${payoutChannel?.value === "mobile_wallet" ? "collection" : partnerId ? "partner" : isKYB ? "company" : "user"}/${payoutChannel?.value === "mobile_wallet" ? "" : 'charge-'}${partnerId ? "kyc" : isKYB ? "kyb" : "kyc"}`
+            const endpoint = `/api/${payoutChannel?.value === "mobile_wallet" ? "collection" : isKYB ? "company" : "user"}/${payoutChannel?.value === "mobile_wallet" ? "" : 'charge-'}${partnerId ? "partner-kyc" : isKYB ? "kyb" : "kyc"}`
 
             console.log(endpoint)
 
@@ -565,6 +565,8 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                     )
                                     ||
                                     saving
+                                    ||
+                                    isGettingFee
                                 }
                                 onClick={handleClick}
                             >{t("Next")}</Button>
@@ -588,11 +590,11 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                 </ModalBody>
             </Modal>
             <Modal isOpen={showSuccess} toggle={() => {
-                checkAuth()
+                verifyToken(true)
                 setShowSuccess(false)
             }}>
                 <ModalHeader toggle={() => {
-                    checkAuth()
+                    verifyToken(true)
                     setShowSuccess(false)
                 }}
                 >
@@ -639,7 +641,7 @@ const VerificationPayment = ({ isOpen, toggle, verify, desc, occupation, loading
                                     onClick={!isKYB ? verify : toggle}
                                     disabled={loading}
                                 >
-                                    {!isKYB ? t("Close") : t("Proceed")}
+                                    {!isKYB ? t("Procees") : t("Close")}
                                 </Button>
                             </div>
                         </>

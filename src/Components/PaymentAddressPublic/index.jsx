@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import TopRight from '../topRight'
 import PaymentAddressComponent from './PaymentAddressComponent'
-import { Card, CardBody, CardText, Modal, ModalBody, ModalHeader } from 'reactstrap'
+import { Card, CardBody, CardText } from 'reactstrap'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import styles from "./styles/index.module.css"
 import axios from 'axios'
@@ -83,62 +83,52 @@ const PaymentAddressPublic = () => {
     }, [])
 
     const navigate = useNavigate()
+
+    if (currenctModal) {
+        return (
+            <div style={{ width: "100vw", height: "100vh", background: "#fff" }}>
+                {currenctModal === "success" && (
+                    <Receipt
+                        data={{
+                            beneficiary: {
+                                first_name: userDetails?.first_name || userDetails?.company_name,
+                                last_name: userDetails?.last_name || "",
+                            }
+                        }}
+                        backHandler={() => {
+                            setCurrentModal("")
+                            navigate("/")
+                        }}
+                        showBack={true}
+                        showTrxBtn={false}
+                    />
+                )}
+                {currenctModal === "error" && (
+                    <FailedTransaction
+                        showBack={true}
+                        isPublic={true}
+                        backHandler={() => {
+                            setCurrentModal("")
+                            navigate("/")
+                        }}
+                    />
+                )}
+                {currenctModal === "abort" && (
+                    <FailedTransaction
+                        showBack={true}
+                        isPublic={true}
+                        backHandler={() => {
+                            setCurrentModal("")
+                            navigate("/")
+                        }}
+                    />
+                )}
+            </div>
+        )
+    }
+
     return (
         <>
-            {
-                currenctModal === "success"
-                &&
-                <Modal style={{ width: "96vw", maxWidth: "1200px" }} isOpen={currenctModal === "success"}>
-                    <ModalHeader toggle={() => setCurrentModal("")}></ModalHeader>
-                    <ModalBody style={{ padding: 0 }}>
-                        <Receipt
-                            data={{
-                                beneficiary: {
-                                    first_name: userDetails?.first_name || userDetails?.company_name,
-                                    last_name: userDetails?.last_name || "",
-                                }
-                            }}
-                            backHandler={() => {
-                                setCurrentModal("")
-                                navigate(`/pay/${user_name}`)
-                            }}
-                            showBack={true}
-                            showTrxBtn={false}
-                        />
-                    </ModalBody>
-                </Modal>
-            }
-            {
-                currenctModal === "error"
-                &&
-                <Modal style={{ width: "96vw", maxWidth: "1200px" }} isOpen={currenctModal === "error"}>
-                    <ModalBody style={{ padding: 0 }}>
-                        <FailedTransaction
-                            showBack={true}
-                            backHandler={() => {
-                                setCurrentModal("")
-                                navigate(`/pay/${user_name}`)
-                            }}
-                        />
-                    </ModalBody>
-                </Modal>
-            }
-            {
-                currenctModal === "abort"
-                &&
-                <Modal style={{ width: "96vw", maxWidth: "1200px" }} isOpen={currenctModal === "abort"}>
-                    <ModalBody style={{ padding: 0 }}>
-                        <FailedTransaction
-                            showBack={true}
-                            backHandler={() => {
-                                setCurrentModal("")
-                                navigate(`/pay/${user_name}`)
-                            }}
-                        />
-                    </ModalBody>
-                </Modal>
-
-            }
             {
                 window.innerWidth > 1000
                     ?
@@ -212,15 +202,10 @@ const PaymentAddressPublic = () => {
                         }
                     </div>
                     :
-                    <div className={styles.mobile}>
-                        {
-                            loading
-                                ?
-                                <div style={{ position: "fixed", top: 0, left: 0, height: "100vh", width: "100vw" }}>
-                                    <InstaPayLoader />
-                                </div>
-                                :
-                                currentUser
+                    (
+                        <div className={styles.mobile}>
+                            {
+                                loading
                                     ?
                                     (
                                         currentUser?.level?.payment_address?.send
@@ -254,20 +239,38 @@ const PaymentAddressPublic = () => {
                                             </Card>
                                     )
                                     :
-                                    (
-                                        userDetails
-                                            ?
-                                            <PaymentAddressComponent userVideos={userVideos} userDetails={userDetails} />
-                                            :
-                                            <NotFound type='Page' />
-                                        // <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
-                                        //     <CardBody>
-                                        //         <CardText>Page Unavailable.<Link onClick={verifyToken} to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>Go back to Home.</Link></CardText>
-                                        //     </CardBody>
-                                        // </Card>
-                                    )
-                        }
-                    </div>
+                                    currentUser
+                                        ?
+                                        (
+                                            currentUser?.level?.payment_address?.send
+                                                ?
+                                                (
+                                                    userDetails
+                                                        ?
+                                                        <>
+                                                            <PaymentAddressComponent userVideos={userVideos} userDetails={userDetails} />
+                                                        </>
+                                                        :
+                                                        <NotFound type='Page' />
+                                                )
+                                                :
+                                                <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
+                                                    <CardBody>
+                                                        <CardText>{t("Sending to a payment address is not available on this level.")}<Link onClick={verifyToken} to={"/"} style={{ textDecoration: "underline", fontWeight: 600 }}>Go back to Home.</Link></CardText>
+                                                    </CardBody>
+                                                </Card>
+                                        )
+                                        :
+                                        (
+                                            userDetails
+                                                ?
+                                                <PaymentAddressComponent userVideos={userVideos} userDetails={userDetails} />
+                                                :
+                                                <NotFound type='Page' />
+                                        )
+                            }
+                        </div>
+                    )
             }
         </>
     )

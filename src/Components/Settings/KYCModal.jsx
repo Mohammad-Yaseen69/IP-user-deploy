@@ -4,6 +4,7 @@ import { Modal, ModalBody, ModalHeader } from "reactstrap";
 
 const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
     const { t } = useTranslation()
+
     const modalStyle = {
         maxWidth: "600px",
         margin: "0 auto",
@@ -26,10 +27,10 @@ const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
         watchlists: "Watchlists",
     };
 
-
     const replacePoaWithPOA = (description) => {
         return description?.replace(/PoA/g, "Proof of Address");
     };
+
     const isNormalFormat = (item) => {
         return item && typeof item === "object" && "name" in item && "description" in item;
     };
@@ -37,7 +38,6 @@ const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
     const isDiditFormat = (item) => {
         return item && typeof item === "object" && ("node_id" in item || "feature" in item || "risk" in item);
     };
-
 
     const renderNormalComments = (comments, sectionStatus) => {
         return comments.map((comment, index) => (
@@ -68,6 +68,7 @@ const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
             </div>
         ));
     };
+
     const renderDiditComments = (comments, headingKey) => {
         return comments.map((item, index) => {
             if (item?.warnings && item.warnings.length > 0) {
@@ -148,6 +149,7 @@ const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
             return null;
         });
     };
+
     const renderComments = (comments, headingKey, sectionStatus) => {
         if (!comments || comments.length === 0) return null;
 
@@ -163,45 +165,48 @@ const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
 
         return null;
     };
-    console.log(KYCComments)
-    return (
-        <Modal isOpen={showModal} toggle={() => setShowModal(!showModal)} style={{ ...modalStyle, minWidth: "60wv" }}>
-            <ModalHeader style={headerStyle}>{t("Verification Status")}</ModalHeader>
-            <ModalBody>
-                {KYCStatus &&
-                    KYCComments &&
-                    Object.keys(KYCStatus)?.map((headingKey) => (
-                        <div key={headingKey}>
-                            <div style={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
-                                <span
-                                    style={{
-                                        color:
-                                            KYCStatus[headingKey] === "approved"
-                                                ? "#28a745"
-                                                : KYCStatus[headingKey] === "declined"
-                                                    ? "#dc3545"
-                                                    : "#FFC107",
-                                        fontSize: "20px",
-                                        fontWeight: "600",
-                                        marginRight: "10px",
-                                    }}
-                                >
-                                    {KYCStatus[headingKey] === "approved" ? (
-                                        <CheckCircle size={18} />
-                                    ) : KYCStatus[headingKey] === "declined" ? (
-                                        <XCircle size={18} />
-                                    ) : (
-                                        <HelpCircle size={18} />
-                                    )}
-                                </span>
 
-                                <h6 style={{ marginBottom: 0 }}>{headingText[headingKey]}</h6>
-                            </div>
-                            {KYCComments[headingKey]?.length > 0 &&
-                                renderComments(KYCComments[headingKey], headingKey, KYCStatus[headingKey])
-                            }
+    return (
+        <Modal
+            isOpen={showModal}
+            toggle={() => setShowModal?.(!showModal)}
+            style={{ ...modalStyle, minWidth: "60vw" }}
+        >
+            <ModalHeader style={headerStyle}>
+                {t("Verification Status")}
+            </ModalHeader>
+            <ModalBody>
+                {Object.keys(KYCStatus ?? {})?.map((headingKey) => (
+                    <div key={headingKey}>
+                        <div style={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
+                            <span
+                                style={{
+                                    color:
+                                        KYCStatus?.[headingKey] === "approved"
+                                            ? "#28a745"
+                                            : KYCStatus?.[headingKey] === "declined"
+                                                ? "#dc3545"
+                                                : "#FFC107",
+                                    fontSize: "20px",
+                                    fontWeight: "600",
+                                    marginRight: "10px",
+                                }}
+                            >
+                                {KYCStatus?.[headingKey] === "approved" ? (
+                                    <CheckCircle size={18} />
+                                ) : KYCStatus?.[headingKey] === "declined" ? (
+                                    <XCircle size={18} />
+                                ) : (
+                                    <HelpCircle size={18} />
+                                )}
+                            </span>
+                            <h6 style={{ marginBottom: 0 }}>{headingText[headingKey]}</h6>
                         </div>
-                    ))}
+                        {KYCComments[headingKey]?.length > 0 &&
+                            renderComments(KYCComments[headingKey], headingKey, KYCStatus[headingKey])
+                        }
+                    </div>
+                ))}
             </ModalBody>
         </Modal>
     );
