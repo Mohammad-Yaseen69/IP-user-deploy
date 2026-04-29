@@ -40,7 +40,7 @@ const Accounts = () => {
                 <div style={{flex: window.innerWidth < 1000 && "flex", flexDirection: window.innerWidth < 1000 && "column",alignItems: window.innerWidth < 1000 && "flex-start" }}>
                     <div>
                         <h4>{t(!isPinAdded ? "Set Your Security PIN" : "Update Your Pin")}</h4>
-                        <p style={{width: !isPinAdded ?  "50%"  :"auto"}}>{t(!isPinAdded ? `For added security, please create a 4-digit \n PIN to protect your session.` : "Need to change your PIN?")}</p>
+                        <p style={{width: !isPinAdded ?  "50%"  :"auto"}}>{!isPinAdded ? t(`For added security, please create a 4-digit \n PIN to protect your session.`) : t("Need to change your PIN?")}</p>
                     </div>
 
 

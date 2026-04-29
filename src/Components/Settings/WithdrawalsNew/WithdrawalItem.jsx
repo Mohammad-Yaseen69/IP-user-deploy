@@ -100,7 +100,6 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
 
 
 
-    // card extra fields
     const [cardExtras, setCardExtras] = useState({
         bank_account_number: ""
     })
@@ -114,10 +113,8 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             }
         })
     }
-    // card extra fields
 
 
-    // cash extra fields
     const [cashExtras, setCashxtras] = useState({
         msisdn: ""
     })
@@ -131,7 +128,6 @@ const WithdrawalItem = ({ countries = [], userWithdrawals, count, setNewWithdraw
             }
         })
     }
-    // cash extra fields
 
     const payoutChannelData = useMemo(() => ([
         userDetails?.level?.international_transfer?.bank ? {

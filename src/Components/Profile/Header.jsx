@@ -43,7 +43,7 @@ const Header = () => {
                 }
                 <div className={styles.basic_dets}>
                     <div style={{ display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
-                        <div className={styles.badge}>{userDetails?.account_type === "individual" ? "Personal" : "Business"} {t("Account")}</div>
+                        <div className={styles.badge}>{userDetails?.account_type === "individual" ? t("Personal") : t("Business")} {t("Account")}</div>
                         {/* <div className={styles.badge} style={{ background: userDetails?.user?.kyc_status === "approved" ? "green" : "grey" }}>{userDetails?.user?.kyc_status === "approved" ? "Verified" : "Unverified"}</div> */}
                         {
                             userDetails?.kyc_status === "approved"
@@ -55,7 +55,7 @@ const Header = () => {
                     <div style={{ fontSize: ".8rem" }}>@{userDetails?.username}</div>
                     <div className={styles.country}>
                         <img src={userCountry?.file_url} alt={userCountry?.alpha3} style={{ boxShadow: "0 0 5px #afafaf" }} />
-                        <span>{userCountry?.name}</span>
+                        <span>{t(userCountry?.name)}</span>
                     </div>
                 </div>
             </div>

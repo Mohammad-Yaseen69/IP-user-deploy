@@ -35,7 +35,7 @@ const Socials = () => {
                 console.log(dec)
                 const data = Object.keys(dec?.data)?.map(item => {
                     return {
-                        name: `${service_name_formatter(item)}: `,
+                        name: `${service_name_formatter(item)}`,
                         followers: typeof dec?.data?.[item] === "number" ? dec?.data?.[item] + " " + t("Followers") : dec?.data?.[item]
                     }
                 })
@@ -95,7 +95,7 @@ const Socials = () => {
                         <div className={styles.item} style={{ flexDirection: "column", alignItems: "flex-start", justifyContent: "center", gap: "0" }} key={item.name}>
                             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: '100%' }}>
                                 <div className={styles.left}>
-                                    <span>{item.name}</span>
+                                    <span>{t(item.name)}</span>
                                 </div>
                                 <div className={styles.right}>
                                     {

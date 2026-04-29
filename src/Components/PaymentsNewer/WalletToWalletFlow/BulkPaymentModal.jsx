@@ -166,7 +166,7 @@ const BulkPaymentModal = ({ isOpen, onClose, onNext, initialRecipients = [] }) =
                             />
                             <div>
                                 <Upload size={14} />
-                                {csvRows.length > 0 ? "Re-upload CSV" : "Upload CSV"}
+                                {csvRows.length > 0 ? t("Re-upload CSV") : t("Upload CSV")}
                             </div>
                         </label>
                     </div>

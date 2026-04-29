@@ -200,7 +200,7 @@ const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
                                     <HelpCircle size={18} />
                                 )}
                             </span>
-                            <h6 style={{ marginBottom: 0 }}>{headingText[headingKey]}</h6>
+                            <h6 style={{ marginBottom: 0 }}>{t(headingText[headingKey])}</h6>
                         </div>
                         {KYCComments[headingKey]?.length > 0 &&
                             renderComments(KYCComments[headingKey], headingKey, KYCStatus[headingKey])
