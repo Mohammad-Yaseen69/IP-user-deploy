@@ -242,7 +242,7 @@ const HomeNewUpdated = () => {
                             showBusinessModal={showBusinessModal}
                             setShowBusinessModal={setShowBusinessModal}
                         />
-                        <a href="https://api.whatsapp.com/send/?phone=41783258200" target="_blank" style={{ width: "100%", flex: 1, display: "flex" }} rel="noreferrer">
+                        <a href="https://api.whatsapp.com/send/?phone=41783192428" target="_blank" style={{ width: "100%", flex: 1, display: "flex" }} rel="noreferrer">
                             <div style={{
                                 minHeight: "75px",
                                 padding: "1rem",
