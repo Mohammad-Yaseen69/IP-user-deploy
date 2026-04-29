@@ -473,10 +473,23 @@ const KYB = () => {
                                 border: "none",
                                 outline: "none"
                             }}
-                                disabled={userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved"}
-                                onClick={() => setShowAddModal(!showAddModal)}>{t("Add New Director")}</Button>
+                                disabled={
+                                    userDetails?.company?.kyb_status === "verified" ||
+                                    userDetails?.company?.kyb_status === "approved" ||
+                                    !taxId ||
+                                    !registrationNum ||
+                                    !dateOfI ||
+                                    compnanyFiles?.length === 0 ||
+                                    compnanyFileNames.length < requiredFilesLength
+                                }
+                                onClick={() => setShowAddModal(!showAddModal)}
+                            >
+                                {t("Add New Director")}
+                            </Button>
                             <Modal isOpen={showAddModal} toggle={() => setShowAddModal(!showAddModal)}>
-                                <ModalHeader toggle={() => setShowAddModal(!showAddModal)}>
+                                <ModalHeader
+                                    toggle={() => setShowAddModal(!showAddModal)}
+                                >
                                     {t("Add New Director")}
                                 </ModalHeader>
                                 <ModalBody>
