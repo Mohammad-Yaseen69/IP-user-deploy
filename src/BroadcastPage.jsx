@@ -19,7 +19,7 @@ const BroadcastPage = () => {
                         </p>
                     </div>
 
-                    <button onClick={() => window.location.reload()}>{T("Open here")}</button>
+                    <button onClick={() => window.location.reload()}>{t("Open here")}</button>
                 </div>
             </div>
         </div>
