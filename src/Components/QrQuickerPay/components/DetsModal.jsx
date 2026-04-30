@@ -4,8 +4,9 @@ import { Input, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import PhoneInput from '../../PhoneInput'
 import styles from "../styles/index.module.scss"
 
-const DetsModal = ({ phone, setPhone, country, password, setPassword, isOpen, toggle, showPassword, setShowPassword, handleBiometricVerification, isPressed }) => {
+const DetsModal = ({ phone, setPhone,setCountry, country, password, setPassword, isOpen, toggle, showPassword, setShowPassword, handleBiometricVerification, isPressed }) => {
     const { t } = useTranslation()
+    
     return (
         <Modal isOpen={isOpen} toggle={toggle}>
 
@@ -22,6 +23,7 @@ const DetsModal = ({ phone, setPhone, country, password, setPassword, isOpen, to
                         phone={phone}
                         setPhone={setPhone}
                         country={country}
+                        setCountry={setCountry}
                     />
                 </div>
                 <div style={{ marginTop: "1rem" }}>
