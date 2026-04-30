@@ -1,25 +1,28 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { Badge, Button, Card, CardBody, CardHeader, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Table } from 'reactstrap'
-import { useTranslation } from 'react-i18next'
-import { UserContext } from '../../Context/UserContext'
+import { DatePicker } from '@material-ui/pickers'
+import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
+import { format } from 'date-fns'
+import { useContext, useEffect, useMemo, useState } from 'react'
+import { CheckCircle, XCircle } from 'react-feather'
+import { useTranslation } from 'react-i18next'
+import { AiOutlineClockCircle } from 'react-icons/ai'
+import { useLocation } from 'react-router'
+import { toast } from 'react-toastify'
+import { Badge, Button, Card, CardBody, CardHeader, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Table } from 'reactstrap'
+import { UserContext } from '../../Context/UserContext'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
+import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
+import { apiWrapper } from '../../utils/Functions/apiWrapper'
+import { isEmailValid } from '../../utils/Functions/validations'
+import errors from "../AddFunds/TrustPaymentErrors.json"
 import InstaPayLoader from '../Loader'
 import KYBPartner from './KYBPartner'
-import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
+import NgosDocs from './NgosDocs'
 import PrivateCompanyDocs from './PrivateCompanyDocs'
 import PubliclyTradedCompanyDocs from './PubliclyTradedCompanyDocs'
-import NgosDocs from './NgosDocs'
 import SoleTradedDocs from './SoleTradedDocs'
 import UploadAdditionalKYB from './UploadAdditionalKYB'
-import { DatePicker } from '@material-ui/pickers'
 import VerificationPayment from './VerificationPayment'
-import { useMutation } from '@tanstack/react-query'
-import { toast } from 'react-toastify'
-import { format } from 'date-fns'
-import { isEmailValid } from '../../utils/Functions/validations'
-import { apiWrapper } from '../../utils/Functions/apiWrapper'
-
 
 function getFirstLargeFileName(files) {
     if (!files || files.length === 0) return false
@@ -58,10 +61,22 @@ const KYB = () => {
     const [showPaymentModal, setShowPaymentModal] = useState(false)
     const [feeAmount, setFeeAmount] = useState("")
     const [partnerVerification, setPartnerVerification] = useState(null)
-
-    // partners
+    const [adding, setAdding] = useState(false)
+    const [showAddModal, setShowAddModal] = useState(false)
+    const [partnerName, setPartnerName] = useState("")
+    const [partnerEmail, setPartnerEmail] = useState("")
+    const [partnerDesignation, setPartnerDesignation] = useState("")
+    const [showAdditionalModal, setShowAdditionalModal] = useState(false)
     const [partners, setPartners] = useState([])
-
+    const [companyType, setCompanyType] = useState("")
+    const [compnanyFiles, setCompanyFiles] = useState([])
+    const [compnanyFileNames, setCompanyFileNames] = useState([])
+    const [isUploading, setIsUploading] = useState(false)
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const status = queryParams.get("status");
+    const code = queryParams.get("code");
+    const isModalOpen = !!status;
     const { mutateAsync, isPending } = useMutation({
         mutationFn: (payload) => getFeeAmount({ payload, authHeader }),
     })
@@ -148,14 +163,6 @@ const KYB = () => {
         }
     }, [userDetails])
 
-    // add states
-    const [adding, setAdding] = useState(false)
-    const [showAddModal, setShowAddModal] = useState(false)
-    const [partnerName, setPartnerName] = useState("")
-    const [partnerEmail, setPartnerEmail] = useState("")
-    const [partnerDesignation, setPartnerDesignation] = useState("")
-    const [showAdditionalModal, setShowAdditionalModal] = useState(false)
-
     const addPartnerHandler = async () => {
         if (userDetails?.company?.kyb_status === "verified" || userDetails?.company?.kyb_status === "approved") {
             toast.error("All actions are blocked as the business is verified.");
@@ -214,13 +221,6 @@ const KYB = () => {
             // console.log(decryptData(error?.response?.data?.data))
         }
     }
-
-    // company typs
-
-    const [companyType, setCompanyType] = useState("")
-    const [compnanyFiles, setCompanyFiles] = useState([])
-    const [compnanyFileNames, setCompanyFileNames] = useState([])
-    const [isUploading, setIsUploading] = useState(false)
 
     useEffect(() => {
         if (userDetails?.category?._id) {
@@ -314,7 +314,9 @@ const KYB = () => {
         const isFileUploaded = userDetails?.company?.kyb_files?.filter(it => it?.document_name.toLowerCase().includes(fileName.toLowerCase()))
         return isFileUploaded?.[0]
     }
-
+    const handleCloseAndRefresh = () => {
+        window.location.href = "/settings?tab=verification";
+    };
 
     const handleDateChange = (date) => {
         if (date) {
@@ -332,6 +334,10 @@ const KYB = () => {
     const isReadOnly = useMemo(() => {
         return userDetails?.company?.kyb_status === "approved"
     }, [userDetails])
+    const error_message = () => {
+        return errors.find(item => item?.code == code)?.message ?? "We cannot process your request at the moment, please try again later."
+    }
+
 
     console.log(partners)
     return (
@@ -355,7 +361,7 @@ const KYB = () => {
                             onClick={(e) => {
                                 e.stopPropagation()
                                 setShowAdditionalModal(!showAdditionalModal)
-                            }}>Additional Files</Button>
+                            }}>{t("Additional Files")}</Button>
                     }
                 </div>
             </CardHeader>
@@ -579,7 +585,47 @@ const KYB = () => {
                     />
                 }
             </CardBody>
-        </Card>
+            {isModalOpen && (
+                <Modal isOpen={true}>
+                    <ModalBody>
+                        {status === "processing" ? (
+                            <h5 className='modal-title ' style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '2rem' }}>
+                                <AiOutlineClockCircle size={64} className="text-warning" />
+                                Payment is in Processing!
+                            </h5>
+                        ) : status === "success" ? (
+                            <h5 className='modal-title ' style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '2rem' }}>
+                                <CheckCircle size={64} className="text-success" />
+                                Payment Successful!
+                            </h5>
+                        ) : (
+                            <h5 className='modal-title ' style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: '2rem' }}>
+                                <XCircle size={64} className="text-danger" />
+                                Payment Failed!
+                            </h5>
+                        )}
+
+                        <div className="text-center mt-3">
+                            {status === "processing" ? (
+                                <p className="mb-0">{t("Your payment is being processed. Please wait or refresh the page for updates")}</p>
+
+                            ) : status === "success" ? (
+                                <p>{t("KYB Fee has been paid successfully!")}
+                                    <span style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }} onClick={() => {
+                                        handleCloseAndRefresh()
+                                    }}>{t("Close Modal")}</span> </p>
+                            ) : (
+                                <p className="mb-0">{t(error_message())} <br /> <span style={{ color: "#5926f0", fontWeight: 600, textDecoration: "underline", cursor: "pointer" }} onClick={() => {
+                                    handleCloseAndRefresh()
+                                }}>{t("Close Modal")}</span></p>
+                            )}
+                        </div>
+                    </ModalBody>
+                </Modal>
+            )
+            }
+
+        </Card >
     )
 }
 
