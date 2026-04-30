@@ -62,7 +62,7 @@ const Sessions = ({ isCollapsed, setIsCollapsed }) => {
             <CardHeader className={`pb-0 ${isCollapsed ? 'collapsed' : 'expanded'}`} onClick={toggleAccordion}>
                 <div>
                     <H4 attrH4={{ className: 'card-title mb-0' }}>{t("Sessions")}</H4>
-                    <p style={{ marginTop: ".5rem", color: "black", fontWeight: "300" }}>{t("This is a list of devices that have logged into your account. Remove those that you do not recognize.")}</p>
+                    <p style={{ marginTop: ".5rem", color: "black", fontWeight: "300" }}>{t("This is a list of devices that have logged into your account.")}</p>
                 </div>
                 <div className="card-options">
                     {isCollapsed ? <ChevronDown /> : <ChevronUp />}

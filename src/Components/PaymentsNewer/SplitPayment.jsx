@@ -68,7 +68,7 @@ const SplitPayment = (props) => {
                                     objectFit: "contain"
                                 }} />
                             </div>
-                            <h5>Split Payment</h5>
+                            <h5>{t("Split Payment")}</h5>
                         </div>
                     </CardBody>
                 </Card>
@@ -89,7 +89,7 @@ const SplitPayment = (props) => {
                             alignItems: 'center',
                             borderRadius: "12px",
                         }}>
-                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>Total Amount</p>
+                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{t("Total Amount")}</p>
                             <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{(+amount).toFixed(2)} {currency}</p>
                         </div>
 
@@ -103,7 +103,7 @@ const SplitPayment = (props) => {
                             borderRadius: "12px",
                             marginTop: "1rem"
                         }}>
-                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>No of terms</p>
+                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{t("No of terms")}</p>
                             <div style={{
                                 background: "#fff",
                                 boxShadow: "0px -1px 32px -3.3496174812316895px rgba(89, 38, 240, 0.36)",
@@ -134,7 +134,7 @@ const SplitPayment = (props) => {
                             borderRadius: "12px",
                             marginTop: "1rem"
                         }}>
-                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>Split Amount</p>
+                            <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{t("Split Amount")}</p>
                             <p style={{ marginBottom: 0, fontSize: "1rem", fontWeight: 500 }}>{numOfSplits > 0 ? (amount / numOfSplits).toFixed(2) : (+amount).toFixed(2)} {currency}</p>
                         </div>
                     </CardBody>

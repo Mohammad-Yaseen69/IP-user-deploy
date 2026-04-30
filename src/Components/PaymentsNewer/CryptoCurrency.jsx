@@ -1,10 +1,8 @@
+import Chart from "react-apexcharts";
 import { ChevronRight, HelpCircle } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { Button, Card, CardBody } from "reactstrap";
 import 'swiper/css';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import Chart from "react-apexcharts"
-import { useEffect } from "react";
 
 
 const CryptoCurrency = ({ cryptoCurrency, setSubStep, setCryptoCurrency, action = "convert" }) => {
@@ -53,7 +51,7 @@ const CryptoCurrency = ({ cryptoCurrency, setSubStep, setCryptoCurrency, action 
                 paddingBottom: 0,
                 boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)"
             }}>
-                <p style={{ fontSize: "1rem", color: "#7d7d7d", padding: "0 1rem" }}>Select the crypto currency from below that you want to {action}.</p>
+                <p style={{ fontSize: "1rem", color: "#7d7d7d", padding: "0 1rem" }}>{t("Select the crypto currency from below that you want to")} {action}.</p>
                 {/* <Swiper
                     slidesPerView={"auto"}
                     spaceBetween={15}
@@ -168,7 +166,7 @@ const CryptoCurrency = ({ cryptoCurrency, setSubStep, setCryptoCurrency, action 
                                     padding: ".75rem .75rem 0",
                                     gap: ".25rem",
                                 }}>
-                                    <p style={{ marginBottom: "0", fontSize: ".6vw", fontWeight: 700, color: "#a8a8a8" }}>Minimum Payout:</p>
+                                    <p style={{ marginBottom: "0", fontSize: ".6vw", fontWeight: 700, color: "#a8a8a8" }}>{t("Minimum Payout:")}</p>
                                     <h5 style={{ marginBottom: "0", fontSize: "1.5vw", fontWeight: 800 }}>$100</h5>
                                 </div>
                                 <div style={{ width: "100%" }}>
@@ -187,7 +185,7 @@ const CryptoCurrency = ({ cryptoCurrency, setSubStep, setCryptoCurrency, action 
                     &&
                     <div style={{ display: "Flex", alignItems: "center", gap: ".6rem", padding: "0 1rem" }} className="i_t_mt2">
                         <img src={cryptoCurrency.img} alt={cryptoCurrency.value} width={25} />
-                        <h5 style={{ fontSize: "1rem", fontWeight: "900", marginBottom: "0" }}>{cryptoCurrency.name} is selected.</h5>
+                        <h5 style={{ fontSize: "1rem", fontWeight: "900", marginBottom: "0" }}>{cryptoCurrency.name} {t("is selected.")}</h5>
                     </div>
                 }
             </CardBody>

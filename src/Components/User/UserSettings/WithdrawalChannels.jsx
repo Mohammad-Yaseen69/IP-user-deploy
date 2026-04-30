@@ -590,7 +590,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
                                                             border: "none",
                                                             outline: "none"
                                                         }} onClick={() => setIsEditMode(false)}>
-                                                            Cancel
+                                                            {t("Cancel")}
                                                         </Button>
                                                         <Button size='sm' style={{
                                                             background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
@@ -609,7 +609,7 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
                                                         border: "none",
                                                         outline: "none"
                                                     }} onClick={() => setIsEditMode(true)}>
-                                                        Edit
+                                                            {t("Edit")}
                                                     </Button>
                                             }
                                         </>
@@ -618,13 +618,13 @@ const WithdrawalChannels = ({ isCollapsed, setIsCollapsed }) => {
                                             background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
                                             border: "none",
                                             outline: "none"
-                                        }} onClick={addWithDrawal}>Save</Button>
+                                        }} onClick={addWithDrawal}>{t("Save")}</Button>
                                 }
                             </CardFooter>
                         </>
                         :
                         <CardBody style={{ textAlign: "center" }}>
-                            <h5 style={{ margin: "1.5rem 0" }}>No Withdrawals Supported In Your Country.</h5>
+                            <h5 style={{ margin: "1.5rem 0" }}>{t("No Withdrawals Supported In Your Country.")}</h5>
                         </CardBody>
                 }
             </div >

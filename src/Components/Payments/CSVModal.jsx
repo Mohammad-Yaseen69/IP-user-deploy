@@ -3,6 +3,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, FormGroup, I
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
 import CSVMTabs from './CSVMTabs';
+import { t } from 'i18next';
 
 const AddCSVModal = ({ isOpen, toggleModal, srr, showInfo, setShowInfo }) => {
     const [fileData, setFileData] = useState([]);
@@ -150,10 +151,10 @@ const AddCSVModal = ({ isOpen, toggleModal, srr, showInfo, setShowInfo }) => {
                         showInfo
                             ?
                             <>
-                                &larr; Go Back
+                                &larr; {t("Go Back")}
                             </>
                             :
-                            "Add A File"
+                            t("Add A File")
                     }
                 </span>
             </ModalHeader>
@@ -167,17 +168,17 @@ const AddCSVModal = ({ isOpen, toggleModal, srr, showInfo, setShowInfo }) => {
                     <>
                         <ModalBody>
                             <FormGroup style={{ width: "100%", marginBottom: 0 }}>
-                                <Label>Upload A File Here</Label>
+                                <Label>{t("Upload A File Here")}</Label>
                                 <input className='form-control' type="file" accept=".csv,.xls,.xlsx,.txt,.json,.xml" onChange={handleFile} />
                                 {error && <span style={{ color: "red", fontSize: ".8rem", fontWeight: 600 }}>{error}</span>}
                             </FormGroup>
                             <div style={{
                                 display: "flex", justifyContent: "space-between", fontWeight: "600", fontSize: ".8rem"
                             }}>
-                                <span>Supported Extensions: CSV, JSON, XML, TXT, XLS, XLSX.</span>
+                                <span>{t("Supported Extensions")}: CSV, JSON, XML, TXT, XLS, XLSX.</span>
                                 <span style={{ textDecoration: "underline", color: "var(--theme-default)", cursor: "pointer" }}
                                     onClick={_ => setShowInfo(true)}
-                                >View Info</span>
+                                >{t("View Info")}</span>
                             </div>
                         </ModalBody>
                         <ModalFooter>
@@ -198,7 +199,7 @@ const AddCSVModal = ({ isOpen, toggleModal, srr, showInfo, setShowInfo }) => {
                                         outline: "none",
                                     }}
                                 >
-                                    Upload
+                                    {t("Upload")}
                                 </Button>
                             </div>
                         </ModalFooter>

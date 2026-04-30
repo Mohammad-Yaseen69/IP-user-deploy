@@ -27,7 +27,7 @@ const ProfileTest = () => {
                                 :
                                 <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                                     <CardBody>
-                                        <CardText>{t("Please add username to your profile to create a personalized public profile page.")} <Link to={"/settings?tab=basic"} style={{ textDecoration: "underline", fontWeight: 600 }}>Add Now</Link></CardText>
+                                        <CardText>{t("Please add username to your profile to create a personalized public profile page.")} <Link to={"/settings?tab=basic"} style={{ textDecoration: "underline", fontWeight: 600 }}>{t("Add Now")}</Link></CardText>
                                     </CardBody>
                                 </Card>
                         }
@@ -41,7 +41,7 @@ const ProfileTest = () => {
                                 :
                                 <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                                     <CardBody>
-                                        <CardText>{t("Please add username to your profile to create a personalized public profile page.")} <Link to={"/settings?tab=basic"} style={{ textDecoration: "underline", fontWeight: 600 }}>Add Now</Link></CardText>
+                                        <CardText>{t("Please add username to your profile to create a personalized public profile page.")} <Link to={"/settings?tab=basic"} style={{ textDecoration: "underline", fontWeight: 600 }}>{t("Add Now")}</Link></CardText>
                                     </CardBody>
                                 </Card>
                         }

@@ -131,6 +131,10 @@ i18n
     interpolation: {
       escapeValue: false,
     },
+    saveMissing: true,
+    missingKeyHandler: (lngs, ns, key) => {
+      console.log(lngs, ns, key, "missing thing");
+    }
   });
 
 export default i18n;

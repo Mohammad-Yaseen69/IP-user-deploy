@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Card, CardBody, Input } from "reactstrap";
 
 const CryptoWalletDetails = ({ amount }) => {
     const initialTime = 60 * 60; // 1 hour in seconds
     const [timeLeft, setTimeLeft] = useState(initialTime);
     const value = amount?.split(",").join("")
-
+   const {t} = useTranslation()
     const formatTime = (time) => {
         const minutes = Math.floor(time / 60);
         const seconds = time % 60;
@@ -36,14 +37,14 @@ const CryptoWalletDetails = ({ amount }) => {
                 boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)"
             }}>
                 <div>
-                    <p style={{ fontSize: "1rem", color: "#7d7d7d" }}>Send {(+value * 0.000034).toFixed(3)} BTC to below wallet address</p>
+                    <p style={{ fontSize: "1rem", color: "#7d7d7d" }}>{t("Send")} {(+value * 0.000034).toFixed(3)} {t("BTC to below wallet address")}</p>
                     <Input readOnly value={"3FZbgi29cpjq2GjdwV8eyHuJJnkLtktZc5"} style={{ padding: "16px", fontSize: "18px", borderRadius: "10px" }} />
                 </div>
                 <div style={{
                     textAlign: "center",
                     marginTop: "4rem"
                 }}>
-                    <h5 style={{ fontSize: "1.2rem", fontWeight: "700" }}>The Wallet address is valid for</h5>
+                    <h5 style={{ fontSize: "1.2rem", fontWeight: "700" }}>{t("The Wallet address is valid for")}</h5>
                     <h2 style={{
                         fontSize: "4rem",
                         fontWeight: 900

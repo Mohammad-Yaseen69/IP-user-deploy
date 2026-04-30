@@ -201,7 +201,7 @@ const RequestCalendar = () => {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="datepicker">Select a Date:</CustomLabel>
+                <CustomLabel htmlFor="datepicker">{t("Select a Date:")}</CustomLabel>
                 <MobileDatePicker
                   minDate={dayjs()}
                   id="datepicker"
@@ -216,7 +216,7 @@ const RequestCalendar = () => {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="timepicker">Select a Time:</CustomLabel>
+                <CustomLabel htmlFor="timepicker">{t("Select a Time:")}</CustomLabel>
                 <MobileTimePicker
                   id="timepicker"
                   minTime={selectedDate.isSame(dayjs(), "day") ? dayjs().add(5, "minute") : null}
@@ -231,7 +231,7 @@ const RequestCalendar = () => {
                   flexDirection: "column",
                 }}
               >
-                <CustomLabel htmlFor="timezone">Select a Timezone:</CustomLabel>
+                <CustomLabel htmlFor="timezone">{t("Select a Timezone:")}</CustomLabel>
                 <Autocomplete
                   fullWidth={true}
                   disablePortal

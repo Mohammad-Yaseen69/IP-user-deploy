@@ -118,7 +118,7 @@ const PendingItemDetails = ({ item, allRating, allReviews, badgeColor, type = "r
                             <span>{t("Attached Files")}</span>
                             <div className={styles.files_count}>
                                 <img src={file} alt="" />
-                                <span>{item?.attachments?.length} File</span>
+                                <span>{item?.attachments?.length} {t("File")}</span>
                             </div>
                             {
                                 item?.attachments && item?.attachments?.length > 0

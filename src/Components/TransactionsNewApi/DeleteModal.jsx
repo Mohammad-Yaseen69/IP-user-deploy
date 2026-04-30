@@ -1,13 +1,14 @@
-import React, { useContext, useState } from 'react'
+import axios from 'axios'
+import { useContext, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import { UserContext } from '../../Context/UserContext'
-import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 import { decryptData } from '../../Helper/EssentilaMethods/Decryption'
-import axios from 'axios'
+import { encryptData } from '../../Helper/EssentilaMethods/Encryption'
 
 const DeleteModal = ({ showDeleteModal, setShowDeleteModal, item, categories, setCategories }) => {
     const [isDeleting, setIsDeleting] = useState(false)
-
+     const {t} = useTranslation()
     const { userDetails, authHeader } = useContext(UserContext)
 
     const deleteHandler = () => {
@@ -44,11 +45,11 @@ const DeleteModal = ({ showDeleteModal, setShowDeleteModal, item, categories, se
     return (
         <Modal isOpen={showDeleteModal} toggle={() => setShowDeleteModal(!showDeleteModal)}>
             <ModalHeader toggle={() => setShowDeleteModal(!showDeleteModal)}>
-                Edit Category
+                {t("Edit Category")}
             </ModalHeader>
             <ModalBody>
                 <p>
-                    Are you sure, You want to remove this category?
+                    {t("Are you sure, You want to remove this category?")}
                 </p>
             </ModalBody>
             <ModalFooter>
@@ -59,7 +60,7 @@ const DeleteModal = ({ showDeleteModal, setShowDeleteModal, item, categories, se
                         outline: "none"
                     }}
                     onClick={() => setShowDeleteModal(!showDeleteModal)}
-                >Cancel</Button>
+                >{t("Cancel")}</Button>
                 <Button
                     style={{
                         background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
@@ -68,7 +69,7 @@ const DeleteModal = ({ showDeleteModal, setShowDeleteModal, item, categories, se
                     }}
                     onClick={deleteHandler}
                     disabled={isDeleting}
-                >{isDeleting ? "Deleting" : "Delete"}</Button>
+                >{isDeleting ? t("Deleting") : t("Delete")}</Button>
             </ModalFooter>
         </Modal>
     )

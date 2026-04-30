@@ -1,6 +1,8 @@
 import { Card, CardBody } from "reactstrap";
+import { useTranslation } from 'react-i18next';
 
 const Receipt = ({ amount, currency, country, payoutChannel, transactionDetails, item }) => {
+    const { t } = useTranslation()
     return (
         <Card style={{
             height: "100%",
@@ -19,7 +21,7 @@ const Receipt = ({ amount, currency, country, payoutChannel, transactionDetails,
                 boxShadow: "0px 18px 15.348464965820312px -15px rgba(89, 38, 240, 0.16)"
             }} className="conf_cont">
                 <div style={{ textAlign: 'center' }}>
-                    <span style={{ color: "#8a8a8a", fontSize: "1.1rem" }}>You transferred</span>
+                    <span style={{ color: "#8a8a8a", fontSize: "1.1rem" }}>{t("You transferred")}</span>
                     <h4 style={{ fontSize: "2rem" }}>{currency} {amount}</h4>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
@@ -35,7 +37,7 @@ const Receipt = ({ amount, currency, country, payoutChannel, transactionDetails,
                         color: "#8a8a8a",
                         fontSize: window.innerWidth > 1500 ? ".8rem" : ".6rem"
                     }}>
-                        Exchange Rate: <span style={{ color: "black", fontWeight: 600 }}>{+transactionDetails?.wholesale_fx_rate.toFixed(2)} {transactionDetails?.destination?.currency}</span>
+                        {t("Exchange Rate")}: <span style={{ color: "black", fontWeight: 600 }}>{+transactionDetails?.wholesale_fx_rate.toFixed(2)} {transactionDetails?.destination?.currency}</span>
                     </div>
                     <div style={{
                         background: "rgba(89,38,240,0.06)",
@@ -49,7 +51,7 @@ const Receipt = ({ amount, currency, country, payoutChannel, transactionDetails,
                         color: "#8a8a8a",
                         fontSize: window.innerWidth > 1500 ? ".8rem" : ".6rem"
                     }}>
-                        Conversion: <span style={{ color: "black", fontWeight: 600 }}>{transactionDetails?.destination?.amount} {transactionDetails?.destination?.currency}</span>
+                        {t("Conversion")}: <span style={{ color: "black", fontWeight: 600 }}>{transactionDetails?.destination?.amount} {transactionDetails?.destination?.currency}</span>
                     </div>
                 </div>
                 {/* recipient */}
@@ -61,7 +63,7 @@ const Receipt = ({ amount, currency, country, payoutChannel, transactionDetails,
                     gap: ".5rem",
                     borderRadius: "10px"
                 }}>
-                    <span style={{ minWidth: "100px", color: "#8a8a8a" }}>To Recipient:</span>
+                    <span style={{ minWidth: "100px", color: "#8a8a8a" }}>{t("To Recipient")}:</span>
                     <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
                         <div style={{
                             width: "30px",
@@ -86,7 +88,7 @@ const Receipt = ({ amount, currency, country, payoutChannel, transactionDetails,
                     gap: ".5rem",
                     borderRadius: "10px"
                 }}>
-                    <span style={{ minWidth: "100px", color: "#8a8a8a" }}>Country:</span>
+                    <span style={{ minWidth: "100px", color: "#8a8a8a" }}>{t("Country")}:</span>
                     <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
                         <img src={country.file_url} alt={country.code} style={{ objectFit: "cover", borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)" }} className="i_t_flag" draggable="false" />
                         <span style={{ fontWeight: 600, fontSize: ".8rem" }}>{country.name}</span>
@@ -101,7 +103,7 @@ const Receipt = ({ amount, currency, country, payoutChannel, transactionDetails,
                     gap: ".5rem",
                     borderRadius: "10px"
                 }}>
-                    <span style={{ minWidth: "100px", color: "#8a8a8a" }}>Via:</span>
+                    <span style={{ minWidth: "100px", color: "#8a8a8a" }}>{t("Via")}:</span>
                     <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
                         <div style={{
                             minHeight: "35px",

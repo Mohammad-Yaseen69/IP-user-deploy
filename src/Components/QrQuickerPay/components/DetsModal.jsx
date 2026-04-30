@@ -1,8 +1,7 @@
-import React from 'react'
+import { Eye, EyeOff } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { Input, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import PhoneInput from '../../PhoneInput'
-import { useTranslation } from 'react-i18next'
-import { Eye, EyeOff } from 'react-feather'
 import styles from "../styles/index.module.scss"
 
 const DetsModal = ({ phone, setPhone,setCountry, country, password, setPassword, isOpen, toggle, showPassword, setShowPassword, handleBiometricVerification, isPressed }) => {

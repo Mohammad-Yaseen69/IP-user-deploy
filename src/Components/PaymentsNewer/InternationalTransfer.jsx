@@ -193,7 +193,7 @@ const InternationalTransfer = ({ sendPaymentType, setStep, setSendPaymentType, s
                                         paddingBottom: 0,
                                         width: "100%"
                                     }}>
-                                        <span>Updates:</span>
+                                        <span>{t("Updates")}:</span>
                                         <Timeline items={timelineData} />
                                     </CardBody>
                                 </Card>
@@ -328,7 +328,7 @@ const InternationalTransfer = ({ sendPaymentType, setStep, setSendPaymentType, s
                                                     }} className="confirm_container">
                                                         <h4 style={{ color: "#5936f0", wordBreak: "normal", fontSize: "1rem" }} className="head_confirm">{t("Your payment is confirmed")}</h4>
                                                         <video src={c_vid} autoPlay loop="true" style={{ height: "100%", width: "100%", objectFit: "cover", mixBlendMode: "multiply" }}></video>
-                                                        <p>Thanks for Using <br /> InstaPay</p>
+                                                        <p>{t("Thanks for Using")} <br /> {t("InstaPay")}</p>
                                                     </div>
                                                 }
                                             </div>

@@ -1,7 +1,9 @@
+import { useTranslation } from "react-i18next"
 import "./ErrorBoundary.css"
 import png from "./assets/tabImg.png"
 
 const BroadcastPage = () => {
+    const {t} = useTranslation()
     return (
         <div className="broadcast-container">
             <div className="broadcast-div">
@@ -10,14 +12,14 @@ const BroadcastPage = () => {
                 <div className="text-cont">
                     <div>
                         <h1>
-                            InstaPay is open on another tab/window.
+                            {t("InstaPay is open on another tab/window.")}
                         </h1>
-                        <p>
-                            Please close this tab, or click the button below
+                        <p> 
+                            {t("Please close this tab, or click the button below")}
                         </p>
                     </div>
 
-                    <button onClick={() => window.location.reload()}>Open here</button>
+                    <button onClick={() => window.location.reload()}>{t("Open here")}</button>
                 </div>
             </div>
         </div>

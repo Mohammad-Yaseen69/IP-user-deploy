@@ -124,7 +124,7 @@ const ReceivedTransactionItem = ({ color, item, activeItem, setActiveItem, index
                                     item?.description
                                     &&
                                     <div>
-                                        <span>Note:</span>
+                                        <span>{t("Note")}:</span>
                                         <h5>{item?.description}</h5>
                                     </div>
                                 }
@@ -132,7 +132,7 @@ const ReceivedTransactionItem = ({ color, item, activeItem, setActiveItem, index
                                     item?.attachments?.length > 0
                                     &&
                                     <div>
-                                        <span>Attachments:</span>
+                                        <span>{t("Attachments")}:</span>
                                         <div style={{
                                             display: "flex",
                                             gap: ".75rem",

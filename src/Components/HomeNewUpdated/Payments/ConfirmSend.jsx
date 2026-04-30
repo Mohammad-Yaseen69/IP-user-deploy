@@ -111,7 +111,7 @@ const ConfirmSend = ({ country, payoutChannel, amount, currency, item, reason, q
 
                 <div style={{ background: "rgba(89, 38, 240, 0.08)", borderRadius: "16px", overflow: "hidden" }} className="i_t_selected">
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem" }}>Country</span>
+                        <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem" }}>{t("Country")}</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }} className="i_t_s_coun">
                         <img src={country.file_url} alt={country.code} style={{ objectFit: "cover", borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)" }} draggable="false" />
@@ -121,7 +121,7 @@ const ConfirmSend = ({ country, payoutChannel, amount, currency, item, reason, q
 
                 <div style={{ background: "rgba(89, 38, 240, 0.08)", borderRadius: "16px" }} className="i_t_selected">
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem" }}>Payout Channel</span>
+                        <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem" }}>{t("Payout Channel")}</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
                         <div style={{
@@ -145,7 +145,7 @@ const ConfirmSend = ({ country, payoutChannel, amount, currency, item, reason, q
                 </div>
                 <div style={{ background: "rgba(89, 38, 240, 0.08)", borderRadius: "16px" }} className="i_t_selected">
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem", fontWeight: 700 }}>You are sending</span>
+                        <span style={{ color: "rgba(0,0,0,0.36)", fontSize: ".7rem", fontWeight: 700 }}>{t("You are sending")}</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
                         <span style={{ fontWeight: 700, fontSize: "1.4rem" }}>{amount} {currency}</span>

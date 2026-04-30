@@ -35,7 +35,7 @@ const Socials = () => {
                 console.log(dec)
                 const data = Object.keys(dec?.data)?.map(item => {
                     return {
-                        name: `${service_name_formatter(item)}: `,
+                        name: `${service_name_formatter(item)}`,
                         followers: typeof dec?.data?.[item] === "number" ? dec?.data?.[item] + " " + t("Followers") : dec?.data?.[item]
                     }
                 })
@@ -44,7 +44,7 @@ const Socials = () => {
                 const index1 = arr.findIndex(social => social.name.trim() === "Facebook:");
                 const index2 = arr.findIndex(social => social.name.trim() === "Telegram:");
 
-                arr[index2].followers = userDetails?.telegram_bot ? "connected" : "not connected"
+                arr[index2].followers = userDetails?.telegram_bot ? t("connected") : t("not connected")
                 const temp = arr[index1]
 
                 arr[index1] = arr[index2]
@@ -71,7 +71,7 @@ const Socials = () => {
                     socials_data.slice(0, showMore ? socials_data.length : 3).map(item => (
                         <div className={styles.item} key={item.name}>
                             <div className={styles.left}>
-                                <span>{item.name}</span>
+                                <span>{t(item.name)}</span>
                                 {
                                     item?.name?.toLowerCase()?.includes("instagram") && userDetails?.insta_username
                                         ?
@@ -84,7 +84,7 @@ const Socials = () => {
                                 {
                                     item.followers !== null
                                     &&
-                                    <span>{item.followers}</span>
+                                    <span>{t(item.followers)}</span>
                                 }
                                 <div>{">"}</div>
                             </div>
@@ -95,13 +95,13 @@ const Socials = () => {
                         <div className={styles.item} style={{ flexDirection: "column", alignItems: "flex-start", justifyContent: "center", gap: "0" }} key={item.name}>
                             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: '100%' }}>
                                 <div className={styles.left}>
-                                    <span>{item.name}</span>
+                                    <span>{t(item.name)}</span>
                                 </div>
                                 <div className={styles.right}>
                                     {
                                         item.followers !== null
                                         &&
-                                        <span>{item.followers}</span>
+                                        <span>{t(item.followers)}</span>
                                     }
                                     <div>{">"}</div>
                                 </div>
