@@ -10,11 +10,12 @@ import Fuse from 'fuse.js'
 const CountryCode = ({ country, selectedCountry, setSelectedCountry, setCountry, disabledDropdown = false, setNumber, phone = "", number, hideIcon }) => {
     const { t, i18n } = useTranslation()
     const [searchTerm, setSearchTerm] = useState("")
-
+    const lang = i18n?.language?.split("-")[0]
     const { allowedCountries } = useContext(UserContext)
 
+    console.log(allowedCountries, "1")
     const countriesData = useMemo(() => {
-        return (countriesInDiffLangs?.[i18n?.language] ?? [])
+        return (countriesInDiffLangs?.[lang] ?? [])
             ?.map(item => {
                 const phoneDetails = CountryBasedPhone?.[item?.alpha3]
                 return {
@@ -25,7 +26,7 @@ const CountryCode = ({ country, selectedCountry, setSelectedCountry, setCountry,
             .filter(item => {
                 return allowedCountries?.some(it => it?.country_iso_code === item?.alpha3)
             })
-    }, [allowedCountries, i18n?.language])
+    }, [allowedCountries, lang])
 
     const fuse = new Fuse(countriesData ?? [], {
         keys: ["name"],
