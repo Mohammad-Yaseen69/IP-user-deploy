@@ -70,7 +70,7 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
                     username={user_name}
                     subscriptionId={data.subscriptionId}
                     countryIsoCode={data.countryIsoCode}
-                    type='subscription'
+                    type='plan'
                 />
             }
 
