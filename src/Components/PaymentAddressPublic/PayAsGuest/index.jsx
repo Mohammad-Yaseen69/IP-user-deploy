@@ -106,11 +106,11 @@ const PayAsGuest = ({
     }
   }, [username])
 
-  useEffect(() => {
-    if (subscriptionId) {
-      dataHandler("step", 2)
-    }
-  }, [subscriptionId])
+  // useEffect(() => {
+  //   if (subscriptionId) {
+  //     dataHandler("step", 2)
+  //   }
+  // }, [subscriptionId])
 
   useEffect(() => {
     if (isOpen && countryIsoCode) {
