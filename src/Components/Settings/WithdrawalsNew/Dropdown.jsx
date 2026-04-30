@@ -160,7 +160,7 @@ const CountriesDropdown = ({ onSelect, country = "", disabled = false, padding =
                                     width: "100%",
                                     background: "transparent"
                                 }}
-                                placeholder='Search Country'
+                                placeholder={t('Search Country')}
                                 ref={countryInputRef}
                                 onClick={(e) => e.stopPropagation()}
                                 value={searchTerm}

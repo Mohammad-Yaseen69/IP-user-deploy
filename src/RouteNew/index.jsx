@@ -1,7 +1,7 @@
 // import { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 // import Loader from "../Layout/Loader";
-import { authRoutes, publicRoutes, routes } from "./Routes";
+import { authRoutes, guestRoutes, publicRoutes, routes } from "./Routes";
 import Layout from "../Layout/Layout";
 
 const Routers = () => {
@@ -20,6 +20,11 @@ const Routers = () => {
       ))}
       {
         authRoutes.map(item => (
+          <Route key={item.path} path={item.path} element={item.component} />
+        ))
+      }
+      {
+        guestRoutes.map(item => (
           <Route key={item.path} path={item.path} element={item.component} />
         ))
       }

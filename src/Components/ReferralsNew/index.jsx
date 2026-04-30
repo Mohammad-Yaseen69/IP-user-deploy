@@ -258,7 +258,7 @@ const ReferralsNew = () => {
                                                                             toggleConvertModal()
                                                                             toggleShowMore()
                                                                         }}
-                                                                    >Move To Main Balance</div>
+                                                                    >{t("Move To Main Balance")}</div>
                                                                 }
                                                                 {
                                                                     (
@@ -283,7 +283,7 @@ const ReferralsNew = () => {
                                                                                 toggleWithdrawModal()
                                                                                 toggleShowMore()
                                                                             }}
-                                                                        >External Withdraw</div>
+                                                                        >{t("External Withdraw")}</div>
                                                                         : ""
                                                                 }
                                                             </div>
@@ -297,7 +297,7 @@ const ReferralsNew = () => {
                                     {
                                         userDetails?.external_witdrawal_commission
                                         &&
-                                        <div style={{ fontSize: ".7rem", fontWeight: "400", marginTop: "1rem" }}>${userDetails?.external_witdrawal_commission} is being processed for external withdrawal.</div>
+                                        <div style={{ fontSize: ".7rem", fontWeight: "400", marginTop: "1rem" }}>${userDetails?.external_witdrawal_commission} {t("is being processed for external withdrawal.")}</div>
                                     }
                                 </div>
                             </div>
@@ -455,7 +455,7 @@ const ReferralsNew = () => {
                     :
                     <Card style={{ maxWidth: "fit-content", margin: "5rem auto 0" }}>
                         <CardBody>
-                            <CardText>Please add username to your profile to enable referrals feature. <Link to={"/settings?tab=basic"} style={{ textDecoration: "underline", fontWeight: 600 }}>Add Now</Link></CardText>
+                            <CardText>{t("Please add username to your profile to enable referrals feature.")} <Link to={"/settings?tab=basic"} style={{ textDecoration: "underline", fontWeight: 600 }}>{t("Add Now")}</Link></CardText>
                         </CardBody>
                     </Card>
             }

@@ -1,47 +1,45 @@
-import { useContext, useEffect, useMemo, useReducer, useState } from "react";
-import ErrorModal from "../InternationalFlow/ErrorModal";
-import SendActionCard from "../Common/SendActionCard";
-import wallet_ic from "../files/wallet.svg"
-import w2w from "../files/w2w.png"
-import InstaPayLoader from "../../Loader";
-import Receipt from "../InternationalFlow/Receipt";
-import styles from "../InternationalFlow/styles/index.module.css"
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ChevronLeft, ChevronRight, HelpCircle, Info, X } from "react-feather";
-import { useTranslation } from "react-i18next";
-import StepOne from "./StepOne";
-import { UserContext } from "../../../Context/UserContext";
-import StepTwo from "./StepTwo";
 import axios from "axios";
+import { useContext, useEffect, useMemo, useReducer, useState } from "react";
+import { ChevronLeft, ChevronRight, HelpCircle, Info } from "react-feather";
+import { useTranslation } from "react-i18next";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { UserContext } from "../../../Context/UserContext";
+import { formatCurrency } from "../../../Helper/AmountFormat";
+import { createShambeToken } from "../../../Helper/CreateToken";
 import { decryptData } from "../../../Helper/EssentilaMethods/Decryption";
-import { LimitsErrorMessage } from "../OTPConfirmation";
-import StepThree from "../InternationalFlow/StepThree";
-import StepFour from "../InternationalFlow/StepFour";
-import WalletsComponent from "../InternationalFlow/WalletsComponent";
-import PaymentType from "./PaymentType";
-import StepFive from "./StepFive";
 import { encryptData } from "../../../Helper/EssentilaMethods/Encryption";
-import CreditCard from "../InternationalFlow/CreditCard";
-import OtpConfirmation from "../InternationalFlow/OtpConfirmation";
-import SchedulePayment from "../SchedulePayment";
-import Recursive from "../RecursivePayment";
+import { getDecimalPointIndex } from "../../../Helper/getDecimalIndex";
+import useTopupLimitCheck from "../../../hooks/Payments/useTopupLimitCheck";
+import errors from "../../AddFunds/TrustPaymentErrors.json";
 import TrustpaymentPage from "../../AddFunds/WalletFund/CreditTransaction";
+import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
+import InstaPayLoader from "../../Loader";
+import NotFoundModal from "../../NotFound/NotFoundModal";
+import ShippingDetails from "../../ReceiptInvoices/InvoicePaymentQr/ShippingDetails";
+import SendActionCard from "../Common/SendActionCard";
+import w2w from "../files/w2w.png";
+import wallet_ic from "../files/wallet.svg";
+import GeneralNoticeModal from "../GeneralNoticeModal";
+import { apiErrorMessage } from "../InternationalFlow";
+import CreditCard from "../InternationalFlow/CreditCard";
+import ErrorModal from "../InternationalFlow/ErrorModal";
 import FeesComponent from "../InternationalFlow/FeesComponent";
 import MobileWalletServices from "../InternationalFlow/MobileWalletServices";
-import { createShambeToken } from "../../../Helper/CreateToken";
-import NotFoundModal from "../../NotFound/NotFoundModal";
-import { currencies } from "../InternationalFlow/StepOne"
-import errors from "../../AddFunds/TrustPaymentErrors.json"
-import { formatCurrency } from "../../../Helper/AmountFormat";
-import { apiErrorMessage } from "../InternationalFlow";
-import ShippingDetails from "../../ReceiptInvoices/InvoicePaymentQr/ShippingDetails";
-import { getDecimalPointIndex } from "../../../Helper/getDecimalIndex";
+import OtpConfirmation from "../InternationalFlow/OtpConfirmation";
+import Receipt from "../InternationalFlow/Receipt";
+import StepFour from "../InternationalFlow/StepFour";
+import { currencies } from "../InternationalFlow/StepOne";
+import StepThree from "../InternationalFlow/StepThree";
+import styles from "../InternationalFlow/styles/index.module.css";
+import WalletsComponent from "../InternationalFlow/WalletsComponent";
+import { LimitsErrorMessage } from "../OTPConfirmation";
+import Recursive from "../RecursivePayment";
+import SchedulePayment from "../SchedulePayment";
+import PaymentType from "./PaymentType";
 import RecentTransactions from "./RecentTransactions";
-import { SwipeableDrawer } from "@mui/material";
-import { AnimatePresence, motion } from "framer-motion";
-import useTopupLimitCheck from "../../../hooks/Payments/useTopupLimitCheck";
-import GeneralNoticeModal from "../GeneralNoticeModal";
-import PlaidBankTransfer from "../../AddFunds/WalletFundsFlow/PlaidBankTransfer";
+import StepFive from "./StepFive";
+import StepOne from "./StepOne";
+import StepTwo from "./StepTwo";
 
 
 
@@ -1226,7 +1224,7 @@ const WalletToWalletFlow = ({ sendPaymentType, setStep, setSendPaymentType, show
                                                                                     lineHeight: 1.3,
                                                                                     letterSpacing: '-0.28px'
                                                                                 }}>
-                                                                                    <strong>{data?.exchange_rate?.paypal?.fee?.currency}</strong> is not supported by Paypal, <strong>USD</strong> will be used as the default currency.
+                                                                                    <strong>{data?.exchange_rate?.paypal?.fee?.currency}</strong> {t("is not supported by Paypal,")} <strong>USD</strong> {t("will be used as the default currency.")}
                                                                                 </span>
                                                                             </div>
                                                                             <div style={{

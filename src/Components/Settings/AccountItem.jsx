@@ -148,7 +148,7 @@ const AccountItem = ({ data }) => {
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                         <img src={data.img} alt={data.name} />
 
-                        <H4>{data.name}</H4>
+                        <H4>{t(data.name)}</H4>
                     </div>
 
                     {(data.name.toLowerCase().includes("insta") || data.name.toLowerCase().includes("telegram")) &&

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './ErrorBoundary.css';
 import * as Sentry from "@sentry/react";
 import InstaPayLoader from './Components/Loader';
+import { withTranslation } from 'react-i18next';
 
 class ErrorBoundary extends Component {
     constructor(props) {
@@ -44,6 +45,7 @@ class ErrorBoundary extends Component {
     }
 
     render() {
+        const { t } = this.props;
         if (this.state.isRefreshing) {
             return (
                 <div className="container">
@@ -56,13 +58,13 @@ class ErrorBoundary extends Component {
                 <div className="container">
                     <div className="error-box">
                         <div>
-                            <h1>Oops! We cannot process your request at the moment, please try again later.</h1>
-                            <p>We are working to fix it. Please try refreshing the page or clear your browsing data for smooth experience.</p>
+                            <h1>{t("Oops! We cannot process your request at the moment, please try again later.")}</h1>
+                            <p>{t("We are working to fix it. Please try refreshing the page or clear your browsing data for smooth experience.")}</p>
                             <div className='error-id'>
-                                Error ID: {this.state.eventId}
+                                {t("Error ID")}: {this.state.eventId}
                             </div>
-                            <p>If the issue continues, please email us at <a href="mailto:support@insta-pay.ch">support@insta-pay.ch</a> with the Error ID, your username, and phone number for further assistance.</p>
-                            <button style={{ marginTop: "30px" }} onClick={() => window.location.reload()} className="error-button">Reload Page</button>
+                            <p>{t("If the issue continues, please email us at")} <a href="mailto:support@insta-pay.ch">support@insta-pay.ch</a> {t("with the Error ID, your username, and phone number for further assistance.")}</p>
+                            <button style={{ marginTop: "30px" }} onClick={() => window.location.reload()} className="error-button">{t("Reload Page")}</button>
                         </div>
                     </div>
                 </div>
@@ -76,4 +78,4 @@ class ErrorBoundary extends Component {
     }
 }
 
-export default ErrorBoundary;
+export default withTranslation()(ErrorBoundary);

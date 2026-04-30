@@ -1010,7 +1010,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                             gap: ".5rem",
                                             borderRadius: "10px"
                                         }}>
-                                            <span style={{ minWidth: "100px", color: "#8a8a8a" }}>Country:</span>
+                                            <span style={{ minWidth: "100px", color: "#8a8a8a" }}>{t("Country")}:</span>
                                             <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
                                                 <img src={country.file_url} alt={country.code} style={{ objectFit: "cover", borderRadius: "4px", boxShadow: "0 0 10px rgba(0,0,0,.3)" }} className="i_t_flag" draggable="false" />
                                                 <span style={{ fontWeight: 600, fontSize: ".8rem" }}>{country.name}</span>
@@ -1025,7 +1025,7 @@ const SendPaymentModal = ({ item, showModal, toggle }) => {
                                             gap: ".5rem",
                                             borderRadius: "10px"
                                         }}>
-                                            <span style={{ minWidth: "100px", color: "#8a8a8a" }}>Via:</span>
+                                            <span style={{ minWidth: "100px", color: "#8a8a8a" }}>{t("Via")}:</span>
                                             <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
                                                 <div style={{
                                                     minHeight: "35px",

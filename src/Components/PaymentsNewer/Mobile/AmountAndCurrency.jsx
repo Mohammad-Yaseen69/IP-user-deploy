@@ -420,7 +420,7 @@ const AmountAndCurrency = ({ setStep, amount, setAmount, currency, setCurrency, 
                 <div
                     style={{ margin: "", textAlign: "center", color: "#5926f0", fontWeight: 600, fontSize: ".7rem", cursor: "pointer" }}
                     onClick={() => setSendType(prev => prev === "card" ? "wallet" : "card")}
-                >Pay via {sendType === "card" ? "wallet" : "card"}</div>
+                >{t("Pay via")} {sendType === "card" ? "wallet" : "card"}</div>
             }
             <div className={styles.rate_info}>
                 {

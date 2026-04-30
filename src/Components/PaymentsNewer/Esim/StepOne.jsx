@@ -162,10 +162,10 @@ const Stepone = ({ data, dataHandler, dataEsimHandler, loadingCountries, setShow
                                 <div style={{ fontWeight: 600, marginTop: 10, marginBottom: 4 }}>{t("For Android (Samsung, Google Pixel, etc.):")}</div>
                                 <ol style={{ marginLeft: 18, marginBottom: 6, display: "flex", flexDirection: "column", gap: 6 }}>
                                     <li>
-                                        {t("Go to")} <b>{t("Settings > Connections > SIM card manager")}</b> (Samsung)
+                                        {t("Go to")} <b>{t("Settings > Connections > SIM card manager")}</b> {t("(Samsung)")}
                                         <br />
                                         {t("or")}<br />
-                                        <b>{t("Settings > Network & Internet > Mobile Network")}</b> (Pixel).
+                                        <b>{t("Settings > Network & Internet > Mobile Network")}</b> {t("(Pixel)")}.
                                     </li>
                                     <li>{t("Look for")} <b>{t("eSIM")}</b> {t("or")} <b>{t("Add carrier / Add eSIM")}</b>.</li>
                                 </ol>

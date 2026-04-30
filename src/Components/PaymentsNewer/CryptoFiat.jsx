@@ -2,25 +2,25 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardBody } from "reactstrap";
 import SendActionCard from "./Common/SendActionCard";
-import ctf from "./files/ctf.png"
-import ctf_bg from "./files/ctf_bg.png"
+import ctf from "./files/ctf.png";
+import ctf_bg from "./files/ctf_bg.png";
+import where from "./files/where_w.png";
+import wimm from "./files/wimm.png";
 import PWizard from "./PWizard";
-import wimm from "./files/wimm.png"
-import where from "./files/where_w.png"
-import Timeline from "./StatusTimeline"
+import Timeline from "./StatusTimeline";
 // import CryptoCurrency from "./CryptoCurrency";
 // import CryptoAmount from "./CryptoAmount";
 // import CryptoWalletDetails from "./CryptoWalletDetails";
-import SelectedCryptoCurrency from "./SelectedCryptoCurrency";
 import ConfirmCryptoFiat from "./ConfirmCryptoFiat";
+import SelectedCryptoCurrency from "./SelectedCryptoCurrency";
 // import clock from "./files/clock.gif"
-import CryptoCurrencyNew from "./CryptoCurrencyNew";
 import CryptoAmountNew from "./CryptoAmountNew";
+import CryptoCurrencyNew from "./CryptoCurrencyNew";
 // import CryptoPayoutChannel from "./CryptoPayoutChannel";
 // import CryptoWalletAdressNew from "./CryptoWalletAddressNew";
-import cfm_vid from "./files/confirmation.mp4"
-import c_vid from "./files/confirm.mp4"
 import CryptoFiatReceipt from "./CryptoFiatReceipt";
+import c_vid from "./files/confirm.mp4";
+import cfm_vid from "./files/confirmation.mp4";
 import SelectedCryptoFiatAmount from "./SelectedCryptoFiatAmount";
 // import SelectedCryptoFIatPayoutChannel from "./SelectedCryptoFIatPayoutChannel";
 import CryptoSendWallet from "./CryptoSendWallet";
@@ -76,7 +76,7 @@ const CryptoFiat = () => {
                         <Card style={{ width: "100%" }}>
                             <CardBody style={{ display: "flex", padding: "24px", gap: "24px" }}>
                                 <div style={{ width: "100%" }}>
-                                    a
+                                    {t("a")}
                                 </div>
                                 <Card style={{
                                     height: "100%",
@@ -97,7 +97,7 @@ const CryptoFiat = () => {
                                         paddingBottom: 0,
                                         width: "100%"
                                     }}>
-                                        <span>Updates:</span>
+                                        <span>{t("Updates")}:</span>
                                         <Timeline items={timelineData} />
                                     </CardBody>
                                 </Card>

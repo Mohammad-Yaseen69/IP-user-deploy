@@ -1,8 +1,10 @@
 import { Card, CardBody } from "reactstrap";
 import { payoutChannelData } from "./CryptoPayoutChannel";
+import { useTranslation } from 'react-i18next';
 
 const CryptoFiatReceipt = ({ cryptoCurrency, amount, walletAddress }) => {
     const payoutChannel = payoutChannelData[0];
+    const { t } = useTranslation()
     return (
         <Card style={{
             height: "100%",
@@ -20,7 +22,7 @@ const CryptoFiatReceipt = ({ cryptoCurrency, amount, walletAddress }) => {
                 boxShadow: "0px 2px 20px -5.704601287841797px rgba(89, 38, 240, 0.07)"
             }} className="conf_cont">
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "1.5rem" }}>
-                    <h5 style={{ fontSize: "1rem", color: "#a8a8a8" }}>You Are Sending</h5>
+                    <h5 style={{ fontSize: "1rem", color: "#a8a8a8" }}>{t("You Are Sending")}</h5>
                     <h4 style={{ fontWeight: "900" }} className="f_s_3r">{amount} USD</h4>
                 </div>
 
@@ -59,7 +61,7 @@ const CryptoFiatReceipt = ({ cryptoCurrency, amount, walletAddress }) => {
                         alignItems: "center",
                         width: "90%"
                     }}>
-                        <span style={{ color: "#808080", fontWeight: 500, whiteSpace: "nowrap" }}>Estimated Price: 1 {cryptoCurrency.value.toUpperCase()} = {cryptoCurrency.price}</span>
+                        <span style={{ color: "#808080", fontWeight: 500, whiteSpace: "nowrap" }}>{t("Estimated Price")}: 1 {cryptoCurrency.value.toUpperCase()} = {cryptoCurrency.price}</span>
                     </div>
                     <div style={{
                         display: "flex",
@@ -70,7 +72,7 @@ const CryptoFiatReceipt = ({ cryptoCurrency, amount, walletAddress }) => {
                         alignItems: "center",
                         width: "90%"
                     }}>
-                        <span style={{ color: "#808080", fontWeight: 500 }}>Transaction Fee: 1.32 USD</span>
+                        <span style={{ color: "#808080", fontWeight: 500 }}>{t("Transaction Fee")}: 1.32 USD</span>
                     </div>
                 </div>
 
@@ -80,7 +82,7 @@ const CryptoFiatReceipt = ({ cryptoCurrency, amount, walletAddress }) => {
                     borderRadius: "12px",
 
                 }}>
-                    <span style={{ color: "#a6a4ac" }}>To recipient (wallet id)</span>
+                    <span style={{ color: "#a6a4ac" }}>{t("To recipient (wallet id)")}</span>
                     <h5 style={{
                         fontSize: "1.1rem",
                         fontWeight: 600,
@@ -99,8 +101,8 @@ const CryptoFiatReceipt = ({ cryptoCurrency, amount, walletAddress }) => {
                     padding: ".5rem",
                     borderRadius: "16px"
                 }}>
-                    <span style={{ color: "#a6a4ac" }}>Network: </span>
-                    <h4 style={{ marginBottom: "0", fontSize: "1rem", fontWeight: 600 }}>Network will be shown</h4>
+                    <span style={{ color: "#a6a4ac" }}>{t("Network")}: </span>
+                    <h4 style={{ marginBottom: "0", fontSize: "1rem", fontWeight: 600 }}>{t("Network will be shown")}</h4>
                 </div>
 
                 <div style={{
@@ -111,7 +113,7 @@ const CryptoFiatReceipt = ({ cryptoCurrency, amount, walletAddress }) => {
                     padding: "1rem",
                     borderRadius: "16px"
                 }}>
-                    <span style={{ color: "#a6a4ac", minWidth: "60px" }}>Via: </span>
+                    <span style={{ color: "#a6a4ac", minWidth: "60px" }}>{t("Via")}: </span>
                     <div style={{
                         display: "flex",
                         alignItems: "center",

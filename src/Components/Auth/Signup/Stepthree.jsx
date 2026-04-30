@@ -25,7 +25,7 @@ const Stepthree = ({ data, dataHandler }) => {
                             }}
                         />
 
-                        {data.phone?.slice(0, 3) === "971" && <p style={{ margin: "0", fontSize: "14px", fontWeight: 600 }}>A verification code will be sent via <span style={{ color: "#25D366" }}>WhatsApp</span>.</p>}
+                        {data.phone?.slice(0, 3) === "971" && <p style={{ margin: "0", fontSize: "14px", fontWeight: 600 }}>{t("A verification code will be sent via")} <span style={{ color: "#25D366" }}>{t("WhatsApp")}</span>.</p>}
                     </div>
                     {
                         data?.phone_error

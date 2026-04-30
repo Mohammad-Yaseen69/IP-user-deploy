@@ -82,16 +82,16 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                 </div>
                 <div className={styles.top_right}>
                     <div className={styles.inp_con}>
-                        <Label>Full Name</Label>
+                        <Label>{t("Full Name")}</Label>
                         <Input placeholder={t(`Nominee's Full Name`)} value={fullName} onChange={e => setFullName(e.target.value)} />
                     </div>
                     <div className={styles.mul_inp}>
                         <div className={styles.inp_con}>
-                            <Label>Date Of Birth</Label>
-                            <Input type='date' placeholder={`Nominee's Date Of Birth`} value={dob} onChange={e => setDob(e.target.value)} />
+                            <Label>{t("Date Of Birth")}</Label>
+                            <Input type='date' placeholder={t("Nominee's Date Of Birth")} value={dob} onChange={e => setDob(e.target.value)} />
                         </div>
                         <div className={styles.inp_con}>
-                            <Label>Gender</Label>
+                            <Label>{t("Gender")}</Label>
                             <Input type='select' value={gender} onChange={e => setGender(e.target.value)}>
                                 <option value="" disabled>--{t("Select Gender")}--</option>
                                 <option value="male">{t("Male")}</option>
@@ -103,7 +103,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
             </div>
             <div className={styles.mul_inp}>
                 <div className={styles.inp_con}>
-                    <Label>Relation with Nominee</Label>
+                    <Label>{t("Relationship with Nominee")}</Label>
                     <Input type='select' value={relationship} onChange={e => setRelationship(e.target.value)}>
                         <option value="" disabled>--{t("Select Relation")}--</option>
                         <option value="brother">{t("Brother")}</option>
@@ -113,7 +113,7 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                     </Input>
                 </div>
                 <div className={styles.inp_con}>
-                    <Label>Nominee Contact Number</Label>
+                    <Label>{t("Nominee Contact Number")}</Label>
                     <PhoneInput
                         placeholder="Enter Phone number"
                         value={contact}
@@ -135,8 +135,8 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                 </div>
             </div>
             <div className={styles.inp_con}>
-                <Label>Nominee Address</Label>
-                <Input type='textarea' placeholder='Nominee Permanent Address' value={address} onChange={e => setAddress(e.target.value)} />
+                <Label>{t("Nominee Address")}</Label>
+                <Input type='textarea' placeholder={t("Nominee Permanent Address")} value={address} onChange={e => setAddress(e.target.value)} />
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "1.5rem" }}>
                 <Button
@@ -149,11 +149,11 @@ const AddNominee = ({ setNominee, setAddNominee }) => {
                     onClick={() => setShowOtp(true)}
                     disabled={!fullName || !image || !dob || !address || !relationship || !gender || !contact || contact.length < 9}
                 >
-                    Save
+                    {t("Save")}
                 </Button>
             </div>
             <Modal isOpen={showOtp} toggle={() => setShowOtp(!showOtp)}>
-                <ModalHeader toggle={() => setShowOtp(!showOtp)}>Confirm</ModalHeader>
+                <ModalHeader toggle={() => setShowOtp(!showOtp)}>{t("Confirm")}</ModalHeader>
                 <ModalBody>
                     <OTPConfirmation callback={(setter) => addNomineeHandler(setter)} setter={setShowSuccess} setterValue={true} hideOtp={() => setShowOtp(false)} />
                 </ModalBody>

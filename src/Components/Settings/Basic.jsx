@@ -349,14 +349,12 @@ const Basic = ({ setCurrentTab }) => {
             })
 
             const dec = decryptData(res.data.data)
-            // Backend should have updated email/phone; mirror it into local context
             if (type === "email") {
                 refreshUserState("email", email)
             } else if (type === "phone") {
                 refreshUserState("phone", phone)
             }
 
-            // proceed to update other profile fields if necessary
             editProfileHandler()
             setter(true)
             // console.log(dec)
@@ -573,7 +571,7 @@ const Basic = ({ setCurrentTab }) => {
                                 fontSize: ".8rem",
                                 fontWeight: 600
                             }}>
-                                {username?.length ?? 0}/30 Chars
+                                {username?.length ?? 0}{t("/30 Chars")}
                             </div>
                         }
                         <Label>
@@ -854,7 +852,7 @@ const Basic = ({ setCurrentTab }) => {
                         isEditMode
                             ? */}
                         <Input disabled={!isEditMode || isVerified} value={timezone} onChange={e => setTimezone(e.target.value)} type='select'>
-                            <option value="">--Select-Your-Timezone--</option>
+                            <option value="">{t("--Select-Your-Timezone--")}</option>
                             {
                                 availableTimezones.map(i => (
                                     <option value={i?.split(" GMT")?.[0]}>{i}</option>

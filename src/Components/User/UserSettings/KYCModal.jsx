@@ -1,8 +1,10 @@
 import React from "react";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import { CheckCircle, XCircle, HelpCircle } from "react-feather";
+import { useTranslation } from "react-i18next";
 
 const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
+    const {t} = useTranslation()
     const modalStyle = {
         maxWidth: "600px",
         margin: "0 auto",
@@ -36,7 +38,7 @@ const KYCModal = ({ showModal, setShowModal, KYCComments, KYCStatus }) => {
     };
     return (
         <Modal isOpen={showModal} toggle={() => setShowModal(!showModal)} style={{ ...modalStyle, minWidth: "60wv" }}>
-            <ModalHeader style={headerStyle}>Verification Status</ModalHeader>
+            <ModalHeader style={headerStyle}>{t("Verification Status")}</ModalHeader>
             <ModalBody>
                 {KYCStatus &&
                     KYCComments &&

@@ -1,22 +1,22 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { Modal, ModalBody, ModalHeader } from 'reactstrap'
-import styles from "../styles/onboard.module.scss"
-import { UserContext } from '../../../Context/UserContext'
-import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
 import axios from 'axios'
-import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
-import { toast } from 'react-toastify'
-import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
+import { useContext, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { CARD_TYPES } from '../../CreditInput/CreditCardTypes';
+import { toast } from 'react-toastify'
+import { Modal, ModalBody, ModalHeader } from 'reactstrap'
+import { UserContext } from '../../../Context/UserContext'
 import { createShambeToken } from '../../../Helper/CreateToken'
+import { decryptData } from '../../../Helper/EssentilaMethods/Decryption'
+import { encryptData } from '../../../Helper/EssentilaMethods/Encryption'
 import TrustpaymentPage from '../../AddFunds/WalletFund/CreditTransaction'
+import { CARD_TYPES } from '../../CreditInput/CreditCardTypes'
+import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow'
+import OTPConfirmation from '../../UserSettingsNew/OTPConfirmation'
+import styles from "../styles/onboard.module.scss"
+import ConfirmationStep from './ConfirmationStep'
 import PaymentSelect from './PaymentSelectStep'
 import PaymentStep from './PaymentStep'
-import ConfirmationStep from './ConfirmationStep'
 import SuccessStep from './SuccessStep'
-import { useTranslation } from 'react-i18next'
-import { apiErrorMessage } from '../../PaymentsNewer/InternationalFlow';
 
 
 const PLACEHOLDER_CARD_TYPE = {
@@ -578,7 +578,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
                   }
                 }}
               >
-                Back
+                {t("Back")}
               </button>
             )}
             <button
@@ -622,7 +622,7 @@ const PaymentModal = ({ isOpen, vvcCardType, setIsOpen, setStepParent, applePay,
 
 
       <Modal isOpen={showOtpModal}>
-        <ModalHeader toggle={() => setshowOtpModal(false)}> Confirm </ModalHeader>
+        <ModalHeader toggle={() => setshowOtpModal(false)}> {t("Confirm")} </ModalHeader>
         <ModalBody>
           <OTPConfirmation
             callback={paymentType === "wallet" ? createWallet : paymentType === "paypal" ? initiatePaypalPayment : initiateCardVVC}
