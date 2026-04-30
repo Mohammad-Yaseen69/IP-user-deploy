@@ -19,8 +19,12 @@ const AmontBox = ({ code, amount, setAmount, isInvoice }) => {
 
     const handleAmountChange = (e) => {
         const value = e.target.value;
-        setAmount(value);
-        e.target.size = Math.max(e.target.value.length, 1);
+        let cleaned = value.replace(/[^0-9.]/g, '');
+
+        cleaned = cleaned.replace(/^0+(\d)/, '$1');
+
+        setAmount(cleaned);
+        e.target.size = Math.max(cleaned.length, 1);
     };
 
     return (

@@ -1071,7 +1071,7 @@ const Login = ({ country, setIsLoginForm, setIsForgot }) => {
                                                 <PhoneInput
                                                     phone={email}
                                                     setPhone={setEmail}
-                                                    country={country}
+                                                    country={country}                                           
                                                 />
                                                 :
                                                 <input type="email" placeholder={t("eg: john@doe.org")} value={email} onChange={e => setEmail(e.target.value?.toLowerCase())} autoComplete="off" name="email" />

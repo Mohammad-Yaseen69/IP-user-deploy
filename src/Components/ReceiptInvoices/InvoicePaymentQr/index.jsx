@@ -72,11 +72,6 @@ function reducer(state, action) {
             return state;
     }
 }
-
-
-
-
-
 const InvoicePaymentQr = () => {
     const { invoiceId } = useParams()
     const [data, dispatch] = useReducer(reducer, initialData)
@@ -269,6 +264,11 @@ const InvoicePaymentQr = () => {
             }
         }
     }
+    useEffect(() => {
+        if (country) {
+            dataHandler("country", country)
+        }
+    }, [country])
     return (
         <>
             <div style={{ position: 'relative' }} className={styles.cont}>
@@ -395,6 +395,8 @@ const InvoicePaymentQr = () => {
                                     setPhone={(value) => dataHandler("phone", value)}
                                     setShowPassword={(value) => dataHandler("showPassword", value)}
                                     showPassword={data.showPassword}
+                                    setCountry={(value) => dataHandler("country", value)}
+
                                 />
 
                                 {!invoice?.paid &&

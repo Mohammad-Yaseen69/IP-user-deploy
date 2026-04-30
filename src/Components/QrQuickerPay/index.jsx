@@ -103,7 +103,7 @@ const QrQuickerPay = () => {
       const dec = decryptData(error?.response?.data?.data)
       const err = apiErrorMessage(dec.message)
       const err2 = LimitsErrorMessage(dec.message)
-      dataHandler("error",err2 ||  err || dec?.message || "We are unable to process your request at the moment.")
+      dataHandler("error", err2 || err || dec?.message || "We are unable to process your request at the moment.")
       dataHandler("showModal", true)
     }
   })
@@ -178,7 +178,11 @@ const QrQuickerPay = () => {
     }
   }
 
-
+  useEffect(() => {
+    if (country) {
+      dataHandler("country", country)
+    }
+  }, [country])
   const { t } = useTranslation()
 
   console.log(data.error)
@@ -279,6 +283,7 @@ const QrQuickerPay = () => {
                 setPhone={(value) => dataHandler("phone", value)}
                 setShowPassword={(value) => dataHandler("showPassword", value)}
                 showPassword={data.showPassword}
+                setCountry={(value) => dataHandler("country", value)}
               />
 
               <div className={styles.btns}>
