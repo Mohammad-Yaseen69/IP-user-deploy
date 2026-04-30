@@ -1,18 +1,16 @@
 import { Fragment, useContext, useEffect, useRef, useState } from "react";
-import CustomizerContext from "../../Helper/Customizer";
-import { MENU } from "./SbNMenu";
-import SidebarIcon from "./SbNIcon";
-import SimpleBar from "simplebar-react";
-import { ArrowLeft, ArrowRight, ChevronRight, Search } from "react-feather";
-import ConfigDB from "../../Config/ThemeConfig";
-import SidebarSubMenu from "./SbNSubMenu";
-import BackBtn from "./SbNBackBtn";
-import { Form, Input } from "reactstrap";
-import "./sm.css"
-import { UserContext } from "../../Context/UserContext";
-import { Link } from "react-router-dom";
+import { ArrowLeft, ArrowRight, ChevronRight } from "react-feather";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom";
+import SimpleBar from "simplebar-react";
+import ConfigDB from "../../Config/ThemeConfig";
+import { UserContext } from "../../Context/UserContext";
+import CustomizerContext from "../../Helper/Customizer";
+import BackBtn from "./SbNBackBtn";
+import SidebarIcon from "./SbNIcon";
+import { MENU } from "./SbNMenu";
+import SidebarSubMenu from "./SbNSubMenu";
+import "./sm.css";
 
 const SidebarNew = ({ setShowModal, showModal }) => {
     const { t } = useTranslation()
