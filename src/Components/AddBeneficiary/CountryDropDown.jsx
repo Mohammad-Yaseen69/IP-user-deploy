@@ -46,7 +46,7 @@ const CountryDropDown = ({ onSelect, country = "", disabled = false, padding = "
                 setCountriesLoaded(true);
             }
         }
-    }, [allowedCountries]);
+    }, [allowedCountries, i18n.language, ]);
 
     const fuse = new Fuse(countries, {
         keys: ["name"],
