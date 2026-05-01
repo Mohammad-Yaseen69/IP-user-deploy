@@ -152,7 +152,22 @@ const Signup = ({ country, setIsLoginForm, setHideLogo }) => {
                 }
             } catch (error) {
                 const dec = decryptData(error?.response?.data?.data)
-                dataHandler("error", dec?.message ?? "Something went wrong while verifying details.")
+                const rawMessage = dec?.message ?? "Something went wrong while verifying details."
+
+                const lowerMsg = rawMessage.toLowerCase()
+                let userFriendlyError = rawMessage
+
+                if (lowerMsg.includes("email") && lowerMsg.includes("phone")) {
+                    userFriendlyError = data.email.length > 0
+                        ? t("Email already exists. Please use a different email.")
+                        : t("Phone number already exists. Please use a different number.")
+                } else if (lowerMsg.includes("email")) {
+                    userFriendlyError = t("Email already exists. Please use a different email.")
+                } else if (lowerMsg.includes("phone")) {
+                    userFriendlyError = t("Phone number already exists. Please use a different number.")
+                }
+
+                dataHandler("error", userFriendlyError)
             } finally {
                 dataHandler("loading", false)
             }

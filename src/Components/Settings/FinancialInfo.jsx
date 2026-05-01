@@ -27,13 +27,13 @@ const questionsArray = [
     },
     {
         question: "Expected Monthly Transaction Volume?",
-        info: "Estimate how much money will come into your account each month.",
+        info: "Estimate how many transactions will come into your account each month.",
         answers: "",
         question_key: "volume"
     },
     {
         question: "Expected Number of Transactions per Month?",
-        info: "Estimate how much money will come into your account each month.",
+        info: "Estimate how many transactions will come into your account each month.",
         answers: "",
         question_key: "transaction_limit"
     },
