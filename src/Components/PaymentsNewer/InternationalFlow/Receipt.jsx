@@ -1,17 +1,16 @@
-import styles from "./styles/receipt.module.css"
-import logo from "./files/ins_logo.svg"
-import { Trans, useTranslation } from "react-i18next"
+import { DotLottieReact } from '@lottiefiles/dotlottie-react'
+import { useEffect, useState } from "react"
 import { Check, Info } from "react-feather"
-import w from "../files/where.png"
-import share from "../files/share.png"
-import help from "./files/help.svg"
-import { useState, useEffect } from "react"
-import SocialModal from "../../ShareBtn/SocialModal"
+import { Trans, useTranslation } from "react-i18next"
 import { useLocation, useNavigate } from "react-router"
-import fail from "./files/fail.json"
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import success from "./files/success.gif"
 import MobileWalletStatus from "../../PaymentAddressPublic/PayAsGuest/MobileWalletStatus"
+import SocialModal from "../../ShareBtn/SocialModal"
+import share from "../files/share.png"
+import w from "../files/where.png"
+import fail from "./files/fail.json"
+import help from "./files/help.svg"
+import logo from "./files/ins_logo.svg"
+import styles from "./styles/receipt.module.css"
 
 const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = false }) => {
     const { t } = useTranslation()
@@ -26,7 +25,7 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = fal
     const base_url = window.location.origin || 'https://my.insta-pay.ch';
 
     useEffect(() => {
-        if (data.payment_type?.value === "mobile_wallet") return;
+        if (data.payment_type?.value === "mobile_wallet" && !data.isGuest) return;
 
         const timer = setInterval(() => {
             setCountdown((prev) => {
@@ -72,7 +71,7 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = fal
                             } */}
                         </div>
                         {
-                            data.payment_type?.value === "mobile_wallet" ?
+                            data.payment_type?.value === "mobile_wallet" && !data.isGuest  ?
                                 <MobileWalletStatus
                                     inGuestPay={false}
                                     transactionId={data?.transaction_details?.transaction_id || data?.transaction_details?.transactionId || data?.transaction_details?.data?.transaction_id || data?.transaction_details?.data?.transactionId}
