@@ -322,7 +322,7 @@ const PayAsGuest = ({
 
       const res = await axios.post(
         `${import.meta.env.VITE_IP_DEV_API
-        }/api/guest-pay${subscriptionId ? "/subscription/initiate-wallet-payment" : "/initiate-wallet-payment"}`,
+        }/api/guest-pay/initiate-wallet-payment`,
         {
           data: enc,
         }
@@ -395,20 +395,12 @@ const PayAsGuest = ({
         dataHandler("step", 2);
         break;
       case 2:
-        if (subscriptionId && data.payment_type?.value !== "card") {
-          dataHandler("step", 4);
-
-        } else {
-          dataHandler("step", 3);
-        }
+        dataHandler("step", 3);
         break;
       case 3:
         if (data.payment_type?.value === "card") {
-          if (subscriptionId) {
-            dataHandler("step", 5)
-          } else {
-            dataHandler("step", 4);
-          }
+
+          dataHandler("step", 4);
 
         } else {
           checkIfPhoneIsValid(() => {
@@ -444,7 +436,7 @@ const PayAsGuest = ({
         toggle();
         break;
       case 2:
-        if (subscriptionId || countryIsoCode) {
+        if (countryIsoCode) {
           toggle();
         } else {
           dataHandler("step", 1);
@@ -455,14 +447,10 @@ const PayAsGuest = ({
         dataHandler("step", 2);
         break;
       case 4:
-        if (subscriptionId) {
-          dataHandler("step", 2);
-        } else {
-          dataHandler("step", 3);
-        }
+        dataHandler("step", 3);
         break;
       case 5:
-        if (subscriptionId && data.payment_type?.value === "card") {
+        if (data.payment_type?.value === "card") {
           dataHandler("step", 3);
         } else {
           dataHandler("step", 4);
@@ -499,9 +487,9 @@ const PayAsGuest = ({
     if (data.step === 4) {
       if (data.payment_type?.value === "card") {
         disabled =
-         !isPersonalInfoValid(data, false) || 
-         (isShipping ? !isShippingValid(data.shippingDetails) : false) || 
-         ((data?.country?.alpha3 === "USA" || data?.country?.alpha3 === "CAN") && (!data.customerTown || !data.customerStreet || !data.customer_county))
+          !isPersonalInfoValid(data, false) ||
+          (isShipping ? !isShippingValid(data.shippingDetails) : false) ||
+          ((data?.country?.alpha3 === "USA" || data?.country?.alpha3 === "CAN") && (!data.customerTown || !data.customerStreet || !data.customer_county))
       }
     }
 
