@@ -201,7 +201,7 @@ const Verification = () => {
 
         if (status?.toLowerCase() === "success" && (!userDetails?.kyc_verification_paid && userDetails?.user?.kyc_status !== "approved" && userDetails?.user?.kyc_status !== "verified")) {
             if (userDetails?.paypal_transaction !== "processing" && payment_through === "paypal") {
-                updateProcessingCheck()
+                // updateProcessingCheck()
                 setProcessing("processing")
             }
         }
@@ -243,19 +243,19 @@ const Verification = () => {
 
     if (showRefreshScreen) {
         return (
-            <div style={{ 
+            <div style={{
                 // width: "100vw", 
                 // height: "100vh", 
-                background: "#fff", 
-                display: "flex", 
-                flexDirection: "column", 
-                justifyContent: "center", 
+                background: "#fff",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
                 alignItems: "center",
                 gap: "1.5rem",
             }}>
                 <AiOutlineClockCircle size={80} className="text-warning" />
-                <h2 style={{ 
-                    color: "#1a1a1a", 
+                <h2 style={{
+                    color: "#1a1a1a",
                     fontWeight: 600,
                     textAlign: "center",
                     maxWidth: "500px",
@@ -263,20 +263,20 @@ const Verification = () => {
                 }}>
                     {t("Your KYC Verification is currently being processed")}
                 </h2>
-                <p style={{ 
-                    color: "#666", 
-                    fontSize: "1rem", 
+                <p style={{
+                    color: "#666",
+                    fontSize: "1rem",
                     textAlign: "center",
                     maxWidth: "400px",
                     lineHeight: 1.6
                 }}>
                     {t("Please refresh the page to get the latest verification status. This may take a few moments.")}
                 </p>
-                <Button 
-                    style={{ 
-                        background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)", 
-                        border: "none", 
-                        outline: "none", 
+                <Button
+                    style={{
+                        background: "linear-gradient(to right bottom, #e64067, #5926f0, #4828a0)",
+                        border: "none",
+                        outline: "none",
                         borderRadius: "10px",
                         padding: "12px 32px",
                         fontSize: "1rem",
