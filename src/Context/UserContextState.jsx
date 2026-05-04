@@ -239,7 +239,7 @@ const UserState = ({ children }) => {
                     if (!decrypted?.tfa) {
                         setMissingTabsData(prev => prev.includes("tfa") ? prev : [...prev, "tfa"]);
                     }
-                    const isKycMissing = decrypted?.account_type === 'business' 
+                    const isKycMissing = decrypted?.account_type === 'business'
                         ? (decrypted?.company?.kyb_status === "declined" || !decrypted.company?.kyb_status)
                         : (decrypted?.user?.kyc_status === "declined" || !decrypted.user?.kyc_status);
 
@@ -260,8 +260,15 @@ const UserState = ({ children }) => {
                         localStorage.setItem("ip_country", coun)
                         clearData()
                         if (!publicRoutes.some(item => window.location.pathname.toLowerCase().includes(item.path.toLowerCase().split(":")[0])) && !window.location.pathname.toLowerCase().includes("profile/")) {
-                            sessionStorage.setItem("path", window.location.href?.split("pay.ch")?.[1])
-                            navigate("/login", { replace: true })
+                            // sessionStorage.setItem("path", window.location.href?.split("pay.ch")?.[1])
+                            // navigate("/login", { replace: true })
+                            if (!publicRoutes.some(item => window.location.pathname.toLowerCase().includes(item.path.toLowerCase().split(":")[0])) && !window.location.pathname.toLowerCase().includes("profile/")) {
+                                const currentPath = window.location.pathname + window.location.search;
+                                if (currentPath && currentPath !== "undefined" && !currentPath.includes("/login")) {
+                                    sessionStorage.setItem("path", currentPath)
+                                }
+                                navigate("/login", { replace: true })
+                            }
                         }
                     }
                 })
@@ -300,7 +307,7 @@ const UserState = ({ children }) => {
                 if (!decrypted?.tfa) {
                     setMissingTabsData(prev => prev.includes("tfa") ? prev : [...prev, "tfa"]);
                 }
-                const isKycMissing = decrypted?.account_type === 'business' 
+                const isKycMissing = decrypted?.account_type === 'business'
                     ? (decrypted?.company?.kyb_status === "declined" || !decrypted.company?.kyb_status)
                     : (decrypted?.user?.kyc_status === "declined" || !decrypted.user?.kyc_status);
 
