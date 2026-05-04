@@ -193,7 +193,7 @@ const PricingsAndPlan = () => {
                             {plans.map(plan => (
                                 <tr key={plan.id || plan._id} style={{ fontSize: 14, fontWeight: 600, position: 'relative' }}>
                                     <td style={{ padding: '12px 8px', fontWeight: 500 }}>{plan.title}</td>
-                                    <td style={{ padding: '12px 8px' }}>{plan.description}</td>
+                                    <td style={{ padding: '12px 8px', }}>{plan.description}</td>
                                     <td style={{ padding: '12px 8px', whiteSpace: 'nowrap' }}>{plan.currency || plan?.receivingWallet?.currency?.code} {Number(plan.price).toFixed(2)}</td>
                                     <td style={{ padding: '12px 8px' }}>{t(plan.billingCycle)}</td>
                                     <td style={{ padding: '12px 8px', textAlign: 'center', position: 'relative' }}>
