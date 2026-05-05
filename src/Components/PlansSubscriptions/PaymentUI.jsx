@@ -23,7 +23,6 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
     const navigate = useNavigate()
     const width = useWindowWidth()
     const [verificationBadge, setShowVerificationBadge] = useState(false)
-
     const actionButtons = [
         {
             label: "Pay With InstaPay",
@@ -100,7 +99,7 @@ const PaymentUI = ({ data, user_name, state, dataHandler, url }) => {
                         ...data?.plan.account,
                         kyc_status: data?.plan.account?.user?.kyc_status
                     }}
-                    user_name={data?.plan?.accoutn?.username}
+                    user_name={data?.plan?.account?.username}
                     invoice={true}
 
                 />

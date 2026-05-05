@@ -31,7 +31,9 @@ const DownloadQR = ({ isOpen, toggle, qrCode, wallet }) => {
                         </button>
                     </div>
 
-                    <a href={active === "sticker" ? qrCode : `/download-qr-poster/${wallet?.wallet_id}`} download={active === "sticker"} target='_blank'>
+                    <a href={active === "sticker" ? qrCode : `/download-qr-poster/${wallet?.wallet_id}`} download={active === "sticker"} target='_blank'
+                    style={{ width: "100%", display: "flex", justifyContent: "center" }}
+                    >
                         <button className={styles.button}>
                             <img src={download} alt="" />
                             <span>{t("Download")}</span>

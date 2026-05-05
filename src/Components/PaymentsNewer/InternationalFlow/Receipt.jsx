@@ -1,19 +1,18 @@
-import styles from "./styles/receipt.module.css"
-import logo from "./files/ins_logo.svg"
-import { Trans, useTranslation } from "react-i18next"
+import { DotLottieReact } from '@lottiefiles/dotlottie-react'
+import { useEffect, useState } from "react"
 import { Check, Info } from "react-feather"
-import w from "../files/where.png"
-import share from "../files/share.png"
-import help from "./files/help.svg"
-import { useState, useEffect } from "react"
-import SocialModal from "../../ShareBtn/SocialModal"
+import { Trans, useTranslation } from "react-i18next"
 import { useLocation, useNavigate } from "react-router"
-import fail from "./files/fail.json"
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import success from "./files/success.gif"
 import MobileWalletStatus from "../../PaymentAddressPublic/PayAsGuest/MobileWalletStatus"
+import SocialModal from "../../ShareBtn/SocialModal"
+import share from "../files/share.png"
+import w from "../files/where.png"
+import fail from "./files/fail.json"
+import help from "./files/help.svg"
+import logo from "./files/ins_logo.svg"
+import styles from "./styles/receipt.module.css"
 
-const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = false }) => {
+const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = false, isGuest }) => {
     const { t } = useTranslation()
     const [showShare, setShowShare] = useState(false)
     const navigate = useNavigate()
@@ -26,7 +25,7 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = fal
     const base_url = window.location.origin || 'https://my.insta-pay.ch';
 
     useEffect(() => {
-        if (data.payment_type?.value === "mobile_wallet") return;
+        if (data.payment_type?.value === "mobile_wallet" && !isGuest) return;
 
         const timer = setInterval(() => {
             setCountdown((prev) => {
@@ -83,31 +82,33 @@ const Receipt = ({ data, showTrxBtn = true, transactionStatus, isFullWidth = fal
                                         <h3 style={{ maxWidth: "15ch" }}
                                         >{transactionStatus !== "error" ? t("Your payment is in process") : t("Your payment is Failed")}</h3>
                                         <p>{t("Thanks for Using InstaPay")}</p>
-                                        <p style={{
-                                            marginTop: "1.5rem",
-                                            fontSize: "0.85rem",
-                                            color: "#666",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "0.5rem",
-                                            background: "rgba(89, 38, 240, 0.05)",
-                                            padding: "0.6rem 1.2rem",
-                                            borderRadius: "50px",
-                                            width: "fit-content",
-                                            border: "1px solid rgba(89, 38, 240, 0.1)",
-                                            fontWeight: 500
-                                        }}>
-                                            {t("Redirecting to transactions in")}
-                                            <span style={{
-                                                fontWeight: 800,
-                                                color: "#5926F0",
-                                                fontSize: "1rem",
-                                                minWidth: "1.2ch",
-                                                display: "inline-block",
-                                                textAlign: "center"
-                                            }}>{countdown}</span>
-                                            {t("seconds")}
-                                        </p>
+                                        {isGuest === false &&
+                                            <p style={{
+                                                marginTop: "1.5rem",
+                                                fontSize: "0.85rem",
+                                                color: "#666",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: "0.5rem",
+                                                background: "rgba(89, 38, 240, 0.05)",
+                                                padding: "0.6rem 1.2rem",
+                                                borderRadius: "50px",
+                                                width: "fit-content",
+                                                border: "1px solid rgba(89, 38, 240, 0.1)",
+                                                fontWeight: 500
+                                            }}>
+                                                {t("Redirecting to transactions in")}
+                                                <span style={{
+                                                    fontWeight: 800,
+                                                    color: "#5926F0",
+                                                    fontSize: "1rem",
+                                                    minWidth: "1.2ch",
+                                                    display: "inline-block",
+                                                    textAlign: "center"
+                                                }}>{countdown}</span>
+                                                {t("seconds")}
+                                            </p>
+                                        }
                                     </div>
                                     {/* <video src={confirm_vid} muted autoPlay loop controls={false} /> */}
                                     <DotLottieReact
