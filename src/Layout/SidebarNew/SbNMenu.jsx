@@ -174,6 +174,13 @@ export const MENU = [
                 type: "link",
                 url: `${window.location.origin}/analytics`,
             },
+            {
+                title: "Delegate Access",
+                icon: <img loading="lazy" src={analytics} style={{ marginRight: "12px" }} />,
+                activeIcon: <img loading="lazy" src={analytics_a} style={{ marginRight: "12px" }} />,
+                type: "link",
+                url: `${window.location.origin}/delegate-access`,
+            },
             // {
             //     title: "Store",
             //     icon: <img loading="lazy" src={shopingcard} style={{ marginRight: "12px" }} />,

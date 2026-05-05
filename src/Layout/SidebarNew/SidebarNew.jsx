@@ -67,7 +67,6 @@ const SidebarNew = ({ setShowModal, showModal }) => {
         }
     };
 
-    // sidebar toggle
     useEffect(() => {
         const handleClick = (event) => {
             const logo = document.querySelector("[data-testid='logo']");
