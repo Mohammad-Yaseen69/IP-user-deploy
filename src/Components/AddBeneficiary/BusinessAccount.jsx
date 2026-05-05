@@ -735,6 +735,7 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
                                                 style={{ flex: 1, minWidth: "250px" }}
                                                 type="text"
                                                 value={representativeFields[item]}
+                                                maxLength={50}
                                                 name={item}
                                                 disabled={isFieldsDisabled}
                                                 readOnly={isFieldsDisabled}
@@ -833,6 +834,7 @@ const BusinessAccount = ({ isInternational, toggleHandler }) => {
                             name="address"
                             id="address"
                             type="textarea"
+                            maxLength={500}
                             placeholder={t('Address Line')}
                             disabled={!country || isFieldsDisabled}
                             readOnly={!country || isFieldsDisabled}

@@ -409,12 +409,12 @@ const StepOne = ({ data, dataHandler, getExchangeRate }) => {
                                     {
                                         data?.exchange_rate_error === "max payer"
                                         &&
-                                        `${t("Maximum Amount")}:: ${data.exchange_rate_error_value} ${data?.conversion_in}`
+                                        `${t("Maximum Amount")}: ${data.exchange_rate_error_value} ${data?.conversion_in}`
                                     }
                                     {
                                         data?.exchange_rate_error === "min payer"
                                         &&
-                                        `${t("Minimum Amount")}:: ${data.exchange_rate_error_value} ${data?.conversion_in}`
+                                        `${t("Minimum Amount")}: ${data.exchange_rate_error_value} ${data?.conversion_in}`
                                     }
                                     {
                                         data?.exchange_rate_error === "Invalid Amount.."

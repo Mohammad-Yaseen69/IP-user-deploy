@@ -32,7 +32,7 @@ const PlaidBankTransfer = ({
   successMessage,
   closeBtnText
 }) => {
-  console.log("successMessages ",successMessage)
+  console.log("successMessages ", successMessage)
   const { userDetails, authHeader, setProfileLockTime } = useContext(UserContext);
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ const PlaidBankTransfer = ({
   const [otpToken, setOtpToken] = useState(null);
   const [showOtp, setShowOtp] = useState(false);
   const [codeType, setCodeType] = useState("sms")
-
+  const [redirectTimer, setRedirectTimer] = useState(10);
   const { sendOtp, isSendingOtp } = useSendOtp({
     onSuccess: (token, data) => {
       console.log(token, data)
@@ -69,7 +69,22 @@ const PlaidBankTransfer = ({
       setCodeType(userDetails?.tfa ? "authenticator" : "sms")
     }
   }, [userDetails?._id, type]);
+  useEffect(() => {
+    if (plaidStep === 4 && type !== "add_funds") {
+      const interval = setInterval(() => {
+        setRedirectTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            navigate("/transactions");
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
 
+      return () => clearInterval(interval);
+    }
+  }, [plaidStep, type, navigate]);
   useEffect(() => {
     if (plaidStep === 4 && type === "add_funds") {
       const redirectTimer = setTimeout(() => {
@@ -471,7 +486,7 @@ const PlaidBankTransfer = ({
             style={{ color: "black", textAlign: "center", marginBottom: "0px" }}
           >
             {t(
-              successMessage ? successMessage :type !== "add_funds" ? "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window" : "Payment authorized successfully! Your wallet will be credited once the transfer is complete.",
+              successMessage ? successMessage : type !== "add_funds" ? "Payment authorized successfully, the recipient will receive the amount once the transfer is complete, you can now close this window" : "Payment authorized successfully! Your wallet will be credited once the transfer is complete.",
             )}
           </h4>
         </div>
@@ -556,8 +571,14 @@ const PlaidBankTransfer = ({
           )}
           {plaidStep === 4 && (
             <button onClick={onBackClickHandler}>
-              {closeBtnText || type === "payment_address" ? t("Close") : type === "add_funds" ? t("Go To Transactions") : t("Go back to wallets")}
-              {window.innerWidth > 1000 && <ChevronRight size={18} />}
+              {
+                closeBtnText
+                  ? t(closeBtnText)
+                  : type === "payment_address"
+                    ? t("Close")
+                    :
+                    t("Redirecting to transactions in {{timer}} seconds", { timer: redirectTimer })
+              }          {window.innerWidth > 1000 && <ChevronRight size={18} />}
             </button>
           )}
         </div>

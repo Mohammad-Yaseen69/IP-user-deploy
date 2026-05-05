@@ -83,6 +83,7 @@
     font-style: normal;
     font-weight: 600;
     margin-bottom: 0px;
+    
 }
 
 .addContainer .text p {
@@ -131,6 +132,9 @@
     font-style: normal;
     font-weight: 700;
     margin-bottom: 0px;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .mobileItem .left p {
@@ -139,6 +143,9 @@
     font-style: normal;
     font-weight: 600;
     margin-bottom: 0px;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .mobileItem .right {
