@@ -180,6 +180,7 @@ export const MENU = [
                 activeIcon: <img loading="lazy" src={analytics_a} style={{ marginRight: "12px" }} />,
                 type: "link",
                 url: `${window.location.origin}/delegate-access`,
+                showOnly: "business"
             },
             // {
             //     title: "Store",

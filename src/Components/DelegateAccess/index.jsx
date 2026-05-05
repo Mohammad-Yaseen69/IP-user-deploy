@@ -6,18 +6,37 @@ import { Search } from "react-feather"
 import { useState } from "react"
 import DelegateTable from "./Components/Table"
 import DelegateModal from "./Components/DelegateModal"
+import { useQuery } from "@tanstack/react-query"
+import { apiWrapper } from "../../utils/Functions/apiWrapper"
 const DelegateAccess = () => {
     const width = useWindowWidth()
     const { t } = useTranslation()
     const [search, setSearch] = useState("")
     const [isRole, setIsRole] = useState(false)
     const [showModal, setShowModal] = useState(false)
+    const [page, setPage] = useState(1)
+    const [limit, setLimit] = useState(10)
     const handleRoleAgentToggle = () => {
         setIsRole(prev => !prev)
     }
     const handleModalOpen = () => {
         setShowModal(true)
     }
+    const { data: rolesData, isLoading, isError } = useQuery({
+        queryKey: ["roles", page, limit, search],
+
+        queryFn: () =>
+            apiWrapper({
+                endpoint: `/api/business-agents/roles/${page}/${limit}/${search}`,
+                method: "GET",
+                isEncrypted: false,   // usually GET encrypted nahi hoti
+                isDecrypted: true
+            }),
+
+        keepPreviousData: true
+    })
+    const roles = rolesData?.data?.roles || []
+    // console.log(roles, "roles roles")
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -113,9 +132,9 @@ const DelegateAccess = () => {
                     />
                 </div>
             </div>
-            <DelegateTable isRole={isRole} />
+            <DelegateTable filteredInvoices={roles} isRole={isRole} />
             {
-                showModal && <DelegateModal isRole={isRole} isOpen={showModal} onClose={""} t={t} width={width} />
+                showModal && <DelegateModal agents={roles} isEdit={false} isRole={isRole} isOpen={showModal} onClose={() => setShowModal(false)} t={t} width={width} />
             }
         </div>
     )

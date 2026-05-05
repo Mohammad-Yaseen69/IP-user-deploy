@@ -63,11 +63,16 @@ const SidebarSubMenu = ({ menu, className, setIsOpen, isOpen, level, showModal, 
         }
     }
 
-
+    const filteredMenu = menu?.filter(item => {
+        if (item.showOnly === "business") {
+            return userDetails?.account_type === "business"
+        }
+        return true
+    })
     return (
         // <ul className={`${className ? className : ""}`} onClick={verifyToken}>
         <ul style={{ width: togglSidebar ? "100%" : "auto" }} className={`${className ? className : ""}`}>
-            {menu.map((item, i) => {
+            {filteredMenu?.map((item, i) => {
                 return (
                     <>
                         {
