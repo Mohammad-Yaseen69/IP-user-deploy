@@ -3,12 +3,14 @@ import { useTranslation } from "react-i18next";
 import styles from "../styles/table.module.css";
 import useWindowWidth from "../../../utils/useWindowWidth";
 import TableItem from "./TableItem";
+import InstaPayLoader from "../../Loader";
 
-const DelegateTable = ({ filteredInvoices, setEditModal, isRole }) => {
+const DelegateTable = ({ filteredInvoices, setEditModal, isRole, roleLoading }) => {
   const { t } = useTranslation();
   const width = useWindowWidth();
   const [menuOpenFor, setMenuOpenFor] = useState(null);
-
+  const [showModal, setShowModal] = useState(false)
+  const [editData, setEditData] = useState(null)
   return (
     <div className={styles.tableWrapper}>
       <div className={styles.table}>
@@ -66,7 +68,11 @@ const DelegateTable = ({ filteredInvoices, setEditModal, isRole }) => {
           </div>
         )}
 
-        {filteredInvoices?.length > 0 ? (
+        {roleLoading ? (
+          <div style={{ padding: "40px", textAlign: "center" }}>
+            <InstaPayLoader />
+          </div>
+        ) : filteredInvoices?.length > 0 ? (
           filteredInvoices.map((item, index) => (
             <TableItem
               key={item._id}

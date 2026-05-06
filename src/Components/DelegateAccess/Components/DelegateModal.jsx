@@ -163,11 +163,8 @@ const DelegateModal = ({ isRole, isOpen, onClose, t, width, agents, isEdit }) =>
             }),
 
         onSuccess: (res) => {
-            console.log("Role Created:", res)
-
+            console.log(res)
             queryClient.invalidateQueries({ queryKey: ["roles"] })
-
-            reset()
             onClose()
         },
 
@@ -181,7 +178,7 @@ const DelegateModal = ({ isRole, isOpen, onClose, t, width, agents, isEdit }) =>
 
     const onSubmit = (e) => {
         e.preventDefault()
-console.log(e)
+        console.log(e)
         const payload = {
             title: form.title,
             description: form.description,

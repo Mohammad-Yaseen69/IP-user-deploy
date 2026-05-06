@@ -14,6 +14,7 @@ const DelegateAccess = () => {
     const [search, setSearch] = useState("")
     const [isRole, setIsRole] = useState(false)
     const [showModal, setShowModal] = useState(false)
+    const [editData, setEditData] = useState(null)
     const [page, setPage] = useState(1)
     const [limit, setLimit] = useState(10)
     const handleRoleAgentToggle = () => {
@@ -22,21 +23,20 @@ const DelegateAccess = () => {
     const handleModalOpen = () => {
         setShowModal(true)
     }
-    const { data: rolesData, isLoading, isError } = useQuery({
+    const { data: rolesData, isLoading: roleLoading, isError } = useQuery({
         queryKey: ["roles", page, limit, search],
 
         queryFn: () =>
             apiWrapper({
                 endpoint: `/api/business-agents/roles/${page}/${limit}/${search}`,
                 method: "GET",
-                isEncrypted: false,   // usually GET encrypted nahi hoti
+                isEncrypted: false,
                 isDecrypted: true
             }),
 
         keepPreviousData: true
     })
     const roles = rolesData?.data?.roles || []
-    // console.log(roles, "roles roles")
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -132,7 +132,7 @@ const DelegateAccess = () => {
                     />
                 </div>
             </div>
-            <DelegateTable filteredInvoices={roles} isRole={isRole} />
+            <DelegateTable filteredInvoices={roles} isRole={isRole} roleLoading={roleLoading} />
             {
                 showModal && <DelegateModal agents={roles} isEdit={false} isRole={isRole} isOpen={showModal} onClose={() => setShowModal(false)} t={t} width={width} />
             }

@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next';
-import styles from "../styles/table.module.css"
-import { MoreHorizontal } from 'react-feather';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { MoreHorizontal } from 'react-feather';
+import { useTranslation } from 'react-i18next';
 import { apiWrapper } from '../../../utils/Functions/apiWrapper';
+import styles from "../styles/table.module.css";
+import DeleteConfirmModal from './DeleteConfirmModal';
+import { useState } from 'react';
 
 function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole }) {
     const { t } = useTranslation()
     const isPhone = width <= 700;
     const queryClient = useQueryClient()
-
+    const [isDeleteModal, setIsDeleteModal] = useState(false)
     const ellipsisStyle = {
         overflow: "hidden",
         textOverflow: "ellipsis",
@@ -29,14 +30,15 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole }) 
                 isDecrypted: true
             }),
         onSuccess: () => {
-            console.log("Role Deleted")
             queryClient.invalidateQueries({ queryKey: ["roles"] })
+            setIsDeleteModal(false)
             setMenuOpenFor(null)
         },
         onError: (err) => {
             console.error("Delete Error:", err)
         }
     })
+
     // console.log(item,"itemdata")
     return (
         <div
@@ -142,10 +144,22 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole }) 
                         <div className={styles.menuItem} onClick={() => setMenuOpenFor(null)}>
                             {t("Edit")}
                         </div>
-                        <div className={`${styles.menuItem} ${styles.danger}`} onClick={() => deleteRole()}>
+                        <div className={`${styles.menuItem} ${styles.danger}`} onClick={() => {
+                            setIsDeleteModal(true)
+                            setMenuOpenFor(null)
+                        }}>
                             {isDeleting ? t("Deleting...") : t("Delete")}
                         </div>
                     </div>
+                )}
+
+                {isDeleteModal && (
+                    <DeleteConfirmModal
+                        isOpen={isDeleteModal}
+                        toggle={() => setIsDeleteModal(false)}
+                        onConfirm={() => deleteRole()}
+                        itemName={item.title || item.name}
+                    />
                 )}
             </div>
         </div>
