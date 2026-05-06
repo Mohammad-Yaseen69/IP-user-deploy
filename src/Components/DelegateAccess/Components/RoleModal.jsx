@@ -1,24 +1,26 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState } from 'react'
-import { Modal, ModalBody, ModalHeader } from 'reactstrap'
-import useCountryLocation from '../../../hooks/GeneralUse/useCountryLocation'
+import { Modal, ModalBody, ModalHeader, Spinner, Button } from 'reactstrap'
+import { CheckCircle, XCircle, X } from "react-feather"
 import permissionsData from "../../../utils/Data/permissionsData.json"
 import { apiWrapper } from '../../../utils/Functions/apiWrapper'
 import styles from "../styles/DelegateModal.module.css"
 import PermissionTree from './PermissionTree'
 
-const RoleModal = ({ isRole, isOpen, onClose, t, width,  isEdit, editData }) => {
+const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
     const [permSearch, setPermSearch] = useState("")
     const [selectedPermissions, setSelectedPermissions] = useState(isEdit && editData ? editData.permissions || [] : [])
-
     const [deniedPermissions, setDeniedPermissions] = useState(isEdit && editData ? editData.deniedPermissions || [] : [])
+    const [status, setStatus] = useState({ type: null, message: "" }) // null, 'loading', 'success', 'error'
+    
     const isWildcardParent = (pk) => pk && selectedPermissions.includes(`${pk}.*`);
     const queryClient = useQueryClient()
+    
     const [form, setForm] = useState({
         title: isEdit && editData ? editData.title || "" : "",
         description: isEdit && editData ? editData.description || "" : "",
-        phone: isEdit && editData ? editData.phone || "" : ""
     })
+
     const isSelected = (key, type = "action") => {
         if (type === "module") return selectedPermissions.includes(`${key}.*`);
         if (type === "feature") {
@@ -46,10 +48,6 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width,  isEdit, editData }) => 
         return selectedPermissions.includes(key);
     };
 
-    useEffect(() => {
-        // if (!isOpen) reset()
-    }, [isOpen])
-
     const groupPermissions = (data) => {
         const hierarchy = {};
         data.forEach(item => {
@@ -67,6 +65,7 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width,  isEdit, editData }) => 
             features: Object.values(m.features)
         }));
     };
+
     const isIndeterminate = (key, type = "module") => {
         if (type === "module" || type === "feature") {
             if (selectedPermissions.includes(`${key}.*`)) return false;
@@ -147,8 +146,10 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width,  isEdit, editData }) => 
         setSelectedPermissions(newPerms);
         setDeniedPermissions(newDenied);
     };
+
     const processedPermissions = groupPermissions(permissionsData);
-    const { mutate: createRole, isPending, isError: roleError } = useMutation({
+
+    const { mutate: createRole, isPending: isCreating } = useMutation({
         mutationFn: (payload) =>
             apiWrapper({
                 endpoint: "/api/business-agents/roles",
@@ -157,36 +158,32 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width,  isEdit, editData }) => 
                 isEncrypted: true,
                 isDecrypted: true
             }),
-
+        onMutate: () => setStatus({ type: 'loading', message: t("Creating role...") }),
         onSuccess: (res) => {
-            console.log(res)
             queryClient.invalidateQueries({ queryKey: ["roles"] })
-            onClose()
+            setStatus({ type: 'success', message: res?.message || t("Role created successfully") })
         },
-
         onError: (err) => {
-            console.error("Error:", err)
+            setStatus({ type: 'error', message: err?.response?.data?.message || t("Failed to create role") })
         }
     })
 
-    const { mutate: updateRole, isPending: isUpdating, isError: updateError } = useMutation({
+    const { mutate: updateRole, isPending: isUpdating } = useMutation({
         mutationFn: (payload) =>
             apiWrapper({
-                endpoint: `/api/business-agents/roles/${editData._id}`,
+                endpoint: `/api/business-agents/roles/${editData?._id}`,
                 method: "PUT",
                 payload,
                 isEncrypted: true,
                 isDecrypted: true
             }),
-
+        onMutate: () => setStatus({ type: 'loading', message: t("Updating role...") }),
         onSuccess: (res) => {
-            console.log(res)
             queryClient.invalidateQueries({ queryKey: ["roles"] })
-            onClose()
+            setStatus({ type: 'success', message: res?.message || t("Role updated successfully") })
         },
-
         onError: (err) => {
-            console.error("Error:", err)
+            setStatus({ type: 'error', message: err?.response?.data?.message || t("Failed to update role") })
         }
     })
     
@@ -196,7 +193,6 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width,  isEdit, editData }) => 
 
     const onSubmit = (e) => {
         e.preventDefault()
-        console.log(e)
         const payload = {
             title: form.title,
             description: form.description,
@@ -211,64 +207,98 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width,  isEdit, editData }) => 
         }
     }
 
-
+    const renderStatusContent = () => {
+        if (status.type === 'loading') {
+            return (
+                <div className="text-center p-5">
+                    <Spinner color="primary" style={{ width: '3rem', height: '3rem' }} />
+                    <h5 className="mt-3">{status.message}</h5>
+                </div>
+            );
+        }
+        if (status.type === 'success') {
+            return (
+                <div className="text-center p-5">
+                    <CheckCircle size={60} color="#27ae60" />
+                    <h5 className="mt-3 text-success">{t("Success!")}</h5>
+                    <p className="text-muted">{status.message}</p>
+                    <Button color="success" className="mt-3 px-5" onClick={onClose}>
+                        {t("Done")}
+                    </Button>
+                </div>
+            );
+        }
+        if (status.type === 'error') {
+            return (
+                <div className="text-center p-5">
+                    <XCircle size={60} color="#e74c3c" />
+                    <h5 className="mt-3 text-danger">{t("Error!")}</h5>
+                    <p className="text-muted">{status.message}</p>
+                    <Button color="danger" className="mt-3 px-5" onClick={() => setStatus({ type: null, message: "" })}>
+                        {t("Try Again")}
+                    </Button>
+                </div>
+            );
+        }
+        return null;
+    };
 
     return (
         <Modal isOpen={isOpen} toggle={onClose} style={{ maxWidth: width > 800 ? "700px" : "95%" }} centered>
-
-            <ModalHeader toggle={onClose}>
-                {isEdit ? (isRole ? t("Edit Role") : t("Edit Agent")) : (t("Add New") + " " + (isRole ? t("Role") : t("Agent")))}
+            <ModalHeader toggle={onClose} className="border-0 pb-0">
+                {!status.type && (isEdit ? t("Edit Role") : t("Add New Role"))}
             </ModalHeader>
 
             <ModalBody>
+                {status.type ? renderStatusContent() : (
+                    <form onSubmit={onSubmit}>
+                        <div className={styles.formGroup}>
+                            <label>{t("Title")}</label>
+                            <input
+                                name="title"
+                                value={form.title}
+                                onChange={handleChange}
+                                placeholder={t("Enter Title")}
+                                required
+                            />
+                        </div>
 
-                <form onSubmit={onSubmit}>
+                        <div className={styles.formGroup}>
+                            <label>{t("Description")}</label>
+                            <input
+                                name="description"
+                                value={form.description}
+                                onChange={handleChange}
+                                placeholder={t("Enter Description")}
+                                required
+                            />
+                        </div>
 
-                    <div className={styles.formGroup}>
-                        <label>Title</label>
-                        <input
-                            name="title"
-                            value={form.title}
-                            onChange={handleChange}
-                            placeholder="Enter Title"
-                        />
-                    </div>
+                        <div className={styles.formGroup}>
+                            <PermissionTree
+                                processedPermissions={processedPermissions}
+                                permSearch={permSearch}
+                                setPermSearch={setPermSearch}
+                                isSelected={isSelected}
+                                isIndeterminate={isIndeterminate}
+                                togglePermission={togglePermission}
+                                isSuperAdmin={false}
+                            />
+                        </div>
 
-                    <div className={styles.formGroup}>
-                        <label>Description</label>
-                        <input
-                            name="description"
-                            value={form.description}
-                            onChange={handleChange}
-                            placeholder="Enter Description"
-                        />
-                    </div>
-
-                    <div className={styles.formGroup}>
-                        <PermissionTree
-                            processedPermissions={processedPermissions}
-                            permSearch={permSearch}
-                            setPermSearch={setPermSearch}
-                            isSelected={isSelected}
-                            isIndeterminate={isIndeterminate}
-                            togglePermission={togglePermission}
-                            isSuperAdmin={false}
-                        />
-                    </div>
-
-                    <button type="submit" className={styles.submitBtn}>
-                        {isEdit ? (isUpdating ? "Updating..." : "Update Role") : (isPending ? "Creating..." : "Add Role")}
-                    </button>
-                    <p style={{
-                        color: "red"
-                    }}>{roleError?.message || updateError?.message || ""}</p>
-                </form>
-
+                        <div className="d-flex justify-content-end gap-2 mt-4">
+                            <Button color="light" onClick={onClose} type="button">
+                                {t("Cancel")}
+                            </Button>
+                            <Button color="primary" type="submit" disabled={isCreating || isUpdating} className="px-4">
+                                {isEdit ? t("Update Role") : t("Add Role")}
+                            </Button>
+                        </div>
+                    </form>
+                )}
             </ModalBody>
         </Modal>
     )
 }
 
-
-
-export default RoleModal
+export default RoleModal;

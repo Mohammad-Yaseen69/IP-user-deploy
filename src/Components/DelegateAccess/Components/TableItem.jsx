@@ -23,7 +23,7 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
         if (!text) return "—";
         return text.length > max ? `${text.slice(0, max)}...` : text;
     };
-    const { mutate: deleteRole, isPending: isDeleting } = useMutation({
+    const { mutate: deleteRole, isPending: isDeleting, isSuccess: deleteRoleSuccess, isError: deleteRoleError } = useMutation({
         mutationFn: () =>
             apiWrapper({
                 endpoint: `/api/business-agents/roles/${item?._id}`,
@@ -33,14 +33,13 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
             }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["roles"] })
-            setIsDeleteModal(false)
             setMenuOpenFor(null)
         },
         onError: (err) => {
             console.error("Delete Error:", err)
         }
     })
-    const { mutate: deleteAgents, isPending: isDeletingAgents } = useMutation({
+    const { mutate: deleteAgents, isPending: isDeletingAgents, isSuccess: deleteAgentsSuccess, isError: deleteAgentsError } = useMutation({
         mutationFn: () =>
             apiWrapper({
                 endpoint: `/api/business-agents/agents/${item?._id}`,
@@ -50,11 +49,26 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
             }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["agents"] })
-            setIsDeleteModal(false)
             setMenuOpenFor(null)
         },
         onError: (err) => {
             console.error("Delete Error:", err)
+        }
+    })
+    const { mutate: updateStatus, isPending: isUpdatingStatus } = useMutation({
+        mutationFn: (newStatus) =>
+            apiWrapper({
+                endpoint: `/api/business-agents/agents/${item?._id}/status`,
+                method: "PUT",
+                payload: { status: newStatus },
+                isEncrypted: false,
+                isDecrypted: true
+            }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["agents"] })
+        },
+        onError: (err) => {
+            console.error("Status Update Error:", err)
         }
     })
 
@@ -123,17 +137,36 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
 
                     {width > 700 && (
                         <div style={{ flex: 0.17 }} className={styles.td}>
-                            <span style={{
-                                background: item?.status === "active" ? "#e6f9ed" : "#ffeaea",
-                                color: item?.status === "active" ? "#1a8a3c" : "#c0392b",
-                                padding: "2px 10px",
-                                borderRadius: "12px",
-                                fontSize: "12px",
-                                fontWeight: 600,
-                                textTransform: "capitalize"
-                            }}>
-                                {item?.status || "—"}
-                            </span>
+                            {isUpdatingStatus ? (
+                                <span style={{ fontSize: "12px" }}>{t("Updating...")}</span>
+                            ) : (
+                                <select
+                                    value={item?.status || ""}
+                                    onChange={(e) => updateStatus(e.target.value)}
+                                    style={{
+                                        background: item?.status === "active" ? "#e6f9ed" :
+                                                   item?.status === "inactive" ? "#ffeaea" :
+                                                   item?.status === "suspended" ? "#fff3e0" : "#f0f0f0",
+                                        color: item?.status === "active" ? "#1a8a3c" :
+                                               item?.status === "inactive" ? "#c0392b" :
+                                               item?.status === "suspended" ? "#e67e22" : "#444",
+                                        padding: "2px 8px",
+                                        borderRadius: "12px",
+                                        fontSize: "12px",
+                                        fontWeight: 600,
+                                        border: "none",
+                                        outline: "none",
+                                        cursor: "pointer",
+                                        textTransform: "capitalize",
+                                        width: "100%"
+                                    }}
+                                >
+                                    <option value="pending">{t("Pending")}</option>
+                                    <option value="active">{t("Active")}</option>
+                                    <option value="inactive">{t("Inactive")}</option>
+                                    <option value="suspended">{t("Suspended")}</option>
+                                </select>
+                            )}
                         </div>
                     )}
                 </>
@@ -184,7 +217,10 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
                         isOpen={isDeleteModal}
                         toggle={() => setIsDeleteModal(false)}
                         onConfirm={() => isRole ? deleteRole() : deleteAgents()}
-                        itemName={item?.title || item?.name}
+                        itemName={item?.title || item?.name || item?.first_name}
+                        isLoading={isDeleting || isDeletingAgents}
+                        isSuccess={isRole ? deleteRoleSuccess : deleteAgentsSuccess}
+                        isError={isRole ? deleteRoleError : deleteAgentsError}
                     />
                 )}
                 {isViewModal && (

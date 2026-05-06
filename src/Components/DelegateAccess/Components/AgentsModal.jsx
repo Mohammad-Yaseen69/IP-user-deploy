@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState } from 'react'
-import { Modal, ModalBody, ModalHeader } from 'reactstrap'
+import { Modal, ModalBody, ModalHeader, Spinner, Button } from 'reactstrap'
+import { CheckCircle, XCircle, X } from "react-feather"
 import useCountryLocation from '../../../hooks/GeneralUse/useCountryLocation'
 import permissionsData from "../../../utils/Data/permissionsData.json"
 import { apiWrapper } from '../../../utils/Functions/apiWrapper'
@@ -17,15 +18,17 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
     const [phoneError, setPhoneError] = useState("")
     const [countryVal, setCountryVal] = useState("")
     const [deniedPermissions, setDeniedPermissions] = useState(isEdit && editData ? editData.deniedPermissions || [] : [])
+    const [status, setStatus] = useState({ type: null, message: "" }) // null, 'loading', 'success', 'error'
+    
     const isWildcardParent = (pk) => pk && selectedPermissions.includes(`${pk}.*`);
     const queryClient = useQueryClient()
+    
     const [form, setForm] = useState({
         first_name: isEdit && editData ? editData?.first_name || "" : "",
         last_name: isEdit && editData ? editData?.last_name || "" : "",
         email: isEdit && editData ? editData?.email || "" : "",
         role: isEdit && editData ? editData?.role?._id || "" : "",
         phone: isEdit && editData ? editData?.phone || "" : "",
-
     })
 
     useEffect(() => {
@@ -33,6 +36,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
             setCountryVal(editData?.country || "")
         }
     }, [isEdit, editData])
+
     const isSelected = (key, type = "action") => {
         if (type === "module") return selectedPermissions.includes(`${key}.*`);
         if (type === "feature") {
@@ -60,10 +64,6 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
         return selectedPermissions.includes(key);
     };
 
-    useEffect(() => {
-        // if (!isOpen) reset()
-    }, [isOpen])
-
     const groupPermissions = (data) => {
         const hierarchy = {};
         data.forEach(item => {
@@ -81,6 +81,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
             features: Object.values(m.features)
         }));
     };
+
     const isIndeterminate = (key, type = "module") => {
         if (type === "module" || type === "feature") {
             if (selectedPermissions.includes(`${key}.*`)) return false;
@@ -161,8 +162,10 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
         setSelectedPermissions(newPerms);
         setDeniedPermissions(newDenied);
     };
+
     const processedPermissions = groupPermissions(permissionsData);
-    const { mutate: createAgent, isPending } = useMutation({
+
+    const { mutate: createAgent, isPending: isCreating } = useMutation({
         mutationFn: (payload) =>
             apiWrapper({
                 endpoint: "/api/business-agents/agents",
@@ -171,9 +174,13 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                 isEncrypted: true,
                 isDecrypted: true
             }),
-        onSuccess: () => {
+        onMutate: () => setStatus({ type: 'loading', message: t("Creating agent...") }),
+        onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ["agents"] })
-            onClose()
+            setStatus({ type: 'success', message: res?.message || t("Agent created successfully") })
+        },
+        onError: (err) => {
+            setStatus({ type: 'error', message: err?.response?.data?.message || t("Failed to create agent") })
         }
     })
 
@@ -186,9 +193,13 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                 isEncrypted: true,
                 isDecrypted: true
             }),
-        onSuccess: () => {
+        onMutate: () => setStatus({ type: 'loading', message: t("Updating agent...") }),
+        onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ["agents"] })
-            onClose()
+            setStatus({ type: 'success', message: res?.message || t("Agent updated successfully") })
+        },
+        onError: (err) => {
+            setStatus({ type: 'error', message: err?.response?.data?.message || t("Failed to update agent") })
         }
     })
 
@@ -222,101 +233,141 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
         }
     }
 
+    const renderStatusContent = () => {
+        if (status.type === 'loading') {
+            return (
+                <div className="text-center p-5">
+                    <Spinner color="primary" style={{ width: '3rem', height: '3rem' }} />
+                    <h5 className="mt-3">{status.message}</h5>
+                </div>
+            );
+        }
+        if (status.type === 'success') {
+            return (
+                <div className="text-center p-5">
+                    <CheckCircle size={60} color="#27ae60" />
+                    <h5 className="mt-3 text-success">{t("Success!")}</h5>
+                    <p className="text-muted">{status.message}</p>
+                    <Button color="success" className="mt-3 px-5" onClick={onClose}>
+                        {t("Done")}
+                    </Button>
+                </div>
+            );
+        }
+        if (status.type === 'error') {
+            return (
+                <div className="text-center p-5">
+                    <XCircle size={60} color="#e74c3c" />
+                    <h5 className="mt-3 text-danger">{t("Error!")}</h5>
+                    <p className="text-muted">{status.message}</p>
+                    <Button color="danger" className="mt-3 px-5" onClick={() => setStatus({ type: null, message: "" })}>
+                        {t("Try Again")}
+                    </Button>
+                </div>
+            );
+        }
+        return null;
+    };
+
     return (
         <Modal isOpen={isOpen} toggle={onClose} style={{ maxWidth: width > 800 ? "700px" : "95%" }} centered>
-            <ModalHeader toggle={onClose}>
-                {isEdit ? t("Edit Agent") : t("Add Agent")}
+            <ModalHeader toggle={onClose} className="border-0 pb-0">
+                {!status.type && (isEdit ? t("Edit Agent") : t("Add Agent"))}
             </ModalHeader>
 
             <ModalBody>
-                <form onSubmit={onSubmit}>
+                {status.type ? renderStatusContent() : (
+                    <form onSubmit={onSubmit}>
+                        <div className={styles.formGroup}>
+                            <label>{t("First Name")}</label>
+                            <input
+                                name="first_name"
+                                value={form.first_name}
+                                onChange={handleChange}
+                                placeholder={t("First Name")}
+                                required
+                            />
+                        </div>
 
-                    <div className={styles.formGroup}>
-                        <label>{t("First Name")}</label>
-                        <input
-                            name="first_name"
-                            value={form.first_name}
-                            onChange={handleChange}
-                            placeholder={t("First Name")}
-                            required
-                        />
-                    </div>
+                        <div className={styles.formGroup}>
+                            <label>{t("Last Name")}</label>
+                            <input
+                                name="last_name"
+                                value={form.last_name}
+                                onChange={handleChange}
+                                placeholder={t("Last Name")}
+                                required
+                            />
+                        </div>
 
-                    <div className={styles.formGroup}>
-                        <label>{t("Last Name")}</label>
-                        <input
-                            name="last_name"
-                            value={form.last_name}
-                            onChange={handleChange}
-                            placeholder={t("Last Name")}
-                            required
-                        />
-                    </div>
+                        <div className={styles.formGroup}>
+                            <label>{t("Phone Number")}</label>
+                            <PhoneInput
+                                country={isEdit && editData?.country ? editData.country : country}
+                                phone={phone}
+                                setPhone={setPhone}
+                                error={phoneError}
+                                setError={setPhoneError}
+                                disabled={isEdit}
+                            />
+                        </div>
 
-                    <div className={styles.formGroup}>
-                        <label>{t("Phone Number")}</label>
-                        <PhoneInput
-                            country={isEdit && editData?.country ? editData.country : country}
-                            phone={phone}
-                            setPhone={setPhone}
-                            error={phoneError}
-                            setError={setPhoneError}
-                            disabled={isEdit}
-                        />
-                    </div>
+                        <div className={styles.formGroup}>
+                            <label>{t("Email")}</label>
+                            <input
+                                name="email"
+                                type="email"
+                                value={form.email}
+                                onChange={handleChange}
+                                placeholder="Enter Email"
+                                required
+                                disabled={isEdit}
+                            />
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label>{t("Country (optional)")}</label>
+                            <CountryDropDown
+                                country={countryVal}
+                                onSelect={(val) => setCountryVal(val?.alpha3)}
+                            />
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label>{t("Role")}</label>
+                            <select name="role" value={form.role} onChange={handleChange}>
+                                <option value="">{t("Select Role")}</option>
+                                {roles?.map((item) => (
+                                    <option key={item?._id} value={item?._id}>
+                                        {item?.title}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                    <div className={styles.formGroup}>
-                        <label>{t("Email")}</label>
-                        <input
-                            name="email"
-                            type="email"
-                            value={form.email}
-                            onChange={handleChange}
-                            placeholder="Enter Email"
-                            required
-                            disabled={isEdit}
-                        />
-                    </div>
-                    <div className={styles.formGroup}>
-                        <label>{t("Country (optional)")}</label>
-                        <CountryDropDown
-                            country={countryVal}
-                            onSelect={(val) => setCountryVal(val?.alpha3)}
-                        />
-                    </div>
-                    <div className={styles.formGroup}>
-                        <label>{t("Role")}</label>
-                        <select name="role" value={form.role} onChange={handleChange}>
-                            <option value="">{t("Select Role")}</option>
-                            {roles?.map((item) => (
-                                <option key={item?._id} value={item?._id}>
-                                    {item?.title}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                        <div className={styles.formGroup}>
+                            <PermissionTree
+                                processedPermissions={processedPermissions}
+                                permSearch={permSearch}
+                                setPermSearch={setPermSearch}
+                                isSelected={isSelected}
+                                isIndeterminate={isIndeterminate}
+                                togglePermission={togglePermission}
+                                isSuperAdmin={false}
+                            />
+                        </div>
 
-                    <div className={styles.formGroup}>
-                        <PermissionTree
-                            processedPermissions={processedPermissions}
-                            permSearch={permSearch}
-                            setPermSearch={setPermSearch}
-                            isSelected={isSelected}
-                            isIndeterminate={isIndeterminate}
-                            togglePermission={togglePermission}
-                            isSuperAdmin={false}
-                        />
-                    </div>
-
-                    <button type="submit" className={styles.submitBtn}>
-                        {isEdit ? (isUpdating ? "Updating..." : "Update Agent") : (isPending ? "Creating..." : "Add Agent")}
-                    </button>
-
-                </form>
+                        <div className="d-flex justify-content-end gap-2 mt-4">
+                            <Button color="light" onClick={onClose} type="button">
+                                {t("Cancel")}
+                            </Button>
+                            <Button color="primary" type="submit" disabled={isCreating || isUpdating} className="px-4">
+                                {isEdit ? t("Update Agent") : t("Add Agent")}
+                            </Button>
+                        </div>
+                    </form>
+                )}
             </ModalBody>
         </Modal>
     )
 }
 
-
-export default AgentsModal
+export default AgentsModal;

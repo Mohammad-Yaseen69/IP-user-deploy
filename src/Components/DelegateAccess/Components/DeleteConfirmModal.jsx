@@ -1,138 +1,160 @@
 import React from "react";
-import { Modal, ModalBody, Button } from "reactstrap";
+import { Modal, ModalBody, Button, Spinner } from "reactstrap";
 import { useTranslation } from "react-i18next";
-import { AlertTriangle } from "react-feather";
+import { AlertTriangle, CheckCircle, XCircle, X } from "react-feather";
 
-const DeleteConfirmModal = ({ isOpen, toggle, onConfirm, itemName }) => {
+const DeleteConfirmModal = ({ isOpen, toggle, onConfirm, itemName, isLoading, isSuccess, isError }) => {
   const { t } = useTranslation();
 
-  const handleConfirm = () => {
-    onConfirm?.();
-    toggle();
-  };
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <div className="status-wrap">
+          <Spinner color="primary" className="spinner" />
+          <h5 className="mt-3">{t("Deleting...")}</h5>
+          <p className="text-muted">{t("Please wait while we process your request.")}</p>
+        </div>
+      );
+    }
 
-  return (
-    <Modal isOpen={isOpen} toggle={toggle} centered size="sm" className="delete-confirm-modal">
-      <ModalBody className="delete-modal-body">
-        <div className="delete-icon-wrap">
-          <AlertTriangle size={32} color="#e94560" />
+    if (isSuccess) {
+      return (
+        <div className="status-wrap">
+          <div className="icon-circle icon-circle-success">
+            <CheckCircle size={40} color="#27ae60" />
+          </div>
+          <h5 className="mt-3 text-success">{t("Success!")}</h5>
+          <p className="text-muted">
+            {itemName} {t("has been deleted successfully.")}
+          </p>
+          <Button color="success" className="mt-3 px-4" onClick={toggle}>
+            {t("Done")}
+          </Button>
+        </div>
+      );
+    }
+
+    if (isError) {
+      return (
+        <div className="status-wrap">
+          <div className="icon-circle icon-circle-error">
+            <XCircle size={40} color="#e74c3c" />
+          </div>
+          <h5 className="mt-3 text-danger">{t("Error!")}</h5>
+          <p className="text-muted">{t("Something went wrong. Please try again.")}</p>
+          <Button color="danger" className="mt-3 px-4" onClick={toggle}>
+            {t("Close")}
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <>
+        <div className="icon-circle icon-circle-warning">
+          <AlertTriangle size={40} color="#f39c12" />
         </div>
 
-        <h5 className="delete-title">{t("Delete Delegate")}</h5>
-
+        <h5 className="delete-title">{t("Are you sure?")}</h5>
         <p className="delete-message">
-          {t("Are you sure you want to delete")}{" "}
-          <strong>{itemName || t("this delegate")}</strong>?{" "}
+          {t("You are about to delete")} <strong>{itemName}</strong>.
+          <br />
           {t("This action cannot be undone.")}
         </p>
 
         <div className="delete-actions">
-          <Button
-            className="btn-cancel"
-            onClick={toggle}
-          >
+          <Button color="light" className="px-4 py-2 fw-bold" onClick={toggle} disabled={isLoading}>
             {t("Cancel")}
           </Button>
-          <Button
-            className="btn-delete"
-            onClick={handleConfirm}
-          >
-            {t("Yes, Delete")}
+          <Button color="danger" className="px-4 py-2 fw-bold ms-2" onClick={onConfirm} disabled={isLoading}>
+            {t("Delete")}
           </Button>
         </div>
+      </>
+    );
+  };
+
+  return (
+    <Modal isOpen={isOpen} toggle={toggle} centered size="sm" className="delete-confirm-modal">
+      <button className="close-btn" onClick={toggle}>
+        <X size={18} />
+      </button>
+      <ModalBody className="text-center p-4">
+        {renderContent()}
       </ModalBody>
 
       <style>{`
         .delete-confirm-modal .modal-content {
-          border-radius: 16px;
+          border-radius: 20px;
           border: none;
-          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
           overflow: hidden;
-          font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
-        .delete-modal-body {
-          padding: 36px 28px 28px;
-          text-align: center;
-          background: #fff;
+        .status-wrap {
+          padding: 20px 10px;
         }
 
-        .delete-icon-wrap {
-          width: 68px;
-          height: 68px;
-          background: #fff1f3;
+        .icon-circle {
+          width: 80px;
+          height: 80px;
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          margin: 0 auto 18px;
-          border: 3px solid #ffd0d8;
+          margin: 0 auto 20px;
         }
 
+        .icon-circle-warning { background: #fff9db; }
+        .icon-circle-success { background: #e6fffa; }
+        .icon-circle-error { background: #fff5f5; }
+
         .delete-title {
-          font-size: 18px;
+          font-size: 1.25rem;
           font-weight: 700;
-          color: #1a1a2e;
-          margin-bottom: 10px;
-          letter-spacing: 0.1px;
+          color: #1a202c;
+          margin-bottom: 0.5rem;
         }
 
         .delete-message {
-          font-size: 14px;
-          color: #6b7280;
-          line-height: 1.6;
-          margin-bottom: 28px;
+          color: #4a5568;
+          font-size: 0.95rem;
+          margin-bottom: 2rem;
         }
 
-        .delete-message strong {
-          color: #1a1a2e;
-          font-weight: 600;
+        .close-btn {
+          position: absolute;
+          right: 16px;
+          top: 16px;
+          background: #f7fafc;
+          border: none;
+          border-radius: 50%;
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #718096;
+          transition: all 0.2s;
+          z-index: 10;
+        }
+
+        .close-btn:hover {
+          background: #edf2f7;
+          color: #2d3748;
+          transform: rotate(90deg);
+        }
+
+        .spinner {
+          width: 3rem;
+          height: 3rem;
+          border-width: 0.25em;
         }
 
         .delete-actions {
           display: flex;
-          gap: 10px;
+          gap: 12px;
           justify-content: center;
-        }
-
-        .btn-cancel {
-          flex: 1;
-          padding: 10px 0;
-          border-radius: 9px;
-          font-size: 14px;
-          font-weight: 600;
-          background: #f3f4f6;
-          color: #374151;
-          border: none;
-          transition: background 0.2s;
-        }
-
-        .btn-cancel:hover {
-          background: #e5e7eb;
-          color: #1a1a2e;
-        }
-
-        .btn-delete {
-          flex: 1;
-          padding: 10px 0;
-          border-radius: 9px;
-          font-size: 14px;
-          font-weight: 600;
-          background: linear-gradient(135deg, #e94560, #c0392b);
-          color: #fff;
-          border: none;
-          box-shadow: 0 4px 14px rgba(233, 69, 96, 0.35);
-          transition: all 0.2s;
-        }
-
-        .btn-delete:hover {
-          background: linear-gradient(135deg, #c0392b, #a93226);
-          box-shadow: 0 6px 18px rgba(233, 69, 96, 0.45);
-          transform: translateY(-1px);
-        }
-
-        .btn-delete:active {
-          transform: translateY(0);
         }
       `}</style>
     </Modal>
