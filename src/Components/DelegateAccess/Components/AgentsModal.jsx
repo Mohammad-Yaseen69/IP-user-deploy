@@ -1,14 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { useEffect, useState } from 'react'
-import { Modal, ModalBody, ModalHeader, Spinner, Button } from 'reactstrap'
-import { CheckCircle, XCircle, X } from "react-feather"
+import { useState } from 'react'
+import { CheckCircle, XCircle } from "react-feather"
+import { Button, Modal, ModalBody, ModalHeader, Spinner } from 'reactstrap'
 import useCountryLocation from '../../../hooks/GeneralUse/useCountryLocation'
 import permissionsData from "../../../utils/Data/permissionsData.json"
 import { apiWrapper } from '../../../utils/Functions/apiWrapper'
 import PhoneInput from '../../PhoneInput'
 import styles from "../styles/DelegateModal.module.css"
 import PermissionTree from './PermissionTree'
-import CountryDropDown from "../../AddBeneficiary/CountryDropDown"
+import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 
 const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editData }) => {
     const { country } = useCountryLocation()
@@ -16,28 +16,38 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
     const [selectedPermissions, setSelectedPermissions] = useState(isEdit && editData ? editData.permissions || [] : [])
     const [phone, setPhone] = useState(isEdit && editData ? editData.phone || "" : "")
     const [phoneError, setPhoneError] = useState("")
-    const [countryVal, setCountryVal] = useState("")
     const [deniedPermissions, setDeniedPermissions] = useState(isEdit && editData ? editData.deniedPermissions || [] : [])
     const [status, setStatus] = useState({ type: null, message: "" }) // null, 'loading', 'success', 'error'
-    
     const isWildcardParent = (pk) => pk && selectedPermissions.includes(`${pk}.*`);
     const queryClient = useQueryClient()
-    
+
     const [form, setForm] = useState({
         first_name: isEdit && editData ? editData?.first_name || "" : "",
         last_name: isEdit && editData ? editData?.last_name || "" : "",
         email: isEdit && editData ? editData?.email || "" : "",
         role: isEdit && editData ? editData?.role?._id || "" : "",
-        phone: isEdit && editData ? editData?.phone || "" : "",
     })
+    const isSuperAdmin = selectedPermissions.includes("*")
+    const handleChange = (e) => {
+        const { name, value } = e.target
+        setForm(prev => ({ ...prev, [name]: value }))
 
-    useEffect(() => {
-        if (isEdit && editData) {
-            setCountryVal(editData?.country || "")
+        if (name === "role" && value) {
+            const selectedRole = roles?.find(r => r._id === value)
+            if (selectedRole) {
+                setSelectedPermissions(selectedRole.permissions || [])
+                setDeniedPermissions(selectedRole.deniedPermissions || [])
+            }
         }
-    }, [isEdit, editData])
+        if (name === "role" && !value) {
+            setSelectedPermissions([])
+            setDeniedPermissions([])
+        }
+    }
 
     const isSelected = (key, type = "action") => {
+        if (isSuperAdmin) return true
+
         if (type === "module") return selectedPermissions.includes(`${key}.*`);
         if (type === "feature") {
             if (key === "general") return false;
@@ -83,6 +93,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
     };
 
     const isIndeterminate = (key, type = "module") => {
+        if (isSuperAdmin) return false
         if (type === "module" || type === "feature") {
             if (selectedPermissions.includes(`${key}.*`)) return false;
             return selectedPermissions.some(p => p.startsWith(`${key}.`)) || deniedPermissions.some(p => p.startsWith(`${key}.`));
@@ -91,6 +102,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
     };
 
     const togglePermission = (key, parentKey = null, type = "action") => {
+        if (isSuperAdmin) return
         let newPerms = [...selectedPermissions];
         let newDenied = [...deniedPermissions];
 
@@ -180,7 +192,18 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
             setStatus({ type: 'success', message: res?.message || t("Agent created successfully") })
         },
         onError: (err) => {
-            setStatus({ type: 'error', message: err?.response?.data?.message || t("Failed to create agent") })
+            let errorMsg = t("Failed to create agent");
+            if (err?.response?.data?.data) {
+                try {
+                    const decrypted = decryptData(err.response.data.data);
+                    errorMsg = decrypted?.message || errorMsg;
+                } catch (e) {
+                    console.error("Decryption failed", e);
+                }
+            } else {
+                errorMsg = err?.response?.data?.message || err?.response?.data?.error || err?.message || errorMsg;
+            }
+            setStatus({ type: 'error', message: errorMsg })
         }
     })
 
@@ -199,23 +222,38 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
             setStatus({ type: 'success', message: res?.message || t("Agent updated successfully") })
         },
         onError: (err) => {
-            setStatus({ type: 'error', message: err?.response?.data?.message || t("Failed to update agent") })
+            let errorMsg = t("Failed to update agent");
+            if (err?.response?.data?.data) {
+                try {
+                    const decrypted = decryptData(err.response.data.data);
+                    errorMsg = decrypted?.message || errorMsg;
+                } catch (e) {
+                    console.error("Decryption failed", e);
+                }
+            } else {
+                errorMsg = err?.response?.data?.message || err?.response?.data?.error || err?.message || errorMsg;
+            }
+            setStatus({ type: 'error', message: errorMsg })
         }
     })
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e?.target?.name]: e?.target?.value })
-    }
+
 
     const onSubmit = (e) => {
         e?.preventDefault()
 
-        if (!phone) {
+        if (!isEdit && !phone) {
             setPhoneError("Phone is required")
             return
         }
 
-        const payload = {
+        const payload = isEdit ? {
+            first_name: form.first_name,
+            last_name: form.last_name,
+            role: form.role,
+            permissions: selectedPermissions,
+            deniedPermissions,
+        } : {
             phone,
             email: form.email,
             first_name: form.first_name,
@@ -223,7 +261,6 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
             role: form.role,
             permissions: selectedPermissions,
             deniedPermissions,
-            country: countryVal || undefined
         }
 
         if (isEdit) {
@@ -320,17 +357,11 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                                 value={form.email}
                                 onChange={handleChange}
                                 placeholder="Enter Email"
-                                required
+                                required={!isEdit}
                                 disabled={isEdit}
                             />
                         </div>
-                        <div className={styles.formGroup}>
-                            <label>{t("Country (optional)")}</label>
-                            <CountryDropDown
-                                country={countryVal}
-                                onSelect={(val) => setCountryVal(val?.alpha3)}
-                            />
-                        </div>
+
                         <div className={styles.formGroup}>
                             <label>{t("Role")}</label>
                             <select name="role" value={form.role} onChange={handleChange}>
@@ -351,7 +382,7 @@ const AgentsModal = ({ isRole, isOpen, onClose, t, width, roles, isEdit, editDat
                                 isSelected={isSelected}
                                 isIndeterminate={isIndeterminate}
                                 togglePermission={togglePermission}
-                                isSuperAdmin={false}
+                                isSuperAdmin={isSuperAdmin}
                             />
                         </div>
 

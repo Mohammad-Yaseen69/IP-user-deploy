@@ -94,7 +94,7 @@ const DelegateAccess = () => {
                                     height: "40px"
                                 } : {}}
                             >
-                                {width > 500 && t("Manage Role")}
+                                {width > 500 && t("Manage Agents")}
                             </button>
                             <button
                                 onClick={handleModalOpen}
@@ -122,7 +122,7 @@ const DelegateAccess = () => {
                                     height: "40px"
                                 } : {}}
                             >
-                                {width > 500 && t("Manage Agent")}
+                                {width > 500 && t("Manage Roles")}
                             </button>
                             <button
                                 onClick={handleModalOpen}

@@ -6,6 +6,7 @@ import styles from "../styles/table.module.css";
 import DeleteConfirmModal from './DeleteConfirmModal';
 import { useState } from 'react';
 import ViewDetailModal from './ViewDetailModal';
+import { toast } from 'react-toastify';
 
 function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, setEditData, setShowModal }) {
     const { t } = useTranslation()
@@ -71,8 +72,24 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
             console.error("Status Update Error:", err)
         }
     })
+    const { mutate: resendEmail, isPending: isResending } = useMutation({
+        mutationFn: () =>
+            apiWrapper({
+                endpoint: `/api/business-agents/agents/${item?._id}/resend-password-email`,
+                method: "POST",
+                isEncrypted: false,
+                isDecrypted: true
+            }),
+        onSuccess: (res) => {
+            toast.success(res?.message || t("Email resent successfully"))
+            setMenuOpenFor(null)
+        },
+        onError: (err) => {
+            console.error("Resend Error:", err)
+            toast.error(err?.response?.data?.message || t("Failed to resend email"))
+        }
+    })
 
-    console.log(item, "itemdata")
     return (
         <div
             className={`${styles.tr} ${styles.dataRow}`}
@@ -219,6 +236,11 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
                         }}>
                             {t("Edit")}
                         </div>
+                        {!isRole && item?.status === "pending" && (
+                            <div className={styles.menuItem} onClick={() => resendEmail()}>
+                                {isResending ? t("Resending...") : t("Resend Email")}
+                            </div>
+                        )}
                         <div className={`${styles.menuItem} ${styles.danger}`} onClick={() => {
                             setIsDeleteModal(true)
                             setMenuOpenFor(null)
