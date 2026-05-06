@@ -67,3 +67,8 @@
     color: red;
     margin-top: 4px;
 }
+
+input:disabled {
+    background: #f3f3f3;
+    cursor: not-allowed;
+}

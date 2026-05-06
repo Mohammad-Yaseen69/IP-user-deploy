@@ -1,27 +1,23 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { Modal, ModalBody, ModalHeader } from 'reactstrap'
 import useCountryLocation from '../../../hooks/GeneralUse/useCountryLocation'
 import permissionsData from "../../../utils/Data/permissionsData.json"
 import { apiWrapper } from '../../../utils/Functions/apiWrapper'
-import PhoneInput from '../../PhoneInput'
 import styles from "../styles/DelegateModal.module.css"
 import PermissionTree from './PermissionTree'
 
-const DelegateModal = ({ isRole, isOpen, onClose, t, width, agents, isEdit }) => {
-
-    const { country } = useCountryLocation()
+const RoleModal = ({ isRole, isOpen, onClose, t, width,  isEdit, editData }) => {
     const [permSearch, setPermSearch] = useState("")
-    const [selectedPermissions, setSelectedPermissions] = useState(isEdit ? agents?.permissions || [] : [])
+    const [selectedPermissions, setSelectedPermissions] = useState(isEdit && editData ? editData.permissions || [] : [])
 
-    const [deniedPermissions, setDeniedPermissions] = useState([])
+    const [deniedPermissions, setDeniedPermissions] = useState(isEdit && editData ? editData.deniedPermissions || [] : [])
     const isWildcardParent = (pk) => pk && selectedPermissions.includes(`${pk}.*`);
     const queryClient = useQueryClient()
     const [form, setForm] = useState({
-        title: "",
-        description: "",
-        phone: ""
+        title: isEdit && editData ? editData.title || "" : "",
+        description: isEdit && editData ? editData.description || "" : "",
+        phone: isEdit && editData ? editData.phone || "" : ""
     })
     const isSelected = (key, type = "action") => {
         if (type === "module") return selectedPermissions.includes(`${key}.*`);
@@ -51,7 +47,7 @@ const DelegateModal = ({ isRole, isOpen, onClose, t, width, agents, isEdit }) =>
     };
 
     useEffect(() => {
-        if (!isOpen) reset()
+        // if (!isOpen) reset()
     }, [isOpen])
 
     const groupPermissions = (data) => {
@@ -152,7 +148,7 @@ const DelegateModal = ({ isRole, isOpen, onClose, t, width, agents, isEdit }) =>
         setDeniedPermissions(newDenied);
     };
     const processedPermissions = groupPermissions(permissionsData);
-    const { mutate: createRole, isPending } = useMutation({
+    const { mutate: createRole, isPending, isError: roleError } = useMutation({
         mutationFn: (payload) =>
             apiWrapper({
                 endpoint: "/api/business-agents/roles",
@@ -172,6 +168,28 @@ const DelegateModal = ({ isRole, isOpen, onClose, t, width, agents, isEdit }) =>
             console.error("Error:", err)
         }
     })
+
+    const { mutate: updateRole, isPending: isUpdating, isError: updateError } = useMutation({
+        mutationFn: (payload) =>
+            apiWrapper({
+                endpoint: `/api/business-agents/roles/${editData._id}`,
+                method: "PUT",
+                payload,
+                isEncrypted: true,
+                isDecrypted: true
+            }),
+
+        onSuccess: (res) => {
+            console.log(res)
+            queryClient.invalidateQueries({ queryKey: ["roles"] })
+            onClose()
+        },
+
+        onError: (err) => {
+            console.error("Error:", err)
+        }
+    })
+    
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
@@ -186,7 +204,11 @@ const DelegateModal = ({ isRole, isOpen, onClose, t, width, agents, isEdit }) =>
             deniedPermissions
         }
 
-        createRole(payload)
+        if (isEdit) {
+            updateRole(payload)
+        } else {
+            createRole(payload)
+        }
     }
 
 
@@ -195,7 +217,7 @@ const DelegateModal = ({ isRole, isOpen, onClose, t, width, agents, isEdit }) =>
         <Modal isOpen={isOpen} toggle={onClose} style={{ maxWidth: width > 800 ? "700px" : "95%" }} centered>
 
             <ModalHeader toggle={onClose}>
-                {t("Add New")} {isRole ? t("Role") : t("Agent")}
+                {isEdit ? (isRole ? t("Edit Role") : t("Edit Agent")) : (t("Add New") + " " + (isRole ? t("Role") : t("Agent")))}
             </ModalHeader>
 
             <ModalBody>
@@ -235,9 +257,11 @@ const DelegateModal = ({ isRole, isOpen, onClose, t, width, agents, isEdit }) =>
                     </div>
 
                     <button type="submit" className={styles.submitBtn}>
-                        {isPending ? "Creating..." : "Add Role"}
+                        {isEdit ? (isUpdating ? "Updating..." : "Update Role") : (isPending ? "Creating..." : "Add Role")}
                     </button>
-
+                    <p style={{
+                        color: "red"
+                    }}>{roleError?.message || updateError?.message || ""}</p>
                 </form>
 
             </ModalBody>
@@ -247,4 +271,4 @@ const DelegateModal = ({ isRole, isOpen, onClose, t, width, agents, isEdit }) =>
 
 
 
-export default DelegateModal
+export default RoleModal

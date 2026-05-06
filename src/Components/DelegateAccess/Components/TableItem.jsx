@@ -5,12 +5,14 @@ import { apiWrapper } from '../../../utils/Functions/apiWrapper';
 import styles from "../styles/table.module.css";
 import DeleteConfirmModal from './DeleteConfirmModal';
 import { useState } from 'react';
+import ViewDetailModal from './ViewDetailModal';
 
-function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole }) {
+function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, setEditData, setShowModal }) {
     const { t } = useTranslation()
     const isPhone = width <= 700;
     const queryClient = useQueryClient()
     const [isDeleteModal, setIsDeleteModal] = useState(false)
+    const [isViewModal, setIsViewModal] = useState(false)
     const ellipsisStyle = {
         overflow: "hidden",
         textOverflow: "ellipsis",
@@ -38,8 +40,25 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole }) 
             console.error("Delete Error:", err)
         }
     })
+    const { mutate: deleteAgents, isPending: isDeletingAgents } = useMutation({
+        mutationFn: () =>
+            apiWrapper({
+                endpoint: `/api/business-agents/agents/${item?._id}`,
+                method: "DELETE",
+                isEncrypted: false,
+                isDecrypted: true
+            }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["agents"] })
+            setIsDeleteModal(false)
+            setMenuOpenFor(null)
+        },
+        onError: (err) => {
+            console.error("Delete Error:", err)
+        }
+    })
 
-    // console.log(item,"itemdata")
+    console.log(item,"itemdata")
     return (
         <div
             className={`${styles.tr} ${styles.dataRow}`}
@@ -54,12 +73,12 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole }) 
                     )}
 
                     <div style={{ flex: isPhone ? 0.40 : 0.30, ...ellipsisStyle }} className={styles.td}>
-                        {item.title || "—"}
+                        {truncate(item?.title, 15) || "—"}
                     </div>
 
                     {width > 700 && (
                         <div style={{ flex: 0.35, ...ellipsisStyle }} className={styles.td}>
-                            {truncate(item.description, 35)}
+                            {truncate(item?.description, 35)}
                         </div>
                     )}
 
@@ -72,7 +91,7 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole }) 
                             fontSize: "12px",
                             fontWeight: 600,
                         }}>
-                            {item.permissions?.length ?? 0} {t("permissions")}
+                            {item?.permissions?.length ?? 0} {t("permissions")}
                         </span>
                     </div>
                 </>
@@ -85,35 +104,35 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole }) 
                     )}
 
                     <div style={{ flex: isPhone ? 0.25 : 0.18, ...ellipsisStyle }} className={styles.td}>
-                        {item.name || "—"}
+                        {item?.first_name + item?.last_name || "—"}
                     </div>
 
-                    <div style={{ flex: isPhone ? 0.40 : 0.24, ...ellipsisStyle }} className={styles.td}>
-                        {item.phone || "—"}
+                    <div style={{ flex: isPhone ? 0.40 : 0.18, ...ellipsisStyle }} className={styles.td}>
+                        {item?.phone || "—"}
                     </div>
 
                     {width > 700 && (
                         <div style={{ flex: 0.26, ...ellipsisStyle }} className={styles.td}>
-                            {item.email || "—"}
+                            {item?.email || "—"}
                         </div>
                     )}
 
                     <div style={{ flex: isPhone ? 0.20 : 0.12 }} className={`${styles.td} ${styles.amount}`}>
-                        {item.role || "—"}
+                        {truncate(item?.role?.title, 15) || "—"}
                     </div>
 
                     {width > 700 && (
                         <div style={{ flex: 0.17 }} className={styles.td}>
                             <span style={{
-                                background: item.status === "active" ? "#e6f9ed" : "#ffeaea",
-                                color: item.status === "active" ? "#1a8a3c" : "#c0392b",
+                                background: item?.status === "active" ? "#e6f9ed" : "#ffeaea",
+                                color: item?.status === "active" ? "#1a8a3c" : "#c0392b",
                                 padding: "2px 10px",
                                 borderRadius: "12px",
                                 fontSize: "12px",
                                 fontWeight: 600,
                                 textTransform: "capitalize"
                             }}>
-                                {item.status || "—"}
+                                {item?.status || "—"}
                             </span>
                         </div>
                     )}
@@ -130,18 +149,25 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole }) 
                     style={{ display: "flex", justifyContent: "center", alignItems: "center", background: "none", border: "none", cursor: "pointer" }}
                     onClick={(e) => {
                         e.stopPropagation();
-                        setMenuOpenFor((prev) => prev === item._id ? null : item._id);
+                        setMenuOpenFor((prev) => prev === item?._id ? null : item?._id);
                     }}
                 >
                     <MoreHorizontal size={18} />
                 </button>
 
-                {menuOpenFor === item._id && (
+                {menuOpenFor === item?._id && (
                     <div className={styles.actionsMenu} onClick={(e) => e.stopPropagation()}>
-                        <div className={styles.menuItem} onClick={() => setMenuOpenFor(null)}>
+                        <div className={styles.menuItem} onClick={() => {
+                            setIsViewModal(true)
+                            setMenuOpenFor(null)
+                        }}>
                             {t("View")}
                         </div>
-                        <div className={styles.menuItem} onClick={() => setMenuOpenFor(null)}>
+                        <div className={styles.menuItem} onClick={() => {
+                            setMenuOpenFor(null);
+                            setEditData(item);
+                            setShowModal(true);
+                        }}>
                             {t("Edit")}
                         </div>
                         <div className={`${styles.menuItem} ${styles.danger}`} onClick={() => {
@@ -157,8 +183,16 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole }) 
                     <DeleteConfirmModal
                         isOpen={isDeleteModal}
                         toggle={() => setIsDeleteModal(false)}
-                        onConfirm={() => deleteRole()}
-                        itemName={item.title || item.name}
+                        onConfirm={() => isRole ? deleteRole() : deleteAgents()}
+                        itemName={item?.title || item?.name}
+                    />
+                )}
+                {isViewModal && (
+                    <ViewDetailModal
+                        isOpen={isViewModal}
+                        toggle={() => setIsViewModal(false)}
+                        item={item}
+                        isRole={isRole}
                     />
                 )}
             </div>

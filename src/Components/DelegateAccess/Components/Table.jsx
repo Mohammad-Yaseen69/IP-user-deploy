@@ -5,12 +5,10 @@ import useWindowWidth from "../../../utils/useWindowWidth";
 import TableItem from "./TableItem";
 import InstaPayLoader from "../../Loader";
 
-const DelegateTable = ({ filteredInvoices, setEditModal, isRole, roleLoading }) => {
+const DelegateTable = ({ filteredInvoices, setEditData, setShowModal, isRole, roleLoading }) => {
   const { t } = useTranslation();
   const width = useWindowWidth();
   const [menuOpenFor, setMenuOpenFor] = useState(null);
-  const [showModal, setShowModal] = useState(false)
-  const [editData, setEditData] = useState(null)
   return (
     <div className={styles.tableWrapper}>
       <div className={styles.table}>
@@ -46,7 +44,7 @@ const DelegateTable = ({ filteredInvoices, setEditModal, isRole, roleLoading }) 
             <div style={{ flex: width <= 700 ? 0.25 : 0.18 }} className={styles.th}>
               {t("Name")}
             </div>
-            <div style={{ flex: width <= 700 ? 0.40 : 0.24 }} className={styles.th}>
+            <div style={{ flex: width <= 700 ? 0.40 : 0.18 }} className={styles.th}>
               {t("Phone")}
             </div>
             {width > 700 && (
@@ -82,6 +80,8 @@ const DelegateTable = ({ filteredInvoices, setEditModal, isRole, roleLoading }) 
               menuOpenFor={menuOpenFor}
               setMenuOpenFor={setMenuOpenFor}
               width={width}
+              setEditData={setEditData}
+              setShowModal={setShowModal}
             />
           ))
         ) : (

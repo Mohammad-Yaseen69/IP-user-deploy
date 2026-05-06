@@ -1,13 +1,14 @@
+import { useQuery } from "@tanstack/react-query"
+import { useEffect, useState } from "react"
+import { Search } from "react-feather"
 import { useTranslation } from "react-i18next"
+import { apiWrapper } from "../../utils/Functions/apiWrapper"
 import useWindowWidth from "../../utils/useWindowWidth"
 import TopRight from "../topRight"
-import styles from "./styles/index.module.css"
-import { Search } from "react-feather"
-import { useState } from "react"
+import RoleModal from "./Components/RoleModal"
 import DelegateTable from "./Components/Table"
-import DelegateModal from "./Components/DelegateModal"
-import { useQuery } from "@tanstack/react-query"
-import { apiWrapper } from "../../utils/Functions/apiWrapper"
+import styles from "./styles/index.module.css"
+import AgentsModal from "./Components/AgentsModal"
 const DelegateAccess = () => {
     const width = useWindowWidth()
     const { t } = useTranslation()
@@ -33,10 +34,32 @@ const DelegateAccess = () => {
                 isEncrypted: false,
                 isDecrypted: true
             }),
-
+        // enabled: isRole,
         keepPreviousData: true
     })
+    const { data: agentsData, isLoading: agentsLoading, isError: agentsError } = useQuery({
+        queryKey: ["agents", page, limit, search],
+
+        queryFn: () =>
+            apiWrapper({
+                endpoint: `/api/business-agents/agents?limit=${limit}&page=${page}&search=${search}`,
+                method: "GET",
+                isEncrypted: false,
+                isDecrypted: true
+            }),
+        enabled: true,
+        keepPreviousData: true
+    })
+    useEffect(() => {
+        const delay = setTimeout(() => {
+            setPage(1)
+        }, 500)
+
+        return () => clearTimeout(delay)
+    }, [search])
     const roles = rolesData?.data?.roles || []
+    const agents = agentsData?.data?.agents || []
+    console.log(agents, "agents data")
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -66,9 +89,7 @@ const DelegateAccess = () => {
                                     width: "40px",
                                     height: "40px"
                                 } : {}}
-                            >                                <span style={{ fontSize: width < 500 ? "24px" : '14px', marginLeft: width < 500 && "5px" }}>
-                                    +
-                                </span>
+                            >
                                 {width > 500 && t("Manage Role")}
                             </button>
                             <button
@@ -96,9 +117,7 @@ const DelegateAccess = () => {
                                     width: "40px",
                                     height: "40px"
                                 } : {}}
-                            >                                <span style={{ fontSize: width < 500 ? "24px" : '14px', marginLeft: width < 500 && "5px" }}>
-                                    +
-                                </span>
+                            >
                                 {width > 500 && t("Manage Agent")}
                             </button>
                             <button
@@ -120,7 +139,6 @@ const DelegateAccess = () => {
                     }
                 </div>
             </div>
-
             <div className={styles.searchCont}>
                 <div className={styles.search}>
                     <Search />
@@ -132,10 +150,44 @@ const DelegateAccess = () => {
                     />
                 </div>
             </div>
-            <DelegateTable filteredInvoices={roles} isRole={isRole} roleLoading={roleLoading} />
-            {
-                showModal && <DelegateModal agents={roles} isEdit={false} isRole={isRole} isOpen={showModal} onClose={() => setShowModal(false)} t={t} width={width} />
-            }
+            <DelegateTable
+                filteredInvoices={isRole ? roles : agents}
+                isRole={isRole}
+                roleLoading={roleLoading || agentsLoading}
+                setEditData={setEditData}
+                setShowModal={setShowModal}
+            />            {showModal && (
+                isRole ? (
+                    <RoleModal
+                        agents={roles}
+                        isEdit={!!editData}
+                        editData={editData}
+                        isRole={isRole}
+                        isOpen={showModal}
+                        onClose={() => {
+                            setShowModal(false)
+                            setEditData(null)
+                        }}
+                        t={t}
+                        width={width}
+                    />
+                ) : (
+                    <AgentsModal
+                        roles={roles}
+                        agents={agents}
+                        isEdit={!!editData}
+                        editData={editData}
+                        isRole={isRole}
+                        isOpen={showModal}
+                        onClose={() => {
+                            setShowModal(false)
+                            setEditData(null)
+                        }}
+                        t={t}
+                        width={width}
+                    />
+                )
+            )}
         </div>
     )
 }
