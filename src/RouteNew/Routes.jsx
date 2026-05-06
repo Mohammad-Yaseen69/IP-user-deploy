@@ -66,7 +66,7 @@ const StoreCreate = lazy(() => import("../Components/StoreCreate"))
 const GuestLogin = lazy(() => import("../Components/guestDashboard/auth"))
 const DelegateAccess = lazy(() => import("../Components/DelegateAccess"))
 const CreateAgentPassword = lazy(() => import("../Components/CreateAgentPassword"))
-const AgentLogin = lazy(() => import("../Components/Auth/AgentLogin"))
+const LogActivity = lazy(() => import("../Components/LogActivity"))
 
 
 export const routes = [
@@ -114,6 +114,7 @@ export const routes = [
     { path: "/invoices", component: <ReceiptInvoice /> },
     { path: "/store-create", component: <StoreCreate /> },
     { path: "/delegate-access", component: <DelegateAccess /> },
+    { path: "/activity", component: <LogActivity /> },
     { path: "*", component: <NotFound type='Page' /> }
 ]
 export const publicRoutes = [

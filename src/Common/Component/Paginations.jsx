@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import styles from "../../Components/ReceiptInvoices/styles/index.module.scss"
+import styles from "./styles.module.css"
 const Paginations = ({ page, totalPages, setPage, limit, setLimit }) => {
     const { t } = useTranslation()
     return (

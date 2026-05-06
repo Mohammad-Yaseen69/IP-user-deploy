@@ -1,0 +1,85 @@
+        .tableWrapper {
+            margin-top: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .tr {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            padding: 12px 16px;
+        }
+
+        .thead {
+            font-weight: 700;
+            color: #333;
+        }
+
+        .th {
+            font-size: 13px;
+            flex: 1;
+        }
+
+        .td {
+            font-size: 14px;
+            font-weight: 600;
+            color: #777;
+            flex: 1;
+        }
+
+        .serial {
+            text-align: center;
+        }
+
+        .amount {
+            font-weight: 700;
+        }
+
+        .dataRow {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .actionsMenu {
+            position: absolute;
+            right: 8px;
+            top: 40px;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            min-width: 160px;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .menuItem {
+            padding: 10px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+
+
+        .danger {
+            color: #D00416;
+        }
+
+        .paginationWrapper {
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            margin-top: 20px;
+            padding: 12px 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: #fff;
+
+        }

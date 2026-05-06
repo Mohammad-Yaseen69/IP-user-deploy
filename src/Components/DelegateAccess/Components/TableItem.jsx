@@ -6,6 +6,7 @@ import styles from "../styles/table.module.css";
 import DeleteConfirmModal from './DeleteConfirmModal';
 import { useState } from 'react';
 import ViewDetailModal from './ViewDetailModal';
+import { toast } from 'react-toastify';
 
 function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, setEditData, setShowModal }) {
     const { t } = useTranslation()
@@ -71,8 +72,24 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
             console.error("Status Update Error:", err)
         }
     })
+    const { mutate: resendEmail, isPending: isResending } = useMutation({
+        mutationFn: () =>
+            apiWrapper({
+                endpoint: `/api/business-agents/agents/${item?._id}/resend-password-email`,
+                method: "POST",
+                isEncrypted: false,
+                isDecrypted: true
+            }),
+        onSuccess: (res) => {
+            toast.success(res?.message || t("Email resent successfully"))
+            setMenuOpenFor(null)
+        },
+        onError: (err) => {
+            console.error("Resend Error:", err)
+            toast.error(err?.response?.data?.message || t("Failed to resend email"))
+        }
+    })
 
-    console.log(item,"itemdata")
     return (
         <div
             className={`${styles.tr} ${styles.dataRow}`}
@@ -118,7 +135,7 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
                     )}
 
                     <div style={{ flex: isPhone ? 0.25 : 0.18, ...ellipsisStyle }} className={styles.td}>
-                        {item?.first_name + item?.last_name || "—"}
+                        {item?.first_name + " " + item?.last_name || "—"}
                     </div>
 
                     <div style={{ flex: isPhone ? 0.40 : 0.18, ...ellipsisStyle }} className={styles.td}>
@@ -141,24 +158,40 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
                                 <span style={{ fontSize: "12px" }}>{t("Updating...")}</span>
                             ) : (
                                 <select
+                                    disabled={item?.status === "pending"}
                                     value={item?.status || ""}
                                     onChange={(e) => updateStatus(e.target.value)}
                                     style={{
-                                        background: item?.status === "active" ? "#e6f9ed" :
-                                                   item?.status === "inactive" ? "#ffeaea" :
-                                                   item?.status === "suspended" ? "#fff3e0" : "#f0f0f0",
-                                        color: item?.status === "active" ? "#1a8a3c" :
-                                               item?.status === "inactive" ? "#c0392b" :
-                                               item?.status === "suspended" ? "#e67e22" : "#444",
+                                        background: item?.status === "pending"
+                                            ? "#e0e0e0"
+                                            : item?.status === "active"
+                                                ? "#e6f9ed"
+                                                : item?.status === "inactive"
+                                                    ? "#ffeaea"
+                                                    : item?.status === "suspended"
+                                                        ? "#fff3e0"
+                                                        : "#f0f0f0",
+
+                                        color: item?.status === "pending"
+                                            ? "#888"
+                                            : item?.status === "active"
+                                                ? "#1a8a3c"
+                                                : item?.status === "inactive"
+                                                    ? "#c0392b"
+                                                    : item?.status === "suspended"
+                                                        ? "#e67e22"
+                                                        : "#444",
+
                                         padding: "2px 8px",
                                         borderRadius: "12px",
                                         fontSize: "12px",
                                         fontWeight: 600,
                                         border: "none",
                                         outline: "none",
-                                        cursor: "pointer",
+                                        cursor: item?.status === "pending" ? "not-allowed" : "pointer",
                                         textTransform: "capitalize",
-                                        width: "100%"
+                                        width: "100%",
+                                        opacity: item?.status === "pending" ? 0.7 : 1
                                     }}
                                 >
                                     <option value="pending">{t("Pending")}</option>
@@ -203,6 +236,11 @@ function TableItem({ setMenuOpenFor, width, item, index, menuOpenFor, isRole, se
                         }}>
                             {t("Edit")}
                         </div>
+                        {!isRole && item?.status === "pending" && (
+                            <div className={styles.menuItem} onClick={() => resendEmail()}>
+                                {isResending ? t("Resending...") : t("Resend Email")}
+                            </div>
+                        )}
                         <div className={`${styles.menuItem} ${styles.danger}`} onClick={() => {
                             setIsDeleteModal(true)
                             setMenuOpenFor(null)

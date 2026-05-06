@@ -6,16 +6,17 @@ import permissionsData from "../../../utils/Data/permissionsData.json"
 import { apiWrapper } from '../../../utils/Functions/apiWrapper'
 import styles from "../styles/DelegateModal.module.css"
 import PermissionTree from './PermissionTree'
+import { decryptData } from "../../../Helper/EssentilaMethods/Decryption"
 
 const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
     const [permSearch, setPermSearch] = useState("")
     const [selectedPermissions, setSelectedPermissions] = useState(isEdit && editData ? editData.permissions || [] : [])
     const [deniedPermissions, setDeniedPermissions] = useState(isEdit && editData ? editData.deniedPermissions || [] : [])
     const [status, setStatus] = useState({ type: null, message: "" }) // null, 'loading', 'success', 'error'
-    
+
     const isWildcardParent = (pk) => pk && selectedPermissions.includes(`${pk}.*`);
     const queryClient = useQueryClient()
-    
+
     const [form, setForm] = useState({
         title: isEdit && editData ? editData.title || "" : "",
         description: isEdit && editData ? editData.description || "" : "",
@@ -164,7 +165,18 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
             setStatus({ type: 'success', message: res?.message || t("Role created successfully") })
         },
         onError: (err) => {
-            setStatus({ type: 'error', message: err?.response?.data?.message || t("Failed to create role") })
+            let errorMsg = t("Failed to create agent");
+            if (err?.response?.data?.data) {
+                try {
+                    const decrypted = decryptData(err.response.data.data);
+                    errorMsg = decrypted?.message || errorMsg;
+                } catch (e) {
+                    console.error("Decryption failed", e);
+                }
+            } else {
+                errorMsg = err?.response?.data?.message || err?.response?.data?.error || err?.message || errorMsg;
+            }
+            setStatus({ type: 'error', message: errorMsg })
         }
     })
 
@@ -183,10 +195,21 @@ const RoleModal = ({ isRole, isOpen, onClose, t, width, isEdit, editData }) => {
             setStatus({ type: 'success', message: res?.message || t("Role updated successfully") })
         },
         onError: (err) => {
-            setStatus({ type: 'error', message: err?.response?.data?.message || t("Failed to update role") })
+            let errorMsg = t("Failed to create agent");
+            if (err?.response?.data?.data) {
+                try {
+                    const decrypted = decryptData(err.response.data.data);
+                    errorMsg = decrypted?.message || errorMsg;
+                } catch (e) {
+                    console.error("Decryption failed", e);
+                }
+            } else {
+                errorMsg = err?.response?.data?.message || err?.response?.data?.error || err?.message || errorMsg;
+            }
+            setStatus({ type: 'error', message: errorMsg })
         }
     })
-    
+
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
